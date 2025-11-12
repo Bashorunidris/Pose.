@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TikTok Style Static UI</title>
+  <title>Pose - African Creator Platform</title>
   <style>
     body, html {
       margin: 0;
@@ -14,15 +14,324 @@
       overflow: hidden;
     }
 
-    /* Feed */
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      color: white;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .modal h2 {
+      margin: 0 0 20px 0;
+      font-size: 24px;
+    }
+    .modal input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+    }
+    .modal input:focus {
+      outline: none;
+      border-color: #ff0050;
+    }
+    .modal-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #ff0050, #ff4081);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .modal-btn:hover {
+      opacity: 0.9;
+    }
+    .modal-switch {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #aaa;
+    }
+    .modal-switch a {
+      color: #ff0050;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .error-msg {
+      background: #ff0050;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    /* Profile Page Styles */
+    .profile-page {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      z-index: 1500;
+      overflow-y: auto;
+    }
+    .profile-page.active {
+      display: block;
+    }
+    .profile-header {
+      position: relative;
+      height: 200px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .profile-back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .profile-settings-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .profile-info-section {
+      position: relative;
+      margin-top: -50px;
+      padding: 0 20px;
+    }
+    .profile-pic-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid #000;
+      background: #333;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: white;
+      font-weight: bold;
+    }
+    .profile-name {
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    .profile-username {
+      text-align: center;
+      color: #888;
+      font-size: 16px;
+      margin-top: 5px;
+    }
+    .profile-bio {
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+      margin-top: 15px;
+      line-height: 1.4;
+    }
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      padding: 20px 0;
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+    }
+    .stat {
+      text-align: center;
+      color: white;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+    }
+    .profile-tabs {
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 0;
+      background: #111;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .profile-tab {
+      color: #888;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .profile-tab.active {
+      color: white;
+      background: #222;
+    }
+    .profile-content {
+      padding: 20px;
+      min-height: 400px;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .video-item {
+      aspect-ratio: 9/16;
+      background: #222;
+      position: relative;
+      cursor: pointer;
+    }
+    .video-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-stats {
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      right: 5px;
+      color: white;
+      font-size: 11px;
+      display: flex;
+      gap: 8px;
+    }
+    .post-section {
+      background: #111;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .post-input {
+      width: 100%;
+      min-height: 100px;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: white;
+      padding: 12px;
+      font-size: 14px;
+      resize: vertical;
+    }
+    .post-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .post-btn {
+      flex: 1;
+      padding: 10px;
+      background: #ff0050;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .feed-post {
+      background: #111;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #333;
+    }
+    .post-author {
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .post-text {
+      color: #ddd;
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .post-stats {
+      display: flex;
+      gap: 20px;
+      color: #888;
+      font-size: 13px;
+    }
+
+    /* Original Feed Styles */
     .video-feed {
       height: 100%;
       width: 100%;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
     }
-
-    /* Each Post */
     .video-post {
       position: relative;
       height: 100vh;
@@ -37,8 +346,6 @@
       width: 100%;
       object-fit: cover;
     }
-
-    /* Play/Pause Overlay */
     .play-pause-overlay {
       position: absolute;
       top: 50%;
@@ -64,8 +371,6 @@
       height: 40px;
       fill: white;
     }
-
-    /* Overlay (scrollable elements) */
     .overlay {
       position: absolute;
       top: 0; left: 0;
@@ -73,8 +378,6 @@
       height: 100%;
       color: white;
     }
-
-    /* ===== STATIC TOP UI ===== */
     .profile-icon {
       position: fixed;
       top: 20px;
@@ -84,6 +387,7 @@
       border-radius: 50%;
       padding: 6px;
       z-index: 1000;
+      cursor: pointer;
     }
     .tabs {
       position: fixed;
@@ -96,7 +400,7 @@
       font-weight: 500;
       z-index: 1000;
     }
-    .tabs span { cursor: pointer; position: relative; }
+    .tabs span { cursor: pointer; position: relative; color: white; }
     .tabs .active::after {
       content: "";
       position: absolute;
@@ -116,9 +420,8 @@
       font-size: 18px;
       color: black;
       z-index: 1000;
+      cursor: pointer;
     }
-
-    /* ===== SCROLLABLE UI ===== */
     .sidebar {
       position: absolute;
       right: 10px;
@@ -135,7 +438,6 @@
       display: block;
       margin-bottom: 5px;
     }
-
     .profile-section {
       position: absolute;
       bottom: 280px;
@@ -206,14 +508,6 @@
       box-shadow: 0 2px 8px rgba(255, 0, 80, 0.3);
       flex-shrink: 0;
     }
-    .follow-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(255, 0, 80, 0.4);
-    }
-    .follow-btn:active {
-      transform: scale(0.95);
-    }
-
     .ad-caption {
       position: absolute;
       bottom: 210px;
@@ -227,9 +521,6 @@
     .ad-caption.ad-closed {
       bottom: 80px;
     }
-    .ad-caption b { font-size: 14px; }
-    .ad-caption span { color: #aaa; }
-
     .banner-ad {
       position: absolute;
       bottom: 100px;
@@ -259,8 +550,6 @@
       font-size: 14px;
       cursor: pointer;
     }
-
-    /* ===== STATIC BOTTOM NAV ===== */
     .bottom-nav {
       position: fixed;
       bottom: 10px;
@@ -272,82 +561,916 @@
       z-index: 1000;
       color: white;
     }
-    .bottom-nav div { display: flex; flex-direction: column; align-items: center; }
+    .bottom-nav div { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
     .bottom-nav i { font-size: 24px; margin-bottom: 3px; }
+    
+    /* Edit Profile Styles */
+.edit-profile-btn {
+  position: absolute;
+  top: 15px;
+  right: 60px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
 
-    /* Mobile responsiveness */
-    @media (max-width: 480px) {
-      .profile-info .name { font-size: 15px; }
-      .profile-info .followers { font-size: 13px; }
-      .follow-btn { 
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-      .ad-caption { max-width: 250px; }
-    }
+.profile-pic-upload {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-pic-large {
+  background-size: cover;
+  background-position: center;
+}
+
+.upload-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ff0050;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px solid #000;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #ff0050;
+}
+
+/* ========== VIDEO GRID PAGE ========== */
+.video-grid-page {
+  background: #000;
+  min-height: 100vh;
+  padding: 70px 0 90px 0;
+}
+
+.grid-page-header {
+  padding: 20px;
+  border-bottom: 1px solid #222;
+  background: #0a0a0a;
+}
+
+.grid-page-header h1 {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.video-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 15px;
+}
+
+.grid-video-card {
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.grid-video-card:hover {
+  transform: scale(1.02);
+}
+
+.grid-thumbnail {
+  width: 100%;
+  aspect-ratio: 9/16;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-overlay {
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+}
+
+.grid-video-info {
+  padding: 10px;
+  background: #0a0a0a;
+}
+
+.grid-video-title {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grid-video-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grid-video-stats .views,
+.grid-video-stats .earnings {
+  color: #888;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.grid-video-stats .earnings {
+  color: #4ecdc4;
+  font-weight: 600;
+}
+
+/* ========== TWEET FEED PAGE ========== */
+.tweet-feed-page {
+  background: #000;
+  min-height: 100vh;
+  padding: 70px 0 90px 0;
+}
+
+.create-post-card {
+  background: #0a0a0a;
+  border-bottom: 1px solid #222;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.create-post-header {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  flex-shrink: 0;
+}
+
+.create-post-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  resize: none;
+  min-height: 60px;
+  line-height: 1.5;
+}
+
+.create-post-input:focus {
+  outline: none;
+}
+
+.create-post-input::placeholder {
+  color: #555;
+}
+
+.create-post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 57px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-icon-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-icon-btn:hover {
+  border-color: #555;
+  color: #aaa;
+}
+
+.post-submit-btn {
+  background: linear-gradient(45deg, #ff0050, #ff4081);
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.post-submit-btn:hover {
+  opacity: 0.9;
+}
+
+/* Timeline Posts */
+.feed-timeline {
+  padding: 0;
+}
+
+.timeline-post {
+  background: #0a0a0a;
+  border-bottom: 1px solid #222;
+  padding: 20px;
+}
+
+.post-user-info {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.verified {
+  color: #1da1f2;
+  font-size: 14px;
+}
+
+.user-handle {
+  color: #666;
+  font-size: 13px;
+}
+
+.post-content {
+  margin-bottom: 12px;
+}
+
+.post-text {
+  color: #e0e0e0;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+}
+
+.post-media {
+  margin-top: 10px;
+}
+
+.media-thumbnail {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.post-interactions {
+  display: flex;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #1a1a1a;
+}
+
+.interaction-btn {
+  color: #666;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.interaction-btn:hover {
+  color: #888;
+}
+
+.tip-btn {
+  color: #4ecdc4;
+  font-weight: 600;
+}
+
+.tip-btn:hover {
+  color: #6ee7df;
+}
+
+/* Load More Section */
+.load-more-section {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.load-more-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 10px;
+}
+
+.load-more-btn:hover {
+  background: #222;
+  border-color: #444;
+}
+
+.load-more-text {
+  color: #666;
+  font-size: 12px;
+  margin: 10px 0 0 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .video-grid-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .grid-video-title {
+    font-size: 11px;
+  }
+  
+  .grid-video-stats {
+    font-size: 10px;
+  }
+  
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .action-icon-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}
+
+
+
+/* Improve touch scrolling on mobile */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent body scroll when tabs are active */
+body.tab-active {
+  overflow: hidden;
+}
+/* Tab Content Scrolling */
+.tab-content {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  z-index: 100;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Video Grid Page Scrollable */
+.video-grid-page {
+  background: #000;
+  min-height: 100vh;
+  padding: 70px 0 90px 0;
+  overflow-y: auto;
+}
+
+/* Tweet Feed Page Scrollable */
+.tweet-feed-page {
+  background: #000;
+  min-height: 100vh;
+  padding: 70px 0 90px 0;
+  overflow-y: auto;
+}
+
+/* Ensure video feed is also scrollable */
+.video-feed {
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar but keep functionality */
+.tab-content::-webkit-scrollbar,
+.video-grid-page::-webkit-scrollbar,
+.tweet-feed-page::-webkit-scrollbar,
+.video-feed::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+
+/* For Firefox */
+.tab-content,
+.video-grid-page,
+.tweet-feed-page,
+.video-feed {
+  scrollbar-width: none;
+}
+
+/* Smooth scrolling */
+.tab-content {
+  scroll-behavior: smooth;
+}
+
+/* Make sure content doesn't hide behind fixed elements */
+#poseTab .video-grid-page,
+#friendTab .tweet-feed-page {
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+
+/* Welcome Popup Overlay */
+.welcome-overlay {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.welcome-overlay.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.welcome-modal {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  border: 1px solid #333;
+  box-shadow: 0 20px 60px rgba(255, 0, 80, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Logo Section */
+.welcome-logo {
+  margin-bottom: 25px;
+}
+
+.logo-icon {
+  margin: 0 auto 15px;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255,0,80,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.logo-text {
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(45deg, #ff0050, #ff4081, #ff0050);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: 3px;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Welcome Message */
+.welcome-message {
+  margin-bottom: 30px;
+}
+
+.welcome-message h2 {
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+}
+
+.welcome-message p {
+  color: #bbb;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+
+.welcome-message strong {
+  color: #ff4081;
+  font-weight: 700;
+}
+
+/* Features List */
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-top: 20px;
+}
+
+.feature-item {
+  color: #ddd;
+  font-size: 14px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #ff0050;
+}
+
+/* Action Buttons */
+.welcome-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.welcome-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.signup-btn {
+  background: linear-gradient(45deg, #ff0050, #ff4081);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 0, 80, 0.4);
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 0, 80, 0.6);
+}
+
+.login-btn {
+  background: transparent;
+  color: white;
+  border: 2px solid #ff0050;
+}
+
+.login-btn:hover {
+  background: rgba(255, 0, 80, 0.1);
+  transform: translateY(-2px);
+}
+
+.skip-btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.2s;
+}
+
+.skip-btn:hover {
+  color: #888;
+  text-decoration: underline;
+}
+
+/* Footer */
+.welcome-footer {
+  padding-top: 20px;
+  border-top: 1px solid #222;
+}
+
+.welcome-footer p {
+  color: #777;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .welcome-modal {
+    padding: 30px 20px;
+    width: 95%;
+  }
+
+  .logo-text {
+    font-size: 36px;
+  }
+
+  .welcome-message h2 {
+    font-size: 22px;
+  }
+
+  .welcome-message p {
+    font-size: 15px;
+  }
+
+  .feature-item {
+    font-size: 13px;
+  }
+
+  .welcome-btn {
+    padding: 13px;
+    font-size: 15px;
+  }
+}
+
+.logo-img {
+  width: 80px;   /* adjust size as needed */
+  height: auto;
+  border-radius: 12px; /* optional rounded corners */
+}
+
   </style>
 </head>
 <body>
-  <!-- Static UI -->
-  <div class="profile-icon">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-    </svg>
-  </div>
-  <div class="tabs">
-    <span class="tab active">Bus</span>
-    <span class="tab">Friend</span>
-    <span class="tab">Pose</span>
-    <span class="tab">fyp</span>
-  </div>
-  <div class="search-icon">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="black">
-      <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-    </svg>
-  </div>
-  <div class="bottom-nav">
-    <div>
-      <i>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
-      </i>
-      <span>Home</span>
-    </div>
-    <div>
-      <i>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-        </svg>
-      </i>
-      <span>Alert</span>
-    </div>
-    <div>
-      <i>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
-        </svg>
-      </i>
-    </div>
-    <div>
-      <i>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-          <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/>
-        </svg>
-      </i>
-      <span>Live</span>
-    </div>
-    <div>
-      <i>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-        </svg>
-      </i>
-      <span>Music</span>
+  <!-- Auth Modals -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeAuthModal()">×</button>
+      <div id="signupForm">
+        <h2>Join Pose</h2>
+        <div id="authError" class="error-msg" style="display:none;"></div>
+        <input type="text" id="signupName" placeholder="Full Name" required>
+        <input type="text" id="signupUsername" placeholder="Username" required>
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" required>
+        <button class="modal-btn" onclick="handleSignup()">Sign Up</button>
+        <div class="modal-switch">
+          Already have an account? <a onclick="switchToLogin()">Log In</a>
+        </div>
+      </div>
+      <div id="loginForm" style="display:none;">
+        <h2>Welcome Back</h2>
+        <div id="loginError" class="error-msg" style="display:none;"></div>
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button class="modal-btn" onclick="handleLogin()">Log In</button>
+        <div class="modal-switch">
+          Don't have an account? <a onclick="switchToSignup()">Sign Up</a>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Scrollable feed -->
+  <!-- Profile Page -->
+  <div class="profile-page" id="profilePage">
+  <div class="profile-header">
+  <button class="profile-back-btn" onclick="closeProfile()">←</button>
+  <button class="edit-profile-btn" onclick="openSettings()">Edit Profile</button>
+  <button class="profile-settings-btn" onclick="logout()">⚙</button>
+</div>
+    <div class="profile-info-section">
+  <div class="profile-pic-large" id="profilePicLarge">U</div>
+  <div class="profile-name" id="profileDisplayName">User Name</div>
+  <div class="profile-username" id="profileUsernameDisplay">@username</div>
+  <div class="profile-bio">African Creator | Skits | Exclusive Content 🔥<br>📍 Lagos, Nigeria</div>
+  <div class="profile-stats">
+    <div class="stat">
+      <div class="stat-value">12.5K</div>
+      <div class="stat-label">Followers</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">804</div>
+      <div class="stat-label">Following</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">108K</div>
+      <div class="stat-label">Likes</div>
+    </div>
+  </div>
+  <div class="profile-stats">
+    <div class="stat">
+      <div class="stat-value">550K</div>
+      <div class="stat-label">Total Views</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">₦82,400</div>
+      <div class="stat-label">Earnings</div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal (Add right after profile-info-section closing div) -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSettings()">×</button>
+    <h2>Edit Profile</h2>
+    <div id="settingsError" class="error-msg" style="display:none;"></div>
+    
+    <!-- Profile Picture Upload -->
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div class="profile-pic-large" id="previewPic" style="margin: 0 auto 15px;">U</div>
+      <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+      <button class="modal-btn" onclick="document.getElementById('profilePicInput').click()" style="background: #333;">
+        📷 Change Photo
+      </button>
+    </div>
+    
+    <input type="text" id="editName" placeholder="Full Name">
+    <input type="text" id="editUsername" placeholder="Username">
+    <textarea id="editBio" placeholder="Bio" style="width: 100%; min-height: 80px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; padding: 12px; font-size: 14px; margin-bottom: 15px; resize: vertical; font-family: Arial, sans-serif;"></textarea>
+    <input type="text" id="editLocation" placeholder="Location (e.g., Lagos, Nigeria)">
+    
+    <button class="modal-btn" onclick="saveProfile()">Save Changes</button>
+    <button class="modal-btn" onclick="closeSettings()" style="background: #333; margin-top: 10px;">Cancel</button>
+  </div>
+</div>
+    <div class="profile-tabs">
+      <div class="profile-tab active" onclick="switchProfileTab('feed')">Feed</div>
+      <div class="profile-tab" onclick="switchProfileTab('exclusive')">Exclusive</div>
+      <div class="profile-tab" onclick="switchProfileTab('shorts')">Shorts</div>
+      <div class="profile-tab" onclick="switchProfileTab('tweets')">Tweets</div>
+      <div class="profile-tab" onclick="switchProfileTab('liked')">Liked</div>
+    </div>
+    <div class="profile-content" id="profileContent">
+      <!-- Feed Videos Tab -->
+      <div id="feedTab">
+        <div class="video-grid">
+          <div class="video-item">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%;"></div>
+            <div class="video-stats">💬 450 👁️ 2.3K</div>
+          </div>
+          <div class="video-item">
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 100%;"></div>
+            <div class="video-stats">💬 380 👁️ 1.9K</div>
+          </div>
+          <div class="video-item">
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 100%;"></div>
+            <div class="video-stats">💬 520 👁️ 3.1K</div>
+          </div>
+        </div>
+      </div>
+      <!-- Exclusive Tab -->
+      <div id="exclusiveTab" style="display:none;">
+        <div class="video-grid">
+          <div class="video-item">
+            <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px;">🔒</div>
+            <div class="video-stats">₦200 | 👁️ 800</div>
+          </div>
+          <div class="video-item">
+            <div style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px;">🔒</div>
+            <div class="video-stats">₦150 | 👁️ 650</div>
+          </div>
+        </div>
+      </div>
+      <!-- Tweets Tab -->
+      <div id="tweetsTab" style="display:none;">
+        <div class="post-section">
+          <textarea class="post-input" placeholder="What's on your mind?"></textarea>
+          <div class="post-actions">
+            <button class="post-btn">📷 Media</button>
+            <button class="post-btn">Post</button>
+          </div>
+        </div>
+        <div class="feed-post">
+          <div class="post-header">
+            <div class="post-avatar"></div>
+            <div>
+              <div class="post-author">You</div>
+              <div style="color: #666; font-size: 12px;">2 hours ago</div>
+            </div>
+          </div>
+          <div class="post-text">New exclusive dropping tonight 🔥</div>
+          <div class="post-stats">
+            <span>❤️ 1.2K</span>
+            <span>💬 320</span>
+            <span>🔁 150</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Original Feed UI (Keep these as is) -->
+<div class="profile-icon" onclick="handleProfileClick()">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+  </svg>
+</div>
+<div class="tabs">
+  <span class="tab active">For You</span>
+  <span class="tab">tweet</span>
+  <span class="tab">Pose</span>
+  
+</div>
+<div class="search-icon">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="black">
+    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+  </svg>
+</div>
+<div class="bottom-nav">
+  <div>
+    <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></i>
+    <span>Home</span>
+  </div>
+  <div>
+    <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></i>
+    <span>Alert</span>
+  </div>
+  <div>
+    <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg></i>
+  </div>
+  <div>
+    <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></svg></i>
+    <span>Live</span>
+  </div>
+  <div>
+    <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></i>
+    <span>Music</span>
+  </div>
+</div>
+
+
+
+<!-- The rest remains the same (friendTab and poseTab) --><!-- Tab Content Containers -->
+<div id="busTab" class="tab-content active">
+  <!-- Video Feed (TikTok style) - This is your existing video-feed -->
+   <!-- Scrollable feed -->
   <div class="video-feed">
     <!-- Post 1 -->
     <div class="video-post">
@@ -511,9 +1634,682 @@
       </div>
     </div>
   </div>
+</div>
+
+<div id="friendTab" class="tab-content" style="display: none;">
+  <div class="tweet-feed-page">
+    <!-- Create Post Section -->
+    <div class="create-post-card">
+      <div class="create-post-header">
+        <div class="user-avatar" id="tweetUserAvatar"></div>
+        <textarea class="create-post-input" placeholder="What's happening?" maxlength="500"></textarea>
+      </div>
+      <div class="create-post-actions">
+        <div class="action-buttons">
+          <button class="action-icon-btn">🖼️ Add Media</button>
+          <button class="action-icon-btn">🎥 Video</button>
+          <button class="action-icon-btn">📍 Tag Creator</button>
+        </div>
+        <button class="post-submit-btn">POST 🔘</button>
+      </div>
+    </div>
+
+    <!-- Feed Timeline -->
+    <div class="feed-timeline">
+      <!-- Post 1 -->
+      <div class="timeline-post">
+        <div class="post-user-info">
+          <div class="user-avatar"></div>
+          <div class="user-details">
+            <div class="user-name">Display Name <span class="verified">✔</span></div>
+            <div class="user-handle">@username • 2m ago</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <p class="post-text">Just dropped my latest dance clip 💃🏾 #PoseChallenge</p>
+          <div class="post-media">
+            <div class="media-thumbnail" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 250px; border-radius: 12px;"></div>
+          </div>
+        </div>
+        <div class="post-interactions">
+          <span class="interaction-btn">❤️ 3.2K</span>
+          <span class="interaction-btn">💬 220</span>
+          <span class="interaction-btn">🔁 80</span>
+          <span class="interaction-btn tip-btn">💸 Tip Creator</span>
+        </div>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="timeline-post">
+        <div class="post-user-info">
+          <div class="user-avatar"></div>
+          <div class="user-details">
+            <div class="user-name">Creator Name <span class="verified">✔</span></div>
+            <div class="user-handle">@creatorhandle • 25m ago</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <p class="post-text">I made ₦10,000 today from exclusive views 😍🔥</p>
+          <div class="post-media">
+            <div class="media-thumbnail" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 200px; border-radius: 12px;"></div>
+          </div>
+        </div>
+        <div class="post-interactions">
+          <span class="interaction-btn">❤️ 2.1K</span>
+          <span class="interaction-btn">💬 180</span>
+          <span class="interaction-btn">🔁 75</span>
+          <span class="interaction-btn tip-btn">💸 Tip Creator</span>
+        </div>
+      </div>
+
+      <!-- Post 3 -->
+      <div class="timeline-post">
+        <div class="post-user-info">
+          <div class="user-avatar"></div>
+          <div class="user-details">
+            <div class="user-name">@user</div>
+            <div class="user-handle">1h ago</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <p class="post-text">Pose feed is cleaner than Twitter ngl 😎</p>
+        </div>
+        <div class="post-interactions">
+          <span class="interaction-btn">❤️ 540</span>
+          <span class="interaction-btn">💬 70</span>
+          <span class="interaction-btn">🔁 18</span>
+          <span class="interaction-btn tip-btn">💸 Tip Creator</span>
+        </div>
+      </div>
+
+      <!-- Post 4 -->
+      <div class="timeline-post">
+        <div class="post-user-info">
+          <div class="user-avatar"></div>
+          <div class="user-details">
+            <div class="user-name">@creator</div>
+            <div class="user-handle">3h ago</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <p class="post-text">Uploading new exclusive content tonight 🚀</p>
+          <div class="post-media">
+            <div class="media-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 220px; border-radius: 12px;"></div>
+          </div>
+        </div>
+        <div class="post-interactions">
+          <span class="interaction-btn">❤️ 1.9K</span>
+          <span class="interaction-btn">💬 200</span>
+          <span class="interaction-btn">🔁 60</span>
+          <span class="interaction-btn tip-btn">💸 Tip Creator</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Show More Section -->
+    <div class="load-more-section">
+      <button class="load-more-btn">Show More Posts 🔽</button>
+      <p class="load-more-text">Scroll to load more...</p>
+    </div>
+  </div>
+</div>
+
+<div id="poseTab" class="tab-content" style="display: none;">
+  <!-- Video Grid -->
+  <div class="video-grid-page">
+    <div class="grid-header">
+      <h2>My Videos</h2>
+    </div>
+    
+    <div class="video-grid-container">
+      <!-- Video Item 1 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Dance Challenge Day 1</div>
+          <div class="grid-stats">
+            <span>👁️ 12K</span>
+            <span>₦2,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 2 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Comedy Skit #5</div>
+          <div class="grid-stats">
+            <span>👁️ 8.5K</span>
+            <span>₦1,500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 5 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Behind The Scenes</div>
+          <div class="grid-stats">
+            <span>👁️ 7.2K</span>
+            <span>₦1,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 6 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Live Stream Recap</div>
+          <div class="grid-stats">
+            <span>👁️ 4.1K</span>
+            <span>₦600</span>
+          </div>
+        </div>
+      </div>
+       <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+ <!-- Video Item 3 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Tutorial Video</div>
+          <div class="grid-stats">
+            <span>👁️ 5K</span>
+            <span>₦800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Item 4 -->
+      <div class="grid-video-item">
+        <div class="grid-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+        <div class="grid-info">
+          <div class="grid-title">Music Video</div>
+          <div class="grid-stats">
+            <span>👁️ 9K</span>
+            <span>₦1,200</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="load-more">
+      <button class="load-more-btn">Load More Videos 🔽</button>
+    </div>
+  </div>
+</div>
+<!-- Welcome Popup -->
+<div class="welcome-overlay" id="welcomePopup">
+<div class="welcome-modal">
+  <!-- Logo and Branding -->
+  <div class="welcome-logo">
+    <div class="logo-icon">
+      <img src="https://i.ibb.co/60JJMHGJ/Red-and-White-Video-Centric-Coming-Soon-Instagram-Post-20250917-230708-0000.png" alt="Red-and-White-Video-Centric-Coming-Soon-Instagram-Post-20250917-230708-0000" class="logo-img" />
+    </div>
+    <h1 class="logo-text">POSE</h1>
+  </div>
+
+
+
+    <!-- Welcome Message -->
+    <div class="welcome-message">
+      <h2>Welcome to Pose (sample version)</h2>
+      <p>Pose helps African creators get <strong>instant</strong> and <strong>multiple revenue models</strong></p>
+      <div class="features-list">
+        <div class="feature-item">✅ Get paid from 100 views</div>
+        <div class="feature-item">✅ Earn 70-85% of your revenue</div>
+        <div class="feature-item">✅ Multiple income streams</div>
+        <div class="feature-item">✅ Instant withdrawals</div>
+      </div>
+    </div>
+
+    <!-- Auth Buttons -->
+    <div class="welcome-actions">
+      <button class="welcome-btn signup-btn" onclick="openSignupFromWelcome()">
+        Create Account
+      </button>
+      <button class="welcome-btn login-btn" onclick="openLoginFromWelcome()">
+        Sign In
+      </button>
+      <button class="skip-btn" onclick="closeWelcomePopup()">
+        Skip for now
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="welcome-footer">
+      <p>Join thousands of African creators earning today 🚀</p>
+    </div>
+  </div>
+</div>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
   <script>
-    // Tabs
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",
+      authDomain: "rewarderhub.firebaseapp.com",
+      projectId: "rewarderhub",
+      storageBucket: "rewarderhub.appspot.com",
+      messagingSenderId: "85965945106",
+      appId: "1:85965945106:web:fa0a57d8968926e1041bcb",
+      measurementId: "G-F2ERB5NGN0"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    let currentUser = null;
+
+    // Auth State Listener
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        currentUser = user;
+        loadUserProfile(user.uid);
+      } else {
+        currentUser = null;
+      }
+    });
+
+    // Handle Profile Icon Click
+    function handleProfileClick() {
+      if (currentUser) {
+        openProfile();
+      } else {
+        openAuthModal();
+      }
+    }
+
+    // Open Auth Modal
+    function openAuthModal() {
+      document.getElementById('authModal').classList.add('active');
+    }
+
+    // Close Auth Modal
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+      document.getElementById('authError').style.display = 'none';
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    // Switch to Login
+    function switchToLogin() {
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    }
+
+    // Switch to Signup
+    function switchToSignup() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('signupForm').style.display = 'block';
+    }
+
+    // Handle Signup
+    async function handleSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const username = document.getElementById('signupUsername').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+
+      if (!name || !username || !email || !password) {
+        showError('authError', 'Please fill in all fields');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('authError', 'Password must be at least 6 characters');
+        return;
+      }
+
+      try {
+        // Create user
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // Save user profile to Firestore
+        await db.collection('users').doc(user.uid).set({
+          name: name,
+          username: username,
+          email: email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          followers: 0,
+          following: 0,
+          likes: 0,
+          views: 0,
+          earnings: 0
+        });
+
+        closeAuthModal();
+        openProfile();
+      } catch (error) {
+        showError('authError', error.message);
+      }
+    }
+
+    // Handle Login
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showError('loginError', 'Please fill in all fields');
+        return;
+      }
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        closeAuthModal();
+        openProfile();
+      } catch (error) {
+        showError('loginError', error.message);
+      }
+    }
+
+    // Show Error
+    function showError(elementId, message) {
+      const errorEl = document.getElementById(elementId);
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    // Load User Profile
+    async function loadUserProfile(uid) {
+      try {
+        const doc = await db.collection('users').doc(uid).get();
+        if (doc.exists) {
+          const userData = doc.data();
+          document.getElementById('profileDisplayName').textContent = userData.name;
+          document.getElementById('profileUsernameDisplay').textContent = '@' + userData.username;
+          document.getElementById('profilePicLarge').textContent = userData.name.charAt(0).toUpperCase();
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    }
+
+    // Open Profile
+    function openProfile() {
+      document.getElementById('profilePage').classList.add('active');
+    }
+
+    // Close Profile
+    function closeProfile() {
+      document.getElementById('profilePage').classList.remove('active');
+    }
+
+    // Logout
+    async function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        await auth.signOut();
+        closeProfile();
+      }
+    }
+
+    // Switch Profile Tab
+    function switchProfileTab(tabName) {
+      // Update tab active state
+      const tabs = document.querySelectorAll('.profile-tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Hide all tab content
+      document.getElementById('feedTab').style.display = 'none';
+      document.getElementById('exclusiveTab').style.display = 'none';
+      document.getElementById('tweetsTab').style.display = 'none';
+
+      // Show selected tab
+      if (tabName === 'feed') {
+        document.getElementById('feedTab').style.display = 'block';
+      } else if (tabName === 'exclusive') {
+        document.getElementById('exclusiveTab').style.display = 'block';
+      } else if (tabName === 'tweets') {
+        document.getElementById('tweetsTab').style.display = 'block';
+      } else if (tabName === 'shorts' || tabName === 'liked') {
+        document.getElementById('feedTab').style.display = 'block';
+      }
+    }
+
+    // Original Video Feed Scripts
     const allTabs = document.querySelectorAll('.tabs span');
     allTabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -522,7 +2318,6 @@
       });
     });
 
-    // Video play/pause functionality
     function setupVideoControls() {
       const posts = document.querySelectorAll('.video-post');
       
@@ -532,9 +2327,7 @@
         const playIcon = post.querySelector('.play-icon');
         const pauseIcon = post.querySelector('.pause-icon');
         
-        // Toggle play/pause on video click
         post.addEventListener('click', (e) => {
-          // Don't trigger if clicking on sidebar buttons or other interactive elements
           if (e.target.closest('.sidebar') || e.target.closest('.follow-btn') || e.target.closest('.close-btn')) {
             return;
           }
@@ -549,14 +2342,12 @@
             pauseIcon.style.display = 'none';
           }
           
-          // Show overlay briefly
           playPauseOverlay.classList.add('show');
           setTimeout(() => {
             playPauseOverlay.classList.remove('show');
           }, 500);
         });
         
-        // Update icon based on video state
         video.addEventListener('play', () => {
           playIcon.style.display = 'none';
           pauseIcon.style.display = 'block';
@@ -569,7 +2360,6 @@
       });
     }
 
-    // Auto play/pause videos based on scroll
     const posts = document.querySelectorAll('.video-post video');
     function handleVideoPlay() {
       posts.forEach(video => {
@@ -592,50 +2382,27 @@
     });
     handleVideoPlay();
 
-    // Close banner
     document.querySelectorAll('.close-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent video play/pause
+        e.stopPropagation();
         const banner = btn.parentElement;
         const overlay = banner.closest('.overlay');
         const profileSection = overlay.querySelector('.profile-section');
         const adCaption = overlay.querySelector('.ad-caption');
         
-        // Add transition classes for smooth animation
         banner.classList.add('hidden');
         profileSection.classList.add('ad-closed');
         adCaption.classList.add('ad-closed');
         
-        // Hide banner completely after animation
         setTimeout(() => {
           banner.style.display = 'none';
         }, 300);
       });
     });
 
-    // Speaker mute/unmute
-    document.querySelectorAll('.video-post').forEach(post => {
-      const video = post.querySelector('video');
-      const speaker = post.querySelector('.speaker');
-      let isMuted = true;
-      
-      speaker.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent video play/pause
-        isMuted = !isMuted;
-        video.muted = isMuted;
-        const icon = speaker.querySelector('svg path');
-        if (isMuted) {
-          icon.setAttribute('d', 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z');
-        } else {
-          icon.setAttribute('d', 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z');
-        }
-      });
-    });
-
-    // Follow button functionality
     document.querySelectorAll('.follow-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent video play/pause
+        e.stopPropagation();
         if (btn.textContent === 'FOLLOW') {
           btn.textContent = 'FOLLOWING';
           btn.style.background = 'rgba(255, 255, 255, 0.2)';
@@ -648,20 +2415,420 @@
       });
     });
 
-    // Initialize video controls
     setupVideoControls();
 
-    // Prevent sidebar interactions from triggering video controls
     document.querySelectorAll('.sidebar div').forEach(item => {
       item.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Add interaction animations or functionality here
         item.style.transform = 'scale(1.1)';
         setTimeout(() => {
           item.style.transform = 'scale(1)';
         }, 150);
       });
     });
+    
+    
+    // Global variable to store profile picture
+let uploadedProfilePic = null;
+
+// Update the profile icon when user logs in or profile picture changes
+function updateProfileIcon(profilePicUrl, userName) {
+  const profileIcon = document.querySelector('.profile-icon');
+  
+  if (profilePicUrl) {
+    // If user has profile picture, show it
+    profileIcon.innerHTML = `
+      <img src="${profilePicUrl}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" alt="profile">
+    `;
+  } else {
+    // If no picture, show initial letter
+    profileIcon.innerHTML = `
+      <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white;">
+        ${userName.charAt(0).toUpperCase()}
+      </div>
+    `;
+  }
+}
+
+// Open Settings Modal
+function openSettings() {
+  if (!currentUser) {
+    alert('Please login first');
+    return;
+  }
+  
+  // Load current profile data
+  db.collection('users').doc(currentUser.uid).get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      document.getElementById('editName').value = data.name || '';
+      document.getElementById('editUsername').value = data.username || '';
+      document.getElementById('editBio').value = data.bio || '';
+      document.getElementById('editLocation').value = data.location || '';
+      
+      // Show current profile pic in preview
+      const previewPic = document.getElementById('previewPic');
+      if (data.profilePicUrl) {
+        previewPic.style.backgroundImage = `url(${data.profilePicUrl})`;
+        previewPic.style.backgroundSize = 'cover';
+        previewPic.style.backgroundPosition = 'center';
+        previewPic.textContent = '';
+      } else {
+        previewPic.style.backgroundImage = 'none';
+        previewPic.textContent = data.name.charAt(0).toUpperCase();
+      }
+    }
+  });
+  
+  document.getElementById('settingsModal').classList.add('active');
+}
+
+// Close Settings Modal
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('active');
+  document.getElementById('settingsError').style.display = 'none';
+  uploadedProfilePic = null;
+}
+
+// Handle Profile Picture Selection - Initialize after DOM loads
+function initProfilePicUpload() {
+  const picInput = document.getElementById('profilePicInput');
+  if (picInput) {
+    picInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 5000000) { // 5MB limit
+          showError('settingsError', 'Image must be less than 5MB');
+          return;
+        }
+        
+        uploadedProfilePic = file;
+        
+        // Preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const previewPic = document.getElementById('previewPic');
+          previewPic.style.backgroundImage = `url(${e.target.result})`;
+          previewPic.style.backgroundSize = 'cover';
+          previewPic.style.backgroundPosition = 'center';
+          previewPic.textContent = '';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+}
+
+// Call this when page loads
+setTimeout(initProfilePicUpload, 500);
+
+// Save Profile
+async function saveProfile() {
+  if (!currentUser) return;
+  
+  const name = document.getElementById('editName').value.trim();
+  const username = document.getElementById('editUsername').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  const location = document.getElementById('editLocation').value.trim();
+  
+  if (!name || !username) {
+    const errorEl = document.getElementById('settingsError');
+    errorEl.textContent = 'Name and username are required';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  try {
+    let profilePicUrl = null;
+    
+    // Get current profile pic URL first
+    const currentDoc = await db.collection('users').doc(currentUser.uid).get();
+    if (currentDoc.exists && currentDoc.data().profilePicUrl) {
+      profilePicUrl = currentDoc.data().profilePicUrl;
+    }
+    
+    // Upload NEW profile picture if one was selected
+    if (uploadedProfilePic) {
+      const storageRef = storage.ref();
+      const fileRef = storageRef.child(`profile_pics/${currentUser.uid}/${Date.now()}_${uploadedProfilePic.name}`);
+      const snapshot = await fileRef.put(uploadedProfilePic);
+      profilePicUrl = await snapshot.ref.getDownloadURL();
+    }
+    
+    // Update Firestore
+    const updateData = {
+      name: name,
+      username: username,
+      bio: bio,
+      location: location,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    
+    if (profilePicUrl) {
+      updateData.profilePicUrl = profilePicUrl;
+    }
+    
+    await db.collection('users').doc(currentUser.uid).update(updateData);
+    
+    // Update profile icon at top LEFT
+    updateProfileIcon(profilePicUrl, name);
+    
+    // Update profile page display name and username
+    document.getElementById('profileDisplayName').textContent = name;
+    document.getElementById('profileUsernameDisplay').textContent = '@' + username;
+    
+    // Update bio display
+    const bioDiv = document.querySelector('.profile-bio');
+    if (bioDiv) {
+      bioDiv.innerHTML = `${bio}<br>📍 ${location}`;
+    }
+    
+    // Update large profile pic on profile page
+    const profilePicLarge = document.getElementById('profilePicLarge');
+    if (profilePicUrl) {
+      profilePicLarge.style.backgroundImage = `url(${profilePicUrl})`;
+      profilePicLarge.style.backgroundSize = 'cover';
+      profilePicLarge.style.backgroundPosition = 'center';
+      profilePicLarge.textContent = '';
+    } else {
+      profilePicLarge.style.backgroundImage = 'none';
+      profilePicLarge.textContent = name.charAt(0).toUpperCase();
+    }
+    
+    // Success message
+    alert('✅ Profile updated successfully!');
+    closeSettings();
+    
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    const errorEl = document.getElementById('settingsError');
+    errorEl.textContent = '❌ Failed to update profile: ' + error.message;
+    errorEl.style.display = 'block';
+  }
+}
+
+// REPLACE your existing loadUserProfile function with this:
+async function loadUserProfile(uid) {
+  try {
+    const doc = await db.collection('users').doc(uid).get();
+    if (doc.exists) {
+      const userData = doc.data();
+      
+      // Update profile page
+      document.getElementById('profileDisplayName').textContent = userData.name;
+      document.getElementById('profileUsernameDisplay').textContent = '@' + userData.username;
+      
+      // Update profile icon at top
+      updateProfileIcon(userData.profilePicUrl, userData.name);
+      
+      // Load profile picture on profile page
+      const profilePicLarge = document.getElementById('profilePicLarge');
+      if (userData.profilePicUrl) {
+        profilePicLarge.style.backgroundImage = `url(${userData.profilePicUrl})`;
+        profilePicLarge.style.backgroundSize = 'cover';
+        profilePicLarge.style.backgroundPosition = 'center';
+        profilePicLarge.textContent = '';
+      } else {
+        profilePicLarge.style.backgroundImage = 'none';
+        profilePicLarge.textContent = userData.name.charAt(0).toUpperCase();
+      }
+      
+      // Load bio and location
+      const bioDiv = document.querySelector('.profile-bio');
+      if (bioDiv) {
+        bioDiv.innerHTML = `${userData.bio || 'African Creator | Exclusive Content 🔥'}<br>📍 ${userData.location || 'Lagos, Nigeria'}`;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading profile:', error);
+  }
+}
+
+// REPLACE your existing auth.onAuthStateChanged with this:
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    currentUser = user;
+    loadUserProfile(user.uid);
+  } else {
+    currentUser = null;
+    // Reset profile icon to default when logged out
+    const profileIcon = document.querySelector('.profile-icon');
+    profileIcon.innerHTML = `
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+      </svg>
+    `;
+  }
+});
+// Tab Switching Function
+function switchMainTab(tabName) {
+  // Remove active class from all tabs
+  const allTabs = document.querySelectorAll('.tabs .tab');
+  allTabs.forEach(tab => tab.classList.remove('active'));
+  
+  // Add active class to clicked tab
+  event.target.classList.add('active');
+  
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+    content.style.display = 'none';
+  });
+  
+  // Show selected tab content
+  const selectedTab = document.getElementById(tabName);
+  if (selectedTab) {
+    selectedTab.classList.add('active');
+    selectedTab.style.display = 'block';
+  }
+  
+  // Pause all videos when switching tabs
+  document.querySelectorAll('video').forEach(video => {
+    video.pause();
+  });
+  
+  // If switching to video feed, restart video playback logic
+  if (tabName === 'busTab') {
+    setTimeout(handleVideoPlay, 300);
+  }
+}
+
+// Initialize Tab Click Listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.tabs .tab');
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', function() {
+      if (index === 0) switchMainTab('busTab');      // Bus = Video Feed
+      if (index === 1) switchMainTab('friendTab');   // Friend = Tweet Feed
+      if (index === 2) switchMainTab('poseTab');     // Pose = Video Grid
+      if (index === 3) switchMainTab('busTab');      // fyp = Video Feed (for now)
+    });
+  });
+});
+
+// Updated Tab Switching Function with Scroll Reset
+function switchMainTab(tabName) {
+  // Remove active class from all tabs
+  const allTabs = document.querySelectorAll('.tabs .tab');
+  allTabs.forEach(tab => tab.classList.remove('active'));
+  
+  // Add active class to clicked tab
+  event.target.classList.add('active');
+  
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+    content.style.display = 'none';
+  });
+  
+  // Show selected tab content
+  const selectedTab = document.getElementById(tabName);
+  if (selectedTab) {
+    selectedTab.classList.add('active');
+    selectedTab.style.display = 'block';
+    
+    // Scroll to top of the new tab
+    selectedTab.scrollTop = 0;
+  }
+  
+  // Pause all videos when switching tabs
+  document.querySelectorAll('video').forEach(video => {
+    video.pause();
+  });
+  
+  // If switching to video feed, restart video playback logic
+  if (tabName === 'busTab') {
+    setTimeout(handleVideoPlay, 300);
+  }
+}
+
+// Add smooth scroll behavior to load more buttons
+document.addEventListener('DOMContentLoaded', function() {
+  // Tab switching
+  const tabs = document.querySelectorAll('.tabs .tab');
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', function() {
+      if (index === 0) switchMainTab('busTab');      // Bus = Video Feed
+      if (index === 1) switchMainTab('friendTab');   // Friend = Tweet Feed
+      if (index === 2) switchMainTab('poseTab');     // Pose = Video Grid
+      if (index === 3) switchMainTab('busTab');      // fyp = Video Feed
+    });
+  });
+
+  // Load more button scroll effect
+  document.querySelectorAll('.load-more-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Add loading animation or fetch more content here
+      this.textContent = 'Loading... ⏳';
+      setTimeout(() => {
+        this.textContent = this.closest('#poseTab') ? 'Load More Videos 🔽' : 'Show More Posts 🔽';
+      }, 1000);
+    });
+  });
+});
+
+
+// Check if user is new and show welcome popup
+function checkAndShowWelcomePopup() {
+  // Check if user has visited before
+  const hasVisited = localStorage.getItem('poseVisited');
+  
+  // Check if user is logged in
+  if (!currentUser && !hasVisited) {
+    document.getElementById('welcomePopup').classList.remove('hidden');
+  }
+}
+
+// Close welcome popup
+function closeWelcomePopup() {
+  document.getElementById('welcomePopup').classList.add('hidden');
+  localStorage.setItem('poseVisited', 'true');
+}
+
+// Open signup from welcome popup
+function openSignupFromWelcome() {
+  closeWelcomePopup();
+  // Switch to signup form
+  document.getElementById('signupForm').style.display = 'block';
+  document.getElementById('loginForm').style.display = 'none';
+  openAuthModal();
+}
+
+// Open login from welcome popup
+function openLoginFromWelcome() {
+  closeWelcomePopup();
+  // Switch to login form
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('signupForm').style.display = 'none';
+  openAuthModal();
+}
+
+// Update auth.onAuthStateChanged to check welcome popup
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    currentUser = user;
+    loadUserProfile(user.uid);
+    // Close welcome popup if user logs in
+    closeWelcomePopup();
+  } else {
+    currentUser = null;
+    // Reset profile icon to default when logged out
+    const profileIcon = document.querySelector('.profile-icon');
+    profileIcon.innerHTML = `
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+      </svg>
+    `;
+  }
+});
+
+// Call this when page loads (add to your DOMContentLoaded)
+document.addEventListener('DOMContentLoaded', function() {
+  // Existing code...
+  
+  // Show welcome popup after short delay
+  setTimeout(checkAndShowWelcomePopup, 500);
+});
   </script>
 </body>
-</html>
+  </html>
