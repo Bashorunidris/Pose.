@@ -429,6 +429,35 @@
             opacity: 0.9;
         }
 
+        /* Progress Bar */
+        .upload-result-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: transparent;
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+        }
+
+        .upload-result-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4C1D95, #22c55e);
+            width: 100%;
+            animation: countdown 3s linear forwards;
+        }
+
+        @keyframes countdown {
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
+        }
+
         /* ====== PRICE OPTIONS ====== */
         .price-options-group {
             display: flex;
@@ -2209,6 +2238,9 @@
             <div class="upload-result-title" id="uploadResultTitle">Success!</div>
             <div class="upload-result-message" id="uploadResultMessage">Your video has been uploaded successfully!</div>
             <button class="upload-result-btn" onclick="closeUploadResultModal()">Continue</button>
+            <div class="upload-result-progress">
+                <div class="upload-result-progress-bar" id="uploadResultProgressBar"></div>
+            </div>
         </div>
     </div>
 
@@ -3708,6 +3740,7 @@
             const resultTitle = document.getElementById('uploadResultTitle');
             const resultMessage = document.getElementById('uploadResultMessage');
             const resultThumbnail = document.getElementById('uploadResultThumbnail');
+            const progressBar = document.getElementById('uploadResultProgressBar');
 
             resultTitle.textContent = title;
             resultMessage.textContent = message;
@@ -3718,6 +3751,12 @@
             } else {
                 resultThumbnail.innerHTML = isSuccess ? '✅' : '❌';
             }
+
+            // Reset animation by removing and re-adding it
+            progressBar.style.animation = 'none';
+            setTimeout(() => {
+                progressBar.style.animation = 'countdown 3s linear forwards';
+            }, 10);
 
             modal.classList.add('active');
         }
