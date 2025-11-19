@@ -429,32 +429,84 @@
             opacity: 0.9;
         }
 
-        /* Progress Bar */
-        .upload-result-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: transparent;
-            border-radius: 0 0 20px 20px;
+        /* Countdown Progress Bar */
+        .upload-result-countdown {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .upload-result-countdown-text {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .countdown-bar {
+            width: 100%;
+            height: 6px;
+            background: #222;
+            border-radius: 3px;
             overflow: hidden;
         }
 
-        .upload-result-progress-bar {
+        .countdown-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, #4C1D95, #22c55e);
             width: 100%;
-            animation: countdown 3s linear forwards;
+            transition: width 0.1s linear;
         }
 
-        @keyframes countdown {
-            from {
-                width: 100%;
+        .countdown-time {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4C1D95;
+            margin-top: 10px;
+        }
+
+        /* ====== TIKTOK-STYLE COUNTDOWN MODAL ====== */
+        .tiktok-countdown-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3500;
+        }
+
+        .tiktok-countdown-modal.active {
+            display: flex;
+        }
+
+        .tiktok-countdown-content {
+            text-align: center;
+        }
+
+        .tiktok-countdown-number {
+            font-size: 180px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 10px 30px rgba(76, 29, 149, 0.5);
+            animation: countdownScale 1s ease-in forwards;
+        }
+
+        @keyframes countdownScale {
+            0% {
+                transform: scale(1.5);
+                opacity: 0;
             }
 
-            to {
-                width: 0%;
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
             }
         }
 
@@ -2229,6 +2281,13 @@
         </div>
     </div>
 
+    <!-- TikTok-Style Countdown Modal -->
+    <div class="tiktok-countdown-modal" id="tiktokCountdownModal">
+        <div class="tiktok-countdown-content">
+            <div class="tiktok-countdown-number" id="countdownNumberDisplay">5</div>
+        </div>
+    </div>
+
     <!-- Upload Result Modal (Success/Error) -->
     <div class="upload-result-modal" id="uploadResultModal">
         <div class="upload-result-content">
@@ -2237,10 +2296,17 @@
             </div>
             <div class="upload-result-title" id="uploadResultTitle">Success!</div>
             <div class="upload-result-message" id="uploadResultMessage">Your video has been uploaded successfully!</div>
-            <button class="upload-result-btn" onclick="closeUploadResultModal()">Continue</button>
-            <div class="upload-result-progress">
-                <div class="upload-result-progress-bar" id="uploadResultProgressBar"></div>
+
+            <!-- Countdown Progress -->
+            <div class="upload-result-countdown" id="uploadResultCountdown" style="display: none;">
+                <div class="upload-result-countdown-text">Closing in...</div>
+                <div class="countdown-bar">
+                    <div class="countdown-bar-fill" id="countdownBarFill"></div>
+                </div>
+                <div class="countdown-time" id="countdownNumber">5</div>
             </div>
+
+            <button class="upload-result-btn" onclick="closeUploadResultModal()">Continue</button>
         </div>
     </div>
 
@@ -3734,13 +3800,52 @@
             console.log(`Price set: ${priceType} (${priceInPc} PC = ₦${priceInPc * 25})`);
         }
 
+        // ====== TIKTOK-STYLE COUNTDOWN ======
+        let tiktokCountdownTimer = null;
+        let onCountdownComplete = null;
+
+        function showTiktokCountdown(duration = 5, callback = null) {
+            const modal = document.getElementById('tiktokCountdownModal');
+            const numberDisplay = document.getElementById('countdownNumberDisplay');
+
+            modal.classList.add('active');
+            onCountdownComplete = callback;
+
+            let remaining = duration;
+            numberDisplay.textContent = remaining;
+
+            tiktokCountdownTimer = setInterval(() => {
+                remaining--;
+
+                if (remaining > 0) {
+                    numberDisplay.textContent = remaining;
+                } else {
+                    clearInterval(tiktokCountdownTimer);
+                    modal.classList.remove('active');
+                    if (onCountdownComplete) {
+                        onCountdownComplete();
+                    }
+                }
+            }, 1000);
+        }
+
+        function hideTiktokCountdown() {
+            const modal = document.getElementById('tiktokCountdownModal');
+            modal.classList.remove('active');
+            if (tiktokCountdownTimer) {
+                clearInterval(tiktokCountdownTimer);
+            }
+        }
+
         // ====== UPLOAD RESULT MODAL ======
+        let countdownTimer = null;
+
         function showUploadResultModal(isSuccess, title, message, thumbnailUrl = null) {
             const modal = document.getElementById('uploadResultModal');
             const resultTitle = document.getElementById('uploadResultTitle');
             const resultMessage = document.getElementById('uploadResultMessage');
             const resultThumbnail = document.getElementById('uploadResultThumbnail');
-            const progressBar = document.getElementById('uploadResultProgressBar');
+            const countdownSection = document.getElementById('uploadResultCountdown');
 
             resultTitle.textContent = title;
             resultMessage.textContent = message;
@@ -3752,18 +3857,42 @@
                 resultThumbnail.innerHTML = isSuccess ? '✅' : '❌';
             }
 
-            // Reset animation by removing and re-adding it
-            progressBar.style.animation = 'none';
-            setTimeout(() => {
-                progressBar.style.animation = 'countdown 3s linear forwards';
-            }, 10);
-
             modal.classList.add('active');
+
+            // TikTok countdown already happened, so just hide this countdown section
+            countdownSection.style.display = 'none';
+        }
+
+        function startCountdown(seconds) {
+            // Clear any existing timer
+            if (countdownTimer) clearInterval(countdownTimer);
+
+            let remaining = seconds;
+            const countdownNumber = document.getElementById('countdownNumber');
+            const countdownBarFill = document.getElementById('countdownBarFill');
+
+            countdownNumber.textContent = remaining;
+            countdownBarFill.style.width = '100%';
+
+            countdownTimer = setInterval(() => {
+                remaining--;
+                countdownNumber.textContent = remaining;
+
+                // Update progress bar (width decreases)
+                const percentRemaining = (remaining / seconds) * 100;
+                countdownBarFill.style.width = percentRemaining + '%';
+
+                if (remaining <= 0) {
+                    clearInterval(countdownTimer);
+                    closeUploadResultModal();
+                }
+            }, 1000);
         }
 
         function closeUploadResultModal() {
             const modal = document.getElementById('uploadResultModal');
             modal.classList.remove('active');
+            if (countdownTimer) clearInterval(countdownTimer);
         }
 
         function resetUploadProgress() {
@@ -4872,127 +5001,141 @@
                 return;
             }
 
-            try {
-                const titleInput = document.getElementById('postTitle');
-                const descInput = document.getElementById('postDescription');
-                const tagsInput = document.getElementById('postTags');
-                const priceInput = document.getElementById('postPrice');
-                const priceTypeInput = document.getElementById('postPriceType');
-                const thumbInput = document.getElementById('postThumbnail');
-
-                addDebugLog('📋 Form elements found');
-
-                // Check if video URL exists (from Cloudinary)
-                if (!postVideoUrl) {
-                    addDebugLog('❌ Video not uploaded yet');
-                    alert('⚠️ Please wait for video upload to complete');
-                    return;
-                }
-
-                const title = titleInput.value.trim();
-                if (!title) {
-                    addDebugLog('❌ Title is empty');
-                    alert('⚠️ Please enter a title for your post');
-                    return;
-                }
-
-                addDebugLog(`📹 Using Cloudinary video URL`);
-
-                // Get user data
-                addDebugLog('📖 Reading user data...');
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                const userData = userDoc.data();
-
-                if (!userData) {
-                    addDebugLog('❌ User profile not found');
-                    alert('User profile not found. Please complete your profile first.');
-                    return;
-                }
-                addDebugLog('✅ User data loaded');
-
-                // Upload thumbnail to Cloudinary if provided
-                let thumbnailUrl = null;
-                if (thumbInput.files && thumbInput.files[0]) {
-                    addDebugLog('🖼️ Uploading thumbnail to Cloudinary...');
-                    try {
-                        const thumbResult = await uploadToCloudinary(thumbInput.files[0], 'post_thumbnail');
-                        thumbnailUrl = thumbResult.url;
-                        addDebugLog('✅ Thumbnail uploaded');
-                    } catch (thumbError) {
-                        addDebugLog(`⚠️ Thumbnail upload failed, continuing without thumbnail`);
-                    }
-                }
-
-                // Prepare post data with Cloudinary URLs
-                const postData = {
-                    userId: currentUser.uid,
-                    userName: userData.name || '',
-                    username: userData.username || '',
-                    userProfilePic: userData.profilePicUrl || null,
-                    title: title,
-                    description: descInput.value.trim(),
-                    tags: tagsInput.value.trim(),
-                    videoUrl: postVideoUrl,
-                    thumbnailUrl: thumbnailUrl,
-                    price: parseFloat(priceInput.value) || 0,
-                    priceType: priceTypeInput.value || 'free',
-                    views: 0,
-                    likes: 0,
-                    comments: 0,
-                    earnings: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // Save to Firestore
-                addDebugLog('💾 Saving to Firestore...');
-
-                try {
-                    const docRef = await db.collection('posts').add(postData);
-                    const postId = docRef.id;
-                    addDebugLog(`✅ Post saved! ID: ${postId}`);
-                } catch (firestoreError) {
-                    addDebugLog(`❌ Firestore error: ${firestoreError.message}`);
-                    showUploadResultModal(false, '❌ Upload Failed', 'Failed to save post: ' + firestoreError.message);
-                    return;
-                }
-
-                // Show success modal with thumbnail
-                showUploadResultModal(
-                    true,
-                    '✅ Video Posted!',
-                    `"${title}" has been posted successfully!`,
-                    thumbnailUrl
-                );
-                addDebugLog('🎉 Upload complete!');
-
-                // Clear form after delay
+            // Show TikTok-style countdown (5 seconds)
+            showTiktokCountdown(5, async () => {
+                // This callback runs after countdown completes
+                // Show success message 1 second after countdown
                 setTimeout(() => {
-                    document.getElementById('postVideo').value = '';
-                    titleInput.value = '';
-                    descInput.value = '';
-                    tagsInput.value = '';
-                    priceInput.value = '0';
-                    priceTypeInput.value = 'free';
-                    thumbInput.value = '';
-                    document.getElementById('postVideoPreview').innerHTML = '';
-                    document.getElementById('postThumbnailPreview').innerHTML = '';
-                    document.getElementById('postUploadStatus').innerHTML = '';
+                    showUploadResultModal(true, '✅ Uploading...', 'Your post is being processed');
+                }, 1000);
+                
+                await performUpload();
+            });
 
-                    // Reset price buttons
-                    setPostPrice(0, 'free');
+            async function performUpload() {
+                try {
+                    const titleInput = document.getElementById('postTitle');
+                    const descInput = document.getElementById('postDescription');
+                    const tagsInput = document.getElementById('postTags');
+                    const priceInput = document.getElementById('postPrice');
+                    const priceTypeInput = document.getElementById('postPriceType');
+                    const thumbInput = document.getElementById('postThumbnail');
 
-                    // Reset variables
-                    postVideoUrl = null;
-                    postVideoFileName = null;
+                    addDebugLog('📋 Form elements found');
 
-                    closeUploadPage();
-                    closeUploadResultModal();
-                }, 3000);
+                    // Check if video URL exists (from Cloudinary)
+                    if (!postVideoUrl) {
+                        addDebugLog('❌ Video not uploaded yet');
+                        alert('⚠️ Please wait for video upload to complete');
+                        return;
+                    }
 
-            } catch (error) {
-                addDebugLog(`❌ Error: ${error.message}`);
-                showUploadResultModal(false, '❌ Error', error.message);
-            }
+                    const title = titleInput.value.trim();
+                    if (!title) {
+                        addDebugLog('❌ Title is empty');
+                        alert('⚠️ Please enter a title for your post');
+                        return;
+                    }
+
+                    addDebugLog(`📹 Using Cloudinary video URL`);
+
+                    // Get user data
+                    addDebugLog('📖 Reading user data...');
+                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                    const userData = userDoc.data();
+
+                    if (!userData) {
+                        addDebugLog('❌ User profile not found');
+                        alert('User profile not found. Please complete your profile first.');
+                        return;
+                    }
+                    addDebugLog('✅ User data loaded');
+
+                    // Upload thumbnail to Cloudinary if provided
+                    let thumbnailUrl = null;
+                    if (thumbInput.files && thumbInput.files[0]) {
+                        addDebugLog('🖼️ Uploading thumbnail to Cloudinary...');
+                        try {
+                            const thumbResult = await uploadToCloudinaryWithProgress(thumbInput.files[0], 'post_thumbnail');
+                            thumbnailUrl = thumbResult.url;
+                            addDebugLog('✅ Thumbnail uploaded: ' + thumbnailUrl);
+                        } catch (thumbError) {
+                            addDebugLog(`⚠️ Thumbnail upload failed: ${thumbError.message}`);
+                        }
+                    }
+
+                    // Prepare post data with Cloudinary URLs
+                    const postData = {
+                        userId: currentUser.uid,
+                        userName: userData.name || '',
+                        username: userData.username || '',
+                        userProfilePic: userData.profilePicUrl || null,
+                        title: title,
+                        description: descInput.value.trim(),
+                        tags: tagsInput.value.trim(),
+                        videoUrl: postVideoUrl,
+                        thumbnailUrl: thumbnailUrl,
+                        price: parseFloat(priceInput.value) || 0,
+                        priceType: priceTypeInput.value || 'free',
+                        views: 0,
+                        likes: 0,
+                        comments: 0,
+                        earnings: 0,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    // Save to Firestore
+                    addDebugLog('💾 Saving to Firestore...');
+
+                    try {
+                        const docRef = await db.collection('posts').add(postData);
+                        const postId = docRef.id;
+                        addDebugLog(`✅ Post saved! ID: ${postId}`);
+                    } catch (firestoreError) {
+                        addDebugLog(`❌ Firestore error: ${firestoreError.message}`);
+                        showUploadResultModal(false, '❌ Upload Failed', 'Failed to save post: ' + firestoreError.message);
+                        return;
+                    }
+
+                    // Update success modal with final message
+                    const modal = document.getElementById('uploadResultModal');
+                    document.getElementById('uploadResultTitle').textContent = '✅ Video Posted!';
+                    document.getElementById('uploadResultMessage').textContent = `"${title}" has been posted successfully!`;
+                    if (thumbnailUrl) {
+                        document.getElementById('uploadResultThumbnail').innerHTML = `<img src="${thumbnailUrl}" alt="thumbnail">`;
+                    }
+                    addDebugLog('🎉 Upload complete!');
+
+                    // Clear form after 5-second countdown
+                    setTimeout(() => {
+                        document.getElementById('postVideo').value = '';
+                        titleInput.value = '';
+                        descInput.value = '';
+                        tagsInput.value = '';
+                        priceInput.value = '0';
+                        priceTypeInput.value = 'free';
+                        thumbInput.value = '';
+                        document.getElementById('postVideoPreview').innerHTML = '';
+                        document.getElementById('postThumbnailPreview').innerHTML = '';
+                        document.getElementById('postUploadStatus').innerHTML = '';
+
+                        // Reset price buttons
+                        setPostPrice(0, 'free');
+
+                        // Reset variables
+                        postVideoUrl = null;
+                        postVideoFileName = null;
+
+                        closeUploadPage();
+                        closeUploadResultModal();
+                    }, 5000);
+
+                } catch (error) {
+                    addDebugLog(`❌ Error: ${error.message}`);
+                    hideTiktokCountdown();
+                    showUploadResultModal(false, '❌ Error', error.message);
+                }
+            } // End performUpload function
         };
 
     </script>
