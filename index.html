@@ -199,12 +199,11 @@
 
         .upload-progress-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 15px;
             background: linear-gradient(135deg, #4C1D95, #6D28D9);
             border-radius: 12px 12px 0 0;
-            cursor: pointer;
             user-select: none;
         }
 
@@ -214,25 +213,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .upload-toggle-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s;
-        }
-
-        .upload-progress-container.collapsed .upload-toggle-btn {
-            transform: rotate(180deg);
         }
 
         .upload-progress-body {
@@ -362,6 +342,182 @@
             justify-content: space-between;
             font-size: 11px;
             color: #888;
+        }
+
+        /* ====== SUCCESS/ERROR MESSAGE MODAL ====== */
+        .upload-result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .upload-result-modal.active {
+            display: flex;
+        }
+
+        .upload-result-content {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid #4C1D95;
+        }
+
+        .upload-result-thumbnail {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #4C1D95, #6D28D9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            overflow: hidden;
+        }
+
+        .upload-result-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-result-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .upload-result-message {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .upload-result-message.success {
+            color: #86efac;
+        }
+
+        .upload-result-message.error {
+            color: #fca5a5;
+        }
+
+        .upload-result-btn {
+            background: linear-gradient(135deg, #4C1D95, #6D28D9);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .upload-result-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ====== PRICE OPTIONS ====== */
+        .price-options-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .price-options {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .price-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #333;
+            background: #222;
+            color: #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .price-btn:hover {
+            border-color: #4C1D95;
+            color: white;
+        }
+
+        .price-btn.active {
+            border-color: #4C1D95;
+            background: #4C1D95;
+            color: white;
+        }
+
+        .price-info-icon {
+            background: none;
+            border: none;
+            color: #4C1D95;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .price-info-icon:hover {
+            color: #6D28D9;
+        }
+
+        /* Tooltip */
+        .price-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            margin-bottom: 8px;
+            border: 1px solid #4C1D95;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .price-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #4C1D95;
+        }
+
+        .price-info-icon:hover .price-tooltip {
+            display: block;
         }
 
         /* Profile Page Styles */
@@ -1990,9 +2146,8 @@
 <body>
     <!-- Upload Progress Container -->
     <div class="upload-progress-container" id="uploadProgressContainer">
-        <div class="upload-progress-header" onclick="toggleUploadProgress()">
+        <div class="upload-progress-header">
             <h3>📤 <span id="uploadProgressTitle">Uploading</span></h3>
-            <button class="upload-toggle-btn">▼</button>
         </div>
         <div class="upload-progress-body">
             <!-- Step 1: Analyze -->
@@ -2042,6 +2197,18 @@
                     <span id="uploadSpeed">0 MB/s</span>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Upload Result Modal (Success/Error) -->
+    <div class="upload-result-modal" id="uploadResultModal">
+        <div class="upload-result-content">
+            <div class="upload-result-thumbnail" id="uploadResultThumbnail">
+                📹
+            </div>
+            <div class="upload-result-title" id="uploadResultTitle">Success!</div>
+            <div class="upload-result-message" id="uploadResultMessage">Your video has been uploaded successfully!</div>
+            <button class="upload-result-btn" onclick="closeUploadResultModal()">Continue</button>
         </div>
     </div>
 
@@ -3048,15 +3215,24 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Monetization</label>
-                    <div class="monetization-options">
-                        <input type="number" id="postPrice" class="text-input" placeholder="Pay-per-view price (₦)"
-                            style="flex: 1;">
-                        <label class="toggle-label">
-                            <input type="checkbox" id="postFree"> Free Video
-                        </label>
+                    <label class="form-label">Video Price</label>
+                    <div class="price-options-group">
+                        <div class="price-options">
+                            <button type="button" class="price-btn active" onclick="setPostPrice(0, 'free')"
+                                id="priceFreBtn">📺 Free</button>
+                            <button type="button" class="price-btn" onclick="setPostPrice(1, '1pc')" id="price1pcBtn">🎯
+                                1 PC</button>
+                            <button type="button" class="price-btn" onclick="setPostPrice(2, '2pc')" id="price2pcBtn">⭐
+                                2 PC</button>
+                        </div>
+                        <button class="price-info-icon" type="button">ℹ️
+                            <div class="price-tooltip">1 PC = ₦25</div>
+                        </button>
                     </div>
                 </div>
+
+                <input type="hidden" id="postPrice" value="0">
+                <input type="hidden" id="postPriceType" value="free">
 
                 <div class="form-group">
                     <label class="form-label">Thumbnail</label>
@@ -3255,45 +3431,7 @@
             postExclusive: typeof window.postExclusive
         });
 
-        // ====== CLOUDINARY UPLOAD FUNCTION ======
-        async function uploadToCloudinary(file, uploadType, quality = 'hd') {
-            if (!currentUser) {
-                alert('Please login first');
-                return null;
-            }
-
-            if (!file) return null;
-
-            const fileName = `${Date.now()}_${file.name}`;
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-            formData.append('tags', `${uploadType},${currentUser.uid}`);
-            formData.append('folder', uploadType);
-
-            try {
-                console.log(`🚀 Uploading ${uploadType} to Cloudinary...`);
-
-                const response = await fetch(CLOUDINARY_API_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) throw new Error(`Upload failed: ${response.status}`);
-
-                const data = await response.json();
-                console.log(`✅ ${uploadType} uploaded:`, data.secure_url);
-
-                return {
-                    url: data.secure_url,
-                    fileName: fileName,
-                    publicId: data.public_id
-                };
-            } catch (error) {
-                console.error(`❌ ${uploadType} upload error:`, error);
-                throw error;
-            }
-        }
+        // ====== CLOUDINARY UPLOAD (REPLACED - use uploadToCloudinaryWithProgress instead) ======
 
         // ====== VIDEO COMPRESSION FUNCTION ======
         async function compressVideo(file, quality = 'hd') {
@@ -3430,9 +3568,22 @@
             formData.append('tags', `${uploadType},${currentUser.uid}`);
             formData.append('folder', uploadType);
 
+            console.log('🔧 Upload Config:', {
+                cloudName: CLOUDINARY_CLOUD_NAME,
+                uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+                uploadUrl: CLOUDINARY_API_URL,
+                fileSize: (file.size / (1024 * 1024)).toFixed(2) + ' MB'
+            });
+
             try {
                 return new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
+
+                    // Timeout after 60 seconds
+                    const timeoutId = setTimeout(() => {
+                        xhr.abort();
+                        reject(new Error('Upload timeout - took too long'));
+                    }, 60000);
 
                     // Track progress
                     xhr.upload.addEventListener('progress', (e) => {
@@ -3440,32 +3591,52 @@
                             const percentComplete = (e.loaded / e.total) * 100;
                             updateUploadStats(e.loaded, e.total);
                             updateStepProgress(3, `Uploading... ${Math.round(percentComplete)}%`, percentComplete);
+                            console.log(`📤 Upload progress: ${Math.round(percentComplete)}%`);
                         }
                     });
 
                     xhr.addEventListener('load', () => {
+                        clearTimeout(timeoutId);
+                        console.log(`📡 XHR Load event, status: ${xhr.status}`);
+
                         if (xhr.status === 200) {
-                            const data = JSON.parse(xhr.responseText);
-                            resolve({
-                                url: data.secure_url,
-                                fileName: fileName,
-                                publicId: data.public_id
-                            });
+                            try {
+                                const data = JSON.parse(xhr.responseText);
+                                console.log('✅ Upload successful:', data.secure_url);
+                                resolve({
+                                    url: data.secure_url,
+                                    fileName: fileName,
+                                    publicId: data.public_id
+                                });
+                            } catch (parseError) {
+                                console.error('❌ JSON parse error:', parseError);
+                                reject(new Error('Invalid response from Cloudinary'));
+                            }
                         } else {
-                            reject(new Error(`Upload failed: ${xhr.status}`));
+                            console.error(`❌ Upload failed with status ${xhr.status}:`, xhr.responseText);
+                            reject(new Error(`Upload failed: ${xhr.status} - ${xhr.statusText}`));
                         }
                     });
 
                     xhr.addEventListener('error', () => {
-                        reject(new Error('Network error during upload'));
+                        clearTimeout(timeoutId);
+                        console.error('❌ Network error during upload');
+                        reject(new Error('Network error - check your connection'));
                     });
 
-                    xhr.open('POST', CLOUDINARY_API_URL);
+                    xhr.addEventListener('abort', () => {
+                        clearTimeout(timeoutId);
+                        console.error('❌ Upload aborted');
+                        reject(new Error('Upload was cancelled'));
+                    });
+
+                    console.log('🚀 Starting upload to:', CLOUDINARY_API_URL);
+                    xhr.open('POST', CLOUDINARY_API_URL, true);
                     xhr.send(formData);
                 });
 
             } catch (error) {
-                console.error(`${uploadType} upload error:`, error);
+                console.error(`❌ ${uploadType} upload error:`, error);
                 throw error;
             }
         }
@@ -3513,9 +3684,47 @@
             container.classList.remove('active');
         }
 
-        function toggleUploadProgress() {
-            const container = document.getElementById('uploadProgressContainer');
-            container.classList.toggle('collapsed');
+        // ====== PRICE OPTIONS ======
+        function setPostPrice(priceInPc, priceType) {
+            document.getElementById('postPrice').value = priceInPc * 25; // Convert PC to Naira (1 PC = 25 Naira)
+            document.getElementById('postPriceType').value = priceType;
+
+            // Update button states
+            document.querySelectorAll('.price-btn').forEach(btn => btn.classList.remove('active'));
+            if (priceType === 'free') {
+                document.getElementById('priceFreBtn').classList.add('active');
+            } else if (priceType === '1pc') {
+                document.getElementById('price1pcBtn').classList.add('active');
+            } else if (priceType === '2pc') {
+                document.getElementById('price2pcBtn').classList.add('active');
+            }
+
+            console.log(`Price set: ${priceType} (${priceInPc} PC = ₦${priceInPc * 25})`);
+        }
+
+        // ====== UPLOAD RESULT MODAL ======
+        function showUploadResultModal(isSuccess, title, message, thumbnailUrl = null) {
+            const modal = document.getElementById('uploadResultModal');
+            const resultTitle = document.getElementById('uploadResultTitle');
+            const resultMessage = document.getElementById('uploadResultMessage');
+            const resultThumbnail = document.getElementById('uploadResultThumbnail');
+
+            resultTitle.textContent = title;
+            resultMessage.textContent = message;
+            resultMessage.className = `upload-result-message ${isSuccess ? 'success' : 'error'}`;
+
+            if (thumbnailUrl) {
+                resultThumbnail.innerHTML = `<img src="${thumbnailUrl}" alt="thumbnail">`;
+            } else {
+                resultThumbnail.innerHTML = isSuccess ? '✅' : '❌';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeUploadResultModal() {
+            const modal = document.getElementById('uploadResultModal');
+            modal.classList.remove('active');
         }
 
         function resetUploadProgress() {
@@ -4629,7 +4838,7 @@
                 const descInput = document.getElementById('postDescription');
                 const tagsInput = document.getElementById('postTags');
                 const priceInput = document.getElementById('postPrice');
-                const freeCheckbox = document.getElementById('postFree');
+                const priceTypeInput = document.getElementById('postPriceType');
                 const thumbInput = document.getElementById('postThumbnail');
 
                 addDebugLog('📋 Form elements found');
@@ -4686,8 +4895,8 @@
                     tags: tagsInput.value.trim(),
                     videoUrl: postVideoUrl,
                     thumbnailUrl: thumbnailUrl,
-                    price: freeCheckbox.checked ? 0 : parseFloat(priceInput.value) || 0,
-                    isFree: freeCheckbox.checked,
+                    price: parseFloat(priceInput.value) || 0,
+                    priceType: priceTypeInput.value || 'free',
                     views: 0,
                     likes: 0,
                     comments: 0,
@@ -4704,34 +4913,46 @@
                     addDebugLog(`✅ Post saved! ID: ${postId}`);
                 } catch (firestoreError) {
                     addDebugLog(`❌ Firestore error: ${firestoreError.message}`);
-                    alert('❌ Failed to save post: ' + firestoreError.message);
+                    showUploadResultModal(false, '❌ Upload Failed', 'Failed to save post: ' + firestoreError.message);
                     return;
                 }
 
-                alert('✅ Video posted successfully!');
+                // Show success modal with thumbnail
+                showUploadResultModal(
+                    true,
+                    '✅ Video Posted!',
+                    `"${title}" has been posted successfully!`,
+                    thumbnailUrl
+                );
                 addDebugLog('🎉 Upload complete!');
 
-                // Clear form
-                document.getElementById('postVideo').value = '';
-                titleInput.value = '';
-                descInput.value = '';
-                tagsInput.value = '';
-                priceInput.value = '';
-                freeCheckbox.checked = false;
-                thumbInput.value = '';
-                document.getElementById('postVideoPreview').innerHTML = '';
-                document.getElementById('postThumbnailPreview').innerHTML = '';
-                document.getElementById('postUploadStatus').innerHTML = '';
+                // Clear form after delay
+                setTimeout(() => {
+                    document.getElementById('postVideo').value = '';
+                    titleInput.value = '';
+                    descInput.value = '';
+                    tagsInput.value = '';
+                    priceInput.value = '0';
+                    priceTypeInput.value = 'free';
+                    thumbInput.value = '';
+                    document.getElementById('postVideoPreview').innerHTML = '';
+                    document.getElementById('postThumbnailPreview').innerHTML = '';
+                    document.getElementById('postUploadStatus').innerHTML = '';
 
-                // Reset variables
-                postVideoUrl = null;
-                postVideoFileName = null;
+                    // Reset price buttons
+                    setPostPrice(0, 'free');
 
-                closeUploadPage();
+                    // Reset variables
+                    postVideoUrl = null;
+                    postVideoFileName = null;
+
+                    closeUploadPage();
+                    closeUploadResultModal();
+                }, 3000);
 
             } catch (error) {
                 addDebugLog(`❌ Error: ${error.message}`);
-                alert('❌ Error: ' + error.message);
+                showUploadResultModal(false, '❌ Error', error.message);
             }
         };
 
