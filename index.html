@@ -8606,14 +8606,25 @@ async function saveDraftText() {
     return;
   }
 
-  // Get button reference before async operations
-  const btn = event?.target;
-  const originalText = btn ? btn.textContent : null;
-  if (btn) {
-    btn.textContent = 'Saving...';
-    btn.disabled = true;
-  }
+  try {
+    // Show TikTok-style countdown
+    showTiktokCountdown(5, async () => {
+      // Show success message 1 second after countdown
+      setTimeout(() => {
+        showUploadResultModal(true, '💾 Saving Draft...', 'Your text draft is being saved');
+      }, 1000);
 
+      // Save to Firebase
+      await saveDraftToFirebase(textInput, caption);
+    });
+  } catch (error) {
+    console.error('Error saving draft:', error);
+    hideTiktokCountdown();
+    alert('❌ Failed to save draft: ' + error.message);
+  }
+}
+
+async function saveDraftToFirebase(textInput, caption) {
   try {
     const todayDate = getTodayDate();
     const docId = generateDocId();
@@ -8640,24 +8651,22 @@ async function saveDraftText() {
 
     await db.collection('textposts').doc(todayDate).collection('drafts').doc(docId).set(draftData);
 
-    console.log(`✅ Draft saved to /textposts/${todayDate}/drafts/${docId}`);
-    showToastRecording('✅ Draft saved', 'success', '💾');
+    console.log(`Draft saved: /textposts/${todayDate}/drafts/${docId}`);
     
+    // Update success modal
+    document.getElementById('uploadResultTitle').textContent = '✅ Draft Saved!';
+    document.getElementById('uploadResultMessage').textContent = 'Your draft was saved successfully!';
+
+    // Reset form after 5 seconds
     setTimeout(() => {
-      if (btn) {
-        btn.textContent = originalText;
-        btn.disabled = false;
-      }
-      closeRecordingUI();
-    }, 1000);
+      closeUploadResultModal();
+      resetTextTab();
+      closeUploadPage();
+    }, 5000);
 
   } catch (error) {
-    console.error('❌ Error saving draft:', error);
-    alert('❌ Failed to save draft: ' + error.message);
-    if (btn) {
-      btn.textContent = originalText || 'Draft';
-      btn.disabled = false;
-    }
+    console.error('Upload error:', error);
+    showUploadResultModal(false, '❌ Save Failed', error.message);
   }
 }
 
@@ -8678,10 +8687,8 @@ async function publishTextPost() {
   }
 
   try {
-    console.log('🚀 Publishing text post...');
     // Show TikTok-style countdown
     showTiktokCountdown(5, async () => {
-      console.log('⏳ Countdown finished, saving to Firebase...');
       // Show success message 1 second after countdown
       setTimeout(() => {
         showUploadResultModal(true, '✅ Posting...', 'Your text is being processed');
@@ -8691,24 +8698,18 @@ async function publishTextPost() {
       await saveTextPostToFirebase(textInput, caption, privacy);
     });
   } catch (error) {
-    console.error('❌ Error posting text:', error);
-    if (typeof hideTiktokCountdown !== 'undefined') {
-      hideTiktokCountdown();
-    }
+    console.error('Error posting text:', error);
+    hideTiktokCountdown();
     alert('❌ Failed to post: ' + error.message);
   }
 }
 
 async function saveTextPostToFirebase(textInput, caption, privacy) {
   try {
-    console.log('💾 Saving text post to Firebase...');
     const todayDate = getTodayDate();
     const docId = generateDocId();
-    console.log(`📅 Date: ${todayDate}, Doc ID: ${docId}`);
-    
     const userDoc = await db.collection('users').doc(currentUser.uid).get();
     const userData = userDoc.data();
-    console.log('👤 User data retrieved:', userData?.name);
 
     const postData = {
       id: docId,
@@ -8731,10 +8732,9 @@ async function saveTextPostToFirebase(textInput, caption, privacy) {
       textColor: recordingState.textColor || '#fff'
     };
 
-    console.log('📝 Saving to /textposts/' + todayDate + '/posts/' + docId);
     await db.collection('textposts').doc(todayDate).collection('posts').doc(docId).set(postData);
 
-    console.log(`✅ Text post saved: /textposts/${todayDate}/posts/${docId}`);
+    console.log(`Text post saved: /textposts/${todayDate}/posts/${docId}`);
     
     // Update success modal
     document.getElementById('uploadResultTitle').textContent = '✅ Text Posted!';
@@ -8748,9 +8748,7 @@ async function saveTextPostToFirebase(textInput, caption, privacy) {
     }, 5000);
 
   } catch (error) {
-    console.error('❌ Upload error:', error);
-    console.error('Error code:', error.code);
-    console.error('Error message:', error.message);
+    console.error('Upload error:', error);
     showUploadResultModal(false, '❌ Upload Failed', error.message);
   }
 }
@@ -8773,6 +8771,25 @@ async function postTextStory() {
     return;
   }
 
+  try {
+    // Show TikTok-style countdown
+    showTiktokCountdown(5, async () => {
+      // Show success message 1 second after countdown
+      setTimeout(() => {
+        showUploadResultModal(true, '📖 Adding to Story...', 'Your story is being posted');
+      }, 1000);
+
+      // Save to Firebase
+      await saveTextStoryToFirebase(textInput);
+    });
+  } catch (error) {
+    console.error('Error posting to story:', error);
+    hideTiktokCountdown();
+    alert('❌ Failed to post story: ' + error.message);
+  }
+}
+
+async function saveTextStoryToFirebase(textInput) {
   try {
     const todayDate = getTodayDate();
     const docId = generateDocId();
@@ -8799,17 +8816,22 @@ async function postTextStory() {
 
     await db.collection('stories').doc(todayDate).collection('posts').doc(docId).set(storyData);
 
-    console.log(`✅ Story saved to /stories/${todayDate}/posts/${docId}`);
-    showToastRecording('✅ Added to your story', 'success', '📖');
+    console.log(`Story posted: /stories/${todayDate}/posts/${docId}`);
     
+    // Update success modal
+    document.getElementById('uploadResultTitle').textContent = '✅ Story Posted!';
+    document.getElementById('uploadResultMessage').textContent = 'Your story will expire in 24 hours!';
+
+    // Reset form after 5 seconds
     setTimeout(() => {
-      closeRecordingUI();
-    }, 1000);
+      closeUploadResultModal();
+      resetTextTab();
+      closeUploadPage();
+    }, 5000);
 
   } catch (error) {
-    console.error('❌ Error posting to story:', error);
-    showToastRecording('❌ Error posting story', 'error', '✕');
-    alert('Error posting story: ' + error.message);
+    console.error('Story error:', error);
+    showUploadResultModal(false, '❌ Story Failed', error.message);
   }
 }
 
