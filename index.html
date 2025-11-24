@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pose - African Creator Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         /* ====== CSS Variables for Theme ====== */
         :root {
@@ -461,6 +462,1014 @@
             font-weight: bold;
             color: #4C1D95;
             margin-top: 10px;
+        }
+
+        /* ====== NOTIFICATIONS PAGE ====== */
+        .notifications-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-main);
+            z-index: 1999;
+            display: none;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+
+        .notifications-overlay.active {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .notifications-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .notifications-close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notifications-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--bg-card);
+        }
+
+        .notification-item:hover {
+            background: #f9fafb;
+        }
+
+        .notification-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            object-fit: cover;
+        }
+
+        .notification-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .notification-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .notification-badge {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            flex-shrink: 0;
+            margin-top: 8px;
+        }
+
+        .notifications-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 12px;
+            color: var(--text-muted);
+            padding: 40px 20px;
+        }
+
+        .notifications-empty-icon {
+            font-size: 48px;
+            opacity: 0.5;
+        }
+
+        .notifications-empty-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* ====== RECORDING UI OVERLAY ====== */
+        .recording-ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 1998;
+            display: none;
+            flex-direction: column;
+            animation: slideUpRecording 0.3s ease;
+        }
+
+        .recording-ui-overlay.active {
+            display: flex;
+        }
+
+        @keyframes slideUpRecording {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Recording Screen Container */
+        .recording-screen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            flex-direction: column;
+        }
+
+        .recording-screen.active {
+            display: flex;
+        }
+
+        /* Camera Preview */
+        .camera-preview {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Top Bar */
+        .rec-top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 10;
+        }
+
+        .rec-icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .rec-icon-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Left Side Menu */
+        .rec-left-menu {
+            position: absolute;
+            left: 20px;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 9;
+        }
+
+        .rec-left-menu.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .rec-menu-item {
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            color: #fff;
+        }
+
+        .rec-menu-item:active {
+            transform: scale(0.95);
+        }
+
+        /* Right Side Effects */
+        .rec-effects-bar {
+            position: absolute;
+            right: 20px;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 9;
+        }
+
+        .rec-effect-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .rec-effect-icon:active {
+            transform: scale(0.9);
+        }
+
+        /* Effect Filters */
+        .camera-preview.effect-sparkle {
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        .camera-preview.effect-mask {
+            filter: saturate(1.5) hue-rotate(15deg);
+        }
+
+        .camera-preview.effect-ghost {
+            filter: opacity(0.8) blur(2px) brightness(1.1);
+        }
+
+        .camera-preview.effect-star {
+            filter: saturate(1.8) brightness(1.15) contrast(1.2);
+        }
+
+        /* Bottom Controls */
+        .rec-bottom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        }
+
+        .rec-control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .rec-control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            color: #fff;
+        }
+
+        .rec-control-btn:active {
+            transform: scale(0.9);
+        }
+
+        .rec-control-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .rec-control-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Record Button */
+        .rec-record-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .rec-record-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            background: #ff0050;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .rec-record-btn:active {
+            transform: scale(0.95);
+        }
+
+        .rec-record-btn.recording {
+            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Mode Tabs */
+        .rec-mode-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            padding: 15px 10px 10px 10px;
+            position: relative;
+        }
+
+        .rec-mode-tab {
+            font-size: 16px;
+            opacity: 0.4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            position: relative;
+            padding: 8px 15px;
+        }
+
+        .rec-mode-tab:hover:not(.active) {
+            opacity: 0.7;
+        }
+
+        .rec-mode-tab:active {
+            transform: scale(0.95);
+        }
+
+        .rec-mode-tab.active {
+            opacity: 1;
+            font-size: 20px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .rec-mode-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* ====== RECORDING CONTROLS - SCREEN 2 ====== */
+        .rec-recording-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .rec-recording-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rec-recording-btn.stop {
+            width: 70px;
+            height: 70px;
+            border: 6px solid #fff;
+            background: #ff0050;
+        }
+
+        .rec-recording-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ====== EDIT CONTROLS - SCREEN 3 ====== */
+        .rec-edit-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+        }
+
+        .rec-add-sound-btn {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .rec-add-sound-btn:active {
+            transform: scale(0.98);
+        }
+
+        .rec-action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .rec-action-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rec-action-btn.draft {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .rec-action-btn.story {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .rec-action-btn.post {
+            background: #ff0050;
+            color: #fff;
+        }
+
+        /* ====== TEXT MODE STYLING ====== */
+        /* Color Picker Bar */
+        .rec-color-picker-bar {
+             position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            overflow-x: auto;
+            z-index: 10;
+        }
+ /* Text Mode Styles */
+        .rec-text-editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .rec-color-option {
+             min-width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .rec-color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .rec-color-option.active {
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+.text-canvas {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: background 0.3s;
+        }
+  .rec-text-input {
+            width: 100%;
+            max-width: 500px;
+            min-height: 200px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            resize: none;
+            outline: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .rec-text-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+ .char-count {
+            position: absolute;
+            bottom: 120px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        .rec-text-tools {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        
+        .rec-text-tool-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .rec-text-tool-btn:active {
+            transform: scale(0.9);
+        }
+
+        .rec-text-tool-btn.active {
+            background: #ff0050;
+        }
+
+        .rec-text-bottom-action {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10;
+        }
+
+        .rec-text-next-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ff0050;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(255,0,80,0.4);
+        }
+
+        .rec-text-next-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ====== TOGGLE SWITCH ====== */
+        .rec-toggle-switch {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .rec-toggle-switch input {
+            display: none;
+        }
+
+        .rec-toggle-slider {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: #444;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+
+        .rec-toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+
+        .rec-toggle-switch input:checked+.rec-toggle-slider {
+            background: #ff0050;
+        }
+
+        .rec-toggle-switch input:checked+.rec-toggle-slider::before {
+            left: 24px;
+        }
+/* Text Preview Thumbnail */
+        .rec-text-preview-thumbnail {
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            word-break: break-word;
+        }
+        /* ====== POPUPS ====== */
+        .rec-popup {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            z-index: 2100;
+            display: none;
+            flex-direction: column;
+            animation: slideUpPopup 0.3s ease;
+        }
+
+        .rec-popup.active {
+            display: flex;
+        }
+
+        @keyframes slideUpPopup {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .rec-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rec-popup-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+
+        .rec-popup-tab {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .rec-popup-tab.active {
+            color: #ff0050;
+            border-bottom-color: #ff0050;
+        }
+
+        .rec-popup-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .rec-popup-item {
+            aspect-ratio: 1;
+            background: #222;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .rec-popup-item:active {
+            transform: scale(0.95);
+            background: #333;
+            border-color: #ff0050;
+        }
+
+        /* ====== POST SETTINGS SECTIONS ====== */
+        /* Toggle Section */
+        .toggle-section {
+            display: flex;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+
+        .rec-post-section.toggle-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rec-action-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ====== POST SETTINGS SCREEN ====== */
+        .rec-post-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rec-post-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .rec-post-section {
+            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rec-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .rec-caption-input {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .rec-caption-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .rec-input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .rec-input-field::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .rec-post-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        /* ====== RECORDING INDICATOR - SCREEN 2 ====== */
+        .rec-recording-indicator {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 15px;
+            background: rgba(255, 0, 80, 0.9);
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 11;
+        }
+
+        .rec-rec-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            animation: recPulse 1.5s infinite;
+        }
+
+        @keyframes recPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ====== RECORDING UI TOAST ====== */
+        .recording-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 25px;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 14px;
+            z-index: 2001;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recording-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .recording-toast-icon {
+            font-size: 16px;
+        }
+
+        .recording-toast.success {
+            background: rgba(67, 233, 123, 0.95);
+        }
+
+        .recording-toast.error {
+            background: rgba(255, 0, 80, 0.95);
+        }
+
+        .recording-toast.info {
+            background: rgba(79, 172, 254, 0.95);
         }
 
         /* ====== TIKTOK-STYLE COUNTDOWN MODAL ====== */
@@ -3243,12 +4252,19 @@
                 </svg></i>
             <span>Home</span>
         </div>
-        <div>
+        <div onclick="openNotifications()">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path
                         d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
                 </svg></i>
             <span>Alert</span>
+        </div>
+        <div onclick="openRecordingUI()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5h3V9h4v3h3l-5 5z" />
+                </svg></i>
+            <span>Create</span>
         </div>
         <div onclick="openUploadPage()">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
@@ -3271,7 +4287,475 @@
         </div>
     </div>
 
+    <!-- RECORDING TOAST -->
+    <div class="recording-toast" id="recordingToast">
+        <span class="recording-toast-icon" id="recordingToastIcon">✓</span>
+        <span id="recordingToastMessage">Message</span>
+    </div>
 
+    <!-- RECORDING UI OVERLAY -->
+    <div id="recordingUIOverlay" class="recording-ui-overlay">
+        <!-- SCREEN 1: VIDEO SETUP -->
+        <div id="screen1" class="recording-screen active">
+            <div class="camera-preview">📹 Camera Preview</div>
+
+            <!-- Top Bar -->
+            <div class="rec-top-bar">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="rec-icon-btn" onclick="closeRecordingUI()"><i
+                            class="fa-solid fa-arrow-left"></i></button>
+                    <button class="rec-icon-btn" onclick="toggleRecLeftMenu()"><i
+                            class="fa-solid fa-caret-down"></i></button>
+                </div>
+                <button class="rec-icon-btn"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+
+            <!-- Left Menu -->
+            <div class="rec-left-menu" id="recLeftMenu">
+                <div class="rec-menu-item">📷 Photo</div>
+                <div class="rec-menu-item">⊞ Layout</div>
+                <div class="rec-menu-item">⏱ Timer</div>
+                <div class="rec-menu-item">🎨 Filters</div>
+                <div class="rec-menu-item">⚡ Speed</div>
+            </div>
+
+            <!-- Right Effects -->
+            <div class="rec-effects-bar">
+                <div class="rec-effect-icon" onclick="toggleEffect('sparkle')">✨</div>
+                <div class="rec-effect-icon" onclick="toggleEffect('mask')">🎭</div>
+                <div class="rec-effect-icon" onclick="toggleEffect('ghost')">👻</div>
+                <div class="rec-effect-icon" onclick="toggleEffect('star')">🌟</div>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="rec-bottom-controls">
+                <div class="rec-control-row">
+                    <button class="rec-control-btn">
+                        <div class="rec-control-icon">✨</div>
+                        <div class="rec-control-label">Effects</div>
+                    </button>
+                    <button class="rec-control-btn">
+                        <div class="rec-control-icon">⏱</div>
+                        <div class="rec-control-label">15s</div>
+                    </button>
+                    <button class="rec-control-btn">
+                        <div class="rec-control-icon">+</div>
+                        <div class="rec-control-label">Add video</div>
+                    </button>
+                </div>
+
+                <div class="rec-record-btn-wrapper">
+                    <button class="rec-record-btn" onclick="startRecording()"></button>
+                </div>
+
+                <div class="rec-mode-tabs">
+                    <button class="rec-mode-tab active" onclick="switchRecMode('video'); return false;">Video</button>
+                    <button class="rec-mode-tab" onclick="switchRecMode('photo'); return false;">Photo</button>
+                    <button class="rec-mode-tab" onclick="switchRecMode('text'); return false;">Text</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: RECORDING -->
+        <div id="screen2" class="recording-screen">
+            <div class="camera-preview">📹 Recording...</div>
+
+            <!-- Top Bar -->
+            <div class="rec-top-bar">
+                <button class="rec-icon-btn" onclick="backToScreen1()"><i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+
+            <!-- Recording Indicator -->
+            <div class="rec-recording-indicator">
+                <div class="rec-rec-dot"></div>
+                <span id="recTimer">0:05</span>
+            </div>
+
+            <!-- Recording Controls -->
+            <div class="rec-recording-controls">
+                <button class="rec-recording-btn" onclick="cancelRecording()">✕</button>
+                <button class="rec-recording-btn stop" onclick="stopRecording()"></button>
+                <button class="rec-recording-btn" onclick="acceptRecording()">✓</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: VIDEO EDIT -->
+        <div id="screen3" class="recording-screen">
+            <div class="camera-preview">▶ Video Preview</div>
+
+            <!-- Top Bar -->
+            <div class="rec-top-bar">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="rec-icon-btn" onclick="backToScreen2()"><i
+                            class="fa-solid fa-arrow-left"></i></button>
+                    <button class="rec-icon-btn" onclick="toggleRecEditMenu()"><i
+                            class="fa-solid fa-caret-down"></i></button>
+                </div>
+            </div>
+
+            <!-- Left Menu -->
+            <div class="rec-left-menu" id="recEditMenu">
+                <div class="rec-menu-item">📝 Text</div>
+                <div class="rec-menu-item">✂ Trim</div>
+                <div class="rec-menu-item">✨ Effects</div>
+                <div class="rec-menu-item">📐 Templates</div>
+                <div class="rec-menu-item">✏ Edit</div>
+            </div>
+
+            <!-- Edit Controls -->
+            <div class="rec-edit-controls">
+                <button class="rec-add-sound-btn"
+                    onclick="showToastRecording('🎵 Add Sound feature coming soon', 'info', '♪')">
+                    🎵 Add Sound
+                </button>
+                <button class="rec-action-btn post" style="width: 100%;" onclick="goToPostSettings()">Continue</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: PHOTO MODE -->
+        <div id="screen5" class="recording-screen">
+            <div class="camera-preview">📷 Photo Camera Preview</div>
+            <div class="rec-top-bar">
+                <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
+                <button class="rec-icon-btn" onclick="toggleRecLeftMenu()">☰</button>
+                <button class="rec-icon-btn" onclick="">🔄</button>
+            </div>
+            <div class="rec-left-menu" id="recPhotoLeftMenu">
+                <div class="rec-menu-item">⚡ Flash</div>
+                <div class="rec-menu-item">⏱ Timer</div>
+                <div class="rec-menu-item">🎨 Filters</div>
+                <div class="rec-menu-item">⊞ Grid</div>
+                <div class="rec-menu-item">📐 Ratio</div>
+            </div>
+            <div class="rec-effects-bar">
+                <div class="rec-effect-icon" onclick="toggleEffect('sparkle')">✨</div>
+                <div class="rec-effect-icon" onclick="toggleEffect('mask')">🎭</div>
+                <div class="rec-effect-icon" onclick="toggleEffect('ghost')">👻</div>
+                <div class="rec-effect-icon" onclick="toggleEffect('star')">🌟</div>
+            </div>
+            <div class="rec-bottom-controls" style="justify-content: space-around;">
+                <button class="rec-control-btn">
+                    <div class="rec-control-icon">🖼️</div>
+                    <div class="rec-control-label">Gallery</div>
+                </button>
+                <button class="rec-control-btn" onclick="capturePhoto()">
+                    <div
+                        style="width: 80px; height: 80px; border-radius: 50%; border: 5px solid #fff; display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 100%; height: 100%; border-radius: 50%; background: #fff;"></div>
+                    </div>
+                </button>
+                <button class="rec-control-btn">
+                    <div class="rec-control-icon">📹</div>
+                    <div class="rec-control-label">Video</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 6: PHOTO EDIT -->
+        <div id="screen6" class="recording-screen">
+            <div class="camera-preview">🖼️ Photo Preview</div>
+            <div class="rec-top-bar">
+                <button class="rec-icon-btn" onclick="backToScreen5()">←</button>
+                <button class="rec-icon-btn" onclick="toggleRecPhotoEditMenu()">☰</button>
+            </div>
+            <div class="rec-left-menu" id="recPhotoEditMenu">
+                <div class="rec-menu-item">📝 Text</div>
+                <div class="rec-menu-item">✂ Crop</div>
+                <div class="rec-menu-item">✨ Effects</div>
+                <div class="rec-menu-item">🎨 Filters</div>
+                <div class="rec-menu-item">✏ Draw</div>
+            </div>
+            <div class="rec-edit-controls">
+                <button class="rec-add-sound-btn"
+                    onclick="showToastRecording('🎵 Add Sound feature coming soon', 'info', '♪')">🎵 Add Sound</button>
+                <button class="rec-action-btn post" onclick="goToPhotoPostSettings()">Continue</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 7: PHOTO POST SETTINGS -->
+        <div id="screen7" class="recording-screen">
+            <div class="rec-post-header">
+                <button class="rec-icon-btn" onclick="backToScreen6()">←</button>
+                <h2 style="color: #fff; margin: 0;">Post Photo</h2>
+                <div></div>
+            </div>
+            <div class="rec-post-content">
+                <div class="rec-post-section">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="rec-section-header" style="margin: 0;">Caption</div>
+                        <span id="photoCaptionCounter" style="color: #999; font-size: 12px;">0/300</span>
+                    </div>
+                    <textarea class="rec-caption-input" id="photoCaption" placeholder="Add a caption..." maxlength="300"
+                        oninput="updatePhotoCaptionCounter()"></textarea>
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header"># Hashtags</div>
+                    <input type="text" class="rec-input-field" placeholder="Add hashtags">
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header">@ Tags</div>
+                    <input type="text" class="rec-input-field" placeholder="Tag people">
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header">👁️ Privacy</div>
+                    <select class="rec-input-field">
+                        <option>Everyone</option>
+                        <option>Friends</option>
+                        <option>Only me</option>
+                    </select>
+                </div>
+            </div>
+            <div class="rec-post-actions">
+                <button class="rec-action-btn draft" onclick="saveDraftPhoto()">Draft</button>
+                <button class="rec-action-btn story" onclick="postPhotoStory()">Your Story</button>
+                <button class="rec-action-btn post" onclick="publishPhotoPost()">Post</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 8: TEXT MODE -->
+        <div id="screen8" class="recording-screen">
+            <div class="rec-text-editor-container">
+            <!-- Color Picker Bar -->
+            <div class="rec-color-picker-bar">
+                <div class="rec-color-option active"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="changeTextBg(this)">
+                </div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: #000;" onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: #fff;" onclick="changeTextBg(this)"></div>
+            </div>
+
+            <div class="rec-top-bar">
+                <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
+                <button class="rec-icon-btn" onclick="closeRecordingUI()">✕</button>
+            </div>
+            
+ <!-- Text Input Area -->
+            <div class="text-canvas" id="textEditorBg">
+                <textarea class="rec-text-input" id="textInput" placeholder="Type something..." maxlength="500"></textarea>
+            </div>
+            <!-- Text Formatting Tools -->
+            <div class="rec-text-tools">
+                <button class="rec-text-tool-btn" onclick="changeTextAlign('left')"><i
+                        class="fa-solid fa-align-left"></i></button>
+                <button class="rec-text-tool-btn active" onclick="changeTextAlign('center')"><i
+                        class="fa-solid fa-align-center"></i></button>
+                <button class="rec-text-tool-btn" onclick="changeTextAlign('right')"><i
+                        class="fa-solid fa-align-right"></i></button>
+                <button class="rec-text-tool-btn" onclick="toggleBold()"><i class="fa-solid fa-bold"></i></button>
+                <button class="rec-text-tool-btn" onclick="changeTextColor()"><i
+                        class="fa-solid fa-palette"></i></button>
+            </div>
+
+            <div style="position: absolute; bottom: 40px; right: 20px;">
+                <button onclick="goToTextPostSettings()"
+                    style="width: 60px; height: 60px; border-radius: 50%; background: #ff0050; border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">→</button>
+            </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 9: TEXT POST SETTINGS -->
+        <div id="screen9" class="recording-screen">
+            <div class="rec-post-header">
+                <button class="rec-icon-btn" onclick="backToScreen8()">←</button>
+                <h2 style="color: #fff; margin: 0;">Post Text</h2>
+                <div></div>
+            </div>
+            <div class="rec-post-content">
+                <!-- Text Preview Thumbnail -->
+            <div class="post-preview">
+                <div class="rec-text-preview-thumbnail" id="textPreview">
+                    <span>Your Text</span>
+                </div>
+            </div>
+                <div class="rec-post-section">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="rec-section-header" style="margin: 0;">Caption</div>
+                        <span id="textPostCaptionCounter" style="color: #999; font-size: 12px;">0/300</span>
+                    </div>
+                    <textarea class="rec-caption-input" id="textPostCaption" placeholder="Add a caption..."
+                        maxlength="300" oninput="updateTextPostCaptionCounter()"></textarea>
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header"># Hashtags</div>
+                    <input type="text" class="rec-input-field" placeholder="Add hashtags">
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header">@ Tags</div>
+                    <input type="text" class="rec-input-field" placeholder="Tag people">
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header">👁️ Privacy</div>
+                    <select class="rec-input-field">
+                        <option>Everyone</option>
+                        <option>Friends</option>
+                        <option>Only me</option>
+                    </select>
+                </div>
+            
+            <!-- Allow Comments -->
+            <div class="post-section toggle-section">
+                <div class="section-header">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>Allow comments</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+    <div class="rec-post-section toggle-section">
+                    <div class="rec-section-header">💬 Allow Comments</div>
+                    <label class="rec-toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="rec-toggle-slider"></span>
+                    </label>
+                </div>
+                
+            </div>
+
+            <div class="rec-post-actions">
+                <button class="rec-action-btn draft" onclick="saveDraftText()">Draft</button>
+                <button class="rec-action-btn story" onclick="postTextStory()">Your Story</button>
+                <button class="rec-action-btn post" onclick="publishTextPost()">Post</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: POST SETTINGS -->
+        <div id="screen4" class="recording-screen">
+            <div class="rec-post-header">
+                <button class="rec-icon-btn" onclick="backToScreen3()">←</button>
+                <h2 style="color: #fff; margin: 0;">Post</h2>
+                <div></div>
+            </div>
+            <div class="rec-post-content">
+                <div class="rec-post-section">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="rec-section-header" style="margin: 0;">Caption</div>
+                        <span id="captionCounter" style="color: #999; font-size: 12px;">0/300</span>
+                    </div>
+                    <textarea class="rec-caption-input" id="recCaption" placeholder="Add a caption..." maxlength="300"
+                        oninput="updateCaptionCounter()"></textarea>
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header"># Hashtags</div>
+                    <input type="text" class="rec-input-field" placeholder="Add hashtags">
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header">@ Tags</div>
+                    <input type="text" class="rec-input-field" placeholder="Tag people">
+                </div>
+                <div class="rec-post-section">
+                    <div class="rec-section-header">👁️ Privacy</div>
+                    <select class="rec-input-field">
+                        <option>Everyone</option>
+                        <option>Friends</option>
+                        <option>Only me</option>
+                    </select>
+                </div>
+                <div class="rec-post-section toggle-section">
+                    <div class="rec-section-header">💬 Allow Comments</div>
+                    <label class="rec-toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="rec-toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="rec-post-section toggle-section">
+                    <div class="rec-section-header">👥 Allow Duet</div>
+                    <label class="rec-toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="rec-toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="rec-post-section toggle-section">
+                    <div class="rec-section-header">✂️ Allow Stitch</div>
+                    <label class="rec-toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="rec-toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="rec-post-section toggle-section">
+                    <div class="rec-section-header">🎵 Allow Sound Reuse</div>
+                    <label class="rec-toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="rec-toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="rec-post-section toggle-section">
+                    <div class="rec-section-header">⬇️ Allow Download</div>
+                    <label class="rec-toggle-switch">
+                        <input type="checkbox">
+                        <span class="rec-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="rec-post-actions">
+                <button class="rec-action-btn draft" onclick="saveDraftRecording()">Draft</button>
+                <button class="rec-action-btn story" onclick="postStory()">Your Story</button>
+                <button class="rec-action-btn post" onclick="publishRecordingPost()">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Effects Popup -->
+    <div class="rec-popup" id="effectsPopup">
+        <button class="rec-popup-close" onclick="closeRecPopup('effectsPopup')">✕</button>
+        <div class="rec-popup-header">
+            <button class="rec-popup-tab active">Trending</button>
+            <button class="rec-popup-tab">New</button>
+            <button class="rec-popup-tab">Favorites</button>
+        </div>
+        <div class="rec-popup-content">
+            <div class="rec-popup-item">✨</div>
+            <div class="rec-popup-item">🎭</div>
+            <div class="rec-popup-item">👻</div>
+            <div class="rec-popup-item">🌟</div>
+            <div class="rec-popup-item">💫</div>
+            <div class="rec-popup-item">🎨</div>
+            <div class="rec-popup-item">🔥</div>
+            <div class="rec-popup-item">❤</div>
+        </div>
+    </div>
+
+    <!-- Sound Popup -->
+    <div class="rec-popup" id="soundPopup">
+        <button class="rec-popup-close" onclick="closeRecPopup('soundPopup')">✕</button>
+        <div class="rec-popup-header">
+            <button class="rec-popup-tab active">Sounds</button>
+            <button class="rec-popup-tab">Your Sounds</button>
+        </div>
+        <div class="rec-popup-content">
+            <div class="rec-popup-item">🎵</div>
+            <div class="rec-popup-item">🎶</div>
+            <div class="rec-popup-item">🎼</div>
+            <div class="rec-popup-item">🎹</div>
+            <div class="rec-popup-item">🎸</div>
+            <div class="rec-popup-item">🥁</div>
+            <div class="rec-popup-item">🎺</div>
+            <div class="rec-popup-item">🎻</div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS PAGE -->
+    <div id="notificationsOverlay" class="notifications-overlay">
+        <div class="notifications-header">
+            <h2>Notifications</h2>
+            <button class="notifications-close-btn" onclick="closeNotifications()">✕</button>
+        </div>
+        <div class="notifications-container" id="notificationsContainer">
+            <!-- Notifications will be populated here -->
+        </div>
+    </div>
 
     <!-- The rest remains the same (friendTab and poseTab) --><!-- Tab Content Containers -->
     <div id="busTab" class="tab-content active">
@@ -5712,6 +7196,675 @@
         });
 
 
+        // ====== MODAL/DIALOG SYSTEM ======
+        let dialogCallback = null;
+
+        function showDialog(title, message, onConfirm) {
+            document.getElementById('dialogTitle').textContent = title;
+            document.getElementById('dialogMessage').textContent = message;
+            document.getElementById('modalOverlay').classList.add('show');
+            dialogCallback = onConfirm;
+        }
+
+        function hideDialog() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            dialogCallback = null;
+        }
+
+        document.getElementById('dialogCancel').addEventListener('click', hideDialog);
+        document.getElementById('dialogConfirm').addEventListener('click', () => {
+            if (dialogCallback) dialogCallback();
+            hideDialog();
+        });
+
+        // Close dialog when clicking overlay
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modalOverlay') hideDialog();
+        });
+
+        // ====== TOAST NOTIFICATION SYSTEM ======
+        function showToastRecording(message, type = 'info', icon = '✓') {
+            const toast = document.getElementById('recordingToast') || document.getElementById('toast');
+            const toastIcon = document.getElementById('recordingToastIcon') || document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('recordingToastMessage') || document.getElementById('toastMessage');
+
+            if (!toast || !toastIcon || !toastMessage) return;
+
+            // Reset classes
+            toast.className = 'recording-toast';
+
+            // Set content
+            toastIcon.textContent = icon;
+            toastMessage.textContent = message;
+
+            // Add type class
+            if (type) toast.classList.add(type);
+
+            // Show toast
+            toast.classList.add('show');
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ====== RECORDING UI FUNCTIONS ======
+        // Recording state
+        let recordingUIState = {
+            currentScreen: 1,
+            isRecording: false,
+            recordingTime: 0,
+            caption: '',
+            videoBlob: null,
+            mediaRecorder: null,
+            recordedChunks: [],
+            stream: null,
+            selectedEffect: null,
+            captionLength: 0
+        };
+
+        function openRecordingUI() {
+            const overlay = document.getElementById('recordingUIOverlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Show screen 1
+            showRecordingScreen(1);
+        }
+
+        function closeRecordingUI() {
+            const overlay = document.getElementById('recordingUIOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            // Reset state
+            recordingUIState = {
+                currentScreen: 1,
+                isRecording: false,
+                recordingTime: 0,
+                caption: '',
+                videoBlob: null
+            };
+        }
+
+        function showRecordingScreen(screenNum) {
+            // Hide all screens
+            document.querySelectorAll('.recording-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            // Show selected screen
+            const screen = document.getElementById(`screen${screenNum}`);
+            if (screen) {
+                screen.classList.add('active');
+                recordingUIState.currentScreen = screenNum;
+            }
+        }
+
+        function toggleRecLeftMenu() {
+            const menu = document.getElementById('recLeftMenu');
+            menu.classList.toggle('show');
+        }
+
+        function toggleRecEditMenu() {
+            const menu = document.getElementById('recEditMenu');
+            menu.classList.toggle('show');
+        }
+
+        function switchRecMode(mode) {
+            // Update active tab
+            document.querySelectorAll('.rec-mode-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (mode === 'photo') {
+                showRecordingScreen(5);
+            } else if (mode === 'text') {
+                showRecordingScreen(8);
+            } else if (mode === 'video') {
+                showRecordingScreen(1);
+            }
+        }
+
+        function toggleEffect(effectName) {
+            const preview = document.querySelector('#screen1 .camera-preview');
+            const effectClass = `effect-${effectName}`;
+
+            // Remove all effect classes
+            preview.classList.remove('effect-sparkle', 'effect-mask', 'effect-ghost', 'effect-star');
+
+            // Add selected effect (toggle off if same effect clicked)
+            if (recordingUIState.selectedEffect !== effectName) {
+                preview.classList.add(effectClass);
+                recordingUIState.selectedEffect = effectName;
+            } else {
+                recordingUIState.selectedEffect = null;
+            }
+        }
+
+        async function startRecording() {
+            try {
+                showRecordingScreen(2);
+
+                // Request camera access
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user' },
+                    audio: true
+                });
+
+                recordingUIState.stream = stream;
+                recordingUIState.isRecording = true;
+                recordingUIState.recordedChunks = [];
+
+                // Create MediaRecorder
+                const mediaRecorder = new MediaRecorder(stream);
+                recordingUIState.mediaRecorder = mediaRecorder;
+
+                mediaRecorder.ondataavailable = (event) => {
+                    recordingUIState.recordedChunks.push(event.data);
+                };
+
+                mediaRecorder.start();
+                startRecordingTimer();
+
+            } catch (error) {
+                console.error('Camera access denied:', error);
+                alert('❌ Camera access denied. Please allow camera permissions.');
+                showRecordingScreen(1);
+            }
+        }
+
+        function startRecordingTimer() {
+            let seconds = 300; // 5 minutes max
+            const timerEl = document.getElementById('recTimer');
+
+            const interval = setInterval(() => {
+                seconds--;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    acceptRecording();
+                }
+            }, 1000);
+
+            // Store interval ID for cleanup
+            recordingUIState.timerInterval = interval;
+        }
+
+        function cancelRecording() {
+            if (confirm('❌ Cancel recording? You will lose this clip.')) {
+                stopMediaRecorder();
+                recordingUIState.isRecording = false;
+                recordingUIState.recordedChunks = [];
+                showRecordingScreen(1);
+            }
+        }
+
+        function stopRecording() {
+            if (recordingUIState.mediaRecorder && recordingUIState.isRecording) {
+                recordingUIState.mediaRecorder.pause();
+                recordingUIState.isRecording = false;
+                console.log('Recording paused');
+            }
+        }
+
+        function acceptRecording() {
+            if (recordingUIState.mediaRecorder && recordingUIState.mediaRecorder.state !== 'inactive') {
+                recordingUIState.mediaRecorder.stop();
+                clearInterval(recordingUIState.timerInterval);
+
+                // Wait for final ondataavailable event
+                recordingUIState.mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordingUIState.recordedChunks, { type: 'video/webm' });
+                    recordingUIState.videoBlob = blob;
+                    stopMediaRecorder();
+                    showRecordingScreen(3);
+                };
+            }
+        }
+
+        function stopMediaRecorder() {
+            if (recordingUIState.stream) {
+                recordingUIState.stream.getTracks().forEach(track => track.stop());
+                recordingUIState.stream = null;
+            }
+        }
+
+        // Toast Notification System for Recording UI
+        function showToastRecording(message, type = 'info', icon = '✓') {
+            const toast = document.getElementById('recordingToast');
+            const toastIcon = document.getElementById('recordingToastIcon');
+            const toastMessage = document.getElementById('recordingToastMessage');
+
+            // Reset classes
+            toast.className = 'recording-toast';
+
+            // Set content
+            toastIcon.textContent = icon;
+            toastMessage.textContent = message;
+
+            // Add type class
+            if (type) toast.classList.add(type);
+
+            // Show toast
+            toast.classList.add('show');
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateCaptionCounter() {
+            const captionInput = document.getElementById('recCaption');
+            const counter = document.getElementById('captionCounter');
+            const length = captionInput.value.length;
+            counter.textContent = `${length}/300`;
+
+            // Change color when approaching limit
+            if (length > 250) {
+                counter.style.color = '#ff6b6b';
+            } else if (length > 200) {
+                counter.style.color = '#ffa500';
+            } else {
+                counter.style.color = '#999';
+            }
+        }
+
+        function updatePhotoCaptionCounter() {
+            const captionInput = document.getElementById('photoCaption');
+            const counter = document.getElementById('photoCaptionCounter');
+            const length = captionInput.value.length;
+            counter.textContent = `${length}/300`;
+
+            if (length > 250) {
+                counter.style.color = '#ff6b6b';
+            } else if (length > 200) {
+                counter.style.color = '#ffa500';
+            } else {
+                counter.style.color = '#999';
+            }
+        }
+
+        function updateTextPostCaptionCounter() {
+            const captionInput = document.getElementById('textPostCaption');
+            const counter = document.getElementById('textPostCaptionCounter');
+            const length = captionInput.value.length;
+            counter.textContent = `${length}/300`;
+
+            if (length > 250) {
+                counter.style.color = '#ff6b6b';
+            } else if (length > 200) {
+                counter.style.color = '#ffa500';
+            } else {
+                counter.style.color = '#999';
+            }
+        }
+
+        // Photo mode functions
+        function backToScreen5() {
+            showRecordingScreen(5);
+        }
+
+        function backToScreen6() {
+            showRecordingScreen(6);
+        }
+
+        function capturePhoto() {
+            showRecordingScreen(6);
+        }
+
+        function toggleRecPhotoEditMenu() {
+            const menu = document.getElementById('recPhotoEditMenu');
+            menu.classList.toggle('show');
+        }
+
+        function goToPhotoPostSettings() {
+            showRecordingScreen(7);
+        }
+
+        function saveDraftPhoto() {
+            alert('✅ Photo saved to drafts');
+            closeRecordingUI();
+        }
+
+        function postPhotoStory() {
+            alert('✅ Photo posted to your story');
+            closeRecordingUI();
+        }
+
+        async function publishPhotoPost() {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+
+            try {
+                const caption = document.getElementById('photoCaption').value;
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+
+                if (!userData) {
+                    alert('User profile not found');
+                    return;
+                }
+
+                // Save to photos collection
+                await db.collection('photos').add({
+                    userId: currentUser.uid,
+                    userName: userData.name || '',
+                    username: userData.username || '',
+                    userProfilePic: userData.profilePicUrl || null,
+                    caption: caption,
+                    photoUrl: 'https://via.placeholder.com/400x600',
+                    status: 'posted',
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert('✅ Photo posted successfully!');
+                closeRecordingUI();
+            } catch (error) {
+                console.error('Error posting photo:', error);
+                alert('❌ Failed to post photo: ' + error.message);
+            }
+        }
+
+        // Text mode functions
+        function backToScreen8() {
+            showRecordingScreen(8);
+        }
+
+        function goToTextPostSettings() {
+            const textInput = document.getElementById('textInput').value.trim();
+            if (!textInput) {
+                alert('⚠️ Please type something first');
+                return;
+            }
+            showRecordingScreen(9);
+        }
+
+        function saveDraftText() {
+            alert('✅ Text saved to drafts');
+            closeRecordingUI();
+        }
+
+        function postTextStory() {
+            alert('✅ Text posted to your story');
+            closeRecordingUI();
+        }
+
+        async function publishTextPost() {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+
+            try {
+                const caption = document.getElementById('textPostCaption').value;
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+
+                if (!userData) {
+                    alert('User profile not found');
+                    return;
+                }
+
+                // Save to texts collection
+                await db.collection('texts').add({
+                    userId: currentUser.uid,
+                    userName: userData.name || '',
+                    username: userData.username || '',
+                    userProfilePic: userData.profilePicUrl || null,
+                    caption: caption,
+                    textContent: document.getElementById('textInput').value,
+                    status: 'posted',
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert('✅ Text posted successfully!');
+                closeRecordingUI();
+            } catch (error) {
+                console.error('Error posting text:', error);
+                alert('❌ Failed to post text: ' + error.message);
+            }
+        }
+
+        // Text input character counter
+        document.addEventListener('DOMContentLoaded', function () {
+            const textInput = document.getElementById('textInput');
+            if (textInput) {
+                textInput.addEventListener('input', function () {
+                    const counter = document.getElementById('textCharCount');
+                    counter.textContent = `${this.value.length}/500`;
+
+                    if (this.value.length > 400) {
+                        counter.style.color = '#ff6b6b';
+                    } else if (this.value.length > 300) {
+                        counter.style.color = '#ffa500';
+                    } else {
+                        counter.style.color = '#aaa';
+                    }
+                });
+            }
+        });
+
+        function backToScreen1() {
+            showRecordingScreen(1);
+        }
+
+        function backToScreen3() {
+            showRecordingScreen(3);
+        }
+
+        function goToPostSettings() {
+            showRecordingScreen(4);
+        }
+
+        function saveDraftRecording() {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+
+            const caption = document.getElementById('recCaption').value;
+            alert('✅ Video saved to drafts');
+            closeRecordingUI();
+        }
+
+        function postStory() {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+
+            alert('✅ Posted to your story');
+            closeRecordingUI();
+        }
+
+        async function publishRecordingPost() {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+
+            try {
+                const caption = document.getElementById('recCaption').value;
+
+                if (!caption.trim()) {
+                    alert('⚠️ Please add a caption');
+                    return;
+                }
+
+                if (!recordingUIState.videoBlob) {
+                    alert('❌ No video recorded');
+                    return;
+                }
+
+                // Get user data
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+
+                if (!userData) {
+                    alert('User profile not found');
+                    return;
+                }
+
+                // Upload to Cloudinary
+                alert('⏳ Uploading video...');
+                const formData = new FormData();
+                formData.append('file', recordingUIState.videoBlob, 'recording.webm');
+                formData.append('upload_preset', 'pose_videos');
+
+                const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/drjptwqij/video/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!uploadResponse.ok) {
+                    throw new Error('Cloudinary upload failed');
+                }
+
+                const videoData = await uploadResponse.json();
+                const videoUrl = videoData.secure_url;
+
+                // Save to Firestore
+                const docRef = await db.collection('records').add({
+                    userId: currentUser.uid,
+                    userName: userData.name || '',
+                    username: userData.username || '',
+                    userProfilePic: userData.profilePicUrl || null,
+                    caption: caption,
+                    videoUrl: videoUrl,
+                    status: 'posted',
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert('✅ Video posted successfully!');
+                closeRecordingUI();
+
+            } catch (error) {
+                console.error('Error posting video:', error);
+                alert('❌ Failed to post video: ' + error.message);
+            }
+        }
+
+        // ====== NOTIFICATIONS FUNCTIONS ======
+        // Sample notifications data
+        const mockNotifications = [
+            {
+                id: 1,
+                type: 'like',
+                user: 'Chioma Adeyemi',
+                avatar: '👩',
+                message: 'liked your video',
+                time: '2 mins ago',
+                unread: true
+            },
+            {
+                id: 2,
+                type: 'comment',
+                user: 'Tunde Okafor',
+                avatar: '👨',
+                message: 'commented on your post: "Amazing content! 🔥"',
+                time: '5 mins ago',
+                unread: true
+            },
+            {
+                id: 3,
+                type: 'follow',
+                user: 'Zainab Hassan',
+                avatar: '👩',
+                message: 'started following you',
+                time: '15 mins ago',
+                unread: true
+            },
+            {
+                id: 4,
+                type: 'like',
+                user: 'Amara Okonkwo',
+                avatar: '👩',
+                message: 'liked your exclusive video',
+                time: '1 hour ago',
+                unread: false
+            },
+            {
+                id: 5,
+                type: 'mention',
+                user: 'Adekunle Gold',
+                avatar: '👨',
+                message: 'mentioned you in their post',
+                time: '2 hours ago',
+                unread: false
+            },
+            {
+                id: 6,
+                type: 'follow',
+                user: 'Funke Wilson',
+                avatar: '👩',
+                message: 'started following you',
+                time: '3 hours ago',
+                unread: false
+            }
+        ];
+
+        function openNotifications() {
+            const overlay = document.getElementById('notificationsOverlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderNotifications();
+        }
+
+        function closeNotifications() {
+            const overlay = document.getElementById('notificationsOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notificationsContainer');
+
+            if (mockNotifications.length === 0) {
+                container.innerHTML = `
+                    <div class="notifications-empty">
+                        <div class="notifications-empty-icon">🔔</div>
+                        <div class="notifications-empty-text">No notifications yet</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = mockNotifications.map(notif => `
+                <div class="notification-item" onclick="handleNotificationClick(${notif.id})">
+                    <div class="notification-avatar">${notif.avatar}</div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notif.user}</div>
+                        <div class="notification-message">${notif.message}</div>
+                        <div class="notification-time">${notif.time}</div>
+                    </div>
+                    ${notif.unread ? '<div class="notification-badge"></div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function handleNotificationClick(notifId) {
+            const notif = mockNotifications.find(n => n.id === notifId);
+            if (notif) {
+                notif.unread = false;
+                renderNotifications();
+                // You can navigate to relevant post/profile here
+                console.log('Notification clicked:', notif);
+            }
+        }
+
         // Open Upload Page
         function openUploadPage() {
             document.getElementById('uploadPage').classList.add('active');
@@ -6663,6 +8816,179 @@
                 }
             } // End performUpload function
         };
+
+        // ====== NEW TEXT FORMATTING FUNCTIONS ======
+        function changeTextBg(element) {
+            const bgColor = element.style.background;
+            const textEditorBg = document.getElementById('textEditorBg');
+            textEditorBg.style.background = bgColor;
+
+            // Update active state
+            document.querySelectorAll('.rec-color-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        function changeTextAlign(align) {
+            const textInput = document.getElementById('textInput');
+            textInput.style.textAlign = align;
+
+            // Update button active state
+            document.querySelectorAll('.rec-text-tool-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.rec-text-tool-btn').classList.add('active');
+        }
+
+        function toggleBold() {
+            const textInput = document.getElementById('textInput');
+            const btn = event.target.closest('.rec-text-tool-btn');
+
+            if (textInput.style.fontWeight === '600' || textInput.style.fontWeight === 'bold') {
+                textInput.style.fontWeight = '400';
+                btn.classList.remove('active');
+            } else {
+                textInput.style.fontWeight = '700';
+                btn.classList.add('active');
+            }
+        }
+
+        function changeTextColor() {
+            const textInput = document.getElementById('textInput');
+            const colorPicker = document.createElement('input');
+            colorPicker.type = 'color';
+            colorPicker.value = '#ffffff';
+            colorPicker.onchange = function () {
+                textInput.style.color = this.value;
+            };
+            colorPicker.click();
+        }
+
+        // ====== POPUP FUNCTIONS ======
+        function showEffectsPopup() {
+            const popup = document.getElementById('effectsPopup');
+            popup.classList.add('active');
+        }
+
+        function showSoundPopup() {
+            const popup = document.getElementById('soundPopup');
+            popup.classList.add('active');
+        }
+
+        function closeRecPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.classList.remove('active');
+        }
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function (event) {
+            const popups = document.querySelectorAll('.rec-popup.active');
+            popups.forEach(popup => {
+                if (!popup.contains(event.target) && event.target.closest('.rec-effect-icon') === null && event.target.closest('.rec-add-sound-btn') === null) {
+                    popup.classList.remove('active');
+                }
+            });
+        });
+
+        // ====== PHOTO MODE FUNCTIONS ======
+        function backToScreen1() {
+            showRecordingScreen(1);
+        }
+
+        function backToScreen2() {
+            showRecordingScreen(2);
+        }
+
+        function backToScreen5() {
+            showRecordingScreen(5);
+        }
+
+        function backToScreen6() {
+            showRecordingScreen(6);
+        }
+
+        function backToScreen8() {
+            showRecordingScreen(8);
+        }
+
+        function capturePhoto() {
+            showRecordingScreen(6);
+            showToastRecording('📷 Photo captured!', 'success', '✓');
+        }
+
+        function goToPhotoPostSettings() {
+            showRecordingScreen(7);
+        }
+
+        function toggleRecPhotoEditMenu() {
+            const menu = document.getElementById('recPhotoEditMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+
+        async function publishPhotoPost() {
+            if (!currentUser) {
+                showToastRecording('Please login first', 'error', '⚠️');
+                return;
+            }
+            showToastRecording('✓ Photo posted successfully!', 'success', '✨');
+            closeRecordingUI();
+        }
+
+        async function saveDraftPhoto() {
+            if (!currentUser) {
+                showToastRecording('Please login first', 'error', '⚠️');
+                return;
+            }
+            showToastRecording('💾 Photo saved to drafts!', 'success', '✓');
+            closeRecordingUI();
+        }
+
+        async function postPhotoStory() {
+            if (!currentUser) {
+                showToastRecording('Please login first', 'error', '⚠️');
+                return;
+            }
+            showToastRecording('📖 Posted to your story!', 'success', '🎉');
+            closeRecordingUI();
+        }
+
+
+
+              
+
+        function updateTextPostCaptionCounter() {
+            const captionInput = document.getElementById('textPostCaption');
+            const counter = document.getElementById('textPostCaptionCounter');
+            if (captionInput && counter) {
+                const length = captionInput.value.length;
+                counter.textContent = `${length}/300`;
+            }
+        }
+
+        function updatePhotoCaptionCounter() {
+            const captionInput = document.getElementById('photoCaption');
+            const counter = document.getElementById('photoCaptionCounter');
+            if (captionInput && counter) {
+                const length = captionInput.value.length;
+                counter.textContent = `${length}/300`;
+            }
+        }
+
+
+        function updateCaptionCounter() {
+            const captionInput = document.getElementById('recCaption');
+            const counter = document.getElementById('captionCounter');
+            if (captionInput && counter) {
+                const length = captionInput.value.length;
+                counter.textContent = `${length}/300`;
+            }
+        }
+
+        function toggleRecPhotoEditMenu() {
+            const menu = document.getElementById('recPhotoEditMenu');
+            if (menu) menu.classList.toggle('show');
+        }
 
     </script>
 </body>
