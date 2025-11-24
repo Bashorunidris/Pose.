@@ -7196,675 +7196,6 @@
         });
 
 
-        // ====== MODAL/DIALOG SYSTEM ======
-        let dialogCallback = null;
-
-        function showDialog(title, message, onConfirm) {
-            document.getElementById('dialogTitle').textContent = title;
-            document.getElementById('dialogMessage').textContent = message;
-            document.getElementById('modalOverlay').classList.add('show');
-            dialogCallback = onConfirm;
-        }
-
-        function hideDialog() {
-            document.getElementById('modalOverlay').classList.remove('show');
-            dialogCallback = null;
-        }
-
-        document.getElementById('dialogCancel').addEventListener('click', hideDialog);
-        document.getElementById('dialogConfirm').addEventListener('click', () => {
-            if (dialogCallback) dialogCallback();
-            hideDialog();
-        });
-
-        // Close dialog when clicking overlay
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target.id === 'modalOverlay') hideDialog();
-        });
-
-        // ====== TOAST NOTIFICATION SYSTEM ======
-        function showToastRecording(message, type = 'info', icon = '✓') {
-            const toast = document.getElementById('recordingToast') || document.getElementById('toast');
-            const toastIcon = document.getElementById('recordingToastIcon') || document.getElementById('toastIcon');
-            const toastMessage = document.getElementById('recordingToastMessage') || document.getElementById('toastMessage');
-
-            if (!toast || !toastIcon || !toastMessage) return;
-
-            // Reset classes
-            toast.className = 'recording-toast';
-
-            // Set content
-            toastIcon.textContent = icon;
-            toastMessage.textContent = message;
-
-            // Add type class
-            if (type) toast.classList.add(type);
-
-            // Show toast
-            toast.classList.add('show');
-
-            // Hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // ====== RECORDING UI FUNCTIONS ======
-        // Recording state
-        let recordingUIState = {
-            currentScreen: 1,
-            isRecording: false,
-            recordingTime: 0,
-            caption: '',
-            videoBlob: null,
-            mediaRecorder: null,
-            recordedChunks: [],
-            stream: null,
-            selectedEffect: null,
-            captionLength: 0
-        };
-
-        function openRecordingUI() {
-            const overlay = document.getElementById('recordingUIOverlay');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            // Show screen 1
-            showRecordingScreen(1);
-        }
-
-        function closeRecordingUI() {
-            const overlay = document.getElementById('recordingUIOverlay');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-            // Reset state
-            recordingUIState = {
-                currentScreen: 1,
-                isRecording: false,
-                recordingTime: 0,
-                caption: '',
-                videoBlob: null
-            };
-        }
-
-        function showRecordingScreen(screenNum) {
-            // Hide all screens
-            document.querySelectorAll('.recording-screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            // Show selected screen
-            const screen = document.getElementById(`screen${screenNum}`);
-            if (screen) {
-                screen.classList.add('active');
-                recordingUIState.currentScreen = screenNum;
-            }
-        }
-
-        function toggleRecLeftMenu() {
-            const menu = document.getElementById('recLeftMenu');
-            menu.classList.toggle('show');
-        }
-
-        function toggleRecEditMenu() {
-            const menu = document.getElementById('recEditMenu');
-            menu.classList.toggle('show');
-        }
-
-        function switchRecMode(mode) {
-            // Update active tab
-            document.querySelectorAll('.rec-mode-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (mode === 'photo') {
-                showRecordingScreen(5);
-            } else if (mode === 'text') {
-                showRecordingScreen(8);
-            } else if (mode === 'video') {
-                showRecordingScreen(1);
-            }
-        }
-
-        function toggleEffect(effectName) {
-            const preview = document.querySelector('#screen1 .camera-preview');
-            const effectClass = `effect-${effectName}`;
-
-            // Remove all effect classes
-            preview.classList.remove('effect-sparkle', 'effect-mask', 'effect-ghost', 'effect-star');
-
-            // Add selected effect (toggle off if same effect clicked)
-            if (recordingUIState.selectedEffect !== effectName) {
-                preview.classList.add(effectClass);
-                recordingUIState.selectedEffect = effectName;
-            } else {
-                recordingUIState.selectedEffect = null;
-            }
-        }
-
-        async function startRecording() {
-            try {
-                showRecordingScreen(2);
-
-                // Request camera access
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'user' },
-                    audio: true
-                });
-
-                recordingUIState.stream = stream;
-                recordingUIState.isRecording = true;
-                recordingUIState.recordedChunks = [];
-
-                // Create MediaRecorder
-                const mediaRecorder = new MediaRecorder(stream);
-                recordingUIState.mediaRecorder = mediaRecorder;
-
-                mediaRecorder.ondataavailable = (event) => {
-                    recordingUIState.recordedChunks.push(event.data);
-                };
-
-                mediaRecorder.start();
-                startRecordingTimer();
-
-            } catch (error) {
-                console.error('Camera access denied:', error);
-                alert('❌ Camera access denied. Please allow camera permissions.');
-                showRecordingScreen(1);
-            }
-        }
-
-        function startRecordingTimer() {
-            let seconds = 300; // 5 minutes max
-            const timerEl = document.getElementById('recTimer');
-
-            const interval = setInterval(() => {
-                seconds--;
-                const mins = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-
-                if (seconds <= 0) {
-                    clearInterval(interval);
-                    acceptRecording();
-                }
-            }, 1000);
-
-            // Store interval ID for cleanup
-            recordingUIState.timerInterval = interval;
-        }
-
-        function cancelRecording() {
-            if (confirm('❌ Cancel recording? You will lose this clip.')) {
-                stopMediaRecorder();
-                recordingUIState.isRecording = false;
-                recordingUIState.recordedChunks = [];
-                showRecordingScreen(1);
-            }
-        }
-
-        function stopRecording() {
-            if (recordingUIState.mediaRecorder && recordingUIState.isRecording) {
-                recordingUIState.mediaRecorder.pause();
-                recordingUIState.isRecording = false;
-                console.log('Recording paused');
-            }
-        }
-
-        function acceptRecording() {
-            if (recordingUIState.mediaRecorder && recordingUIState.mediaRecorder.state !== 'inactive') {
-                recordingUIState.mediaRecorder.stop();
-                clearInterval(recordingUIState.timerInterval);
-
-                // Wait for final ondataavailable event
-                recordingUIState.mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordingUIState.recordedChunks, { type: 'video/webm' });
-                    recordingUIState.videoBlob = blob;
-                    stopMediaRecorder();
-                    showRecordingScreen(3);
-                };
-            }
-        }
-
-        function stopMediaRecorder() {
-            if (recordingUIState.stream) {
-                recordingUIState.stream.getTracks().forEach(track => track.stop());
-                recordingUIState.stream = null;
-            }
-        }
-
-        // Toast Notification System for Recording UI
-        function showToastRecording(message, type = 'info', icon = '✓') {
-            const toast = document.getElementById('recordingToast');
-            const toastIcon = document.getElementById('recordingToastIcon');
-            const toastMessage = document.getElementById('recordingToastMessage');
-
-            // Reset classes
-            toast.className = 'recording-toast';
-
-            // Set content
-            toastIcon.textContent = icon;
-            toastMessage.textContent = message;
-
-            // Add type class
-            if (type) toast.classList.add(type);
-
-            // Show toast
-            toast.classList.add('show');
-
-            // Hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        function updateCaptionCounter() {
-            const captionInput = document.getElementById('recCaption');
-            const counter = document.getElementById('captionCounter');
-            const length = captionInput.value.length;
-            counter.textContent = `${length}/300`;
-
-            // Change color when approaching limit
-            if (length > 250) {
-                counter.style.color = '#ff6b6b';
-            } else if (length > 200) {
-                counter.style.color = '#ffa500';
-            } else {
-                counter.style.color = '#999';
-            }
-        }
-
-        function updatePhotoCaptionCounter() {
-            const captionInput = document.getElementById('photoCaption');
-            const counter = document.getElementById('photoCaptionCounter');
-            const length = captionInput.value.length;
-            counter.textContent = `${length}/300`;
-
-            if (length > 250) {
-                counter.style.color = '#ff6b6b';
-            } else if (length > 200) {
-                counter.style.color = '#ffa500';
-            } else {
-                counter.style.color = '#999';
-            }
-        }
-
-        function updateTextPostCaptionCounter() {
-            const captionInput = document.getElementById('textPostCaption');
-            const counter = document.getElementById('textPostCaptionCounter');
-            const length = captionInput.value.length;
-            counter.textContent = `${length}/300`;
-
-            if (length > 250) {
-                counter.style.color = '#ff6b6b';
-            } else if (length > 200) {
-                counter.style.color = '#ffa500';
-            } else {
-                counter.style.color = '#999';
-            }
-        }
-
-        // Photo mode functions
-        function backToScreen5() {
-            showRecordingScreen(5);
-        }
-
-        function backToScreen6() {
-            showRecordingScreen(6);
-        }
-
-        function capturePhoto() {
-            showRecordingScreen(6);
-        }
-
-        function toggleRecPhotoEditMenu() {
-            const menu = document.getElementById('recPhotoEditMenu');
-            menu.classList.toggle('show');
-        }
-
-        function goToPhotoPostSettings() {
-            showRecordingScreen(7);
-        }
-
-        function saveDraftPhoto() {
-            alert('✅ Photo saved to drafts');
-            closeRecordingUI();
-        }
-
-        function postPhotoStory() {
-            alert('✅ Photo posted to your story');
-            closeRecordingUI();
-        }
-
-        async function publishPhotoPost() {
-            if (!currentUser) {
-                alert('Please login first');
-                return;
-            }
-
-            try {
-                const caption = document.getElementById('photoCaption').value;
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                const userData = userDoc.data();
-
-                if (!userData) {
-                    alert('User profile not found');
-                    return;
-                }
-
-                // Save to photos collection
-                await db.collection('photos').add({
-                    userId: currentUser.uid,
-                    userName: userData.name || '',
-                    username: userData.username || '',
-                    userProfilePic: userData.profilePicUrl || null,
-                    caption: caption,
-                    photoUrl: 'https://via.placeholder.com/400x600',
-                    status: 'posted',
-                    views: 0,
-                    likes: 0,
-                    comments: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert('✅ Photo posted successfully!');
-                closeRecordingUI();
-            } catch (error) {
-                console.error('Error posting photo:', error);
-                alert('❌ Failed to post photo: ' + error.message);
-            }
-        }
-
-        // Text mode functions
-        function backToScreen8() {
-            showRecordingScreen(8);
-        }
-
-        function goToTextPostSettings() {
-            const textInput = document.getElementById('textInput').value.trim();
-            if (!textInput) {
-                alert('⚠️ Please type something first');
-                return;
-            }
-            showRecordingScreen(9);
-        }
-
-        function saveDraftText() {
-            alert('✅ Text saved to drafts');
-            closeRecordingUI();
-        }
-
-        function postTextStory() {
-            alert('✅ Text posted to your story');
-            closeRecordingUI();
-        }
-
-        async function publishTextPost() {
-            if (!currentUser) {
-                alert('Please login first');
-                return;
-            }
-
-            try {
-                const caption = document.getElementById('textPostCaption').value;
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                const userData = userDoc.data();
-
-                if (!userData) {
-                    alert('User profile not found');
-                    return;
-                }
-
-                // Save to texts collection
-                await db.collection('texts').add({
-                    userId: currentUser.uid,
-                    userName: userData.name || '',
-                    username: userData.username || '',
-                    userProfilePic: userData.profilePicUrl || null,
-                    caption: caption,
-                    textContent: document.getElementById('textInput').value,
-                    status: 'posted',
-                    views: 0,
-                    likes: 0,
-                    comments: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert('✅ Text posted successfully!');
-                closeRecordingUI();
-            } catch (error) {
-                console.error('Error posting text:', error);
-                alert('❌ Failed to post text: ' + error.message);
-            }
-        }
-
-        // Text input character counter
-        document.addEventListener('DOMContentLoaded', function () {
-            const textInput = document.getElementById('textInput');
-            if (textInput) {
-                textInput.addEventListener('input', function () {
-                    const counter = document.getElementById('textCharCount');
-                    counter.textContent = `${this.value.length}/500`;
-
-                    if (this.value.length > 400) {
-                        counter.style.color = '#ff6b6b';
-                    } else if (this.value.length > 300) {
-                        counter.style.color = '#ffa500';
-                    } else {
-                        counter.style.color = '#aaa';
-                    }
-                });
-            }
-        });
-
-        function backToScreen1() {
-            showRecordingScreen(1);
-        }
-
-        function backToScreen3() {
-            showRecordingScreen(3);
-        }
-
-        function goToPostSettings() {
-            showRecordingScreen(4);
-        }
-
-        function saveDraftRecording() {
-            if (!currentUser) {
-                alert('Please login first');
-                return;
-            }
-
-            const caption = document.getElementById('recCaption').value;
-            alert('✅ Video saved to drafts');
-            closeRecordingUI();
-        }
-
-        function postStory() {
-            if (!currentUser) {
-                alert('Please login first');
-                return;
-            }
-
-            alert('✅ Posted to your story');
-            closeRecordingUI();
-        }
-
-        async function publishRecordingPost() {
-            if (!currentUser) {
-                alert('Please login first');
-                return;
-            }
-
-            try {
-                const caption = document.getElementById('recCaption').value;
-
-                if (!caption.trim()) {
-                    alert('⚠️ Please add a caption');
-                    return;
-                }
-
-                if (!recordingUIState.videoBlob) {
-                    alert('❌ No video recorded');
-                    return;
-                }
-
-                // Get user data
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                const userData = userDoc.data();
-
-                if (!userData) {
-                    alert('User profile not found');
-                    return;
-                }
-
-                // Upload to Cloudinary
-                alert('⏳ Uploading video...');
-                const formData = new FormData();
-                formData.append('file', recordingUIState.videoBlob, 'recording.webm');
-                formData.append('upload_preset', 'pose_videos');
-
-                const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/drjptwqij/video/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!uploadResponse.ok) {
-                    throw new Error('Cloudinary upload failed');
-                }
-
-                const videoData = await uploadResponse.json();
-                const videoUrl = videoData.secure_url;
-
-                // Save to Firestore
-                const docRef = await db.collection('records').add({
-                    userId: currentUser.uid,
-                    userName: userData.name || '',
-                    username: userData.username || '',
-                    userProfilePic: userData.profilePicUrl || null,
-                    caption: caption,
-                    videoUrl: videoUrl,
-                    status: 'posted',
-                    views: 0,
-                    likes: 0,
-                    comments: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert('✅ Video posted successfully!');
-                closeRecordingUI();
-
-            } catch (error) {
-                console.error('Error posting video:', error);
-                alert('❌ Failed to post video: ' + error.message);
-            }
-        }
-
-        // ====== NOTIFICATIONS FUNCTIONS ======
-        // Sample notifications data
-        const mockNotifications = [
-            {
-                id: 1,
-                type: 'like',
-                user: 'Chioma Adeyemi',
-                avatar: '👩',
-                message: 'liked your video',
-                time: '2 mins ago',
-                unread: true
-            },
-            {
-                id: 2,
-                type: 'comment',
-                user: 'Tunde Okafor',
-                avatar: '👨',
-                message: 'commented on your post: "Amazing content! 🔥"',
-                time: '5 mins ago',
-                unread: true
-            },
-            {
-                id: 3,
-                type: 'follow',
-                user: 'Zainab Hassan',
-                avatar: '👩',
-                message: 'started following you',
-                time: '15 mins ago',
-                unread: true
-            },
-            {
-                id: 4,
-                type: 'like',
-                user: 'Amara Okonkwo',
-                avatar: '👩',
-                message: 'liked your exclusive video',
-                time: '1 hour ago',
-                unread: false
-            },
-            {
-                id: 5,
-                type: 'mention',
-                user: 'Adekunle Gold',
-                avatar: '👨',
-                message: 'mentioned you in their post',
-                time: '2 hours ago',
-                unread: false
-            },
-            {
-                id: 6,
-                type: 'follow',
-                user: 'Funke Wilson',
-                avatar: '👩',
-                message: 'started following you',
-                time: '3 hours ago',
-                unread: false
-            }
-        ];
-
-        function openNotifications() {
-            const overlay = document.getElementById('notificationsOverlay');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            renderNotifications();
-        }
-
-        function closeNotifications() {
-            const overlay = document.getElementById('notificationsOverlay');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function renderNotifications() {
-            const container = document.getElementById('notificationsContainer');
-
-            if (mockNotifications.length === 0) {
-                container.innerHTML = `
-                    <div class="notifications-empty">
-                        <div class="notifications-empty-icon">🔔</div>
-                        <div class="notifications-empty-text">No notifications yet</div>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = mockNotifications.map(notif => `
-                <div class="notification-item" onclick="handleNotificationClick(${notif.id})">
-                    <div class="notification-avatar">${notif.avatar}</div>
-                    <div class="notification-content">
-                        <div class="notification-title">${notif.user}</div>
-                        <div class="notification-message">${notif.message}</div>
-                        <div class="notification-time">${notif.time}</div>
-                    </div>
-                    ${notif.unread ? '<div class="notification-badge"></div>' : ''}
-                </div>
-            `).join('');
-        }
-
-        function handleNotificationClick(notifId) {
-            const notif = mockNotifications.find(n => n.id === notifId);
-            if (notif) {
-                notif.unread = false;
-                renderNotifications();
-                // You can navigate to relevant post/profile here
-                console.log('Notification clicked:', notif);
-            }
-        }
-
         // Open Upload Page
         function openUploadPage() {
             document.getElementById('uploadPage').classList.add('active');
@@ -8817,177 +8148,726 @@
             } // End performUpload function
         };
 
-        // ====== NEW TEXT FORMATTING FUNCTIONS ======
-        function changeTextBg(element) {
-            const bgColor = element.style.background;
-            const textEditorBg = document.getElementById('textEditorBg');
-            textEditorBg.style.background = bgColor;
 
-            // Update active state
-            document.querySelectorAll('.rec-color-option').forEach(opt => {
-                opt.classList.remove('active');
-            });
-            element.classList.add('active');
-        }
 
-        function changeTextAlign(align) {
-            const textInput = document.getElementById('textInput');
-            textInput.style.textAlign = align;
 
-            // Update button active state
-            document.querySelectorAll('.rec-text-tool-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.closest('.rec-text-tool-btn').classList.add('active');
-        }
 
-        function toggleBold() {
-            const textInput = document.getElementById('textInput');
-            const btn = event.target.closest('.rec-text-tool-btn');
+        // ============================================================================
+// RECORDING UI FUNCTIONALITY
+// ============================================================================
 
-            if (textInput.style.fontWeight === '600' || textInput.style.fontWeight === 'bold') {
-                textInput.style.fontWeight = '400';
-                btn.classList.remove('active');
-            } else {
-                textInput.style.fontWeight = '700';
-                btn.classList.add('active');
-            }
-        }
+// State Management
+const recordingUIState = {
+  isRecording: false,
+  recordedBlob: null,
+  recordingStartTime: 0,
+  timerInterval: null,
+  selectedMode: 'video',
+  activeEffects: [],
+  mediaStream: null,
+  mediaRecorder: null,
+  textBgGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  textAlign: 'center',
+  isBold: false,
+  textColor: '#fff'
+};
 
-        function changeTextColor() {
-            const textInput = document.getElementById('textInput');
-            const colorPicker = document.createElement('input');
-            colorPicker.type = 'color';
-            colorPicker.value = '#ffffff';
-            colorPicker.onchange = function () {
-                textInput.style.color = this.value;
-            };
-            colorPicker.click();
-        }
+// ============================================================================
+// SCREEN NAVIGATION
+// ============================================================================
 
-        // ====== POPUP FUNCTIONS ======
-        function showEffectsPopup() {
-            const popup = document.getElementById('effectsPopup');
-            popup.classList.add('active');
-        }
+function showScreen(screenId) {
+  // Hide all screens
+  document.querySelectorAll('.recording-screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+  // Show target screen
+  const targetScreen = document.getElementById(screenId);
+  if (targetScreen) {
+    targetScreen.classList.add('active');
+  }
+}
 
-        function showSoundPopup() {
-            const popup = document.getElementById('soundPopup');
-            popup.classList.add('active');
-        }
+function closeRecordingUI() {
+  const overlay = document.getElementById('recordingUIOverlay');
+  if (overlay) {
+    overlay.style.display = 'none';
+  }
+}
 
-        function closeRecPopup(popupId) {
-            const popup = document.getElementById(popupId);
-            popup.classList.remove('active');
-        }
+function backToScreen1() {
+  showScreen('screen1');
+}
 
-        // Close popup when clicking outside
-        document.addEventListener('click', function (event) {
-            const popups = document.querySelectorAll('.rec-popup.active');
-            popups.forEach(popup => {
-                if (!popup.contains(event.target) && event.target.closest('.rec-effect-icon') === null && event.target.closest('.rec-add-sound-btn') === null) {
-                    popup.classList.remove('active');
-                }
-            });
-        });
+function backToScreen2() {
+  showScreen('screen2');
+}
 
-        // ====== PHOTO MODE FUNCTIONS ======
-        function backToScreen1() {
+function backToScreen3() {
+  showScreen('screen3');
+}
+
+function backToScreen5() {
+  showScreen('screen5');
+}
+
+function backToScreen6() {
+  showScreen('screen6');
+}
+
+function backToScreen8() {
+  showScreen('screen8');
+}
+
+// ============================================================================
+// MENU TOGGLES
+// ============================================================================
+
+function toggleRecLeftMenu() {
+  const menu = document.getElementById('recLeftMenu');
+  if (menu) {
+    menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+  }
+}
+
+function toggleRecEditMenu() {
+  const menu = document.getElementById('recEditMenu');
+  if (menu) {
+    menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+  }
+}
+
+function toggleRecPhotoEditMenu() {
+  const menu = document.getElementById('recPhotoEditMenu');
+  if (menu) {
+    menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+  }
+}
+
+// ============================================================================
+// TOAST NOTIFICATIONS
+// ============================================================================
+
+function showToastRecording(message, type = 'success', icon = '✓') {
+  const toast = document.getElementById('recordingToast');
+  const toastIcon = document.getElementById('recordingToastIcon');
+  const toastMessage = document.getElementById('recordingToastMessage');
+
+  if (toast && toastMessage && toastIcon) {
+    toastIcon.textContent = icon;
+    toastMessage.textContent = message;
+    toast.className = `recording-toast ${type}`;
+    toast.style.display = 'flex';
+
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 3000);
+  }
+}
+
+// ============================================================================
+// VIDEO RECORDING FUNCTIONALITY
+// ============================================================================
+
+function startRecording() {
+  // Request camera access
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+      recordingState.mediaStream = stream;
+      recordingState.mediaRecorder = new MediaRecorder(stream);
+      const chunks = [];
+
+      recordingState.mediaRecorder.ondataavailable = (e) => {
+        chunks.push(e.data);
+      };
+
+      recordingState.mediaRecorder.onstop = () => {
+        recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
+      };
+
+      recordingState.mediaRecorder.start();
+      recordingState.isRecording = true;
+      recordingState.recordingStartTime = Date.now();
+
+      showScreen('screen2');
+      startRecordingTimer();
+      showToastRecording('Recording started', 'success', '⏹');
+    })
+    .catch(err => {
+      showToastRecording('Camera access denied', 'error', '✕');
+      console.error('Error accessing camera:', err);
+    });
+}
+
+function stopRecording() {
+  if (recordingState.mediaRecorder) {
+    recordingState.mediaRecorder.stop();
+    recordingState.isRecording = false;
+    clearInterval(recordingState.timerInterval);
+
+    // Stop all tracks
+    if (recordingState.mediaStream) {
+      recordingState.mediaStream.getTracks().forEach(track => track.stop());
+    }
+
+    showToastRecording('Recording stopped', 'info', '⏹');
+  }
+}
+
+function cancelRecording() {
+  stopRecording();
+  recordingState.recordedBlob = null;
+  showScreen('screen1');
+  showToastRecording('Recording cancelled', 'error', '✕');
+}
+
+function acceptRecording() {
+  showScreen('screen3');
+  showToastRecording('Ready to edit', 'success', '✓');
+}
+
+function startRecordingTimer() {
+  let seconds = 0;
+  recordingState.timerInterval = setInterval(() => {
+    seconds++;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const timerEl = document.getElementById('recTimer');
+    if (timerEl) {
+      timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+  }, 1000);
+}
+
+// ============================================================================
+// MODE SWITCHING
+// ============================================================================
+
+function switchRecMode(mode) {
+  recordingState.selectedMode = mode;
+
+  // Update active tab
+  document.querySelectorAll('.rec-mode-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  if (mode === 'photo') {
+    showScreen('screen5');
+    showToastRecording('Photo mode', 'info', '📷');
+  } else if (mode === 'text') {
+    showScreen('screen8');
+    showToastRecording('Text mode', 'info', '✏️');
+  } else if (mode === 'video') {
+    showScreen('screen1');
+    showToastRecording('Video mode', 'info', '📹');
+  }
+}
+
+// ============================================================================
+// EFFECTS
+// ============================================================================
+
+function toggleEffect(effect) {
+  const index = recordingState.activeEffects.indexOf(effect);
+  if (index > -1) {
+    recordingState.activeEffects.splice(index, 1);
+  } else {
+    recordingState.activeEffects.push(effect);
+  }
+  showToastRecording(`${effect} toggled`, 'info', '✨');
+}
+
+// ============================================================================
+// PHOTO MODE
+// ============================================================================
+
+function capturePhoto() {
+  showScreen('screen6');
+  showToastRecording('Photo captured', 'success', '📷');
+}
+
+function goToPhotoPostSettings() {
+  showScreen('screen7');
+}
+
+// ============================================================================
+// TEXT MODE
+// ============================================================================
+
+function changeTextBg(element) {
+  const bg = window.getComputedStyle(element).background;
+  recordingState.textBgGradient = bg;
+
+  // Update active color
+  document.querySelectorAll('.rec-color-option').forEach(el => {
+    el.classList.remove('active');
+  });
+  element.classList.add('active');
+
+  const textCanvas = document.getElementById('textEditorBg');
+  if (textCanvas) {
+    textCanvas.style.background = bg;
+  }
+}
+
+function changeTextAlign(align) {
+  recordingState.textAlign = align;
+
+  // Update active button
+  document.querySelectorAll('.rec-text-tool-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.closest('.rec-text-tool-btn').classList.add('active');
+
+  const textInput = document.getElementById('textInput');
+  if (textInput) {
+    textInput.style.textAlign = align;
+  }
+}
+
+function toggleBold() {
+  recordingState.isBold = !recordingState.isBold;
+  event.target.closest('.rec-text-tool-btn').classList.toggle('active');
+
+  const textInput = document.getElementById('textInput');
+  if (textInput) {
+    textInput.style.fontWeight = recordingState.isBold ? 'bold' : 'normal';
+  }
+}
+
+function changeTextColor() {
+  const color = prompt('Enter text color (hex or name):', recordingState.textColor);
+  if (color) {
+    recordingState.textColor = color;
+    const textInput = document.getElementById('textInput');
+    if (textInput) {
+      textInput.style.color = color;
+    }
+    showToastRecording('Text color changed', 'success', '🎨');
+  }
+}
+
+function goToTextPostSettings() {
+  const textInput = document.getElementById('textInput');
+  const textPreview = document.getElementById('textPreview');
+
+  if (textPreview && textInput) {
+    textPreview.innerHTML = `<span>${textInput.value || 'Your Text'}</span>`;
+  }
+
+  showScreen('screen9');
+}
+
+// ============================================================================
+// CAPTION COUNTERS
+// ============================================================================
+
+function updateCaptionCounter() {
+  const captionInput = document.getElementById('recCaption');
+  const counter = document.getElementById('captionCounter');
+
+  if (captionInput && counter) {
+    const length = captionInput.value.length;
+    counter.textContent = `${length}/300`;
+  }
+}
+
+function updatePhotoCaptionCounter() {
+  const captionInput = document.getElementById('photoCaption');
+  const counter = document.getElementById('photoCaptionCounter');
+
+  if (captionInput && counter) {
+    const length = captionInput.value.length;
+    counter.textContent = `${length}/300`;
+  }
+}
+
+function updateTextPostCaptionCounter() {
+  const captionInput = document.getElementById('textPostCaption');
+  const counter = document.getElementById('textPostCaptionCounter');
+
+  if (captionInput && counter) {
+    const length = captionInput.value.length;
+    counter.textContent = `${length}/300`;
+  }
+}
+
+// ============================================================================
+// POST SETTINGS NAVIGATION
+// ============================================================================
+
+function goToPostSettings() {
+  showScreen('screen4');
+}
+
+// ============================================================================
+// FIREBASE HELPER FUNCTIONS
+// ============================================================================
+
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function generateDocId() {
+  return `post_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// ============================================================================
+// PUBLISHING & SAVING
+// ============================================================================
+
+function saveDraftRecording() {
+  const caption = document.getElementById('recCaption')?.value || '';
+  const draft = {
+    type: 'video',
+    caption: caption,
+    blob: recordingState.recordedBlob,
+    timestamp: new Date().toISOString()
+  };
+
+  // Save to localStorage
+  let drafts = JSON.parse(localStorage.getItem('recordingDrafts') || '[]');
+  drafts.push(draft);
+  localStorage.setItem('recordingDrafts', JSON.stringify(drafts));
+
+  showToastRecording('Draft saved', 'success', '💾');
+  closeRecordingUI();
+}
+
+function publishRecordingPost() {
+  const caption = document.getElementById('recCaption')?.value || '';
+  const post = {
+    type: 'video',
+    caption: caption,
+    timestamp: new Date().toISOString(),
+    privacy: document.querySelector('select').value
+  };
+
+  console.log('Publishing video post:', post);
+  showToastRecording('Video posted successfully', 'success', '✓');
+  closeRecordingUI();
+}
+
+function postStory() {
+  showToastRecording('Added to your story', 'success', '📖');
+  closeRecordingUI();
+}
+
+function saveDraftPhoto() {
+  const caption = document.getElementById('photoCaption')?.value || '';
+  const draft = {
+    type: 'photo',
+    caption: caption,
+    timestamp: new Date().toISOString()
+  };
+
+  let drafts = JSON.parse(localStorage.getItem('recordingDrafts') || '[]');
+  drafts.push(draft);
+  localStorage.setItem('recordingDrafts', JSON.stringify(drafts));
+
+  showToastRecording('Draft saved', 'success', '💾');
+  closeRecordingUI();
+}
+
+function publishPhotoPost() {
+  const caption = document.getElementById('photoCaption')?.value || '';
+  const post = {
+    type: 'photo',
+    caption: caption,
+    timestamp: new Date().toISOString()
+  };
+
+  console.log('Publishing photo post:', post);
+  showToastRecording('Photo posted successfully', 'success', '✓');
+  closeRecordingUI();
+}
+
+function postPhotoStory() {
+  showToastRecording('Added to your story', 'success', '📖');
+  closeRecordingUI();
+}
+
+async function saveDraftText() {
+  if (!currentUser) {
+    alert('❌ Please login to save drafts');
+    return;
+  }
+
+  const textInput = document.getElementById('textInput')?.value || '';
+  const caption = document.getElementById('textPostCaption')?.value || '';
+
+  if (!textInput.trim()) {
+    alert('⚠️ Please enter some text');
+    return;
+  }
+
+  // Get button reference before async operations
+  const btn = event?.target;
+  const originalText = btn ? btn.textContent : null;
+  if (btn) {
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+  }
+
+  try {
+    const todayDate = getTodayDate();
+    const docId = generateDocId();
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    const userData = userDoc.data();
+
+    const draftData = {
+      id: docId,
+      userId: currentUser.uid,
+      userName: userData?.name || 'Anonymous',
+      username: userData?.username || 'user',
+      userProfilePic: userData?.profilePicUrl || null,
+      textContent: textInput,
+      caption: caption,
+      backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      textAlign: recordingState.textAlign || 'center',
+      isBold: recordingState.isBold || false,
+      textColor: recordingState.textColor || '#fff',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: Date.now(),
+      isDraft: true,
+      type: 'text'
+    };
+
+    await db.collection('textposts').doc(todayDate).collection('drafts').doc(docId).set(draftData);
+
+    console.log(`✅ Draft saved to /textposts/${todayDate}/drafts/${docId}`);
+    showToastRecording('✅ Draft saved', 'success', '💾');
+    
+    setTimeout(() => {
+      if (btn) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+      closeRecordingUI();
+    }, 1000);
+
+  } catch (error) {
+    console.error('❌ Error saving draft:', error);
+    alert('❌ Failed to save draft: ' + error.message);
+    if (btn) {
+      btn.textContent = originalText || 'Draft';
+      btn.disabled = false;
+    }
+  }
+}
+
+async function publishTextPost() {
+  if (!currentUser) {
+    alert('❌ Please login to post');
+    return;
+  }
+
+  const textInput = document.getElementById('textInput')?.value || '';
+  const caption = document.getElementById('textPostCaption')?.value || '';
+  const privacySelect = document.querySelector('select');
+  const privacy = privacySelect ? privacySelect.value : 'Everyone';
+
+  if (!textInput.trim()) {
+    alert('⚠️ Please enter some text');
+    return;
+  }
+
+  try {
+    console.log('🚀 Publishing text post...');
+    // Show TikTok-style countdown
+    showTiktokCountdown(5, async () => {
+      console.log('⏳ Countdown finished, saving to Firebase...');
+      // Show success message 1 second after countdown
+      setTimeout(() => {
+        showUploadResultModal(true, '✅ Posting...', 'Your text is being processed');
+      }, 1000);
+
+      // Save to Firebase
+      await saveTextPostToFirebase(textInput, caption, privacy);
+    });
+  } catch (error) {
+    console.error('❌ Error posting text:', error);
+    if (typeof hideTiktokCountdown !== 'undefined') {
+      hideTiktokCountdown();
+    }
+    alert('❌ Failed to post: ' + error.message);
+  }
+}
+
+async function saveTextPostToFirebase(textInput, caption, privacy) {
+  try {
+    console.log('💾 Saving text post to Firebase...');
+    const todayDate = getTodayDate();
+    const docId = generateDocId();
+    console.log(`📅 Date: ${todayDate}, Doc ID: ${docId}`);
+    
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    const userData = userDoc.data();
+    console.log('👤 User data retrieved:', userData?.name);
+
+    const postData = {
+      id: docId,
+      userId: currentUser.uid,
+      userName: userData?.name || 'Anonymous',
+      username: userData?.username || 'user',
+      userProfilePic: userData?.profilePicUrl || null,
+      textContent: textInput,
+      caption: caption,
+      privacy: privacy,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: Date.now(),
+      type: 'text',
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      textAlign: recordingState.textAlign || 'center',
+      isBold: recordingState.isBold || false,
+      textColor: recordingState.textColor || '#fff'
+    };
+
+    console.log('📝 Saving to /textposts/' + todayDate + '/posts/' + docId);
+    await db.collection('textposts').doc(todayDate).collection('posts').doc(docId).set(postData);
+
+    console.log(`✅ Text post saved: /textposts/${todayDate}/posts/${docId}`);
+    
+    // Update success modal
+    document.getElementById('uploadResultTitle').textContent = '✅ Text Posted!';
+    document.getElementById('uploadResultMessage').textContent = 'Your text was posted successfully!';
+
+    // Reset form after 5 seconds
+    setTimeout(() => {
+      closeUploadResultModal();
+      resetTextTab();
+      closeUploadPage();
+    }, 5000);
+
+  } catch (error) {
+    console.error('❌ Upload error:', error);
+    console.error('Error code:', error.code);
+    console.error('Error message:', error.message);
+    showUploadResultModal(false, '❌ Upload Failed', error.message);
+  }
+}
+
+function resetTextTab() {
+  document.getElementById('textInput').value = '';
+  document.getElementById('textPostCaption').value = '';
+}
+
+async function postTextStory() {
+  if (!currentUser) {
+    alert('❌ Please login to post story');
+    return;
+  }
+
+  const textInput = document.getElementById('textInput')?.value || '';
+
+  if (!textInput.trim()) {
+    alert('⚠️ Please enter some text');
+    return;
+  }
+
+  try {
+    const todayDate = getTodayDate();
+    const docId = generateDocId();
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    const userData = userDoc.data();
+
+    const storyData = {
+      id: docId,
+      userId: currentUser.uid,
+      userName: userData?.name || 'Anonymous',
+      username: userData?.username || 'user',
+      userProfilePic: userData?.profilePicUrl || null,
+      textContent: textInput,
+      backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      textAlign: recordingState.textAlign || 'center',
+      isBold: recordingState.isBold || false,
+      textColor: recordingState.textColor || '#fff',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: Date.now(),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      type: 'text',
+      views: 0
+    };
+
+    await db.collection('stories').doc(todayDate).collection('posts').doc(docId).set(storyData);
+
+    console.log(`✅ Story saved to /stories/${todayDate}/posts/${docId}`);
+    showToastRecording('✅ Added to your story', 'success', '📖');
+    
+    setTimeout(() => {
+      closeRecordingUI();
+    }, 1000);
+
+  } catch (error) {
+    console.error('❌ Error posting to story:', error);
+    showToastRecording('❌ Error posting story', 'error', '✕');
+    alert('Error posting story: ' + error.message);
+  }
+}
+
+// ============================================================================
+// POPUP MANAGEMENT
+// ============================================================================
+
+function closeRecPopup(popupId) {
+  const popup = document.getElementById(popupId);
+  if (popup) {
+    popup.style.display = 'none';
+  }
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Set initial styles
+  const textCanvas = document.getElementById('textEditorBg');
+  if (textCanvas) {
+    textCanvas.style.background = recordingState.textBgGradient;
+  }
+
+  const textInput = document.getElementById('textInput');
+  if (textInput) {
+    textInput.style.textAlign = 'center';
+  }
+
+  // Add event listeners to menu items for demo
+  document.querySelectorAll('.rec-menu-item').forEach(item => {
+    item.addEventListener('click', function() {
+      showToastRecording(`${this.textContent} selected`, 'info', '✓');
+    });
+  });
+});
+
+ function openRecordingUI() {
+            const overlay = document.getElementById('recordingUIOverlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Show screen 1
             showRecordingScreen(1);
         }
 
-        function backToScreen2() {
-            showRecordingScreen(2);
-        }
-
-        function backToScreen5() {
-            showRecordingScreen(5);
-        }
-
-        function backToScreen6() {
-            showRecordingScreen(6);
-        }
-
-        function backToScreen8() {
-            showRecordingScreen(8);
-        }
-
-        function capturePhoto() {
-            showRecordingScreen(6);
-            showToastRecording('📷 Photo captured!', 'success', '✓');
-        }
-
-        function goToPhotoPostSettings() {
-            showRecordingScreen(7);
-        }
-
-        function toggleRecPhotoEditMenu() {
-            const menu = document.getElementById('recPhotoEditMenu');
-            if (menu) menu.classList.toggle('show');
-        }
-
-        async function publishPhotoPost() {
-            if (!currentUser) {
-                showToastRecording('Please login first', 'error', '⚠️');
-                return;
-            }
-            showToastRecording('✓ Photo posted successfully!', 'success', '✨');
-            closeRecordingUI();
-        }
-
-        async function saveDraftPhoto() {
-            if (!currentUser) {
-                showToastRecording('Please login first', 'error', '⚠️');
-                return;
-            }
-            showToastRecording('💾 Photo saved to drafts!', 'success', '✓');
-            closeRecordingUI();
-        }
-
-        async function postPhotoStory() {
-            if (!currentUser) {
-                showToastRecording('Please login first', 'error', '⚠️');
-                return;
-            }
-            showToastRecording('📖 Posted to your story!', 'success', '🎉');
-            closeRecordingUI();
-        }
-
-
-
-              
-
-        function updateTextPostCaptionCounter() {
-            const captionInput = document.getElementById('textPostCaption');
-            const counter = document.getElementById('textPostCaptionCounter');
-            if (captionInput && counter) {
-                const length = captionInput.value.length;
-                counter.textContent = `${length}/300`;
-            }
-        }
-
-        function updatePhotoCaptionCounter() {
-            const captionInput = document.getElementById('photoCaption');
-            const counter = document.getElementById('photoCaptionCounter');
-            if (captionInput && counter) {
-                const length = captionInput.value.length;
-                counter.textContent = `${length}/300`;
-            }
-        }
-
-
-        function updateCaptionCounter() {
-            const captionInput = document.getElementById('recCaption');
-            const counter = document.getElementById('captionCounter');
-            if (captionInput && counter) {
-                const length = captionInput.value.length;
-                counter.textContent = `${length}/300`;
-            }
-        }
-
-        function toggleRecPhotoEditMenu() {
-            const menu = document.getElementById('recPhotoEditMenu');
-            if (menu) menu.classList.toggle('show');
+        function closeRecordingUI() {
+            const overlay = document.getElementById('recordingUIOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            // Reset state
+            recordingUIState = {
+                currentScreen: 1,
+                isRecording: false,
+                recordingTime: 0,
+                caption: '',
+                videoBlob: null
+            };
         }
 
     </script>
