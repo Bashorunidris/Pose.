@@ -713,13 +713,15 @@
             gap: 15px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transform: translateY(-10px) scale(0.95);
+            transition: opacity 0.3s ease, transform 0.3s ease;
             z-index: 9;
         }
 
         .rec-left-menu.show {
             opacity: 1;
             pointer-events: all;
+            transform: translateY(0) scale(1);
         }
 
         .rec-menu-item {
@@ -1012,7 +1014,7 @@
         /* ====== TEXT MODE STYLING ====== */
         /* Color Picker Bar */
         .rec-color-picker-bar {
-             position: absolute;
+            position: absolute;
             top: 80px;
             left: 0;
             right: 0;
@@ -1022,7 +1024,8 @@
             overflow-x: auto;
             z-index: 10;
         }
- /* Text Mode Styles */
+
+        /* Text Mode Styles */
         .rec-text-editor-container {
             flex: 1;
             display: flex;
@@ -1031,7 +1034,7 @@
         }
 
         .rec-color-option {
-             min-width: 40px;
+            min-width: 40px;
             height: 40px;
             border-radius: 50%;
             cursor: pointer;
@@ -1047,7 +1050,8 @@
             border-color: #fff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
-.text-canvas {
+
+        .text-canvas {
             flex: 1;
             display: flex;
             align-items: center;
@@ -1055,7 +1059,8 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transition: background 0.3s;
         }
-  .rec-text-input {
+
+        .rec-text-input {
             width: 100%;
             max-width: 500px;
             min-height: 200px;
@@ -1071,13 +1076,14 @@
         }
 
         .rec-text-input::placeholder {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
         }
- .char-count {
+
+        .char-count {
             position: absolute;
             bottom: 120px;
             right: 20px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             padding: 8px 12px;
             border-radius: 20px;
             font-size: 12px;
@@ -1095,12 +1101,12 @@
             z-index: 10;
         }
 
-        
+
         .rec-text-tool-btn {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             border: none;
             color: #fff;
@@ -1140,7 +1146,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(255,0,80,0.4);
+            box-shadow: 0 4px 20px rgba(255, 0, 80, 0.4);
         }
 
         .rec-text-next-btn:active {
@@ -1186,7 +1192,8 @@
         .rec-toggle-switch input:checked+.rec-toggle-slider::before {
             left: 24px;
         }
-/* Text Preview Thumbnail */
+
+        /* Text Preview Thumbnail */
         .rec-text-preview-thumbnail {
             width: 100px;
             height: 150px;
@@ -1202,6 +1209,7 @@
             text-align: center;
             word-break: break-word;
         }
+
         /* ====== POPUPS ====== */
         .rec-popup {
             position: fixed;
@@ -4516,49 +4524,51 @@
         <!-- SCREEN 8: TEXT MODE -->
         <div id="screen8" class="recording-screen">
             <div class="rec-text-editor-container">
-            <!-- Color Picker Bar -->
-            <div class="rec-color-picker-bar">
-                <div class="rec-color-option active"
-                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="changeTextBg(this)">
+                <!-- Color Picker Bar -->
+                <div class="rec-color-picker-bar">
+                    <div class="rec-color-option active"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
+                        onclick="changeTextBg(this)">
+                    </div>
+                    <div class="rec-color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
+                        onclick="changeTextBg(this)"></div>
+                    <div class="rec-color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
+                        onclick="changeTextBg(this)"></div>
+                    <div class="rec-color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"
+                        onclick="changeTextBg(this)"></div>
+                    <div class="rec-color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
+                        onclick="changeTextBg(this)"></div>
+                    <div class="rec-color-option" style="background: #000;" onclick="changeTextBg(this)"></div>
+                    <div class="rec-color-option" style="background: #fff;" onclick="changeTextBg(this)"></div>
                 </div>
-                <div class="rec-color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
-                    onclick="changeTextBg(this)"></div>
-                <div class="rec-color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
-                    onclick="changeTextBg(this)"></div>
-                <div class="rec-color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"
-                    onclick="changeTextBg(this)"></div>
-                <div class="rec-color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
-                    onclick="changeTextBg(this)"></div>
-                <div class="rec-color-option" style="background: #000;" onclick="changeTextBg(this)"></div>
-                <div class="rec-color-option" style="background: #fff;" onclick="changeTextBg(this)"></div>
-            </div>
 
-            <div class="rec-top-bar">
-                <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
-                <button class="rec-icon-btn" onclick="closeRecordingUI()">✕</button>
-            </div>
-            
- <!-- Text Input Area -->
-            <div class="text-canvas" id="textEditorBg">
-                <textarea class="rec-text-input" id="textInput" placeholder="Type something..." maxlength="500"></textarea>
-            </div>
-            <!-- Text Formatting Tools -->
-            <div class="rec-text-tools">
-                <button class="rec-text-tool-btn" onclick="changeTextAlign('left')"><i
-                        class="fa-solid fa-align-left"></i></button>
-                <button class="rec-text-tool-btn active" onclick="changeTextAlign('center')"><i
-                        class="fa-solid fa-align-center"></i></button>
-                <button class="rec-text-tool-btn" onclick="changeTextAlign('right')"><i
-                        class="fa-solid fa-align-right"></i></button>
-                <button class="rec-text-tool-btn" onclick="toggleBold()"><i class="fa-solid fa-bold"></i></button>
-                <button class="rec-text-tool-btn" onclick="changeTextColor()"><i
-                        class="fa-solid fa-palette"></i></button>
-            </div>
+                <div class="rec-top-bar">
+                    <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
+                    <button class="rec-icon-btn" onclick="closeRecordingUI()">✕</button>
+                </div>
 
-            <div style="position: absolute; bottom: 40px; right: 20px;">
-                <button onclick="goToTextPostSettings()"
-                    style="width: 60px; height: 60px; border-radius: 50%; background: #ff0050; border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">→</button>
-            </div>
+                <!-- Text Input Area -->
+                <div class="text-canvas" id="textEditorBg">
+                    <textarea class="rec-text-input" id="textInput" placeholder="Type something..."
+                        maxlength="500"></textarea>
+                </div>
+                <!-- Text Formatting Tools -->
+                <div class="rec-text-tools">
+                    <button class="rec-text-tool-btn" onclick="changeTextAlign('left')"><i
+                            class="fa-solid fa-align-left"></i></button>
+                    <button class="rec-text-tool-btn active" onclick="changeTextAlign('center')"><i
+                            class="fa-solid fa-align-center"></i></button>
+                    <button class="rec-text-tool-btn" onclick="changeTextAlign('right')"><i
+                            class="fa-solid fa-align-right"></i></button>
+                    <button class="rec-text-tool-btn" onclick="toggleBold()"><i class="fa-solid fa-bold"></i></button>
+                    <button class="rec-text-tool-btn" onclick="changeTextColor()"><i
+                            class="fa-solid fa-palette"></i></button>
+                </div>
+
+                <div style="position: absolute; bottom: 40px; right: 20px;">
+                    <button onclick="goToTextPostSettings()"
+                        style="width: 60px; height: 60px; border-radius: 50%; background: #ff0050; border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">→</button>
+                </div>
             </div>
         </div>
 
@@ -4571,11 +4581,11 @@
             </div>
             <div class="rec-post-content">
                 <!-- Text Preview Thumbnail -->
-            <div class="post-preview">
-                <div class="rec-text-preview-thumbnail" id="textPreview">
-                    <span>Your Text</span>
+                <div class="post-preview">
+                    <div class="rec-text-preview-thumbnail" id="textPreview">
+                        <span>Your Text</span>
+                    </div>
                 </div>
-            </div>
                 <div class="rec-post-section">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -4601,26 +4611,26 @@
                         <option>Only me</option>
                     </select>
                 </div>
-            
-            <!-- Allow Comments -->
-            <div class="post-section toggle-section">
-                <div class="section-header">
-                    <i class="fa-solid fa-comment"></i>
-                    <span>Allow comments</span>
+
+                <!-- Allow Comments -->
+                <div class="post-section toggle-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>Allow comments</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-    <div class="rec-post-section toggle-section">
+                <div class="rec-post-section toggle-section">
                     <div class="rec-section-header">💬 Allow Comments</div>
                     <label class="rec-toggle-switch">
                         <input type="checkbox" checked>
                         <span class="rec-toggle-slider"></span>
                     </label>
                 </div>
-                
+
             </div>
 
             <div class="rec-post-actions">
@@ -8153,496 +8163,673 @@
 
 
         // ============================================================================
-// RECORDING UI FUNCTIONALITY
-// ============================================================================
+        // RECORDING UI FUNCTIONALITY
+        // ============================================================================
 
-// State Management
-const recordingUIState = {
-  isRecording: false,
-  recordedBlob: null,
-  recordingStartTime: 0,
-  timerInterval: null,
-  selectedMode: 'video',
-  activeEffects: [],
-  mediaStream: null,
-  mediaRecorder: null,
-  textBgGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  textAlign: 'center',
-  isBold: false,
-  textColor: '#fff'
-};
+        // State Management
+        const recordingUIState = {
+            isRecording: false,
+            recordedBlob: null,
+            recordingStartTime: 0,
+            timerInterval: null,
+            selectedMode: 'video',
+            activeEffects: [],
+            mediaStream: null,
+            mediaRecorder: null,
+            textBgGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            textAlign: 'center',
+            isBold: false,
+            textColor: '#fff'
+        };
 
-// ============================================================================
-// SCREEN NAVIGATION
-// ============================================================================
+        // ============================================================================
+        // SCREEN NAVIGATION
+        // ============================================================================
 
-function showScreen(screenId) {
-  // Get current active screen before hiding
-  const currentScreen = document.querySelector('.recording-screen.active');
-  const currentScreenId = currentScreen?.id;
-  
-  // Stop camera when leaving screen 5
-  if (currentScreenId === 'screen5' && screenId !== 'screen5') {
-    console.log('Leaving screen 5 - stopping camera');
-    stopPhotoMode();
-  }
-  
-  // Hide all screens
-  document.querySelectorAll('.recording-screen').forEach(screen => {
-    screen.classList.remove('active');
-  });
-  
-  // Show target screen
-  const targetScreen = document.getElementById(screenId);
-  if (targetScreen) {
-    targetScreen.classList.add('active');
-    
-    // Initialize photo mode when showing screen 5 (only if not already initialized)
-    if (screenId === 'screen5') {
-      // Check if camera is already active/streaming
-      if (!photoState.photoStream || !photoState.photoStream.active) {
-        console.log('Entering screen 5 - camera not ready, initializing...');
-        initializePhotoMode();
-      } else {
-        console.log('Entering screen 5 - camera already active');
-        ensureVideoElement();
-      }
-    }
-  }
-}
+        function showScreen(screenId) {
+            // Get current active screen before hiding
+            const currentScreen = document.querySelector('.recording-screen.active');
+            const currentScreenId = currentScreen?.id;
 
-function closeRecordingUI() {
-  const overlay = document.getElementById('recordingUIOverlay');
-  if (overlay) {
-    overlay.style.display = 'none';
-  }
-}
+            // Stop camera when leaving screen 5
+            if (currentScreenId === 'screen5' && screenId !== 'screen5') {
+                console.log('Leaving screen 5 - stopping camera');
+                stopPhotoMode();
+            }
 
-function backToScreen1() {
-  // Stop camera if navigating away from photo mode
-  stopPhotoMode();
-  showScreen('screen1');
-}
+            // Hide all screens
+            document.querySelectorAll('.recording-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
 
-function backToScreen2() {
-  // Stop camera if navigating away from photo mode
-  stopPhotoMode();
-  showScreen('screen2');
-}
+            // Show target screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
 
-function backToScreen3() {
-  showScreen('screen3');
-}
+                // Initialize photo mode when showing screen 5 (only if not already initialized)
+                if (screenId === 'screen5') {
+                    // Check if camera is already active/streaming
+                    if (!photoState.photoStream || !photoState.photoStream.active) {
+                        console.log('Entering screen 5 - camera not ready, initializing...');
+                        initializePhotoMode();
+                    } else {
+                        console.log('Entering screen 5 - camera already active');
+                        ensureVideoElement();
+                    }
+                }
+            }
+        }
 
-function backToScreen5() {
-  showScreen('screen5');
-}
+        function closeRecordingUI() {
+            const overlay = document.getElementById('recordingUIOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
 
-function backToScreen6() {
-  showScreen('screen6');
-}
+        function backToScreen1() {
+            // Stop camera if navigating away from photo mode
+            stopPhotoMode();
+            showScreen('screen1');
+        }
 
-function backToScreen8() {
-  showScreen('screen8');
-}
+        function backToScreen2() {
+            // Stop camera if navigating away from photo mode
+            stopPhotoMode();
+            showScreen('screen2');
+        }
 
-// ============================================================================
-// MENU TOGGLES
-// ============================================================================
+        function backToScreen3() {
+            showScreen('screen3');
+        }
 
-function toggleRecLeftMenu() {
-  const menu = document.getElementById('recLeftMenu');
-  if (menu) {
-    menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
-  }
-}
+        function backToScreen5() {
+            showScreen('screen5');
+        }
 
-function toggleRecEditMenu() {
-  const menu = document.getElementById('recEditMenu');
-  if (menu) {
-    menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
-  }
-}
+        function backToScreen6() {
+            showScreen('screen6');
+        }
 
-function toggleRecPhotoEditMenu() {
-  const menu = document.getElementById('recPhotoEditMenu');
-  if (menu) {
-    menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
-  }
-}
+        function backToScreen8() {
+            showScreen('screen8');
+        }
 
-// ============================================================================
-// TOAST NOTIFICATIONS
-// ============================================================================
+        // ============================================================================
+        // MENU TOGGLES
+        // ============================================================================
 
-function showToastRecording(message, type = 'success', icon = '✓') {
-  const toast = document.getElementById('recordingToast');
-  const toastIcon = document.getElementById('recordingToastIcon');
-  const toastMessage = document.getElementById('recordingToastMessage');
+        function toggleRecLeftMenu() {
+            // Determine which menu to toggle based on active screen
+            const activeScreen = document.querySelector('.recording-screen.active');
+            let menuId = 'recLeftMenu'; // Default for other screens
 
-  if (toast && toastMessage && toastIcon) {
-    toastIcon.textContent = icon;
-    toastMessage.textContent = message;
-    toast.className = `recording-toast ${type}`;
-    toast.style.display = 'flex';
+            if (activeScreen?.id === 'screen5') {
+                menuId = 'recPhotoLeftMenu'; // Photo mode menu
+            } else if (activeScreen?.id === 'screen6') {
+                menuId = 'recPhotoEditMenu'; // Photo edit menu
+            }
 
-    setTimeout(() => {
-      toast.style.display = 'none';
-    }, 3000);
-  }
-}
+            const menu = document.getElementById(menuId);
+            if (menu) {
+                // Toggle the 'show' class for smooth animation
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                    console.log('Menu closed:', menuId);
+                } else {
+                    menu.classList.add('show');
+                    console.log('Menu opened:', menuId);
+                }
+            } else {
+                console.warn('Menu not found:', menuId);
+            }
+        }
 
-// ============================================================================
-// VIDEO RECORDING FUNCTIONALITY
-// ============================================================================
+        function toggleRecEditMenu() {
+            const menu = document.getElementById('recEditMenu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+            }
+        }
 
-function startRecording() {
-  // Request camera access
-  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-    .then(stream => {
-      recordingState.mediaStream = stream;
-      recordingState.mediaRecorder = new MediaRecorder(stream);
-      const chunks = [];
+        function toggleRecPhotoEditMenu() {
+            const menu = document.getElementById('recPhotoEditMenu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+            }
+        }
 
-      recordingState.mediaRecorder.ondataavailable = (e) => {
-        chunks.push(e.data);
-      };
+        // ============================================================================
+        // TOAST NOTIFICATIONS
+        // ============================================================================
 
-      recordingState.mediaRecorder.onstop = () => {
-        recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
-      };
+        function showToastRecording(message, type = 'success', icon = '✓') {
+            const toast = document.getElementById('recordingToast');
+            const toastIcon = document.getElementById('recordingToastIcon');
+            const toastMessage = document.getElementById('recordingToastMessage');
 
-      recordingState.mediaRecorder.start();
-      recordingState.isRecording = true;
-      recordingState.recordingStartTime = Date.now();
+            if (toast && toastMessage && toastIcon) {
+                toastIcon.textContent = icon;
+                toastMessage.textContent = message;
+                toast.className = `recording-toast ${type}`;
+                toast.style.display = 'flex';
 
-      showScreen('screen2');
-      startRecordingTimer();
-      showToastRecording('Recording started', 'success', '⏹');
-    })
-    .catch(err => {
-      showToastRecording('Camera access denied', 'error', '✕');
-      console.error('Error accessing camera:', err);
-    });
-}
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
 
-function stopRecording() {
-  if (recordingState.mediaRecorder) {
-    recordingState.mediaRecorder.stop();
-    recordingState.isRecording = false;
-    clearInterval(recordingState.timerInterval);
+        // ============================================================================
+        // VIDEO RECORDING FUNCTIONALITY
+        // ============================================================================
 
-    // Stop all tracks
-    if (recordingState.mediaStream) {
-      recordingState.mediaStream.getTracks().forEach(track => track.stop());
-    }
+        function startRecording() {
+            // Request camera access
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(stream => {
+                    recordingState.mediaStream = stream;
+                    recordingState.mediaRecorder = new MediaRecorder(stream);
+                    const chunks = [];
 
-    showToastRecording('Recording stopped', 'info', '⏹');
-  }
-}
+                    recordingState.mediaRecorder.ondataavailable = (e) => {
+                        chunks.push(e.data);
+                    };
 
-function cancelRecording() {
-  stopRecording();
-  recordingState.recordedBlob = null;
-  showScreen('screen1');
-  showToastRecording('Recording cancelled', 'error', '✕');
-}
+                    recordingState.mediaRecorder.onstop = () => {
+                        recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
+                    };
 
-function acceptRecording() {
-  showScreen('screen3');
-  showToastRecording('Ready to edit', 'success', '✓');
-}
+                    recordingState.mediaRecorder.start();
+                    recordingState.isRecording = true;
+                    recordingState.recordingStartTime = Date.now();
 
-function startRecordingTimer() {
-  let seconds = 0;
-  recordingState.timerInterval = setInterval(() => {
-    seconds++;
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    const timerEl = document.getElementById('recTimer');
-    if (timerEl) {
-      timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-  }, 1000);
-}
+                    showScreen('screen2');
+                    startRecordingTimer();
+                    showToastRecording('Recording started', 'success', '⏹');
+                })
+                .catch(err => {
+                    showToastRecording('Camera access denied', 'error', '✕');
+                    console.error('Error accessing camera:', err);
+                });
+        }
 
-// ============================================================================
-// MODE SWITCHING
-// ============================================================================
+        function stopRecording() {
+            if (recordingState.mediaRecorder) {
+                recordingState.mediaRecorder.stop();
+                recordingState.isRecording = false;
+                clearInterval(recordingState.timerInterval);
 
-function switchRecMode(mode) {
-  recordingState.selectedMode = mode;
+                // Stop all tracks
+                if (recordingState.mediaStream) {
+                    recordingState.mediaStream.getTracks().forEach(track => track.stop());
+                }
 
-  // Update active tab
-  document.querySelectorAll('.rec-mode-tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  event.target.classList.add('active');
+                showToastRecording('Recording stopped', 'info', '⏹');
+            }
+        }
 
-  if (mode === 'photo') {
-    // Pre-initialize camera BEFORE showing screen for instant availability
-    console.log('Initializing camera before showing Screen 5...');
-    initializePhotoMode().then(() => {
-      console.log('Camera ready - showing Screen 5');
-      showScreen('screen5');
-      showToastRecording('Photo mode', 'info', '📷');
-    }).catch(err => {
-      console.error('Camera init error:', err);
-      showScreen('screen5');
-      showToastRecording('Photo mode - camera may not be ready', 'warning', '📷');
-    });
-  } else if (mode === 'text') {
-    showScreen('screen8');
-    showToastRecording('Text mode', 'info', '✏️');
-  } else if (mode === 'video') {
-    showScreen('screen1');
-    showToastRecording('Video mode', 'info', '📹');
-  }
-}
+        function cancelRecording() {
+            stopRecording();
+            recordingState.recordedBlob = null;
+            showScreen('screen1');
+            showToastRecording('Recording cancelled', 'error', '✕');
+        }
 
-// ============================================================================
-// EFFECTS
-// ============================================================================
+        function acceptRecording() {
+            showScreen('screen3');
+            showToastRecording('Ready to edit', 'success', '✓');
+        }
 
-// ============================================================================
-// PHOTO MODE - SCREEN 5, 6, 7
-// ============================================================================
+        function startRecordingTimer() {
+            let seconds = 0;
+            recordingState.timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                const timerEl = document.getElementById('recTimer');
+                if (timerEl) {
+                    timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
 
-let photoState = {
-  photoStream: null,
-  capturedPhotos: [],
-  currentPhotoIndex: 0,
-  photoSettings: {
-    flash: false,
-    timer: 0,
-    filter: 'none',
-    grid: false,
-    ratio: '1:1',
-    effects: []
-  },
-  canvas: null,
-  ctx: null
-};
+        // ============================================================================
+        // MODE SWITCHING
+        // ============================================================================
 
-// Initialize photo camera - request permissions once
-async function initializePhotoMode() {
-  try {
-    // Check if camera is already initialized
-    if (photoState.photoStream && photoState.photoStream.active) {
-      console.log('Camera already active');
-      ensureVideoElement();
-      return;
-    }
-    
-    console.log('Requesting camera & audio permissions...');
-    
-    const constraints = {
-      video: {
-        facingMode: 'user',
-        width: { ideal: 1280 },
-        height: { ideal: 960 }
-      },
-      audio: true  // IMPORTANT: Include audio in permissions request
-    };
-    
-    photoState.photoStream = await navigator.mediaDevices.getUserMedia(constraints);
-    console.log('Camera & audio access granted');
-    
-    // Ensure video element exists and is properly set up
-    ensureVideoElement();
-    
-    showToastRecording('📷 Camera ready', 'success', '✓');
-  } catch (error) {
-    console.error('Camera/Audio error:', error);
-    
-    // Handle specific permission errors
-    if (error.name === 'NotAllowedError') {
-      alert('❌ Camera/Microphone access denied. Please allow permissions in your browser settings.');
-    } else if (error.name === 'NotFoundError') {
-      alert('❌ No camera found on this device');
-    } else {
-      alert('❌ Cannot access camera: ' + error.message);
-    }
-    
-    // Stop trying to use camera
-    if (photoState.photoStream) {
-      photoState.photoStream.getTracks().forEach(track => track.stop());
-      photoState.photoStream = null;
-    }
-  }
-}
+        function switchRecMode(mode) {
+            recordingState.selectedMode = mode;
 
-// Helper: Ensure video element is created and streaming
-function ensureVideoElement() {
-  if (!photoState.photoStream || !photoState.photoStream.active) {
-    console.error('Stream not active');
-    return false;
-  }
-  
-  const container = document.querySelector('#screen5 .camera-preview');
-  if (!container) {
-    console.error('Screen 5 container not found');
-    return false;
-  }
-  
-  // Check if video element already exists
-  let video = document.getElementById('photoPreviewVideo');
-  
-  if (!video) {
-    // Create new video element
-    video = document.createElement('video');
-    video.id = 'photoPreviewVideo';
-    video.autoplay = true;
-    video.muted = true;  // IMPORTANT: Mute to allow autoplay in most browsers
-    video.playsinline = true;
-    video.style.width = '100%';
-    video.style.height = '100%';
-    video.style.objectFit = 'cover';
-    video.style.backgroundColor = '#000';
-    video.style.display = 'block';
-    
-    container.innerHTML = '';
-    container.appendChild(video);
-    
-    console.log('Video element created');
-  }
-  
-  // Assign stream to video
-  if (video.srcObject !== photoState.photoStream) {
-    video.srcObject = photoState.photoStream;
-    console.log('Stream assigned to video element');
-  }
-  
-  // Ensure it's playing
-  video.play().catch(err => {
-    console.error('Video play error:', err);
-  });
-  
-  return true;
-}
+            // Update active tab
+            document.querySelectorAll('.rec-mode-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
 
-// Toggle photo mode menus
-function togglePhotoFlash() {
-  photoState.photoSettings.flash = !photoState.photoSettings.flash;
-  const menu = document.getElementById('recPhotoLeftMenu');
-  const flashItem = menu.querySelector('.rec-menu-item:nth-child(1)');
-  if (photoState.photoSettings.flash) {
-    flashItem.style.color = '#FFD700';
-    showToastRecording('Flash enabled', 'success', '⚡');
-  } else {
-    flashItem.style.color = 'white';
-    showToastRecording('Flash disabled', 'info', '⚡');
-  }
-}
+            if (mode === 'photo') {
+                // Pre-initialize camera BEFORE showing screen for instant availability
+                console.log('Initializing camera before showing Screen 5...');
+                initializePhotoMode().then(() => {
+                    console.log('Camera ready - showing Screen 5');
+                    showScreen('screen5');
+                    showToastRecording('Photo mode', 'info', '📷');
+                }).catch(err => {
+                    console.error('Camera init error:', err);
+                    showScreen('screen5');
+                    showToastRecording('Photo mode - camera may not be ready', 'warning', '📷');
+                });
+            } else if (mode === 'text') {
+                showScreen('screen8');
+                showToastRecording('Text mode', 'info', '✏️');
+            } else if (mode === 'video') {
+                showScreen('screen1');
+                showToastRecording('Video mode', 'info', '📹');
+            }
+        }
 
-function togglePhotoTimer() {
-  const currentTimer = photoState.photoSettings.timer;
-  const timers = [0, 3, 5, 10];
-  const nextIndex = (timers.indexOf(currentTimer) + 1) % timers.length;
-  photoState.photoSettings.timer = timers[nextIndex];
-  
-  const menu = document.getElementById('recPhotoLeftMenu');
-  const timerItem = menu.querySelector('.rec-menu-item:nth-child(2)');
-  if (photoState.photoSettings.timer === 0) {
-    timerItem.textContent = '⏱ Timer';
-  } else {
-    timerItem.textContent = `⏱ ${photoState.photoSettings.timer}s`;
-  }
-  
-  showToastRecording(`Timer: ${photoState.photoSettings.timer}s`, 'info', '⏱');
-}
+        // ============================================================================
+        // EFFECTS
+        // ============================================================================
 
-function togglePhotoFilters() {
-  const menu = document.getElementById('recPhotoLeftMenu');
-  const filterItem = menu.querySelector('.rec-menu-item:nth-child(3)');
-  
-  const filters = ['none', 'sepia', 'grayscale', 'brightness', 'contrast'];
-  const currentIdx = filters.indexOf(photoState.photoSettings.filter);
-  photoState.photoSettings.filter = filters[(currentIdx + 1) % filters.length];
-  
-  filterItem.textContent = `🎨 ${photoState.photoSettings.filter}`;
-  applyPhotoFilter(photoState.photoSettings.filter);
-  showToastRecording(`Filter: ${photoState.photoSettings.filter}`, 'info', '🎨');
-}
+        // ============================================================================
+        // PHOTO MODE - SCREEN 5, 6, 7
+        // ============================================================================
 
-function togglePhotoGrid() {
-  photoState.photoSettings.grid = !photoState.photoSettings.grid;
-  const menu = document.getElementById('recPhotoLeftMenu');
-  const gridItem = menu.querySelector('.rec-menu-item:nth-child(4)');
-  
-  if (photoState.photoSettings.grid) {
-    gridItem.style.color = '#FFD700';
-    showGridOverlay('grid-overlay-photo');
-  } else {
-    gridItem.style.color = 'white';
-    hideGridOverlay();
-  }
-  
-  showToastRecording(photoState.photoSettings.grid ? 'Grid on' : 'Grid off', 'info', '⊞');
-}
+        let photoState = {
+            photoStream: null,
+            capturedPhotos: [],
+            currentPhotoIndex: 0,
+            photoSettings: {
+                flash: false,
+                timer: 0,
+                filter: 'none',
+                grid: false,
+                ratio: '1:1',
+                effects: []
+            },
+            canvas: null,
+            ctx: null
+        };
 
-function togglePhotoRatio() {
-  const ratios = ['1:1', '3:4', '9:16', '16:9'];
-  const currentIdx = ratios.indexOf(photoState.photoSettings.ratio);
-  photoState.photoSettings.ratio = ratios[(currentIdx + 1) % ratios.length];
-  
-  const menu = document.getElementById('recPhotoLeftMenu');
-  const ratioItem = menu.querySelector('.rec-menu-item:nth-child(5)');
-  ratioItem.textContent = `📐 ${photoState.photoSettings.ratio}`;
-  
-  showToastRecording(`Ratio: ${photoState.photoSettings.ratio}`, 'info', '📐');
-}
+        // Initialize photo camera - request permissions once
+        async function initializePhotoMode() {
+            try {
+                // Check if camera is already initialized
+                if (photoState.photoStream && photoState.photoStream.active) {
+                    console.log('Camera already active');
+                    ensureVideoElement();
+                    return;
+                }
 
-// Toggle effects
-function toggleEffect(effect) {
-  const idx = photoState.photoSettings.effects.indexOf(effect);
-  if (idx > -1) {
-    photoState.photoSettings.effects.splice(idx, 1);
-  } else {
-    photoState.photoSettings.effects.push(effect);
-  }
-  
-  const effectIcons = {
-    'sparkle': '✨',
-    'mask': '🎭',
-    'ghost': '👻',
-    'star': '🌟'
-  };
-  
-  showToastRecording(`${effectIcons[effect]} effect ${idx > -1 ? 'removed' : 'added'}`, 'info', effectIcons[effect]);
-}
+                console.log('Requesting camera & audio permissions...');
 
-function applyPhotoFilter(filterName) {
-  const video = document.getElementById('photoPreviewVideo');
-  if (!video) return;
-  
-  let filter = '';
-  switch(filterName) {
-    case 'sepia':
-      filter = 'sepia(100%)';
-      break;
-    case 'grayscale':
-      filter = 'grayscale(100%)';
-      break;
-    case 'brightness':
-      filter = 'brightness(1.2)';
-      break;
-    case 'contrast':
-      filter = 'contrast(1.3)';
-      break;
-    default:
-      filter = 'none';
-  }
-  
-  video.style.filter = filter;
-}
+                const constraints = {
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 1280 },
+                        height: { ideal: 960 }
+                    },
+                    audio: true  // IMPORTANT: Include audio in permissions request
+                };
 
-function showGridOverlay(gridId) {
-  let grid = document.getElementById(gridId);
-  if (!grid) {
-    grid = document.createElement('div');
-    grid.id = gridId;
-    grid.style.cssText = `
+                photoState.photoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                console.log('Camera & audio access granted');
+
+                // Ensure video element exists and is properly set up
+                ensureVideoElement();
+
+                showToastRecording('📷 Camera ready', 'success', '✓');
+            } catch (error) {
+                console.error('Camera/Audio error:', error);
+
+                // Handle specific permission errors
+                if (error.name === 'NotAllowedError') {
+                    alert('❌ Camera/Microphone access denied. Please allow permissions in your browser settings.');
+                } else if (error.name === 'NotFoundError') {
+                    alert('❌ No camera found on this device');
+                } else {
+                    alert('❌ Cannot access camera: ' + error.message);
+                }
+
+                // Stop trying to use camera
+                if (photoState.photoStream) {
+                    photoState.photoStream.getTracks().forEach(track => track.stop());
+                    photoState.photoStream = null;
+                }
+            }
+        }
+
+        // Helper: Ensure video element is created and streaming
+        function ensureVideoElement() {
+            if (!photoState.photoStream || !photoState.photoStream.active) {
+                console.error('Stream not active');
+                return false;
+            }
+
+            const container = document.querySelector('#screen5 .camera-preview');
+            if (!container) {
+                console.error('Screen 5 container not found');
+                return false;
+            }
+
+            // Check if video element already exists
+            let video = document.getElementById('photoPreviewVideo');
+
+            if (!video) {
+                // Create new video element
+                video = document.createElement('video');
+                video.id = 'photoPreviewVideo';
+                video.autoplay = true;
+                video.muted = true;  // IMPORTANT: Mute to allow autoplay in most browsers
+                video.playsinline = true;
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.objectFit = 'cover';
+                video.style.backgroundColor = '#000';
+                video.style.display = 'block';
+
+                container.innerHTML = '';
+                container.appendChild(video);
+
+                console.log('Video element created');
+            }
+
+            // Assign stream to video
+            if (video.srcObject !== photoState.photoStream) {
+                video.srcObject = photoState.photoStream;
+                console.log('Stream assigned to video element');
+            }
+
+            // Ensure it's playing
+            video.play().catch(err => {
+                console.error('Video play error:', err);
+            });
+
+            return true;
+        }
+
+        // Close photo left menu after action
+        function closePhotoLeftMenu() {
+            const menu = document.getElementById('recPhotoLeftMenu');
+            if (menu && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+                console.log('Photo menu closed');
+            }
+        }
+
+        // Toggle photo mode menus
+        function togglePhotoFlash() {
+            // Cycle through flash modes: off → on → auto
+            const flashModes = [false, 'on', 'auto'];
+            const current = photoState.photoSettings.flash;
+            const currentIdx = flashModes.indexOf(current);
+            photoState.photoSettings.flash = flashModes[(currentIdx + 1) % flashModes.length];
+
+            const menu = document.getElementById('recPhotoLeftMenu');
+            const flashItem = menu.querySelector('.rec-menu-item:nth-child(1)');
+
+            let flashText = '⚡ Flash';
+            let message = 'Flash off';
+
+            if (photoState.photoSettings.flash === 'on') {
+                flashItem.style.color = '#FFD700';
+                flashText = '⚡ Flash (ON)';
+                message = '⚡ Flash ON - brightens captured photo';
+            } else if (photoState.photoSettings.flash === 'auto') {
+                flashItem.style.color = '#FFA500';
+                flashText = '⚡ Flash (AUTO)';
+                message = '⚡ Flash AUTO - applies if needed';
+            } else {
+                flashItem.style.color = 'white';
+                flashText = '⚡ Flash';
+                message = 'Flash OFF';
+            }
+
+            flashItem.textContent = flashText;
+            showToastRecording(message, 'info', '⚡');
+            closePhotoLeftMenu();
+        }
+
+        function togglePhotoTimer() {
+            const currentTimer = photoState.photoSettings.timer;
+            const timers = [0, 3, 5, 10];
+            const nextIndex = (timers.indexOf(currentTimer) + 1) % timers.length;
+            photoState.photoSettings.timer = timers[nextIndex];
+
+            const menu = document.getElementById('recPhotoLeftMenu');
+            const timerItem = menu.querySelector('.rec-menu-item:nth-child(2)');
+            if (photoState.photoSettings.timer === 0) {
+                timerItem.textContent = '⏱ Timer';
+            } else {
+                timerItem.textContent = `⏱ ${photoState.photoSettings.timer}s`;
+            }
+
+            showToastRecording(`Timer: ${photoState.photoSettings.timer}s`, 'info', '⏱');
+            closePhotoLeftMenu();
+        }
+
+        function togglePhotoFilters() {
+            const menu = document.getElementById('recPhotoLeftMenu');
+            const filterItem = menu.querySelector('.rec-menu-item:nth-child(3)');
+
+            const filters = ['none', 'sepia', 'grayscale', 'brightness', 'contrast'];
+            const currentIdx = filters.indexOf(photoState.photoSettings.filter);
+            photoState.photoSettings.filter = filters[(currentIdx + 1) % filters.length];
+
+            filterItem.textContent = `🎨 ${photoState.photoSettings.filter}`;
+            applyPhotoFilter(photoState.photoSettings.filter);
+            showToastRecording(`Filter: ${photoState.photoSettings.filter}`, 'info', '🎨');
+            closePhotoLeftMenu();
+        }
+
+        function togglePhotoGrid() {
+            photoState.photoSettings.grid = !photoState.photoSettings.grid;
+            const menu = document.getElementById('recPhotoLeftMenu');
+            const gridItem = menu.querySelector('.rec-menu-item:nth-child(4)');
+
+            if (photoState.photoSettings.grid) {
+                gridItem.style.color = '#FFD700';
+                showGridOverlay('grid-overlay-photo');
+            } else {
+                gridItem.style.color = 'white';
+                hideGridOverlay();
+            }
+
+            showToastRecording(photoState.photoSettings.grid ? 'Grid on' : 'Grid off', 'info', '⊞');
+            closePhotoLeftMenu();
+        }
+
+        function togglePhotoRatio() {
+            const ratios = ['1:1', '3:4', '9:16', '16:9'];
+            const currentIdx = ratios.indexOf(photoState.photoSettings.ratio);
+            photoState.photoSettings.ratio = ratios[(currentIdx + 1) % ratios.length];
+
+            const menu = document.getElementById('recPhotoLeftMenu');
+            const ratioItem = menu.querySelector('.rec-menu-item:nth-child(5)');
+            ratioItem.textContent = `📐 ${photoState.photoSettings.ratio}`;
+
+            showToastRecording(`Ratio: ${photoState.photoSettings.ratio}`, 'info', '📐');
+            closePhotoLeftMenu();
+        }
+
+        // Toggle effects
+        function toggleEffect(effect) {
+            const idx = photoState.photoSettings.effects.indexOf(effect);
+            if (idx > -1) {
+                photoState.photoSettings.effects.splice(idx, 1);
+            } else {
+                photoState.photoSettings.effects.push(effect);
+            }
+
+            const effectIcons = {
+                'sparkle': '✨',
+                'mask': '🎭',
+                'ghost': '👻',
+                'star': '🌟'
+            };
+
+            showToastRecording(`${effectIcons[effect]} effect ${idx > -1 ? 'removed' : 'added'}`, 'info', effectIcons[effect]);
+        }
+
+        function applyPhotoFilter(filterName) {
+            const video = document.getElementById('photoPreviewVideo');
+            if (!video) return;
+
+            let filter = '';
+            switch (filterName) {
+                case 'sepia':
+                    filter = 'sepia(100%)';
+                    break;
+                case 'grayscale':
+                    filter = 'grayscale(100%)';
+                    break;
+                case 'brightness':
+                    filter = 'brightness(1.2)';
+                    break;
+                case 'contrast':
+                    filter = 'contrast(1.3)';
+                    break;
+                default:
+                    filter = 'none';
+            }
+
+            video.style.filter = filter;
+        }
+
+        // ============================================================================
+        // PHOTO CAPTURE HELPER FUNCTIONS
+        // ============================================================================
+
+        // Show countdown timer with visual feedback
+        async function showPhotoCountdown(seconds) {
+            return new Promise((resolve) => {
+                let remaining = seconds;
+
+                // Create countdown overlay
+                const overlay = document.createElement('div');
+                overlay.id = 'photoCountdownOverlay';
+                overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    `;
+
+                const number = document.createElement('div');
+                number.style.cssText = `
+      font-size: 120px;
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      animation: photoCountdownPulse 1s ease-in-out;
+    `;
+                number.textContent = remaining;
+
+                overlay.appendChild(number);
+                document.body.appendChild(overlay);
+
+                // Add CSS animation if not exists
+                if (!document.getElementById('photoCountdownStyle')) {
+                    const style = document.createElement('style');
+                    style.id = 'photoCountdownStyle';
+                    style.textContent = `
+        @keyframes photoCountdownPulse {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `;
+                    document.head.appendChild(style);
+                }
+
+                const interval = setInterval(() => {
+                    remaining--;
+                    if (remaining > 0) {
+                        number.textContent = remaining;
+                        number.style.animation = 'none';
+                        setTimeout(() => {
+                            number.style.animation = 'photoCountdownPulse 1s ease-in-out';
+                        }, 10);
+                    } else {
+                        clearInterval(interval);
+                        overlay.remove();
+                        resolve();
+                    }
+                }, 1000);
+            });
+        }
+
+        // Calculate canvas size based on selected aspect ratio
+        function calculateCanvasSize(videoWidth, videoHeight) {
+            const ratio = photoState.photoSettings.ratio;
+            let canvasWidth, canvasHeight, offsetX = 0, offsetY = 0;
+
+            const ratioMap = {
+                '1:1': 1,
+                '3:4': 3 / 4,
+                '9:16': 9 / 16,
+                '16:9': 16 / 9
+            };
+
+            const targetRatio = ratioMap[ratio] || 1;
+            const currentRatio = videoWidth / videoHeight;
+
+            if (currentRatio > targetRatio) {
+                // Video is wider, crop sides
+                canvasHeight = videoHeight;
+                canvasWidth = Math.floor(videoHeight * targetRatio);
+                offsetX = Math.floor((videoWidth - canvasWidth) / 2);
+                offsetY = 0;
+            } else {
+                // Video is taller, crop top/bottom
+                canvasWidth = videoWidth;
+                canvasHeight = Math.floor(videoWidth / targetRatio);
+                offsetX = 0;
+                offsetY = Math.floor((videoHeight - canvasHeight) / 2);
+            }
+
+            return { canvasWidth, canvasHeight, offsetX, offsetY };
+        }
+
+        // Apply flash effect to captured image
+        function applyFlashEffectToCanvas(ctx, width, height) {
+            const flashMode = photoState.photoSettings.flash;
+
+            // Skip if flash is off
+            if (!flashMode) return;
+
+            // For auto mode, we could check image brightness, but for now just apply normal flash
+            const isAutoMode = flashMode === 'auto';
+            const opacity = isAutoMode ? 0.08 : 0.15; // Lighter effect for auto mode
+
+            // Create bright white overlay for flash effect
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.fillRect(0, 0, width, height);
+
+            // Add subtle glow at edges
+            const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height));
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        // ============================================================================
+
+        function showGridOverlay(gridId) {
+            let grid = document.getElementById(gridId);
+            if (!grid) {
+                grid = document.createElement('div');
+                grid.id = gridId;
+                grid.style.cssText = `
       position: absolute;
       top: 0;
       left: 0;
@@ -8655,779 +8842,793 @@ function showGridOverlay(gridId) {
       pointer-events: none;
       z-index: 10;
     `;
-    
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.style.cssText = 'border: 1px solid rgba(255,255,255,0.3);';
-      grid.appendChild(cell);
-    }
-    
-    const preview = document.querySelector('#screen5 .camera-preview');
-    if (preview) {
-      preview.style.position = 'relative';
-      preview.appendChild(grid);
-    }
-  }
-  grid.style.display = 'grid';
-}
 
-function hideGridOverlay() {
-  const grid = document.getElementById('grid-overlay-photo');
-  if (grid) {
-    grid.style.display = 'none';
-  }
-}
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.style.cssText = 'border: 1px solid rgba(255,255,255,0.3);';
+                    grid.appendChild(cell);
+                }
 
-// Capture photo with timer support
-async function capturePhoto() {
-  // Check if stream is available
-  if (!photoState.photoStream || !photoState.photoStream.active) {
-    alert('❌ Camera not initialized. Please wait a moment and try again.');
-    await initializePhotoMode();
-    return;
-  }
-  
-  const video = document.getElementById('photoPreviewVideo');
-  if (!video || !video.videoWidth || !video.videoHeight) {
-    alert('❌ Camera not ready. Please wait for video stream to load.');
-    return;
-  }
-  
-  // Timer countdown before capture
-  if (photoState.photoSettings.timer > 0) {
-    showToastRecording(`Photo in ${photoState.photoSettings.timer} seconds...`, 'info', '⏱');
-    await new Promise(resolve => setTimeout(resolve, photoState.photoSettings.timer * 1000));
-  }
-  
-  try {
-    // Create canvas and capture
-    if (!photoState.canvas) {
-      photoState.canvas = document.createElement('canvas');
-      photoState.ctx = photoState.canvas.getContext('2d');
-    }
-    
-    photoState.canvas.width = video.videoWidth;
-    photoState.canvas.height = video.videoHeight;
-    
-    // Apply filter
-    if (photoState.photoSettings.filter !== 'none') {
-      photoState.ctx.filter = photoState.getPhotoFilterString(photoState.photoSettings.filter);
-    }
-    
-    photoState.ctx.drawImage(video, 0, 0);
-    
-    // Save photo
-    const photoData = {
-      url: photoState.canvas.toDataURL('image/jpeg'),
-      timestamp: Date.now(),
-      settings: {...photoState.photoSettings}
-    };
-    
-    photoState.capturedPhotos.push(photoData);
-    photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
-    
-    showToastRecording('Photo captured! ✨', 'success', '📷');
-    console.log('Photo captured successfully');
-    
-    // Stop camera after capturing (user won't need it in edit screen)
-    stopPhotoMode();
-    
-    // Show photo in screen 6
-    setTimeout(() => {
-      showScreen('screen6');
-      displayCapturedPhoto();
-    }, 500);
-  } catch (error) {
-    console.error('Capture error:', error);
-    alert('❌ Failed to capture photo: ' + error.message);
-  }
-}
+                const preview = document.querySelector('#screen5 .camera-preview');
+                if (preview) {
+                    preview.style.position = 'relative';
+                    preview.appendChild(grid);
+                }
+            }
+            grid.style.display = 'grid';
+        }
 
-function displayCapturedPhoto() {
-  if (photoState.capturedPhotos.length === 0) return;
-  
-  const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-  const preview = document.querySelector('#screen6 .camera-preview');
-  
-  if (preview) {
-    preview.innerHTML = `<img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">`;
-  }
-}
+        function hideGridOverlay() {
+            const grid = document.getElementById('grid-overlay-photo');
+            if (grid) {
+                grid.style.display = 'none';
+            }
+        }
 
-// Gallery function
-function openPhotoGallery() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const photoData = {
-          url: event.target.result,
-          timestamp: Date.now(),
-          settings: {...photoState.photoSettings}
+        // Capture photo with timer support
+        async function capturePhoto() {
+            // Check if stream is available
+            if (!photoState.photoStream || !photoState.photoStream.active) {
+                alert('❌ Camera not initialized. Please wait a moment and try again.');
+                await initializePhotoMode();
+                return;
+            }
+
+            const video = document.getElementById('photoPreviewVideo');
+            if (!video || !video.videoWidth || !video.videoHeight) {
+                alert('❌ Camera not ready. Please wait for video stream to load.');
+                return;
+            }
+
+            try {
+                // STEP 1: Hide grid overlay before capturing (it should not appear in final photo)
+                if (photoState.photoSettings.grid) {
+                    hideGridOverlay();
+                }
+
+                // STEP 2: Handle timer with visual countdown
+                if (photoState.photoSettings.timer > 0) {
+                    await showPhotoCountdown(photoState.photoSettings.timer);
+                }
+
+                // STEP 3: Create canvas with correct ratio
+                if (!photoState.canvas) {
+                    photoState.canvas = document.createElement('canvas');
+                    photoState.ctx = photoState.canvas.getContext('2d');
+                }
+
+                // Set canvas dimensions based on selected ratio
+                const { canvasWidth, canvasHeight, offsetX, offsetY } = calculateCanvasSize(video.videoWidth, video.videoHeight);
+                photoState.canvas.width = canvasWidth;
+                photoState.canvas.height = canvasHeight;
+
+                // STEP 4: Apply filter to canvas context
+                if (photoState.photoSettings.filter !== 'none') {
+                    photoState.ctx.filter = photoState.getPhotoFilterString(photoState.photoSettings.filter);
+                } else {
+                    photoState.ctx.filter = 'none';
+                }
+
+                // STEP 5: Draw video frame with proper cropping for aspect ratio
+                photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+
+                // STEP 6: Apply flash effect if enabled (brightness boost to capture)
+                if (photoState.photoSettings.flash) {
+                    applyFlashEffectToCanvas(photoState.ctx, canvasWidth, canvasHeight);
+                }
+
+                // STEP 7: Save photo with all settings
+                const photoData = {
+                    url: photoState.canvas.toDataURL('image/jpeg', 0.95),
+                    timestamp: Date.now(),
+                    settings: { ...photoState.photoSettings }
+                };
+
+                photoState.capturedPhotos.push(photoData);
+                photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
+
+                showToastRecording('📷 Photo captured!', 'success', '✨');
+                console.log('Photo captured with settings:', photoState.photoSettings);
+
+                // Stop camera after capturing (user won't need it in edit screen)
+                stopPhotoMode();
+
+                // Show photo in screen 6
+                setTimeout(() => {
+                    showScreen('screen6');
+                    displayCapturedPhoto();
+                }, 500);
+            } catch (error) {
+                console.error('Capture error:', error);
+                alert('❌ Failed to capture photo: ' + error.message);
+            }
+        }
+
+        function displayCapturedPhoto() {
+            if (photoState.capturedPhotos.length === 0) return;
+
+            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+            const preview = document.querySelector('#screen6 .camera-preview');
+
+            if (preview) {
+                preview.innerHTML = `<img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+        }
+
+        // Gallery function
+        function openPhotoGallery() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const photoData = {
+                            url: event.target.result,
+                            timestamp: Date.now(),
+                            settings: { ...photoState.photoSettings }
+                        };
+                        photoState.capturedPhotos.push(photoData);
+                        photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
+
+                        // Stop camera when moving to edit screen
+                        stopPhotoMode();
+
+                        showToastRecording('Photo added from gallery', 'success', '🖼️');
+                        setTimeout(() => {
+                            showScreen('screen6');
+                            displayCapturedPhoto();
+                        }, 300);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Switch to video mode
+        function switchToVideoMode() {
+            // Stop camera before switching modes
+            stopPhotoMode();
+
+            showToastRecording('Switching to video mode...', 'info', '📹');
+            setTimeout(() => {
+                showScreen('screen3');
+            }, 300);
+        }
+
+        // Photo edit functions
+        function photoAddText() {
+            showToastRecording('📝 Text editor coming soon', 'info', '📝');
+        }
+
+        function photoCrop() {
+            showToastRecording('✂ Crop tool coming soon', 'info', '✂');
+        }
+
+        function photoAddEffects() {
+            showToastRecording('✨ Effects editor coming soon', 'info', '✨');
+        }
+
+        function photoAddFilters() {
+            showToastRecording('🎨 Filter editor coming soon', 'info', '🎨');
+        }
+
+        function photoDraw() {
+            showToastRecording('✏ Drawing tool coming soon', 'info', '✏');
+        }
+
+        // Post photo
+        async function saveDraftPhoto() {
+            if (!currentUser || photoState.capturedPhotos.length === 0) {
+                alert('Please login and capture a photo first');
+                return;
+            }
+
+            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+
+            try {
+                showTiktokCountdown(5, async () => {
+                    setTimeout(() => {
+                        showUploadResultModal(true, '💾 Saving Draft...', 'Your photo draft is being saved');
+                    }, 1000);
+
+                    await savePhotoToFirebase(photo, 'draft');
+                });
+            } catch (error) {
+                console.error('Error saving photo draft:', error);
+                alert('Failed to save photo draft');
+            }
+        }
+
+        async function publishPhotoPost() {
+            if (!currentUser || photoState.capturedPhotos.length === 0) {
+                alert('Please login and capture a photo first');
+                return;
+            }
+
+            const caption = document.querySelector('#screen7 textarea')?.value || '';
+            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+
+            try {
+                showTiktokCountdown(5, async () => {
+                    setTimeout(() => {
+                        showUploadResultModal(true, '📤 Publishing Photo...', 'Your photo is being published');
+                    }, 1000);
+
+                    await savePhotoToFirebase(photo, 'post', caption);
+                });
+            } catch (error) {
+                console.error('Error publishing photo:', error);
+                alert('Failed to publish photo');
+            }
+        }
+
+        async function postPhotoStory() {
+            if (!currentUser || photoState.capturedPhotos.length === 0) {
+                alert('Please login and capture a photo first');
+                return;
+            }
+
+            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+
+            try {
+                showTiktokCountdown(5, async () => {
+                    setTimeout(() => {
+                        showUploadResultModal(true, '📤 Posting Story...', 'Your photo story is being posted');
+                    }, 1000);
+
+                    await savePhotoToFirebase(photo, 'story');
+                });
+            } catch (error) {
+                console.error('Error posting photo story:', error);
+                alert('Failed to post photo story');
+            }
+        }
+
+        async function savePhotoToFirebase(photo, type, caption = '') {
+            try {
+                const today = getTodayDate();
+                const docId = generateDocId();
+
+                const photoRef = ref(database, `photos/${today}/${type}/${docId}`);
+
+                // Convert image to blob and upload to storage
+                const photoBlob = await (await fetch(photo.url)).blob();
+                const storageRef = ref(storage, `photos/${currentUser.uid}/${today}/${docId}.jpg`);
+                const uploadResult = await uploadBytes(storageRef, photoBlob);
+                const downloadUrl = await getDownloadURL(uploadResult.ref);
+
+                // Save metadata to database
+                await set(photoRef, {
+                    uid: currentUser.uid,
+                    imageUrl: downloadUrl,
+                    caption: caption,
+                    timestamp: Date.now(),
+                    type: type,
+                    settings: photo.settings
+                });
+
+                console.log('Photo saved:', docId);
+                setTimeout(() => {
+                    closeUploadResultModal();
+                    resetPhotoMode();
+                    showScreen('screen1');
+                }, 3000);
+            } catch (error) {
+                console.error('Firebase error:', error);
+                throw error;
+            }
+        }
+
+        // Stop photo mode and release camera
+        function stopPhotoMode() {
+            console.log('Stopping photo mode - releasing camera');
+
+            // Stop all media tracks
+            if (photoState.photoStream) {
+                photoState.photoStream.getTracks().forEach(track => {
+                    console.log('Stopping track:', track.kind);
+                    track.stop();
+                });
+                photoState.photoStream = null;
+            }
+
+            // Remove video element
+            const video = document.getElementById('photoPreviewVideo');
+            if (video) {
+                video.srcObject = null;
+                video.remove();
+            }
+
+            showToastRecording('📷 Camera released', 'info', '✓');
+        }
+
+        // Full reset - clears all photo data and stops camera
+        function resetPhotoMode() {
+            console.log('Resetting photo mode completely');
+
+            photoState.capturedPhotos = [];
+            photoState.currentPhotoIndex = 0;
+            photoState.photoSettings = {
+                flash: false,
+                timer: 0,
+                filter: 'none',
+                grid: false,
+                ratio: '1:1',
+                effects: []
+            };
+
+            // Stop camera
+            stopPhotoMode();
+        }
+
+        // Helper method
+        photoState.getPhotoFilterString = function (filterName) {
+            const filters = {
+                'sepia': 'sepia(100%)',
+                'grayscale': 'grayscale(100%)',
+                'brightness': 'brightness(1.2)',
+                'contrast': 'contrast(1.3)'
+            };
+            return filters[filterName] || 'none';
         };
-        photoState.capturedPhotos.push(photoData);
-        photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
-        
-        // Stop camera when moving to edit screen
-        stopPhotoMode();
-        
-        showToastRecording('Photo added from gallery', 'success', '🖼️');
-        setTimeout(() => {
-          showScreen('screen6');
-          displayCapturedPhoto();
-        }, 300);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  input.click();
-}
-
-// Switch to video mode
-function switchToVideoMode() {
-  // Stop camera before switching modes
-  stopPhotoMode();
-  
-  showToastRecording('Switching to video mode...', 'info', '📹');
-  setTimeout(() => {
-    showScreen('screen3');
-  }, 300);
-}
-
-// Photo edit functions
-function photoAddText() {
-  showToastRecording('📝 Text editor coming soon', 'info', '📝');
-}
-
-function photoCrop() {
-  showToastRecording('✂ Crop tool coming soon', 'info', '✂');
-}
-
-function photoAddEffects() {
-  showToastRecording('✨ Effects editor coming soon', 'info', '✨');
-}
-
-function photoAddFilters() {
-  showToastRecording('🎨 Filter editor coming soon', 'info', '🎨');
-}
-
-function photoDraw() {
-  showToastRecording('✏ Drawing tool coming soon', 'info', '✏');
-}
-
-// Post photo
-async function saveDraftPhoto() {
-  if (!currentUser || photoState.capturedPhotos.length === 0) {
-    alert('Please login and capture a photo first');
-    return;
-  }
-  
-  const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-  
-  try {
-    showTiktokCountdown(5, async () => {
-      setTimeout(() => {
-        showUploadResultModal(true, '💾 Saving Draft...', 'Your photo draft is being saved');
-      }, 1000);
-      
-      await savePhotoToFirebase(photo, 'draft');
-    });
-  } catch (error) {
-    console.error('Error saving photo draft:', error);
-    alert('Failed to save photo draft');
-  }
-}
-
-async function publishPhotoPost() {
-  if (!currentUser || photoState.capturedPhotos.length === 0) {
-    alert('Please login and capture a photo first');
-    return;
-  }
-  
-  const caption = document.querySelector('#screen7 textarea')?.value || '';
-  const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-  
-  try {
-    showTiktokCountdown(5, async () => {
-      setTimeout(() => {
-        showUploadResultModal(true, '📤 Publishing Photo...', 'Your photo is being published');
-      }, 1000);
-      
-      await savePhotoToFirebase(photo, 'post', caption);
-    });
-  } catch (error) {
-    console.error('Error publishing photo:', error);
-    alert('Failed to publish photo');
-  }
-}
-
-async function postPhotoStory() {
-  if (!currentUser || photoState.capturedPhotos.length === 0) {
-    alert('Please login and capture a photo first');
-    return;
-  }
-  
-  const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-  
-  try {
-    showTiktokCountdown(5, async () => {
-      setTimeout(() => {
-        showUploadResultModal(true, '📤 Posting Story...', 'Your photo story is being posted');
-      }, 1000);
-      
-      await savePhotoToFirebase(photo, 'story');
-    });
-  } catch (error) {
-    console.error('Error posting photo story:', error);
-    alert('Failed to post photo story');
-  }
-}
-
-async function savePhotoToFirebase(photo, type, caption = '') {
-  try {
-    const today = getTodayDate();
-    const docId = generateDocId();
-    
-    const photoRef = ref(database, `photos/${today}/${type}/${docId}`);
-    
-    // Convert image to blob and upload to storage
-    const photoBlob = await (await fetch(photo.url)).blob();
-    const storageRef = ref(storage, `photos/${currentUser.uid}/${today}/${docId}.jpg`);
-    const uploadResult = await uploadBytes(storageRef, photoBlob);
-    const downloadUrl = await getDownloadURL(uploadResult.ref);
-    
-    // Save metadata to database
-    await set(photoRef, {
-      uid: currentUser.uid,
-      imageUrl: downloadUrl,
-      caption: caption,
-      timestamp: Date.now(),
-      type: type,
-      settings: photo.settings
-    });
-    
-    console.log('Photo saved:', docId);
-    setTimeout(() => {
-      closeUploadResultModal();
-      resetPhotoMode();
-      showScreen('screen1');
-    }, 3000);
-  } catch (error) {
-    console.error('Firebase error:', error);
-    throw error;
-  }
-}
-
-// Stop photo mode and release camera
-function stopPhotoMode() {
-  console.log('Stopping photo mode - releasing camera');
-  
-  // Stop all media tracks
-  if (photoState.photoStream) {
-    photoState.photoStream.getTracks().forEach(track => {
-      console.log('Stopping track:', track.kind);
-      track.stop();
-    });
-    photoState.photoStream = null;
-  }
-  
-  // Remove video element
-  const video = document.getElementById('photoPreviewVideo');
-  if (video) {
-    video.srcObject = null;
-    video.remove();
-  }
-  
-  showToastRecording('📷 Camera released', 'info', '✓');
-}
-
-// Full reset - clears all photo data and stops camera
-function resetPhotoMode() {
-  console.log('Resetting photo mode completely');
-  
-  photoState.capturedPhotos = [];
-  photoState.currentPhotoIndex = 0;
-  photoState.photoSettings = {
-    flash: false,
-    timer: 0,
-    filter: 'none',
-    grid: false,
-    ratio: '1:1',
-    effects: []
-  };
-  
-  // Stop camera
-  stopPhotoMode();
-}
-
-// Helper method
-photoState.getPhotoFilterString = function(filterName) {
-  const filters = {
-    'sepia': 'sepia(100%)',
-    'grayscale': 'grayscale(100%)',
-    'brightness': 'brightness(1.2)',
-    'contrast': 'contrast(1.3)'
-  };
-  return filters[filterName] || 'none';
-};
-
-function goToPhotoPostSettings() {
-  showScreen('screen7');
-}
-
-// ============================================================================
-// TEXT MODE
-// ============================================================================
-
-function changeTextBg(element) {
-  const bg = window.getComputedStyle(element).background;
-  recordingState.textBgGradient = bg;
-
-  // Update active color
-  document.querySelectorAll('.rec-color-option').forEach(el => {
-    el.classList.remove('active');
-  });
-  element.classList.add('active');
-
-  const textCanvas = document.getElementById('textEditorBg');
-  if (textCanvas) {
-    textCanvas.style.background = bg;
-  }
-}
-
-function changeTextAlign(align) {
-  recordingState.textAlign = align;
-
-  // Update active button
-  document.querySelectorAll('.rec-text-tool-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  event.target.closest('.rec-text-tool-btn').classList.add('active');
-
-  const textInput = document.getElementById('textInput');
-  if (textInput) {
-    textInput.style.textAlign = align;
-  }
-}
-
-function toggleBold() {
-  recordingState.isBold = !recordingState.isBold;
-  event.target.closest('.rec-text-tool-btn').classList.toggle('active');
-
-  const textInput = document.getElementById('textInput');
-  if (textInput) {
-    textInput.style.fontWeight = recordingState.isBold ? 'bold' : 'normal';
-  }
-}
-
-function changeTextColor() {
-  const color = prompt('Enter text color (hex or name):', recordingState.textColor);
-  if (color) {
-    recordingState.textColor = color;
-    const textInput = document.getElementById('textInput');
-    if (textInput) {
-      textInput.style.color = color;
-    }
-    showToastRecording('Text color changed', 'success', '🎨');
-  }
-}
-
-function goToTextPostSettings() {
-  const textInput = document.getElementById('textInput');
-  const textPreview = document.getElementById('textPreview');
-
-  if (textPreview && textInput) {
-    textPreview.innerHTML = `<span>${textInput.value || 'Your Text'}</span>`;
-  }
-
-  showScreen('screen9');
-}
-
-// ============================================================================
-// CAPTION COUNTERS
-// ============================================================================
-
-function updateCaptionCounter() {
-  const captionInput = document.getElementById('recCaption');
-  const counter = document.getElementById('captionCounter');
-
-  if (captionInput && counter) {
-    const length = captionInput.value.length;
-    counter.textContent = `${length}/300`;
-  }
-}
-
-function updatePhotoCaptionCounter() {
-  const captionInput = document.getElementById('photoCaption');
-  const counter = document.getElementById('photoCaptionCounter');
-
-  if (captionInput && counter) {
-    const length = captionInput.value.length;
-    counter.textContent = `${length}/300`;
-  }
-}
-
-function updateTextPostCaptionCounter() {
-  const captionInput = document.getElementById('textPostCaption');
-  const counter = document.getElementById('textPostCaptionCounter');
-
-  if (captionInput && counter) {
-    const length = captionInput.value.length;
-    counter.textContent = `${length}/300`;
-  }
-}
-
-// ============================================================================
-// POST SETTINGS NAVIGATION
-// ============================================================================
-
-function goToPostSettings() {
-  showScreen('screen4');
-}
-
-// ============================================================================
-// FIREBASE HELPER FUNCTIONS
-// ============================================================================
-
-function getTodayDate() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-function generateDocId() {
-  return `post_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
-
-// ============================================================================
-// PUBLISHING & SAVING
-// ============================================================================
-
-function saveDraftRecording() {
-  const caption = document.getElementById('recCaption')?.value || '';
-  const draft = {
-    type: 'video',
-    caption: caption,
-    blob: recordingState.recordedBlob,
-    timestamp: new Date().toISOString()
-  };
-
-  // Save to localStorage
-  let drafts = JSON.parse(localStorage.getItem('recordingDrafts') || '[]');
-  drafts.push(draft);
-  localStorage.setItem('recordingDrafts', JSON.stringify(drafts));
-
-  showToastRecording('Draft saved', 'success', '💾');
-  closeRecordingUI();
-}
-
-function publishRecordingPost() {
-  const caption = document.getElementById('recCaption')?.value || '';
-  const post = {
-    type: 'video',
-    caption: caption,
-    timestamp: new Date().toISOString(),
-    privacy: document.querySelector('select').value
-  };
-
-  console.log('Publishing video post:', post);
-  showToastRecording('Video posted successfully', 'success', '✓');
-  closeRecordingUI();
-}
-
-function postStory() {
-  showToastRecording('Added to your story', 'success', '📖');
-  closeRecordingUI();
-}
-
-// Note: saveDraftPhoto, publishPhotoPost, and postPhotoStory are now located
-// in the PHOTO MODE section above with Firebase integration
-
-async function saveDraftText() {
-  if (!currentUser) {
-    alert('❌ Please login to save drafts');
-    return;
-  }
-
-  const textInput = document.getElementById('textInput')?.value || '';
-  const caption = document.getElementById('textPostCaption')?.value || '';
-
-  if (!textInput.trim()) {
-    alert('⚠️ Please enter some text');
-    return;
-  }
-
-  try {
-    // Show TikTok-style countdown
-    showTiktokCountdown(5, async () => {
-      // Show success message 1 second after countdown
-      setTimeout(() => {
-        showUploadResultModal(true, '💾 Saving Draft...', 'Your text draft is being saved');
-      }, 1000);
-
-      // Save to Firebase
-      await saveDraftToFirebase(textInput, caption);
-    });
-  } catch (error) {
-    console.error('Error saving draft:', error);
-    hideTiktokCountdown();
-    alert('❌ Failed to save draft: ' + error.message);
-  }
-}
-
-async function saveDraftToFirebase(textInput, caption) {
-  try {
-    const todayDate = getTodayDate();
-    const docId = generateDocId();
-    const userDoc = await db.collection('users').doc(currentUser.uid).get();
-    const userData = userDoc.data();
-
-    const draftData = {
-      id: docId,
-      userId: currentUser.uid,
-      userName: userData?.name || 'Anonymous',
-      username: userData?.username || 'user',
-      userProfilePic: userData?.profilePicUrl || null,
-      textContent: textInput,
-      caption: caption,
-      backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      textAlign: recordingState.textAlign || 'center',
-      isBold: recordingState.isBold || false,
-      textColor: recordingState.textColor || '#fff',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      timestamp: Date.now(),
-      isDraft: true,
-      type: 'text'
-    };
-
-    await db.collection('textposts').doc(todayDate).collection('drafts').doc(docId).set(draftData);
-
-    console.log(`Draft saved: /textposts/${todayDate}/drafts/${docId}`);
-    
-    // Update success modal
-    document.getElementById('uploadResultTitle').textContent = '✅ Draft Saved!';
-    document.getElementById('uploadResultMessage').textContent = 'Your draft was saved successfully!';
-
-    // Reset form after 5 seconds
-    setTimeout(() => {
-      closeUploadResultModal();
-      resetTextTab();
-      closeUploadPage();
-    }, 5000);
-
-  } catch (error) {
-    console.error('Upload error:', error);
-    showUploadResultModal(false, '❌ Save Failed', error.message);
-  }
-}
-
-async function publishTextPost() {
-  if (!currentUser) {
-    alert('❌ Please login to post');
-    return;
-  }
-
-  const textInput = document.getElementById('textInput')?.value || '';
-  const caption = document.getElementById('textPostCaption')?.value || '';
-  const privacySelect = document.querySelector('select');
-  const privacy = privacySelect ? privacySelect.value : 'Everyone';
-
-  if (!textInput.trim()) {
-    alert('⚠️ Please enter some text');
-    return;
-  }
-
-  try {
-    // Show TikTok-style countdown
-    showTiktokCountdown(5, async () => {
-      // Show success message 1 second after countdown
-      setTimeout(() => {
-        showUploadResultModal(true, '✅ Posting...', 'Your text is being processed');
-      }, 1000);
-
-      // Save to Firebase
-      await saveTextPostToFirebase(textInput, caption, privacy);
-    });
-  } catch (error) {
-    console.error('Error posting text:', error);
-    hideTiktokCountdown();
-    alert('❌ Failed to post: ' + error.message);
-  }
-}
-
-async function saveTextPostToFirebase(textInput, caption, privacy) {
-  try {
-    const todayDate = getTodayDate();
-    const docId = generateDocId();
-    const userDoc = await db.collection('users').doc(currentUser.uid).get();
-    const userData = userDoc.data();
-
-    const postData = {
-      id: docId,
-      userId: currentUser.uid,
-      userName: userData?.name || 'Anonymous',
-      username: userData?.username || 'user',
-      userProfilePic: userData?.profilePicUrl || null,
-      textContent: textInput,
-      caption: caption,
-      privacy: privacy,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      timestamp: Date.now(),
-      type: 'text',
-      likes: 0,
-      comments: 0,
-      shares: 0,
-      backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      textAlign: recordingState.textAlign || 'center',
-      isBold: recordingState.isBold || false,
-      textColor: recordingState.textColor || '#fff'
-    };
-
-    await db.collection('textposts').doc(todayDate).collection('posts').doc(docId).set(postData);
-
-    console.log(`Text post saved: /textposts/${todayDate}/posts/${docId}`);
-    
-    // Update success modal
-    document.getElementById('uploadResultTitle').textContent = '✅ Text Posted!';
-    document.getElementById('uploadResultMessage').textContent = 'Your text was posted successfully!';
-
-    // Reset form after 5 seconds
-    setTimeout(() => {
-      closeUploadResultModal();
-      resetTextTab();
-      closeUploadPage();
-    }, 5000);
-
-  } catch (error) {
-    console.error('Upload error:', error);
-    showUploadResultModal(false, '❌ Upload Failed', error.message);
-  }
-}
-
-function resetTextTab() {
-  document.getElementById('textInput').value = '';
-  document.getElementById('textPostCaption').value = '';
-}
-
-async function postTextStory() {
-  if (!currentUser) {
-    alert('❌ Please login to post story');
-    return;
-  }
-
-  const textInput = document.getElementById('textInput')?.value || '';
-
-  if (!textInput.trim()) {
-    alert('⚠️ Please enter some text');
-    return;
-  }
-
-  try {
-    // Show TikTok-style countdown
-    showTiktokCountdown(5, async () => {
-      // Show success message 1 second after countdown
-      setTimeout(() => {
-        showUploadResultModal(true, '📖 Adding to Story...', 'Your story is being posted');
-      }, 1000);
-
-      // Save to Firebase
-      await saveTextStoryToFirebase(textInput);
-    });
-  } catch (error) {
-    console.error('Error posting to story:', error);
-    hideTiktokCountdown();
-    alert('❌ Failed to post story: ' + error.message);
-  }
-}
-
-async function saveTextStoryToFirebase(textInput) {
-  try {
-    const todayDate = getTodayDate();
-    const docId = generateDocId();
-    const userDoc = await db.collection('users').doc(currentUser.uid).get();
-    const userData = userDoc.data();
-
-    const storyData = {
-      id: docId,
-      userId: currentUser.uid,
-      userName: userData?.name || 'Anonymous',
-      username: userData?.username || 'user',
-      userProfilePic: userData?.profilePicUrl || null,
-      textContent: textInput,
-      backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      textAlign: recordingState.textAlign || 'center',
-      isBold: recordingState.isBold || false,
-      textColor: recordingState.textColor || '#fff',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      timestamp: Date.now(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-      type: 'text',
-      views: 0
-    };
-
-    await db.collection('stories').doc(todayDate).collection('posts').doc(docId).set(storyData);
-
-    console.log(`Story posted: /stories/${todayDate}/posts/${docId}`);
-    
-    // Update success modal
-    document.getElementById('uploadResultTitle').textContent = '✅ Story Posted!';
-    document.getElementById('uploadResultMessage').textContent = 'Your story will expire in 24 hours!';
-
-    // Reset form after 5 seconds
-    setTimeout(() => {
-      closeUploadResultModal();
-      resetTextTab();
-      closeUploadPage();
-    }, 5000);
-
-  } catch (error) {
-    console.error('Story error:', error);
-    showUploadResultModal(false, '❌ Story Failed', error.message);
-  }
-}
-
-// ============================================================================
-// POPUP MANAGEMENT
-// ============================================================================
-
-function closeRecPopup(popupId) {
-  const popup = document.getElementById(popupId);
-  if (popup) {
-    popup.style.display = 'none';
-  }
-}
-
-// ============================================================================
-// INITIALIZATION
-// ============================================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Set initial styles
-  const textCanvas = document.getElementById('textEditorBg');
-  if (textCanvas) {
-    textCanvas.style.background = recordingState.textBgGradient;
-  }
-
-  const textInput = document.getElementById('textInput');
-  if (textInput) {
-    textInput.style.textAlign = 'center';
-  }
-
-  // Add event listeners to menu items for demo
-  document.querySelectorAll('.rec-menu-item').forEach(item => {
-    item.addEventListener('click', function() {
-      showToastRecording(`${this.textContent} selected`, 'info', '✓');
-    });
-  });
-});
-
- function openRecordingUI() {
+
+        function goToPhotoPostSettings() {
+            showScreen('screen7');
+        }
+
+        // ============================================================================
+        // TEXT MODE
+        // ============================================================================
+
+        function changeTextBg(element) {
+            const bg = window.getComputedStyle(element).background;
+            recordingState.textBgGradient = bg;
+
+            // Update active color
+            document.querySelectorAll('.rec-color-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            const textCanvas = document.getElementById('textEditorBg');
+            if (textCanvas) {
+                textCanvas.style.background = bg;
+            }
+        }
+
+        function changeTextAlign(align) {
+            recordingState.textAlign = align;
+
+            // Update active button
+            document.querySelectorAll('.rec-text-tool-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.rec-text-tool-btn').classList.add('active');
+
+            const textInput = document.getElementById('textInput');
+            if (textInput) {
+                textInput.style.textAlign = align;
+            }
+        }
+
+        function toggleBold() {
+            recordingState.isBold = !recordingState.isBold;
+            event.target.closest('.rec-text-tool-btn').classList.toggle('active');
+
+            const textInput = document.getElementById('textInput');
+            if (textInput) {
+                textInput.style.fontWeight = recordingState.isBold ? 'bold' : 'normal';
+            }
+        }
+
+        function changeTextColor() {
+            const color = prompt('Enter text color (hex or name):', recordingState.textColor);
+            if (color) {
+                recordingState.textColor = color;
+                const textInput = document.getElementById('textInput');
+                if (textInput) {
+                    textInput.style.color = color;
+                }
+                showToastRecording('Text color changed', 'success', '🎨');
+            }
+        }
+
+        function goToTextPostSettings() {
+            const textInput = document.getElementById('textInput');
+            const textPreview = document.getElementById('textPreview');
+
+            if (textPreview && textInput) {
+                textPreview.innerHTML = `<span>${textInput.value || 'Your Text'}</span>`;
+            }
+
+            showScreen('screen9');
+        }
+
+        // ============================================================================
+        // CAPTION COUNTERS
+        // ============================================================================
+
+        function updateCaptionCounter() {
+            const captionInput = document.getElementById('recCaption');
+            const counter = document.getElementById('captionCounter');
+
+            if (captionInput && counter) {
+                const length = captionInput.value.length;
+                counter.textContent = `${length}/300`;
+            }
+        }
+
+        function updatePhotoCaptionCounter() {
+            const captionInput = document.getElementById('photoCaption');
+            const counter = document.getElementById('photoCaptionCounter');
+
+            if (captionInput && counter) {
+                const length = captionInput.value.length;
+                counter.textContent = `${length}/300`;
+            }
+        }
+
+        function updateTextPostCaptionCounter() {
+            const captionInput = document.getElementById('textPostCaption');
+            const counter = document.getElementById('textPostCaptionCounter');
+
+            if (captionInput && counter) {
+                const length = captionInput.value.length;
+                counter.textContent = `${length}/300`;
+            }
+        }
+
+        // ============================================================================
+        // POST SETTINGS NAVIGATION
+        // ============================================================================
+
+        function goToPostSettings() {
+            showScreen('screen4');
+        }
+
+        // ============================================================================
+        // FIREBASE HELPER FUNCTIONS
+        // ============================================================================
+
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function generateDocId() {
+            return `post_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        }
+
+        // ============================================================================
+        // PUBLISHING & SAVING
+        // ============================================================================
+
+        function saveDraftRecording() {
+            const caption = document.getElementById('recCaption')?.value || '';
+            const draft = {
+                type: 'video',
+                caption: caption,
+                blob: recordingState.recordedBlob,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            let drafts = JSON.parse(localStorage.getItem('recordingDrafts') || '[]');
+            drafts.push(draft);
+            localStorage.setItem('recordingDrafts', JSON.stringify(drafts));
+
+            showToastRecording('Draft saved', 'success', '💾');
+            closeRecordingUI();
+        }
+
+        function publishRecordingPost() {
+            const caption = document.getElementById('recCaption')?.value || '';
+            const post = {
+                type: 'video',
+                caption: caption,
+                timestamp: new Date().toISOString(),
+                privacy: document.querySelector('select').value
+            };
+
+            console.log('Publishing video post:', post);
+            showToastRecording('Video posted successfully', 'success', '✓');
+            closeRecordingUI();
+        }
+
+        function postStory() {
+            showToastRecording('Added to your story', 'success', '📖');
+            closeRecordingUI();
+        }
+
+        // Note: saveDraftPhoto, publishPhotoPost, and postPhotoStory are now located
+        // in the PHOTO MODE section above with Firebase integration
+
+        async function saveDraftText() {
+            if (!currentUser) {
+                alert('❌ Please login to save drafts');
+                return;
+            }
+
+            const textInput = document.getElementById('textInput')?.value || '';
+            const caption = document.getElementById('textPostCaption')?.value || '';
+
+            if (!textInput.trim()) {
+                alert('⚠️ Please enter some text');
+                return;
+            }
+
+            try {
+                // Show TikTok-style countdown
+                showTiktokCountdown(5, async () => {
+                    // Show success message 1 second after countdown
+                    setTimeout(() => {
+                        showUploadResultModal(true, '💾 Saving Draft...', 'Your text draft is being saved');
+                    }, 1000);
+
+                    // Save to Firebase
+                    await saveDraftToFirebase(textInput, caption);
+                });
+            } catch (error) {
+                console.error('Error saving draft:', error);
+                hideTiktokCountdown();
+                alert('❌ Failed to save draft: ' + error.message);
+            }
+        }
+
+        async function saveDraftToFirebase(textInput, caption) {
+            try {
+                const todayDate = getTodayDate();
+                const docId = generateDocId();
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+
+                const draftData = {
+                    id: docId,
+                    userId: currentUser.uid,
+                    userName: userData?.name || 'Anonymous',
+                    username: userData?.username || 'user',
+                    userProfilePic: userData?.profilePicUrl || null,
+                    textContent: textInput,
+                    caption: caption,
+                    backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    textAlign: recordingState.textAlign || 'center',
+                    isBold: recordingState.isBold || false,
+                    textColor: recordingState.textColor || '#fff',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: Date.now(),
+                    isDraft: true,
+                    type: 'text'
+                };
+
+                await db.collection('textposts').doc(todayDate).collection('drafts').doc(docId).set(draftData);
+
+                console.log(`Draft saved: /textposts/${todayDate}/drafts/${docId}`);
+
+                // Update success modal
+                document.getElementById('uploadResultTitle').textContent = '✅ Draft Saved!';
+                document.getElementById('uploadResultMessage').textContent = 'Your draft was saved successfully!';
+
+                // Reset form after 5 seconds
+                setTimeout(() => {
+                    closeUploadResultModal();
+                    resetTextTab();
+                    closeUploadPage();
+                }, 5000);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showUploadResultModal(false, '❌ Save Failed', error.message);
+            }
+        }
+
+        async function publishTextPost() {
+            if (!currentUser) {
+                alert('❌ Please login to post');
+                return;
+            }
+
+            const textInput = document.getElementById('textInput')?.value || '';
+            const caption = document.getElementById('textPostCaption')?.value || '';
+            const privacySelect = document.querySelector('select');
+            const privacy = privacySelect ? privacySelect.value : 'Everyone';
+
+            if (!textInput.trim()) {
+                alert('⚠️ Please enter some text');
+                return;
+            }
+
+            try {
+                // Show TikTok-style countdown
+                showTiktokCountdown(5, async () => {
+                    // Show success message 1 second after countdown
+                    setTimeout(() => {
+                        showUploadResultModal(true, '✅ Posting...', 'Your text is being processed');
+                    }, 1000);
+
+                    // Save to Firebase
+                    await saveTextPostToFirebase(textInput, caption, privacy);
+                });
+            } catch (error) {
+                console.error('Error posting text:', error);
+                hideTiktokCountdown();
+                alert('❌ Failed to post: ' + error.message);
+            }
+        }
+
+        async function saveTextPostToFirebase(textInput, caption, privacy) {
+            try {
+                const todayDate = getTodayDate();
+                const docId = generateDocId();
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+
+                const postData = {
+                    id: docId,
+                    userId: currentUser.uid,
+                    userName: userData?.name || 'Anonymous',
+                    username: userData?.username || 'user',
+                    userProfilePic: userData?.profilePicUrl || null,
+                    textContent: textInput,
+                    caption: caption,
+                    privacy: privacy,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: Date.now(),
+                    type: 'text',
+                    likes: 0,
+                    comments: 0,
+                    shares: 0,
+                    backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    textAlign: recordingState.textAlign || 'center',
+                    isBold: recordingState.isBold || false,
+                    textColor: recordingState.textColor || '#fff'
+                };
+
+                await db.collection('textposts').doc(todayDate).collection('posts').doc(docId).set(postData);
+
+                console.log(`Text post saved: /textposts/${todayDate}/posts/${docId}`);
+
+                // Update success modal
+                document.getElementById('uploadResultTitle').textContent = '✅ Text Posted!';
+                document.getElementById('uploadResultMessage').textContent = 'Your text was posted successfully!';
+
+                // Reset form after 5 seconds
+                setTimeout(() => {
+                    closeUploadResultModal();
+                    resetTextTab();
+                    closeUploadPage();
+                }, 5000);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showUploadResultModal(false, '❌ Upload Failed', error.message);
+            }
+        }
+
+        function resetTextTab() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('textPostCaption').value = '';
+        }
+
+        async function postTextStory() {
+            if (!currentUser) {
+                alert('❌ Please login to post story');
+                return;
+            }
+
+            const textInput = document.getElementById('textInput')?.value || '';
+
+            if (!textInput.trim()) {
+                alert('⚠️ Please enter some text');
+                return;
+            }
+
+            try {
+                // Show TikTok-style countdown
+                showTiktokCountdown(5, async () => {
+                    // Show success message 1 second after countdown
+                    setTimeout(() => {
+                        showUploadResultModal(true, '📖 Adding to Story...', 'Your story is being posted');
+                    }, 1000);
+
+                    // Save to Firebase
+                    await saveTextStoryToFirebase(textInput);
+                });
+            } catch (error) {
+                console.error('Error posting to story:', error);
+                hideTiktokCountdown();
+                alert('❌ Failed to post story: ' + error.message);
+            }
+        }
+
+        async function saveTextStoryToFirebase(textInput) {
+            try {
+                const todayDate = getTodayDate();
+                const docId = generateDocId();
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+
+                const storyData = {
+                    id: docId,
+                    userId: currentUser.uid,
+                    userName: userData?.name || 'Anonymous',
+                    username: userData?.username || 'user',
+                    userProfilePic: userData?.profilePicUrl || null,
+                    textContent: textInput,
+                    backgroundGradient: recordingState.textBgGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    textAlign: recordingState.textAlign || 'center',
+                    isBold: recordingState.isBold || false,
+                    textColor: recordingState.textColor || '#fff',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: Date.now(),
+                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+                    type: 'text',
+                    views: 0
+                };
+
+                await db.collection('stories').doc(todayDate).collection('posts').doc(docId).set(storyData);
+
+                console.log(`Story posted: /stories/${todayDate}/posts/${docId}`);
+
+                // Update success modal
+                document.getElementById('uploadResultTitle').textContent = '✅ Story Posted!';
+                document.getElementById('uploadResultMessage').textContent = 'Your story will expire in 24 hours!';
+
+                // Reset form after 5 seconds
+                setTimeout(() => {
+                    closeUploadResultModal();
+                    resetTextTab();
+                    closeUploadPage();
+                }, 5000);
+
+            } catch (error) {
+                console.error('Story error:', error);
+                showUploadResultModal(false, '❌ Story Failed', error.message);
+            }
+        }
+
+        // ============================================================================
+        // POPUP MANAGEMENT
+        // ============================================================================
+
+        function closeRecPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.style.display = 'none';
+            }
+        }
+
+        // ============================================================================
+        // INITIALIZATION
+        // ============================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial styles
+            const textCanvas = document.getElementById('textEditorBg');
+            if (textCanvas) {
+                textCanvas.style.background = recordingState.textBgGradient;
+            }
+
+            const textInput = document.getElementById('textInput');
+            if (textInput) {
+                textInput.style.textAlign = 'center';
+            }
+
+            // Add event listeners to menu items for demo
+            document.querySelectorAll('.rec-menu-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    showToastRecording(`${this.textContent} selected`, 'info', '✓');
+                });
+            });
+        });
+
+        function openRecordingUI() {
             const overlay = document.getElementById('recordingUIOverlay');
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
