@@ -670,6 +670,37 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
+        /* Ratio Guide Frame - Shows what will be captured */
+        .ratio-guide-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid rgba(76, 29, 149, 0.7);
+            border-radius: 8px;
+            background: transparent;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+            pointer-events: none;
+            z-index: 8;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.85;
+        }
+
+        /* Corner indicators for professional look */
+        .ratio-guide-frame::before,
+        .ratio-guide-frame::after {
+            content: '';
+            position: absolute;
+            background: rgba(76, 29, 149, 0.8);
+        }
+
+        .ratio-guide-frame::before {
+            width: 40px;
+            height: 3px;
+            top: -15px;
+            left: -15px;
+        }
+
         /* Top Bar */
         .rec-top-bar {
             position: absolute;
@@ -4422,7 +4453,11 @@
 
         <!-- SCREEN 5: PHOTO MODE -->
         <div id="screen5" class="recording-screen">
-            <div class="camera-preview">📷 Photo Camera Preview</div>
+            <div class="camera-preview">
+                <!-- Ratio Guide Frame (Live Preview) -->
+                <div id="ratioGuide" class="ratio-guide-frame"></div>
+                📷 Photo Camera Preview
+            </div>
             <div class="rec-top-bar">
                 <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
                 <button class="rec-icon-btn" onclick="toggleRecLeftMenu()">☰</button>
@@ -8656,6 +8691,58 @@
             closePhotoLeftMenu();
         }
 
+        // ============================================================================
+        // UPDATE RATIO GUIDE - Shows real-time frame preview
+        // ============================================================================
+        function updateRatioGuide() {
+            const video = document.getElementById('photoPreviewVideo');
+            const guide = document.getElementById('ratioGuide');
+            
+            if (!video || !video.videoWidth) {
+                console.log('Video not ready yet');
+                return;
+            }
+            
+            // Aspect ratio mappings
+            const ratios = {
+                '1:1': 1,
+                '3:4': 0.75,
+                '9:16': 0.5625,
+                '16:9': 1.777
+            };
+            
+            const targetRatio = ratios[photoState.photoSettings.ratio] || 1.777;
+            const videoRatio = video.videoWidth / video.videoHeight;
+            
+            let frameWidth = 100;  // percentage
+            let frameHeight = 100; // percentage
+            
+            // Calculate which dimension to constrain
+            if (videoRatio > targetRatio) {
+                // Video is wider than target ratio - constrain width
+                frameWidth = (targetRatio * 100) / videoRatio;
+                frameHeight = 100;
+            } else {
+                // Video is taller than target ratio - constrain height
+                frameWidth = 100;
+                frameHeight = (100 * videoRatio) / targetRatio;
+            }
+            
+            // Apply to guide element
+            guide.style.width = frameWidth + '%';
+            guide.style.height = frameHeight + '%';
+            guide.style.display = 'block';
+            
+            // Log for debugging
+            console.log(`📐 Ratio Guide Updated:`, {
+                ratio: photoState.photoSettings.ratio,
+                frameSize: `${frameWidth.toFixed(1)}% × ${frameHeight.toFixed(1)}%`,
+                videoRes: `${video.videoWidth}×${video.videoHeight}`,
+                videoRatio: videoRatio.toFixed(3),
+                targetRatio: targetRatio.toFixed(3)
+            });
+        }
+
         function togglePhotoTimer() {
             const currentTimer = photoState.photoSettings.timer;
             const timers = [0, 3, 5, 10];
@@ -8714,7 +8801,10 @@
             const ratioItem = menu.querySelector('.rec-menu-item:nth-child(5)');
             ratioItem.textContent = `📐 ${photoState.photoSettings.ratio}`;
 
-            showToastRecording(`Ratio: ${photoState.photoSettings.ratio}`, 'info', '📐');
+            // Update live ratio guide frame in preview
+            updateRatioGuide();
+
+            showToastRecording(`📐 ${photoState.photoSettings.ratio} - 💾 100% Quality JPEG`, 'info', '📐');
             closePhotoLeftMenu();
         }
 
