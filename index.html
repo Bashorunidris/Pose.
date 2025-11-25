@@ -830,9 +830,12 @@
 
         .rec-control-row {
             display: flex;
+            flex-direction: row;
             align-items: center;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 30px;
             margin-bottom: 20px;
+            width: 100%;
         }
 
         .rec-control-btn {
@@ -945,7 +948,205 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        /* ====== RECORDING CONTROLS - SCREEN 2 ====== */
+        /* Photo Mode Controls */
+        .photo-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .photo-control-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .photo-control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            color: #fff;
+        }
+
+        .photo-control-btn:active {
+            transform: scale(0.9);
+        }
+
+        .photo-record-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .photo-record-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-record-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Photo Filters Panel - Fixed Vertical on Right Side */
+        .photo-filters-panel {
+            position: fixed;
+            right: 12px;
+            bottom: 100px;
+            width: 95px;
+            height: auto;
+            max-height: 480px;
+            border-radius: 20px;
+            padding: 12px 8px;
+            z-index: 99;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(20, 20, 20, 0.92);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .photo-filters-panel.show {
+            display: block;
+        }
+
+        .photo-filters-scroll {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-height: 480px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0;
+            align-items: center;
+            scroll-behavior: smooth;
+        }
+
+        .photo-filters-scroll::-webkit-scrollbar {
+            width: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .photo-filters-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .photo-filters-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+
+        .photo-filters-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .photo-filter-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: 2px solid transparent;
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #fff;
+            font-size: 11px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            min-width: fit-content;
+            position: relative;
+        }
+
+        .photo-filter-btn:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .photo-filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .photo-filter-btn.active {
+            border-color: #4C1D95;
+            background: rgba(76, 29, 149, 0.3);
+            box-shadow: 0 0 15px rgba(76, 29, 149, 0.5), inset 0 0 10px rgba(76, 29, 149, 0.2);
+        }
+
+        .photo-filter-btn.active .photo-filter-preview {
+            border-color: #4C1D95;
+            box-shadow: 0 0 20px rgba(76, 29, 149, 0.8);
+        }
+
+        .photo-filter-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        /* Filter Preview Styles */
+        .photo-filter-preview.original {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .photo-filter-preview.bw {
+            background: linear-gradient(135deg, #333 0%, #666 100%);
+            filter: grayscale(100%);
+        }
+
+        .photo-filter-preview.sepia {
+            background: linear-gradient(135deg, #8b6f47 0%, #a0826d 100%);
+            filter: sepia(100%);
+        }
+
+        .photo-filter-preview.vintage {
+            background: linear-gradient(135deg, #8b7355 0%, #a08575 100%);
+            filter: sepia(50%) contrast(90%) brightness(90%);
+        }
+
+        .photo-filter-preview.vivid {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            filter: saturate(150%) contrast(110%);
+        }
+
+        .photo-filter-preview.warm {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);
+            filter: brightness(110%) saturate(130%);
+        }
+
+        .photo-filter-preview.cool {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            filter: hue-rotate(-20deg) saturate(120%);
+        }
+
+        .photo-filter-btn:hover .photo-filter-preview {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+         /* ====== RECORDING CONTROLS - SCREEN 2 ====== */
         .rec-recording-controls {
             position: absolute;
             bottom: 40px;
@@ -4470,26 +4671,67 @@
                 <div class="rec-menu-item" onclick="togglePhotoRatio()">📐 Ratio</div>
             </div>
             <div class="rec-effects-bar">
-                <div class="rec-effect-icon" onclick="toggleEffect('sparkle')">✨</div>
-                <div class="rec-effect-icon" onclick="toggleEffect('mask')">🎭</div>
-                <div class="rec-effect-icon" onclick="toggleEffect('ghost')">👻</div>
-                <div class="rec-effect-icon" onclick="toggleEffect('star')">🌟</div>
-            </div>
-            <div class="rec-bottom-controls" style="justify-content: space-around;">
-                <button class="rec-control-btn" onclick="openPhotoGallery()">
-                    <div class="rec-control-icon">🖼️</div>
-                    <div class="rec-control-label">Gallery</div>
-                </button>
-                <button class="rec-control-btn" onclick="capturePhoto()">
-                    <div
-                        style="width: 80px; height: 80px; border-radius: 50%; border: 5px solid #fff; display: flex; align-items: center; justify-content: center;">
-                        <div style="width: 100%; height: 100%; border-radius: 50%; background: #fff;"></div>
-                    </div>
-                </button>
-                <button class="rec-control-btn" onclick="switchToVideoMode()">
-                    <div class="rec-control-icon">📹</div>
-                    <div class="rec-control-label">Video</div>
-                </button>
+               
+
+            <!-- Filters Panel (Right Side, Scrollable) -->
+            <div class="photo-filters-panel">
+                <div class="photo-filters-scroll">
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('none')" title="Original">
+                        <div class="photo-filter-preview original"></div>
+                        <span>Original</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('bw')" title="Black & White">
+                        <div class="photo-filter-preview bw"></div>
+                        <span>B&W</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('sepia')" title="Sepia">
+                        <div class="photo-filter-preview sepia"></div>
+                        <span>Sepia</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('vintage')" title="Vintage">
+                        <div class="photo-filter-preview vintage"></div>
+                        <span>Vintage</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('vivid')" title="Vivid">
+                        <div class="photo-filter-preview vivid"></div>
+                        <span>Vivid</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('warm')" title="Warm">
+                        <div class="photo-filter-preview warm"></div>
+                        <span>Warm</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('cool')" title="Cool">
+                        <div class="photo-filter-preview cool"></div>
+                        <span>Cool</span>
+                    </button>
+                </div>
+            </div></div>
+
+            <div class="rec-bottom-controls photo-controls">
+                <div class="photo-control-row">
+                    <button class="photo-control-btn" onclick="openPhotoGallery()">
+                        <div class="rec-control-icon">🖼️</div>
+                        <div class="rec-control-label">Gallery</div>
+                    </button>
+                    <button class="photo-control-btn" onclick="togglePhotoFlash()">
+                        <div class="rec-control-icon">⚡</div>
+                        <div class="rec-control-label">Flash</div>
+                    </button>
+                    <button class="photo-control-btn" onclick="togglePhotoTimer()">
+                        <div class="rec-control-icon">⏱</div>
+                        <div class="rec-control-label">Timer</div>
+                    </button>
+                </div>
+
+                <div class="photo-record-btn-wrapper">
+                    <button class="photo-record-btn" onclick="capturePhoto()"></button>
+                </div>
+
+                <div class="rec-mode-tabs">
+                    <button class="rec-mode-tab" onclick="switchRecMode('video'); return false;">Video</button>
+                    <button class="rec-mode-tab active" onclick="switchRecMode('photo'); return false;">Photo</button>
+                    <button class="rec-mode-tab" onclick="switchRecMode('text'); return false;">Text</button>
+                </div>
             </div>
         </div>
 
@@ -8443,6 +8685,12 @@
             event.target.classList.add('active');
 
             if (mode === 'photo') {
+                // Show filters panel and initialize camera
+                const filtersPanel = document.querySelector('.photo-filters-panel');
+                if (filtersPanel) {
+                    filtersPanel.classList.add('show');
+                }
+                
                 // Pre-initialize camera BEFORE showing screen for instant availability
                 console.log('Initializing camera before showing Screen 5...');
                 initializePhotoMode().then(() => {
@@ -8455,9 +8703,19 @@
                     showToastRecording('Photo mode - camera may not be ready', 'warning', '📷');
                 });
             } else if (mode === 'text') {
+                // Hide filters panel
+                const filtersPanel = document.querySelector('.photo-filters-panel');
+                if (filtersPanel) {
+                    filtersPanel.classList.remove('show');
+                }
                 showScreen('screen8');
                 showToastRecording('Text mode', 'info', '✏️');
             } else if (mode === 'video') {
+                // Hide filters panel
+                const filtersPanel = document.querySelector('.photo-filters-panel');
+                if (filtersPanel) {
+                    filtersPanel.classList.remove('show');
+                }
                 showScreen('screen1');
                 showToastRecording('Video mode', 'info', '📹');
             }
@@ -8856,25 +9114,64 @@
             const video = document.getElementById('photoPreviewVideo');
             if (!video) return;
 
+            // Update photoState with selected filter
+            photoState.photoSettings.filter = filterName;
+
             let filter = '';
+            let filterString = filterName;
+
             switch (filterName) {
+                case 'none':
+                    filter = 'none';
+                    filterString = 'Original';
+                    break;
+                case 'bw':
+                    filter = 'grayscale(100%)';
+                    filterString = 'Black & White';
+                    break;
                 case 'sepia':
                     filter = 'sepia(100%)';
+                    filterString = 'Sepia';
                     break;
-                case 'grayscale':
-                    filter = 'grayscale(100%)';
+                case 'vintage':
+                    filter = 'sepia(50%) contrast(0.9) brightness(0.9)';
+                    filterString = 'Vintage';
                     break;
-                case 'brightness':
-                    filter = 'brightness(1.2)';
+                case 'vivid':
+                    filter = 'saturate(1.5) contrast(1.1)';
+                    filterString = 'Vivid';
                     break;
-                case 'contrast':
-                    filter = 'contrast(1.3)';
+                case 'warm':
+                    filter = 'brightness(1.1) saturate(1.3) hue-rotate(10deg)';
+                    filterString = 'Warm';
+                    break;
+                case 'cool':
+                    filter = 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)';
+                    filterString = 'Cool';
                     break;
                 default:
                     filter = 'none';
+                    filterString = 'Original';
             }
 
+            // Apply filter to video
             video.style.filter = filter;
+
+            // Update active button state in filters panel
+            document.querySelectorAll('.photo-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Find and mark the clicked button as active
+            const activeBtn = document.querySelector(`[onclick="applyPhotoFilter('${filterName}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // Show toast feedback
+            showToastRecording(`🎨 ${filterString}`, 'info', '✓');
+
+            console.log('📸 Filter applied:', filterName);
         }
 
         // ============================================================================
