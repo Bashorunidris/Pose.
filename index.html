@@ -1204,7 +1204,7 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
         }
 
-         /* ====== RECORDING CONTROLS - SCREEN 2 ====== */
+        /* ====== RECORDING CONTROLS - SCREEN 2 ====== */
         .rec-recording-controls {
             position: absolute;
             bottom: 40px;
@@ -4454,71 +4454,44 @@
             </div>
         </div>
         <div class="profile-tabs">
-            <div class="profile-tab active" onclick="switchProfileTab('feed')">Feed</div>
-            <div class="profile-tab" onclick="switchProfileTab('exclusive')">Exclusive</div>
-            <div class="profile-tab" onclick="switchProfileTab('shorts')">Shorts</div>
-            <div class="profile-tab" onclick="switchProfileTab('tweets')">Tweets</div>
-            <div class="profile-tab" onclick="switchProfileTab('liked')">Liked</div>
+            <div class="profile-tab active" onclick="switchProfileTab('feed')">📹 Feed</div>
+            <div class="profile-tab" onclick="switchProfileTab('exclusive')">🔒 Exclusive</div>
+            <div class="profile-tab" onclick="switchProfileTab('shorts')">⚡ Shorts</div>
+            <div class="profile-tab" onclick="switchProfileTab('tweets')">💬 Tweets</div>
+            <div class="profile-tab" onclick="switchProfileTab('liked')">❤️ Liked</div>
+            <div class="profile-tab" onclick="switchProfileTab('stories')">📖 Stories</div>
         </div>
         <div class="profile-content" id="profileContent">
             <!-- Feed Videos Tab -->
-            <div id="feedTab">
-                <div class="video-grid">
-                    <div class="video-item">
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%;"></div>
-                        <div class="video-stats">💬 450 👁️ 2.3K</div>
-                    </div>
-                    <div class="video-item">
-                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 100%;"></div>
-                        <div class="video-stats">💬 380 👁️ 1.9K</div>
-                    </div>
-                    <div class="video-item">
-                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 100%;"></div>
-                        <div class="video-stats">💬 520 👁️ 3.1K</div>
-                    </div>
-                </div>
+            <div id="feedTab" class="profile-tab-content active">
+                <div class="video-grid" id="feedGrid"></div>
             </div>
-            <!-- Exclusive Tab -->
-            <div id="exclusiveTab" style="display:none;">
-                <div class="video-grid">
-                    <div class="video-item">
-                        <div
-                            style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px;">
-                            🔒</div>
-                        <div class="video-stats">₦200 | 👁️ 800</div>
-                    </div>
-                    <div class="video-item">
-                        <div
-                            style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px;">
-                            🔒</div>
-                        <div class="video-stats">₦150 | 👁️ 650</div>
-                    </div>
-                </div>
+            <!-- Exclusive Tab (Paid Videos) -->
+            <div id="exclusiveTab" class="profile-tab-content" style="display:none;">
+                <div class="video-grid" id="exclusiveGrid"></div>
+            </div>
+            <!-- Shorts Tab (5-15 sec videos) -->
+            <div id="shortsTab" class="profile-tab-content" style="display:none;">
+                <div class="video-grid" id="shortsGrid"></div>
             </div>
             <!-- Tweets Tab -->
-            <div id="tweetsTab" style="display:none;">
-                <div class="post-section">
-                    <textarea class="post-input" placeholder="What's on your mind?"></textarea>
+            <div id="tweetsTab" class="profile-tab-content" style="display:none;">
+                <div class="post-compose-section">
+                    <textarea class="post-input" placeholder="What's on your mind?" id="profileTweetInput"></textarea>
                     <div class="post-actions">
-                        <button class="post-btn">📷 Media</button>
-                        <button class="post-btn">Post</button>
+                        <button class="post-btn" onclick="attachMediaToTweet()">📷 Media</button>
+                        <button class="post-btn" onclick="postNewTweet()">Post</button>
                     </div>
                 </div>
-                <div class="feed-post">
-                    <div class="post-header">
-                        <div class="post-avatar"></div>
-                        <div>
-                            <div class="post-author">You</div>
-                            <div style="color: #666; font-size: 12px;">2 hours ago</div>
-                        </div>
-                    </div>
-                    <div class="post-text">New exclusive dropping tonight 🔥</div>
-                    <div class="post-stats">
-                        <span>❤️ 1.2K</span>
-                        <span>💬 320</span>
-                        <span>🔁 150</span>
-                    </div>
-                </div>
+                <div id="tweetsContainer"></div>
+            </div>
+            <!-- Liked Tab -->
+            <div id="likedTab" class="profile-tab-content" style="display:none;">
+                <div class="video-grid" id="likedGrid"></div>
+            </div>
+            <!-- Stories Tab -->
+            <div id="storiesTab" class="profile-tab-content" style="display:none;">
+                <div class="stories-container" id="storiesContainer"></div>
             </div>
         </div>
     </div>
@@ -4729,41 +4702,42 @@
                 <div class="rec-menu-item" onclick="togglePhotoRatio()">📐 Ratio</div>
             </div>
             <div class="rec-effects-bar">
-               
 
-            <!-- Filters Panel (Right Side, Scrollable) -->
-            <div class="photo-filters-panel">
-                <div class="photo-filters-scroll">
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('none')" title="Original">
-                        <div class="photo-filter-preview original"></div>
-                        <span>Original</span>
-                    </button>
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('bw')" title="Black & White">
-                        <div class="photo-filter-preview bw"></div>
-                        <span>B&W</span>
-                    </button>
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('sepia')" title="Sepia">
-                        <div class="photo-filter-preview sepia"></div>
-                        <span>Sepia</span>
-                    </button>
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('vintage')" title="Vintage">
-                        <div class="photo-filter-preview vintage"></div>
-                        <span>Vintage</span>
-                    </button>
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('vivid')" title="Vivid">
-                        <div class="photo-filter-preview vivid"></div>
-                        <span>Vivid</span>
-                    </button>
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('warm')" title="Warm">
-                        <div class="photo-filter-preview warm"></div>
-                        <span>Warm</span>
-                    </button>
-                    <button class="photo-filter-btn" onclick="applyPhotoFilter('cool')" title="Cool">
-                        <div class="photo-filter-preview cool"></div>
-                        <span>Cool</span>
-                    </button>
+
+                <!-- Filters Panel (Right Side, Scrollable) -->
+                <div class="photo-filters-panel">
+                    <div class="photo-filters-scroll">
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('none')" title="Original">
+                            <div class="photo-filter-preview original"></div>
+                            <span>Original</span>
+                        </button>
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('bw')" title="Black & White">
+                            <div class="photo-filter-preview bw"></div>
+                            <span>B&W</span>
+                        </button>
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('sepia')" title="Sepia">
+                            <div class="photo-filter-preview sepia"></div>
+                            <span>Sepia</span>
+                        </button>
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('vintage')" title="Vintage">
+                            <div class="photo-filter-preview vintage"></div>
+                            <span>Vintage</span>
+                        </button>
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('vivid')" title="Vivid">
+                            <div class="photo-filter-preview vivid"></div>
+                            <span>Vivid</span>
+                        </button>
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('warm')" title="Warm">
+                            <div class="photo-filter-preview warm"></div>
+                            <span>Warm</span>
+                        </button>
+                        <button class="photo-filter-btn" onclick="applyPhotoFilter('cool')" title="Cool">
+                            <div class="photo-filter-preview cool"></div>
+                            <span>Cool</span>
+                        </button>
+                    </div>
                 </div>
-            </div></div>
+            </div>
 
             <div class="rec-bottom-controls photo-controls">
                 <div class="photo-control-row">
@@ -6917,6 +6891,7 @@
         }
 
         // Switch Profile Tab
+        // ====== PROFILE TAB MANAGEMENT ======
         function switchProfileTab(tabName) {
             // Update tab active state
             const tabs = document.querySelectorAll('.profile-tab');
@@ -6924,20 +6899,447 @@
             event.target.classList.add('active');
 
             // Hide all tab content
-            document.getElementById('feedTab').style.display = 'none';
-            document.getElementById('exclusiveTab').style.display = 'none';
-            document.getElementById('tweetsTab').style.display = 'none';
+            document.querySelectorAll('.profile-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
 
-            // Show selected tab
-            if (tabName === 'feed') {
-                document.getElementById('feedTab').style.display = 'block';
-            } else if (tabName === 'exclusive') {
-                document.getElementById('exclusiveTab').style.display = 'block';
-            } else if (tabName === 'tweets') {
-                document.getElementById('tweetsTab').style.display = 'block';
-            } else if (tabName === 'shorts' || tabName === 'liked') {
-                document.getElementById('feedTab').style.display = 'block';
+            // Show selected tab and load content
+            const tabElement = document.getElementById(tabName + 'Tab');
+            if (tabElement) {
+                tabElement.style.display = 'block';
+
+                // Load content for each tab
+                if (currentUser) {
+                    switch (tabName) {
+                        case 'feed':
+                            loadProfileFeed();
+                            break;
+                        case 'exclusive':
+                            loadExclusiveVideos();
+                            break;
+                        case 'shorts':
+                            loadShortVideos();
+                            break;
+                        case 'tweets':
+                            loadProfileTweets();
+                            break;
+                        case 'liked':
+                            loadLikedContent();
+                            break;
+                        case 'stories':
+                            loadStories();
+                            break;
+                    }
+                }
             }
+        }
+
+        // Load all posted videos (Feed)
+        async function loadProfileFeed() {
+            if (!currentUser) return;
+
+            try {
+                const feedGrid = document.getElementById('feedGrid');
+                feedGrid.innerHTML = '<div class="loading">Loading feed...</div>';
+
+                const snapshot = await db.collection('posts')
+                    .where('userId', '==', currentUser.uid)
+                    .where('type', '==', 'video')
+                    .orderBy('createdAt', 'desc')
+                    .limit(12)
+                    .get();
+
+                feedGrid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    feedGrid.innerHTML = '<div class="empty-state">No videos posted yet</div>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const videoItem = createVideoItem(doc.id, data);
+                    feedGrid.appendChild(videoItem);
+                });
+            } catch (error) {
+                console.error('Error loading feed:', error);
+                document.getElementById('feedGrid').innerHTML = '<div class="error">Error loading feed</div>';
+            }
+        }
+
+        // Load exclusive (paid) videos
+        async function loadExclusiveVideos() {
+            if (!currentUser) return;
+
+            try {
+                const exclusiveGrid = document.getElementById('exclusiveGrid');
+                exclusiveGrid.innerHTML = '<div class="loading">Loading exclusive content...</div>';
+
+                const snapshot = await db.collection('posts')
+                    .where('userId', '==', currentUser.uid)
+                    .where('type', '==', 'video')
+                    .where('isExclusive', '==', true)
+                    .where('price', '>', 0)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                exclusiveGrid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    exclusiveGrid.innerHTML = '<div class="empty-state">No exclusive content yet</div>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const videoItem = createExclusiveVideoItem(doc.id, data);
+                    exclusiveGrid.appendChild(videoItem);
+                });
+            } catch (error) {
+                console.error('Error loading exclusive videos:', error);
+                document.getElementById('exclusiveGrid').innerHTML = '<div class="error">Error loading exclusive content</div>';
+            }
+        }
+
+        // Load short videos (5-15 seconds)
+        async function loadShortVideos() {
+            if (!currentUser) return;
+
+            try {
+                const shortsGrid = document.getElementById('shortsGrid');
+                shortsGrid.innerHTML = '<div class="loading">Loading shorts...</div>';
+
+                const snapshot = await db.collection('posts')
+                    .where('userId', '==', currentUser.uid)
+                    .where('type', '==', 'video')
+                    .where('duration', '>=', 5)
+                    .where('duration', '<=', 15)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                shortsGrid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    shortsGrid.innerHTML = '<div class="empty-state">No shorts created yet</div>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const videoItem = createVideoItem(doc.id, data);
+                    shortsGrid.appendChild(videoItem);
+                });
+            } catch (error) {
+                console.error('Error loading shorts:', error);
+                document.getElementById('shortsGrid').innerHTML = '<div class="error">Error loading shorts</div>';
+            }
+        }
+
+        // Load profile tweets
+        async function loadProfileTweets() {
+            if (!currentUser) return;
+
+            try {
+                const tweetsContainer = document.getElementById('tweetsContainer');
+                tweetsContainer.innerHTML = '<div class="loading">Loading tweets...</div>';
+
+                const snapshot = await db.collection('posts')
+                    .where('userId', '==', currentUser.uid)
+                    .where('type', '==', 'tweet')
+                    .orderBy('createdAt', 'desc')
+                    .limit(20)
+                    .get();
+
+                tweetsContainer.innerHTML = '';
+
+                if (snapshot.empty) {
+                    tweetsContainer.innerHTML = '<div class="empty-state">No tweets yet</div>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const tweetElement = createTweetElement(doc.id, data);
+                    tweetsContainer.appendChild(tweetElement);
+                });
+            } catch (error) {
+                console.error('Error loading tweets:', error);
+                document.getElementById('tweetsContainer').innerHTML = '<div class="error">Error loading tweets</div>';
+            }
+        }
+
+        // Load liked content
+        async function loadLikedContent() {
+            if (!currentUser) return;
+
+            try {
+                const likedGrid = document.getElementById('likedGrid');
+                likedGrid.innerHTML = '<div class="loading">Loading liked content...</div>';
+
+                const userLikesDoc = await db.collection('users').doc(currentUser.uid).get();
+                const likedIds = userLikesDoc.data()?.likedPosts || [];
+
+                if (likedIds.length === 0) {
+                    likedGrid.innerHTML = '<div class="empty-state">No liked posts yet</div>';
+                    return;
+                }
+
+                likedGrid.innerHTML = '';
+
+                // Fetch liked posts in chunks
+                for (let i = 0; i < likedIds.length; i += 10) {
+                    const chunk = likedIds.slice(i, i + 10);
+                    const snapshot = await db.collection('posts')
+                        .where(firebase.firestore.FieldPath.documentId(), 'in', chunk)
+                        .get();
+
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const videoItem = createVideoItem(doc.id, data);
+                        likedGrid.appendChild(videoItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading liked content:', error);
+                document.getElementById('likedGrid').innerHTML = '<div class="error">Error loading liked content</div>';
+            }
+        }
+
+        // Load stories
+        async function loadStories() {
+            if (!currentUser) return;
+
+            try {
+                const storiesContainer = document.getElementById('storiesContainer');
+                storiesContainer.innerHTML = '<div class="loading">Loading stories...</div>';
+
+                const snapshot = await db.collection('posts')
+                    .where('userId', '==', currentUser.uid)
+                    .where('type', '==', 'story')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                storiesContainer.innerHTML = '';
+
+                if (snapshot.empty) {
+                    storiesContainer.innerHTML = '<div class="empty-state">No stories created yet</div>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const storyElement = createStoryElement(doc.id, data);
+                    storiesContainer.appendChild(storyElement);
+                });
+            } catch (error) {
+                console.error('Error loading stories:', error);
+                document.getElementById('storiesContainer').innerHTML = '<div class="error">Error loading stories</div>';
+            }
+        }
+
+        // Create video item with interactions
+        function createVideoItem(postId, data) {
+            const item = document.createElement('div');
+            item.className = 'video-item';
+            item.innerHTML = `
+                <div class="video-thumbnail" style="position: relative; height: 100%; background: ${data.thumbnailGradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'} center/cover;">
+                    ${data.thumbnail ? `<img src="${data.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
+                    <div class="video-overlay">
+                        <div class="play-btn">▶</div>
+                    </div>
+                </div>
+                <div class="video-stats">
+                    <span>💬 ${data.comments || 0}</span>
+                    <span>👁️ ${data.views || 0}</span>
+                    <span>❤️ ${data.likes || 0}</span>
+                </div>
+                <div class="video-actions">
+                    <button class="action-btn" onclick="likePost('${postId}')">❤️ Like</button>
+                    <button class="action-btn" onclick="commentOnPost('${postId}')">💬 Comment</button>
+                    <button class="action-btn" onclick="sharePost('${postId}')">📤 Share</button>
+                    <button class="action-btn" onclick="downloadPost('${postId}')">⬇️ Download</button>
+                </div>
+            `;
+            return item;
+        }
+
+        // Create exclusive video item
+        function createExclusiveVideoItem(postId, data) {
+            const item = document.createElement('div');
+            item.className = 'video-item';
+            item.innerHTML = `
+                <div class="video-thumbnail exclusive-lock" style="position: relative; height: 100%; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">🔒</div>
+                        <div style="color: white; font-weight: bold;">₦${data.price || 0}</div>
+                    </div>
+                </div>
+                <div class="video-stats">
+                    <span>💬 ${data.comments || 0}</span>
+                    <span>👁️ ${data.views || 0}</span>
+                </div>
+            `;
+            return item;
+        }
+
+        // Create tweet element
+        function createTweetElement(postId, data) {
+            const createdAt = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'Just now';
+            const tweet = document.createElement('div');
+            tweet.className = 'profile-tweet-item';
+            tweet.innerHTML = `
+                <div class="tweet-header">
+                    <div class="tweet-avatar"></div>
+                    <div>
+                        <div class="tweet-author">${data.authorName || 'Anonymous'}</div>
+                        <div class="tweet-time">${createdAt}</div>
+                    </div>
+                </div>
+                <div class="tweet-text">${data.text || ''}</div>
+                ${data.media ? `<div class="tweet-media"><img src="${data.media}" style="max-width: 100%; border-radius: 10px;"></div>` : ''}
+                <div class="tweet-actions">
+                    <button class="tweet-action-btn" onclick="likeTweet('${postId}')">❤️ ${data.likes || 0}</button>
+                    <button class="tweet-action-btn" onclick="commentTweet('${postId}')">💬 ${data.comments || 0}</button>
+                    <button class="tweet-action-btn" onclick="retweet('${postId}')">🔁 ${data.retweets || 0}</button>
+                    <button class="tweet-action-btn" onclick="sharePost('${postId}')">📤 Share</button>
+                </div>
+            `;
+            return tweet;
+        }
+
+        // Create story element
+        function createStoryElement(postId, data) {
+            const story = document.createElement('div');
+            story.className = 'story-item';
+            story.style.cssText = `
+                background: ${data.thumbnail ? `url(${data.thumbnail}) center/cover` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'};
+                border-radius: 15px;
+                aspect-ratio: 9/16;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+            `;
+            story.innerHTML = `
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center; color: white;">
+                        <div style="font-size: 30px;">📖</div>
+                        <div style="margin-top: 10px; font-size: 12px;">View Story</div>
+                    </div>
+                </div>
+            `;
+            story.onclick = () => viewStory(postId);
+            return story;
+        }
+
+        // Post new tweet
+        async function postNewTweet() {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+
+            const text = document.getElementById('profileTweetInput').value.trim();
+            if (!text) {
+                alert('Please type something');
+                return;
+            }
+
+            try {
+                await db.collection('posts').add({
+                    userId: currentUser.uid,
+                    type: 'tweet',
+                    text: text,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    likes: 0,
+                    comments: 0,
+                    retweets: 0,
+                    authorName: (await db.collection('users').doc(currentUser.uid).get()).data().name
+                });
+
+                document.getElementById('profileTweetInput').value = '';
+                showToast('✅ Tweet posted!', 'success');
+                loadProfileTweets();
+            } catch (error) {
+                console.error('Error posting tweet:', error);
+                showToast('Error posting tweet', 'error');
+            }
+        }
+
+        // Interaction functions
+        async function likePost(postId) {
+            if (!currentUser) return;
+            try {
+                const postRef = db.collection('posts').doc(postId);
+                const userRef = db.collection('users').doc(currentUser.uid);
+
+                const postData = (await postRef.get()).data();
+                const userData = (await userRef.get()).data() || {};
+
+                const likedPosts = userData.likedPosts || [];
+                if (likedPosts.includes(postId)) {
+                    likedPosts.splice(likedPosts.indexOf(postId), 1);
+                    await postRef.update({ likes: Math.max(0, (postData.likes || 1) - 1) });
+                } else {
+                    likedPosts.push(postId);
+                    await postRef.update({ likes: (postData.likes || 0) + 1 });
+                }
+
+                await userRef.update({ likedPosts: likedPosts });
+                showToast('❤️ Updated!', 'success');
+                loadProfileFeed();
+            } catch (error) {
+                console.error('Error liking post:', error);
+            }
+        }
+
+        async function sharePost(postId) {
+            const shareText = `Check out this post on Pose!\n${window.location.href}#post/${postId}`;
+            if (navigator.share) {
+                navigator.share({ text: shareText });
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = shareText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('📋 Copied to clipboard!', 'success');
+            }
+        }
+
+        async function downloadPost(postId) {
+            showToast('⬇️ Download started', 'info');
+            // Implementation depends on video/media URL
+        }
+
+        function commentOnPost(postId) {
+            const comment = prompt('Write your comment:');
+            if (comment && currentUser) {
+                db.collection('posts').doc(postId).update({
+                    comments: firebase.firestore.FieldValue.increment(1)
+                });
+                showToast('💬 Comment added!', 'success');
+            }
+        }
+
+        function likeTweet(postId) {
+            likePost(postId);
+        }
+
+        function commentTweet(postId) {
+            commentOnPost(postId);
+        }
+
+        function retweet(postId) {
+            showToast('🔁 Retweeted!', 'success');
+        }
+
+        function viewStory(storyId) {
+            alert('Opening story: ' + storyId);
+        }
+
+        function attachMediaToTweet() {
+            alert('Media attachment feature coming soon');
         }
 
         // Original Video Feed Scripts
@@ -8748,7 +9150,7 @@
                 if (filtersPanel) {
                     filtersPanel.classList.add('show');
                 }
-                
+
                 // Pre-initialize camera BEFORE showing screen for instant availability
                 console.log('Initializing camera before showing Screen 5...');
                 initializePhotoMode().then(() => {
@@ -8860,17 +9262,17 @@
                     photoState.photoStream = null;
                 }
             }
-            }
+        }
 
         // Helper: Ensure video element is created and streaming
         function ensureVideoElement() {
             console.log('🎥 ensureVideoElement called');
-            
+
             if (!photoState.photoStream || !photoState.photoStream.active) {
                 console.error('❌ Stream not active');
                 return false;
             }
-            
+
             console.log('✅ Stream is active');
 
             const container = document.querySelector('#screen5 .camera-preview');
@@ -8878,7 +9280,7 @@
                 console.error('❌ Screen 5 container not found');
                 return false;
             }
-            
+
             console.log('✅ Container found');
 
             // Check if video element already exists
@@ -8892,7 +9294,7 @@
                 video.autoplay = true;
                 video.muted = true;  // IMPORTANT: Mute to allow autoplay in most browsers
                 video.playsinline = true;
-                
+
                 // Professional quality CSS
                 video.style.cssText = `
                     width: 100vw;
@@ -8930,7 +9332,7 @@
             } else {
                 console.log('Stream already assigned');
             }
-            
+
             console.log('📹 Video element display:', window.getComputedStyle(video).display);
             console.log('📹 Video element dimensions:', video.offsetWidth, 'x', video.offsetHeight);
 
@@ -8943,7 +9345,7 @@
             });
 
             return true;
-            }
+        }
 
         // ============================================================================
         // VERIFY PHOTO QUALITY SETTINGS - Check console for debug info
@@ -8951,7 +9353,7 @@
         function verifyPhotoQualitySettings() {
             const video = document.getElementById('photoPreviewVideo');
             if (!video) return;
-            
+
             console.group('📸 PHOTO QUALITY VERIFICATION');
             console.log('✅ Camera Resolution:', `${video.videoWidth}x${video.videoHeight}`);
             console.log('✅ Canvas Smoothing:', 'DISABLED (crisp capture)');
@@ -9004,46 +9406,46 @@
             flashItem.textContent = flashText;
             showToastRecording(message, 'info', '⚡');
             closePhotoLeftMenu();
-            }
+        }
 
-            // ============================================================================
-            // SWITCH PHOTO CAMERA - Toggle between front and back camera
-            // ============================================================================
-            async function switchPhotoCamera() {
+        // ============================================================================
+        // SWITCH PHOTO CAMERA - Toggle between front and back camera
+        // ============================================================================
+        async function switchPhotoCamera() {
             try {
                 // Toggle camera facing mode
                 photoState.cameraFacingMode = photoState.cameraFacingMode === 'environment' ? 'user' : 'environment';
-                
+
                 // Stop current stream
                 if (photoState.photoStream) {
                     photoState.photoStream.getTracks().forEach(track => track.stop());
                     photoState.photoStream = null;
                 }
-                
+
                 // Reinitialize with new camera
                 showToastRecording('🔄 Switching camera...', 'info', '⏳');
                 await initializePhotoMode();
-                
+
                 const cameraType = photoState.cameraFacingMode === 'environment' ? '📷 Back Camera' : '🤳 Front Camera';
                 showToastRecording(`${cameraType} activated`, 'success', '✓');
             } catch (error) {
                 console.error('Camera switch error:', error);
                 showToastRecording('❌ Failed to switch camera', 'error', '✗');
             }
-            }
+        }
 
-            // ============================================================================
-            // UPDATE RATIO GUIDE - Shows real-time frame preview
-            // ============================================================================
+        // ============================================================================
+        // UPDATE RATIO GUIDE - Shows real-time frame preview
+        // ============================================================================
         function updateRatioGuide() {
             const video = document.getElementById('photoPreviewVideo');
             const guide = document.getElementById('ratioGuide');
-            
+
             if (!video || !video.videoWidth) {
                 console.log('Video not ready yet');
                 return;
             }
-            
+
             // Aspect ratio mappings
             const ratios = {
                 '1:1': 1,
@@ -9051,13 +9453,13 @@
                 '9:16': 0.5625,
                 '16:9': 1.777
             };
-            
+
             const targetRatio = ratios[photoState.photoSettings.ratio] || 1.777;
             const videoRatio = video.videoWidth / video.videoHeight;
-            
+
             let frameWidth = 100;  // percentage
             let frameHeight = 100; // percentage
-            
+
             // Calculate which dimension to constrain
             if (videoRatio > targetRatio) {
                 // Video is wider than target ratio - constrain width
@@ -9068,12 +9470,12 @@
                 frameWidth = 100;
                 frameHeight = (100 * videoRatio) / targetRatio;
             }
-            
+
             // Apply to guide element
             guide.style.width = frameWidth + '%';
             guide.style.height = frameHeight + '%';
             guide.style.display = 'block';
-            
+
             // Log for debugging
             console.log(`📐 Ratio Guide Updated:`, {
                 ratio: photoState.photoSettings.ratio,
@@ -9218,7 +9620,7 @@
             document.querySelectorAll('.photo-filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             // Find and mark the clicked button as active
             const activeBtn = document.querySelector(`[onclick="applyPhotoFilter('${filterName}')"]`);
             if (activeBtn) {
@@ -9465,10 +9867,10 @@
                 const blob = await new Promise(resolve => {
                     photoState.canvas.toBlob(resolve, 'image/jpeg', 1.0);
                 });
-                
+
                 // Convert to data URL for display
                 const photoUrl = URL.createObjectURL(blob);
-                
+
                 // Log actual dimensions for verification
                 console.log('✅ Photo captured at native resolution:', {
                     width: photoState.canvas.width,
@@ -9477,7 +9879,7 @@
                     blobSize: blob.size,
                     compression: '100% (lossless quality)'
                 });
-                
+
                 const photoData = {
                     url: photoUrl,
                     blob: blob,  // Store blob for Firebase upload
