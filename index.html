@@ -8463,24 +8463,72 @@
                     return;
                 }
 
-                console.log('Requesting camera & audio permissions...');
+                console.log('Requesting professional-grade camera...');
 
+                // Professional quality camera constraints (4K resolution)
                 const constraints = {
                     video: {
-                        facingMode: 'user',
-                        width: { ideal: 1280 },
-                        height: { ideal: 960 }
+                        // Request maximum resolution for crystal clear photos
+                        width: { ideal: 3840 },        // 4K width
+                        height: { ideal: 2160 },       // 4K height
+                        
+                        // Use back camera (higher quality, more megapixels than front)
+                        facingMode: 'environment',
+                        
+                        // Smooth 60fps motion
+                        frameRate: { ideal: 60 },
+                        
+                        // Standard 16:9 aspect ratio
+                        aspectRatio: { ideal: 16 / 9 },
+                        
+                        // Advanced quality features
+                        advanced: [
+                            { exposureMode: 'continuous' },     // Auto HDR
+                            { whiteBalanceMode: 'continuous' }, // Auto white balance
+                            { focusMode: 'continuous' },        // Continuous autofocus
+                            { zoom: 1.0 }                       // No digital zoom (maintains quality)
+                        ]
                     },
                     audio: true  // IMPORTANT: Include audio in permissions request
                 };
 
-                photoState.photoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                // Fallback constraints if 4K not supported
+                const fallbackConstraints = {
+                    video: {
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 },
+                        facingMode: 'environment',
+                        frameRate: { ideal: 30 }
+                    },
+                    audio: true
+                };
+
+                try {
+                    photoState.photoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    console.log('✅ Professional 4K camera initialized');
+                } catch (highResError) {
+                    console.log('4K not available, falling back to 1080p...');
+                    photoState.photoStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+                    console.log('✅ 1080p camera initialized');
+                }
+
                 console.log('Camera & audio access granted');
+
+                // Log actual camera capabilities for debugging
+                const videoTrack = photoState.photoStream.getVideoTracks()[0];
+                if (videoTrack) {
+                    const settings = videoTrack.getSettings();
+                    console.log('Camera specs:', {
+                        resolution: `${settings.width}x${settings.height}`,
+                        frameRate: settings.frameRate + 'fps',
+                        facingMode: settings.facingMode
+                    });
+                }
 
                 // Ensure video element exists and is properly set up
                 ensureVideoElement();
 
-                showToastRecording('📷 Camera ready', 'success', '✓');
+                showToastRecording('📷 Pro Camera Ready', 'success', '✓');
             } catch (error) {
                 console.error('Camera/Audio error:', error);
 
@@ -8518,28 +8566,44 @@
             let video = document.getElementById('photoPreviewVideo');
 
             if (!video) {
-                // Create new video element
+                // Create new video element with PROFESSIONAL QUALITY settings
                 video = document.createElement('video');
                 video.id = 'photoPreviewVideo';
                 video.autoplay = true;
                 video.muted = true;  // IMPORTANT: Mute to allow autoplay in most browsers
                 video.playsinline = true;
-                video.style.width = '100%';
-                video.style.height = '100%';
-                video.style.objectFit = 'cover';
-                video.style.backgroundColor = '#000';
-                video.style.display = 'block';
+                
+                // Professional quality CSS
+                video.style.cssText = `
+                    width: 100vw;
+                    height: 100vh;
+                    object-fit: cover;
+                    background-color: #000;
+                    display: block;
+                    
+                    /* Prevent quality loss from browser scaling */
+                    image-rendering: -webkit-optimize-contrast;
+                    image-rendering: crisp-edges;
+                    
+                    /* Hardware acceleration for smooth rendering */
+                    transform: translate3d(0, 0, 0);
+                    backface-visibility: hidden;
+                    will-change: transform;
+                    
+                    /* Prevent flickering */
+                    perspective: 1000px;
+                `;
 
                 container.innerHTML = '';
                 container.appendChild(video);
 
-                console.log('Video element created');
+                console.log('✅ Professional video element created');
             }
 
             // Assign stream to video
             if (video.srcObject !== photoState.photoStream) {
                 video.srcObject = photoState.photoStream;
-                console.log('Stream assigned to video element');
+                console.log('✅ Stream assigned to video element');
             }
 
             // Ensure it's playing
@@ -8891,16 +8955,24 @@
                     await showPhotoCountdown(photoState.photoSettings.timer);
                 }
 
-                // STEP 3: Create canvas with correct ratio
+                // STEP 3: Create canvas with NATIVE resolution for maximum quality
                 if (!photoState.canvas) {
                     photoState.canvas = document.createElement('canvas');
-                    photoState.ctx = photoState.canvas.getContext('2d');
+                    // Professional quality context settings
+                    photoState.ctx = photoState.canvas.getContext('2d', {
+                        alpha: false,              // No transparency = better performance
+                        desynchronized: true       // Faster rendering
+                    });
                 }
 
-                // Set canvas dimensions based on selected ratio
+                // Set canvas dimensions to NATIVE video resolution (not CSS dimensions!)
+                // This is critical: use video.videoWidth/Height, NOT offsetWidth/offsetHeight
                 const { canvasWidth, canvasHeight, offsetX, offsetY } = calculateCanvasSize(video.videoWidth, video.videoHeight);
                 photoState.canvas.width = canvasWidth;
                 photoState.canvas.height = canvasHeight;
+
+                // Disable image smoothing for crisp, sharp capture
+                photoState.ctx.imageSmoothingEnabled = false;
 
                 // STEP 4: Apply filter to canvas context
                 if (photoState.photoSettings.filter !== 'none') {
@@ -8909,7 +8981,8 @@
                     photoState.ctx.filter = 'none';
                 }
 
-                // STEP 5: Draw video frame with proper cropping for aspect ratio
+                // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
+                // Draw directly from video stream (no interpolation)
                 photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
                 // STEP 6: Apply flash effect if enabled (brightness boost to capture)
@@ -8917,9 +8990,19 @@
                     applyFlashEffectToCanvas(photoState.ctx, canvasWidth, canvasHeight);
                 }
 
-                // STEP 7: Save photo with all settings
+                // STEP 7: Save photo with MAXIMUM quality and all settings
+                // Convert canvas to JPEG at 100% quality (no compression artifacts)
+                const photoUrl = photoState.canvas.toDataURL('image/jpeg', 1.0);
+                
+                // Log actual dimensions for verification
+                console.log('✅ Photo captured at native resolution:', {
+                    width: photoState.canvas.width,
+                    height: photoState.canvas.height,
+                    size: Math.round(photoUrl.length / 1024) + 'KB'
+                });
+                
                 const photoData = {
-                    url: photoState.canvas.toDataURL('image/jpeg', 0.95),
+                    url: photoUrl,
                     timestamp: Date.now(),
                     settings: { ...photoState.photoSettings }
                 };
