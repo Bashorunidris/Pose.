@@ -8501,14 +8501,29 @@
 
                 console.log('🎥 Requesting camera access...');
 
-                // Simple, straightforward camera request - TikTok quality
-                photoState.photoStream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: photoState.cameraFacingMode,
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    }
-                });
+                let photoState_photoStream = null;
+                
+                // Try primary constraint with facingMode
+                try {
+                    photoState_photoStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: photoState.cameraFacingMode,
+                            width: { ideal: 1920 },
+                            height: { ideal: 1080 }
+                        }
+                    });
+                } catch (e) {
+                    console.log('FacingMode constraint failed, trying without it...');
+                    // Fallback: try without facingMode (works on laptops with single camera)
+                    photoState_photoStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            width: { ideal: 1920 },
+                            height: { ideal: 1080 }
+                        }
+                    });
+                }
+                
+                photoState.photoStream = photoState_photoStream;
 
                 console.log('✅ Camera access granted');
 
@@ -8531,26 +8546,24 @@
 
                 showToastRecording('📷 Camera Ready', 'success', '✓');
             } catch (error) {
-                console.error('❌ Camera error:', error.message);
+                console.error('❌ Camera error:', error.name, error.message);
 
-                // Handle specific permission errors
                 if (error.name === 'NotAllowedError') {
-                    alert('❌ Camera access denied.\n\nTo fix:\n1. Click the lock icon 🔒 in address bar\n2. Reset site permissions\n3. Reload page\n4. Allow camera');
+                    alert('❌ Camera permission denied.\n\nFix:\n1. Click lock 🔒 in address bar\n2. Reset permissions\n3. Reload & allow camera');
                 } else if (error.name === 'NotFoundError') {
-                    alert('❌ No camera found on this device');
+                    alert('❌ No camera found.\n\nOn laptop: Connect USB webcam\nOn phone: Check camera permissions in system settings');
                 } else if (error.name === 'NotReadableError') {
-                    alert('❌ Camera in use by another app');
+                    alert('❌ Camera in use.\n\nClose: Zoom, Teams, other video apps, or other browser tabs');
                 } else {
                     alert('❌ Camera error: ' + error.message);
                 }
 
-                // Stop trying to use camera
                 if (photoState.photoStream) {
                     photoState.photoStream.getTracks().forEach(track => track.stop());
                     photoState.photoStream = null;
                 }
             }
-        }
+            }
 
         // Helper: Ensure video element is created and streaming
         function ensureVideoElement() {
