@@ -8494,66 +8494,29 @@
             try {
                 // Check if camera is already initialized
                 if (photoState.photoStream && photoState.photoStream.active) {
-                    console.log('Camera already active');
+                    console.log('✅ Camera already active');
                     ensureVideoElement();
                     return;
                 }
 
-                console.log('Requesting professional-grade camera...');
+                console.log('🎥 Requesting camera access...');
 
-                // Professional quality camera constraints (4K resolution) - TikTok level
-                const constraints = {
+                // Simple, straightforward camera request - TikTok quality
+                photoState.photoStream = await navigator.mediaDevices.getUserMedia({
                     video: {
-                        // Request maximum resolution for crystal clear photos
-                        width: { ideal: 3840, min: 1920 },        // 4K ideal, 1080p minimum
-                        height: { ideal: 2160, min: 1080 },       // 4K ideal, 1080p minimum
-                        
-                        // Use camera facing mode from photoState (back camera is higher quality)
                         facingMode: photoState.cameraFacingMode,
-                        
-                        // 30fps for stable photos (60fps can introduce motion blur)
-                        frameRate: { ideal: 30, min: 24 },
-                        
-                        // Standard 16:9 aspect ratio
-                        aspectRatio: { ideal: 16 / 9 },
-                        
-                        // Advanced quality features for sharpness
-                        advanced: [
-                            { exposureMode: 'continuous' },     // Auto exposure (HDR)
-                            { whiteBalanceMode: 'continuous' }, // Auto white balance
-                            { focusMode: 'continuous-picture' } // Continuous autofocus for photos
-                        ]
-                    },
-                    audio: true  // IMPORTANT: Include audio in permissions request
-                };
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                });
 
-                // Fallback constraints if 4K not supported - Still high quality (1080p)
-                const fallbackConstraints = {
-                    video: {
-                        width: { ideal: 1920, min: 1280 },       // 1080p ideal, 720p minimum
-                        height: { ideal: 1080, min: 720 },
-                        facingMode: photoState.cameraFacingMode,
-                        frameRate: { ideal: 30, min: 24 }
-                    },
-                    audio: true
-                };
-
-                try {
-                    photoState.photoStream = await navigator.mediaDevices.getUserMedia(constraints);
-                    console.log('✅ Professional 4K camera initialized');
-                } catch (highResError) {
-                    console.log('4K not available, falling back to 1080p...');
-                    photoState.photoStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
-                    console.log('✅ 1080p camera initialized');
-                }
-
-                console.log('Camera & audio access granted');
+                console.log('✅ Camera access granted');
 
                 // Log actual camera capabilities for debugging
                 const videoTrack = photoState.photoStream.getVideoTracks()[0];
                 if (videoTrack) {
                     const settings = videoTrack.getSettings();
-                    console.log('Camera specs:', {
+                    console.log('📸 Camera specs:', {
                         resolution: `${settings.width}x${settings.height}`,
                         frameRate: settings.frameRate + 'fps',
                         facingMode: settings.facingMode
@@ -8566,17 +8529,19 @@
                 // Verify camera quality settings
                 verifyPhotoQualitySettings();
 
-                showToastRecording('📷 Pro Camera Ready', 'success', '✓');
+                showToastRecording('📷 Camera Ready', 'success', '✓');
             } catch (error) {
-                console.error('Camera/Audio error:', error);
+                console.error('❌ Camera error:', error.message);
 
                 // Handle specific permission errors
                 if (error.name === 'NotAllowedError') {
-                    alert('❌ Camera/Microphone access denied. Please allow permissions in your browser settings.');
+                    alert('❌ Camera access denied.\n\nTo fix:\n1. Click the lock icon 🔒 in address bar\n2. Reset site permissions\n3. Reload page\n4. Allow camera');
                 } else if (error.name === 'NotFoundError') {
                     alert('❌ No camera found on this device');
+                } else if (error.name === 'NotReadableError') {
+                    alert('❌ Camera in use by another app');
                 } else {
-                    alert('❌ Cannot access camera: ' + error.message);
+                    alert('❌ Camera error: ' + error.message);
                 }
 
                 // Stop trying to use camera
@@ -8667,7 +8632,7 @@
             console.log('✅ Filter Mode:', photoState.photoSettings.filter || 'none');
             console.log('✅ Aspect Ratio:', photoState.photoSettings.ratio);
             console.log('✅ Camera Mode:', photoState.cameraFacingMode === 'environment' ? '📷 Back (Higher Quality)' : '🤳 Front');
-            console.log('ℹ️ Expected Photo Size:', videoWidth * videoHeight > 2073600 ? '4K or High Resolution' : 'HD Resolution');
+            console.log('ℹ️ Expected Photo Size:', video.videoWidth * video.videoHeight > 2073600 ? '4K or High Resolution' : 'HD Resolution');
             console.groupEnd();
         }
 
