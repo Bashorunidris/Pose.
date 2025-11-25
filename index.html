@@ -4456,7 +4456,6 @@
             <div class="camera-preview">
                 <!-- Ratio Guide Frame (Live Preview) -->
                 <div id="ratioGuide" class="ratio-guide-frame"></div>
-                📷 Photo Camera Preview
             </div>
             <div class="rec-top-bar">
                 <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
@@ -8501,29 +8500,11 @@
 
                 console.log('🎥 Requesting camera access...');
 
-                let photoState_photoStream = null;
-                
-                // Try primary constraint with facingMode
-                try {
-                    photoState_photoStream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            facingMode: photoState.cameraFacingMode,
-                            width: { ideal: 1920 },
-                            height: { ideal: 1080 }
-                        }
-                    });
-                } catch (e) {
-                    console.log('FacingMode constraint failed, trying without it...');
-                    // Fallback: try without facingMode (works on laptops with single camera)
-                    photoState_photoStream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            width: { ideal: 1920 },
-                            height: { ideal: 1080 }
-                        }
-                    });
-                }
-                
-                photoState.photoStream = photoState_photoStream;
+                // Simple, no constraints - just ask for video and audio
+                photoState.photoStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
 
                 console.log('✅ Camera access granted');
 
@@ -8567,21 +8548,28 @@
 
         // Helper: Ensure video element is created and streaming
         function ensureVideoElement() {
+            console.log('🎥 ensureVideoElement called');
+            
             if (!photoState.photoStream || !photoState.photoStream.active) {
-                console.error('Stream not active');
+                console.error('❌ Stream not active');
                 return false;
             }
+            
+            console.log('✅ Stream is active');
 
             const container = document.querySelector('#screen5 .camera-preview');
             if (!container) {
-                console.error('Screen 5 container not found');
+                console.error('❌ Screen 5 container not found');
                 return false;
             }
+            
+            console.log('✅ Container found');
 
             // Check if video element already exists
             let video = document.getElementById('photoPreviewVideo');
 
             if (!video) {
+                console.log('Creating new video element...');
                 // Create new video element with PROFESSIONAL QUALITY settings
                 video = document.createElement('video');
                 video.id = 'photoPreviewVideo';
@@ -8610,25 +8598,36 @@
                     perspective: 1000px;
                 `;
 
+                // Clear any text content from container before adding video
                 container.innerHTML = '';
+                container.style.background = '#000';  // Black background
                 container.appendChild(video);
 
                 console.log('✅ Professional video element created');
             }
 
             // Assign stream to video
+            console.log('📹 Video element srcObject before:', video.srcObject ? 'has stream' : 'no stream');
             if (video.srcObject !== photoState.photoStream) {
                 video.srcObject = photoState.photoStream;
                 console.log('✅ Stream assigned to video element');
+            } else {
+                console.log('Stream already assigned');
             }
+            
+            console.log('📹 Video element display:', window.getComputedStyle(video).display);
+            console.log('📹 Video element dimensions:', video.offsetWidth, 'x', video.offsetHeight);
 
             // Ensure it's playing
-            video.play().catch(err => {
-                console.error('Video play error:', err);
+            console.log('▶️ Attempting to play video...');
+            video.play().then(() => {
+                console.log('✅ Video playing');
+            }).catch(err => {
+                console.error('❌ Video play error:', err.message);
             });
 
             return true;
-        }
+            }
 
         // ============================================================================
         // VERIFY PHOTO QUALITY SETTINGS - Check console for debug info
