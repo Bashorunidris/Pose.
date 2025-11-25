@@ -1001,16 +1001,16 @@
             transform: scale(0.92);
         }
 
-        /* Photo Filters Panel - Fixed Vertical on Right Side */
+        /* Photo Filters Panel - Vertical on Right, Responsive */
         .photo-filters-panel {
-            position: fixed;
-            right: 12px;
-            bottom: 100px;
-            width: 95px;
+            position: absolute;
+            right: 20px;
+            top: 50px;
+            width: 85px;
             height: auto;
-            max-height: 480px;
+            max-height: calc(100vh - 150px);
             border-radius: 20px;
-            padding: 12px 8px;
+            padding: 10px 6px;
             z-index: 99;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1027,14 +1027,41 @@
         .photo-filters-scroll {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             width: 100%;
-            max-height: 480px;
+            max-height: calc(100vh - 150px);
             overflow-y: auto;
             overflow-x: hidden;
             padding: 0;
             align-items: center;
             scroll-behavior: smooth;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .photo-filters-panel {
+                right: 12px;
+                top: 48px;
+                width: 75px;
+                padding: 8px 5px;
+            }
+
+            .photo-filters-scroll {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .photo-filters-panel {
+                right: 10px;
+                top: 45px;
+                width: 65px;
+                padding: 6px 4px;
+            }
+
+            .photo-filters-scroll {
+                gap: 6px;
+            }
         }
 
         .photo-filters-scroll::-webkit-scrollbar {
@@ -1062,15 +1089,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             background: none;
-            border: 2px solid transparent;
+            border: 1.5px solid transparent;
             cursor: pointer;
-            padding: 8px;
+            padding: 6px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: #fff;
-            font-size: 11px;
-            border-radius: 12px;
+            font-size: 9px;
+            border-radius: 10px;
             flex-shrink: 0;
             min-width: fit-content;
             position: relative;
@@ -1079,31 +1106,62 @@
         .photo-filter-btn:hover {
             border-color: rgba(255, 255, 255, 0.5);
             background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .photo-filter-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .photo-filter-btn.active {
             border-color: #4C1D95;
             background: rgba(76, 29, 149, 0.3);
-            box-shadow: 0 0 15px rgba(76, 29, 149, 0.5), inset 0 0 10px rgba(76, 29, 149, 0.2);
+            box-shadow: 0 0 12px rgba(76, 29, 149, 0.5), inset 0 0 8px rgba(76, 29, 149, 0.2);
         }
 
         .photo-filter-btn.active .photo-filter-preview {
             border-color: #4C1D95;
-            box-shadow: 0 0 20px rgba(76, 29, 149, 0.8);
+            box-shadow: 0 0 15px rgba(76, 29, 149, 0.8);
         }
 
         .photo-filter-preview {
-            width: 70px;
-            height: 70px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s;
+        }
+
+        /* Mobile Responsive Button Sizes */
+        @media (max-width: 768px) {
+            .photo-filter-btn {
+                padding: 5px;
+                gap: 3px;
+                font-size: 8px;
+                border-radius: 9px;
+            }
+
+            .photo-filter-preview {
+                width: 48px;
+                height: 48px;
+                border: 1.3px solid rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .photo-filter-btn {
+                padding: 4px;
+                gap: 2px;
+                font-size: 7px;
+                border-radius: 8px;
+            }
+
+            .photo-filter-preview {
+                width: 40px;
+                height: 40px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
         }
 
         /* Filter Preview Styles */
@@ -9045,16 +9103,15 @@
         }
 
         function togglePhotoFilters() {
-            const menu = document.getElementById('recPhotoLeftMenu');
-            const filterItem = menu.querySelector('.rec-menu-item:nth-child(3)');
-
-            const filters = ['none', 'sepia', 'grayscale', 'brightness', 'contrast'];
-            const currentIdx = filters.indexOf(photoState.photoSettings.filter);
-            photoState.photoSettings.filter = filters[(currentIdx + 1) % filters.length];
-
-            filterItem.textContent = `🎨 ${photoState.photoSettings.filter}`;
-            applyPhotoFilter(photoState.photoSettings.filter);
-            showToastRecording(`Filter: ${photoState.photoSettings.filter}`, 'info', '🎨');
+            const filtersPanel = document.querySelector('.photo-filters-panel');
+            if (filtersPanel) {
+                filtersPanel.classList.toggle('show');
+                if (filtersPanel.classList.contains('show')) {
+                    showToastRecording('📸 Filters Opened', 'info', '✓');
+                } else {
+                    showToastRecording('📸 Filters Closed', 'info', '✓');
+                }
+            }
             closePhotoLeftMenu();
         }
 
