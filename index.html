@@ -4784,10 +4784,25 @@
             <div class="rec-edit-controls">
                 <button class="rec-add-sound-btn"
                     onclick="showToastRecording('🎵 Add Sound feature coming soon', 'info', '♪')">🎵 Add Sound</button>
-                <button class="rec-action-btn post" onclick="goToPhotoPostSettings()">Continue</button>
-            </div>
+          <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;" onclick="downloadCapturedPhoto()">
+        ⬇️ Download
+    </button>
+    <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
+        Continue ➜
+    </button>
+                </div>
+          
         </div>
-
+<div id="discardPhotoModal" class="modal-overlay">
+    <div class="modal">
+        <h2>Discard Photo?</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this photo?</p>
+        <div style="display: flex; gap: 10px;">
+            <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;" onclick="closeDiscardModal()">Stay</button>
+            <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardPhoto()">Discard</button>
+        </div>
+    </div>
+</div>
         <!-- SCREEN 7: PHOTO POST SETTINGS -->
         <div id="screen7" class="recording-screen">
             <div class="rec-post-header">
@@ -9958,6 +9973,78 @@ function openPhotoGallery() {
     input.click();
 }
 
+// Show discard confirmation modal
+function showDiscardPhotoModal() {
+    const modal = document.getElementById('discardPhotoModal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+// Close discard modal (stay on screen 6)
+function closeDiscardModal() {
+    const modal = document.getElementById('discardPhotoModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// Confirm discard and go back to screen 5
+function confirmDiscardPhoto() {
+    closeDiscardModal();
+    
+    // Clear current photo from state
+    if (photoState.currentPhotoIndex >= 0) {
+        photoState.capturedPhotos.splice(photoState.currentPhotoIndex, 1);
+        photoState.currentPhotoIndex = Math.max(0, photoState.currentPhotoIndex - 1);
+    }
+    
+    // Go back to camera screen
+    showScreen('screen5');
+    
+    // Reinitialize camera
+    initializePhotoMode().then(() => {
+        showToastRecording('📷 Photo discarded, camera ready', 'info', '✓');
+    });
+}
+
+// Download photo to device
+function downloadCapturedPhoto() {
+    try {
+        if (photoState.capturedPhotos.length === 0 || photoState.currentPhotoIndex < 0) {
+            showToastRecording('❌ No photo to download', 'error', '✗');
+            return;
+        }
+
+        const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = photo.url;
+        
+        // Generate filename with timestamp
+        const timestamp = new Date(photo.timestamp).toISOString().slice(0, 19).replace(/:/g, '-');
+        const filterName = photo.settings.filter || 'original';
+        link.download = `pose_photo_${timestamp}_${filterName}.jpg`;
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToastRecording('✅ Photo downloading...', 'success', '⬇️');
+        console.log('📥 Photo download started:', link.download);
+        
+    } catch (error) {
+        console.error('Download error:', error);
+        showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
+    }
+}
+
+// Update back button for screen 6 to show discard modal
+function backToScreen5() {
+    showDiscardPhotoModal();
+}
 
 
 
