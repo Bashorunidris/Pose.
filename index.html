@@ -4787,16 +4787,7 @@
                 <button class="rec-action-btn post" onclick="goToPhotoPostSettings()">Continue</button>
             </div>
         </div>
-<div id="discardPhotoModal" class="modal-overlay">
-    <div class="modal">
-        <h2>Discard Photo?</h2>
-        <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this photo?</p>
-        <div style="display: flex; gap: 10px;">
-            <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;" onclick="closeDiscardModal()">Stay</button>
-            <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardPhoto()">Discard</button>
-        </div>
-    </div>
-</div>
+
         <!-- SCREEN 7: PHOTO POST SETTINGS -->
         <div id="screen7" class="recording-screen">
             <div class="rec-post-header">
@@ -8989,8 +8980,11 @@
             showScreen('screen3');
         }
 
+        // Back to Screen 5 - Preserve filter selection
         function backToScreen5() {
             showScreen('screen5');
+            // Sync filter button state with current filter
+            syncFilterButtonState();
         }
 
         function backToScreen6() {
@@ -9578,6 +9572,47 @@
             showToastRecording(`${effectIcons[effect]} effect ${idx > -1 ? 'removed' : 'added'}`, 'info', effectIcons[effect]);
         }
 
+        // Robust filter button synchronization
+        function syncFilterButtonState() {
+            console.log('🔄 Syncing filter buttons... Current filter:', photoState.photoSettings.filter);
+            
+            // Get current filter
+            const currentFilter = photoState.photoSettings.filter || 'none';
+            
+            // Clear ALL active states
+            document.querySelectorAll('.photo-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Get all filter buttons
+            const filterButtons = document.querySelectorAll('.photo-filter-btn');
+            console.log('📌 Found', filterButtons.length, 'filter buttons');
+            
+            let found = false;
+            
+            // Match by onclick attribute
+            filterButtons.forEach((btn, index) => {
+                const onclick = btn.getAttribute('onclick') || '';
+                const filterMatch = onclick.match(/applyPhotoFilter\('([^']+)'\)/);
+                
+                if (filterMatch && filterMatch[1] === currentFilter) {
+                    console.log('✅ Matched filter at index', index, ':', currentFilter);
+                    btn.classList.add('active');
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                console.warn('⚠️ Filter button not found for:', currentFilter);
+                // Fallback: highlight first button if none found
+                if (filterButtons.length > 0) {
+                    filterButtons[0].classList.add('active');
+                }
+            }
+            
+            console.log('✅ Filter sync complete');
+        }
+
         function applyPhotoFilter(filterName) {
             const video = document.getElementById('photoPreviewVideo');
             if (!video) return;
@@ -9625,21 +9660,13 @@
             // Apply filter to video
             video.style.filter = filter;
 
-            // Update active button state in filters panel
-            document.querySelectorAll('.photo-filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Find and mark the clicked button as active
-            const activeBtn = document.querySelector(`[onclick="applyPhotoFilter('${filterName}')"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
+            // Update button highlighting using robust sync function
+            syncFilterButtonState();
 
             // Show toast feedback
             showToastRecording(`🎨 ${filterString}`, 'info', '✓');
 
-            console.log('📸 Filter applied:', filterName);
+            console.log('📸 Filter applied & saved:', filterName);
         }
 
         // ============================================================================
@@ -10631,6 +10658,19 @@ function openPhotoGallery() {
                 videoBlob: null
             };
         }
+
+        // ============================================================================
+        // FILTER PERSISTENCE ON WINDOW FOCUS
+        // ============================================================================
+        
+        // When user returns to tab, sync filter buttons
+        window.addEventListener('focus', () => {
+            const screen5 = document.getElementById('screen5');
+            if (screen5 && screen5.classList.contains('active')) {
+                console.log('🔄 Window focused on Screen5 - syncing filters');
+                syncFilterButtonState();
+            }
+        });
 
     </script>
 </body>
