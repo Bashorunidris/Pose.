@@ -9800,157 +9800,166 @@
             }
         }
 
-        // Capture photo with timer support
-        async function capturePhoto() {
-            // Check if stream is available
-            if (!photoState.photoStream || !photoState.photoStream.active) {
-                alert('❌ Camera not initialized. Please wait a moment and try again.');
-                await initializePhotoMode();
-                return;
-            }
 
-            const video = document.getElementById('photoPreviewVideo');
-            if (!video || !video.videoWidth || !video.videoHeight) {
-                alert('❌ Camera not ready. Please wait for video stream to load.');
-                return;
-            }
+// ============================================================================
+// PHOTO CAPTURE WITH ADVANCED FEATURES (Timer, Grid, Flash, Gallery)
+// ============================================================================
 
-            try {
-                // STEP 1: Hide grid overlay before capturing (it should not appear in final photo)
-                if (photoState.photoSettings.grid) {
-                    hideGridOverlay();
-                }
+// Capture photo with timer support
+async function capturePhoto() {
+    // Check if stream is available
+    if (!photoState.photoStream || !photoState.photoStream.active) {
+        alert('❌ Camera not initialized. Please wait a moment and try again.');
+        await initializePhotoMode();
+        return;
+    }
 
-                // STEP 2: Handle timer with visual countdown
-                if (photoState.photoSettings.timer > 0) {
-                    await showPhotoCountdown(photoState.photoSettings.timer);
-                }
+    const video = document.getElementById('photoPreviewVideo');
+    if (!video || !video.videoWidth || !video.videoHeight) {
+        alert('❌ Camera not ready. Please wait for video stream to load.');
+        return;
+    }
 
-                // STEP 3: Create canvas with NATIVE resolution for maximum quality
-                if (!photoState.canvas) {
-                    photoState.canvas = document.createElement('canvas');
-                    // Professional quality context settings
-                    photoState.ctx = photoState.canvas.getContext('2d', {
-                        alpha: false,              // No transparency = better performance
-                        desynchronized: true       // Faster rendering
-                    });
-                }
+    try {
+        // STEP 1: Hide grid overlay before capturing (it should not appear in final photo)
+        if (photoState.photoSettings.grid) {
+            hideGridOverlay();
+        }
 
-                // Set canvas dimensions to NATIVE video resolution (not CSS dimensions!)
-                // This is critical: use video.videoWidth/Height, NOT offsetWidth/offsetHeight
-                const { canvasWidth, canvasHeight, offsetX, offsetY } = calculateCanvasSize(video.videoWidth, video.videoHeight);
-                photoState.canvas.width = canvasWidth;
-                photoState.canvas.height = canvasHeight;
+        // STEP 2: Handle timer with visual countdown
+        if (photoState.photoSettings.timer > 0) {
+            await showPhotoCountdown(photoState.photoSettings.timer);
+        }
 
-                // Disable image smoothing for crisp, sharp capture
-                photoState.ctx.imageSmoothingEnabled = false;
+        // STEP 3: Create canvas with NATIVE resolution for maximum quality
+        if (!photoState.canvas) {
+            photoState.canvas = document.createElement('canvas');
+            // Professional quality context settings
+            photoState.ctx = photoState.canvas.getContext('2d', {
+                alpha: false,              // No transparency = better performance
+                desynchronized: true       // Faster rendering
+            });
+        }
 
-                // STEP 4: Apply filter to canvas context
-                if (photoState.photoSettings.filter !== 'none') {
-                    photoState.ctx.filter = photoState.getPhotoFilterString(photoState.photoSettings.filter);
-                } else {
-                    photoState.ctx.filter = 'none';
-                }
+        // Set canvas dimensions to NATIVE video resolution (not CSS dimensions!)
+        // This is critical: use video.videoWidth/Height, NOT offsetWidth/offsetHeight
+        const { canvasWidth, canvasHeight, offsetX, offsetY } = calculateCanvasSize(video.videoWidth, video.videoHeight);
+        photoState.canvas.width = canvasWidth;
+        photoState.canvas.height = canvasHeight;
 
-                // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
-                // Draw directly from video stream (no interpolation)
-                photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+        // Disable image smoothing for crisp, sharp capture
+        photoState.ctx.imageSmoothingEnabled = false;
 
-                // STEP 6: Apply flash effect if enabled (brightness boost to capture)
-                if (photoState.photoSettings.flash) {
-                    applyFlashEffectToCanvas(photoState.ctx, canvasWidth, canvasHeight);
-                }
+        // STEP 4: Apply filter to canvas context
+        if (photoState.photoSettings.filter !== 'none') {
+            photoState.ctx.filter = photoState.getPhotoFilterString(photoState.photoSettings.filter);
+        } else {
+            photoState.ctx.filter = 'none';
+        }
 
-                // STEP 7: Save photo with MAXIMUM quality and all settings
-                // Convert canvas to JPEG at 100% quality (no compression artifacts)
-                // Using toBlob for better performance than toDataURL
-                const blob = await new Promise(resolve => {
-                    photoState.canvas.toBlob(resolve, 'image/jpeg', 1.0);
-                });
+        // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
+        // Draw directly from video stream (no interpolation)
+        photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
-                // Convert to data URL for display
-                const photoUrl = URL.createObjectURL(blob);
+        // STEP 6: Apply flash effect if enabled (brightness boost to capture)
+        if (photoState.photoSettings.flash) {
+            applyFlashEffectToCanvas(photoState.ctx, canvasWidth, canvasHeight);
+        }
 
-                // Log actual dimensions for verification
-                console.log('✅ Photo captured at native resolution:', {
-                    width: photoState.canvas.width,
-                    height: photoState.canvas.height,
-                    size: Math.round(blob.size / 1024) + 'KB',
-                    blobSize: blob.size,
-                    compression: '100% (lossless quality)'
-                });
+        // STEP 7: Save photo with MAXIMUM quality and all settings
+        // Convert canvas to JPEG at 100% quality (no compression artifacts)
+        // Using toBlob for better performance than toDataURL
+        const blob = await new Promise(resolve => {
+            photoState.canvas.toBlob(resolve, 'image/jpeg', 1.0);
+        });
 
+        // Convert to data URL for display
+        const photoUrl = URL.createObjectURL(blob);
+
+        // Log actual dimensions for verification
+        console.log('✅ Photo captured at native resolution:', {
+            width: photoState.canvas.width,
+            height: photoState.canvas.height,
+            size: Math.round(blob.size / 1024) + 'KB',
+            blobSize: blob.size,
+            compression: '100% (lossless quality)'
+        });
+
+        const photoData = {
+            url: photoUrl,
+            blob: blob,  // Store blob for Firebase upload
+            timestamp: Date.now(),
+            resolution: `${photoState.canvas.width}x${photoState.canvas.height}`,
+            settings: { ...photoState.photoSettings }
+        };
+
+        photoState.capturedPhotos.push(photoData);
+        photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
+
+        showToastRecording('📷 Photo captured!', 'success', '✨');
+        console.log('Photo captured with settings:', photoState.photoSettings);
+
+        // Stop camera after capturing (user won't need it in edit screen)
+        stopPhotoMode();
+
+        // Show photo in screen 6
+        setTimeout(() => {
+            showScreen('screen6');
+            displayCapturedPhoto();
+        }, 500);
+    } catch (error) {
+        console.error('Capture error:', error);
+        alert('❌ Failed to capture photo: ' + error.message);
+    }
+}
+
+// Display captured photo in preview
+function displayCapturedPhoto() {
+    if (photoState.capturedPhotos.length === 0) return;
+
+    const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+    const preview = document.querySelector('#screen6 .camera-preview');
+
+    if (preview) {
+        preview.innerHTML = `<img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">`;
+    }
+}
+
+// Gallery function - select photo from device
+function openPhotoGallery() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
                 const photoData = {
-                    url: photoUrl,
-                    blob: blob,  // Store blob for Firebase upload
+                    url: event.target.result,
                     timestamp: Date.now(),
-                    resolution: `${photoState.canvas.width}x${photoState.canvas.height}`,
                     settings: { ...photoState.photoSettings }
                 };
-
                 photoState.capturedPhotos.push(photoData);
                 photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
 
-                showToastRecording('📷 Photo captured!', 'success', '✨');
-                console.log('Photo captured with settings:', photoState.photoSettings);
-
-                // Stop camera after capturing (user won't need it in edit screen)
+                // Stop camera when moving to edit screen
                 stopPhotoMode();
 
-                // Show photo in screen 6
+                showToastRecording('Photo added from gallery', 'success', '🖼️');
                 setTimeout(() => {
                     showScreen('screen6');
                     displayCapturedPhoto();
-                }, 500);
-            } catch (error) {
-                console.error('Capture error:', error);
-                alert('❌ Failed to capture photo: ' + error.message);
-            }
-        }
-
-        function displayCapturedPhoto() {
-            if (photoState.capturedPhotos.length === 0) return;
-
-            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-            const preview = document.querySelector('#screen6 .camera-preview');
-
-            if (preview) {
-                preview.innerHTML = `<img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">`;
-            }
-        }
-
-        // Gallery function
-        function openPhotoGallery() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const photoData = {
-                            url: event.target.result,
-                            timestamp: Date.now(),
-                            settings: { ...photoState.photoSettings }
-                        };
-                        photoState.capturedPhotos.push(photoData);
-                        photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
-
-                        // Stop camera when moving to edit screen
-                        stopPhotoMode();
-
-                        showToastRecording('Photo added from gallery', 'success', '🖼️');
-                        setTimeout(() => {
-                            showScreen('screen6');
-                            displayCapturedPhoto();
-                        }, 300);
-                    };
-                    reader.readAsDataURL(file);
-                }
+                }, 300);
             };
-            input.click();
+            reader.readAsDataURL(file);
         }
+    };
+    input.click();
+}
+
+
+
 
         // Switch to video mode
         function switchToVideoMode() {
