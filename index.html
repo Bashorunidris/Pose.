@@ -4272,553 +4272,786 @@
 
 
         /* ====== SOUND LIBRARY MODAL ====== */
-.sound-library-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 3500;
-    animation: fadeIn 0.3s ease;
-}
-
-.sound-library-modal.active {
-    display: flex;
-    flex-direction: column;
-}
-
-.sound-library-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 20px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
-}
-
-.sound-library-header h2 {
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    margin: 0;
-}
-
-.sound-library-close {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 28px;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-}
-
-.sound-library-close:hover {
-    color: #ff0050;
-    transform: scale(1.1);
-}
-
-/* Banner Ads Section */
-.sound-banner-ads {
-    width: 100%;
-    height: 180px;
-    background: #0a0a0a;
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid #333;
-}
-
-.banner-ads-slider {
-    display: flex;
-    height: 100%;
-    transition: transform 0.5s ease;
-}
-
-.banner-ad-item {
-    min-width: 100%;
-    height: 100%;
-    position: relative;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.banner-ad-item img,
-.banner-ad-item video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.banner-ad-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 15px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-    color: white;
-}
-
-.banner-ad-title {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.banner-ad-subtitle {
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.banner-indicators {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-    z-index: 10;
-}
-
-.banner-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.banner-indicator.active {
-    background: white;
-    width: 24px;
-    border-radius: 4px;
-}
-
-/* Sound Tabs */
-.sound-tabs {
-    display: flex;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.sound-tabs::-webkit-scrollbar {
-    display: none;
-}
-
-.sound-tab {
-    flex: 1;
-    min-width: 100px;
-    padding: 15px 10px;
-    background: transparent;
-    border: none;
-    color: #888;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    position: relative;
-    transition: var(--transition);
-    white-space: nowrap;
-}
-
-.sound-tab:hover {
-    color: #aaa;
-}
-
-.sound-tab.active {
-    color: white;
-}
-
-.sound-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(45deg, #ff0050, #ff4081);
-    border-radius: 2px 2px 0 0;
-}
-
-/* Tab Content */
-.sound-tab-content {
-    display: none;
-    flex: 1;
-    overflow-y: auto;
-    background: #0a0a0a;
-}
-
-.sound-tab-content.active {
-    display: block;
-}
-
-/* Search Bar */
-.sound-search {
-    padding: 15px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.sound-search-input {
-    width: 100%;
-    padding: 12px 45px 12px 15px;
-    background: #0a0a0a;
-    border: 1px solid #333;
-    border-radius: 25px;
-    color: white;
-    font-size: 14px;
-}
-
-.sound-search-input:focus {
-    outline: none;
-    border-color: #ff0050;
-}
-
-.sound-search-input::placeholder {
-    color: #666;
-}
-
-.search-icon {
-    position: absolute;
-    right: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    font-size: 16px;
-}
-
-/* Sound List */
-.sound-list {
-    padding: 10px;
-}
-
-.sound-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #1a1a1a;
-    border-radius: var(--radius-sm);
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    border: 1px solid transparent;
-}
-
-.sound-item:hover {
-    background: #222;
-    border-color: #333;
-}
-
-.sound-item.active,
-.sound-item.playing {
-    border-color: #ff0050;
-    background: rgba(255, 0, 80, 0.1);
-}
-
-.sound-thumbnail {
-    width: 50px;
-    height: 50px;
-    border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 20px;
-    flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.sound-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.sound-play-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 24px;
-    height: 24px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 10px;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.sound-item:hover .sound-play-icon {
-    opacity: 1;
-}
-
-.sound-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.sound-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 3px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.sound-artist {
-    font-size: 12px;
-    color: #888;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.sound-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    color: #666;
-}
-
-.sound-duration {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.sound-uses {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.sound-action {
-    background: transparent;
-    border: 1px solid #333;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    flex-shrink: 0;
-}
-
-.sound-action:hover {
-    background: #ff0050;
-    border-color: #ff0050;
-}
-
-.sound-item.active .sound-action {
-    background: #ff0050;
-    border-color: #ff0050;
-}
-
-/* Empty State */
-.sound-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    color: #666;
-    text-align: center;
-}
-
-.sound-empty-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
-    opacity: 0.5;
-}
-
-.sound-empty-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #888;
-    margin-bottom: 10px;
-}
-
-.sound-empty-text {
-    font-size: 14px;
-    color: #666;
-}
-
-/* Voice Recording Interface */
-.voice-recorder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    min-height: 400px;
-}
-
-.voice-visualizer {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ff0050, #ff4081);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 30px;
-    box-shadow: 0 0 0 0 rgba(255, 0, 80, 0.7);
-}
-
-.voice-visualizer.recording {
-    animation: voicePulse 1.5s infinite;
-}
-
-@keyframes voicePulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 0, 80, 0.7);
-    }
-    50% {
-        box-shadow: 0 0 0 30px rgba(255, 0, 80, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 0, 80, 0);
-    }
-}
-
-.voice-icon {
-    font-size: 64px;
-    color: white;
-}
-
-.voice-timer {
-    font-size: 32px;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 30px;
-    font-family: monospace;
-}
-
-.voice-controls {
-    display: flex;
-    gap: 20px;
-}
-
-.voice-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    transition: var(--transition);
-}
-
-.voice-btn.record {
-    background: #ff0050;
-    color: white;
-}
-
-.voice-btn.record:hover {
-    background: #cc0040;
-    transform: scale(1.1);
-}
-
-.voice-btn.stop {
-    background: #333;
-    color: white;
-}
-
-.voice-btn.stop:hover {
-    background: #444;
-}
-
-.voice-btn.save {
-    background: #22c55e;
-    color: white;
-}
-
-.voice-btn.save:hover {
-    background: #16a34a;
-}
-
-/* Loading State */
-.sound-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    color: #888;
-}
-
-.sound-loading-spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid #333;
-    border-top-color: #ff0050;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Mobile Responsive */
-@media (max-width: 480px) {
-    .sound-banner-ads {
-        height: 140px;
-    }
-
-    .sound-tab {
-        min-width: 80px;
-        font-size: 13px;
-        padding: 12px 8px;
-    }
-
-    .sound-item {
-        gap: 10px;
-        padding: 10px;
-    }
-
-    .sound-thumbnail {
-        width: 45px;
-        height: 45px;
-    }
-
-    .sound-title {
-        font-size: 13px;
-    }
-
-    .sound-artist {
-        font-size: 11px;
-    }
-}
+        .sound-library-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3500;
+            animation: fadeIn 0.3s ease;
+            flex-direction: column;
+        }
+
+        .sound-library-modal.active {
+            display: flex;
+        }
+
+        .sound-library-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+
+        .sound-library-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .sound-library-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .sound-library-close:hover {
+            color: #ff0050;
+            transform: scale(1.1);
+        }
+
+        /* Banner Ads Section */
+        .sound-banner-ads {
+            width: 100%;
+            height: 180px;
+            background: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #333;
+        }
+
+        .banner-ads-slider {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .banner-ad-item {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-ad-item img,
+        .banner-ad-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-ad-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+        }
+
+        .banner-ad-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .banner-ad-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .banner-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .banner-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .banner-indicator.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Sound Tabs */
+        .sound-tabs {
+            display: flex;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .sound-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sound-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px 10px;
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .sound-tab:hover {
+            color: #aaa;
+        }
+
+        .sound-tab.active {
+            color: white;
+        }
+
+        .sound-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #ff0050, #ff4081);
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* Tab Content */
+        .sound-tab-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            background: #0a0a0a;
+        }
+
+        .sound-tab-content.active {
+            display: block;
+        }
+
+        /* Search Bar */
+        .sound-search {
+            padding: 15px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sound-search-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .sound-search-input:focus {
+            outline: none;
+            border-color: #ff0050;
+        }
+
+        .sound-search-input::placeholder {
+            color: #666;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Sound List */
+        .sound-list {
+            padding: 10px;
+        }
+
+        .sound-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #1a1a1a;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .sound-item:hover {
+            background: #222;
+            border-color: #333;
+        }
+
+        .sound-item.active,
+        .sound-item.playing {
+            border-color: #ff0050;
+            background: rgba(255, 0, 80, 0.1);
+        }
+
+        .sound-thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sound-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sound-play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .sound-item:hover .sound-play-icon {
+            opacity: 1;
+        }
+
+        /* Trending Badge */
+        .trending-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #ff0050 0%, #ff6b7a 100%);
+            border-radius: 12px;
+            padding: 4px 8px;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.4);
+            animation: trendingPulse 2s ease-in-out infinite;
+        }
+
+        .trending-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        @keyframes trendingPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 2px 8px rgba(255, 0, 80, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(255, 0, 80, 0.6);
+            }
+        }
+
+        .sound-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sound-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sound-artist {
+            font-size: 12px;
+            color: #888;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sound-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .sound-duration {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sound-uses {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sound-action {
+            background: transparent;
+            border: 1px solid #333;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .sound-action:hover {
+            background: #ff0050;
+            border-color: #ff0050;
+        }
+
+        .sound-item.active .sound-action {
+            background: #ff0050;
+            border-color: #ff0050;
+        }
+
+        /* Empty State */
+        .sound-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #666;
+            text-align: center;
+        }
+
+        .sound-empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .sound-empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .sound-empty-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Voice Recording Interface */
+        .voice-recorder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 400px;
+        }
+
+        .voice-visualizer {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0050, #ff4081);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 30px;
+            box-shadow: 0 0 0 0 rgba(255, 0, 80, 0.7);
+        }
+
+        .voice-visualizer.recording {
+            animation: voicePulse 1.5s infinite;
+        }
+
+        @keyframes voicePulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 80, 0.7);
+            }
+
+            50% {
+                box-shadow: 0 0 0 30px rgba(255, 0, 80, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 80, 0.7);
+            }
+        }
+
+        .voice-icon {
+            font-size: 64px;
+            color: white;
+        }
+
+        .voice-timer {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 30px;
+            font-family: monospace;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 20px;
+        }
+
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: var(--transition);
+        }
+
+        .voice-btn.record {
+            background: #ff0050;
+            color: white;
+        }
+
+        .voice-btn.record:hover {
+            background: #cc0040;
+            transform: scale(1.1);
+        }
+
+        .voice-btn.stop {
+            background: #333;
+            color: white;
+        }
+
+        .voice-btn.stop:hover {
+            background: #444;
+        }
+
+        .voice-btn.save {
+            background: #22c55e;
+            color: white;
+        }
+
+        .voice-btn.save:hover {
+            background: #16a34a;
+        }
+
+        /* Loading State */
+        .sound-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .sound-loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #333;
+            border-top-color: #ff0050;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .sound-banner-ads {
+                height: 140px;
+            }
+
+            .sound-tab {
+                min-width: 80px;
+                font-size: 13px;
+                padding: 12px 8px;
+            }
+
+            .sound-item {
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .sound-thumbnail {
+                width: 45px;
+                height: 45px;
+            }
+
+            .sound-title {
+                font-size: 13px;
+            }
+
+            .sound-artist {
+                font-size: 11px;
+            }
+        }
+
+        /* ====== SELECTED SOUND DISPLAY - SCREEN 6 ====== */
+        .selected-sound-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 12px 20px;
+            z-index: 15;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.3s ease;
+            max-width: calc(100% - 40px);
+        }
+
+        .selected-sound-container.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .sound-display-thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .sound-display-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sound-display-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .sound-display-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sound-display-artist {
+            font-size: 12px;
+            color: #aaa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sound-display-controls {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .sound-play-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ff0050;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .sound-play-btn:hover {
+            background: #cc0040;
+            transform: scale(1.05);
+        }
+
+        .sound-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .sound-play-btn.playing {
+            background: #22c55e;
+        }
+
+        .sound-trim-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #6366f1;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .sound-trim-btn:hover {
+            background: #4f46e5;
+            transform: scale(1.05);
+        }
+
+        .sound-trim-btn:active {
+            transform: scale(0.95);
+        }
+
+        .sound-remove-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .sound-remove-btn:hover {
+            background: #ff0050;
+            border-color: #ff0050;
+        }
+
+        .sound-remove-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .selected-sound-container {
+                top: 15px;
+                padding: 10px 15px;
+                border-radius: 15px;
+            }
+
+            .sound-display-thumbnail {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .sound-display-title {
+                font-size: 13px;
+            }
+
+            .sound-display-artist {
+                font-size: 11px;
+            }
+
+            .sound-play-btn,
+            .sound-remove-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -5233,90 +5466,6 @@
             </div>
         </div>
 
-<!-- Sound Library Modal -->
-<div class="sound-library-modal" id="soundLibraryModal">
-    <!-- Header -->
-    <div class="sound-library-header">
-        <h2>🎵 Add Sound</h2>
-        <button class="sound-library-close" onclick="closeSoundLibrary()">×</button>
-    </div>
-
-    <!-- Banner Ads Section -->
-    <div class="sound-banner-ads">
-        <div class="banner-ads-slider" id="bannerAdsSlider">
-            <!-- Banner ads will be populated here -->
-        </div>
-        <div class="banner-indicators" id="bannerIndicators"></div>
-    </div>
-
-    <!-- Sound Tabs -->
-    <div class="sound-tabs">
-        <button class="sound-tab active" onclick="switchSoundTab('favourite')">⭐ Favourite</button>
-        <button class="sound-tab" onclick="switchSoundTab('yourMusic')">🎧 Your Music</button>
-        <button class="sound-tab" onclick="switchSoundTab('poseMusic')">🎵 Pose Music</button>
-        <button class="sound-tab" onclick="switchSoundTab('voiceOver')">🎤 Voice Over</button>
-    </div>
-
-    <!-- Tab Content -->
-    <!-- Favourite Tab -->
-    <div class="sound-tab-content active" id="favouriteTab">
-        <div class="sound-search">
-            <input type="text" class="sound-search-input" placeholder="Search favourite sounds..." 
-                   oninput="searchSounds('favourite', this.value)">
-            <span class="search-icon">🔍</span>
-        </div>
-        <div class="sound-list" id="favouriteSoundList">
-            <!-- Sounds will be populated here -->
-        </div>
-    </div>
-
-    <!-- Your Music Tab -->
-    <div class="sound-tab-content" id="yourMusicTab">
-        <div class="sound-search">
-            <input type="text" class="sound-search-input" placeholder="Search your music..." 
-                   oninput="searchSounds('yourMusic', this.value)">
-            <span class="search-icon">🔍</span>
-        </div>
-        <div class="sound-list" id="yourMusicSoundList">
-            <!-- User's uploaded music will be populated here -->
-        </div>
-    </div>
-
-    <!-- Pose Music Tab -->
-    <div class="sound-tab-content" id="poseMusicTab">
-        <div class="sound-search">
-            <input type="text" class="sound-search-input" placeholder="Search Pose music library..." 
-                   oninput="searchSounds('poseMusic', this.value)">
-            <span class="search-icon">🔍</span>
-        </div>
-        <div class="sound-list" id="poseMusicSoundList">
-            <!-- Pose music library will be populated here -->
-        </div>
-    </div>
-
-    <!-- Voice Over Tab -->
-    <div class="sound-tab-content" id="voiceOverTab">
-        <div class="voice-recorder">
-            <div class="voice-visualizer" id="voiceVisualizer">
-                <span class="voice-icon">🎤</span>
-            </div>
-            <div class="voice-timer" id="voiceTimer">00:00</div>
-            <div class="voice-controls">
-                <button class="voice-btn record" id="voiceRecordBtn" onclick="startVoiceRecording()">
-                    <i class="fa-solid fa-microphone"></i>
-                </button>
-                <button class="voice-btn stop" id="voiceStopBtn" onclick="stopVoiceRecording()" style="display:none;">
-                    <i class="fa-solid fa-stop"></i>
-                </button>
-                <button class="voice-btn save" id="voiceSaveBtn" onclick="saveVoiceRecording()" style="display:none;">
-                    <i class="fa-solid fa-check"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
         <!-- SCREEN 5: PHOTO MODE -->
         <div id="screen5" class="recording-screen">
             <div class="camera-preview">
@@ -5404,6 +5553,22 @@
         <!-- SCREEN 6: PHOTO EDIT -->
         <div id="screen6" class="recording-screen">
             <div class="camera-preview">🖼️ Photo Preview</div>
+            <!-- Selected Sound Display -->
+            <div class="selected-sound-container" id="selectedSoundContainer">
+                <div class="sound-display-thumbnail" id="soundDisplayThumbnail"><i class="fas fa-music"></i></div>
+                <div class="sound-display-info">
+                    <div class="sound-display-title" id="soundDisplayTitle">Sound Name</div>
+                    <div class="sound-display-artist" id="soundDisplayArtist">Artist Name</div>
+                </div>
+                <div class="sound-display-controls">
+                    <button class="sound-play-btn" id="soundPlayBtn" onclick="toggleSelectedSoundPlayback()"
+                        title="Play/Pause"><i class="fas fa-play"></i></button>
+                    <button class="sound-trim-btn" id="soundTrimBtn" onclick="openSoundTrimmer()" title="Trim Sound"><i
+                            class="fas fa-cut"></i></button>
+                    <button class="sound-remove-btn" onclick="removeSelectedSound()" title="Remove"><i
+                            class="fas fa-times"></i></button>
+                </div>
+            </div>
             <div class="rec-top-bar">
                 <button class="rec-icon-btn" onclick="backToScreen5()">←</button>
                 <button class="rec-icon-btn" onclick="toggleRecPhotoEditMenu()">☰</button>
@@ -5416,27 +5581,29 @@
                 <div class="rec-menu-item" onclick="photoDraw()">✏ Draw</div>
             </div>
             <div class="rec-edit-controls">
-                <button class="rec-add-sound-btn"
-                    onclick="showToastRecording('🎵 Add Sound feature coming soon', 'info', '♪')">🎵 Add Sound</button>
-          <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;" onclick="downloadCapturedPhoto()">
-        ⬇️ Download
-    </button>
-    <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
-        Continue ➜
-    </button>
+                <button class="rec-add-sound-btn" onclick="openSoundLibrary()">🎵 Add Sound</button>
+
+                <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                    onclick="downloadCapturedPhoto()">
+                    ⬇️ Download
+                </button>
+                <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
+                    Continue ➜
+                </button>
+            </div>
+
+        </div>
+        <div id="discardPhotoModal" class="modal-overlay">
+            <div class="modal">
+                <h2>Discard Photo?</h2>
+                <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this photo?</p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                        onclick="closeDiscardModal()">Stay</button>
+                    <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardPhoto()">Discard</button>
                 </div>
-          
+            </div>
         </div>
-<div id="discardPhotoModal" class="modal-overlay">
-    <div class="modal">
-        <h2>Discard Photo?</h2>
-        <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this photo?</p>
-        <div style="display: flex; gap: 10px;">
-            <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;" onclick="closeDiscardModal()">Stay</button>
-            <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardPhoto()">Discard</button>
-        </div>
-    </div>
-</div>
         <!-- SCREEN 7: PHOTO POST SETTINGS -->
         <div id="screen7" class="recording-screen">
             <div class="rec-post-header">
@@ -6906,6 +7073,90 @@
         </div>
     </div>
 
+    <!-- Sound Library Modal -->
+    <div class="sound-library-modal" id="soundLibraryModal">
+        <!-- Header -->
+        <div class="sound-library-header">
+            <h2>🎵 Add Sound</h2>
+            <button class="sound-library-close" onclick="closeSoundLibrary()">×</button>
+        </div>
+
+        <!-- Banner Ads Section -->
+        <div class="sound-banner-ads">
+            <div class="banner-ads-slider" id="bannerAdsSlider">
+                <!-- Banner ads will be populated here -->
+            </div>
+            <div class="banner-indicators" id="bannerIndicators"></div>
+        </div>
+
+        <!-- Sound Tabs -->
+        <div class="sound-tabs">
+            <button class="sound-tab active" onclick="switchSoundTab('favourite')">⭐ Favourite</button>
+            <button class="sound-tab" onclick="switchSoundTab('yourMusic')">🎧 Your Music</button>
+            <button class="sound-tab" onclick="switchSoundTab('poseMusic')">🎵 Pose Music</button>
+            <button class="sound-tab" onclick="switchSoundTab('voiceOver')">🎤 Voice Over</button>
+        </div>
+
+        <!-- Tab Content -->
+        <!-- Favourite Tab -->
+        <div class="sound-tab-content active" id="favouriteTab">
+            <div class="sound-search">
+                <input type="text" class="sound-search-input" placeholder="Search favourite sounds..."
+                    oninput="searchSounds('favourite', this.value)">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="sound-list" id="favouriteSoundList">
+                <!-- Sounds will be populated here -->
+            </div>
+        </div>
+
+        <!-- Your Music Tab -->
+        <div class="sound-tab-content" id="yourMusicTab">
+            <div class="sound-search">
+                <input type="text" class="sound-search-input" placeholder="Search your music..."
+                    oninput="searchSounds('yourMusic', this.value)">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="sound-list" id="yourMusicSoundList">
+                <!-- User's uploaded music will be populated here -->
+            </div>
+        </div>
+
+        <!-- Pose Music Tab -->
+        <div class="sound-tab-content" id="poseMusicTab">
+            <div class="sound-search">
+                <input type="text" class="sound-search-input" placeholder="Search Pose music library..."
+                    oninput="searchSounds('poseMusic', this.value)">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="sound-list" id="poseMusicSoundList">
+                <!-- Pose music library will be populated here -->
+            </div>
+        </div>
+
+        <!-- Voice Over Tab -->
+        <div class="sound-tab-content" id="voiceOverTab">
+            <div class="voice-recorder">
+                <div class="voice-visualizer" id="voiceVisualizer">
+                    <span class="voice-icon">🎤</span>
+                </div>
+                <div class="voice-timer" id="voiceTimer">00:00</div>
+                <div class="voice-controls">
+                    <button class="voice-btn record" id="voiceRecordBtn" onclick="startVoiceRecording()">
+                        🎙️
+                    </button>
+                    <button class="voice-btn stop" id="voiceStopBtn" onclick="stopVoiceRecording()"
+                        style="display:none;">
+                        ⏹️
+                    </button>
+                    <button class="voice-btn save" id="voiceSaveBtn" onclick="saveVoiceRecording()"
+                        style="display:none;">
+                        ✔️
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Firebase Scripts -->
@@ -8989,10 +9240,6 @@
             console.log('Sticker added:', emoji);
         }
 
-        function openSoundLibrary() {
-            alert('Sound library coming soon - will integrate with music API');
-        }
-
         function extractAudio() {
             alert('Extract audio feature coming soon');
         }
@@ -10450,235 +10697,235 @@
         }
 
 
-// ============================================================================
-// PHOTO CAPTURE WITH ADVANCED FEATURES (Timer, Grid, Flash, Gallery)
-// ============================================================================
+        // ============================================================================
+        // PHOTO CAPTURE WITH ADVANCED FEATURES (Timer, Grid, Flash, Gallery)
+        // ============================================================================
 
-// Capture photo with timer support
-async function capturePhoto() {
-    // Check if stream is available
-    if (!photoState.photoStream || !photoState.photoStream.active) {
-        alert('❌ Camera not initialized. Please wait a moment and try again.');
-        await initializePhotoMode();
-        return;
-    }
+        // Capture photo with timer support
+        async function capturePhoto() {
+            // Check if stream is available
+            if (!photoState.photoStream || !photoState.photoStream.active) {
+                alert('❌ Camera not initialized. Please wait a moment and try again.');
+                await initializePhotoMode();
+                return;
+            }
 
-    const video = document.getElementById('photoPreviewVideo');
-    if (!video || !video.videoWidth || !video.videoHeight) {
-        alert('❌ Camera not ready. Please wait for video stream to load.');
-        return;
-    }
+            const video = document.getElementById('photoPreviewVideo');
+            if (!video || !video.videoWidth || !video.videoHeight) {
+                alert('❌ Camera not ready. Please wait for video stream to load.');
+                return;
+            }
 
-    try {
-        // STEP 1: Hide grid overlay before capturing (it should not appear in final photo)
-        if (photoState.photoSettings.grid) {
-            hideGridOverlay();
-        }
+            try {
+                // STEP 1: Hide grid overlay before capturing (it should not appear in final photo)
+                if (photoState.photoSettings.grid) {
+                    hideGridOverlay();
+                }
 
-        // STEP 2: Handle timer with visual countdown
-        if (photoState.photoSettings.timer > 0) {
-            await showPhotoCountdown(photoState.photoSettings.timer);
-        }
+                // STEP 2: Handle timer with visual countdown
+                if (photoState.photoSettings.timer > 0) {
+                    await showPhotoCountdown(photoState.photoSettings.timer);
+                }
 
-        // STEP 3: Create canvas with NATIVE resolution for maximum quality
-        if (!photoState.canvas) {
-            photoState.canvas = document.createElement('canvas');
-            // Professional quality context settings
-            photoState.ctx = photoState.canvas.getContext('2d', {
-                alpha: false,              // No transparency = better performance
-                desynchronized: true       // Faster rendering
-            });
-        }
+                // STEP 3: Create canvas with NATIVE resolution for maximum quality
+                if (!photoState.canvas) {
+                    photoState.canvas = document.createElement('canvas');
+                    // Professional quality context settings
+                    photoState.ctx = photoState.canvas.getContext('2d', {
+                        alpha: false,              // No transparency = better performance
+                        desynchronized: true       // Faster rendering
+                    });
+                }
 
-        // Set canvas dimensions to NATIVE video resolution (not CSS dimensions!)
-        // This is critical: use video.videoWidth/Height, NOT offsetWidth/offsetHeight
-        const { canvasWidth, canvasHeight, offsetX, offsetY } = calculateCanvasSize(video.videoWidth, video.videoHeight);
-        photoState.canvas.width = canvasWidth;
-        photoState.canvas.height = canvasHeight;
+                // Set canvas dimensions to NATIVE video resolution (not CSS dimensions!)
+                // This is critical: use video.videoWidth/Height, NOT offsetWidth/offsetHeight
+                const { canvasWidth, canvasHeight, offsetX, offsetY } = calculateCanvasSize(video.videoWidth, video.videoHeight);
+                photoState.canvas.width = canvasWidth;
+                photoState.canvas.height = canvasHeight;
 
-        // Disable image smoothing for crisp, sharp capture
-        photoState.ctx.imageSmoothingEnabled = false;
+                // Disable image smoothing for crisp, sharp capture
+                photoState.ctx.imageSmoothingEnabled = false;
 
-        // STEP 4: Apply filter to canvas context
-        if (photoState.photoSettings.filter !== 'none') {
-            photoState.ctx.filter = photoState.getPhotoFilterString(photoState.photoSettings.filter);
-        } else {
-            photoState.ctx.filter = 'none';
-        }
+                // STEP 4: Apply filter to canvas context
+                if (photoState.photoSettings.filter !== 'none') {
+                    photoState.ctx.filter = photoState.getPhotoFilterString(photoState.photoSettings.filter);
+                } else {
+                    photoState.ctx.filter = 'none';
+                }
 
-        // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
-        // Draw directly from video stream (no interpolation)
-        photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+                // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
+                // Draw directly from video stream (no interpolation)
+                photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
-        // STEP 6: Apply flash effect if enabled (brightness boost to capture)
-        if (photoState.photoSettings.flash) {
-            applyFlashEffectToCanvas(photoState.ctx, canvasWidth, canvasHeight);
-        }
+                // STEP 6: Apply flash effect if enabled (brightness boost to capture)
+                if (photoState.photoSettings.flash) {
+                    applyFlashEffectToCanvas(photoState.ctx, canvasWidth, canvasHeight);
+                }
 
-        // STEP 7: Save photo with MAXIMUM quality and all settings
-        // Convert canvas to JPEG at 100% quality (no compression artifacts)
-        // Using toBlob for better performance than toDataURL
-        const blob = await new Promise(resolve => {
-            photoState.canvas.toBlob(resolve, 'image/jpeg', 1.0);
-        });
+                // STEP 7: Save photo with MAXIMUM quality and all settings
+                // Convert canvas to JPEG at 100% quality (no compression artifacts)
+                // Using toBlob for better performance than toDataURL
+                const blob = await new Promise(resolve => {
+                    photoState.canvas.toBlob(resolve, 'image/jpeg', 1.0);
+                });
 
-        // Convert to data URL for display
-        const photoUrl = URL.createObjectURL(blob);
+                // Convert to data URL for display
+                const photoUrl = URL.createObjectURL(blob);
 
-        // Log actual dimensions for verification
-        console.log('✅ Photo captured at native resolution:', {
-            width: photoState.canvas.width,
-            height: photoState.canvas.height,
-            size: Math.round(blob.size / 1024) + 'KB',
-            blobSize: blob.size,
-            compression: '100% (lossless quality)'
-        });
+                // Log actual dimensions for verification
+                console.log('✅ Photo captured at native resolution:', {
+                    width: photoState.canvas.width,
+                    height: photoState.canvas.height,
+                    size: Math.round(blob.size / 1024) + 'KB',
+                    blobSize: blob.size,
+                    compression: '100% (lossless quality)'
+                });
 
-        const photoData = {
-            url: photoUrl,
-            blob: blob,  // Store blob for Firebase upload
-            timestamp: Date.now(),
-            resolution: `${photoState.canvas.width}x${photoState.canvas.height}`,
-            settings: { ...photoState.photoSettings }
-        };
-
-        photoState.capturedPhotos.push(photoData);
-        photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
-
-        showToastRecording('📷 Photo captured!', 'success', '✨');
-        console.log('Photo captured with settings:', photoState.photoSettings);
-
-        // Stop camera after capturing (user won't need it in edit screen)
-        stopPhotoMode();
-
-        // Show photo in screen 6
-        setTimeout(() => {
-            showScreen('screen6');
-            displayCapturedPhoto();
-        }, 500);
-    } catch (error) {
-        console.error('Capture error:', error);
-        alert('❌ Failed to capture photo: ' + error.message);
-    }
-}
-
-// Display captured photo in preview
-function displayCapturedPhoto() {
-    if (photoState.capturedPhotos.length === 0) return;
-
-    const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-    const preview = document.querySelector('#screen6 .camera-preview');
-
-    if (preview) {
-        preview.innerHTML = `<img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">`;
-    }
-}
-
-// Gallery function - select photo from device
-function openPhotoGallery() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
                 const photoData = {
-                    url: event.target.result,
+                    url: photoUrl,
+                    blob: blob,  // Store blob for Firebase upload
                     timestamp: Date.now(),
+                    resolution: `${photoState.canvas.width}x${photoState.canvas.height}`,
                     settings: { ...photoState.photoSettings }
                 };
+
                 photoState.capturedPhotos.push(photoData);
                 photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
 
-                // Stop camera when moving to edit screen
+                showToastRecording('📷 Photo captured!', 'success', '✨');
+                console.log('Photo captured with settings:', photoState.photoSettings);
+
+                // Stop camera after capturing (user won't need it in edit screen)
                 stopPhotoMode();
 
-                showToastRecording('Photo added from gallery', 'success', '🖼️');
+                // Show photo in screen 6
                 setTimeout(() => {
                     showScreen('screen6');
                     displayCapturedPhoto();
-                }, 300);
+                }, 500);
+            } catch (error) {
+                console.error('Capture error:', error);
+                alert('❌ Failed to capture photo: ' + error.message);
+            }
+        }
+
+        // Display captured photo in preview
+        function displayCapturedPhoto() {
+            if (photoState.capturedPhotos.length === 0) return;
+
+            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+            const preview = document.querySelector('#screen6 .camera-preview');
+
+            if (preview) {
+                preview.innerHTML = `<img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+        }
+
+        // Gallery function - select photo from device
+        function openPhotoGallery() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const photoData = {
+                            url: event.target.result,
+                            timestamp: Date.now(),
+                            settings: { ...photoState.photoSettings }
+                        };
+                        photoState.capturedPhotos.push(photoData);
+                        photoState.currentPhotoIndex = photoState.capturedPhotos.length - 1;
+
+                        // Stop camera when moving to edit screen
+                        stopPhotoMode();
+
+                        showToastRecording('Photo added from gallery', 'success', '🖼️');
+                        setTimeout(() => {
+                            showScreen('screen6');
+                            displayCapturedPhoto();
+                        }, 300);
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
-            reader.readAsDataURL(file);
-        }
-    };
-    input.click();
-}
-
-// Show discard confirmation modal
-function showDiscardPhotoModal() {
-    const modal = document.getElementById('discardPhotoModal');
-    if (modal) {
-        modal.classList.add('active');
-    }
-}
-
-// Close discard modal (stay on screen 6)
-function closeDiscardModal() {
-    const modal = document.getElementById('discardPhotoModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Confirm discard and go back to screen 5
-function confirmDiscardPhoto() {
-    closeDiscardModal();
-    
-    // Clear current photo from state
-    if (photoState.currentPhotoIndex >= 0) {
-        photoState.capturedPhotos.splice(photoState.currentPhotoIndex, 1);
-        photoState.currentPhotoIndex = Math.max(0, photoState.currentPhotoIndex - 1);
-    }
-    
-    // Go back to camera screen
-    showScreen('screen5');
-    
-    // Reinitialize camera
-    initializePhotoMode().then(() => {
-        showToastRecording('📷 Photo discarded, camera ready', 'info', '✓');
-    });
-}
-
-// Download photo to device
-function downloadCapturedPhoto() {
-    try {
-        if (photoState.capturedPhotos.length === 0 || photoState.currentPhotoIndex < 0) {
-            showToastRecording('❌ No photo to download', 'error', '✗');
-            return;
+            input.click();
         }
 
-        const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-        
-        // Create download link
-        const link = document.createElement('a');
-        link.href = photo.url;
-        
-        // Generate filename with timestamp
-        const timestamp = new Date(photo.timestamp).toISOString().slice(0, 19).replace(/:/g, '-');
-        const filterName = photo.settings.filter || 'original';
-        link.download = `pose_photo_${timestamp}_${filterName}.jpg`;
-        
-        // Trigger download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        showToastRecording('✅ Photo downloading...', 'success', '⬇️');
-        console.log('📥 Photo download started:', link.download);
-        
-    } catch (error) {
-        console.error('Download error:', error);
-        showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
-    }
-}
+        // Show discard confirmation modal
+        function showDiscardPhotoModal() {
+            const modal = document.getElementById('discardPhotoModal');
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
 
-// Update back button for screen 6 to show discard modal
-function backToScreen5() {
-    showDiscardPhotoModal();
-}
+        // Close discard modal (stay on screen 6)
+        function closeDiscardModal() {
+            const modal = document.getElementById('discardPhotoModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // Confirm discard and go back to screen 5
+        function confirmDiscardPhoto() {
+            closeDiscardModal();
+
+            // Clear current photo from state
+            if (photoState.currentPhotoIndex >= 0) {
+                photoState.capturedPhotos.splice(photoState.currentPhotoIndex, 1);
+                photoState.currentPhotoIndex = Math.max(0, photoState.currentPhotoIndex - 1);
+            }
+
+            // Go back to camera screen
+            showScreen('screen5');
+
+            // Reinitialize camera
+            initializePhotoMode().then(() => {
+                showToastRecording('📷 Photo discarded, camera ready', 'info', '✓');
+            });
+        }
+
+        // Download photo to device
+        function downloadCapturedPhoto() {
+            try {
+                if (photoState.capturedPhotos.length === 0 || photoState.currentPhotoIndex < 0) {
+                    showToastRecording('❌ No photo to download', 'error', '✗');
+                    return;
+                }
+
+                const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+
+                // Create download link
+                const link = document.createElement('a');
+                link.href = photo.url;
+
+                // Generate filename with timestamp
+                const timestamp = new Date(photo.timestamp).toISOString().slice(0, 19).replace(/:/g, '-');
+                const filterName = photo.settings.filter || 'original';
+                link.download = `pose_photo_${timestamp}_${filterName}.jpg`;
+
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showToastRecording('✅ Photo downloading...', 'success', '⬇️');
+                console.log('📥 Photo download started:', link.download);
+
+            } catch (error) {
+                console.error('Download error:', error);
+                showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
+            }
+        }
+
+        // Update back button for screen 6 to show discard modal
+        function backToScreen5() {
+            showDiscardPhotoModal();
+        }
 
 
 
@@ -11349,830 +11596,1163 @@ function backToScreen5() {
                 videoBlob: null
             };
         }
+        // ============================================================================
+        // SOUND LIBRARY FUNCTIONALITY
+        // ============================================================================
 
+        const soundLibraryState = {
+            currentTab: 'favourite',
+            selectedSound: null,
+            isPlaying: false,
+            currentAudio: null,
+            bannerInterval: null,
+            currentBannerIndex: 0,
+            voiceRecorder: null,
+            voiceRecordingBlob: null,
+            voiceRecordingTime: 0,
+            voiceTimerInterval: null,
+            searchResults: {},
+            allSounds: {
+                favourite: [],
+                yourMusic: [],
+                poseMusic: []
+            }
+        };
+
+        // Banner Ads Data
+        const bannerAds = [
+            {
+                type: 'image',
+                url: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800',
+                title: '🎵 Trending Music',
+                subtitle: 'Discover the hottest tracks'
+            },
+            {
+                type: 'video',
+                url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                title: '🔥 New Releases',
+                subtitle: 'Fresh sounds daily'
+            },
+            {
+                type: 'image',
+                url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800',
+                title: '🎧 Premium Collection',
+                subtitle: 'Exclusive tracks for creators'
+            },
+            {
+                type: 'image',
+                url: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800',
+                title: '🌟 Editor\'s Pick',
+                subtitle: 'Hand-picked sounds'
+            }
+        ];
 
         // ============================================================================
-// SOUND LIBRARY FUNCTIONALITY
-// ============================================================================
+        // AFROBEAT MUSIC LIBRARY - Real Artists & Dynamic Loading
+        // ============================================================================
 
-const soundLibraryState = {
-    currentTab: 'favourite',
-    selectedSound: null,
-    isPlaying: false,
-    currentAudio: null,
-    bannerInterval: null,
-    currentBannerIndex: 0,
-    voiceRecorder: null,
-    voiceRecordingBlob: null,
-    voiceRecordingTime: 0,
-    voiceTimerInterval: null,
-    searchResults: {},
-    allSounds: {
-        favourite: [],
-        yourMusic: [],
-        poseMusic: []
-    }
-};
+        // Afrobeat Artists to fetch from iTunes API
+        const afrobeatArtists = [
+            'Zinoleisky',
+            'Bhad Boi OML',
+            'Balloranking',
+            'Wizkid',
+            'King Von',
+            'Davido',
+            'Burna Boy',
+            'Rema',
+            'Asake',
+            'Tiwa Savage',
+            'CKay',
+            'Olamide'
+        ];
 
-// Banner Ads Data
-const bannerAds = [
-    {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800',
-        title: '🎵 Trending Music',
-        subtitle: 'Discover the hottest tracks'
-    },
-    {
-        type: 'video',
-        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        title: '🔥 New Releases',
-        subtitle: 'Fresh sounds daily'
-    },
-    {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800',
-        title: '🎧 Premium Collection',
-        subtitle: 'Exclusive tracks for creators'
-    },
-    {
-        type: 'image',
-        url: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800',
-        title: '🌟 Editor\'s Pick',
-        subtitle: 'Hand-picked sounds'
-    }
-];
+        // Trending songs (manually marked for badge)
+        const trendingSongs = new Set();
 
-// Sample Sound Data (Pose Music Library - like WhatsApp Status sounds)
-const poseMusicLibrary = [
-    {
-        id: 'pm1',
-        title: 'Summer Vibes',
-        artist: 'DJ Pose',
-        duration: '2:45',
-        uses: '1.2M',
-        thumbnail: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-        category: 'Trending'
-    },
-    {
-        id: 'pm2',
-        title: 'Chill Beats',
-        artist: 'Lofi Pose',
-        duration: '3:12',
-        uses: '890K',
-        thumbnail: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-        category: 'Chill'
-    },
-    {
-        id: 'pm3',
-        title: 'Afrobeat Fire',
-        artist: 'African Drums',
-        duration: '2:30',
-        uses: '2.5M',
-        thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-        category: 'Afrobeat'
-    },
-    {
-        id: 'pm4',
-        title: 'Dance Party',
-        artist: 'Club Pose',
-        duration: '3:45',
-        uses: '1.8M',
-        thumbnail: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-        category: 'Dance'
-    },
-    {
-        id: 'pm5',
-        title: 'Romantic Melody',
-        artist: 'Love Sounds',
-        duration: '4:00',
-        uses: '950K',
-        thumbnail: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-        category: 'Romance'
-    },
-    {
-        id: 'pm6',
-        title: 'Hip Hop Anthem',
-        artist: 'Rap Pose',
-        duration: '2:58',
-        uses: '1.5M',
-        thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-        category: 'Hip Hop'
-    },
-    {
-        id: 'pm7',
-        title: 'Electronic Wave',
-        artist: 'Synth Pose',
-        duration: '3:20',
-        uses: '780K',
-        thumbnail: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-        category: 'Electronic'
-    },
-    {
-        id: 'pm8',
-        title: 'Gospel Praise',
-        artist: 'Worship Sounds',
-        duration: '3:30',
-        uses: '650K',
-        thumbnail: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200',
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-        category: 'Gospel'
-    }
-];
+        // Main Afrobeat Music Library (will be populated dynamically)
+        let poseMusicLibrary = [];
 
-// Open Sound Library
-function openSoundLibrary() {
-    const modal = document.getElementById('soundLibraryModal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Initialize
-    initializeBannerAds();
-    loadPoseMusicLibrary();
-    loadFavouriteSounds();
-    loadYourMusic();
-    
-    console.log('🎵 Sound library opened');
-}
+        // Music library state for rotation
+        let musicLibraryState = {
+            lastRefresh: 0,
+            refreshInterval: 300000, // 5 minutes in milliseconds
+            initialDelay: 10000, // 10 seconds before first rotation
+            currentIndex: 0,
+            allLoadedSongs: [],
+            isLoading: false
+        };
 
-// Close Sound Library
-function closeSoundLibrary() {
-    const modal = document.getElementById('soundLibraryModal');
-    modal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-    
-    // Stop any playing audio
-    stopCurrentAudio();
-    
-    // Clear banner interval
-    if (soundLibraryState.bannerInterval) {
-        clearInterval(soundLibraryState.bannerInterval);
-    }
-    
-    console.log('🎵 Sound library closed');
-}
+        // Hardcoded Afrobeat Fallback Songs (if API fails)
+        const afrobeatFallbackSongs = [
+            {
+                id: 'afro1',
+                title: 'Essence',
+                artist: 'Wizkid ft. Tems',
+                duration: '2:55',
+                uses: '45M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d6/2f/69/d62f69eb-fce9-72ac-e7c7-e1f47d14b1ed/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro2',
+                title: 'Ye',
+                artist: 'Burna Boy',
+                duration: '3:30',
+                uses: '38M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/8f/c3/e7/8fc3e7e9-c2ed-6cc9-b15b-fae7e2e2a77f/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro3',
+                title: 'Blinding Lights (Afrobeat Remix)',
+                artist: 'The Weeknd ft. Wizkid',
+                duration: '3:20',
+                uses: '52M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/cb/d8/5c/cbd85c4b-ba16-6b1b-c4f1-21ab5d8c86be/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro4',
+                title: 'Calm Down',
+                artist: 'Rema & Selena Gomez',
+                duration: '3:08',
+                uses: '40M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d1/5e/0f/d15e0fc1-65b8-3f4a-83db-29b67db04f98/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro5',
+                title: 'Sunroof',
+                artist: 'Nicky Youre ft. Afrobeat',
+                duration: '2:50',
+                uses: '35M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a2/e4/e0/a2e4e0e7-79ba-e52e-2c72-1f8c53f01f37/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro6',
+                title: 'Flowers',
+                artist: 'Miley Cyrus (Afrobeat Version)',
+                duration: '3:18',
+                uses: '48M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a6/21/3a/a6213a94-f825-fa06-b97e-5b4e3289c4d9/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro7',
+                title: 'Terminator',
+                artist: 'Zinoleisky',
+                duration: '3:25',
+                uses: '28M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/c9/f1/96/c9f196d2-6da1-c89e-80d4-8e3e7b5e0d2a/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro8',
+                title: 'Unavailable',
+                artist: 'Davido ft. Musa Keys',
+                duration: '3:42',
+                uses: '42M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/4d/f8/f4/4df8f4c9-f1e0-6c2a-83db-1f5e8c9d3e2f/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro9',
+                title: 'Aseju',
+                artist: 'Asake',
+                duration: '3:15',
+                uses: '32M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/9f/2d/c3/9f2dc3e5-6d9e-8f4a-92b8-3c4f5e6d7a8b/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
+                category: 'Trending',
+                trending: true
+            },
+            {
+                id: 'afro10',
+                title: 'Ye Her',
+                artist: 'Olamide',
+                duration: '2:58',
+                uses: '26M',
+                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/7b/8c/9d/7b8c9d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e/source/400x400bb.jpg',
+                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
+                category: 'Trending',
+                trending: true
+            }
+        ];
 
-// Initialize Banner Ads with Auto-Scroll
-function initializeBannerAds() {
-    const slider = document.getElementById('bannerAdsSlider');
-    const indicators = document.getElementById('bannerIndicators');
-    
-    // Clear existing
-    slider.innerHTML = '';
-    indicators.innerHTML = '';
-    
-    // Create banner items
-    bannerAds.forEach((ad, index) => {
-        const item = document.createElement('div');
-        item.className = 'banner-ad-item';
-        
-        if (ad.type === 'image') {
-            item.innerHTML = `
+        // Fetch Afrobeat songs from iTunes API
+        async function fetchAfrobeatSongsFromItunes() {
+            try {
+                console.log('🎵 Fetching Afrobeat songs from iTunes API...');
+                musicLibraryState.isLoading = true;
+
+                let allSongs = [];
+                let successCount = 0;
+
+                // Fetch top 2-3 songs from each artist
+                for (const artist of afrobeatArtists) {
+                    try {
+                        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&entity=song&limit=5`;
+                        console.log(`Fetching from: ${url}`);
+
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            mode: 'cors',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            console.warn(`⚠️ API returned status ${response.status} for artist: ${artist}`);
+                            continue;
+                        }
+
+                        const data = await response.json();
+                        console.log(`✅ Response for ${artist}:`, data.resultCount, 'results');
+
+                        if (data.results && data.results.length > 0) {
+                            // Filter and map iTunes results
+                            data.results.forEach((song, index) => {
+                                if (song.previewUrl && index < 2) { // Only songs with preview URLs, max 2 per artist
+                                    allSongs.push({
+                                        id: `song_${allSongs.length}`,
+                                        title: song.trackName || 'Unknown',
+                                        artist: song.artistName || artist,
+                                        duration: formatDuration(song.trackTimeMillis),
+                                        uses: `${Math.floor(Math.random() * 50) + 10}M`,
+                                        thumbnail: song.artworkUrl100 || song.artworkUrl60 || 'https://via.placeholder.com/200',
+                                        audioUrl: song.previewUrl,
+                                        category: 'Afrobeat',
+                                        trending: index === 0 // First song from each artist is trending
+                                    });
+                                    successCount++;
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.warn(`⚠️ Error fetching from artist: ${artist}`, error.message);
+                    }
+                }
+
+                if (allSongs.length === 0) {
+                    console.warn('⚠️ No songs fetched from iTunes, using fallback');
+                    musicLibraryState.allLoadedSongs = afrobeatFallbackSongs;
+                } else {
+                    console.log(`✅ Fetched ${allSongs.length} songs (${successCount} with preview URLs) from iTunes`);
+                    musicLibraryState.allLoadedSongs = allSongs;
+                }
+
+                // Load initial batch
+                rotatePoseMusicLibrary();
+                musicLibraryState.lastRefresh = Date.now();
+                musicLibraryState.isLoading = false;
+
+                console.log('📊 Music library state:', {
+                    totalSongs: musicLibraryState.allLoadedSongs.length,
+                    currentBatch: poseMusicLibrary.length
+                });
+
+            } catch (error) {
+                console.error('❌ Error fetching iTunes data:', error);
+                // Fallback to hardcoded songs
+                console.log('📀 Using fallback songs');
+                musicLibraryState.allLoadedSongs = afrobeatFallbackSongs;
+                rotatePoseMusicLibrary();
+                musicLibraryState.isLoading = false;
+            }
+        }
+
+        // Format duration from milliseconds
+        function formatDuration(ms) {
+            if (!ms) return '0:00';
+            const seconds = Math.floor(ms / 1000);
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Rotate Pose Music Library every 20 minutes
+        function rotatePoseMusicLibrary() {
+            const songsPerBatch = 10;
+            const startIndex = musicLibraryState.currentIndex % (musicLibraryState.allLoadedSongs.length - songsPerBatch + 1);
+
+            poseMusicLibrary = musicLibraryState.allLoadedSongs.slice(startIndex, startIndex + songsPerBatch);
+
+            // Mark some songs as trending
+            poseMusicLibrary.forEach((song, index) => {
+                song.trending = index < 3 || (Math.random() > 0.7);
+            });
+
+            musicLibraryState.currentIndex += 3; // Rotate offset
+            console.log(`🔄 Music library rotated - showing songs ${startIndex} to ${startIndex + songsPerBatch}`);
+        }
+
+        // Schedule music rotation: 10 sec initial delay, then every 5 minutes
+        function scheduleMusicsLibraryRotation() {
+            console.log(`⏰ Music library rotation: ${musicLibraryState.initialDelay}ms initial delay, then every ${musicLibraryState.refreshInterval}ms (5 minutes)`);
+
+            // First rotation after 10 seconds
+            setTimeout(() => {
+                console.log('🔄 First music rotation after initial delay...');
+                if (musicLibraryState.allLoadedSongs.length > 0) {
+                    rotatePoseMusicLibrary();
+
+                    // Reload if sound library is open
+                    const container = document.getElementById('poseMusicSoundList');
+                    if (container && container.innerHTML !== '') {
+                        loadPoseMusicLibrary();
+                        showToastRecording('🎵 Music library refreshed!', 'success', '✨');
+                        console.log('✅ Library reloaded with rotated songs');
+                    }
+                }
+
+                // Then repeat every 5 minutes
+                setInterval(() => {
+                    console.log('🔄 Rotating music library...');
+                    if (musicLibraryState.allLoadedSongs.length > 0) {
+                        rotatePoseMusicLibrary();
+
+                        // Reload if sound library is open
+                        const container = document.getElementById('poseMusicSoundList');
+                        if (container && container.innerHTML !== '') {
+                            loadPoseMusicLibrary();
+                            showToastRecording('🎵 Music library refreshed!', 'success', '✨');
+                            console.log('✅ Library reloaded with rotated songs');
+                        }
+                    }
+                }, musicLibraryState.refreshInterval);
+
+            }, musicLibraryState.initialDelay);
+        }
+
+        // Open Sound Library
+        async function openSoundLibrary() {
+            try {
+                const modal = document.getElementById('soundLibraryModal');
+                if (!modal) {
+                    console.error('❌ Sound library modal not found');
+                    return;
+                }
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Initialize
+                initializeBannerAds();
+
+                // Fetch Afrobeat songs if not already loaded
+                if (musicLibraryState.allLoadedSongs.length === 0) {
+                    console.log('📥 Loading music library for first time...');
+                    await fetchAfrobeatSongsFromItunes();
+                    scheduleMusicsLibraryRotation(); // Start 20-min rotation
+                } else {
+                    console.log('✅ Using cached music library:', musicLibraryState.allLoadedSongs.length, 'songs');
+                }
+
+                loadPoseMusicLibrary();
+                loadFavouriteSounds();
+                loadYourMusic();
+
+                console.log('🎵 Sound library opened');
+            } catch (error) {
+                console.error('❌ Error opening sound library:', error);
+                showToastRecording('Error opening sound library', 'error', '❌');
+            }
+        }
+
+        // Close Sound Library
+        function closeSoundLibrary() {
+            const modal = document.getElementById('soundLibraryModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // Stop any playing audio
+            stopCurrentAudio();
+
+            // Clear banner interval
+            if (soundLibraryState.bannerInterval) {
+                clearInterval(soundLibraryState.bannerInterval);
+            }
+
+            console.log('🎵 Sound library closed');
+        }
+
+        // Initialize Banner Ads with Auto-Scroll
+        function initializeBannerAds() {
+            const slider = document.getElementById('bannerAdsSlider');
+            const indicators = document.getElementById('bannerIndicators');
+
+            // Clear existing
+            slider.innerHTML = '';
+            indicators.innerHTML = '';
+
+            // Create banner items
+            bannerAds.forEach((ad, index) => {
+                const item = document.createElement('div');
+                item.className = 'banner-ad-item';
+
+                if (ad.type === 'image') {
+                    item.innerHTML = `
                 <img src="${ad.url}" alt="${ad.title}">
                 <div class="banner-ad-overlay">
                     <div class="banner-ad-title">${ad.title}</div>
                     <div class="banner-ad-subtitle">${ad.subtitle}</div>
                 </div>
             `;
-        } else if (ad.type === 'video') {
-            item.innerHTML = `
+                } else if (ad.type === 'video') {
+                    item.innerHTML = `
                 <video src="${ad.url}" autoplay muted loop></video>
                 <div class="banner-ad-overlay">
                     <div class="banner-ad-title">${ad.title}</div>
                     <div class="banner-ad-subtitle">${ad.subtitle}</div>
                 </div>
             `;
+                }
+
+                slider.appendChild(item);
+
+                // Create indicator
+                const indicator = document.createElement('div');
+                indicator.className = `banner-indicator ${index === 0 ? 'active' : ''}`;
+                indicator.onclick = () => goToBannerSlide(index);
+                indicators.appendChild(indicator);
+            });
+
+            // Start auto-scroll
+            startBannerAutoScroll();
         }
-        
-        slider.appendChild(item);
-        
-        // Create indicator
-        const indicator = document.createElement('div');
-        indicator.className = `banner-indicator ${index === 0 ? 'active' : ''}`;
-        indicator.onclick = () => goToBannerSlide(index);
-        indicators.appendChild(indicator);
-    });
-    
-    // Start auto-scroll
-    startBannerAutoScroll();
-}
 
-// Auto-scroll banner ads
-function startBannerAutoScroll() {
-    soundLibraryState.bannerInterval = setInterval(() => {
-        const nextIndex = (soundLibraryState.currentBannerIndex + 1) % bannerAds.length;
-        goToBannerSlide(nextIndex);
-    }, 4000); // Change every 4 seconds
-}
+        // Auto-scroll banner ads
+        function startBannerAutoScroll() {
+            soundLibraryState.bannerInterval = setInterval(() => {
+                const nextIndex = (soundLibraryState.currentBannerIndex + 1) % bannerAds.length;
+                goToBannerSlide(nextIndex);
+            }, 4000); // Change every 4 seconds
+        }
 
-// Go to specific banner slide
-function goToBannerSlide(index) {
-    const slider = document.getElementById('bannerAdsSlider');
-    const indicators = document.querySelectorAll('.banner-indicator');
-    
-    soundLibraryState.currentBannerIndex = index;
-    slider.style.transform = `translateX(-${index * 100}%)`;
-    
-    // Update indicators
-    indicators.forEach((ind, i) => {
-        ind.classList.toggle('active', i === index);
-    });
-}
+        // Go to specific banner slide
+        function goToBannerSlide(index) {
+            const slider = document.getElementById('bannerAdsSlider');
+            const indicators = document.querySelectorAll('.banner-indicator');
 
-// Switch Sound Tab
-function switchSoundTab(tabName) {
-    soundLibraryState.currentTab = tabName;
-    
-    // Update tab buttons
-    document.querySelectorAll('.sound-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // Update tab content
-    document.querySelectorAll('.sound-tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    const tabMap = {
-        'favourite': 'favouriteTab',
-        'yourMusic': 'yourMusicTab',
-        'poseMusic': 'poseMusicTab',
-        'voiceOver': 'voiceOverTab'
-    };
-    
-    document.getElementById(tabMap[tabName]).classList.add('active');
-    
-    console.log('🎵 Switched to tab:', tabName);
-}
+            soundLibraryState.currentBannerIndex = index;
+            slider.style.transform = `translateX(-${index * 100}%)`;
 
-// Load Pose Music Library
-function loadPoseMusicLibrary() {
-    const container = document.getElementById('poseMusicSoundList');
-    container.innerHTML = '';
-    
-    if (poseMusicLibrary.length === 0) {
-        container.innerHTML = `
+            // Update indicators
+            indicators.forEach((ind, i) => {
+                ind.classList.toggle('active', i === index);
+            });
+        }
+
+        // Switch Sound Tab
+        function switchSoundTab(tabName) {
+            soundLibraryState.currentTab = tabName;
+
+            // Update tab buttons
+            document.querySelectorAll('.sound-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.sound-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const tabMap = {
+                'favourite': 'favouriteTab',
+                'yourMusic': 'yourMusicTab',
+                'poseMusic': 'poseMusicTab',
+                'voiceOver': 'voiceOverTab'
+            };
+
+            document.getElementById(tabMap[tabName]).classList.add('active');
+
+            console.log('🎵 Switched to tab:', tabName);
+        }
+
+        // Load Pose Music Library
+        function loadPoseMusicLibrary() {
+            const container = document.getElementById('poseMusicSoundList');
+            container.innerHTML = '';
+
+            if (poseMusicLibrary.length === 0) {
+                container.innerHTML = `
             <div class="sound-empty">
                 <div class="sound-empty-icon">🎵</div>
                 <div class="sound-empty-title">No sounds available</div>
                 <div class="sound-empty-text">Check back soon for new music!</div>
             </div>
         `;
-        return;
-    }
-    
-    soundLibraryState.allSounds.poseMusic = poseMusicLibrary;
-    
-    poseMusicLibrary.forEach(sound => {
-        const item = createSoundItem(sound, 'poseMusic');
-        container.appendChild(item);
-    });
-}
+                return;
+            }
 
-// Load Favourite Sounds
-async function loadFavouriteSounds() {
-    const container = document.getElementById('favouriteSoundList');
-    container.innerHTML = '<div class="sound-loading"><div class="sound-loading-spinner"></div><p>Loading favourites...</p></div>';
-    
-    try {
-        if (!currentUser) {
-            container.innerHTML = `
+            soundLibraryState.allSounds.poseMusic = poseMusicLibrary;
+
+            poseMusicLibrary.forEach(sound => {
+                const item = createSoundItem(sound, 'poseMusic');
+                container.appendChild(item);
+            });
+        }
+
+        // Load Favourite Sounds
+        async function loadFavouriteSounds() {
+            const container = document.getElementById('favouriteSoundList');
+            container.innerHTML = '<div class="sound-loading"><div class="sound-loading-spinner"></div><p>Loading favourites...</p></div>';
+
+            try {
+                if (!currentUser) {
+                    container.innerHTML = `
                 <div class="sound-empty">
                     <div class="sound-empty-icon">⭐</div>
                     <div class="sound-empty-title">Login to save favourites</div>
                     <div class="sound-empty-text">Your favourite sounds will appear here</div>
                 </div>
             `;
-            return;
-        }
-        
-        // Load from Firestore
-        const snapshot = await db.collection('users')
-            .doc(currentUser.uid)
-            .collection('favouriteSounds')
-            .orderBy('addedAt', 'desc')
-            .limit(50)
-            .get();
-        
-        container.innerHTML = '';
-        
-        if (snapshot.empty) {
-            container.innerHTML = `
+                    return;
+                }
+
+                // Load from Firestore
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('favouriteSounds')
+                    .orderBy('addedAt', 'desc')
+                    .limit(50)
+                    .get();
+
+                container.innerHTML = '';
+
+                if (snapshot.empty) {
+                    container.innerHTML = `
                 <div class="sound-empty">
                     <div class="sound-empty-icon">⭐</div>
                     <div class="sound-empty-title">No favourites yet</div>
                     <div class="sound-empty-text">Add sounds to your favourites from Pose Music</div>
                 </div>
             `;
-            return;
-        }
-        
-        const sounds = [];
-        snapshot.forEach(doc => {
-            sounds.push({ id: doc.id, ...doc.data() });
-        });
-        
-        soundLibraryState.allSounds.favourite = sounds;
-        
-        sounds.forEach(sound => {
-            const item = createSoundItem(sound, 'favourite');
-            container.appendChild(item);
-        });
-        
-    } catch (error) {
-        console.error('Error loading favourites:', error);
-        container.innerHTML = `
+                    return;
+                }
+
+                const sounds = [];
+                snapshot.forEach(doc => {
+                    sounds.push({ id: doc.id, ...doc.data() });
+                });
+
+                soundLibraryState.allSounds.favourite = sounds;
+
+                sounds.forEach(sound => {
+                    const item = createSoundItem(sound, 'favourite');
+                    container.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error('Error loading favourites:', error);
+                container.innerHTML = `
             <div class="sound-empty">
-                <div class="sound-empty-icon">❌
-   </div>
+                <div class="sound-empty-icon">❌</div>
                 <div class="sound-empty-title">Error loading favourites</div>
                 <div class="sound-empty-text">${error.message}</div>
             </div>
         `;
-    }
-}// Load Your Music
-async function loadYourMusic() {
-const container = document.getElementById('yourMusicSoundList');
-container.innerHTML = '<div class="sound-loading"><div class="sound-loading-spinner"></div><p>Loading your music...</p></div>';
-        try {
-    if (!currentUser) {
-        container.innerHTML = `
-            <div class="sound-empty">
-                <div class="sound-empty-icon">🎧</div>
-                <div class="sound-empty-title">Login to upload music</div>
-                <div class="sound-empty-text">Upload your own music tracks here</div>
-            </div>
-        `;
-        return;
-    }
-    
-    // Load from Firestore
-    const snapshot = await db.collection('users')
-        .doc(currentUser.uid)
-        .collection('uploadedMusic')
-        .orderBy('uploadedAt', 'desc')
-        .limit(50)
-        .get();
-    
-    container.innerHTML = '';
-    
-    if (snapshot.empty) {
-        container.innerHTML = `
-            <div class="sound-empty">
-                <div class="sound-empty-icon">🎧</div>
-                <div class="sound-empty-title">No music uploaded</div>
-                <div class="sound-empty-text">
-                    <button class="modal-btn" onclick="uploadYourMusic()" style="margin-top: 20px;">
-                        📤 Upload Music
-                    </button>
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    const sounds = [];
-    snapshot.forEach(doc => {
-        sounds.push({ id: doc.id, ...doc.data() });
-    });
-    
-    soundLibraryState.allSounds.yourMusic = sounds;
-    
-    sounds.forEach(sound => {
-        const item = createSoundItem(sound, 'yourMusic');
-        container.appendChild(item);
-    });
-    
-} catch (error) {
-    console.error('Error loading your music:', error);
-    container.innerHTML = `
-        <div class="sound-empty">
-            <div class="sound-empty-icon">❌</div>
-            <div class="sound-empty-title">Error loading music</div>
-            <div class="sound-empty-text">${error.message}</div>
-        </div>
-    `;
-}         
-}
-// Create Sound Item
-function createSoundItem(sound, sourceTab) {
-const item = document.createElement('div');
-item.className = 'sound-item';
-item.dataset.soundId = sound.id;
-item.innerHTML = `
-    <div class="sound-thumbnail">
-        ${sound.thumbnail ? `<img src="${sound.thumbnail}" alt="${sound.title}">` : '🎵'}
-        <div class="sound-play-icon">▶</div>
-    </div>
-    <div class="sound-info">
-        <div class="sound-title">${sound.title}</div>
-        <div class="sound-artist">${sound.artist || 'Unknown Artist'}</div>
-        <div class="sound-meta">
-            <span class="sound-duration">⏱️ ${sound.duration || '0:00'}</span>
-            ${sound.uses ? `<span class="sound-uses">👥 ${sound.uses}</span>` : ''}
-        </div>
-    </div>
-    <button class="sound-action" onclick="selectSound('${sound.id}', '${sourceTab}', event)">
-        Use
-    </button>
-`;
-
-// Add play on click
-item.querySelector('.sound-thumbnail').onclick = (e) => {
-    e.stopPropagation();
-    toggleSoundPlay(sound);
-};
-
-return item;
-}
-// Toggle Sound Play
-function toggleSoundPlay(sound) {
-if (soundLibraryState.isPlaying && soundLibraryState.currentAudio?.src === sound.audioUrl) {
-// Pause current
-soundLibraryState.currentAudio.pause();
-soundLibraryState.isPlaying = false;
-document.querySelectorAll('.sound-item').forEach(item => {
-item.classList.remove('playing');
-});
-} else {
-// Stop any current audio
-stopCurrentAudio();
-    // Play new
-    soundLibraryState.currentAudio = new Audio(sound.audioUrl);
-    soundLibraryState.currentAudio.play();
-    soundLibraryState.isPlaying = true;
-    
-    // Mark as playing
-    const item = document.querySelector(`[data-sound-id="${sound.id}"]`);
-    if (item) item.classList.add('playing');
-    
-    // Auto-remove playing state when ended
-    soundLibraryState.currentAudio.onended = () => {
-        soundLibraryState.isPlaying = false;
-        item.classList.remove('playing');
-    };
-}
-}
-// Stop Current Audio
-function stopCurrentAudio() {
-if (soundLibraryState.currentAudio) {
-soundLibraryState.currentAudio.pause();
-soundLibraryState.currentAudio.currentTime = 0;
-soundLibraryState.isPlaying = false;
-}
-document.querySelectorAll('.sound-item').forEach(item => {
-    item.classList.remove('playing');
-});
-}
-// Select Sound
-function selectSound(soundId, sourceTab, event) {
-event.stopPropagation();
-const sound = soundLibraryState.allSounds[sourceTab].find(s => s.id === soundId);
-if (!sound) return;
-
-soundLibraryState.selectedSound = sound;
-
-// Mark as selected
-document.querySelectorAll('.sound-item').forEach(item => {
-    item.classList.remove('active');
-});
-event.target.closest('.sound-item').classList.add('active');
-
-// Show success feedback
-showToastRecording(`🎵 "${sound.title}" selected`, 'success', '✓');
-
-console.log('Selected sound:', sound);
-
-// Close modal after selection
-setTimeout(() => {
-    closeSoundLibrary();
-}, 1000);
-}
-const containerMap = {
-    'favourite': 'favouriteSoundList',
-    'yourMusic': 'yourMusicSoundList',
-    'poseMusic': 'poseMusicSoundList'
-};
-
-const container = document.getElementById(containerMap[tab]);
-container.innerHTML = '';
-
-if (searchResults.length === 0) {
-    container.innerHTML = `
-        <div class="sound-empty">
-            <div class="sound-empty-icon">🔍</div>
-            <div class="sound-empty-title">No results found</div>
-            <div class="sound-empty-text">Try a different search term</div>
-        </div>
-    `;
-    return;
-}
-
-searchResults.forEach(sound => {
-    const item = createSoundItem(sound, tab);
-    container.appendChild(item);
-});
-
-// Search Sounds - FIXED
-function searchSounds(tab, query) {
-    try {
-        // Validate inputs
-        if (!soundLibraryState || !soundLibraryState.allSounds || !soundLibraryState.allSounds[tab]) {
-            console.warn('Sound library not initialized for tab:', tab);
-            return [];
-        }
-
-        const searchResults = soundLibraryState.allSounds[tab].filter(sound => {
-            // FIX: Use backticks for template literal
-            const searchStr = `${sound.title} ${sound.artist} ${sound.category || ''}`.toLowerCase();
-            return searchStr.includes(query.toLowerCase());
-        });
-
-        console.log(`🔍 Found ${searchResults.length} sounds matching "${query}"`);
-        return searchResults;
-
-    } catch (error) {
-        console.error('Search error:', error);
-        showToastRecording('❌ Search failed', 'error', '✗');
-        return [];
-    }
-}
-
-// Display search results
-function displaySearchResults(results, tab) {
-    const resultsContainer = document.querySelector('.rec-popup-content');
-    
-    if (!resultsContainer) {
-        console.error('Results container not found');
-        return;
-    }
-
-    if (results.length === 0) {
-        resultsContainer.innerHTML = '<div class="sound-empty-title">No results found</div>';
-        return;
-    }
-
-    resultsContainer.innerHTML = results.map(sound => `
-        <div class="sound-item" onclick="selectSound('${sound.id}', '${sound.title}', '${sound.url}')">
-            <div class="sound-item-content">
-                <div class="sound-title">${sound.title}</div>
-                <div class="sound-artist">${sound.artist}</div>
-                <div class="sound-duration">${sound.duration || '0:00'}</div>
-            </div>
-            <button class="sound-play-btn" onclick="event.stopPropagation(); playSound('${sound.url}')">
-                ▶️
-            </button>
-        </div>
-    `).join('');
-
-    console.log('✅ Displayed', results.length, 'search results');
-}
-
-// Filter sounds by category
-function filterSoundsByCategory(tab, category) {
-    if (!soundLibraryState.allSounds[tab]) {
-        return [];
-    }
-
-    return soundLibraryState.allSounds[tab].filter(sound => 
-        sound.category === category
-    );
-}
-
-// Handle sound selection
-function selectSound(soundId, soundTitle, soundUrl) {
-    try {
-        console.log('🎵 Selected sound:', soundTitle);
-
-        // Add to current photo
-        if (photoState.capturedPhotos && photoState.capturedPhotos.length > 0) {
-            const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-            if (photo) {
-                photo.audioUrl = soundUrl;
-                photo.settings.sound = {
-                    id: soundId,
-                    title: soundTitle,
-                    url: soundUrl
-                };
-                showToastRecording(`🎵 "${soundTitle}" added`, 'success', '✓');
             }
         }
 
-        // Close popup
-        closeSoundPopup();
+        // Load Your Music
+        async function loadYourMusic() {
+            const container = document.getElementById('yourMusicSoundList');
+            container.innerHTML = '<div class="sound-loading"><div class="sound-loading-spinner"></div><p>Loading your music...</p></div>';
+            try {
+                if (!currentUser) {
+                    container.innerHTML = `
+                <div class="sound-empty">
+                    <div class="sound-empty-icon">🎧</div>
+                    <div class="sound-empty-title">Login to upload music</div>
+                    <div class="sound-empty-text">Upload your own music tracks here</div>
+                </div>
+            `;
+                    return;
+                }
 
-    } catch (error) {
-        console.error('Selection error:', error);
-        showToastRecording('❌ Could not select sound', 'error', '✗');
-    }
-}
+                // Load from Firestore
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('uploadedMusic')
+                    .orderBy('uploadedAt', 'desc')
+                    .limit(50)
+                    .get();
 
-// Play sound preview
-function playSound(soundUrl) {
-    try {
-        const audio = new Audio(soundUrl);
-        audio.play().catch(err => {
-            console.error('Play error:', err);
-            showToastRecording('❌ Could not play sound', 'error', '✗');
-        });
-    } catch (error) {
-        console.error('Sound error:', error);
-        showToastRecording('❌ Sound error', 'error', '✗');
-    }
-}
+                container.innerHTML = '';
 
-// Stop all sounds
-function stopAllSounds() {
-    const audioElements = document.querySelectorAll('audio');
-    audioElements.forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-    });
-    console.log('⏹️ All sounds stopped');
-}
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                <div class="sound-empty">
+                    <div class="sound-empty-icon">🎧</div>
+                    <div class="sound-empty-title">No music uploaded</div>
+                    <div class="sound-empty-text">
+                        <button class="modal-btn" onclick="uploadYourMusic()" style="margin-top: 20px;">
+                            📤 Upload Music
+                        </button>
+                    </div>
+                </div>
+            `;
+                    return;
+                }
 
-// Upload Your Music
-function uploadYourMusic() {
-const input = document.createElement('input');
-input.type = 'file';
-input.accept = 'audio/*';
-input.onchange = async (e) => {
-const file = e.target.files[0];
-if (!file) return;
-    if (!currentUser) {
-        alert('Please login to upload music');
-        return;
-    }
-    
-    try {
-        showToastRecording('📤 Uploading music...', 'info', '⏳');
-        
-        // Upload to Cloudinary
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-        formData.append('folder', 'user_music');
-        
-        const response = await fetch(CLOUDINARY_API_URL, {
-            method: 'POST',
-            body: formData
-        });
-        
-        const data = await response.json();
-        
-        // Save to Firestore
-        await db.collection('users').doc(currentUser.uid).collection('uploadedMusic').add({
-            title: file.name.replace(/\.[^/.]+$/, ''),
-            artist: 'You',
-            audioUrl: data.secure_url,
-            duration: '0:00', // Calculate from file
-            uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        showToastRecording('✅ Music uploaded!', 'success', '✓');
-        loadYourMusic();
-        
-    } catch (error) {
-        console.error('Upload error:', error);
-        showToastRecording('❌ Upload failed', 'error', '✗');
-    }
-};
-input.click();
-}
-// Voice Recording Functions
-let voiceRecordingState = {
-recorder: null,
-chunks: [],
-startTime: 0,
-timerInterval: null
-};
-async function startVoiceRecording() {
-try {
-const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-voiceRecordingState.recorder = new MediaRecorder(stream);
-voiceRecordingState.chunks = [];
-    voiceRecordingState.recorder.ondataavailable = (e) => {
-        voiceRecordingState.chunks.push(e.data);
-    };
-    
-    voiceRecordingState.recorder.onstop = () => {
-        const blob = new Blob(voiceRecordingState.chunks, { type: 'audio/webm' });
-        soundLibraryState.voiceRecordingBlob = blob;
-    };
-    
-    voiceRecordingState.recorder.start();
-    voiceRecordingState.startTime = Date.now();
-    
-    // Update UI
-    document.getElementById('voiceRecordBtn').style.display = 'none';
-    document.getElementById('voiceStopBtn').style.display = 'flex';
-    document.getElementById('voiceVisualizer').classList.add('recording');
-    
-    // Start timer
-    voiceRecordingState.timerInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - voiceRecordingState.startTime) / 1000);
-        const mins = Math.floor(elapsed / 60);
-        const secs = elapsed % 60;
-        document.getElementById('voiceTimer').textContent = 
-            `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    }, 1000);
-    
-    showToastRecording('🎤 Recording...', 'info', '⏺');
-    
-} catch (error) {
-    console.error('Microphone error:', error);
-    alert('❌ Microphone access denied');
-}
-}
-function stopVoiceRecording() {
-if (voiceRecordingState.recorder) {
-voiceRecordingState.recorder.stop();
-voiceRecordingState.recorder.stream.getTracks().forEach(track => track.stop());
-    clearInterval(voiceRecordingState.timerInterval);
-    
-    // Update UI
-    document.getElementById('voiceStopBtn').style.display = 'none';
-    document.getElementById('voiceSaveBtn').style.display = 'flex';
-    document.getElementById('voiceVisualizer').classList.remove('recording');
-    
-    showToastRecording('⏹️ Recording stopped', 'success', '✓');
-}
-}
-async function saveVoiceRecording() {
-if (!soundLibraryState.voiceRecordingBlob) {
-alert('No recording to save');
-return;
-}
-if (!currentUser) {
-    alert('Please login to save voice recording');
-    return;
-}
+                const sounds = [];
+                snapshot.forEach(doc => {
+                    sounds.push({ id: doc.id, ...doc.data() });
+                });
 
-try {
-    showToastRecording('💾 Saving...', 'info', '⏳');
-    
-    // Upload to Cloudinary
-    const formData = new FormData();
-    formData.append('file', soundLibraryState.voiceRecordingBlob);
-    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-    formData.append('folder', 'voice_recordings');
-    
-    const response = await fetch(CLOUDINARY_API_URL, {
-        method: 'POST',
-        body: formData
-    });
-    
-    const data = await response.json();
-    
-    // Save to Firestore
-    const voiceData = {
-        title: `Voice Recording ${new Date().toLocaleString()}`,
-        artist: 'You',
-        audioUrl: data.secure_url,
-        duration: document.getElementById('voiceTimer').textContent,
-        uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    
-    await db.collection('users').doc(currentUser.uid).collection('uploadedMusic').add(voiceData);
-    
-    // Also add to selected sound
-    soundLibraryState.selectedSound = {
-        id: data.public_id,
-        ...voiceData
-    };
-    
-    showToastRecording('✅ Voice saved!', 'success', '✓');
-    
-    // Reset UI
-    document.getElementById('voiceTimer').textContent = '00:00';
-    document.getElementById('voiceSaveBtn').style.display = 'none';
-    document.getElementById('voiceRecordBtn').style.display = 'flex';
-    
-    // Close modal
-    setTimeout(() => {
-        closeSoundLibrary();
-    }, 1000);
-    
-} catch (error) {
-    console.error('Save error:', error);
-    showToastRecording('❌ Save failed', 'error', '✗');
-}
-}
-// Update the existing function to open sound library
-function openSoundLibraryFromScreen() {
-openSoundLibrary();
-}
+                soundLibraryState.allSounds.yourMusic = sounds;
+
+                sounds.forEach(sound => {
+                    const item = createSoundItem(sound, 'yourMusic');
+                    container.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error('Error loading your music:', error);
+                container.innerHTML = `
+            <div class="sound-empty">
+                <div class="sound-empty-icon">❌</div>
+                <div class="sound-empty-title">Error loading music</div>
+                <div class="sound-empty-text">${error.message}</div>
+            </div>
+        `;
+            }
+        }
+
+        // Create Sound Item with Trending Badge
+        function createSoundItem(sound, sourceTab) {
+            const item = document.createElement('div');
+            item.className = 'sound-item';
+            item.dataset.soundId = sound.id;
+
+            // Add trending badge if applicable
+            const trendingBadge = sound.trending ? `
+        <div class="trending-badge">
+            <span class="trending-text"><i class="fas fa-fire"></i> Trending</span>
+        </div>
+    ` : '';
+
+            item.innerHTML = `
+        <div class="sound-thumbnail">
+            ${sound.thumbnail ? `<img src="${sound.thumbnail}" alt="${sound.title}">` : '<i class="fas fa-music"></i>'}
+            <div class="sound-play-icon"><i class="fas fa-play"></i></div>
+            ${trendingBadge}
+        </div>
+        <div class="sound-info">
+            <div class="sound-title">${sound.title}</div>
+            <div class="sound-artist">${sound.artist || 'Unknown Artist'}</div>
+            <div class="sound-meta">
+                <span class="sound-duration"><i class="fas fa-clock"></i> ${sound.duration || '0:00'}</span>
+                ${sound.uses ? `<span class="sound-uses"><i class="fas fa-users"></i> ${sound.uses}</span>` : ''}
+            </div>
+        </div>
+        <button class="sound-action" onclick="selectSound('${sound.id}', '${sourceTab}', event)">
+            <i class="fas fa-check"></i> Use
+        </button>
+    `;
+
+            // Add play on click
+            item.querySelector('.sound-thumbnail').onclick = (e) => {
+                e.stopPropagation();
+                toggleSoundPlay(sound);
+            };
+
+            return item;
+        }
+
+        // Toggle Sound Play
+        function toggleSoundPlay(sound) {
+            if (soundLibraryState.isPlaying && soundLibraryState.currentAudio?.src === sound.audioUrl) {
+                // Pause current
+                soundLibraryState.currentAudio.pause();
+                soundLibraryState.isPlaying = false;
+                document.querySelectorAll('.sound-item').forEach(item => {
+                    item.classList.remove('playing');
+                });
+            } else {
+                // Stop any current audio
+                stopCurrentAudio();
+                // Play new
+                soundLibraryState.currentAudio = new Audio(sound.audioUrl);
+                soundLibraryState.currentAudio.play();
+                soundLibraryState.isPlaying = true;
+
+                // Mark as playing
+                const item = document.querySelector(`[data-sound-id="${sound.id}"]`);
+                if (item) item.classList.add('playing');
+
+                // Auto-remove playing state when ended
+                soundLibraryState.currentAudio.onended = () => {
+                    soundLibraryState.isPlaying = false;
+                    item.classList.remove('playing');
+                };
+            }
+        }
+
+        // Stop Current Audio
+        function stopCurrentAudio() {
+            if (soundLibraryState.currentAudio) {
+                soundLibraryState.currentAudio.pause();
+                soundLibraryState.currentAudio.currentTime = 0;
+                soundLibraryState.isPlaying = false;
+            }
+            document.querySelectorAll('.sound-item').forEach(item => {
+                item.classList.remove('playing');
+            });
+        }
+
+        // Select Sound
+        function selectSound(soundId, sourceTab, event) {
+            event.stopPropagation();
+            const sound = soundLibraryState.allSounds[sourceTab].find(s => s.id === soundId);
+            if (!sound) return;
+
+            soundLibraryState.selectedSound = sound;
+
+            // Mark as selected in modal
+            document.querySelectorAll('.sound-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.sound-item').classList.add('active');
+
+            // Show success feedback
+            showToastRecording(`🎵 "${sound.title}" selected`, 'success', '✓');
+
+            console.log('Selected sound:', sound);
+
+            // Close modal and display sound on Screen 6
+            setTimeout(() => {
+                closeSoundLibrary();
+                displaySelectedSoundOnScreen6(sound);
+            }, 800);
+        }
 
 
+        // Display Selected Sound on Screen 6
+        function displaySelectedSoundOnScreen6(sound) {
+            const container = document.getElementById('selectedSoundContainer');
+            const thumbnail = document.getElementById('soundDisplayThumbnail');
+            const title = document.getElementById('soundDisplayTitle');
+            const artist = document.getElementById('soundDisplayArtist');
+            const playBtn = document.getElementById('soundPlayBtn');
 
-</script>
+            // Update display info
+            title.textContent = sound.title;
+            artist.textContent = sound.artist || 'Unknown Artist';
+
+            // Update thumbnail
+            if (sound.thumbnail) {
+                thumbnail.innerHTML = `<img src="${sound.thumbnail}" alt="${sound.title}">`;
+            } else {
+                thumbnail.innerHTML = '<i class="fas fa-music"></i>';
+            }
+
+            // Reset play button
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.classList.remove('playing');
+
+            // Show container
+            container.classList.add('show');
+
+            console.log('🎵 Sound displayed on Screen 6:', sound);
+        }
+
+        // Toggle Selected Sound Playback
+        function toggleSelectedSoundPlayback() {
+            if (!soundLibraryState.selectedSound) return;
+
+            const sound = soundLibraryState.selectedSound;
+            const btn = document.getElementById('soundPlayBtn');
+
+            if (soundLibraryState.isPlaying && soundLibraryState.currentAudio?.src === sound.audioUrl) {
+                // Pause current
+                soundLibraryState.currentAudio.pause();
+                soundLibraryState.isPlaying = false;
+                btn.innerHTML = '<i class="fas fa-play"></i>';
+                btn.classList.remove('playing');
+            } else {
+                // Stop any current audio
+                stopCurrentAudio();
+
+                // Play selected sound
+                soundLibraryState.currentAudio = new Audio(sound.audioUrl);
+                soundLibraryState.currentAudio.volume = 1;
+
+                // Get trim boundaries (if trimmed)
+                const startTime = sound.trimStart || 0;
+                const endTime = sound.trimEnd || soundLibraryState.currentAudio.duration;
+
+                // Start from trim point
+                soundLibraryState.currentAudio.currentTime = startTime;
+                soundLibraryState.currentAudio.play();
+                soundLibraryState.isPlaying = true;
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
+                btn.classList.add('playing');
+
+                // Monitor playback and stop at trim end
+                soundLibraryState.currentAudio.ontimeupdate = () => {
+                    if (soundLibraryState.currentAudio.currentTime >= endTime) {
+                        soundLibraryState.currentAudio.pause();
+                        soundLibraryState.isPlaying = false;
+                        btn.innerHTML = '<i class="fas fa-play"></i>';
+                        btn.classList.remove('playing');
+                    }
+                };
+
+                // Auto stop when finished
+                soundLibraryState.currentAudio.onended = () => {
+                    soundLibraryState.isPlaying = false;
+                    btn.innerHTML = '<i class="fas fa-play"></i>';
+                    btn.classList.remove('playing');
+                };
+
+                const trimInfo = sound.trimStart ? ` (${sound.trimDuration}s trimmed)` : '';
+                showToastRecording(`🎵 Playing "${sound.title}"${trimInfo}`, 'info', '♪');
+            }
+        }
+
+        // Remove Selected Sound
+        function removeSelectedSound() {
+            if (soundLibraryState.currentAudio) {
+                soundLibraryState.currentAudio.pause();
+                soundLibraryState.currentAudio = null;
+                soundLibraryState.isPlaying = false;
+            }
+
+            soundLibraryState.selectedSound = null;
+            document.getElementById('selectedSoundContainer').classList.remove('show');
+            document.getElementById('soundPlayBtn').innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById('soundPlayBtn').classList.remove('playing');
+
+            showToastRecording('🎵 Sound removed', 'info', '✓');
+            console.log('🎵 Selected sound removed');
+        }
+
+        // Open Sound Trimmer
+        function openSoundTrimmer() {
+            if (!soundLibraryState.selectedSound) {
+                showToastRecording('No sound selected', 'error', '❌');
+                return;
+            }
+
+            const sound = soundLibraryState.selectedSound;
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.id = 'soundTrimmerModal';
+
+            // Use existing trim values or default to 0 and full duration
+            const startVal = sound.trimStart !== undefined ? sound.trimStart : 0;
+            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : 60;
+
+            modal.innerHTML = `
+        <div class="modal" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeSoundTrimmer()"><i class="fas fa-times"></i></button>
+            <h2><i class="fas fa-cut"></i> Trim Sound - ${sound.title}</h2>
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 20px;">Select where the audio should start and stop</p>
+            <div style="margin: 20px 0;">
+                <audio id="trimPreviewAudio" style="width: 100%; margin-bottom: 20px;" controls>
+                    <source src="${sound.audioUrl}" type="audio/mpeg">
+                </audio>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;"><i class="fas fa-play"></i> Start Time (seconds)</label>
+                    <input type="number" id="trimStart" min="0" max="600" value="${startVal}" step="0.1" style="width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 14px;">
+                    <small style="color: #888; display: block; margin-top: 4px;">Song will start playing from this point</small>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;"><i class="fas fa-stop"></i> End Time (seconds)</label>
+                    <input type="number" id="trimEnd" min="0" max="600" value="${endVal}" step="0.1" style="width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 14px;">
+                    <small style="color: #888; display: block; margin-top: 4px;">Song will stop playing at this point</small>
+                </div>
+                
+                <div id="trimDurationDisplay" style="background: rgba(99, 102, 241, 0.2); border: 1px solid #6366f1; border-radius: 8px; padding: 12px; margin-bottom: 20px; color: #c7d2fe;">
+                    <i class="fas fa-info-circle"></i> Duration: <strong id="trimDurationValue">30.0s</strong>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="applyAudioTrim()" class="modal-btn" style="flex: 1;">
+                        <i class="fas fa-check"></i> Apply Trim
+                    </button>
+                    <button onclick="closeSoundTrimmer()" class="modal-btn" style="flex: 1; background: #666;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+        `;
+
+            document.body.appendChild(modal);
+
+            // Update duration display as user types
+            document.getElementById('trimStart').addEventListener('input', updateTrimDuration);
+            document.getElementById('trimEnd').addEventListener('input', updateTrimDuration);
+            updateTrimDuration();
+
+            console.log('✂️ Sound trimmer opened for:', sound.title);
+        }
+
+        // Update trim duration display
+        function updateTrimDuration() {
+            const start = parseFloat(document.getElementById('trimStart').value) || 0;
+            const end = parseFloat(document.getElementById('trimEnd').value) || 0;
+            const duration = Math.max(0, end - start).toFixed(1);
+            document.getElementById('trimDurationValue').textContent = duration + 's';
+        }
+
+        // Close Sound Trimmer
+        function closeSoundTrimmer() {
+            const modal = document.getElementById('soundTrimmerModal');
+            if (modal) modal.remove();
+        }
+
+        // Apply Audio Trim
+        function applyAudioTrim() {
+            const startTime = parseFloat(document.getElementById('trimStart').value) || 0;
+            const endTime = parseFloat(document.getElementById('trimEnd').value) || 30;
+
+            if (startTime >= endTime) {
+                showToastRecording('Start time must be less than end time', 'error', '❌');
+                return;
+            }
+
+            // Update selected sound with trim info
+            soundLibraryState.selectedSound.trimStart = startTime;
+            soundLibraryState.selectedSound.trimEnd = endTime;
+            soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+
+            closeSoundTrimmer();
+            showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
+            console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
+        }
+
+        // Search Sounds
+        function searchSounds(tab, query) {
+            const searchResults = soundLibraryState.allSounds[tab].filter(sound => {
+                const searchStr = `${sound.title} ${sound.artist} ${sound.category || ''}`.toLowerCase();
+                return searchStr.includes(query.toLowerCase());
+            });
+            const containerMap = {
+                'favourite': 'favouriteSoundList',
+                'yourMusic': 'yourMusicSoundList',
+                'poseMusic': 'poseMusicSoundList'
+            };
+
+            const container = document.getElementById(containerMap[tab]);
+            container.innerHTML = '';
+
+            if (searchResults.length === 0) {
+                container.innerHTML = `
+            <div class="sound-empty">
+                <div class="sound-empty-icon">🔍</div>
+                <div class="sound-empty-title">No results found</div>
+                <div class="sound-empty-text">Try a different search term</div>
+            </div>
+        `;
+                return;
+            }
+
+            searchResults.forEach(sound => {
+                const item = createSoundItem(sound, tab);
+                container.appendChild(item);
+            });
+        }
+
+        // Upload Your Music
+        function uploadYourMusic() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'audio/*';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (!currentUser) {
+                    alert('Please login to upload music');
+                    return;
+                }
+
+                try {
+                    showToastRecording('📤 Uploading music...', 'info', '⏳');
+
+                    // Upload to Cloudinary
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                    formData.append('folder', 'user_music');
+
+                    const response = await fetch(CLOUDINARY_API_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    // Save to Firestore
+                    await db.collection('users').doc(currentUser.uid).collection('uploadedMusic').add({
+                        title: file.name.replace(/\.[^/.]+$/, ''),
+                        artist: 'You',
+                        audioUrl: data.secure_url,
+                        duration: '0:00',
+                        uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    showToastRecording('✅ Music uploaded!', 'success', '✓');
+                    loadYourMusic();
+
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showToastRecording('❌ Upload failed', 'error', '✗');
+                }
+            };
+            input.click();
+        }
+
+        // Voice Recording Functions
+        let voiceRecordingState = {
+            recorder: null,
+            chunks: [],
+            startTime: 0,
+            timerInterval: null
+        };
+
+        async function startVoiceRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                voiceRecordingState.recorder = new MediaRecorder(stream);
+                voiceRecordingState.chunks = [];
+
+                voiceRecordingState.recorder.ondataavailable = (e) => {
+                    voiceRecordingState.chunks.push(e.data);
+                };
+
+                voiceRecordingState.recorder.onstop = () => {
+                    const blob = new Blob(voiceRecordingState.chunks, { type: 'audio/webm' });
+                    soundLibraryState.voiceRecordingBlob = blob;
+                };
+
+                voiceRecordingState.recorder.start();
+                voiceRecordingState.startTime = Date.now();
+
+                // Update UI
+                document.getElementById('voiceRecordBtn').style.display = 'none';
+                document.getElementById('voiceStopBtn').style.display = 'flex';
+                document.getElementById('voiceVisualizer').classList.add('recording');
+
+                // Start timer
+                voiceRecordingState.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - voiceRecordingState.startTime) / 1000);
+                    const mins = Math.floor(elapsed / 60);
+                    const secs = elapsed % 60;
+                    document.getElementById('voiceTimer').textContent =
+                        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                }, 1000);
+
+                showToastRecording('🎤 Recording...', 'info', '⏺');
+
+            } catch (error) {
+                console.error('Microphone error:', error);
+                alert('❌ Microphone access denied');
+            }
+        }
+
+        function stopVoiceRecording() {
+            if (voiceRecordingState.recorder) {
+                voiceRecordingState.recorder.stop();
+                voiceRecordingState.recorder.stream.getTracks().forEach(track => track.stop());
+                clearInterval(voiceRecordingState.timerInterval);
+
+                // Update UI
+                document.getElementById('voiceStopBtn').style.display = 'none';
+                document.getElementById('voiceSaveBtn').style.display = 'flex';
+                document.getElementById('voiceVisualizer').classList.remove('recording');
+
+                showToastRecording('⏹️ Recording stopped', 'success', '✓');
+            }
+        }
+
+        async function saveVoiceRecording() {
+            if (!soundLibraryState.voiceRecordingBlob) {
+                alert('No recording to save');
+                return;
+            }
+            if (!currentUser) {
+                alert('Please login to save voice recording');
+                return;
+            }
+
+            try {
+                showToastRecording('💾 Saving...', 'info', '⏳');
+
+                // Upload to Cloudinary
+                const formData = new FormData();
+                formData.append('file', soundLibraryState.voiceRecordingBlob);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('folder', 'voice_recordings');
+
+                const response = await fetch(CLOUDINARY_API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                // Save to Firestore
+                const voiceData = {
+                    title: `Voice Recording ${new Date().toLocaleString()}`,
+                    artist: 'You',
+                    audioUrl: data.secure_url,
+                    duration: document.getElementById('voiceTimer').textContent,
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('users').doc(currentUser.uid).collection('uploadedMusic').add(voiceData);
+
+                // Also add to selected sound
+                soundLibraryState.selectedSound = {
+                    id: data.public_id,
+                    ...voiceData
+                };
+
+                showToastRecording('✅ Voice saved!', 'success', '✓');
+
+                // Reset UI
+                document.getElementById('voiceTimer').textContent = '00:00';
+                document.getElementById('voiceSaveBtn').style.display = 'none';
+                document.getElementById('voiceRecordBtn').style.display = 'flex';
+
+                // Close modal
+                setTimeout(() => {
+                    closeSoundLibrary();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Save error:', error);
+                showToastRecording('❌ Save failed', 'error', '✗');
+            }
+        }
+
+    </script>
 </body>
 
 </html>
