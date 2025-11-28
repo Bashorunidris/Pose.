@@ -4555,21 +4555,25 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 24px;
-            height: 24px;
-            background: rgba(0, 0, 0, 0.7);
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 0, 80, 0.9);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 10px;
-            opacity: 0;
+            font-size: 14px;
+            opacity: 1;
             transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
         }
 
         .sound-item:hover .sound-play-icon {
             opacity: 1;
+            transform: translate(-50%, -50%) scale(1.15);
+            background: rgba(255, 0, 80, 1);
         }
 
         /* Trending Badge */
@@ -4649,6 +4653,41 @@
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+
+        .sound-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        .sound-favorite-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .sound-favorite-btn:hover {
+            background: rgba(255, 0, 80, 0.2);
+            border-color: #ff0050;
+            color: #ff0050;
+            transform: scale(1.1);
+        }
+
+        .sound-favorite-btn.active {
+            background: #ff0050;
+            border-color: #ff0050;
+            color: white;
         }
 
         .sound-action {
@@ -7125,10 +7164,49 @@
         <!-- Pose Music Tab -->
         <div class="sound-tab-content" id="poseMusicTab">
             <div class="sound-search">
-                <input type="text" class="sound-search-input" placeholder="Search Pose music library..."
+                <input type="text" class="sound-search-input" placeholder="Search by artist or song title..."
                     oninput="searchSounds('poseMusic', this.value)">
                 <span class="search-icon">🔍</span>
             </div>
+            
+            <!-- Search Filters -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 15px; background: #0a0a0a; border-radius: 8px; margin-bottom: 15px; border: 1px solid #333;">
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px;"><i class="fas fa-music"></i> Genre</label>
+                    <select id="genreFilter" onchange="applySearchFilters()" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white; border-radius: 6px; font-size: 12px;">
+                        <option value="">All Genres</option>
+                        <option value="afrobeat">Afrobeat</option>
+                        <option value="hip-hop">Hip-Hop</option>
+                        <option value="pop">Pop</option>
+                        <option value="r&b">R&B</option>
+                        <option value="amapiano">Amapiano</option>
+                        <option value="reggae">Reggae</option>
+                        <option value="house">House</option>
+                        <option value="gospel">Gospel</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px;"><i class="fas fa-globe"></i> Country/Region</label>
+                    <select id="countryFilter" onchange="applySearchFilters()" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white; border-radius: 6px; font-size: 12px;">
+                        <option value="">All Regions</option>
+                        <option value="NG">Nigeria</option>
+                        <option value="GH">Ghana</option>
+                        <option value="ZA">South Africa</option>
+                        <option value="KE">Kenya</option>
+                        <option value="UG">Uganda</option>
+                        <option value="CM">Cameroon</option>
+                        <option value="US">USA</option>
+                        <option value="UK">UK</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px;"><i class="fas fa-calendar"></i> Year Released</label>
+                    <input type="number" id="yearFilter" min="2000" max="2025" placeholder="e.g. 2024" onchange="applySearchFilters()" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white; border-radius: 6px; font-size: 12px;">
+                </div>
+            </div>
+            
             <div class="sound-list" id="poseMusicSoundList">
                 <!-- Pose music library will be populated here -->
             </div>
@@ -12240,11 +12318,12 @@
             }
         }
 
-        // Create Sound Item with Trending Badge
+        // Create Sound Item with Trending Badge & Favorite
         function createSoundItem(sound, sourceTab) {
             const item = document.createElement('div');
             item.className = 'sound-item';
             item.dataset.soundId = sound.id;
+            item.dataset.sourceTab = sourceTab;
 
             // Add trending badge if applicable
             const trendingBadge = sound.trending ? `
@@ -12253,23 +12332,33 @@
         </div>
     ` : '';
 
+            // Favorite button
+            const isFavorited = sound.isFavorited ? 'active' : '';
+            const favoriteIcon = sound.isFavorited ? 'fas fa-heart' : 'far fa-heart';
+
             item.innerHTML = `
         <div class="sound-thumbnail">
             ${sound.thumbnail ? `<img src="${sound.thumbnail}" alt="${sound.title}">` : '<i class="fas fa-music"></i>'}
             <div class="sound-play-icon"><i class="fas fa-play"></i></div>
             ${trendingBadge}
+            ${sound.previewNote ? `<div style="position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; padding: 2px 4px; border-radius: 3px; text-align: center;">${sound.previewNote}</div>` : ''}
         </div>
         <div class="sound-info">
             <div class="sound-title">${sound.title}</div>
             <div class="sound-artist">${sound.artist || 'Unknown Artist'}</div>
             <div class="sound-meta">
-                <span class="sound-duration"><i class="fas fa-clock"></i> ${sound.duration || '0:00'}</span>
+                <span class="sound-duration" title="Full duration: ${sound.fullDuration || sound.duration}"><i class="fas fa-clock"></i> ${sound.duration || '0:00'}</span>
                 ${sound.uses ? `<span class="sound-uses"><i class="fas fa-users"></i> ${sound.uses}</span>` : ''}
             </div>
         </div>
-        <button class="sound-action" onclick="selectSound('${sound.id}', '${sourceTab}', event)">
-            <i class="fas fa-check"></i> Use
-        </button>
+        <div class="sound-actions">
+            <button class="sound-favorite-btn ${isFavorited}" onclick="toggleFavoriteSound('${sound.id}', '${sourceTab}', event)" title="Add to favorites">
+                <i class="${favoriteIcon}"></i>
+            </button>
+            <button class="sound-action" onclick="selectSound('${sound.id}', '${sourceTab}', event)">
+                <i class="fas fa-check"></i> Use
+            </button>
+        </div>
     `;
 
             // Add play on click
@@ -12320,6 +12409,95 @@
             document.querySelectorAll('.sound-item').forEach(item => {
                 item.classList.remove('playing');
             });
+        }
+
+        // Toggle Favorite Sound
+        async function toggleFavoriteSound(soundId, sourceTab, event) {
+            event.stopPropagation();
+
+            if (!currentUser) {
+                showToastRecording('Please login to save favorites', 'error', '❌');
+                return;
+            }
+
+            try {
+                // Get sound from library
+                const sound = soundLibraryState.allSounds[sourceTab]?.find(s => s.id === soundId);
+                if (!sound) {
+                    console.error('Sound not found:', soundId);
+                    return;
+                }
+
+                const isFavorited = sound.isFavorited;
+                const btn = event.target.closest('.sound-favorite-btn');
+
+                if (isFavorited) {
+                    // Remove from favorites
+                    await db.collection('users').doc(currentUser.uid).collection('favouriteSounds').doc(soundId).delete();
+                    sound.isFavorited = false;
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="far fa-heart"></i>';
+                    showToastRecording('Removed from favorites', 'info', '💔');
+                } else {
+                    // Add to favorites
+                    await db.collection('users').doc(currentUser.uid).collection('favouriteSounds').doc(soundId).set({
+                        ...sound,
+                        addedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    sound.isFavorited = true;
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fas fa-heart"></i>';
+                    showToastRecording('Added to favorites ❤️', 'success', '✓');
+
+                    // Get recommendations based on this favorite
+                    getRecommendedSongs(sound);
+                }
+
+                console.log(`❤️ Favorite toggled for: ${sound.title}`);
+
+            } catch (error) {
+                console.error('Error toggling favorite:', error);
+                showToastRecording('Error saving favorite', 'error', '❌');
+            }
+        }
+
+        // Get Recommended Songs Based on Favorite
+        async function getRecommendedSongs(favoriteSound) {
+            try {
+                // Recommend based on same artist or category
+                const artist = favoriteSound.artist;
+                const category = favoriteSound.category || 'Afrobeat';
+
+                // Search for more songs by same artist
+                const response = await fetch(
+                    `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&entity=song&limit=10`,
+                    { mode: 'cors' }
+                );
+
+                const data = await response.json();
+
+                if (data.results && data.results.length > 1) {
+                    const recommended = data.results.slice(0, 5).map((song, index) => ({
+                        id: `rec_${Date.now()}_${index}`,
+                        title: song.trackName,
+                        artist: song.artistName || artist,
+                        duration: formatDuration(song.trackTimeMillis),
+                        thumbnail: song.artworkUrl100,
+                        audioUrl: song.previewUrl,
+                        category: category,
+                        isRecommended: true,
+                        trending: false,
+                        uses: '0M'
+                    })).filter(s => s.audioUrl); // Only include songs with previews
+
+                    if (recommended.length > 0) {
+                        showToastRecording(`✨ ${recommended.length} recommended songs added!`, 'success', '⭐');
+                        console.log(`✨ Recommendations for ${artist}:`, recommended);
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not fetch recommendations:', error.message);
+            }
         }
 
         // Select Sound
@@ -12467,7 +12645,7 @@
             const endVal = sound.trimEnd !== undefined ? sound.trimEnd : null;
 
             modal.innerHTML = `
-        <div class="modal" style="max-width: 700px;">
+        <div class="modal" style="max-width: 95vw; width: 100%; max-height: 95vh; overflow-y: auto;">
             <button class="modal-close" onclick="closeSoundTrimmer()"><i class="fas fa-times"></i></button>
             <h2><i class="fas fa-cut"></i> Trim Sound - ${sound.title}</h2>
             <p style="color: #aaa; font-size: 13px; margin-bottom: 20px;">Select where the audio should start and stop</p>
@@ -12756,8 +12934,8 @@
             console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
         }
 
-        // Search Sounds
-        function searchSounds(tab, query) {
+        // Search Sounds - Local + API Search
+        async function searchSounds(tab, query) {
             const containerMap = {
                 'favourite': 'favouriteSoundList',
                 'yourMusic': 'yourMusicSoundList',
@@ -12793,31 +12971,73 @@
                 return;
             }
 
-            // Search
-            const searchResults = allSounds.filter(sound => {
+            // Show loading
+            container.innerHTML = '<div class="sound-loading"><div class="sound-loading-spinner"></div><p>Searching...</p></div>';
+
+            // Local search first
+            const localResults = allSounds.filter(sound => {
                 const searchStr = `${sound.title} ${sound.artist} ${sound.category || ''}`.toLowerCase();
                 return searchStr.includes(query.toLowerCase());
             });
 
+            // For poseMusic tab, also search iTunes API
+            let apiResults = [];
+            if (tab === 'poseMusic') {
+                try {
+                    const response = await fetch(
+                        `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=10`,
+                        { mode: 'cors' }
+                    );
+
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        if (data.results && data.results.length > 0) {
+                            apiResults = data.results
+                                .filter(song => song.previewUrl)
+                                .slice(0, 5)
+                                .map((song, index) => ({
+                                    id: `api_${Date.now()}_${index}`,
+                                    title: song.trackName || 'Unknown',
+                                    artist: song.artistName || 'Unknown Artist',
+                                    duration: formatDuration(song.trackTimeMillis),
+                                    fullDuration: formatDuration(song.trackTimeMillis),
+                                    previewNote: '(30s preview)',
+                                    thumbnail: song.artworkUrl100 || song.artworkUrl60,
+                                    audioUrl: song.previewUrl,
+                                    category: 'Search Result',
+                                    uses: `${Math.floor(Math.random() * 100)}K`,
+                                    isTrimable: true
+                                }));
+                        }
+                    }
+                } catch (error) {
+                    console.warn('⚠️ API search failed:', error.message);
+                }
+            }
+
+            // Combine results
+            const allResults = [...localResults, ...apiResults];
+
             container.innerHTML = '';
 
-            if (searchResults.length === 0) {
+            if (allResults.length === 0) {
                 container.innerHTML = `
                 <div class="sound-empty">
                     <div class="sound-empty-icon">🔍</div>
                     <div class="sound-empty-title">No results found</div>
-                    <div class="sound-empty-text">Try: "${query.substring(0, 20)}"</div>
+                    <div class="sound-empty-text">Try searching by artist name or song title</div>
                 </div>
             `;
                 console.log(`🔍 No results for "${query}" in ${tab}`);
                 return;
             }
 
-            searchResults.forEach(sound => {
+            allResults.forEach(sound => {
                 const item = createSoundItem(sound, tab);
                 container.appendChild(item);
             });
-            console.log(`🔍 Found ${searchResults.length} results for "${query}" in ${tab}`);
+            console.log(`🔍 Found ${localResults.length} local + ${apiResults.length} API results for "${query}"`);
         }
 
         // Upload Your Music
