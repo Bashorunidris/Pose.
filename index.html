@@ -12466,7 +12466,7 @@
             const endVal = sound.trimEnd !== undefined ? sound.trimEnd : 60;
 
             modal.innerHTML = `
-        <div class="modal" style="max-width: 600px;">
+        <div class="modal" style="max-width: 700px;">
             <button class="modal-close" onclick="closeSoundTrimmer()"><i class="fas fa-times"></i></button>
             <h2><i class="fas fa-cut"></i> Trim Sound - ${sound.title}</h2>
             <p style="color: #aaa; font-size: 13px; margin-bottom: 20px;">Select where the audio should start and stop</p>
@@ -12475,16 +12475,62 @@
                     <source src="${sound.audioUrl}" type="audio/mpeg">
                 </audio>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;"><i class="fas fa-play"></i> Start Time (seconds)</label>
-                    <input type="number" id="trimStart" min="0" max="600" value="${startVal}" step="0.1" style="width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 14px;">
-                    <small style="color: #888; display: block; margin-top: 4px;">Song will start playing from this point</small>
+                <!-- VISUAL TIMELINE SLIDER -->
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600;"><i class="fas fa-sliders-h"></i> Visual Trim Timeline</label>
+                    <div style="background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%); border-radius: 8px; padding: 20px; border: 1px solid #444;">
+                        <!-- Timeline Bar -->
+                        <div style="position: relative; height: 40px; background: #0a0a0a; border-radius: 6px; border: 1px solid #555; cursor: pointer;" id="timelineBar">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center;">
+                                <!-- Untrimmed region (gray) -->
+                                <div id="beforeTrim" style="position: absolute; top: 0; height: 100%; background: rgba(255,255,255,0.1); border-radius: 6px 0 0 6px;"></div>
+                                <!-- Trimmed region (blue) -->
+                                <div id="trimmedRegion" style="position: absolute; top: 0; height: 100%; background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%); border-radius: 4px;"></div>
+                                <!-- After trim (gray) -->
+                                <div id="afterTrim" style="position: absolute; top: 0; right: 0; height: 100%; background: rgba(255,255,255,0.1); border-radius: 0 6px 6px 0;"></div>
+                                <!-- Start handle -->
+                                <div id="startHandle" style="position: absolute; top: 50%; transform: translateY(-50%); width: 12px; height: 40px; background: #ff0050; border-radius: 4px; cursor: col-resize; z-index: 10; box-shadow: 0 0 10px rgba(255,0,80,0.6);"></div>
+                                <!-- End handle -->
+                                <div id="endHandle" style="position: absolute; top: 50%; transform: translateY(-50%); width: 12px; height: 40px; background: #ff0050; border-radius: 4px; cursor: col-resize; z-index: 10; box-shadow: 0 0 10px rgba(255,0,80,0.6);"></div>
+                            </div>
+                        </div>
+                        <!-- Time labels -->
+                        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #888;">
+                            <span><i class="fas fa-play"></i> <strong id="startLabel">0.0s</strong></span>
+                            <span id="durationLabel" style="color: #6366f1;"><strong>60.0s</strong></span>
+                            <span><i class="fas fa-stop"></i> <strong id="endLabel">60.0s</strong></span>
+                        </div>
+                    </div>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;"><i class="fas fa-stop"></i> End Time (seconds)</label>
-                    <input type="number" id="trimEnd" min="0" max="600" value="${endVal}" step="0.1" style="width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 14px;">
-                    <small style="color: #888; display: block; margin-top: 4px;">Song will stop playing at this point</small>
+                <!-- NUMBER INPUT METHOD -->
+                <div style="background: #0a0a0a; border-radius: 8px; padding: 15px; border: 1px solid #333; margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600; color: #ccc;"><i class="fas fa-keyboard"></i> Manual Input</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;"><i class="fas fa-play"></i> Start (s)</label>
+                            <input type="number" id="trimStart" min="0" max="600" value="${startVal}" step="0.1" style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;"><i class="fas fa-stop"></i> End (s)</label>
+                            <input type="number" id="trimEnd" min="0" max="600" value="${endVal}" step="0.1" style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- RANGE SLIDER METHOD -->
+                <div style="background: #0a0a0a; border-radius: 8px; padding: 15px; border: 1px solid #333; margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600; color: #ccc;"><i class="fas fa-sliders-h"></i> Range Slider</label>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 12px; color: #888; display: block; margin-bottom: 8px;">Start Time</label>
+                        <input type="range" id="startSlider" min="0" max="600" value="${startVal}" step="0.1" style="width: 100%; cursor: pointer;">
+                        <span id="startSliderLabel" style="font-size: 12px; color: #6366f1; display: block; margin-top: 4px;">${startVal}s</span>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: #888; display: block; margin-bottom: 8px;">End Time</label>
+                        <input type="range" id="endSlider" min="0" max="600" value="${endVal}" step="0.1" style="width: 100%; cursor: pointer;">
+                        <span id="endSliderLabel" style="font-size: 12px; color: #6366f1; display: block; margin-top: 4px;">${endVal}s</span>
+                    </div>
                 </div>
                 
                 <div id="trimDurationDisplay" style="background: rgba(99, 102, 241, 0.2); border: 1px solid #6366f1; border-radius: 8px; padding: 12px; margin-bottom: 20px; color: #c7d2fe;">
@@ -12505,12 +12551,126 @@
 
             document.body.appendChild(modal);
 
-            // Update duration display as user types
-            document.getElementById('trimStart').addEventListener('input', updateTrimDuration);
-            document.getElementById('trimEnd').addEventListener('input', updateTrimDuration);
-            updateTrimDuration();
+            // Setup event listeners
+            const trimStart = document.getElementById('trimStart');
+            const trimEnd = document.getElementById('trimEnd');
+            const startSlider = document.getElementById('startSlider');
+            const endSlider = document.getElementById('endSlider');
+
+            // Sync all inputs
+            trimStart.addEventListener('input', () => {
+                startSlider.value = trimStart.value;
+                updateTrimTimeline();
+            });
+
+            trimEnd.addEventListener('input', () => {
+                endSlider.value = trimEnd.value;
+                updateTrimTimeline();
+            });
+
+            startSlider.addEventListener('input', () => {
+                trimStart.value = startSlider.value;
+                document.getElementById('startSliderLabel').textContent = startSlider.value + 's';
+                updateTrimTimeline();
+            });
+
+            endSlider.addEventListener('input', () => {
+                trimEnd.value = endSlider.value;
+                document.getElementById('endSliderLabel').textContent = endSlider.value + 's';
+                updateTrimTimeline();
+            });
+
+            // Setup timeline handle dragging
+            setupTimelineHandles();
+
+            updateTrimTimeline();
 
             console.log('✂️ Sound trimmer opened for:', sound.title);
+        }
+
+        // Setup draggable timeline handles
+        function setupTimelineHandles() {
+            const timeline = document.getElementById('timelineBar');
+            const startHandle = document.getElementById('startHandle');
+            const endHandle = document.getElementById('endHandle');
+            const trimStart = document.getElementById('trimStart');
+            const trimEnd = document.getElementById('trimEnd');
+
+            if (!timeline || !startHandle || !endHandle) return;
+
+            let isDragging = false;
+            let dragType = null;
+
+            startHandle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragType = 'start';
+                e.preventDefault();
+            });
+
+            endHandle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragType = 'end';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const rect = timeline.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                const time = (percent / 100) * 600; // Assuming max 600s
+
+                if (dragType === 'start' && time < parseFloat(trimEnd.value)) {
+                    trimStart.value = time.toFixed(1);
+                    document.getElementById('startSlider').value = time.toFixed(1);
+                    updateTrimTimeline();
+                } else if (dragType === 'end' && time > parseFloat(trimStart.value)) {
+                    trimEnd.value = time.toFixed(1);
+                    document.getElementById('endSlider').value = time.toFixed(1);
+                    updateTrimTimeline();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                dragType = null;
+            });
+        }
+
+        // Update timeline visual
+        function updateTrimTimeline() {
+            const start = parseFloat(document.getElementById('trimStart').value) || 0;
+            const end = parseFloat(document.getElementById('trimEnd').value) || 60;
+            const maxTime = 600;
+
+            const startPercent = (start / maxTime) * 100;
+            const endPercent = (end / maxTime) * 100;
+            const duration = Math.max(0, end - start).toFixed(1);
+
+            // Update timeline regions
+            const beforeTrim = document.getElementById('beforeTrim');
+            const trimmedRegion = document.getElementById('trimmedRegion');
+            const afterTrim = document.getElementById('afterTrim');
+            const startHandle = document.getElementById('startHandle');
+            const endHandle = document.getElementById('endHandle');
+
+            if (beforeTrim) beforeTrim.style.width = startPercent + '%';
+            if (trimmedRegion) {
+                trimmedRegion.style.left = startPercent + '%';
+                trimmedRegion.style.width = (endPercent - startPercent) + '%';
+            }
+            if (afterTrim) {
+                afterTrim.style.left = endPercent + '%';
+                afterTrim.style.width = (100 - endPercent) + '%';
+            }
+            if (startHandle) startHandle.style.left = startPercent + '%';
+            if (endHandle) endHandle.style.left = endPercent + '%';
+
+            // Update labels
+            document.getElementById('startLabel').textContent = start.toFixed(1) + 's';
+            document.getElementById('endLabel').textContent = end.toFixed(1) + 's';
+            document.getElementById('durationLabel').textContent = '<strong>' + duration + 's</strong>';
+            document.getElementById('trimDurationValue').textContent = duration + 's';
         }
 
         // Update trim duration display
@@ -12549,10 +12709,6 @@
 
         // Search Sounds
         function searchSounds(tab, query) {
-            const searchResults = soundLibraryState.allSounds[tab].filter(sound => {
-                const searchStr = `${sound.title} ${sound.artist} ${sound.category || ''}`.toLowerCase();
-                return searchStr.includes(query.toLowerCase());
-            });
             const containerMap = {
                 'favourite': 'favouriteSoundList',
                 'yourMusic': 'yourMusicSoundList',
@@ -12560,16 +12716,51 @@
             };
 
             const container = document.getElementById(containerMap[tab]);
+
+            // Ensure allSounds[tab] exists
+            if (!soundLibraryState.allSounds[tab]) {
+                soundLibraryState.allSounds[tab] = [];
+            }
+
+            const allSounds = soundLibraryState.allSounds[tab];
+
+            // If query is empty, reload all sounds
+            if (!query || query.trim() === '') {
+                container.innerHTML = '';
+                if (allSounds.length === 0) {
+                    container.innerHTML = `
+                    <div class="sound-empty">
+                        <div class="sound-empty-icon">🎵</div>
+                        <div class="sound-empty-title">No sounds</div>
+                        <div class="sound-empty-text">Add sounds to this tab</div>
+                    </div>
+                    `;
+                    return;
+                }
+                allSounds.forEach(sound => {
+                    const item = createSoundItem(sound, tab);
+                    container.appendChild(item);
+                });
+                return;
+            }
+
+            // Search
+            const searchResults = allSounds.filter(sound => {
+                const searchStr = `${sound.title} ${sound.artist} ${sound.category || ''}`.toLowerCase();
+                return searchStr.includes(query.toLowerCase());
+            });
+
             container.innerHTML = '';
 
             if (searchResults.length === 0) {
                 container.innerHTML = `
-            <div class="sound-empty">
-                <div class="sound-empty-icon">🔍</div>
-                <div class="sound-empty-title">No results found</div>
-                <div class="sound-empty-text">Try a different search term</div>
-            </div>
-        `;
+                <div class="sound-empty">
+                    <div class="sound-empty-icon">🔍</div>
+                    <div class="sound-empty-title">No results found</div>
+                    <div class="sound-empty-text">Try: "${query.substring(0, 20)}"</div>
+                </div>
+            `;
+                console.log(`🔍 No results for "${query}" in ${tab}`);
                 return;
             }
 
@@ -12577,6 +12768,7 @@
                 const item = createSoundItem(sound, tab);
                 container.appendChild(item);
             });
+            console.log(`🔍 Found ${searchResults.length} results for "${query}" in ${tab}`);
         }
 
         // Upload Your Music
@@ -12588,12 +12780,12 @@
                 const file = e.target.files[0];
                 if (!file) return;
                 if (!currentUser) {
-                    alert('Please login to upload music');
+                    showToastRecording('Please login to upload music', 'error', '❌');
                     return;
                 }
 
                 try {
-                    showToastRecording('📤 Uploading music...', 'info', '⏳');
+                    showToastRecording('📤 Uploading music to your library...', 'info', '⏳');
 
                     // Upload to Cloudinary
                     const formData = new FormData();
@@ -12614,15 +12806,20 @@
                         artist: 'You',
                         audioUrl: data.secure_url,
                         duration: '0:00',
+                        category: 'Uploaded',
+                        isTrimable: true,
+                        trimStart: 0,
+                        trimEnd: null,
                         uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    showToastRecording('✅ Music uploaded!', 'success', '✓');
+                    showToastRecording('✅ Uploaded to your music!', 'success', '✓');
+                    console.log('📤 Music uploaded:', file.name);
                     loadYourMusic();
 
                 } catch (error) {
                     console.error('Upload error:', error);
-                    showToastRecording('❌ Upload failed', 'error', '✗');
+                    showToastRecording('❌ Upload failed: ' + error.message, 'error', '✗');
                 }
             };
             input.click();
@@ -12693,16 +12890,16 @@
 
         async function saveVoiceRecording() {
             if (!soundLibraryState.voiceRecordingBlob) {
-                alert('No recording to save');
+                showToastRecording('No recording to save', 'error', '❌');
                 return;
             }
             if (!currentUser) {
-                alert('Please login to save voice recording');
+                showToastRecording('Please login to save voice recording', 'error', '❌');
                 return;
             }
 
             try {
-                showToastRecording('💾 Saving...', 'info', '⏳');
+                showToastRecording('💾 Saving voice to your music...', 'info', '⏳');
 
                 // Upload to Cloudinary
                 const formData = new FormData();
@@ -12723,7 +12920,11 @@
                     artist: 'You',
                     audioUrl: data.secure_url,
                     duration: document.getElementById('voiceTimer').textContent,
-                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    category: 'Voice',
+                    isTrimable: true,
+                    trimStart: 0,
+                    trimEnd: null
                 };
 
                 await db.collection('users').doc(currentUser.uid).collection('uploadedMusic').add(voiceData);
@@ -12734,21 +12935,25 @@
                     ...voiceData
                 };
 
-                showToastRecording('✅ Voice saved!', 'success', '✓');
+                showToastRecording('✅ Saved to your music!', 'success', '✓');
+                console.log('🎙️ Voice recording saved to your music');
 
                 // Reset UI
                 document.getElementById('voiceTimer').textContent = '00:00';
                 document.getElementById('voiceSaveBtn').style.display = 'none';
                 document.getElementById('voiceRecordBtn').style.display = 'flex';
 
-                // Close modal
+                // Reload your music tab
+                await loadYourMusic();
+
+                // Close modal after delay
                 setTimeout(() => {
                     closeSoundLibrary();
-                }, 1000);
+                }, 1500);
 
             } catch (error) {
                 console.error('Save error:', error);
-                showToastRecording('❌ Save failed', 'error', '✗');
+                showToastRecording('❌ Save failed: ' + error.message, 'error', '✗');
             }
         }
 
