@@ -12461,9 +12461,10 @@
             modal.className = 'modal-overlay active';
             modal.id = 'soundTrimmerModal';
 
-            // Use existing trim values or default to 0 and full duration
+            // Use existing trim values or default to 0 and will detect actual duration
             const startVal = sound.trimStart !== undefined ? sound.trimStart : 0;
-            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : 60;
+            // Will be updated once audio loads
+            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : null;
 
             modal.innerHTML = `
         <div class="modal" style="max-width: 700px;">
@@ -12474,6 +12475,9 @@
                 <audio id="trimPreviewAudio" style="width: 100%; margin-bottom: 20px;" controls>
                     <source src="${sound.audioUrl}" type="audio/mpeg">
                 </audio>
+                <div id="durationLoading" style="text-align: center; color: #888; font-size: 12px; padding: 10px;">
+                    <i class="fas fa-spinner fa-spin"></i> Loading audio duration...
+                </div>
                 
                 <!-- VISUAL TIMELINE SLIDER -->
                 <div style="margin-bottom: 25px;">
@@ -12556,6 +12560,45 @@
             const trimEnd = document.getElementById('trimEnd');
             const startSlider = document.getElementById('startSlider');
             const endSlider = document.getElementById('endSlider');
+            const audioElement = document.getElementById('trimPreviewAudio');
+            const durationLoading = document.getElementById('durationLoading');
+
+            // Detect actual audio duration
+            audioElement.addEventListener('loadedmetadata', () => {
+                const actualDuration = Math.ceil(audioElement.duration);
+
+                // Update max values to actual duration
+                const newEndVal = endVal !== null ? endVal : actualDuration;
+
+                // Update all range limits
+                trimStart.max = actualDuration;
+                trimEnd.max = actualDuration;
+                startSlider.max = actualDuration;
+                endSlider.max = actualDuration;
+
+                // Set end value if not already set
+                if (endVal === null) {
+                    trimEnd.value = actualDuration;
+                    endSlider.value = actualDuration;
+                    document.getElementById('endSliderLabel').textContent = actualDuration + 's';
+                    document.getElementById('endLabel').textContent = actualDuration.toFixed(1) + 's';
+                }
+
+                // Hide loading message
+                durationLoading.style.display = 'none';
+
+                // Update timeline
+                updateTrimTimeline();
+
+                console.log(`📊 Audio duration detected: ${actualDuration}s`);
+                showToastRecording(`📊 Audio duration: ${actualDuration}s`, 'info', '♪');
+            });
+
+            // Handle audio load errors
+            audioElement.addEventListener('error', () => {
+                console.error('❌ Error loading audio');
+                durationLoading.innerHTML = '<span style="color: #ff6b6b;">Error loading audio duration</span>';
+            });
 
             // Sync all inputs
             trimStart.addEventListener('input', () => {
@@ -12618,15 +12661,18 @@
 
                 const rect = timeline.getBoundingClientRect();
                 const percent = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
-                const time = (percent / 100) * 600; // Assuming max 600s
+                const maxTime = parseFloat(trimEnd.max) || 600;
+                const time = (percent / 100) * maxTime;
 
                 if (dragType === 'start' && time < parseFloat(trimEnd.value)) {
                     trimStart.value = time.toFixed(1);
                     document.getElementById('startSlider').value = time.toFixed(1);
+                    document.getElementById('startSliderLabel').textContent = time.toFixed(1) + 's';
                     updateTrimTimeline();
                 } else if (dragType === 'end' && time > parseFloat(trimStart.value)) {
                     trimEnd.value = time.toFixed(1);
                     document.getElementById('endSlider').value = time.toFixed(1);
+                    document.getElementById('endSliderLabel').textContent = time.toFixed(1) + 's';
                     updateTrimTimeline();
                 }
             });
@@ -12639,9 +12685,12 @@
 
         // Update timeline visual
         function updateTrimTimeline() {
-            const start = parseFloat(document.getElementById('trimStart').value) || 0;
-            const end = parseFloat(document.getElementById('trimEnd').value) || 60;
-            const maxTime = 600;
+            const trimStartInput = document.getElementById('trimStart');
+            const trimEndInput = document.getElementById('trimEnd');
+            const start = parseFloat(trimStartInput.value) || 0;
+            const end = parseFloat(trimEndInput.value) || 60;
+            // Use actual max from input or 600 as fallback
+            const maxTime = parseFloat(trimEndInput.max) || 600;
 
             const startPercent = (start / maxTime) * 100;
             const endPercent = (end / maxTime) * 100;
