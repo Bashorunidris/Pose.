@@ -688,9 +688,7 @@
              flex: 1;
              background: #000;
              position: relative;
-             display: flex;
-             align-items: center;
-             justify-content: center;
+             display: block;
              font-size: 24px;
              color: rgba(255, 255, 255, 0.5);
              width: 100%;
@@ -701,9 +699,22 @@
 
          /* Ensure video elements also get proper styling */
          video.camera-preview {
-             display: flex !important;
-             align-items: center;
-             justify-content: center;
+             display: block !important;
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
+             background: #000;
+             transform: scaleX(-1);
+         }
+         
+         /* Ensure recording video element is visible */
+         #recordingVideoPreview {
+             display: block !important;
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
+             background: #000;
+             transform: scaleX(-1);
          }
 
         .camera-error-overlay {
@@ -953,8 +964,8 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 30px 20px 40px 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7) 50%, transparent);
         }
 
         .rec-control-row {
@@ -962,8 +973,8 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
+            gap: 50px;
+            margin-bottom: 30px;
             width: 100%;
         }
 
@@ -971,60 +982,82 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             background: none;
             border: none;
             color: #fff;
         }
 
+        .rec-control-btn:hover .rec-control-icon {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
         .rec-control-btn:active {
-            transform: scale(0.9);
+            transform: scale(0.92);
         }
 
         .rec-control-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 24px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .rec-control-label {
-            font-size: 12px;
-            opacity: 0.8;
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         /* Record Button */
         .rec-record-btn-wrapper {
             display: flex;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
+            padding: 20px 0;
         }
 
         .rec-record-btn {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            border: 6px solid #fff;
-            background: #ff0050;
+            border: 5px solid #fff;
+            background: linear-gradient(135deg, #ff0050 0%, #ff4478 100%);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            box-shadow: 0 8px 25px rgba(255, 0, 80, 0.5);
+        }
+
+        .rec-record-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 35px rgba(255, 0, 80, 0.7);
         }
 
         .rec-record-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.93);
         }
 
         .rec-record-btn.recording {
             border-radius: 15px;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
+            animation: pulse-recording 0.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-recording {
+            0%, 100% { box-shadow: 0 8px 25px rgba(255, 0, 80, 0.5); }
+            50% { box-shadow: 0 12px 40px rgba(255, 0, 80, 0.8); }
         }
 
         /* Mode Tabs */
@@ -1516,33 +1549,46 @@
             bottom: 250px;
             left: 50%;
             transform: translateX(-50%);
-            width: 280px;
-            max-height: 200px;
-            border-radius: 20px;
+            width: 90%;
+            max-width: 420px;
+            max-height: 240px;
+            border-radius: 25px;
             padding: 0;
             z-index: 99;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(20, 20, 20, 0.92);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1.5px solid rgba(138, 43, 226, 0.3);
+            background: rgba(15, 15, 20, 0.95);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
             display: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .rec-filters-panel.show {
             display: block;
+            animation: slideUpFilter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUpFilter {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         .rec-filters-scroll {
             display: flex;
             flex-direction: row;
-            gap: 8px;
+            gap: 14px;
             width: 100%;
-            max-height: 200px;
+            max-height: 240px;
             overflow-x: auto;
             overflow-y: hidden;
-            padding: 10px;
+            padding: 18px;
         }
 
         .rec-filters-scroll::-webkit-scrollbar {
@@ -1567,53 +1613,56 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            background: none;
-            border: 1.5px solid transparent;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
             cursor: pointer;
-            padding: 6px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 8px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             color: #fff;
-            font-size: 9px;
-            border-radius: 10px;
+            font-size: 11px;
+            border-radius: 14px;
             flex-shrink: 0;
             min-width: fit-content;
             position: relative;
+            font-weight: 500;
         }
 
         .rec-filter-btn:hover {
-            border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.08);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.2);
         }
 
         .rec-filter-btn:active {
-            transform: scale(0.92);
+            transform: scale(0.94);
         }
 
         .rec-filter-btn.active {
-            border-color: #4C1D95;
-            background: rgba(76, 29, 149, 0.3);
-            box-shadow: 0 0 12px rgba(76, 29, 149, 0.5), inset 0 0 8px rgba(76, 29, 149, 0.2);
+            border-color: #8A2BE2;
+            background: rgba(138, 43, 226, 0.25);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.6), inset 0 0 12px rgba(138, 43, 226, 0.3);
         }
 
         .rec-filter-btn.active .rec-filter-preview {
-            border-color: #4C1D95;
-            box-shadow: 0 0 15px rgba(76, 29, 149, 0.8);
+            border-color: #8A2BE2;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
         }
 
         .rec-filter-preview {
-            width: 55px;
-            height: 55px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .rec-filter-btn:hover .rec-filter-preview {
-            border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 6px 25px rgba(138, 43, 226, 0.4);
         }
 
         /* Filter Preview Styles for Recording */
@@ -1657,18 +1706,19 @@
             bottom: 220px;
             left: 50%;
             transform: translateX(-50%);
-            width: 380px;
-            max-height: 500px;
+            width: 90%;
+            max-width: 440px;
+            max-height: 550px;
             border-radius: 30px;
             padding: 0;
             z-index: 99;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            border: 1.5px solid rgba(138, 43, 226, 0.3);
+            background: rgba(15, 15, 20, 0.97);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.12);
             display: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .rec-effects-panel.show {
@@ -1676,6 +1726,18 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
+            animation: slideUpEffect 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUpEffect {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         .rec-effects-category {
@@ -1732,17 +1794,18 @@
             bottom: 220px;
             left: 50%;
             transform: translateX(-50%);
-            width: 300px;
-            border-radius: 25px;
+            width: 90%;
+            max-width: 380px;
+            border-radius: 28px;
             padding: 0;
             z-index: 99;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            border: 1.5px solid rgba(138, 43, 226, 0.3);
+            background: rgba(15, 15, 20, 0.96);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.12);
             display: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .rec-options-panel.show {
@@ -1750,43 +1813,58 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
+            animation: slideUpOption 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUpOption {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         .rec-options-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 15px;
-            background: rgba(76, 29, 149, 0.2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 20px;
+            background: rgba(138, 43, 226, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             flex-shrink: 0;
         }
 
         .rec-options-close {
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
-            padding: 0;
-            width: 24px;
-            height: 24px;
+            padding: 4px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .rec-options-close:hover {
             color: #ff6b6b;
-            transform: scale(1.15);
+            background: rgba(255, 100, 100, 0.15);
+            border-color: rgba(255, 100, 100, 0.3);
+            transform: scale(1.1);
         }
 
         .rec-options-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-            gap: 12px;
-            padding: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+            gap: 14px;
+            padding: 18px;
         }
 
         .rec-option-btn {
@@ -1794,9 +1872,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
             border-radius: 15px;
             padding: 12px 8px;
             color: white;
@@ -1825,11 +1903,11 @@
         .rec-effects-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 14px;
             width: 100%;
             max-height: 400px;
             overflow-y: auto;
-            padding: 15px;
+            padding: 16px;
         }
 
         .rec-effect-circular {
@@ -1837,16 +1915,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 7px;
             background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
             border-radius: 50%;
             aspect-ratio: 1;
             color: white;
             cursor: pointer;
             padding: 0;
-            font-size: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 11px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-weight: 500;
             position: relative;
             overflow: hidden;
@@ -1859,44 +1937,48 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle, rgba(76, 29, 149, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.25) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .rec-effect-circular:hover {
-            background: rgba(76, 29, 149, 0.25);
-            border-color: rgba(76, 29, 149, 0.5);
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(76, 29, 149, 0.3);
+            background: rgba(138, 43, 226, 0.2);
+            border-color: rgba(138, 43, 226, 0.4);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.25);
         }
 
         .rec-effect-circular:hover::before {
             opacity: 1;
         }
 
+        .rec-effect-circular:active {
+            transform: scale(0.93);
+        }
+
         .rec-effect-circular.active {
-            background: rgba(76, 29, 149, 0.5);
-            border-color: #4C1D95;
-            box-shadow: 0 0 20px rgba(76, 29, 149, 0.6), inset 0 0 15px rgba(76, 29, 149, 0.3);
+            background: rgba(138, 43, 226, 0.35);
+            border-color: #8A2BE2;
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.65), inset 0 0 15px rgba(138, 43, 226, 0.3);
             transform: scale(1);
         }
 
         .rec-effect-circular.active .rec-effect-circle {
-            animation: effectPulse 1s ease-in-out infinite;
+            animation: effectPulse 0.8s ease-in-out infinite;
         }
 
         @keyframes effectPulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+            50% { transform: scale(1.2); }
         }
 
         .rec-effect-circle {
-            font-size: 24px;
+            font-size: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .rec-effects-grid::-webkit-scrollbar {
@@ -10253,30 +10335,34 @@
 
         // ====== RECORD TAB VARIABLES ====== 
         let recordingState = {
-            isRecording: false,
-            mediaRecorder: null,
-            stream: null,
-            clips: [],
-            currentSpeed: 1,
-            currentMode: 'normal',
-            maxDuration: 15,
-            aspectRatio: '9:16',
-            recordingTime: 0,
-            timerInterval: null,
-            cameraFacingMode: 'user',
-            audioContext: null,
-            analyser: null,
-            beautyLevel: 0,
-            sharpenLevel: 0,
-            currentFilter: 'none',
-            filterAdjustments: { brightness: 0, contrast: 0, saturation: 0 },
-            selectedEffects: [],
-            textOverlays: [],
-            audioTracks: [],
-            mergedVideo: null,
-            videoCameraInitialized: false,
-            recordingTimer: 0  // 0, 3, 5, 10 seconds
-        };
+             isRecording: false,
+             mediaRecorder: null,
+             mediaStream: null,
+             stream: null,
+             clips: [],
+             currentSpeed: 1,
+             currentMode: 'normal',
+             maxDuration: 15,
+             aspectRatio: '9:16',
+             recordingTime: 0,
+             timerInterval: null,
+             timerPaused: false,
+             cameraFacingMode: 'user',
+             audioContext: null,
+             analyser: null,
+             beautyLevel: 0,
+             sharpenLevel: 0,
+             currentFilter: 'none',
+             filterAdjustments: { brightness: 0, contrast: 0, saturation: 0 },
+             selectedEffects: [],
+             textOverlays: [],
+             audioTracks: [],
+             mergedVideo: null,
+             videoCameraInitialized: false,
+             recordingTimer: 0,  // 0, 3, 5, 10 seconds
+             recordingStartTime: null,
+             recordedBlob: null
+         };
 
         // ====== VIDEO CAMERA INITIALIZATION (SCREEN 1) ======
         async function initializeVideoCamera() {
@@ -11482,74 +11568,158 @@
         // ============================================================================
 
         function startRecording() {
-            // Request camera access
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-                .then(stream => {
-                    recordingState.mediaStream = stream;
-                    recordingState.mediaRecorder = new MediaRecorder(stream);
-                    const chunks = [];
+             // Check if timer is set
+             if (recordingState.recordingTimer > 0) {
+                 // Show countdown first
+                 showRecordingCountdown();
+                 return;
+             }
 
-                    recordingState.mediaRecorder.ondataavailable = (e) => {
-                        chunks.push(e.data);
-                    };
+             // Proceed with actual recording
+             performRecording();
+         }
 
-                    recordingState.mediaRecorder.onstop = () => {
-                        recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
-                    };
+        function performRecording() {
+             // Request camera access
+             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                 .then(stream => {
+                     recordingState.mediaStream = stream;
+                     
+                     // IMPORTANT: Display camera stream to user
+                     const videoElement = document.getElementById('recordingVideoPreview');
+                     if (videoElement) {
+                         videoElement.srcObject = stream;
+                         videoElement.play().catch(err => {
+                             console.error('Error playing video:', err);
+                         });
+                     }
+                     
+                     recordingState.mediaRecorder = new MediaRecorder(stream);
+                     const chunks = [];
 
-                    recordingState.mediaRecorder.start();
-                    recordingState.isRecording = true;
-                    recordingState.recordingStartTime = Date.now();
+                     recordingState.mediaRecorder.ondataavailable = (e) => {
+                         chunks.push(e.data);
+                     };
 
-                    showScreen('screen2');
-                    startRecordingTimer();
-                    showToastRecording('Recording started', 'success', '⏹');
-                })
-                .catch(err => {
-                    showToastRecording('Camera access denied', 'error', '✕');
-                    console.error('Error accessing camera:', err);
-                });
-        }
+                     recordingState.mediaRecorder.onstop = () => {
+                         recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
+                     };
+
+                     recordingState.mediaRecorder.start();
+                     recordingState.isRecording = true;
+                     recordingState.recordingStartTime = Date.now();
+
+                     // Update record button to show recording state
+                     const recordBtn = document.querySelector('.rec-record-btn');
+                     if (recordBtn) {
+                         recordBtn.classList.add('recording');
+                         recordBtn.onclick = stopRecording;
+                         recordBtn.textContent = '⏹';
+                     }
+
+                     showScreen('screen2');
+                     startRecordingTimer();
+                     showToastRecording('🎥 Recording started', 'success', '⏹');
+                 })
+                 .catch(err => {
+                     showToastRecording('Camera access denied', 'error', '✕');
+                     console.error('Error accessing camera:', err);
+                 });
+         }
 
         function stopRecording() {
-            if (recordingState.mediaRecorder) {
-                recordingState.mediaRecorder.stop();
-                recordingState.isRecording = false;
-                clearInterval(recordingState.timerInterval);
+             if (recordingState.mediaRecorder) {
+                 recordingState.mediaRecorder.stop();
+                 recordingState.isRecording = false;
+                 clearInterval(recordingState.timerInterval);
 
-                // Stop all tracks
-                if (recordingState.mediaStream) {
-                    recordingState.mediaStream.getTracks().forEach(track => track.stop());
-                }
+                 // Stop all tracks
+                 if (recordingState.mediaStream) {
+                     recordingState.mediaStream.getTracks().forEach(track => track.stop());
+                 }
 
-                showToastRecording('Recording stopped', 'info', '⏹');
-            }
-        }
+                 // Clear video display
+                 const videoElement = document.getElementById('recordingVideoPreview');
+                 if (videoElement) {
+                     videoElement.srcObject = null;
+                 }
+
+                 // Reset record button
+                 const recordBtn = document.querySelector('.rec-record-btn');
+                 if (recordBtn) {
+                     recordBtn.classList.remove('recording');
+                     recordBtn.onclick = startRecording;
+                     recordBtn.textContent = '';
+                 }
+
+                 showToastRecording('🛑 Recording stopped', 'info', '⏹');
+             }
+         }
 
         function cancelRecording() {
-            stopRecording();
-            recordingState.recordedBlob = null;
-            showScreen('screen1');
-            showToastRecording('Recording cancelled', 'error', '✕');
-        }
+             stopRecording();
+             recordingState.recordedBlob = null;
+             recordingState.timerPaused = false;
+             
+             // Clear timer
+             const timerEl = document.getElementById('recTimer');
+             if (timerEl) timerEl.textContent = '0:00';
+             
+             showScreen('screen1');
+             showToastRecording('❌ Recording cancelled', 'error', '✕');
+         }
 
-        function acceptRecording() {
-            showScreen('screen3');
-            showToastRecording('Ready to edit', 'success', '✓');
-        }
+         function acceptRecording() {
+             if (!recordingState.recordedBlob) {
+                 showToastRecording('No recording to save', 'error', '⚠️');
+                 return;
+             }
+             
+             // Save recorded video for editing
+             recordingState.savedRecording = {
+                 blob: recordingState.recordedBlob,
+                 timestamp: new Date(),
+                 settings: {
+                     layout: recordingState.layout,
+                     filter: recordingState.currentFilter,
+                     effects: [...recordingState.selectedEffects],
+                     speed: recordingState.currentSpeed,
+                     timer: recordingState.recordingTimer
+                 }
+             };
+             
+             recordingState.timerPaused = false;
+             
+             // Clear timer
+             const timerEl = document.getElementById('recTimer');
+             if (timerEl) timerEl.textContent = '0:00';
+             
+             showScreen('screen3');
+             showToastRecording('✅ Ready to edit', 'success', '✓');
+         }
 
         function startRecordingTimer() {
-            let seconds = 0;
-            recordingState.timerInterval = setInterval(() => {
-                seconds++;
-                const mins = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                const timerEl = document.getElementById('recTimer');
-                if (timerEl) {
-                    timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                }
-            }, 1000);
-        }
+             let seconds = 0;
+             recordingState.timerInterval = setInterval(() => {
+                 // Only increment if not paused
+                 if (!recordingState.timerPaused) {
+                     seconds++;
+                 }
+                 
+                 const mins = Math.floor(seconds / 60);
+                 const secs = seconds % 60;
+                 const timerEl = document.getElementById('recTimer');
+                 if (timerEl) {
+                     timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                 }
+                 
+                 // Update recording overlay indicator pulsing
+                 const recDot = document.querySelector('.rec-rec-dot');
+                 if (recDot) {
+                     recDot.style.opacity = !recordingState.timerPaused ? '1' : '0.5';
+                 }
+             }, 1000);
+         }
 
         // ============================================================================
         // MODE SWITCHING
@@ -11630,6 +11800,13 @@
 
         function setRecordingLayout(layout) {
             recordingState.layout = layout;
+            recordingState.aspectRatio = layout;
+            
+            // Apply layout to video preview element
+            const video = getRecordingVideoElement();
+            if (video && video.parentElement) {
+                video.parentElement.style.aspectRatio = layout === '16:9' ? '16/9' : layout === '1:1' ? '1/1' : 'auto';
+            }
             
             // Update active button
             document.querySelectorAll('#recLayoutPanel .rec-option-btn').forEach(btn => {
@@ -11673,7 +11850,14 @@
         }
 
         function setRecordingSpeed(speed) {
+            recordingState.currentSpeed = speed;
             recordingState.playbackSpeed = speed;
+            
+            // Apply playback rate to video element if recording
+            const video = getRecordingVideoElement();
+            if (video && recordingState.isRecording) {
+                video.playbackRate = speed;
+            }
             
             // Update active button
             document.querySelectorAll('#recSpeedPanel .rec-option-btn').forEach(btn => {
@@ -11687,7 +11871,15 @@
                 1.5: '⏩',
                 2: '⚡'
             };
-            showToastRecording(`${speedEmoji[speed]} Speed: ${speed}x`, 'info', '✓');
+            
+            const speedNames = {
+                0.5: 'Slow Motion',
+                1: 'Normal',
+                1.5: 'Fast',
+                2: 'Hyper Speed'
+            };
+            
+            showToastRecording(`${speedEmoji[speed]} ${speedNames[speed]} (${speed}x)`, 'info', '✓');
         }
 
         // ============================================================================
@@ -11724,12 +11916,31 @@
         }
 
         function toggleRecordingPause() {
-            const pauseBtn = document.getElementById('recPauseBtn');
-            if (pauseBtn) {
-                pauseBtn.textContent = pauseBtn.textContent === '⏸' ? '▶️' : '⏸';
-                showToastRecording(pauseBtn.textContent === '⏸' ? 'Recording paused' : 'Recording resumed', 'info', '⏱');
-            }
-        }
+             if (!recordingState.mediaRecorder) return;
+             
+             const pauseBtn = document.getElementById('recPauseBtn');
+             const isPaused = recordingState.mediaRecorder.state === 'paused';
+             
+             if (isPaused) {
+                 // Resume
+                 recordingState.mediaRecorder.resume();
+                 if (pauseBtn) pauseBtn.textContent = '⏸';
+                 
+                 // Resume timer
+                 recordingState.timerPaused = false;
+                 
+                 showToastRecording('▶️ Recording resumed', 'info', '▶️');
+             } else {
+                 // Pause
+                 recordingState.mediaRecorder.pause();
+                 if (pauseBtn) pauseBtn.textContent = '▶️';
+                 
+                 // Pause timer
+                 recordingState.timerPaused = true;
+                 
+                 showToastRecording('⏸ Recording paused', 'info', '⏸');
+             }
+         }
 
         // ============================================================================
         // EFFECTS
