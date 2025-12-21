@@ -695,6 +695,11 @@
              height: 100%;
              object-fit: cover;
              transform: scaleX(-1);
+             /* Performance optimizations */
+             will-change: transform;
+             backface-visibility: hidden;
+             -webkit-backface-visibility: hidden;
+             transform: translate3d(0, 0, 0) scaleX(-1);
          }
 
          /* Ensure video elements also get proper styling */
@@ -704,7 +709,11 @@
              height: 100%;
              object-fit: cover;
              background: #000;
-             transform: scaleX(-1);
+             /* Performance optimizations */
+             will-change: transform;
+             backface-visibility: hidden;
+             -webkit-backface-visibility: hidden;
+             transform: translate3d(0, 0, 0) scaleX(-1);
          }
          
          /* Ensure recording video element is visible */
@@ -1022,42 +1031,238 @@
         /* Record Button */
         .rec-record-btn-wrapper {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
             margin-bottom: 30px;
             padding: 20px 0;
+            gap: 20px;
+            position: relative;
+        }
+
+        /* Recording Status Bar */
+        .rec-recording-status {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 12px 20px;
+            animation: slideDown 0.3s ease;
+            z-index: 10;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .rec-status-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .rec-recording-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rec-record-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            animation: blink-dot 1s ease-in-out infinite;
+        }
+
+        @keyframes blink-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .rec-status-text {
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .rec-timer-display {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        /* Button Container */
+        .rec-btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
         .rec-record-btn {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            border: 5px solid #fff;
+            border: 4px solid #fff;
             background: linear-gradient(135deg, #ff0050 0%, #ff4478 100%);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
-            box-shadow: 0 8px 25px rgba(255, 0, 80, 0.5);
+            box-shadow: 0 10px 30px rgba(255, 0, 80, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rec-btn-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .rec-btn-circle {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
         }
 
         .rec-record-btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 12px 35px rgba(255, 0, 80, 0.7);
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 0, 80, 0.8);
+        }
+
+        .rec-record-btn:hover .rec-btn-circle {
+            transform: scale(1.15);
         }
 
         .rec-record-btn:active {
-            transform: scale(0.93);
+            transform: scale(0.95);
         }
 
         .rec-record-btn.recording {
-            border-radius: 15px;
-            width: 70px;
-            height: 70px;
             animation: pulse-recording 0.8s ease-in-out infinite;
         }
 
+        .rec-record-btn.recording .rec-btn-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 3px;
+            background: #ff0050;
+        }
+
         @keyframes pulse-recording {
-            0%, 100% { box-shadow: 0 8px 25px rgba(255, 0, 80, 0.5); }
-            50% { box-shadow: 0 12px 40px rgba(255, 0, 80, 0.8); }
+            0%, 100% { 
+                box-shadow: 0 10px 30px rgba(255, 0, 80, 0.6);
+            }
+            50% { 
+                box-shadow: 0 15px 50px rgba(255, 0, 80, 0.9);
+            }
+        }
+
+        /* Button Label */
+        .rec-btn-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .rec-record-btn.recording ~ .rec-btn-label {
+            opacity: 0.5;
+        }
+
+        /* Recording Controls */
+        .rec-recording-controls {
+            display: flex;
+            gap: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .rec-control-action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rec-control-action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .rec-control-action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .rec-control-pause-btn {
+            background: rgba(100, 150, 255, 0.3);
+        }
+
+        .rec-control-pause-btn:hover {
+            background: rgba(100, 150, 255, 0.5);
+            border-color: rgba(150, 200, 255, 0.8);
+        }
+
+        .rec-control-stop-btn {
+            background: rgba(255, 100, 100, 0.3);
+        }
+
+        .rec-control-stop-btn:hover {
+            background: rgba(255, 100, 100, 0.5);
+            border-color: rgba(255, 150, 150, 0.8);
+        }
+
+        /* Quality Badge */
+        .rec-quality-badge {
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 11px;
+            color: #fff;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .rec-quality-icon {
+            font-size: 12px;
+        }
+
+        .rec-quality-text {
+            letter-spacing: 0.5px;
         }
 
         /* Mode Tabs */
@@ -6319,7 +6524,7 @@
     <div id="recordingUIOverlay" class="recording-ui-overlay">
         <!-- SCREEN 1: VIDEO SETUP -->
         <div id="screen1" class="recording-screen active">
-            <video id="videoPreview" class="camera-preview" playsinline autoplay muted></video>
+            <video id="videoPreview" class="camera-preview" playsinline autoplay muted webkit-playsinline></video>
             <div id="videoCameraInitError" class="camera-error-overlay" style="display: none;">
                 <div style="text-align: center; color: #fff;">
                     <div style="font-size: 48px; margin-bottom: 15px;">📹</div>
@@ -6351,12 +6556,13 @@
                 <div class="rec-menu-item" onclick="openSpeedOptions()">⚡ Speed</div>
             </div>
 
-            <!-- Quick Stats Bar -->
-            <div class="rec-stats-bar">
-                <span id="recQualityDisplay">🎬 HD</span>
-                <span id="recSpaceDisplay">💾 2.4GB</span>
-                <span id="recDurationDisplay">⏱ 0:00</span>
-            </div>
+            <!-- Recording Status Bar -->
+                    <div class="rec-recording-status" id="recRecordingStatus" style="display: none;">
+                        <div class="rec-status-content">
+                            
+                            <div class="rec-timer-display" id="recTimerDisplay">0:00</div>
+                        </div>
+                    </div>
 
             <!-- Right Effects -->
             <div class="rec-effects-bar">
@@ -6616,7 +6822,7 @@
 
             <!-- Bottom Controls -->
             <div class="rec-bottom-controls">
-                <div class="rec-control-row">
+                <div class="rec-control-row" id="recControlRow">
                     <button class="rec-control-btn" onclick="toggleRecordingFilters()">
                         <div class="rec-control-icon">🎨</div>
                         <div class="rec-control-label" id="recFiltersLabel">Filters</div>
@@ -6632,7 +6838,33 @@
                 </div>
 
                 <div class="rec-record-btn-wrapper">
-                    <button class="rec-record-btn" onclick="startRecording()"></button>
+                   
+
+                    <!-- Main Record Button -->
+                    <div class="rec-btn-container">
+                        <button class="rec-record-btn" id="recMainBtn" onclick="recordingState.isRecording ? stopRecording() : recordVideo()" title="Record video">
+                            <div class="rec-btn-inner">
+                                <div class="rec-btn-circle"></div>
+                            </div>
+                        </button>
+                        <div class="rec-btn-label" id="recBtnLabel">Start</div>
+                    </div>
+
+                    <!-- Recording Controls (visible during recording) -->
+                    <div class="rec-recording-controls" id="recRecordingControls" style="display: none;">
+                        <button class="rec-control-action-btn rec-control-pause-btn" onclick="toggleRecordingPause()" title="Pause/Resume" id="recPauseBtn">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="rec-control-action-btn rec-control-stop-btn" onclick="stopRecording()" title="Stop Recording">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+
+                    <!-- Quality Badge -->
+                    <div class="rec-quality-badge" id="recQualityBadge">
+                        <span class="rec-quality-icon">📹</span>
+                        <span class="rec-quality-text">HD</span>
+                    </div>
                 </div>
 
                 <div class="rec-mode-tabs">
@@ -6643,35 +6875,8 @@
             </div>
         </div>
 
-        <!-- SCREEN 2: RECORDING -->
-        <div id="screen2" class="recording-screen">
-            <!-- Live Camera Feed (Same as Screen 1) -->
-            <video id="recordingVideoPreview" class="camera-preview" playsinline autoplay muted></video>
-            
-
-
-            <!-- Top Bar (Left Button) -->
-            <div class="rec-top-bar" style="justify-content: flex-start;">
-                <button class="rec-icon-btn" onclick="cancelRecording()" title="Cancel"><i class="fa-solid fa-arrow-left"></i></button>
-            </div>
-
-            <!-- Recording Indicator (Timer at Top Center) -->
-            <div class="rec-recording-indicator">
-                <div class="rec-rec-dot"></div>
-                <span id="recTimer" class="rec-timer-text">0:00</span>
-                <span id="recSpaceWarning" class="rec-space-warning" style="display: none;">⚠️ Space Low</span>
-            </div>
-
-            <!-- Recording Controls (Bottom) -->
-            <div class="rec-recording-controls">
-                <button class="rec-recording-btn" onclick="cancelRecording()" title="Cancel">✕</button>
-                <button class="rec-recording-btn pause" id="recPauseBtn" onclick="toggleRecordingPause()"
-                    title="Pause">⏸</button>
-                <button class="rec-recording-btn stop" id="recStopBtn" onclick="stopRecording()" title="Stop">⏹</button>
-                <button class="rec-recording-btn" onclick="acceptRecording()" title="Accept"
-                    style="display: none;">✓</button>
-            </div>
-        </div>
+        
+          
 
         <!-- SCREEN 3: VIDEO EDIT -->
         <div id="screen3" class="recording-screen">
@@ -10401,7 +10606,7 @@
                     video: {
                         facingMode: recordingState.cameraFacingMode,
                         width: { ideal: 1280 },
-                        height: { ideal: 2260 }
+                        height: { ideal: 720 }
                     },
                     audio: true
                 };
@@ -10411,7 +10616,15 @@
 
                 if (videoElement) {
                     videoElement.srcObject = recordingState.stream;
-                    videoElement.play().catch(err => console.warn('Auto-play prevented:', err));
+                    
+                    // Optimize video playback for performance
+                    videoElement.onloadedmetadata = () => {
+                        videoElement.play().catch(err => console.warn('Auto-play:', err));
+                    };
+                    
+                    // Set up filter preview updates
+                    setUpPreviewFilterUpdates();
+                    
                     recordingState.videoCameraInitialized = true;
 
                     // Hide error overlay if visible
@@ -10440,6 +10653,49 @@
                     showToastRecording('❌ Camera in use by another app', 'error', '⚠️');
                 }
             }
+        }
+
+        function setUpPreviewFilterUpdates() {
+            // Update preview filters whenever they change (lightweight CSS-only approach)
+            const videoElement = document.getElementById('videoPreview');
+            if (!videoElement) return;
+
+            const updatePreviewFilter = () => {
+                let filterString = 'none';
+                if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
+                    const filterMap = {
+                        'none': 'none',
+                        'bw': 'grayscale(100%)',
+                        'sepia': 'sepia(100%)',
+                        'vintage': 'sepia(50%) contrast(0.9) brightness(0.9)',
+                        'vivid': 'saturate(1.5) contrast(1.1)',
+                        'warm': 'brightness(1.1) saturate(1.3) hue-rotate(10deg)',
+                        'cool': 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)'
+                    };
+                    filterString = filterMap[recordingState.currentFilter] || 'none';
+                }
+
+                const adjustments = recordingState.filterAdjustments || {};
+                const brightness = parseFloat(adjustments.brightness) || 0;
+                const contrast = parseFloat(adjustments.contrast) || 0;
+                const saturation = parseFloat(adjustments.saturation) || 0;
+
+                if (brightness !== 0 || contrast !== 0 || saturation !== 0) {
+                    const brightnessPercent = 100 + brightness;
+                    const contrastPercent = 100 + contrast;
+                    const saturationPercent = 100 + saturation;
+                    const adjustmentString = `brightness(${brightnessPercent}%) contrast(${contrastPercent}%) saturate(${saturationPercent}%)`;
+                    filterString = filterString === 'none' ? adjustmentString : `${filterString} ${adjustmentString}`;
+                }
+
+                videoElement.style.filter = filterString;
+            };
+
+            // Initial update
+            updatePreviewFilter();
+
+            // Listen for filter changes
+            recordingState.previewFilterCallback = updatePreviewFilter;
         }
 
         // Stop video camera
@@ -10485,93 +10741,41 @@
         }
 
         // ====== RECORDING CONTROLS ======
-        function startRecording() {
+
+        function recordVideo() {
             if (!recordingState.stream) {
-                alert('Camera not initialized. Please refresh.');
+                showToastRecording('❌ Camera not available', 'error', '🚫');
                 return;
             }
 
-            // If timer is set, show countdown first
-            if (recordingState.recordingTimer > 0) {
-                showRecordingCountdown();
-            } 
-            // If hands-free mode, show countdown
-            else if (recordingState.currentMode === 'handsfree') {
-                showHandsfreeCountdown();
-            } else {
-                performRecording();
-            }
-        }
-
-        function showHandsfreeCountdown() {
-            let count = 3;
-            const overlay = document.getElementById('countdownOverlay');
-            const number = document.getElementById('countdownNumber');
-            overlay.style.display = 'flex';
-
-            const interval = setInterval(() => {
-                count--;
-                number.textContent = count;
-                if (count <= 0) {
-                    clearInterval(interval);
-                    overlay.style.display = 'none';
-                    performRecording();
-                }
-            }, 1000);
-        }
-
-        function performRecording() {
             recordingState.isRecording = true;
+            recordingState.timerPaused = false;
             recordingState.recordingTime = 0;
-
-            // Show Screen 2 (Recording) with camera feed
-            showScreen('screen2');
-            
-            // Connect camera feed to recording preview (after DOM is ready)
-            setTimeout(() => {
-                const recordingVideoElement = document.getElementById('recordingVideoPreview');
-                if (recordingVideoElement && recordingState.stream && recordingState.stream.active) {
-                    recordingVideoElement.srcObject = recordingState.stream;
-                    recordingVideoElement.play().catch(err => console.warn('Auto-play prevented:', err));
-                    console.log('✅ Recording preview stream connected');
-                    
-                    // Re-apply effects and filters to Screen 2
-                    applyActiveEffectsAndFiltersToScreen2(recordingVideoElement);
-                } else {
-                    console.warn('⚠️ Stream not ready:', {
-                        element: !!recordingVideoElement,
-                        stream: !!recordingState.stream,
-                        active: recordingState.stream?.active
-                    });
-                }
-            }, 100);
+            recordingState.recordingStartTime = Date.now();
 
             const chunks = [];
-            
-            // Create a canvas that will capture the video with filters/effects applied
+
+            // Create canvas for professional rendering with filters and effects
             const canvas = document.createElement('canvas');
-            canvas.width = recordingState.stream.getVideoTracks()[0].getSettings().width || 1280;
-            canvas.height = recordingState.stream.getVideoTracks()[0].getSettings().height || 720;
-            const ctx = canvas.getContext('2d');
+            const videoTrack = recordingState.stream.getVideoTracks()[0];
+            const videoSettings = videoTrack.getSettings();
             
-            // Create a temporary video element for canvas drawing
+            canvas.width = videoSettings.width || 1280;
+            canvas.height = videoSettings.height || 720;
+            const ctx = canvas.getContext('2d');
+
+            // Create temp video element to draw from
             const tempVideo = document.createElement('video');
             tempVideo.srcObject = recordingState.stream;
-            tempVideo.play();
-            
-            // Get the recording video element to read filters/styles from
-            const recordingVideoElement = document.getElementById('recordingVideoPreview');
-            
-            // Get canvas stream for recording
+            tempVideo.play().catch(err => console.warn('Auto-play:', err));
+
+            // Get canvas stream with audio
             const canvasStream = canvas.captureStream(30);
-            
-            // Copy audio tracks from original stream
             recordingState.stream.getAudioTracks().forEach(track => {
                 canvasStream.addTrack(track);
             });
-            
-            const options = { mimeType: 'video/webm;codecs=vp9' };
 
+            const options = { mimeType: 'video/webm;codecs=vp9' };
             try {
                 recordingState.mediaRecorder = new MediaRecorder(canvasStream, options);
             } catch (e) {
@@ -10583,6 +10787,13 @@
             };
 
             recordingState.mediaRecorder.onstop = () => {
+                // Stop rendering
+                if (recordingState.renderingAnimationId) {
+                    cancelAnimationFrame(recordingState.renderingAnimationId);
+                }
+                tempVideo.pause();
+                tempVideo.srcObject = null;
+
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const url = URL.createObjectURL(blob);
 
@@ -10593,119 +10804,54 @@
                     speed: recordingState.currentSpeed
                 });
 
-                updateClipsPreview();
-                showClipFeedback();
-                
-                // Clean up temp video and canvas
-                tempVideo.pause();
-                tempVideo.srcObject = null;
-                if (recordingState.canvasAnimationId) {
-                    cancelAnimationFrame(recordingState.canvasAnimationId);
-                }
+                recordingState.recordedBlob = blob;
+                updateUIAfterRecording(false);
+                showToastRecording('✅ Recording saved', 'success', '✓');
             };
 
             recordingState.mediaRecorder.start();
-            
-            // Store canvas for effects rendering
+
+            // Store canvas references for rendering loop
             recordingState.recordingCanvas = canvas;
             recordingState.recordingCanvasCtx = ctx;
             recordingState.recordingTempVideo = tempVideo;
-            
-            // Start rendering the video with filters/effects to canvas
-            recordingState.canvasAnimationId = null;
-            const renderFrameToCanvas = () => {
-                if (!recordingState.isRecording) {
-                    return;
-                }
-                
-                ctx.save();
-                
-                // Apply mirror transform if camera is in user mode
-                if (recordingState.cameraFacingMode === 'user') {
-                    ctx.translate(canvas.width, 0);
-                    ctx.scale(-1, 1);
-                }
-                
-                // Calculate filter string
-                let filterString = 'none';
-                if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
-                    const filterMap = {
-                        'none': 'none',
-                        'bw': 'grayscale(100%)',
-                        'sepia': 'sepia(100%)',
-                        'vintage': 'sepia(50%) contrast(0.9) brightness(0.9)',
-                        'vivid': 'saturate(1.5) contrast(1.1)',
-                        'warm': 'brightness(1.1) saturate(1.3) hue-rotate(10deg)',
-                        'cool': 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)'
-                    };
-                    filterString = filterMap[recordingState.currentFilter] || 'none';
-                }
 
-                // Apply filter adjustments (brightness, contrast, saturation)
-                const adjustments = recordingState.filterAdjustments || {};
-                const brightness = parseFloat(adjustments.brightness) || 0;
-                const contrast = parseFloat(adjustments.contrast) || 0;
-                const saturation = parseFloat(adjustments.saturation) || 0;
+            // Start rendering loop with filters and effects
+            startRenderingLoop();
 
-                if (brightness !== 0 || contrast !== 0 || saturation !== 0) {
-                    const brightnessPercent = 100 + brightness;
-                    const contrastPercent = 100 + contrast;
-                    const saturationPercent = 100 + saturation;
-                    const adjustmentString = `brightness(${brightnessPercent}%) contrast(${contrastPercent}%) saturate(${saturationPercent}%)`;
-                    
-                    filterString = filterString === 'none' ? adjustmentString : `${filterString} ${adjustmentString}`;
-                }
-
-                // Apply the filters to the canvas context
-                ctx.filter = filterString;
-                
-                // Draw video frame with applied filters
-                ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-                
-                // If effects canvas exists, overlay it on the recording canvas
-                if (effectsState.canvas && effectsState.canvas.width > 0) {
-                    ctx.filter = 'none'; // Reset filter before drawing effects
-                    ctx.drawImage(effectsState.canvas, 0, 0, canvas.width, canvas.height);
-                }
-                
-                ctx.restore();
-                
-                recordingState.canvasAnimationId = requestAnimationFrame(renderFrameToCanvas);
-            };
-            
-            renderFrameToCanvas();
+            updateUIAfterRecording(true);
+            showToastRecording('🔴 Recording with effects', 'success', '✓');
             startRecordingTimer();
-            showToastRecording('🔴 Recording started', 'success', '✓');
-
-            // Update button states
-            document.getElementById('recordStartBtn').style.display = 'none';
-            document.getElementById('recordStopBtn').style.display = 'flex';
-            document.getElementById('deleteLastClip').style.display = 'flex';
-            document.getElementById('proceedToEdit').style.display = 'flex';
-
-            // Start timer
-            startTimer();
         }
 
-        function applyActiveEffectsAndFiltersToScreen2(videoElement) {
-            // Apply current filter to Screen 2's video element
-            let filterString = 'none';
-            if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
-                const filterMap = {
-                    'none': 'none',
-                    'bw': 'grayscale(100%)',
-                    'sepia': 'sepia(100%)',
-                    'vintage': 'sepia(50%) contrast(0.9) brightness(0.9)',
-                    'vivid': 'saturate(1.5) contrast(1.1)',
-                    'warm': 'brightness(1.1) saturate(1.3) hue-rotate(10deg)',
-                    'cool': 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)'
-                };
-                filterString = filterMap[recordingState.currentFilter] || 'none';
-                console.log('✅ Filter applied to Screen 2:', recordingState.currentFilter);
+        // Filter map cache for performance
+        const filterMap = {
+            'none': 'none',
+            'bw': 'grayscale(100%)',
+            'sepia': 'sepia(100%)',
+            'vintage': 'sepia(50%) contrast(0.9) brightness(0.9)',
+            'vivid': 'saturate(1.5) contrast(1.1)',
+            'warm': 'brightness(1.1) saturate(1.3) hue-rotate(10deg)',
+            'cool': 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)'
+        };
+
+        let cachedFilterString = 'none';
+        let lastCachedFilter = null;
+        let lastCachedAdjustments = null;
+
+        function buildFilterString() {
+            // Cache filter string to avoid rebuilding every frame
+            const currentFilter = recordingState.currentFilter || 'none';
+            const adjustments = recordingState.filterAdjustments || {};
+
+            // Check if anything changed
+            if (lastCachedFilter === currentFilter && 
+                lastCachedAdjustments === JSON.stringify(adjustments)) {
+                return cachedFilterString;
             }
 
-            // Apply filter adjustments (brightness, contrast, saturation)
-            const adjustments = recordingState.filterAdjustments || {};
+            let filterString = filterMap[currentFilter] || 'none';
+
             const brightness = parseFloat(adjustments.brightness) || 0;
             const contrast = parseFloat(adjustments.contrast) || 0;
             const saturation = parseFloat(adjustments.saturation) || 0;
@@ -10715,95 +10861,200 @@
                 const contrastPercent = 100 + contrast;
                 const saturationPercent = 100 + saturation;
                 const adjustmentString = `brightness(${brightnessPercent}%) contrast(${contrastPercent}%) saturate(${saturationPercent}%)`;
-                
                 filterString = filterString === 'none' ? adjustmentString : `${filterString} ${adjustmentString}`;
-                console.log('✅ Filter adjustments applied to Screen 2:', { brightness, contrast, saturation });
             }
 
-            videoElement.style.filter = filterString;
+            cachedFilterString = filterString;
+            lastCachedFilter = currentFilter;
+            lastCachedAdjustments = JSON.stringify(adjustments);
 
-            // Apply layout/aspect ratio to Screen 2
-            if (recordingState.aspectRatio) {
-                const videoParent = videoElement.parentElement;
-                if (videoParent) {
-                    if (recordingState.aspectRatio === '16:9') {
-                        videoParent.style.aspectRatio = '16/9';
-                    } else if (recordingState.aspectRatio === '1:1') {
-                        videoParent.style.aspectRatio = '1/1';
+            return filterString;
+        }
+
+        function startRenderingLoop() {
+            let frameCount = 0;
+            const targetFPS = 24; // Reduced from 30 for smoother performance
+            const frameTime = 1000 / targetFPS;
+            let lastFrameTime = 0;
+
+            const render = (currentTime) => {
+                if (!recordingState.isRecording || !recordingState.recordingTempVideo) {
+                    return;
+                }
+
+                // Frame rate throttling for better performance
+                if (currentTime - lastFrameTime < frameTime) {
+                    recordingState.renderingAnimationId = requestAnimationFrame(render);
+                    return;
+                }
+
+                lastFrameTime = currentTime;
+
+                const canvas = recordingState.recordingCanvas;
+                const ctx = recordingState.recordingCanvasCtx;
+                const tempVideo = recordingState.recordingTempVideo;
+
+                if (!canvas || !ctx || !tempVideo) return;
+
+                try {
+                    // Fast path: no transformations needed
+                    if (recordingState.cameraFacingMode === 'back') {
+                        const filterString = buildFilterString();
+                        ctx.filter = filterString;
+                        ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
                     } else {
-                        videoParent.style.aspectRatio = 'auto';
+                        // Mirrored path for front camera
+                        ctx.save();
+                        ctx.translate(canvas.width, 0);
+                        ctx.scale(-1, 1);
+                        
+                        const filterString = buildFilterString();
+                        ctx.filter = filterString;
+                        ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+                        
+                        ctx.restore();
                     }
-                    console.log('✅ Layout applied to Screen 2:', recordingState.aspectRatio);
-                }
-            }
 
-            // Re-apply active effects (e.g., sparkle, glow, etc.)
-            if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
-                const activeEffect = recordingState.selectedEffects[0];
-                
-                // Destroy old canvas if it exists
-                if (effectsState.canvas) {
-                    effectsState.canvas.remove();
-                    effectsState.canvas = null;
-                    effectsState.ctx = null;
-                    if (effectsState.animationId) {
-                        cancelAnimationFrame(effectsState.animationId);
+                    // Draw effects on top (only if they exist and have content)
+                    if (effectsState.canvas && effectsState.canvas.width > 0 && 
+                        effectsState.ctx && recordingState.selectedEffects.length > 0) {
+                        ctx.filter = 'none';
+                        ctx.drawImage(effectsState.canvas, 0, 0, canvas.width, canvas.height);
                     }
+
+                } catch (e) {
+                    console.warn('Rendering error:', e.message);
                 }
-                
-                // Start effect on Screen 2's video element
-                startEffect(activeEffect);
-                console.log('✅ Effect re-applied to Screen 2:', activeEffect);
-            }
+
+                recordingState.renderingAnimationId = requestAnimationFrame(render);
+            };
+
+            recordingState.renderingAnimationId = requestAnimationFrame(render);
         }
 
         function stopRecording() {
-            recordingState.isRecording = false;
-
-            if (recordingState.mediaRecorder && recordingState.mediaRecorder.state !== 'inactive') {
-                recordingState.mediaRecorder.stop();
+            if (!recordingState.mediaRecorder || !recordingState.isRecording) {
+                return;
             }
 
-            // Stop timer
+            recordingState.isRecording = false;
+            recordingState.mediaRecorder.stop();
+            stopRecordingTimer();
+            showToastRecording('⏹ Recording stopped', 'success', '✓');
+            console.log('✅ Video recorded successfully:', recordingState.recordingTime + 's');
+        }
+
+        function startRecordingTimer() {
             if (recordingState.timerInterval) {
                 clearInterval(recordingState.timerInterval);
             }
 
-            // Show Screen 3 with recorded video playback
-            setTimeout(() => {
-                showScreen('screen3');
+            recordingState.timerInterval = setInterval(() => {
+                if (recordingState.isRecording && !recordingState.timerPaused) {
+                    recordingState.recordingTime++;
+                    updateRecordingDisplay();
 
-                // Load the latest recorded video into the preview
-                if (recordingState.clips.length > 0) {
-                    const latestClip = recordingState.clips[recordingState.clips.length - 1];
-                    const editVideoElement = document.getElementById('editVideoPreview');
-                    const loadingOverlay = document.getElementById('editLoadingOverlay');
+                    // Warning at 80% of max duration
+                    if (recordingState.recordingTime === Math.floor(recordingState.maxDuration * 0.8)) {
+                        showToastRecording('⚠️ Approaching max duration', 'warning', '⏱');
+                    }
 
-                    if (editVideoElement && latestClip.url) {
-                        loadingOverlay.style.display = 'flex';
-                        editVideoElement.src = latestClip.url;
-
-                        editVideoElement.oncanplay = () => {
-                            loadingOverlay.style.display = 'none';
-                            console.log('✅ Video loaded for editing');
-                            showToastRecording('📹 Video ready to edit', 'success', '✓');
-                        };
-
-                        editVideoElement.onerror = () => {
-                            loadingOverlay.style.display = 'none';
-                            showToastRecording('❌ Error loading video', 'error', '❌');
-                        };
+                    // Auto-stop at max duration
+                    if (recordingState.recordingTime >= recordingState.maxDuration) {
+                        stopRecording();
+                        showToastRecording('⏱ Max duration reached', 'info', '✓');
                     }
                 }
-            }, 500);
+            }, 1000);
+        }
 
-            // Update button states for Screen 2
-            const recordStartBtn = document.getElementById('recordStartBtn');
-            const recordStopBtn = document.getElementById('recordStopBtn');
-            if (recordStartBtn) recordStartBtn.style.display = 'flex';
-            if (recordStopBtn) recordStopBtn.style.display = 'none';
+        function stopRecordingTimer() {
+            if (recordingState.timerInterval) {
+                clearInterval(recordingState.timerInterval);
+                recordingState.timerInterval = null;
+            }
+        }
 
-            showToastRecording('⏹ Recording stopped', 'success', '✓');
+        function updateRecordingDisplay() {
+            // Update status bar timer
+            const statusTimer = document.getElementById('recTimerDisplay');
+            if (statusTimer) {
+                const minutes = Math.floor(recordingState.recordingTime / 60);
+                const seconds = recordingState.recordingTime % 60;
+                statusTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // Update quick stats bar
+            const statsDisplay = document.getElementById('recDurationDisplay');
+            if (statsDisplay) {
+                const minutes = Math.floor(recordingState.recordingTime / 60);
+                const seconds = recordingState.recordingTime % 60;
+                statsDisplay.textContent = `⏱ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function toggleRecordingPause() {
+            if (!recordingState.mediaRecorder || !recordingState.isRecording) {
+                return;
+            }
+
+            if (recordingState.mediaRecorder.state === 'recording') {
+                recordingState.mediaRecorder.pause();
+                recordingState.timerPaused = true;
+                stopRecordingTimer();
+
+                const pauseBtn = document.getElementById('recPauseBtn');
+                if (pauseBtn) {
+                    pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    pauseBtn.title = 'Resume';
+                }
+                showToastRecording('⏸ Recording paused', 'info', '⏸');
+            } else if (recordingState.mediaRecorder.state === 'paused') {
+                recordingState.mediaRecorder.resume();
+                recordingState.timerPaused = false;
+                startRecordingTimer();
+
+                const pauseBtn = document.getElementById('recPauseBtn');
+                if (pauseBtn) {
+                    pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    pauseBtn.title = 'Pause';
+                }
+                showToastRecording('▶ Recording resumed', 'info', '▶');
+            }
+        }
+
+        function updateUIAfterRecording(isRecording) {
+            const mainBtn = document.getElementById('recMainBtn');
+            const btnLabel = document.getElementById('recBtnLabel');
+            const statusBar = document.getElementById('recRecordingStatus');
+            const controls = document.getElementById('recRecordingControls');
+            const qualityBadge = document.getElementById('recQualityBadge');
+            const controlRow = document.getElementById('recControlRow');
+
+            if (isRecording) {
+                // Recording started - hide controls, show recording UI
+                if (mainBtn) mainBtn.classList.add('recording');
+                if (btnLabel) btnLabel.textContent = 'Stop';
+                if (statusBar) statusBar.style.display = 'flex';
+                if (controls) controls.style.display = 'flex';
+                if (qualityBadge) qualityBadge.style.opacity = '0.5';
+                if (controlRow) controlRow.style.display = 'none';
+            } else {
+                // Recording stopped - show controls, hide recording UI
+                if (mainBtn) mainBtn.classList.remove('recording');
+                if (btnLabel) btnLabel.textContent = 'Start';
+                if (statusBar) statusBar.style.display = 'none';
+                if (controls) controls.style.display = 'none';
+                if (qualityBadge) qualityBadge.style.opacity = '1';
+                if (controlRow) controlRow.style.display = 'flex';
+
+                // Reset pause button
+                const pauseBtn = document.getElementById('recPauseBtn');
+                if (pauseBtn) {
+                    pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    pauseBtn.title = 'Pause';
+                }
+            }
         }
 
         function startTimer() {
@@ -12585,11 +12836,24 @@
 
         // ====== HELPER FUNCTION: Get Recording Video Element ======
         function getRecordingVideoElement() {
-            // Priority order for getting the video element
-            return document.getElementById('videoPreview') ||        // Screen 1 recording setup
-                   document.getElementById('recordingVideoPreview') || // Screen 2 recording
-                   document.querySelector('#screen1 .camera-preview') || // Fallback to screen1
-                   document.querySelector('.camera-preview');         // Any camera preview
+            // Check which screen is currently active and return the appropriate video element
+            const activeScreen = document.querySelector('.recording-screen.active');
+            
+            if (activeScreen?.id === 'screen2') {
+                // Screen 2 is active - return recording video preview
+                const recordingVideo = document.getElementById('recordingVideoPreview');
+                if (recordingVideo) return recordingVideo;
+            } else if (activeScreen?.id === 'screen1') {
+                // Screen 1 is active - return video preview
+                const videoPreview = document.getElementById('videoPreview');
+                if (videoPreview) return videoPreview;
+            }
+            
+            // Fallback priority order if screen detection fails
+            return document.getElementById('recordingVideoPreview') ||  // Screen 2
+                   document.getElementById('videoPreview') ||          // Screen 1
+                   document.querySelector('.recording-screen.active .camera-preview') ||
+                   document.querySelector('.camera-preview');          // Any camera preview
         }
 
         // ====== RECORDING EFFECTS - TIKTOK STYLE ======
@@ -12806,8 +13070,23 @@
         function resizeEffectsCanvas() {
             const video = getRecordingVideoElement();
             if (!video || !effectsState.canvas) return;
-            effectsState.canvas.width = video.offsetWidth;
-            effectsState.canvas.height = video.offsetHeight;
+            
+            // Use actual video dimensions if available, not just offset
+            let width = video.offsetWidth;
+            let height = video.offsetHeight;
+            
+            // If recording canvas exists, match its dimensions
+            if (recordingState.recordingCanvas) {
+                width = recordingState.recordingCanvas.width;
+                height = recordingState.recordingCanvas.height;
+            } else if (video.videoWidth && video.videoHeight) {
+                width = video.videoWidth;
+                height = video.videoHeight;
+            }
+            
+            effectsState.canvas.width = width;
+            effectsState.canvas.height = height;
+            console.log('🎬 Effects canvas resized to:', width, 'x', height);
         }
 
         function startSparkleEffect() {
@@ -13473,19 +13752,52 @@
                     filterString = 'Original';
             }
 
+            // Update preview immediately with CSS filter (smooth, instant)
+            const videoPreview = document.getElementById('videoPreview');
+            if (videoPreview) {
+                videoPreview.style.filter = filter;
+            }
+
             // Get the appropriate video element
             const video = getRecordingVideoElement();
             if (video) {
                 video.style.filter = filter;
             }
 
-            // Update active button state
-            document.querySelectorAll('.rec-filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            // Trigger callback if it exists
+            if (recordingState.previewFilterCallback) {
+                recordingState.previewFilterCallback();
+            }
 
-            // Mark current filter as active
-            event.target.closest('.rec-filter-btn').classList.add('active');
+            // Determine which screen is active
+            const activeScreen = document.querySelector('.recording-screen.active');
+            let activePanelId = 'recFiltersPanel'; // Default to Screen 1
+            if (activeScreen?.id === 'screen2') {
+                activePanelId = 'recScreen2FiltersPanel';
+            }
+
+            // Update active button state - only in the active panel
+            const activePanel = document.getElementById(activePanelId);
+            if (activePanel) {
+                activePanel.querySelectorAll('.rec-filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Mark current filter as active - try multiple ways to be sure
+                const filterButton = activePanel.querySelector(`button[onclick*="applyRecordingFilter('${filterName}')"]`) ||
+                                   activePanel.querySelector(`button[onclick*="applyRecordingFilter\\('${filterName}'\\)"]`);
+                
+                if (filterButton) {
+                    filterButton.classList.add('active');
+                    console.log('✅ Updated button active state for filter:', filterName);
+                } else {
+                    console.warn('⚠️ Could not find filter button for:', filterName);
+                }
+            }
+
+            // Log for debugging
+            console.log('✅ Filter applied:', filterName, 'to screen:', activeScreen?.id);
+            showToastRecording(`🎨 ${filterString} Applied`, 'info', '✓');
 
             // Update button label
             const label = document.getElementById('recFiltersLabel');
