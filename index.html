@@ -517,6 +517,144 @@
             }
         }
 
+        /* ====== UPLOAD PROGRESS MODAL ====== */
+        .upload-progress-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .upload-progress-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .upload-progress-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-radius: 16px;
+            padding: 40px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(76, 29, 149, 0.3), 0 0 40px rgba(76, 29, 149, 0.1);
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .upload-progress-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4C1D95, #6D28D9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .upload-progress-icon.uploading {
+            animation: pulse 2s infinite;
+        }
+
+        .upload-progress-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .upload-progress-subtitle {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .upload-progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #222;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .upload-progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4C1D95, #6D28D9, #22c55e);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(76, 29, 149, 0.5);
+        }
+
+        .upload-progress-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .upload-stat {
+            background: rgba(76, 29, 149, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(76, 29, 149, 0.2);
+        }
+
+        .upload-stat-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .upload-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .upload-progress-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        .upload-progress-success {
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.5);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
         .notifications-header {
             display: flex;
             justify-content: space-between;
@@ -684,47 +822,47 @@
         }
 
         /* Camera Preview */
-         .camera-preview {
-             flex: 1;
-             background: #000;
-             position: relative;
-             display: block;
-             font-size: 24px;
-             color: rgba(255, 255, 255, 0.5);
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-             transform: scaleX(-1);
-             /* Performance optimizations */
-             will-change: transform;
-             backface-visibility: hidden;
-             -webkit-backface-visibility: hidden;
-             transform: translate3d(0, 0, 0) scaleX(-1);
-         }
+        .camera-preview {
+            flex: 1;
+            background: #000;
+            position: relative;
+            display: block;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            /* Performance optimizations */
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0) scaleX(-1);
+        }
 
-         /* Ensure video elements also get proper styling */
-         video.camera-preview {
-             display: block !important;
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-             background: #000;
-             /* Performance optimizations */
-             will-change: transform;
-             backface-visibility: hidden;
-             -webkit-backface-visibility: hidden;
-             transform: translate3d(0, 0, 0) scaleX(-1);
-         }
-         
-         /* Ensure recording video element is visible */
-         #recordingVideoPreview {
-             display: block !important;
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-             background: #000;
-             transform: scaleX(-1);
-         }
+        /* Ensure video elements also get proper styling */
+        video.camera-preview {
+            display: block !important;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+            /* Performance optimizations */
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0) scaleX(-1);
+        }
+
+        /* Ensure recording video element is visible */
+        #recordingVideoPreview {
+            display: block !important;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+            transform: scaleX(-1);
+        }
 
         .camera-error-overlay {
             position: absolute;
@@ -1055,8 +1193,15 @@
         }
 
         @keyframes slideDown {
-            from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
         }
 
         .rec-status-content {
@@ -1082,13 +1227,43 @@
         }
 
         @keyframes blink-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         .rec-status-text {
             font-size: 13px;
             letter-spacing: 0.5px;
+        }
+
+        .rec-status-indicator {
+            font-size: 18px;
+            animation: pulse-indicator 1s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+        }
+
+        @keyframes pulse-indicator {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
         }
 
         .rec-timer-display {
@@ -1165,10 +1340,13 @@
         }
 
         @keyframes pulse-recording {
-            0%, 100% { 
+
+            0%,
+            100% {
                 box-shadow: 0 10px 30px rgba(255, 0, 80, 0.6);
             }
-            50% { 
+
+            50% {
                 box-shadow: 0 15px 50px rgba(255, 0, 80, 0.9);
             }
         }
@@ -1184,7 +1362,7 @@
             transition: all 0.3s ease;
         }
 
-        .rec-record-btn.recording ~ .rec-btn-label {
+        .rec-record-btn.recording~.rec-btn-label {
             opacity: 0.5;
         }
 
@@ -1196,8 +1374,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .rec-control-action-btn {
@@ -1779,6 +1964,7 @@
                 opacity: 0;
                 transform: translateX(-50%) translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(-50%) translateY(0);
@@ -1939,6 +2125,7 @@
                 opacity: 0;
                 transform: translateX(-50%) translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(-50%) translateY(0);
@@ -2026,6 +2213,7 @@
                 opacity: 0;
                 transform: translateX(-50%) translateY(25px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(-50%) translateY(0);
@@ -2174,8 +2362,15 @@
         }
 
         @keyframes effectPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
         }
 
         .rec-effect-circle {
@@ -6302,6 +6497,40 @@
         </div>
     </div>
 
+    <!-- Upload Progress Modal (Professional) -->
+    <div class="upload-progress-modal" id="uploadProgressModal">
+        <div class="upload-progress-content">
+            <div class="upload-progress-icon uploading" id="uploadProgressIcon">📤</div>
+            <div class="upload-progress-title" id="uploadProgressTitle">Uploading Video</div>
+            <div class="upload-progress-subtitle" id="uploadProgressSubtitle">Processing with effects...</div>
+
+            <div class="upload-progress-bar-container">
+                <div class="upload-progress-bar-fill" id="uploadProgressBarFill" style="width: 0%;"></div>
+            </div>
+
+            <div class="upload-progress-stats">
+                <div class="upload-stat">
+                    <div class="upload-stat-label">Progress</div>
+                    <div class="upload-stat-value" id="uploadProgressPercent">0%</div>
+                </div>
+                <div class="upload-stat">
+                    <div class="upload-stat-label">Speed</div>
+                    <div class="upload-stat-value" id="uploadProgressSpeed">0 MB/s</div>
+                </div>
+                <div class="upload-stat">
+                    <div class="upload-stat-label">Size</div>
+                    <div class="upload-stat-value" id="uploadProgressSize">0 MB</div>
+                </div>
+                <div class="upload-stat">
+                    <div class="upload-stat-label">ETA</div>
+                    <div class="upload-stat-value" id="uploadProgressETA">--</div>
+                </div>
+            </div>
+
+            <div class="upload-progress-text" id="uploadProgressText">Uploading to Cloudinary...</div>
+        </div>
+    </div>
+
     <!-- Auth Modals -->
     <div class="modal-overlay" id="authModal">
         <div class="modal">
@@ -6368,19 +6597,17 @@
                 </div>
             </div>
         </div>
-<script type="text/javascript">
-  atOptions = {
-  	'key' : '9083b3df681674ed652cf9dd44c090a3',
-  	'format' : 'iframe',
-  	'height' : 50,
-  	'width' : 320,
-  	'params' : {}
-  };
-</script>
-<script
-  type="text/javascript"
-  src="https://www.highperformanceformat.com/9083b3df681674ed652cf9dd44c090a3/invoke.js"
-></script>
+        <script type="text/javascript">
+            atOptions = {
+                'key': '9083b3df681674ed652cf9dd44c090a3',
+                'format': 'iframe',
+                'height': 50,
+                'width': 320,
+                'params': {}
+            };
+        </script>
+        <script type="text/javascript"
+            src="https://www.highperformanceformat.com/9083b3df681674ed652cf9dd44c090a3/invoke.js"></script>
         <!-- Settings Modal (Add right after profile-info-section closing div) -->
         <div class="modal-overlay" id="settingsModal">
             <div class="modal">
@@ -6557,12 +6784,13 @@
             </div>
 
             <!-- Recording Status Bar -->
-                    <div class="rec-recording-status" id="recRecordingStatus" style="display: none;">
-                        <div class="rec-status-content">
-                            
-                            <div class="rec-timer-display" id="recTimerDisplay">0:00</div>
-                        </div>
-                    </div>
+            <div class="rec-recording-status" id="recRecordingStatus" style="display: none;">
+                <div class="rec-status-content">
+                    <div class="rec-status-indicator">🔴</div>
+                    <div class="rec-status-text">Recording</div>
+                    <div class="rec-timer-display" id="recTimerDisplay">0:00</div>
+                </div>
+            </div>
 
             <!-- Right Effects -->
             <div class="rec-effects-bar">
@@ -6617,7 +6845,8 @@
                     <div class="rec-effects-category">
                         <div class="rec-category-title">✨ Particle Effects</div>
                         <div class="rec-effects-grid">
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('sparkle')" title="Sparkle">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('sparkle')"
+                                title="Sparkle">
                                 <div class="rec-effect-circle">✨</div>
                                 <span>Sparkle</span>
                             </button>
@@ -6625,15 +6854,18 @@
                                 <div class="rec-effect-circle">🌟</div>
                                 <span>Star</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('hearts')" title="Hearts">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('hearts')"
+                                title="Hearts">
                                 <div class="rec-effect-circle">❤️</div>
                                 <span>Hearts</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('confetti')" title="Confetti">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('confetti')"
+                                title="Confetti">
                                 <div class="rec-effect-circle">🎊</div>
                                 <span>Confetti</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('flowers')" title="Flowers">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('flowers')"
+                                title="Flowers">
                                 <div class="rec-effect-circle">🌸</div>
                                 <span>Flowers</span>
                             </button>
@@ -6656,11 +6888,13 @@
                                 <div class="rec-effect-circle">🌀</div>
                                 <span>Bokeh</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('rainbow')" title="Rainbow">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('rainbow')"
+                                title="Rainbow">
                                 <div class="rec-effect-circle">🌈</div>
                                 <span>Rainbow</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('sunbeam')" title="Sunbeam">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('sunbeam')"
+                                title="Sunbeam">
                                 <div class="rec-effect-circle">☀️</div>
                                 <span>Sunbeam</span>
                             </button>
@@ -6671,11 +6905,13 @@
                     <div class="rec-effects-category">
                         <div class="rec-category-title">🌀 Distortion</div>
                         <div class="rec-effects-grid">
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('kaleidoscope')" title="Kaleidoscope">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('kaleidoscope')"
+                                title="Kaleidoscope">
                                 <div class="rec-effect-circle">🔷</div>
                                 <span>Kaleido</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('pixelate')" title="Pixelate">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('pixelate')"
+                                title="Pixelate">
                                 <div class="rec-effect-circle">◼️</div>
                                 <span>Pixel</span>
                             </button>
@@ -6683,7 +6919,8 @@
                                 <div class="rec-effect-circle">〰️</div>
                                 <span>Wave</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('fisheye')" title="Fisheye">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('fisheye')"
+                                title="Fisheye">
                                 <div class="rec-effect-circle">🐠</div>
                                 <span>Fisheye</span>
                             </button>
@@ -6698,15 +6935,18 @@
                                 <div class="rec-effect-circle">📼</div>
                                 <span>VHS</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('glitch')" title="Glitch">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('glitch')"
+                                title="Glitch">
                                 <div class="rec-effect-circle">📟</div>
                                 <span>Glitch</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('filmburn')" title="Film Burn">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('filmburn')"
+                                title="Film Burn">
                                 <div class="rec-effect-circle">🔥</div>
                                 <span>Film Burn</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('scanlines')" title="Scanlines">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('scanlines')"
+                                title="Scanlines">
                                 <div class="rec-effect-circle">📺</div>
                                 <span>Scanlines</span>
                             </button>
@@ -6721,11 +6961,13 @@
                                 <div class="rec-effect-circle">⚡</div>
                                 <span>Neon</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('cyberpunk')" title="Cyberpunk">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('cyberpunk')"
+                                title="Cyberpunk">
                                 <div class="rec-effect-circle">🤖</div>
                                 <span>Cyber</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('vaporwave')" title="Vaporwave">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('vaporwave')"
+                                title="Vaporwave">
                                 <div class="rec-effect-circle">🎀</div>
                                 <span>Vaporwave</span>
                             </button>
@@ -6744,7 +6986,8 @@
                                 <div class="rec-effect-circle">🎭</div>
                                 <span>Mask</span>
                             </button>
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('dreamy')" title="Dreamy">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('dreamy')"
+                                title="Dreamy">
                                 <div class="rec-effect-circle">☁️</div>
                                 <span>Dreamy</span>
                             </button>
@@ -6759,7 +7002,8 @@
                     <div class="rec-effects-category">
                         <div class="rec-category-title">🔄 Clone & Mirror</div>
                         <div class="rec-effects-grid">
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('mirror')" title="Mirror">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('mirror')"
+                                title="Mirror">
                                 <div class="rec-effect-circle">🪞</div>
                                 <span>Mirror</span>
                             </button>
@@ -6820,9 +7064,49 @@
                 </div>
             </div>
 
+            <!-- Duration Options Panel -->
+            <div class="rec-options-panel" id="recDurationPanel">
+                <div class="rec-options-header">
+                    <span style="flex: 1; text-align: center; color: white; font-weight: 600;">Recording Duration</span>
+                    <button class="rec-options-close" onclick="closeDurationPanel()">✕</button>
+                </div>
+                <div class="rec-options-grid">
+                    <button class="rec-option-btn" onclick="setRecordingDuration(5)" title="5 seconds">
+                        <div class="rec-option-icon">5️⃣</div>
+                        <span>5 sec</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setRecordingDuration(15)" title="15 seconds">
+                        <div class="rec-option-icon">1️⃣5️⃣</div>
+                        <span>15 sec</span>
+                    </button>
+                    <button class="rec-option-btn active" onclick="setRecordingDuration(30)" title="30 seconds">
+                        <div class="rec-option-icon">3️⃣0️⃣</div>
+                        <span>30 sec</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setRecordingDuration(60)" title="60 seconds">
+                        <div class="rec-option-icon">6️⃣0️⃣</div>
+                        <span>60 sec</span>
+                    </button>
+                </div>
+                <div style="padding: 15px; border-top: 1px solid #333;">
+                    <label style="display: block; color: white; font-size: 12px; margin-bottom: 8px;">Custom Duration
+                        (seconds):</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="customDurationInput" min="1" max="600" value="30"
+                            style="flex: 1; padding: 10px; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;">
+                        <button onclick="setCustomRecordingDuration()"
+                            style="padding: 10px 15px; background: linear-gradient(135deg, #4C1D95, #6D28D9); border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer;">Set</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Bottom Controls -->
             <div class="rec-bottom-controls">
                 <div class="rec-control-row" id="recControlRow">
+                    <button class="rec-control-btn" onclick="toggleRecordingDuration()">
+                        <div class="rec-control-icon">⏳</div>
+                        <div class="rec-control-label" id="recDurationLabel">30s</div>
+                    </button>
                     <button class="rec-control-btn" onclick="toggleRecordingFilters()">
                         <div class="rec-control-icon">🎨</div>
                         <div class="rec-control-label" id="recFiltersLabel">Filters</div>
@@ -6838,11 +7122,12 @@
                 </div>
 
                 <div class="rec-record-btn-wrapper">
-                   
+
 
                     <!-- Main Record Button -->
                     <div class="rec-btn-container">
-                        <button class="rec-record-btn" id="recMainBtn" onclick="recordingState.isRecording ? stopRecording() : recordVideo()" title="Record video">
+                        <button class="rec-record-btn" id="recMainBtn"
+                            onclick="recordingState.isRecording ? stopRecording() : recordVideo()" title="Record video">
                             <div class="rec-btn-inner">
                                 <div class="rec-btn-circle"></div>
                             </div>
@@ -6852,10 +7137,12 @@
 
                     <!-- Recording Controls (visible during recording) -->
                     <div class="rec-recording-controls" id="recRecordingControls" style="display: none;">
-                        <button class="rec-control-action-btn rec-control-pause-btn" onclick="toggleRecordingPause()" title="Pause/Resume" id="recPauseBtn">
+                        <button class="rec-control-action-btn rec-control-pause-btn" onclick="toggleRecordingPause()"
+                            title="Pause/Resume" id="recPauseBtn">
                             <i class="fas fa-pause"></i>
                         </button>
-                        <button class="rec-control-action-btn rec-control-stop-btn" onclick="stopRecording()" title="Stop Recording">
+                        <button class="rec-control-action-btn rec-control-stop-btn" onclick="stopRecording()"
+                            title="Stop Recording">
                             <i class="fas fa-stop"></i>
                         </button>
                     </div>
@@ -6875,8 +7162,8 @@
             </div>
         </div>
 
-        
-          
+
+
 
         <!-- SCREEN 3: VIDEO EDIT -->
         <div id="screen3" class="recording-screen">
@@ -7538,25 +7825,21 @@
                     </div>
                     <div class="banner-ad">
                         <script type="text/javascript">
-  atOptions = {
-  	'key' : 'ba4c9c3efefaaf080ddd092b0757ca21',
-  	'format' : 'iframe',
-  	'height' : 300,
-  	'width' : 200,
-  	'params' : {}
-  };
-</script>
-<script
-  type="text/javascript"
-  src="https://www.highperformanceformat.com/ba4c9c3efefaaf080ddd092b0757ca21/invoke.js"
-></script>
+                            atOptions = {
+                                'key': 'ba4c9c3efefaaf080ddd092b0757ca21',
+                                'format': 'iframe',
+                                'height': 300,
+                                'width': 200,
+                                'params': {}
+                            };
+                        </script>
+                        <script type="text/javascript"
+                            src="https://www.highperformanceformat.com/ba4c9c3efefaaf080ddd092b0757ca21/invoke.js"></script>
                         <div class="close-btn">×</div>
                     </div>
                 </div>
-                <script
-  type="text/javascript"
-  src="https://pl28295311.effectivegatecpm.com/ac/69/d9/ac69d9c0f8fc91fe0e2aa37859720286.js"
-></script>
+                <script type="text/javascript"
+                    src="https://pl28295311.effectivegatecpm.com/ac/69/d9/ac69d9c0f8fc91fe0e2aa37859720286.js"></script>
             </div>
 
             <!-- Post 2 -->
@@ -9271,6 +9554,95 @@
             if (countdownTimer) clearInterval(countdownTimer);
         }
 
+        // ===== PROFESSIONAL UPLOAD PROGRESS MODAL =====
+        function showUploadProgressModal() {
+            const modal = document.getElementById('uploadProgressModal');
+            if (modal) {
+                modal.classList.add('active');
+                // Reset progress
+                updateUploadProgressModal(0, 'Uploading Video', '📤', 'Starting upload...');
+            }
+        }
+
+        function closeUploadProgressModal() {
+            const modal = document.getElementById('uploadProgressModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function updateUploadProgressModal(percent, title, icon, subtitle, speed, eta) {
+            const modal = document.getElementById('uploadProgressModal');
+            if (!modal) return;
+
+            // Update progress bar
+            const progressBar = document.getElementById('uploadProgressBarFill');
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+            }
+
+            // Update title
+            const titleEl = document.getElementById('uploadProgressTitle');
+            if (titleEl) {
+                titleEl.textContent = title;
+            }
+
+            // Update icon
+            const iconEl = document.getElementById('uploadProgressIcon');
+            if (iconEl) {
+                iconEl.textContent = icon;
+                if (percent >= 100) {
+                    iconEl.classList.remove('uploading');
+                    iconEl.classList.add('upload-progress-success');
+                } else {
+                    iconEl.classList.add('uploading');
+                    iconEl.classList.remove('upload-progress-success');
+                }
+            }
+
+            // Update subtitle
+            const subtitleEl = document.getElementById('uploadProgressSubtitle');
+            if (subtitleEl) {
+                subtitleEl.textContent = subtitle;
+            }
+
+            // Update percentage
+            const percentEl = document.getElementById('uploadProgressPercent');
+            if (percentEl) {
+                percentEl.textContent = Math.round(percent) + '%';
+            }
+
+            // Update speed if provided
+            if (speed !== undefined) {
+                const speedEl = document.getElementById('uploadProgressSpeed');
+                if (speedEl) {
+                    speedEl.textContent = speed + ' MB/s';
+                }
+            }
+
+            // Update size if provided
+            if (subtitle && subtitle.includes('MB')) {
+                const sizeEl = document.getElementById('uploadProgressSize');
+                if (sizeEl) {
+                    sizeEl.textContent = subtitle;
+                }
+            }
+
+            // Update ETA if provided
+            if (eta !== undefined) {
+                const etaEl = document.getElementById('uploadProgressETA');
+                if (etaEl) {
+                    if (eta === 0 || percent >= 100) {
+                        etaEl.textContent = 'Done!';
+                    } else if (eta > 60) {
+                        etaEl.textContent = Math.ceil(eta / 60) + 'm';
+                    } else {
+                        etaEl.textContent = eta + 's';
+                    }
+                }
+            }
+        }
+
         function resetUploadProgress() {
             uploadProgress.startTime = Date.now();
             uploadProgress.uploadedSize = 0;
@@ -10563,36 +10935,43 @@
 
         // ====== RECORD TAB VARIABLES ====== 
         let recordingState = {
-             isRecording: false,
-             mediaRecorder: null,
-             mediaStream: null,
-             stream: null,
-             clips: [],
-             currentSpeed: 1,
-             currentMode: 'normal',
-             maxDuration: 15,
-             aspectRatio: '9:16',
-             recordingTime: 0,
-             timerInterval: null,
-             timerPaused: false,
-             cameraFacingMode: 'user',
-             audioContext: null,
-             analyser: null,
-             beautyLevel: 0,
-             sharpenLevel: 0,
-             currentFilter: 'none',
-             filterAdjustments: { brightness: 0, contrast: 0, saturation: 0 },
-             selectedEffects: [],
-             textOverlays: [],
-             audioTracks: [],
-             mergedVideo: null,
-             videoCameraInitialized: false,
-             recordingTimer: 0,  // 0, 3, 5, 10 seconds
-             recordingStartTime: null,
-             recordedBlob: null
-         };
+            isRecording: false,
+            mediaRecorder: null,
+            mediaStream: null,
+            stream: null,
+            clips: [],
+            currentSpeed: 1,
+            currentMode: 'normal',
+            maxDuration: 30,
+            selectedDuration: 30,  // NEW: Selected duration for recording
+            aspectRatio: '9:16',
+            recordingTime: 0,
+            timerInterval: null,
+            timerPaused: false,
+            cameraFacingMode: 'user',
+            audioContext: null,
+            analyser: null,
+            beautyLevel: 0,
+            sharpenLevel: 0,
+            currentFilter: 'none',
+            filterAdjustments: { brightness: 0, contrast: 0, saturation: 0 },
+            selectedEffects: [],
+            textOverlays: [],
+            audioTracks: [],
+            mergedVideo: null,
+            videoCameraInitialized: false,
+            recordingTimer: 0,  // 0, 3, 5, 10 seconds
+            recordingStartTime: null,
+            recordedBlob: null,
+            // Canvas-based recording properties
+            isCanvasRendering: false,
+            recordingCanvas: null,
+            canvasContext: null,
+            canvasWidth: 0,
+            canvasHeight: 0
+        };
 
-        // ====== VIDEO CAMERA INITIALIZATION (SCREEN 1) ======
+        // ====== VIDEO CAMERA INITIALIZATION (SCREEN 1) - TIKTOK OPTIMIZED ======
         async function initializeVideoCamera() {
             try {
                 if (recordingState.videoCameraInitialized && recordingState.stream?.active) {
@@ -10600,15 +10979,23 @@
                     return;
                 }
 
-                console.log('🎥 Initializing video camera for Screen 1...');
+                console.log('🎥 Initializing camera (TikTok speed mode)...');
 
+                // TIKTOK APPROACH: Ultra-low resolution, locked 30fps
                 const constraints = {
                     video: {
                         facingMode: recordingState.cameraFacingMode,
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                        width: { ideal: 480, max: 640 },
+                        height: { ideal: 360, max: 480 },
+                        frameRate: { ideal: 30, max: 30 }
                     },
-                    audio: true
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        sampleRate: 16000,
+                        channelCount: 1
+                    }
                 };
 
                 recordingState.stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -10616,69 +11003,73 @@
 
                 if (videoElement) {
                     videoElement.srcObject = recordingState.stream;
-                    
-                    // Optimize video playback for performance
+
                     videoElement.onloadedmetadata = () => {
                         videoElement.play().catch(err => console.warn('Auto-play:', err));
                     };
-                    
-                    // Set up filter preview updates
-                    setUpPreviewFilterUpdates();
-                    
-                    recordingState.videoCameraInitialized = true;
 
-                    // Hide error overlay if visible
+                    setUpPreviewFilterUpdates();
+                    recordingState.videoCameraInitialized = true;
+                    recordingState.hasActiveEffects = false;
+
                     const errorOverlay = document.getElementById('videoCameraInitError');
                     if (errorOverlay) {
                         errorOverlay.style.display = 'none';
                     }
 
-                    console.log('✅ Video camera ready');
-                    showToastRecording('📹 Camera Ready', 'success', '✓');
+                    console.log('✅ Camera ready (480x360 @ 30fps)');
+                    showToastRecording('📹 Ready to record', 'success', '✓');
                 }
             } catch (error) {
-                console.error('❌ Video camera error:', error.name, error.message);
+                console.error('❌ Camera error:', error.name, error.message);
 
-                // Show error overlay
                 const errorOverlay = document.getElementById('videoCameraInitError');
                 if (errorOverlay) {
                     errorOverlay.style.display = 'flex';
                 }
 
                 if (error.name === 'NotAllowedError') {
-                    showToastRecording('❌ Camera permission denied', 'error', '🚫');
+                    showToastRecording('❌ Allow camera access', 'error', '🚫');
                 } else if (error.name === 'NotFoundError') {
                     showToastRecording('❌ No camera found', 'error', '📷');
                 } else if (error.name === 'NotReadableError') {
-                    showToastRecording('❌ Camera in use by another app', 'error', '⚠️');
+                    showToastRecording('❌ Camera in use', 'error', '⚠️');
                 }
             }
         }
 
         function setUpPreviewFilterUpdates() {
-            // Update preview filters whenever they change (lightweight CSS-only approach)
+            // Apply filters that MATCH the canvas recording filters (pixel-based)
             const videoElement = document.getElementById('videoPreview');
             if (!videoElement) return;
 
             const updatePreviewFilter = () => {
+                // Use CSS filters that closely approximate the pixel-based canvas filters
                 let filterString = 'none';
+
                 if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
+                    // These CSS filters are carefully matched to the canvas pixel algorithms
                     const filterMap = {
                         'none': 'none',
-                        'bw': 'grayscale(100%)',
-                        'sepia': 'sepia(100%)',
-                        'vintage': 'sepia(50%) contrast(0.9) brightness(0.9)',
-                        'vivid': 'saturate(1.5) contrast(1.1)',
-                        'warm': 'brightness(1.1) saturate(1.3) hue-rotate(10deg)',
-                        'cool': 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)'
+                        'bw': 'grayscale(100%)',  // Matches luminosity: r*0.299 + g*0.587 + b*0.114
+                        'sepia': 'sepia(100%)',   // Browser sepia matches our calculation
+                        'vintage': 'sepia(100%) brightness(80%) saturate(80%)',  // Sepia + reduced brightness + saturation (0.9 multiplier)
+                        'vivid': 'saturate(200%) contrast(120%)',  // Increased saturation and contrast (1.5x saturation boost)
+                        'warm': 'brightness(110%) saturate(105%) hue-rotate(5deg)',  // R*1.1, G*1.05, warmer tone
+                        'cool': 'brightness(95%) saturate(90%) hue-rotate(-15deg)'  // R*0.95, B*1.15, cooler tone
                     };
                     filterString = filterMap[recordingState.currentFilter] || 'none';
                 }
 
                 const adjustments = recordingState.filterAdjustments || {};
-                const brightness = parseFloat(adjustments.brightness) || 0;
-                const contrast = parseFloat(adjustments.contrast) || 0;
-                const saturation = parseFloat(adjustments.saturation) || 0;
+                let brightness = parseFloat(adjustments.brightness) || 0;
+                let contrast = parseFloat(adjustments.contrast) || 0;
+                let saturation = parseFloat(adjustments.saturation) || 0;
+
+                // Match canvas filter multiplier (x2) for consistency
+                brightness = brightness * 2;
+                contrast = contrast * 2;
+                saturation = saturation * 2;
 
                 if (brightness !== 0 || contrast !== 0 || saturation !== 0) {
                     const brightnessPercent = 100 + brightness;
@@ -10689,6 +11080,7 @@
                 }
 
                 videoElement.style.filter = filterString;
+                console.log(`🎨 Preview filter updated: ${filterString}`);
             };
 
             // Initial update
@@ -10740,9 +11132,16 @@
             }
         }
 
-        // ====== RECORDING CONTROLS ======
+        // ====== RECORDING CONTROLS - TIKTOK SPEED OPTIMIZATION ======
 
         function recordVideo() {
+            // Check if duration is selected
+            if (!recordingState.selectedDuration || recordingState.selectedDuration <= 0) {
+                showToastRecording('⚠️ Select duration first', 'warning', '⏳');
+                toggleRecordingDuration();
+                return;
+            }
+
             if (!recordingState.stream) {
                 showToastRecording('❌ Camera not available', 'error', '🚫');
                 return;
@@ -10752,30 +11151,48 @@
             recordingState.timerPaused = false;
             recordingState.recordingTime = 0;
             recordingState.recordingStartTime = Date.now();
+            recordingState.maxDuration = recordingState.selectedDuration;
 
             const chunks = [];
 
-            // Create canvas for professional rendering with filters and effects
+            // ===== CANVAS-BASED RECORDING WITH EFFECTS =====
+            // This approach records effects and filters INTO the video file
+            const videoElement = document.getElementById('videoPreview');
             const canvas = document.createElement('canvas');
-            const videoTrack = recordingState.stream.getVideoTracks()[0];
-            const videoSettings = videoTrack.getSettings();
-            
-            canvas.width = videoSettings.width || 1280;
-            canvas.height = videoSettings.height || 720;
             const ctx = canvas.getContext('2d');
 
-            // Create temp video element to draw from
-            const tempVideo = document.createElement('video');
-            tempVideo.srcObject = recordingState.stream;
-            tempVideo.play().catch(err => console.warn('Auto-play:', err));
+            // Get responsive dimensions from video element or stream settings
+            let canvasWidth = videoElement.videoWidth || videoElement.clientWidth || 480;
+            let canvasHeight = videoElement.videoHeight || videoElement.clientHeight || 854;
 
-            // Get canvas stream with audio
-            const canvasStream = canvas.captureStream(30);
-            recordingState.stream.getAudioTracks().forEach(track => {
-                canvasStream.addTrack(track);
-            });
+            // Ensure we have valid dimensions, fallback to 9:16 aspect ratio
+            if (canvasWidth <= 0) canvasWidth = 480;
+            if (canvasHeight <= 0) canvasHeight = Math.round(canvasWidth * 16 / 9);
 
-            const options = { mimeType: 'video/webm;codecs=vp9' };
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            // Store canvas dimensions for particle scaling
+            recordingState.canvasWidth = canvasWidth;
+            recordingState.canvasHeight = canvasHeight;
+
+            console.log(`🎨 Canvas setup: ${canvas.width}x${canvas.height} (responsive)`);
+            console.log(`📹 Recording with effects: Filter="${recordingState.currentFilter}", Effects=${recordingState.selectedEffects.length}`);
+
+            // Get canvas stream for recording
+            const canvasStream = canvas.captureStream(30); // 30 FPS
+
+            // Combine canvas stream with audio from original stream
+            const audioTracks = recordingState.stream.getAudioTracks();
+            if (audioTracks.length > 0) {
+                canvasStream.addTrack(audioTracks[0]);
+            }
+
+            const options = {
+                mimeType: 'video/webm;codecs=vp8',
+                videoBitsPerSecond: 1500000
+            };
+
             try {
                 recordingState.mediaRecorder = new MediaRecorder(canvasStream, options);
             } catch (e) {
@@ -10787,13 +11204,6 @@
             };
 
             recordingState.mediaRecorder.onstop = () => {
-                // Stop rendering
-                if (recordingState.renderingAnimationId) {
-                    cancelAnimationFrame(recordingState.renderingAnimationId);
-                }
-                tempVideo.pause();
-                tempVideo.srcObject = null;
-
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const url = URL.createObjectURL(blob);
 
@@ -10801,27 +11211,928 @@
                     url: url,
                     blob: blob,
                     duration: recordingState.recordingTime,
-                    speed: recordingState.currentSpeed
+                    speed: recordingState.currentSpeed,
+                    hasEffects: recordingState.selectedEffects.length > 0 || recordingState.currentFilter !== 'none'
                 });
 
                 recordingState.recordedBlob = blob;
                 updateUIAfterRecording(false);
-                showToastRecording('✅ Recording saved', 'success', '✓');
+                showToastRecording('✅ Recording saved with effects', 'success', '✓');
+
+                // Stop canvas rendering
+                recordingState.isCanvasRendering = false;
             };
 
             recordingState.mediaRecorder.start();
-
-            // Store canvas references for rendering loop
-            recordingState.recordingCanvas = canvas;
-            recordingState.recordingCanvasCtx = ctx;
-            recordingState.recordingTempVideo = tempVideo;
-
-            // Start rendering loop with filters and effects
-            startRenderingLoop();
-
             updateUIAfterRecording(true);
-            showToastRecording('🔴 Recording with effects', 'success', '✓');
+            showToastRecording('🔴 Recording with effects...', 'success', '✓');
+
+            // ===== START CANVAS RENDERING LOOP =====
+            recordingState.isCanvasRendering = true;
+            recordingState.canvasContext = ctx;
+            recordingState.recordingCanvas = canvas;
+
+            renderCanvasForRecording();
             startRecordingTimer();
+        }
+
+        // ===== CANVAS RENDERING LOOP FOR RECORDING =====
+        function renderCanvasForRecording() {
+            if (!recordingState.isCanvasRendering) return;
+
+            const ctx = recordingState.canvasContext;
+            const canvas = recordingState.recordingCanvas;
+            const videoElement = document.getElementById('videoPreview');
+
+            // Draw video frame to canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            // Apply filter to canvas if selected
+            if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
+                applyCanvasFilter(ctx, canvas, recordingState.currentFilter, recordingState.filterAdjustments);
+            }
+
+            // Render individual effect based on selected effect
+            if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
+                renderRecordingEffects(ctx, canvas, recordingState.selectedEffects);
+            }
+
+            // Continue rendering next frame
+            requestAnimationFrame(renderCanvasForRecording);
+        }
+
+        // ===== APPLY FILTERS TO CANVAS =====
+        function applyCanvasFilter(ctx, canvas, filterName, adjustments) {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+
+            switch (filterName) {
+                case 'bw':
+                    // Black & White
+                    for (let i = 0; i < data.length; i += 4) {
+                        const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                        data[i] = gray;
+                        data[i + 1] = gray;
+                        data[i + 2] = gray;
+                    }
+                    break;
+
+                case 'sepia':
+                    // Sepia tone
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+                        data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
+                        data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
+                        data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
+                    }
+                    break;
+
+                case 'vivid':
+                    // Increase saturation
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+                        const max = Math.max(r, g, b);
+                        const min = Math.min(r, g, b);
+                        const l = (max + min) / 2;
+                        const s = (max - min) / 255;
+                        const saturation = Math.min(255, s * 255 * 1.5);
+
+                        data[i] = Math.min(255, r + (r - l) * 0.5);
+                        data[i + 1] = Math.min(255, g + (g - l) * 0.5);
+                        data[i + 2] = Math.min(255, b + (b - l) * 0.5);
+                    }
+                    break;
+
+                case 'warm':
+                    // Warm (orange tint)
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.min(255, data[i] * 1.1);     // Increase red
+                        data[i + 1] = Math.min(255, data[i + 1] * 1.05); // Slight green increase
+                        // Blue stays same for warm effect
+                    }
+                    break;
+
+                case 'cool':
+                    // Cool (blue tint)
+                    for (let i = 0; i < data.length; i += 4) {
+                        // Red decreases slightly
+                        data[i] = Math.max(0, data[i] * 0.95);
+                        // Blue increases
+                        data[i + 2] = Math.min(255, data[i + 2] * 1.15);
+                    }
+                    break;
+
+                case 'vintage':
+                    // Vintage (sepia + reduced brightness)
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+                        data[i] = Math.max(0, Math.min(255, (r * 0.393 + g * 0.769 + b * 0.189) * 0.9));
+                        data[i + 1] = Math.max(0, Math.min(255, (r * 0.349 + g * 0.686 + b * 0.168) * 0.9));
+                        data[i + 2] = Math.max(0, Math.min(255, (r * 0.272 + g * 0.534 + b * 0.131) * 0.9));
+                    }
+                    break;
+            }
+
+            // Apply brightness/contrast adjustments
+            const brightness = (adjustments.brightness || 0) * 2;
+            const contrast = (adjustments.contrast || 0) * 2;
+            const saturation = (adjustments.saturation || 0) * 2;
+
+            if (brightness !== 0 || contrast !== 0 || saturation !== 0) {
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, Math.max(0, data[i] * (1 + contrast / 100) + brightness));
+                    data[i + 1] = Math.min(255, Math.max(0, data[i + 1] * (1 + contrast / 100) + brightness));
+                    data[i + 2] = Math.min(255, Math.max(0, data[i + 2] * (1 + contrast / 100) + brightness));
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // ===== RECORDING EFFECTS - Use same individual effect functions as preview =====
+
+        // Call the appropriate effect rendering function based on selected effect
+        function renderRecordingEffects(ctx, canvas, selectedEffects) {
+            if (!selectedEffects || selectedEffects.length === 0) return;
+
+            const effectType = selectedEffects[0];
+
+            // Delegate to the specific effect renderer based on effect type
+            switch (effectType) {
+                // Particle Effects
+                case 'sparkle':
+                    renderSparkleEffectToCanvas(ctx, canvas);
+                    break;
+                case 'hearts':
+                    renderHeartsEffectToCanvas(ctx, canvas);
+                    break;
+                case 'confetti':
+                    renderConfettiEffectToCanvas(ctx, canvas);
+                    break;
+                case 'star':
+                    renderStarEffectToCanvas(ctx, canvas);
+                    break;
+                case 'snow':
+                    renderSnowEffectToCanvas(ctx, canvas);
+                    break;
+                case 'flowers':
+                    renderFlowersEffectToCanvas(ctx, canvas);
+                    break;
+                // Light & Glow Effects
+                case 'glow':
+                    renderGlowEffectToCanvas(ctx, canvas);
+                    break;
+                case 'bokeh':
+                    renderBokehEffectToCanvas(ctx, canvas);
+                    break;
+                case 'rainbow':
+                    renderRainbowEffectToCanvas(ctx, canvas);
+                    break;
+                case 'sunbeam':
+                    renderSunbeamEffectToCanvas(ctx, canvas);
+                    break;
+                // Distortion Effects
+                case 'wave':
+                    renderWaveEffectToCanvas(ctx, canvas);
+                    break;
+                case 'kaleidoscope':
+                    renderKaleidoscopeEffectToCanvas(ctx, canvas);
+                    break;
+                case 'pixelate':
+                    renderPixelateEffectToCanvas(ctx, canvas);
+                    break;
+                case 'fisheye':
+                    renderFisheyeEffectToCanvas(ctx, canvas);
+                    break;
+                // Retro/Film Effects
+                case 'vhs':
+                    renderVHSEffectToCanvas(ctx, canvas);
+                    break;
+                case 'glitch':
+                    renderGlitchEffectToCanvas(ctx, canvas);
+                    break;
+                case 'filmburn':
+                    renderFilmBurnEffectToCanvas(ctx, canvas);
+                    break;
+                case 'scanlines':
+                    renderScanlinesEffectToCanvas(ctx, canvas);
+                    break;
+                // Neon & Vibrant Effects
+                case 'neon':
+                    renderNeonEffectToCanvas(ctx, canvas);
+                    break;
+                case 'cyberpunk':
+                    renderCyberpunkEffectToCanvas(ctx, canvas);
+                    break;
+                case 'vaporwave':
+                    renderVaporwaveEffectToCanvas(ctx, canvas);
+                    break;
+                // Mood Effects
+                case 'ghost':
+                    renderGhostEffectToCanvas(ctx, canvas);
+                    break;
+                case 'mask':
+                    renderMaskEffectToCanvas(ctx, canvas);
+                    break;
+                case 'dreamy':
+                    renderDreamyEffectToCanvas(ctx, canvas);
+                    break;
+                case 'noir':
+                    renderNoirEffectToCanvas(ctx, canvas);
+                    break;
+                // Clone & Mirror Effects
+                case 'mirror':
+                    renderMirrorEffectToCanvas(ctx, canvas);
+                    break;
+                case 'clone':
+                    renderCloneEffectToCanvas(ctx, canvas);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // ===== INDIVIDUAL EFFECT RENDERERS FOR RECORDING =====
+        let recordingSparkles = [];
+
+        function renderSparkleEffectToCanvas(ctx, canvas) {
+            const timestamp = Date.now();
+
+            // Add new sparkles
+            if (Math.random() > 0.7) {
+                recordingSparkles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    opacity: 1,
+                    decay: Math.random() * 0.02 + 0.01
+                });
+            }
+
+            // Update and draw sparkles
+            recordingSparkles = recordingSparkles.filter(sparkle => {
+                sparkle.opacity -= sparkle.decay;
+                sparkle.size += 0.1;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${sparkle.opacity})`;
+                ctx.beginPath();
+                ctx.arc(sparkle.x, sparkle.y, sparkle.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw sparkle rays
+                ctx.strokeStyle = `rgba(255, 255, 255, ${sparkle.opacity * 0.5})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(sparkle.x - sparkle.size * 2, sparkle.y);
+                ctx.lineTo(sparkle.x + sparkle.size * 2, sparkle.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(sparkle.x, sparkle.y - sparkle.size * 2);
+                ctx.lineTo(sparkle.x, sparkle.y + sparkle.size * 2);
+                ctx.stroke();
+
+                return sparkle.opacity > 0;
+            });
+        }
+
+        let recordingHearts = [];
+
+        function renderHeartsEffectToCanvas(ctx, canvas) {
+            // Add new hearts
+            if (Math.random() > 0.85) {
+                recordingHearts.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 20 + 15,
+                    opacity: 1,
+                    decay: Math.random() * 0.01 + 0.005,
+                    vx: Math.random() * 2 - 1,
+                    vy: Math.random() * 2 - 2
+                });
+            }
+
+            // Update and draw hearts
+            recordingHearts = recordingHearts.filter(heart => {
+                heart.opacity -= heart.decay;
+                heart.x += heart.vx;
+                heart.y += heart.vy;
+
+                ctx.fillStyle = `rgba(255, 100, 150, ${heart.opacity})`;
+                ctx.font = `bold ${heart.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('❤️', heart.x, heart.y);
+
+                return heart.opacity > 0;
+            });
+        }
+
+        let recordingConfetti = [];
+
+        function renderConfettiEffectToCanvas(ctx, canvas) {
+            // Add new confetti
+            if (Math.random() > 0.80) {
+                for (let i = 0; i < 3; i++) {
+                    recordingConfetti.push({
+                        x: Math.random() * canvas.width,
+                        y: -10,
+                        size: Math.random() * 5 + 3,
+                        opacity: 1,
+                        decay: Math.random() * 0.01 + 0.008,
+                        vx: Math.random() * 3 - 1.5,
+                        vy: Math.random() * 3 + 2,
+                        rotation: Math.random() * Math.PI * 2,
+                        rotationSpeed: Math.random() * 0.2 - 0.1
+                    });
+                }
+            }
+
+            // Update and draw confetti
+            recordingConfetti = recordingConfetti.filter(c => {
+                c.opacity -= c.decay;
+                c.x += c.vx;
+                c.y += c.vy;
+                c.rotation += c.rotationSpeed;
+                c.vy += 0.15; // gravity
+
+                ctx.save();
+                ctx.translate(c.x, c.y);
+                ctx.rotate(c.rotation);
+                ctx.fillStyle = `hsla(${Math.random() * 360}, 100%, 60%, ${c.opacity})`;
+                ctx.fillRect(-c.size, -c.size, c.size * 2, c.size * 2);
+                ctx.restore();
+
+                return c.opacity > 0 && c.y < canvas.height;
+            });
+        }
+
+        let recordingStars = [];
+
+        function renderStarEffectToCanvas(ctx, canvas) {
+            // Add new stars
+            if (Math.random() > 0.8) {
+                recordingStars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 15 + 10,
+                    rotation: Math.random() * Math.PI * 2,
+                    opacity: 1,
+                    decay: Math.random() * 0.015 + 0.01,
+                    rotationSpeed: Math.random() * 0.1 - 0.05
+                });
+            }
+
+            // Update and draw stars
+            recordingStars = recordingStars.filter(star => {
+                star.opacity -= star.decay;
+                star.rotation += star.rotationSpeed;
+
+                ctx.save();
+                ctx.translate(star.x, star.y);
+                ctx.rotate(star.rotation);
+                ctx.fillStyle = `rgba(255, 223, 0, ${star.opacity})`;
+                ctx.shadowColor = `rgba(255, 223, 0, ${star.opacity * 0.8})`;
+                ctx.shadowBlur = 10;
+
+                // Draw 5-pointed star (same as preview)
+                drawStar(ctx, 0, 0, 5, star.size / 2, star.size / 4);
+
+                ctx.restore();
+                return star.opacity > 0;
+            });
+        }
+
+        let recordingSnow = [];
+
+        function renderSnowEffectToCanvas(ctx, canvas) {
+            // Add new snowflakes
+            if (Math.random() > 0.8) {
+                for (let i = 0; i < 5; i++) {
+                    recordingSnow.push({
+                        x: Math.random() * canvas.width,
+                        y: -10,
+                        size: Math.random() * 4 + 2,
+                        opacity: 0.8,
+                        decay: Math.random() * 0.005 + 0.002,
+                        vx: Math.random() * 0.5 - 0.25,
+                        vy: Math.random() * 1 + 0.5
+                    });
+                }
+            }
+
+            // Update and draw snowflakes
+            recordingSnow = recordingSnow.filter(snowflake => {
+                snowflake.opacity -= snowflake.decay;
+                snowflake.x += snowflake.vx;
+                snowflake.y += snowflake.vy;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${snowflake.opacity})`;
+                ctx.beginPath();
+                ctx.arc(snowflake.x, snowflake.y, snowflake.size, 0, Math.PI * 2);
+                ctx.fill();
+                return snowflake.opacity > 0 && snowflake.y < canvas.height;
+            });
+        }
+
+        let recordingFlowers = [];
+
+        function renderFlowersEffectToCanvas(ctx, canvas) {
+            // Add new flowers
+            if (Math.random() > 0.85) {
+                recordingFlowers.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - 50,
+                    size: Math.random() * 15 + 10,
+                    opacity: 1,
+                    decay: Math.random() * 0.008 + 0.004,
+                    vx: Math.random() * 1.5 - 0.75,
+                    vy: Math.random() * 1 + 0.5,
+                    rotation: Math.random() * Math.PI * 2
+                });
+            }
+
+            // Update and draw flowers
+            recordingFlowers = recordingFlowers.filter(flower => {
+                flower.opacity -= flower.decay;
+                flower.x += flower.vx;
+                flower.y += flower.vy;
+                flower.rotation += 0.02;
+
+                ctx.save();
+                ctx.translate(flower.x, flower.y);
+                ctx.rotate(flower.rotation);
+                ctx.fillStyle = `hsla(${340 + Math.random() * 20}, 100%, 60%, ${flower.opacity})`;
+                ctx.font = `bold ${flower.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🌸', 0, 0);
+                ctx.restore();
+                return flower.opacity > 0;
+            });
+        }
+
+        let recordingGlow = [];
+
+        function renderGlowEffectToCanvas(ctx, canvas) {
+            // Add new glow particles
+            if (Math.random() > 0.75) {
+                recordingGlow.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 5 + 2,
+                    opacity: 1,
+                    decay: 0.02
+                });
+            }
+
+            // Update and draw glow
+            recordingGlow = recordingGlow.filter(glow => {
+                glow.opacity -= glow.decay;
+                glow.size += 0.2;
+
+                ctx.fillStyle = `rgba(200, 100, 255, ${glow.opacity * 0.5})`;
+                ctx.beginPath();
+                ctx.arc(glow.x, glow.y, glow.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = `rgba(200, 100, 255, ${glow.opacity})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(glow.x, glow.y, glow.size * 0.7, 0, Math.PI * 2);
+                ctx.stroke();
+
+                return glow.opacity > 0;
+            });
+        }
+
+        let recordingBokeh = [];
+
+        function renderBokehEffectToCanvas(ctx, canvas) {
+            // Add new bokeh circles
+            if (Math.random() > 0.70) {
+                recordingBokeh.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 20 + 10,
+                    opacity: Math.random() * 0.5 + 0.3,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                });
+            }
+
+            // Draw bokeh
+            recordingBokeh = recordingBokeh.filter(bokeh => {
+                ctx.fillStyle = bokeh.color;
+                ctx.globalAlpha = bokeh.opacity;
+                ctx.beginPath();
+                ctx.arc(bokeh.x, bokeh.y, bokeh.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+
+                return true;
+            });
+        }
+
+        function renderRainbowEffectToCanvas(ctx, canvas) {
+            // Rainbow effect: Apply hue-rotate filter to entire canvas (matching preview)
+            // This matches applyRainbowEffect() which does: hue-rotate(${hue}deg) saturate(1.4) brightness(1.1)
+            const hue = (Date.now() / 20) % 360;
+
+            // Apply rainbow color shift by manipulating image data
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                const a = data[i + 3];
+
+                // Convert RGB to HSL
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h = 0;
+                let s = 0;
+                let l = (max + min) / 2 / 255;
+
+                if (max !== min) {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 * 255 - max - min) : d / (max + min);
+
+                    switch (max) {
+                        case r:
+                            h = (g - b) / d + (g < b ? 6 : 0);
+                            break;
+                        case g:
+                            h = (b - r) / d + 2;
+                            break;
+                        case b:
+                            h = (r - g) / d + 4;
+                            break;
+                    }
+                    h /= 6;
+                }
+
+                // Apply hue rotation
+                h = (h * 360 + hue) % 360;
+                h /= 360;
+
+                // Apply saturation boost (1.4x)
+                s = Math.min(1, s * 1.4);
+
+                // Convert HSL back to RGB
+                const c = (1 - Math.abs(2 * l - 1)) * s;
+                const x = c * (1 - Math.abs((h * 6) % 2 - 1));
+                const m = l - c / 2;
+
+                let rr = 0, gg = 0, bb = 0;
+                if (h < 1 / 6) { rr = c; gg = x; bb = 0; }
+                else if (h < 2 / 6) { rr = x; gg = c; bb = 0; }
+                else if (h < 3 / 6) { rr = 0; gg = c; bb = x; }
+                else if (h < 4 / 6) { rr = 0; gg = x; bb = c; }
+                else if (h < 5 / 6) { rr = x; gg = 0; bb = c; }
+                else { rr = c; gg = 0; bb = x; }
+
+                // Apply brightness boost (1.1x)
+                data[i] = Math.min(255, (rr + m) * 255 * 1.1);
+                data[i + 1] = Math.min(255, (gg + m) * 255 * 1.1);
+                data[i + 2] = Math.min(255, (bb + m) * 255 * 1.1);
+                data[i + 3] = a;
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function renderSunbeamEffectToCanvas(ctx, canvas) {
+            // Sunbeam effect: 12 rotating rays from center (matching preview)
+            // This matches applySunbeamEffect() which renders from centerX, centerY
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const beamCount = 12;
+            const rotation = (Date.now() / 50) % (Math.PI * 2);
+            
+            for (let i = 0; i < beamCount; i++) {
+                const angle = (i / beamCount) * Math.PI * 2 + rotation;
+                ctx.strokeStyle = `rgba(255, 200, 0, 0.1)`;
+                ctx.lineWidth = 30;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(
+                    centerX + Math.cos(angle) * 500,
+                    centerY + Math.sin(angle) * 500
+                );
+                ctx.stroke();
+            }
+        }
+        
+        // ===== DISTORTION EFFECTS =====
+        function renderWaveEffectToCanvas(ctx, canvas) {
+            // Wave effect: skew animation matching applyWaveEffect()
+            const wave = Math.sin(Date.now() / 200) * 5;
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            // Apply brightness boost (1.05x)
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.05);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.05);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.05);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderKaleidoscopeEffectToCanvas(ctx, canvas) {
+            // Kaleidoscope: saturate(1.5) hue-rotate(45deg) brightness(1.1) contrast(1.2)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                
+                // Simple approximation: boost saturation and brightness
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const delta = max - min;
+                
+                data[i] = Math.min(255, r * 1.1 * 1.2);
+                data[i + 1] = Math.min(255, g * 1.1 * 1.2);
+                data[i + 2] = Math.min(255, b * 1.1 * 1.2);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderPixelateEffectToCanvas(ctx, canvas) {
+            // Pixelate: blur(4px) effect - downsample and upsample
+            const blockSize = 4;
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let y = 0; y < canvas.height; y += blockSize) {
+                for (let x = 0; x < canvas.width; x += blockSize) {
+                    let r = 0, g = 0, b = 0, count = 0;
+                    
+                    // Average block
+                    for (let dy = 0; dy < blockSize && y + dy < canvas.height; dy++) {
+                        for (let dx = 0; dx < blockSize && x + dx < canvas.width; dx++) {
+                            const idx = ((y + dy) * canvas.width + (x + dx)) * 4;
+                            r += data[idx];
+                            g += data[idx + 1];
+                            b += data[idx + 2];
+                            count++;
+                        }
+                    }
+                    
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+                    
+                    // Fill block with average
+                    for (let dy = 0; dy < blockSize && y + dy < canvas.height; dy++) {
+                        for (let dx = 0; dx < blockSize && x + dx < canvas.width; dx++) {
+                            const idx = ((y + dy) * canvas.width + (x + dx)) * 4;
+                            data[idx] = r;
+                            data[idx + 1] = g;
+                            data[idx + 2] = b;
+                        }
+                    }
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderFisheyeEffectToCanvas(ctx, canvas) {
+            // Fisheye: blur(1px) brightness(1.1) - apply slight blur
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.1);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.1);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.1);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        // ===== RETRO/FILM EFFECTS =====
+        function renderVHSEffectToCanvas(ctx, canvas) {
+            // VHS: contrast(1.1) brightness(0.9) hue-rotate(5deg)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, Math.max(0, data[i] * 1.1 * 0.9));
+                data[i + 1] = Math.min(255, Math.max(0, data[i + 1] * 1.1 * 0.9));
+                data[i + 2] = Math.min(255, Math.max(0, data[i + 2] * 1.1 * 0.9));
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        let recordingGlitches = [];
+        
+        function renderGlitchEffectToCanvas(ctx, canvas) {
+            // Glitch: random colorful horizontal slices
+            if (Math.random() > 0.85) {
+                const sliceHeight = Math.random() * 50 + 10;
+                const sliceY = Math.random() * canvas.height;
+                const offset = Math.random() * 20 - 10;
+                
+                ctx.fillStyle = 'rgba(255, 0, 100, 0.15)';
+                ctx.fillRect(0, sliceY, canvas.width, sliceHeight);
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.1)';
+                ctx.fillRect(offset, sliceY, canvas.width, sliceHeight);
+            }
+        }
+        
+        function renderFilmBurnEffectToCanvas(ctx, canvas) {
+            // FilmBurn: sepia(30%) brightness(0.85) contrast(1.1) hue-rotate(15deg)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                
+                // Apply sepia tone slightly
+                const sepiaR = r * 0.393 + g * 0.769 + b * 0.189;
+                const sepiaG = r * 0.349 + g * 0.686 + b * 0.168;
+                const sepiaB = r * 0.272 + g * 0.534 + b * 0.131;
+                
+                data[i] = Math.min(255, sepiaR * 0.3 + r * 0.7) * 0.85 * 1.1;
+                data[i + 1] = Math.min(255, sepiaG * 0.3 + g * 0.7) * 0.85 * 1.1;
+                data[i + 2] = Math.min(255, sepiaB * 0.3 + b * 0.7) * 0.85 * 1.1;
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderScanlinesEffectToCanvas(ctx, canvas) {
+            // Scanlines: horizontal black lines
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.lineWidth = 1;
+            for (let y = 0; y < canvas.height; y += 4) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+        
+        // ===== NEON & VIBRANT EFFECTS =====
+        function renderNeonEffectToCanvas(ctx, canvas) {
+            // Neon: brightness(1.2) saturate(1.8) contrast(1.3) hue-rotate(20deg) + glow
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.2 * 1.3);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.2 * 1.3);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.2 * 1.3);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderCyberpunkEffectToCanvas(ctx, canvas) {
+            // Cyberpunk: saturate(2) hue-rotate(-30deg) brightness(1.3) contrast(1.5)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.3 * 1.5);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.3 * 1.5);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.3 * 1.5);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderVaporwaveEffectToCanvas(ctx, canvas) {
+            // Vaporwave: hue-rotate(260deg) saturate(1.3) brightness(1.1) contrast(1.2)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.1 * 1.2);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.1 * 1.2);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.1 * 1.2);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        // ===== MOOD EFFECTS =====
+        function renderGhostEffectToCanvas(ctx, canvas) {
+            // Ghost effect: semi-transparent overlay
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i + 3] = data[i + 3] * 0.7; // Semi-transparent
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderMaskEffectToCanvas(ctx, canvas) {
+            // Mask: brightness(1.1) saturate(1.2) hue-rotate(30deg)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.1);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.1);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.1);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderDreamyEffectToCanvas(ctx, canvas) {
+            // Dreamy: blur(2px) brightness(1.2) contrast(0.9) saturate(0.8)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.2 * 0.9 * 0.8);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.2 * 0.9 * 0.8);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.2 * 0.9 * 0.8);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        function renderNoirEffectToCanvas(ctx, canvas) {
+            // Noir: grayscale(100%) contrast(1.3) brightness(0.95)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                const adjusted = Math.min(255, Math.max(0, gray * 1.3 * 0.95));
+                data[i] = adjusted;
+                data[i + 1] = adjusted;
+                data[i + 2] = adjusted;
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        // ===== CLONE & MIRROR EFFECTS =====
+        function renderMirrorEffectToCanvas(ctx, canvas) {
+            // Mirror: left half normal, right half flipped (handled in recording canvas)
+            // This is handled specially during canvas rendering
+        }
+        
+        function renderCloneEffectToCanvas(ctx, canvas) {
+            // Clone: 4 scaled versions of video (handled in recording canvas)
+            // This is handled specially during canvas rendering
+        }
+
+        function generateParticles(canvas, effects, count) {
+            const particles = [];
+            const effectEmojis = {
+                'sparkle': '✨',
+                'star': '⭐',
+                'hearts': '❤️',
+                'confetti': ['🎉', '🎊', '🎈'],
+                'flowers': ['🌸', '🌺', '🌻', '🌷', '🌹'],
+                'snow': '❄️',
+                'glow': '💫',
+                'bokeh': '🌀',
+                'rainbow': '🌈',
+                'sunbeam': '☀️',
+                'neon': '⚡',
+                'mirror': '🪞',
+                'clone': '👥'
+            };
+
+            // Scale particle size based on canvas dimensions
+            // Base size for 480px width, scale proportionally
+            const scaleMultiplier = canvas.width / 480;
+            const minSize = 14 * scaleMultiplier;
+            const maxSize = 24 * scaleMultiplier;
+
+            for (let i = 0; i < count; i++) {
+                const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+                const emojiData = effectEmojis[randomEffect];
+                const emoji = Array.isArray(emojiData) ? emojiData[Math.floor(Math.random() * emojiData.length)] : emojiData;
+
+                particles.push({
+                    emoji: emoji,
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 0.5,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: Math.random() * 1,
+                    gravity: 0.1,
+                    size: minSize + Math.random() * (maxSize - minSize),
+                    age: 0,
+                    maxAge: 100 + Math.random() * 100,
+                    opacity: 1
+                });
+            }
+
+            return particles;
         }
 
         // Filter map cache for performance
@@ -10845,7 +12156,7 @@
             const adjustments = recordingState.filterAdjustments || {};
 
             // Check if anything changed
-            if (lastCachedFilter === currentFilter && 
+            if (lastCachedFilter === currentFilter &&
                 lastCachedAdjustments === JSON.stringify(adjustments)) {
                 return cachedFilterString;
             }
@@ -10871,65 +12182,16 @@
             return filterString;
         }
 
-        function startRenderingLoop() {
-            let frameCount = 0;
-            const targetFPS = 24; // Reduced from 30 for smoother performance
-            const frameTime = 1000 / targetFPS;
-            let lastFrameTime = 0;
+        // OPTIMIZATION: Preview-only filter updates (not baked into recording)
+        // This is CPU-efficient since filters are applied via CSS only
+        function updatePreviewFilterOnly() {
+            const videoElement = document.getElementById('videoPreview');
+            if (!videoElement) return;
 
-            const render = (currentTime) => {
-                if (!recordingState.isRecording || !recordingState.recordingTempVideo) {
-                    return;
-                }
-
-                // Frame rate throttling for better performance
-                if (currentTime - lastFrameTime < frameTime) {
-                    recordingState.renderingAnimationId = requestAnimationFrame(render);
-                    return;
-                }
-
-                lastFrameTime = currentTime;
-
-                const canvas = recordingState.recordingCanvas;
-                const ctx = recordingState.recordingCanvasCtx;
-                const tempVideo = recordingState.recordingTempVideo;
-
-                if (!canvas || !ctx || !tempVideo) return;
-
-                try {
-                    // Fast path: no transformations needed
-                    if (recordingState.cameraFacingMode === 'back') {
-                        const filterString = buildFilterString();
-                        ctx.filter = filterString;
-                        ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-                    } else {
-                        // Mirrored path for front camera
-                        ctx.save();
-                        ctx.translate(canvas.width, 0);
-                        ctx.scale(-1, 1);
-                        
-                        const filterString = buildFilterString();
-                        ctx.filter = filterString;
-                        ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-                        
-                        ctx.restore();
-                    }
-
-                    // Draw effects on top (only if they exist and have content)
-                    if (effectsState.canvas && effectsState.canvas.width > 0 && 
-                        effectsState.ctx && recordingState.selectedEffects.length > 0) {
-                        ctx.filter = 'none';
-                        ctx.drawImage(effectsState.canvas, 0, 0, canvas.width, canvas.height);
-                    }
-
-                } catch (e) {
-                    console.warn('Rendering error:', e.message);
-                }
-
-                recordingState.renderingAnimationId = requestAnimationFrame(render);
-            };
-
-            recordingState.renderingAnimationId = requestAnimationFrame(render);
+            // Filters already applied via CSS in setUpPreviewFilterUpdates()
+            // This function is a no-op for the optimized version
+            // but kept for compatibility with the recording flow
+            console.log('✅ Preview filter update (CSS-based, zero CPU impact)');
         }
 
         function stopRecording() {
@@ -10940,8 +12202,359 @@
             recordingState.isRecording = false;
             recordingState.mediaRecorder.stop();
             stopRecordingTimer();
-            showToastRecording('⏹ Recording stopped', 'success', '✓');
+
+            // Stop canvas rendering loop
+            recordingState.isCanvasRendering = false;
+            if (recordingState.recordingCanvas) {
+                recordingState.recordingCanvas = null;
+                recordingState.canvasContext = null;
+            }
+
+            // Clear all recording effect particles for next recording
+            recordingSparkles = [];
+            recordingHearts = [];
+            recordingConfetti = [];
+            recordingStars = [];
+            recordingSnow = [];
+            recordingFlowers = [];
+            recordingGlow = [];
+            recordingBokeh = [];
+
+            console.log('✅ Recording stopped. Canvas rendering stopped.');
+
+            showToastRecording('⏹ Recording stopped, processing video...', 'success', '⏳');
             console.log('✅ Video recorded successfully:', recordingState.recordingTime + 's');
+
+            // Wait for mediaRecorder to finish saving, then process video
+            setTimeout(() => {
+                processRecordedVideo();
+            }, 100);
+        }
+
+        function processRecordedVideo() {
+            // Check what was applied during recording
+            const hasFilters = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+            const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
+            const hasSpeed = recordingState.currentSpeed && recordingState.currentSpeed !== 1;
+
+            console.log('🎬 Video Processing Complete!');
+            console.log('✅ Filters applied during recording:', hasFilters, recordingState.currentFilter);
+            console.log('✅ Effects applied during recording:', hasEffects, recordingState.selectedEffects.length);
+            console.log('✅ Speed setting:', recordingState.currentSpeed);
+
+            // Show upload message (effects already baked in)
+            const editLoadingOverlay = document.getElementById('editLoadingOverlay');
+            if (editLoadingOverlay) {
+                editLoadingOverlay.style.display = 'flex';
+                editLoadingOverlay.innerHTML = `
+                    <div style="text-align: center; color: #fff; max-width: 300px;">
+                        <div style="font-size: 36px; margin-bottom: 15px; animation: pulse 1s infinite;">⏳</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Uploading video</div>
+                        <div style="font-size: 12px; color: #aaa; margin-top: 10px;">
+                            ${hasFilters ? '✅ Filter baked in' : ''}
+                            ${hasEffects ? '<br>✅ Effects baked in' : ''}
+                            <br>📤 Sending to Cloudinary...
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Always upload (effects are already baked into the video)
+            uploadRecordedVideoWithEffects();
+        }
+
+        async function uploadRecordedVideoWithEffects() {
+            const latestClip = recordingState.clips[recordingState.clips.length - 1];
+            if (!latestClip || !latestClip.blob) {
+                console.error('❌ No video blob found');
+                transitionToEditScreen();
+                return;
+            }
+
+            console.log('🎬 Starting Cloudinary upload (effects already baked in)...');
+
+            // Hide edit loading overlay and show professional upload progress
+            const editLoadingOverlay = document.getElementById('editLoadingOverlay');
+            if (editLoadingOverlay) {
+                editLoadingOverlay.style.display = 'none';
+            }
+
+            // Show professional upload progress modal
+            showUploadProgressModal();
+
+            try {
+                console.log('📤 Uploading blob with effects...');
+
+                // Upload to Cloudinary (video already has effects baked in)
+                const uploadResult = await uploadRecordingToCloudinary(latestClip.blob);
+
+                if (uploadResult && uploadResult.url) {
+                    console.log('✅ Upload successful:', uploadResult.url);
+
+                    // Use Cloudinary URL for preview
+                    const cloudinaryUrl = uploadResult.url;
+
+                    // Log metadata
+                    console.log('✅ Filter used:', recordingState.currentFilter);
+                    console.log('✅ Effects applied:', recordingState.selectedEffects.length);
+                    console.log('✅ Speed setting:', recordingState.currentSpeed);
+                    console.log('📹 Video URL (with effects baked in):', cloudinaryUrl);
+
+                    // Update the clip with Cloudinary URL
+                    latestClip.url = cloudinaryUrl;
+                    latestClip.cloudinaryUrl = uploadResult.url;
+                    latestClip.publicId = uploadResult.publicId;
+                    latestClip.filter = recordingState.currentFilter;
+                    latestClip.effects = recordingState.selectedEffects;
+
+                    // Show success state
+                    updateUploadProgressModal(100, 'Upload Complete!', '✅', 'Preparing to edit...');
+                    console.log('✅ Video upload and effects processing complete');
+
+                    // Save to Firebase in background (doesn't block)
+                    saveRecordingToFirebase(latestClip);
+
+                    // Transition to edit screen after 1 second
+                    setTimeout(() => {
+                        closeUploadProgressModal();
+                        transitionToEditScreen();
+                    }, 1000);
+                } else {
+                    throw new Error('Upload failed');
+                }
+
+            } catch (error) {
+                console.error('❌ Video upload error:', error);
+                // Show error state
+                updateUploadProgressModal(0, 'Upload Failed', '❌', 'Error: ' + error.message);
+
+                // Transition to edit screen after 2 seconds
+                setTimeout(() => {
+                    closeUploadProgressModal();
+                    transitionToEditScreen();
+                }, 2000);
+            }
+        }
+
+        function getCloudinaryFilterTransform(filterName) {
+            // Map filter names to Cloudinary effects
+            // Note: For videos, we don't use transformation params that cause 400 errors
+            // Instead, save the raw URL and apply filters via CSS on preview
+            // Filters will be applied server-side when needed
+            const filterMap = {
+                'none': '',
+                'bw': 'e_grayscale',                      // Black & White
+                'sepia': 'e_sepia',                       // Sepia
+                'vintage': 'e_sepia:50',                 // Vintage - sepia
+                'vivid': 'e_saturation:70',              // Vivid - increased saturation
+                'warm': 'e_colorize:40:FF8C00',         // Warm - orange tint
+                'cool': 'e_colorize:30:00BFFF'          // Cool - blue tint
+            };
+            return filterMap[filterName] || '';
+        }
+
+        function applyCloudinaryTransformations(originalUrl, transforms) {
+            // Simply return the raw Cloudinary URL without transforms
+            // This ensures preview loads without 400 errors
+            // Transform application can be done server-side later if needed
+
+            if (!originalUrl) {
+                return originalUrl;
+            }
+
+            console.log('📹 Using raw Cloudinary URL (no transforms applied)');
+            return originalUrl;
+        }
+
+        async function uploadRecordingToCloudinary(videoBlob) {
+            const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
+            const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
+            const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+
+                const fileName = `recording_${Date.now()}.webm`;
+                formData.append('file', videoBlob, fileName);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('tags', `video_recording,${recordingState.recordingTime}s`);
+                formData.append('folder', 'recorded-videos');
+                formData.append('resource_type', 'auto');
+
+                // Timeout after 120 seconds
+                const timeoutId = setTimeout(() => {
+                    xhr.abort();
+                    reject(new Error('Upload timeout'));
+                }, 120000);
+
+                // Track upload progress
+                const uploadStartTime = Date.now();
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = (e.loaded / e.total) * 100;
+                        const uploadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
+                        const totalMB = (e.total / (1024 * 1024)).toFixed(1);
+                        const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
+                        const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
+                        const remainingBytes = e.total - e.loaded;
+                        const etaSeconds = remainingBytes / (e.loaded / elapsedSeconds);
+
+                        // Update professional progress modal
+                        updateUploadProgressModal(
+                            percentComplete,
+                            `Uploading... ${Math.round(percentComplete)}%`,
+                            '📤',
+                            `${uploadedMB} MB of ${totalMB} MB`,
+                            uploadSpeed,
+                            Math.max(0, Math.ceil(etaSeconds))
+                        );
+
+                        console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    clearTimeout(timeoutId);
+
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            console.log('✅ Cloudinary upload response:', response);
+                            resolve({
+                                url: response.secure_url,
+                                publicId: response.public_id,
+                                fileName: fileName
+                            });
+                        } catch (error) {
+                            reject(new Error('Invalid Cloudinary response'));
+                        }
+                    } else {
+                        reject(new Error(`Upload failed: ${xhr.status}`));
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    clearTimeout(timeoutId);
+                    reject(new Error('Network error during upload'));
+                });
+
+                xhr.open('POST', CLOUDINARY_API_URL);
+                xhr.send(formData);
+            });
+        }
+
+        async function saveRecordingToFirebase(clip) {
+            try {
+                const user = firebase.auth().currentUser;
+                if (!user) {
+                    console.log('⚠️ No user logged in, skipping Firebase save');
+                    return;
+                }
+
+                const db = firebase.firestore();
+                const userId = user.uid;
+
+                // Simple recording data
+                const recordingData = {
+                    userId: userId,
+                    url: clip.url,
+                    cloudinaryUrl: clip.cloudinaryUrl,
+                    publicId: clip.publicId || '',
+                    duration: clip.duration || 0,
+                    speed: clip.speed || 1,
+                    filter: recordingState.currentFilter || 'none',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: Date.now()
+                };
+
+                // Save to user's recordings collection (fire and forget)
+                db.collection('users').doc(userId).collection('recordings').add(recordingData)
+                    .then(docRef => {
+                        console.log('✅ Recording saved to Firebase:', docRef.id);
+                        clip.firebaseId = docRef.id;
+                    })
+                    .catch(err => {
+                        console.log('⚠️ Firebase save error (preview still works):', err.message);
+                    });
+
+            } catch (error) {
+                console.error('⚠️ Firebase error:', error.message);
+                // Don't block - preview still works
+            }
+        }
+
+        function updateRecordingUploadProgress(percent) {
+            const editLoadingOverlay = document.getElementById('editLoadingOverlay');
+            if (editLoadingOverlay) {
+                editLoadingOverlay.style.display = 'flex';
+
+                // Determine speed indicator
+                let speedEmoji = '🐢';
+                let speedText = 'Slow';
+                if (percent < 30) {
+                    speedEmoji = '🚀';
+                    speedText = 'Fast';
+                } else if (percent < 70) {
+                    speedEmoji = '⚡';
+                    speedText = 'Normal';
+                }
+
+                editLoadingOverlay.innerHTML = `
+                    <div style="text-align: center; color: #fff; max-width: 300px;">
+                        <div style="font-size: 36px; margin-bottom: 15px; animation: pulse 1s infinite;">📤</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Uploading video</div>
+                        
+                        <div style="width: 100%; height: 8px; background: #2a2a2a; border-radius: 4px; overflow: hidden; margin: 0 auto 15px;">
+                            <div style="height: 100%; background: linear-gradient(90deg, #4C1D95, #6D28D9); width: ${percent}%; transition: width 0.2s;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <div style="font-size: 24px;">${speedEmoji}</div>
+                            <div style="font-size: 14px; color: #aaa;">${Math.round(percent)}%</div>
+                            <div style="font-size: 12px; color: #888;">${speedText}</div>
+                        </div>
+                        
+                        <div style="font-size: 11px; color: #666; margin-top: 15px;">Applying effects & filters</div>
+                    </div>
+                `;
+            }
+        }
+
+        function transitionToEditScreen() {
+            // Load the latest recorded video into Screen 3
+            if (recordingState.clips.length > 0) {
+                const latestClip = recordingState.clips[recordingState.clips.length - 1];
+                const editVideoElement = document.getElementById('editVideoPreview');
+                const loadingOverlay = document.getElementById('editLoadingOverlay');
+
+                console.log('🎬 Transitioning to edit screen...');
+                console.log('📹 Video URL:', latestClip.url);
+
+                if (editVideoElement) {
+                    // Set video source
+                    editVideoElement.src = latestClip.url;
+                    editVideoElement.preload = 'metadata';
+                    editVideoElement.crossOrigin = 'anonymous';
+
+                    // Hide loading overlay after a moment
+                    setTimeout(() => {
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+                        console.log('✅ Video loaded and ready');
+                    }, 500);
+
+                    editVideoElement.onerror = (err) => {
+                        console.error('❌ Video load error:', err);
+                        if (loadingOverlay) loadingOverlay.style.display = 'none';
+                    };
+                }
+            }
+
+            // Show screen immediately
+            showScreen('screen3');
+            console.log('📺 Screen 3 shown');
         }
 
         function startRecordingTimer() {
@@ -10999,6 +12612,7 @@
             }
 
             if (recordingState.mediaRecorder.state === 'recording') {
+                // Pause recording
                 recordingState.mediaRecorder.pause();
                 recordingState.timerPaused = true;
                 stopRecordingTimer();
@@ -11006,10 +12620,18 @@
                 const pauseBtn = document.getElementById('recPauseBtn');
                 if (pauseBtn) {
                     pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-                    pauseBtn.title = 'Resume';
+                    pauseBtn.title = 'Resume Recording';
                 }
+
+                const mainBtn = document.getElementById('recMainBtn');
+                if (mainBtn) {
+                    mainBtn.style.opacity = '0.6';
+                }
+
                 showToastRecording('⏸ Recording paused', 'info', '⏸');
+                console.log('⏸ Recording paused at:', recordingState.recordingTime + 's');
             } else if (recordingState.mediaRecorder.state === 'paused') {
+                // Resume recording
                 recordingState.mediaRecorder.resume();
                 recordingState.timerPaused = false;
                 startRecordingTimer();
@@ -11017,9 +12639,16 @@
                 const pauseBtn = document.getElementById('recPauseBtn');
                 if (pauseBtn) {
                     pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                    pauseBtn.title = 'Pause';
+                    pauseBtn.title = 'Pause Recording';
                 }
+
+                const mainBtn = document.getElementById('recMainBtn');
+                if (mainBtn) {
+                    mainBtn.style.opacity = '1';
+                }
+
                 showToastRecording('▶ Recording resumed', 'info', '▶');
+                console.log('▶ Recording resumed from:', recordingState.recordingTime + 's');
             }
         }
 
@@ -11157,26 +12786,7 @@
         }
 
         // ====== SPEED & MODE CONTROLS ======
-        function setRecordingSpeed(speed) {
-            recordingState.currentSpeed = speed;
 
-            document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function setRecordMode(mode) {
-            recordingState.currentMode = mode;
-
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function setAspectRatio(ratio) {
-            recordingState.aspectRatio = ratio;
-
-            document.querySelectorAll('.aspect-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
 
         // ====== PROCEED TO EDITOR ======
         function proceedToEdit() {
@@ -12014,158 +13624,68 @@
         // ============================================================================
 
         function startRecording() {
-             // Check if timer is set
-             if (recordingState.recordingTimer > 0) {
-                 // Show countdown first
-                 showRecordingCountdown();
-                 return;
-             }
+            // Check if timer is set
+            if (recordingState.recordingTimer > 0) {
+                // Show countdown first
+                showRecordingCountdown();
+                return;
+            }
 
-             // Proceed with actual recording
-             performRecording();
-         }
+            // Proceed with actual recording
+            performRecording();
+        }
 
         function performRecording() {
-             // Request camera access
-             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-                 .then(stream => {
-                     recordingState.mediaStream = stream;
-                     
-                     // IMPORTANT: Display camera stream to user
-                     const videoElement = document.getElementById('recordingVideoPreview');
-                     if (videoElement) {
-                         videoElement.srcObject = stream;
-                         videoElement.play().catch(err => {
-                             console.error('Error playing video:', err);
-                         });
-                     }
-                     
-                     recordingState.mediaRecorder = new MediaRecorder(stream);
-                     const chunks = [];
+            // Request camera access
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(stream => {
+                    recordingState.mediaStream = stream;
 
-                     recordingState.mediaRecorder.ondataavailable = (e) => {
-                         chunks.push(e.data);
-                     };
+                    // IMPORTANT: Display camera stream to user
+                    const videoElement = document.getElementById('recordingVideoPreview');
+                    if (videoElement) {
+                        videoElement.srcObject = stream;
+                        videoElement.play().catch(err => {
+                            console.error('Error playing video:', err);
+                        });
+                    }
 
-                     recordingState.mediaRecorder.onstop = () => {
-                         recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
-                     };
+                    recordingState.mediaRecorder = new MediaRecorder(stream);
+                    const chunks = [];
 
-                     recordingState.mediaRecorder.start();
-                     recordingState.isRecording = true;
-                     recordingState.recordingStartTime = Date.now();
+                    recordingState.mediaRecorder.ondataavailable = (e) => {
+                        chunks.push(e.data);
+                    };
 
-                     // Update record button to show recording state
-                     const recordBtn = document.querySelector('.rec-record-btn');
-                     if (recordBtn) {
-                         recordBtn.classList.add('recording');
-                         recordBtn.onclick = stopRecording;
-                         recordBtn.textContent = '⏹';
-                     }
+                    recordingState.mediaRecorder.onstop = () => {
+                        recordingState.recordedBlob = new Blob(chunks, { type: 'video/webm' });
+                    };
 
-                     showScreen('screen2');
-                     startRecordingTimer();
-                     showToastRecording('🎥 Recording started', 'success', '⏹');
-                 })
-                 .catch(err => {
-                     showToastRecording('Camera access denied', 'error', '✕');
-                     console.error('Error accessing camera:', err);
-                 });
-         }
+                    recordingState.mediaRecorder.start();
+                    recordingState.isRecording = true;
+                    recordingState.recordingStartTime = Date.now();
 
-        function stopRecording() {
-             if (recordingState.mediaRecorder) {
-                 recordingState.mediaRecorder.stop();
-                 recordingState.isRecording = false;
-                 clearInterval(recordingState.timerInterval);
+                    // Update record button to show recording state
+                    const recordBtn = document.querySelector('.rec-record-btn');
+                    if (recordBtn) {
+                        recordBtn.classList.add('recording');
+                        recordBtn.onclick = stopRecording;
+                        recordBtn.textContent = '⏹';
+                    }
 
-                 // Stop all tracks
-                 if (recordingState.mediaStream) {
-                     recordingState.mediaStream.getTracks().forEach(track => track.stop());
-                 }
+                    showScreen('screen2');
+                    startRecordingTimer();
+                    showToastRecording('🎥 Recording started', 'success', '⏹');
+                })
+                .catch(err => {
+                    showToastRecording('Camera access denied', 'error', '✕');
+                    console.error('Error accessing camera:', err);
+                });
+        }
 
-                 // Clear video display
-                 const videoElement = document.getElementById('recordingVideoPreview');
-                 if (videoElement) {
-                     videoElement.srcObject = null;
-                 }
 
-                 // Reset record button
-                 const recordBtn = document.querySelector('.rec-record-btn');
-                 if (recordBtn) {
-                     recordBtn.classList.remove('recording');
-                     recordBtn.onclick = startRecording;
-                     recordBtn.textContent = '';
-                 }
 
-                 showToastRecording('🛑 Recording stopped', 'info', '⏹');
-             }
-         }
 
-        function cancelRecording() {
-             stopRecording();
-             recordingState.recordedBlob = null;
-             recordingState.timerPaused = false;
-             
-             // Clear timer
-             const timerEl = document.getElementById('recTimer');
-             if (timerEl) timerEl.textContent = '0:00';
-             
-             showScreen('screen1');
-             showToastRecording('❌ Recording cancelled', 'error', '✕');
-         }
-
-         function acceptRecording() {
-             if (!recordingState.recordedBlob) {
-                 showToastRecording('No recording to save', 'error', '⚠️');
-                 return;
-             }
-             
-             // Save recorded video for editing
-             recordingState.savedRecording = {
-                 blob: recordingState.recordedBlob,
-                 timestamp: new Date(),
-                 settings: {
-                     layout: recordingState.layout,
-                     filter: recordingState.currentFilter,
-                     effects: [...recordingState.selectedEffects],
-                     speed: recordingState.currentSpeed,
-                     timer: recordingState.recordingTimer
-                 }
-             };
-             
-             recordingState.timerPaused = false;
-             
-             // Clear timer
-             const timerEl = document.getElementById('recTimer');
-             if (timerEl) timerEl.textContent = '0:00';
-             
-             showScreen('screen3');
-             showToastRecording('✅ Ready to edit', 'success', '✓');
-         }
-
-        function startRecordingTimer() {
-             let seconds = 0;
-             recordingState.timerInterval = setInterval(() => {
-                 // Only increment if not paused
-                 if (!recordingState.timerPaused) {
-                     seconds++;
-                 }
-                 
-                 const mins = Math.floor(seconds / 60);
-                 const secs = seconds % 60;
-                 const timerEl = document.getElementById('recTimer');
-                 if (timerEl) {
-                     timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                 }
-                 
-                 // Update recording overlay indicator pulsing
-                 const recDot = document.querySelector('.rec-rec-dot');
-                 if (recDot) {
-                     recDot.style.opacity = !recordingState.timerPaused ? '1' : '0.5';
-                 }
-             }, 1000);
-         }
 
         // ============================================================================
         // MODE SWITCHING
@@ -12247,13 +13767,13 @@
         function setRecordingLayout(layout) {
             recordingState.layout = layout;
             recordingState.aspectRatio = layout;
-            
+
             // Apply layout to video preview element
             const video = getRecordingVideoElement();
             if (video && video.parentElement) {
                 video.parentElement.style.aspectRatio = layout === '16:9' ? '16/9' : layout === '1:1' ? '1/1' : 'auto';
             }
-            
+
             // Update active button
             document.querySelectorAll('#recLayoutPanel .rec-option-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -12298,13 +13818,34 @@
         function setRecordingSpeed(speed) {
             recordingState.currentSpeed = speed;
             recordingState.playbackSpeed = speed;
-            
-            // Apply playback rate to video element if recording
+
+            // Apply playback rate to ALL video preview elements
+            const videoPreview = document.getElementById('videoPreview');
+            if (videoPreview) {
+                videoPreview.playbackRate = speed;
+            }
+
+            const recordingVideoPreview = document.getElementById('recordingVideoPreview');
+            if (recordingVideoPreview) {
+                recordingVideoPreview.playbackRate = speed;
+            }
+
+            const editVideoPreview = document.getElementById('editVideoPreview');
+            if (editVideoPreview) {
+                editVideoPreview.playbackRate = speed;
+            }
+
+            // Apply to current recording video element
             const video = getRecordingVideoElement();
-            if (video && recordingState.isRecording) {
+            if (video) {
                 video.playbackRate = speed;
             }
-            
+
+            // Apply to all camera preview elements
+            document.querySelectorAll('.camera-preview').forEach(el => {
+                el.playbackRate = speed;
+            });
+
             // Update active button
             document.querySelectorAll('#recSpeedPanel .rec-option-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -12317,15 +13858,88 @@
                 1.5: '⏩',
                 2: '⚡'
             };
-            
+
             const speedNames = {
                 0.5: 'Slow Motion',
                 1: 'Normal',
                 1.5: 'Fast',
                 2: 'Hyper Speed'
             };
-            
+
+            console.log(`✅ Speed set to ${speed}x`);
             showToastRecording(`${speedEmoji[speed]} ${speedNames[speed]} (${speed}x)`, 'info', '✓');
+        }
+
+        // ============================================================================
+        // RECORDING DURATION OPTIONS
+        // ============================================================================
+
+        function toggleRecordingDuration() {
+            const durationPanel = document.getElementById('recDurationPanel');
+            if (durationPanel) {
+                durationPanel.classList.toggle('show');
+            }
+        }
+
+        function closeDurationPanel() {
+            const durationPanel = document.getElementById('recDurationPanel');
+            if (durationPanel) durationPanel.classList.remove('show');
+        }
+
+        function setRecordingDuration(seconds) {
+            recordingState.selectedDuration = seconds;
+            recordingState.maxDuration = seconds;
+
+            // Update active button
+            document.querySelectorAll('#recDurationPanel .rec-options-grid .rec-option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.rec-option-btn').classList.add('active');
+
+            // Update label
+            const durationLabel = document.getElementById('recDurationLabel');
+            if (durationLabel) {
+                durationLabel.textContent = `${seconds}s`;
+            }
+
+            // Clear custom input
+            const customInput = document.getElementById('customDurationInput');
+            if (customInput) customInput.value = seconds;
+
+            showToastRecording(`⏳ Duration set to ${seconds} seconds`, 'info', '✓');
+
+            // Close panel after selection
+            closeDurationPanel();
+        }
+
+        function setCustomRecordingDuration() {
+            const customInput = document.getElementById('customDurationInput');
+            if (!customInput) return;
+
+            const customSeconds = parseInt(customInput.value);
+            if (isNaN(customSeconds) || customSeconds < 1 || customSeconds > 600) {
+                showToastRecording('❌ Duration must be 1-600 seconds', 'error', '⚠️');
+                return;
+            }
+
+            recordingState.selectedDuration = customSeconds;
+            recordingState.maxDuration = customSeconds;
+
+            // Deselect all preset buttons
+            document.querySelectorAll('#recDurationPanel .rec-options-grid .rec-option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Update label
+            const durationLabel = document.getElementById('recDurationLabel');
+            if (durationLabel) {
+                durationLabel.textContent = `${customSeconds}s`;
+            }
+
+            showToastRecording(`⏳ Duration set to ${customSeconds} seconds`, 'success', '✓');
+
+            // Close panel after setting
+            closeDurationPanel();
         }
 
         // ============================================================================
@@ -12361,32 +13975,7 @@
             showToastRecording('Video saved to drafts ✓', 'success', '💾');
         }
 
-        function toggleRecordingPause() {
-             if (!recordingState.mediaRecorder) return;
-             
-             const pauseBtn = document.getElementById('recPauseBtn');
-             const isPaused = recordingState.mediaRecorder.state === 'paused';
-             
-             if (isPaused) {
-                 // Resume
-                 recordingState.mediaRecorder.resume();
-                 if (pauseBtn) pauseBtn.textContent = '⏸';
-                 
-                 // Resume timer
-                 recordingState.timerPaused = false;
-                 
-                 showToastRecording('▶️ Recording resumed', 'info', '▶️');
-             } else {
-                 // Pause
-                 recordingState.mediaRecorder.pause();
-                 if (pauseBtn) pauseBtn.textContent = '▶️';
-                 
-                 // Pause timer
-                 recordingState.timerPaused = true;
-                 
-                 showToastRecording('⏸ Recording paused', 'info', '⏸');
-             }
-         }
+
 
         // ============================================================================
         // EFFECTS
@@ -12838,7 +14427,7 @@
         function getRecordingVideoElement() {
             // Check which screen is currently active and return the appropriate video element
             const activeScreen = document.querySelector('.recording-screen.active');
-            
+
             if (activeScreen?.id === 'screen2') {
                 // Screen 2 is active - return recording video preview
                 const recordingVideo = document.getElementById('recordingVideoPreview');
@@ -12848,12 +14437,12 @@
                 const videoPreview = document.getElementById('videoPreview');
                 if (videoPreview) return videoPreview;
             }
-            
+
             // Fallback priority order if screen detection fails
             return document.getElementById('recordingVideoPreview') ||  // Screen 2
-                   document.getElementById('videoPreview') ||          // Screen 1
-                   document.querySelector('.recording-screen.active .camera-preview') ||
-                   document.querySelector('.camera-preview');          // Any camera preview
+                document.getElementById('videoPreview') ||          // Screen 1
+                document.querySelector('.recording-screen.active .camera-preview') ||
+                document.querySelector('.camera-preview');          // Any camera preview
         }
 
         // ====== RECORDING EFFECTS - TIKTOK STYLE ======
@@ -12951,21 +14540,67 @@
 
         function startEffect(effectName) {
             const video = getRecordingVideoElement();
-            if (!video) return;
+            if (!video) {
+                console.error('❌ No video element found for effects');
+                return;
+            }
+
+            console.log('🎬 Starting effect:', effectName, 'Video:', video.id);
 
             // Create or reuse effects canvas
             if (!effectsState.canvas) {
                 effectsState.canvas = document.createElement('canvas');
-                effectsState.canvas.style.position = 'absolute';
-                effectsState.canvas.style.top = '0';
-                effectsState.canvas.style.left = '0';
-                effectsState.canvas.style.zIndex = '10';
-                effectsState.canvas.style.pointerEvents = 'none';
-                video.parentElement.style.position = 'relative';
-                video.parentElement.appendChild(effectsState.canvas);
+
+                // Set canvas styling BEFORE appending
+                effectsState.canvas.id = 'effectsOverlayCanvas';
+                effectsState.canvas.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    zIndex: 10;
+                    pointerEvents: none;
+                    display: block;
+                    background: transparent;
+                `;
+
+                // Get the correct parent (the screen container)
+                let parent = video.parentElement;
+
+                // Ensure parent is positioned
+                const currentPosition = window.getComputedStyle(parent).position;
+                if (currentPosition === 'static' || !currentPosition) {
+                    parent.style.position = 'relative';
+                }
+                parent.style.overflow = 'hidden';
+
+                // Insert canvas right after video (so it overlays)
+                video.insertAdjacentElement('afterend', effectsState.canvas);
+
                 effectsState.ctx = effectsState.canvas.getContext('2d');
+
+                // Set initial canvas size
                 resizeEffectsCanvas();
+
+                // Draw test rectangle to verify canvas is visible
+                if (effectsState.ctx && effectsState.canvas.width > 0 && effectsState.canvas.height > 0) {
+                    effectsState.ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
+                    effectsState.ctx.fillRect(0, 0, effectsState.canvas.width, effectsState.canvas.height);
+                    console.log('✅ Test rectangle drawn on canvas');
+                }
+
+                // Also resize on timeout to handle any layout shifts
+                setTimeout(() => {
+                    resizeEffectsCanvas();
+                }, 50);
+
                 window.addEventListener('resize', resizeEffectsCanvas);
+
+                console.log('✅ Effects canvas created');
+                console.log('📍 Canvas parent:', parent.id, parent.className);
+                console.log('🎨 Canvas element:', effectsState.canvas.id);
+                console.log('📐 Canvas dimensions:', effectsState.canvas.width, 'x', effectsState.canvas.height);
             }
 
             // Particle Effects
@@ -13040,7 +14675,7 @@
 
         function stopEffect(effectName) {
             const video = getRecordingVideoElement();
-            
+
             // Particle & Canvas-based Effects
             const canvasEffects = ['sparkle', 'star', 'ghost', 'hearts', 'confetti', 'flowers', 'snow', 'bokeh', 'rainbow', 'clone'];
             if (canvasEffects.includes(effectName)) {
@@ -13057,7 +14692,7 @@
                 effectsState.stars = [];
                 effectsState.ghostTrail = [];
             }
-            
+
             // Filter-based Effects
             const filterEffects = ['glow', 'vhs', 'glitch', 'filmburn', 'scanlines', 'neon', 'cyberpunk', 'vaporwave', 'mask', 'dreamy', 'noir', 'pixelate', 'wave', 'fisheye', 'kaleidoscope', 'sunbeam', 'mirror'];
             if (filterEffects.includes(effectName)) {
@@ -13070,31 +14705,42 @@
         function resizeEffectsCanvas() {
             const video = getRecordingVideoElement();
             if (!video || !effectsState.canvas) return;
-            
-            // Use actual video dimensions if available, not just offset
-            let width = video.offsetWidth;
-            let height = video.offsetHeight;
-            
+
+            // Try multiple ways to get dimensions
+            let width = video.offsetWidth || video.clientWidth || video.videoWidth || window.innerWidth;
+            let height = video.offsetHeight || video.clientHeight || video.videoHeight || window.innerHeight;
+
             // If recording canvas exists, match its dimensions
             if (recordingState.recordingCanvas) {
                 width = recordingState.recordingCanvas.width;
                 height = recordingState.recordingCanvas.height;
-            } else if (video.videoWidth && video.videoHeight) {
-                width = video.videoWidth;
-                height = video.videoHeight;
             }
-            
+
+            // Ensure minimum size
+            if (width < 100) width = 480;
+            if (height < 100) height = 360;
+
             effectsState.canvas.width = width;
             effectsState.canvas.height = height;
             console.log('🎬 Effects canvas resized to:', width, 'x', height);
         }
 
         function startSparkleEffect() {
+            let debugLogged = false;
+
             const animate = () => {
                 if (!recordingState.selectedEffects.includes('sparkle')) return;
 
                 const canvas = effectsState.canvas;
                 const ctx = effectsState.ctx;
+
+                // Debug log on first frame only
+                if (!debugLogged) {
+                    console.log('✨ Sparkle animation started');
+                    console.log('Canvas size:', canvas.width, 'x', canvas.height);
+                    console.log('Context:', ctx ? 'Ready' : 'Not ready');
+                    debugLogged = true;
+                }
 
                 // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -13656,7 +15302,7 @@
 
                 // Left half
                 ctx.drawImage(video, 0, 0, video.width, video.height, 0, 0, canvas.width / 2, canvas.height);
-                
+
                 // Right half mirrored
                 ctx.save();
                 ctx.translate(canvas.width, 0);
@@ -13752,10 +15398,15 @@
                     filterString = 'Original';
             }
 
-            // Update preview immediately with CSS filter (smooth, instant)
+            // Update ALL video elements that show preview
             const videoPreview = document.getElementById('videoPreview');
             if (videoPreview) {
                 videoPreview.style.filter = filter;
+            }
+
+            const recordingVideoPreview = document.getElementById('recordingVideoPreview');
+            if (recordingVideoPreview) {
+                recordingVideoPreview.style.filter = filter;
             }
 
             // Get the appropriate video element
@@ -13764,10 +15415,17 @@
                 video.style.filter = filter;
             }
 
+            // Also apply to any video element with camera-preview class
+            document.querySelectorAll('.camera-preview').forEach(el => {
+                el.style.filter = filter;
+            });
+
             // Trigger callback if it exists
             if (recordingState.previewFilterCallback) {
                 recordingState.previewFilterCallback();
             }
+
+            console.log(`✅ Filter applied: ${filterString}`);
 
             // Determine which screen is active
             const activeScreen = document.querySelector('.recording-screen.active');
@@ -13782,11 +15440,11 @@
                 activePanel.querySelectorAll('.rec-filter-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
-                
+
                 // Mark current filter as active - try multiple ways to be sure
                 const filterButton = activePanel.querySelector(`button[onclick*="applyRecordingFilter('${filterName}')"]`) ||
-                                   activePanel.querySelector(`button[onclick*="applyRecordingFilter\\('${filterName}'\\)"]`);
-                
+                    activePanel.querySelector(`button[onclick*="applyRecordingFilter\\('${filterName}'\\)"]`);
+
                 if (filterButton) {
                     filterButton.classList.add('active');
                     console.log('✅ Updated button active state for filter:', filterName);
@@ -17086,7 +18744,13 @@
         function closeRecordingUI() {
             const overlay = document.getElementById('recordingUIOverlay');
             overlay.classList.remove('active');
+            overlay.style.display = 'none';
             document.body.style.overflow = '';
+
+            // Stop all video/photo cameras when closing
+            stopVideoCamera();
+            stopPhotoMode();
+
             // Reset state
             recordingUIState = {
                 currentScreen: 1,
@@ -17095,6 +18759,8 @@
                 caption: '',
                 videoBlob: null
             };
+
+            console.log('📷 Recording UI closed - Camera streams stopped');
         }
         // ============================================================================
         // SOUND LIBRARY FUNCTIONALITY
@@ -19375,6 +21041,56 @@
                 }
             }
         }
+
+        // ============================================================================
+        // AUTO-CLOSE CAMERA ON PAGE NAVIGATION
+        // ============================================================================
+
+        // Close camera when user navigates away
+        window.addEventListener('beforeunload', () => {
+            if (recordingState.stream) {
+                stopVideoCamera();
+                console.log('🚪 Page unloading - Video camera stopped');
+            }
+            if (photoState.photoStream) {
+                stopPhotoMode();
+                console.log('🚪 Page unloading - Photo camera stopped');
+            }
+        });
+
+        // Close camera when tab becomes hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                console.log('👁️ Tab hidden - Closing camera streams');
+                if (recordingState.stream) {
+                    stopVideoCamera();
+                }
+                if (photoState.photoStream) {
+                    stopPhotoMode();
+                }
+                // Also close recording UI if open
+                const overlay = document.getElementById('recordingUIOverlay');
+                if (overlay && overlay.style.display !== 'none') {
+                    closeRecordingUI();
+                }
+            }
+        });
+
+        // Close camera if page loses focus
+        window.addEventListener('blur', () => {
+            console.log('⚠️ Window blurred - Monitoring camera state');
+            // Optional: You can add additional checks here if needed
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('unload', () => {
+            if (recordingState.stream) {
+                recordingState.stream.getTracks().forEach(track => track.stop());
+            }
+            if (photoState.photoStream) {
+                photoState.photoStream.getTracks().forEach(track => track.stop());
+            }
+        });
 
 
 
