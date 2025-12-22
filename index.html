@@ -7013,6 +7013,17 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- AFCON FACE FILTER -->
+                    <div class="rec-effects-category">
+                        <div class="rec-category-title">🏆 AFCON Face Filter</div>
+                        <div class="rec-effects-grid">
+                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('afcon')" title="AFCON">
+                                <div class="rec-effect-circle">🏆</div>
+                                <span>AFCON</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -7060,6 +7071,64 @@
                     <button class="rec-option-btn" onclick="setRecordingSpeed(2)" title="2x">
                         <div class="rec-option-icon">⚡</div>
                         <span>2x</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- AFCON Country Selector Panel -->
+            <div class="rec-options-panel" id="recAfconPanel">
+                <div class="rec-options-header">
+                    <span style="flex: 1; text-align: center; color: white; font-weight: 600;">AFCON Country</span>
+                    <button class="rec-options-close" onclick="closeAfconPanel()">✕</button>
+                </div>
+                <div class="rec-options-grid" style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 400px; overflow-y: auto;">
+                    <button class="rec-option-btn" onclick="setAfconCountry('NG')" title="Nigeria 🇳🇬">
+                        <div class="rec-option-icon">🇳🇬</div>
+                        <span>Nigeria</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('CM')" title="Cameroon 🇨🇲">
+                        <div class="rec-option-icon">🇨🇲</div>
+                        <span>Cameroon</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('EG')" title="Egypt 🇪🇬">
+                        <div class="rec-option-icon">🇪🇬</div>
+                        <span>Egypt</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('SN')" title="Senegal 🇸🇳">
+                        <div class="rec-option-icon">🇸🇳</div>
+                        <span>Senegal</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('MA')" title="Morocco 🇲🇦">
+                        <div class="rec-option-icon">🇲🇦</div>
+                        <span>Morocco</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('GH')" title="Ghana 🇬🇭">
+                        <div class="rec-option-icon">🇬🇭</div>
+                        <span>Ghana</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('CI')" title="Ivory Coast 🇨🇮">
+                        <div class="rec-option-icon">🇨🇮</div>
+                        <span>Ivory Coast</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('KE')" title="Kenya 🇰🇪">
+                        <div class="rec-option-icon">🇰🇪</div>
+                        <span>Kenya</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('TN')" title="Tunisia 🇹🇳">
+                        <div class="rec-option-icon">🇹🇳</div>
+                        <span>Tunisia</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('UG')" title="Uganda 🇺🇬">
+                        <div class="rec-option-icon">🇺🇬</div>
+                        <span>Uganda</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('ZA')" title="South Africa 🇿🇦">
+                        <div class="rec-option-icon">🇿🇦</div>
+                        <span>South Africa</span>
+                    </button>
+                    <button class="rec-option-btn" onclick="setAfconCountry('BF')" title="Burkina Faso 🇧🇫">
+                        <div class="rec-option-icon">🇧🇫</div>
+                        <span>Burkina Faso</span>
                     </button>
                 </div>
             </div>
@@ -7159,6 +7228,19 @@
                     <button class="rec-mode-tab" onclick="switchRecMode('photo'); return false;">Photo</button>
                     <button class="rec-mode-tab" onclick="switchRecMode('text'); return false;">Text</button>
                 </div>
+            </div>
+
+            <!-- AFCON Face Detection Canvas & Overlays -->
+            <canvas id="afconFaceCanvas" style="position: absolute; top: 0; left: 0; display: none;"></canvas>
+            <div id="afconOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;">
+                <!-- Face paint left cheek -->
+                <div id="afconLeftCheek" style="position: absolute; width: 60px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.8; display: none;"></div>
+                <!-- Face paint right cheek -->
+                <div id="afconRightCheek" style="position: absolute; width: 60px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.8; display: none;"></div>
+                <!-- Flag/badge forehead -->
+                <div id="afconBadge" style="position: absolute; width: 50px; height: 50px; background-size: contain; background-repeat: no-repeat; background-position: center; display: none;"></div>
+                <!-- Text overlay -->
+                <div id="afconText" style="position: absolute; color: white; font-weight: bold; font-size: 14px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); text-align: center; white-space: nowrap; display: none;"></div>
             </div>
         </div>
 
@@ -21094,6 +21176,444 @@
 
 
 
+    </script>
+
+    <!-- AFCON Face Filter System -->
+    <script>
+        // Load ml5.js dynamically
+        if (!window.ml5) {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/ml5@0.12.0/dist/ml5.min.js';
+            script.async = true;
+            document.head.appendChild(script);
+        }
+    </script>
+    <script>
+        // ====== AFCON FACE FILTER STATE ======
+        const afconState = {
+            enabled: false,
+            selectedCountry: null,
+            detector: null,
+            isDetecting: false,
+            faceDetectionInterval: null,
+            detectionFrameRate: 15, // 15 FPS for performance
+            lastDetectionTime: 0,
+            currentFace: null,
+            animationFrameId: null,
+            libraryReady: false
+        };
+
+        // ====== AFCON COUNTRY ASSETS ======
+        const afconCountries = {
+            'NG': {
+                name: 'Nigeria',
+                flag: '🇳🇬',
+                colors: ['#009B3A', '#FFFFFF', '#E41E22'],
+                theme: '#009B3A',
+                leftPaint: '🟢',
+                rightPaint: '🟢',
+                badgeText: 'NIGERIA'
+            },
+            'CM': {
+                name: 'Cameroon',
+                flag: '🇨🇲',
+                colors: ['#007A5E', '#FFFFFF', '#CE1126'],
+                theme: '#007A5E',
+                leftPaint: '🟢',
+                rightPaint: '🔴',
+                badgeText: 'CAMEROON'
+            },
+            'EG': {
+                name: 'Egypt',
+                flag: '🇪🇬',
+                colors: ['#CE1126', '#FFFFFF', '#007A5E'],
+                theme: '#CE1126',
+                leftPaint: '🔴',
+                rightPaint: '🔴',
+                badgeText: 'EGYPT'
+            },
+            'SN': {
+                name: 'Senegal',
+                flag: '🇸🇳',
+                colors: ['#007A5E', '#FCDCCF', '#CE1126'],
+                theme: '#007A5E',
+                leftPaint: '🟢',
+                rightPaint: '🔴',
+                badgeText: 'SENEGAL'
+            },
+            'MA': {
+                name: 'Morocco',
+                flag: '🇲🇦',
+                colors: ['#CE1126', '#007A5E', '#FFFFFF'],
+                theme: '#CE1126',
+                leftPaint: '🔴',
+                rightPaint: '🟢',
+                badgeText: 'MOROCCO'
+            },
+            'GH': {
+                name: 'Ghana',
+                flag: '🇬🇭',
+                colors: ['#007A5E', '#FFD100', '#CE1126'],
+                theme: '#007A5E',
+                leftPaint: '🟡',
+                rightPaint: '🔴',
+                badgeText: 'GHANA'
+            },
+            'CI': {
+                name: 'Ivory Coast',
+                flag: '🇨🇮',
+                colors: ['#FF7800', '#FFFFFF', '#007A5E'],
+                theme: '#FF7800',
+                leftPaint: '🟠',
+                rightPaint: '🟢',
+                badgeText: 'IVORY COAST'
+            },
+            'KE': {
+                name: 'Kenya',
+                flag: '🇰🇪',
+                colors: ['#000000', '#FFFFFF', '#CE1126'],
+                theme: '#000000',
+                leftPaint: '⚫',
+                rightPaint: '🔴',
+                badgeText: 'KENYA'
+            },
+            'TN': {
+                name: 'Tunisia',
+                flag: '🇹🇳',
+                colors: ['#CE1126', '#FFFFFF', '#007A5E'],
+                theme: '#CE1126',
+                leftPaint: '🔴',
+                rightPaint: '🔴',
+                badgeText: 'TUNISIA'
+            },
+            'UG': {
+                name: 'Uganda',
+                flag: '🇺🇬',
+                colors: ['#000000', '#FFD100', '#CE1126'],
+                theme: '#000000',
+                leftPaint: '⚫',
+                rightPaint: '🟡',
+                badgeText: 'UGANDA'
+            },
+            'ZA': {
+                name: 'South Africa',
+                flag: '🇿🇦',
+                colors: ['#000000', '#007A5E', '#FFD100'],
+                theme: '#000000',
+                leftPaint: '⚫',
+                rightPaint: '🟢',
+                badgeText: 'SOUTH AFRICA'
+            },
+            'BF': {
+                name: 'Burkina Faso',
+                flag: '🇧🇫',
+                colors: ['#CE1126', '#007A5E', '#FFD100'],
+                theme: '#CE1126',
+                leftPaint: '🔴',
+                rightPaint: '🟢',
+                badgeText: 'BURKINA FASO'
+            }
+        };
+
+        // ====== INITIALIZE FACE DETECTION ======
+        async function initAfconDetector() {
+            try {
+                console.log('🏆 AFCON: Starting initialization...');
+                
+                // Wait for ml5 to load with longer timeout
+                let attempts = 0;
+                const maxAttempts = 150; // 15 seconds at 100ms intervals
+                
+                while (typeof window.ml5 === 'undefined' && attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+
+                if (typeof window.ml5 === 'undefined') {
+                    throw new Error('ml5.js library timeout - failed to load from CDN');
+                }
+
+                console.log('✅ AFCON: ml5.js library loaded');
+                console.log('🏆 AFCON: Initializing face detection...');
+                
+                // Initialize face detection with ml5
+                const detector = await window.ml5.faceApi();
+                
+                afconState.detector = detector;
+                console.log('✅ AFCON: Face detection ready');
+                afconState.libraryReady = true;
+                return true;
+            } catch (err) {
+                console.error('❌ AFCON: Failed to initialize face detection', err.message || err);
+                afconState.detector = null;
+                afconState.libraryReady = false;
+                return false;
+            }
+        }
+
+        // ====== DETECT FACES ======
+        async function detectAfconFace() {
+            if (!afconState.enabled || !afconState.selectedCountry) return;
+            if (!afconState.libraryReady || !afconState.detector) return;
+
+            const video = document.getElementById('videoPreview');
+            if (!video || !video.srcObject) return;
+
+            const now = Date.now();
+            if (now - afconState.lastDetectionTime < 1000 / afconState.detectionFrameRate) {
+                return;
+            }
+            afconState.lastDetectionTime = now;
+
+            try {
+                // Use ml5 to detect faces
+                const predictions = await afconState.detector.estimateFace(video);
+
+                if (predictions && predictions.length > 0) {
+                    // Get first face only (MVP requirement)
+                    const face = predictions[0];
+                    afconState.currentFace = face;
+                    renderAfconOverlaysML5(face);
+                } else {
+                    hideAfconOverlays();
+                    afconState.currentFace = null;
+                }
+            } catch (err) {
+                // Silently fail during detection
+                // No logging to reduce console spam
+            }
+        }
+
+        // ====== RENDER OVERLAYS (ML5.JS) ======
+        function renderAfconOverlaysML5(face) {
+            const video = document.getElementById('videoPreview');
+            const overlay = document.getElementById('afconOverlay');
+            const country = afconCountries[afconState.selectedCountry];
+
+            if (!video || !overlay || !country) return;
+
+            // Get video dimensions
+            const videoRect = video.getBoundingClientRect();
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
+
+            // ml5 returns normalized coordinates (0-1)
+            const scale = videoRect.width / videoWidth;
+            const offsetX = videoRect.left;
+            const offsetY = videoRect.top;
+
+            // Extract face box from ml5 predictions
+            const start = face.start;
+            const size = face.size;
+
+            // Convert to pixel coordinates
+            const faceX = start[0] * scale;
+            const faceY = start[1] * scale;
+            const faceWidth = size[0] * scale;
+            const faceHeight = size[1] * scale;
+
+            // Get landmarks if available
+            let leftCheekPos, rightCheekPos, foreheadPos;
+
+            if (face.landmarks && face.landmarks.length > 0) {
+                // ml5 provides landmarks as array of [x, y] pairs
+                // Use approximate landmark indices for face features
+                const midpoint = face.landmarks[8]; // Chin
+                const leftEye = face.landmarks[0]; // Left eye
+                const rightEye = face.landmarks[1]; // Right eye
+                
+                // Estimate cheek positions from face geometry
+                const faceCenter = {
+                    x: (start[0] + size[0] / 2) * scale,
+                    y: (start[1] + size[1] / 2) * scale
+                };
+
+                leftCheekPos = {
+                    x: offsetX + (start[0] + size[0] * 0.3) * scale - 30,
+                    y: offsetY + (start[1] + size[1] * 0.55) * scale - 30
+                };
+
+                rightCheekPos = {
+                    x: offsetX + (start[0] + size[0] * 0.7) * scale - 30,
+                    y: offsetY + (start[1] + size[1] * 0.55) * scale - 30
+                };
+
+                foreheadPos = {
+                    x: offsetX + (start[0] + size[0] * 0.5) * scale - 25,
+                    y: offsetY + (start[1] + size[1] * 0.15) * scale - 25
+                };
+            } else {
+                // Fallback positioning based on face bounding box
+                leftCheekPos = {
+                    x: offsetX + faceX + faceWidth * 0.3 - 30,
+                    y: offsetY + faceY + faceHeight * 0.55 - 30
+                };
+
+                rightCheekPos = {
+                    x: offsetX + faceX + faceWidth * 0.7 - 30,
+                    y: offsetY + faceY + faceHeight * 0.55 - 30
+                };
+
+                foreheadPos = {
+                    x: offsetX + faceX + faceWidth * 0.5 - 25,
+                    y: offsetY + faceY + faceHeight * 0.15 - 25
+                };
+            }
+
+            // Update left cheek
+            const leftCheek = document.getElementById('afconLeftCheek');
+            leftCheek.textContent = country.leftPaint;
+            leftCheek.style.left = leftCheekPos.x + 'px';
+            leftCheek.style.top = leftCheekPos.y + 'px';
+            leftCheek.style.fontSize = (faceWidth * 0.25) + 'px';
+            leftCheek.style.display = 'flex';
+            leftCheek.style.alignItems = 'center';
+            leftCheek.style.justifyContent = 'center';
+
+            // Update right cheek
+            const rightCheek = document.getElementById('afconRightCheek');
+            rightCheek.textContent = country.rightPaint;
+            rightCheek.style.left = rightCheekPos.x + 'px';
+            rightCheek.style.top = rightCheekPos.y + 'px';
+            rightCheek.style.fontSize = (faceWidth * 0.25) + 'px';
+            rightCheek.style.display = 'flex';
+            rightCheek.style.alignItems = 'center';
+            rightCheek.style.justifyContent = 'center';
+
+            // Update badge
+            const badge = document.getElementById('afconBadge');
+            badge.textContent = country.flag;
+            badge.style.left = foreheadPos.x + 'px';
+            badge.style.top = foreheadPos.y + 'px';
+            badge.style.fontSize = (faceWidth * 0.2) + 'px';
+            badge.style.display = 'flex';
+            badge.style.alignItems = 'center';
+            badge.style.justifyContent = 'center';
+
+            // Update text
+            const text = document.getElementById('afconText');
+            text.textContent = country.badgeText;
+            text.style.left = (offsetX + faceX + faceWidth / 2 - 50) + 'px';
+            text.style.top = (offsetY + faceY - 30) + 'px';
+            text.style.color = country.theme;
+            text.style.display = 'block';
+
+            overlay.style.display = 'block';
+        }
+
+        // ====== HIDE OVERLAYS ======
+        function hideAfconOverlays() {
+            document.getElementById('afconLeftCheek').style.display = 'none';
+            document.getElementById('afconRightCheek').style.display = 'none';
+            document.getElementById('afconBadge').style.display = 'none';
+            document.getElementById('afconText').style.display = 'none';
+        }
+
+        // ====== TOGGLE AFCON EFFECT ======
+        async function toggleAfconEffect() {
+            if (afconState.enabled) {
+                // Disable
+                afconState.enabled = false;
+                console.log('🏆 AFCON effect disabled');
+                
+                // Stop detection
+                if (afconState.faceDetectionInterval) {
+                    clearInterval(afconState.faceDetectionInterval);
+                    afconState.faceDetectionInterval = null;
+                }
+
+                hideAfconOverlays();
+                const afconPanel = document.getElementById('recAfconPanel');
+                if (afconPanel) {
+                    afconPanel.style.display = 'none';
+                }
+            } else {
+                // Enable
+                console.log('🏆 AFCON effect enabled - initializing face detection...');
+                afconState.enabled = true;
+                
+                if (!afconState.libraryReady) {
+                    const success = await initAfconDetector();
+                    
+                    if (!success) {
+                        console.error('❌ AFCON: Face detection library failed to initialize');
+                        afconState.enabled = false;
+                        alert('Face detection library failed to load. Please check your internet connection.');
+                        return;
+                    }
+                }
+
+                // Show country selector
+                const afconPanel = document.getElementById('recAfconPanel');
+                if (afconPanel) {
+                    afconPanel.style.display = 'block';
+                }
+
+                // Start detection loop
+                if (!afconState.faceDetectionInterval) {
+                    afconState.faceDetectionInterval = setInterval(() => {
+                        detectAfconFace();
+                    }, 100); // Check every 100ms
+                }
+            }
+        }
+
+        // ====== SET AFCON COUNTRY ======
+        function setAfconCountry(countryCode) {
+            if (!afconCountries[countryCode]) return;
+
+            afconState.selectedCountry = countryCode;
+            const country = afconCountries[countryCode];
+
+            console.log('AFCON: Selected', country.name);
+
+            // Mark selected button
+            document.querySelectorAll('#recAfconPanel .rec-option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.rec-option-btn').classList.add('active');
+
+            // Start detection if not already running
+            if (afconState.enabled && !afconState.faceDetectionInterval) {
+                afconState.faceDetectionInterval = setInterval(() => {
+                    detectAfconFace();
+                }, 100);
+            }
+        }
+
+        // ====== CLOSE AFCON PANEL ======
+        function closeAfconPanel() {
+            const afconPanel = document.getElementById('recAfconPanel');
+            if (afconPanel) {
+                afconPanel.style.display = 'none';
+            }
+        }
+
+        // ====== INTEGRATION WITH RECORDING EFFECTS ======
+        // Override toggleRecordingEffect to handle AFCON
+        const originalToggleRecordingEffect = window.toggleRecordingEffect;
+        window.toggleRecordingEffect = function(effectName) {
+            if (effectName === 'afcon') {
+                toggleAfconEffect();
+            } else if (originalToggleRecordingEffect) {
+                originalToggleRecordingEffect(effectName);
+            }
+        };
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('🏆 AFCON: System initialized. Ready when you enable the effect.');
+            // Don't auto-load models - wait until user enables the effect
+        });
+
+        // Also check when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('🏆 AFCON: DOM ready');
+            });
+        } else {
+            console.log('🏆 AFCON: DOM already ready');
+        }
     </script>
 </body>
 
