@@ -360,37 +360,66 @@
             color: #888;
         }
 
-        /* ====== SUCCESS/ERROR MESSAGE MODAL ====== */
+        /* ====== SUCCESS/ERROR MESSAGE MODAL - RESPONSIVE ====== */
         .upload-result-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 3000;
+            animation: fadeIn 0.3s ease;
         }
 
         .upload-result-modal.active {
             display: flex;
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+
+            to {
+                opacity: 1;
+                backdrop-filter: blur(5px);
+            }
+        }
+
         .upload-result-content {
-            background: #1a1a1a;
-            border-radius: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #2d1b4e);
+            border-radius: 24px;
             padding: 30px;
-            max-width: 300px;
+            max-width: 320px;
+            width: 90%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            border: 1px solid #4C1D95;
+            box-shadow: 0 25px 60px rgba(76, 29, 149, 0.3);
+            border: 1px solid rgba(76, 29, 149, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .upload-result-thumbnail {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             margin: 0 auto 20px;
             background: linear-gradient(135deg, #4C1D95, #6D28D9);
@@ -399,6 +428,24 @@
             justify-content: center;
             font-size: 48px;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(76, 29, 149, 0.4);
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .upload-result-thumbnail img {
@@ -408,75 +455,188 @@
         }
 
         .upload-result-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
             margin-bottom: 10px;
+            letter-spacing: -0.5px;
         }
 
         .upload-result-message {
             font-size: 14px;
-            color: #aaa;
+            color: #bbb;
             margin-bottom: 20px;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         .upload-result-message.success {
             color: #86efac;
+            font-weight: 500;
         }
 
         .upload-result-message.error {
             color: #fca5a5;
+            font-weight: 500;
         }
 
         .upload-result-btn {
-            background: linear-gradient(135deg, #4C1D95, #6D28D9);
+            width: 100%;
+            background: linear-gradient(135deg, #ff0050, #ff4081);
             color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: bold;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 14px;
-            transition: opacity 0.3s;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 0, 80, 0.3);
         }
 
         .upload-result-btn:hover {
-            opacity: 0.9;
+            background: linear-gradient(135deg, #ff1a66, #ff5fa0);
+            box-shadow: 0 6px 25px rgba(255, 0, 80, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .upload-result-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(255, 0, 80, 0.3);
         }
 
         /* Countdown Progress Bar */
         .upload-result-countdown {
-            margin-top: 20px;
+            margin: 20px 0 15px 0;
             text-align: center;
+            animation: fadeIn 0.5s ease 0.3s both;
         }
 
         .upload-result-countdown-text {
             font-size: 12px;
             color: #888;
             margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .countdown-bar {
             width: 100%;
             height: 6px;
-            background: #222;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
             overflow: hidden;
+            border: 1px solid rgba(76, 29, 149, 0.3);
         }
 
         .countdown-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4C1D95, #22c55e);
+            background: linear-gradient(90deg, #4C1D95, #ff0050);
             width: 100%;
             transition: width 0.1s linear;
+            border-radius: 2px;
         }
 
         .countdown-time {
-            font-size: 20px;
-            font-weight: bold;
-            color: #4C1D95;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff0050;
             margin-top: 10px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ====== RESPONSIVE MODAL ====== */
+
+        /* Tablet */
+        @media (max-width: 768px) {
+            .upload-result-content {
+                padding: 25px;
+                max-width: 300px;
+                border-radius: 20px;
+            }
+
+            .upload-result-thumbnail {
+                width: 90px;
+                height: 90px;
+                font-size: 44px;
+                margin-bottom: 18px;
+            }
+
+            .upload-result-title {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+
+            .upload-result-message {
+                font-size: 13px;
+                margin-bottom: 18px;
+            }
+
+            .upload-result-btn {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+
+            .upload-result-countdown {
+                margin: 18px 0 12px 0;
+            }
+
+            .countdown-time {
+                font-size: 22px;
+                margin-top: 8px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            .upload-result-modal {
+                padding: 20px;
+            }
+
+            .upload-result-content {
+                padding: 20px;
+                max-width: 100%;
+                width: 95%;
+                border-radius: 16px;
+            }
+
+            .upload-result-thumbnail {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+                margin-bottom: 15px;
+            }
+
+            .upload-result-title {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .upload-result-message {
+                font-size: 12px;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+
+            .upload-result-btn {
+                padding: 11px 16px;
+                font-size: 13px;
+                border-radius: 10px;
+            }
+
+            .upload-result-countdown-text {
+                font-size: 11px;
+            }
+
+            .countdown-bar {
+                height: 5px;
+            }
+
+            .countdown-time {
+                font-size: 20px;
+                margin-top: 6px;
+            }
         }
 
         /* ====== NOTIFICATIONS PAGE ====== */
@@ -821,7 +981,7 @@
             display: flex;
         }
 
-        /* Camera Preview - Responsive */
+        /* Camera Preview - Fully Responsive */
         .camera-preview {
             flex: 1;
             background: #000;
@@ -831,39 +991,285 @@
             color: rgba(255, 255, 255, 0.5);
             width: 100%;
             height: 100%;
-            max-height: calc(100vh - 100px);
-            object-fit: contain;
+            object-fit: cover;
             transform: scaleX(-1);
             /* Performance optimizations */
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform: translate3d(0, 0, 0) scaleX(-1);
+            /* Ensure fills container */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Ensure video elements also get proper styling */
-        video.camera-preview {
+        /* Video element - Live streaming */
+        video#videoPreview {
             display: block !important;
             width: 100%;
-            height: auto;
-            max-height: calc(100vh - 120px);
-            object-fit: contain;
+            height: 100%;
+            object-fit: cover;
             background: #000;
             /* Performance optimizations */
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform: translate3d(0, 0, 0) scaleX(-1);
+            -webkit-transform: scaleX(-1);
         }
 
-        /* Edit screen video preview */
+        /* Ensure video fills entire screen */
+        @supports (object-fit: cover) {
+            video#videoPreview {
+                object-fit: cover;
+            }
+        }
+
+        /* Edit screen video wrapper and preview */
+        .edit-video-wrapper {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
         #editVideoPreview {
-            max-height: calc(100vh - 200px) !important;
+            display: block !important;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        /* Video Controls - Only visible on hover */
+        .edit-video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+            padding: 16px 15px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .edit-video-controls.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .edit-video-wrapper:hover .edit-video-controls {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .edit-video-controls:hover {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Progress Bar */
+        .video-progress-bar {
+            position: relative;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .video-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0050, #ff4081);
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .video-progress-slider {
+            position: absolute;
+            top: -8px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .video-progress-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0050;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
+        }
+
+        .video-progress-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0050;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
+        }
+
+        /* Bottom Controls */
+        .video-controls-bottom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .video-play-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .video-play-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .video-play-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Time Display */
+        .video-time-display {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #fff;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            flex: 1;
+            padding: 0 8px;
+        }
+
+        .time-separator {
+            opacity: 0.6;
+            margin: 0 2px;
+        }
+
+        /* Fullscreen Button */
+        .video-fullscreen-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .video-fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .video-fullscreen-btn:active {
+            transform: scale(0.92);
         }
 
         /* Video controls responsive */
         video::-webkit-media-controls {
             max-height: 50px;
+        }
+
+        /* Responsive Video Controls */
+        @media (max-width: 768px) {
+            .edit-video-controls {
+                padding: 15px 12px 12px;
+                gap: 8px;
+            }
+
+            .video-progress-bar {
+                height: 3px;
+            }
+
+            .video-play-btn,
+            .video-fullscreen-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+
+            .video-time-display {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .edit-video-controls {
+                padding: 12px 10px 10px;
+                gap: 6px;
+            }
+
+            .video-progress-bar {
+                height: 2px;
+            }
+
+            .video-play-btn,
+            .video-fullscreen-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 10px;
+            }
+
+            .video-time-display {
+                font-size: 10px;
+                gap: 2px;
+            }
+        }
+
+        /* Mobile video responsive */
+        @media (max-width: 768px) {
+            video#videoPreview {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        @media (max-width: 480px) {
+            video#videoPreview {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
 
         /* Ensure recording video element is visible */
@@ -2537,13 +2943,14 @@
             left: 0;
             right: 0;
             padding: 15px;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.8));
             display: flex;
             flex-direction: column;
             gap: 12px;
             z-index: 50;
-            max-height: 30vh;
+            max-height: 25vh;
             overflow-y: auto;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
         }
 
         /* Sound Button */
@@ -7378,7 +7785,34 @@
 
         <!-- SCREEN 3: VIDEO EDIT -->
         <div id="screen3" class="recording-screen">
-            <video id="editVideoPreview" class="camera-preview" playsinline controls></video>
+            <div class="edit-video-wrapper">
+                <video id="editVideoPreview" class="camera-preview" playsinline></video>
+
+                <!-- Video Controls Overlay -->
+                <div class="edit-video-controls">
+                    <div class="video-progress-bar">
+                        <div class="video-progress-fill" id="videoProgressFill"></div>
+                        <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
+                            value="0">
+                    </div>
+                    <div class="video-controls-bottom">
+                        <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
+                            title="Play/Pause">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="video-time-display">
+                            <span id="videoCurrentTime">0:00</span>
+                            <span class="time-separator">/</span>
+                            <span id="videoDuration">0:00</span>
+                        </div>
+                        <button class="video-fullscreen-btn" id="editVideoFullscreen"
+                            onclick="toggleEditVideoFullscreen()" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="edit-loading-overlay" id="editLoadingOverlay" style="display: none;">
                 <div style="text-align: center; color: #fff;">
                     <div style="font-size: 32px; margin-bottom: 10px;">⏳</div>
@@ -11190,14 +11624,29 @@
                     return;
                 }
 
-                console.log('🎥 Initializing camera (TikTok speed mode)...');
+                console.log('🎥 Initializing camera (Responsive mode)...');
 
-                // TIKTOK APPROACH: Ultra-low resolution, locked 30fps
+                // RESPONSIVE CAMERA: Adapt resolution based on device
+                let videoWidth = 480;
+                let videoHeight = 360;
+
+                // Mobile optimization
+                if (window.innerWidth <= 480) {
+                    videoWidth = 360;
+                    videoHeight = 270;
+                } else if (window.innerWidth <= 768) {
+                    videoWidth = 640;
+                    videoHeight = 480;
+                } else {
+                    videoWidth = 1280;
+                    videoHeight = 720;
+                }
+
                 const constraints = {
                     video: {
                         facingMode: recordingState.cameraFacingMode,
-                        width: { ideal: 480, max: 640 },
-                        height: { ideal: 360, max: 480 },
+                        width: { ideal: videoWidth, max: videoWidth + 160 },
+                        height: { ideal: videoHeight, max: videoHeight + 120 },
                         frameRate: { ideal: 30, max: 30 }
                     },
                     audio: {
@@ -12749,16 +13198,31 @@
                 if (editVideoElement) {
                     // Set video source
                     editVideoElement.src = latestClip.url;
-                    editVideoElement.preload = 'metadata';
+                    editVideoElement.preload = 'auto';
                     editVideoElement.crossOrigin = 'anonymous';
+                    editVideoElement.autoplay = false;
+                    editVideoElement.muted = false;
 
-                    // Hide loading overlay after a moment
+                    // Load the video
+                    editVideoElement.load();
+
+                    // Handle when metadata is loaded
+                    const onMetadataLoaded = () => {
+                        console.log('✅ Video metadata loaded, duration:', editVideoElement.duration);
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+                        editVideoElement.removeEventListener('loadedmetadata', onMetadataLoaded);
+                    };
+
+                    editVideoElement.addEventListener('loadedmetadata', onMetadataLoaded, { once: true });
+
+                    // Fallback: hide overlay after timeout
                     setTimeout(() => {
                         if (loadingOverlay) {
                             loadingOverlay.style.display = 'none';
                         }
-                        console.log('✅ Video loaded and ready');
-                    }, 500);
+                    }, 2000);
 
                     editVideoElement.onerror = (err) => {
                         console.error('❌ Video load error:', err);
@@ -13728,6 +14192,13 @@
                     setTimeout(() => {
                         updatePhotoFlashButtonState();
                         updatePhotoTimerButtonState();
+                    }, 100);
+                }
+
+                // Initialize video controls when showing screen 3 (edit screen)
+                if (screenId === 'screen3') {
+                    setTimeout(() => {
+                        initEditVideoControls();
                     }, 100);
                 }
             }
@@ -18972,6 +19443,127 @@
         // ============================================================================
         // POST SETTINGS NAVIGATION
         // ============================================================================
+
+        // ============================================================================
+        // VIDEO PREVIEW CONTROLS (Screen 3 - Edit)
+        // ============================================================================
+
+        function initEditVideoControls() {
+            const video = document.getElementById('editVideoPreview');
+            const playBtn = document.getElementById('editVideoPausePlay');
+            const progressSlider = document.getElementById('videoProgressSlider');
+            const progressFill = document.getElementById('videoProgressFill');
+            const currentTimeEl = document.getElementById('videoCurrentTime');
+            const durationEl = document.getElementById('videoDuration');
+
+            if (!video || !playBtn || !progressSlider) return;
+
+            console.log('🎬 Initializing video controls...');
+            console.log('Video duration:', video.duration);
+            console.log('Video src:', video.src);
+
+            // Helper to set duration
+            const updateDuration = () => {
+                if (video.duration && !isNaN(video.duration)) {
+                    durationEl.textContent = formatTime(video.duration);
+                    progressSlider.max = Math.floor(video.duration);
+                    console.log('⏱️ Video duration updated:', formatTime(video.duration));
+                }
+            };
+
+            // Update duration when metadata loads
+            video.addEventListener('loadedmetadata', updateDuration);
+
+            // If metadata is already loaded, update immediately
+            if (video.duration && !isNaN(video.duration)) {
+                updateDuration();
+            }
+
+            // Update progress bar and time display
+            video.addEventListener('timeupdate', function () {
+                if (!isNaN(video.duration) && video.duration > 0) {
+                    const percent = (video.currentTime / video.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                    currentTimeEl.textContent = formatTime(video.currentTime);
+                    progressSlider.value = Math.floor(video.currentTime);
+                }
+            });
+
+            // Update play/pause button icon
+            video.addEventListener('play', function () {
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            });
+
+            video.addEventListener('pause', function () {
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            });
+
+            video.addEventListener('ended', function () {
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            });
+
+            // Handle progress slider drag
+            progressSlider.addEventListener('input', function () {
+                video.currentTime = parseFloat(progressSlider.value);
+            });
+
+            // Click on progress bar to seek
+            const progressBar = document.querySelector('.video-progress-bar');
+            if (progressBar) {
+                progressBar.addEventListener('click', function (e) {
+                    if (video.duration && !isNaN(video.duration)) {
+                        const rect = this.getBoundingClientRect();
+                        const percent = (e.clientX - rect.left) / rect.width;
+                        video.currentTime = percent * video.duration;
+                    }
+                });
+            }
+
+            console.log('✅ Video controls initialized');
+        }
+
+        function toggleEditVideoPlayPause() {
+            const video = document.getElementById('editVideoPreview');
+            if (!video) {
+                console.error('❌ Video element not found');
+                return;
+            }
+
+            console.log('▶️ Toggling play/pause. Current state:', video.paused ? 'paused' : 'playing');
+
+            if (video.paused) {
+                const promise = video.play();
+                if (promise !== undefined) {
+                    promise.catch(error => {
+                        console.error('❌ Play error:', error);
+                    });
+                }
+            } else {
+                video.pause();
+            }
+        }
+
+        function toggleEditVideoFullscreen() {
+            const wrapper = document.querySelector('.edit-video-wrapper');
+            if (!document.fullscreenElement) {
+                if (wrapper.requestFullscreen) {
+                    wrapper.requestFullscreen();
+                } else if (wrapper.webkitRequestFullscreen) {
+                    wrapper.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
 
         function goToPostSettings() {
             showScreen('screen4');
