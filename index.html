@@ -1026,11 +1026,22 @@
             }
         }
 
-        /* Edit screen video wrapper and preview */
-        .edit-video-wrapper {
+        /* Edit video container - takes flex space */
+        .edit-video-container {
             position: relative;
             flex: 1;
             width: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* Edit screen video wrapper and preview */
+        .edit-video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: #000;
             display: flex;
             align-items: center;
@@ -1046,21 +1057,21 @@
             background: #000;
         }
 
-        /* Video Controls - Only visible on hover */
+        /* Video Controls - Always visible like TikTok */
         .edit-video-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
             padding: 16px 15px 12px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.3s ease;
-            z-index: 100;
-            pointer-events: none;
+            z-index: 10;
+            pointer-events: all;
         }
 
         .edit-video-controls.visible {
@@ -1076,6 +1087,42 @@
         .edit-video-controls:hover {
             opacity: 1;
             pointer-events: all;
+        }
+
+        /* Large center play button for tap-to-play */
+        .video-center-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 0, 80, 0.9);
+            border: none;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 20px rgba(255, 0, 80, 0.4);
+        }
+
+        .video-center-play:hover {
+            background: rgba(255, 0, 80, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 0, 80, 0.6);
+        }
+
+        .video-center-play:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        .video-center-play.hidden {
+            display: none;
         }
 
         /* Progress Bar */
@@ -1212,46 +1259,88 @@
         /* Responsive Video Controls */
         @media (max-width: 768px) {
             .edit-video-controls {
-                padding: 15px 12px 12px;
+                padding: 12px 10px 10px;
                 gap: 8px;
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .video-center-play {
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
+                box-shadow: 0 4px 15px rgba(255, 0, 80, 0.3);
             }
 
             .video-progress-bar {
-                height: 3px;
+                height: 6px;
+                cursor: pointer;
+            }
+
+            .video-progress-slider {
+                height: 30px;
+                top: -12px;
             }
 
             .video-play-btn,
             .video-fullscreen-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 12px;
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
             }
 
             .video-time-display {
-                font-size: 11px;
+                font-size: 13px;
+                padding: 0 12px;
             }
         }
 
         @media (max-width: 480px) {
             .edit-video-controls {
-                padding: 12px 10px 10px;
-                gap: 6px;
+                padding: 10px 8px 8px;
+                gap: 8px;
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .video-center-play {
+                width: 72px;
+                height: 72px;
+                font-size: 36px;
+                box-shadow: 0 4px 18px rgba(255, 0, 80, 0.4);
             }
 
             .video-progress-bar {
-                height: 2px;
+                height: 8px;
+                cursor: pointer;
+            }
+
+            .video-progress-slider {
+                height: 40px;
+                top: -16px;
             }
 
             .video-play-btn,
             .video-fullscreen-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 10px;
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
             }
 
             .video-time-display {
-                font-size: 10px;
-                gap: 2px;
+                font-size: 12px;
+                gap: 3px;
+                padding: 0 10px;
+            }
+
+            .video-progress-slider::-webkit-slider-thumb {
+                width: 16px;
+                height: 16px;
+            }
+
+            .video-progress-slider::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
             }
         }
 
@@ -7785,30 +7874,41 @@
 
         <!-- SCREEN 3: VIDEO EDIT -->
         <div id="screen3" class="recording-screen">
-            <div class="edit-video-wrapper">
-                <video id="editVideoPreview" class="camera-preview" playsinline></video>
+            <div class="edit-video-container">
+                <div class="edit-video-wrapper">
+                    <video id="editVideoPreview" class="camera-preview" playsinline></video>
+                    
+                    <!-- Hidden Audio Element for Sound Playback -->
+                    <audio id="editVideoSoundAudio" style="display: none;"></audio>
 
-                <!-- Video Controls Overlay -->
-                <div class="edit-video-controls">
-                    <div class="video-progress-bar">
-                        <div class="video-progress-fill" id="videoProgressFill"></div>
-                        <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
-                            value="0">
-                    </div>
-                    <div class="video-controls-bottom">
-                        <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
-                            title="Play/Pause">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <div class="video-time-display">
-                            <span id="videoCurrentTime">0:00</span>
-                            <span class="time-separator">/</span>
-                            <span id="videoDuration">0:00</span>
+                    <!-- Center Play Button (TikTok style) -->
+                    <button class="video-center-play" id="videoCenterPlay" onclick="toggleEditVideoPlayPause()"
+                        title="Play/Pause">
+                        <i class="fas fa-play"></i>
+                    </button>
+
+                    <!-- Video Controls Overlay -->
+                    <div class="edit-video-controls">
+                        <div class="video-progress-bar">
+                            <div class="video-progress-fill" id="videoProgressFill"></div>
+                            <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
+                                value="0">
                         </div>
-                        <button class="video-fullscreen-btn" id="editVideoFullscreen"
-                            onclick="toggleEditVideoFullscreen()" title="Fullscreen">
-                            <i class="fas fa-expand"></i>
-                        </button>
+                        <div class="video-controls-bottom">
+                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
+                                title="Play/Pause">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <div class="video-time-display">
+                                <span id="videoCurrentTime">0:00</span>
+                                <span class="time-separator">/</span>
+                                <span id="videoDuration">0:00</span>
+                            </div>
+                            <button class="video-fullscreen-btn" id="editVideoFullscreen"
+                                onclick="toggleEditVideoFullscreen()" title="Fullscreen">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -11613,7 +11713,10 @@
             recordingCanvas: null,
             canvasContext: null,
             canvasWidth: 0,
-            canvasHeight: 0
+            canvasHeight: 0,
+            // Screen 3 Sound properties
+            selectedSound: null,
+            videoOriginalVolume: 1
         };
 
         // ====== VIDEO CAMERA INITIALIZATION (SCREEN 1) - TIKTOK OPTIMIZED ======
@@ -11897,6 +12000,60 @@
         }
 
         // ===== CANVAS RENDERING LOOP FOR RECORDING =====
+        // ===== OPTIMIZED: Convert filter to CSS instead of pixel manipulation =====
+        function getFilterString(filterName, adjustments = {}) {
+            let filters = [];
+            
+            switch(filterName) {
+                case 'bw':
+                    filters.push('grayscale(100%)');
+                    break;
+                case 'sepia':
+                    filters.push('sepia(100%)');
+                    break;
+                case 'vintage':
+                    filters.push('sepia(70%)');
+                    filters.push('brightness(90%)');
+                    break;
+                case 'cool':
+                    filters.push('hue-rotate(30deg)');
+                    filters.push('saturate(120%)');
+                    break;
+                case 'warm':
+                    filters.push('hue-rotate(-30deg)');
+                    filters.push('saturate(120%)');
+                    break;
+                case 'vivid':
+                    filters.push('contrast(130%)');
+                    filters.push('saturate(150%)');
+                    break;
+            }
+            
+            // Apply adjustments (GPU-accelerated)
+            if (adjustments.brightness) {
+                filters.push(`brightness(${100 + adjustments.brightness * 2}%)`);
+            }
+            if (adjustments.contrast) {
+                filters.push(`contrast(${100 + adjustments.contrast * 2}%)`);
+            }
+            if (adjustments.saturation) {
+                filters.push(`saturate(${100 + adjustments.saturation * 2}%)`);
+            }
+            
+            return filters.join(' ');
+        }
+
+        // Apply CSS filter to video preview (GPU-accelerated, NO pixel operations)
+        function applyFilterToPreview(filterName, adjustments = {}) {
+            const videoElement = document.getElementById('videoPreview');
+            if (!videoElement) return;
+            
+            const filterString = getFilterString(filterName, adjustments);
+            videoElement.style.filter = filterString;
+            
+            console.log('✅ GPU Filter applied:', filterName, '- Smooth 60fps preview');
+        }
+
         function renderCanvasForRecording() {
             if (!recordingState.isCanvasRendering) return;
 
@@ -11904,14 +12061,13 @@
             const canvas = recordingState.recordingCanvas;
             const videoElement = document.getElementById('videoPreview');
 
-            // Draw video frame to canvas
+            // Draw video frame to canvas (video already has CSS filter applied for smooth preview)
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-            // Apply filter to canvas if selected
-            if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
-                applyCanvasFilter(ctx, canvas, recordingState.currentFilter, recordingState.filterAdjustments);
-            }
+            // NOTE: Filters now applied via CSS (GPU-accelerated) on the video element
+            // This removes the heavy pixel-by-pixel processing that was causing lag
+            // The canvas just captures the already-filtered frame
 
             // Render individual effect based on selected effect
             if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
@@ -19451,6 +19607,7 @@
         function initEditVideoControls() {
             const video = document.getElementById('editVideoPreview');
             const playBtn = document.getElementById('editVideoPausePlay');
+            const centerPlayBtn = document.getElementById('videoCenterPlay');
             const progressSlider = document.getElementById('videoProgressSlider');
             const progressFill = document.getElementById('videoProgressFill');
             const currentTimeEl = document.getElementById('videoCurrentTime');
@@ -19489,17 +19646,20 @@
                 }
             });
 
-            // Update play/pause button icon
+            // Update play/pause button icons (both top button and center)
             video.addEventListener('play', function () {
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                if (centerPlayBtn) centerPlayBtn.classList.add('hidden');
             });
 
             video.addEventListener('pause', function () {
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                if (centerPlayBtn) centerPlayBtn.classList.remove('hidden');
             });
 
             video.addEventListener('ended', function () {
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                if (centerPlayBtn) centerPlayBtn.classList.remove('hidden');
             });
 
             // Handle progress slider drag
@@ -19510,26 +19670,52 @@
             // Click on progress bar to seek
             const progressBar = document.querySelector('.video-progress-bar');
             if (progressBar) {
-                progressBar.addEventListener('click', function (e) {
+                const seekVideo = (e) => {
                     if (video.duration && !isNaN(video.duration)) {
-                        const rect = this.getBoundingClientRect();
-                        const percent = (e.clientX - rect.left) / rect.width;
+                        const rect = progressBar.getBoundingClientRect();
+                        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                        const percent = (clientX - rect.left) / rect.width;
                         video.currentTime = percent * video.duration;
                     }
-                });
+                };
+
+                progressBar.addEventListener('click', seekVideo);
+                progressBar.addEventListener('touchstart', seekVideo, false);
+                progressBar.addEventListener('touchmove', seekVideo, false);
             }
 
-            console.log('✅ Video controls initialized');
+            // Mobile: Show controls on tap
+            const videoWrapper = document.querySelector('.edit-video-wrapper');
+            if (videoWrapper) {
+                let controlsTimeout;
+                const showControls = () => {
+                    const controls = document.querySelector('.edit-video-controls');
+                    if (controls) {
+                        controls.classList.add('visible');
+                        clearTimeout(controlsTimeout);
+                        controlsTimeout = setTimeout(() => {
+                            controls.classList.remove('visible');
+                        }, 5000);
+                    }
+                };
+
+                videoWrapper.addEventListener('touchstart', showControls, false);
+                videoWrapper.addEventListener('click', showControls);
+            }
+
+            console.log('✅ Video controls initialized with touch support');
         }
 
         function toggleEditVideoPlayPause() {
             const video = document.getElementById('editVideoPreview');
+            const audio = document.getElementById('editVideoSoundAudio');
             if (!video) {
                 console.error('❌ Video element not found');
                 return;
             }
 
             console.log('▶️ Toggling play/pause. Current state:', video.paused ? 'paused' : 'playing');
+            console.log('📹 Video duration:', video.duration, '| Current time:', video.currentTime);
 
             if (video.paused) {
                 const promise = video.play();
@@ -19538,8 +19724,29 @@
                         console.error('❌ Play error:', error);
                     });
                 }
+                
+                // Play audio if sound is selected
+                if (audio && recordingState.selectedSound) {
+                    // Set audio to video position
+                    audio.currentTime = video.currentTime;
+                    
+                    // Set loop to match video duration
+                    if (video.duration && video.duration > 0) {
+                        audio.loop = false;
+                    }
+                    
+                    audio.play().catch(err => console.log('Audio auto-play prevented:', err));
+                    console.log('▶️ Sound playing with video');
+                    console.log('🎵 Audio duration:', audio.duration);
+                }
             } else {
                 video.pause();
+                
+                // Pause audio
+                if (audio) {
+                    audio.pause();
+                    console.log('⏸️ Sound paused with video');
+                }
             }
         }
 
@@ -20953,10 +21160,27 @@
 
             console.log('Selected sound:', sound);
 
-            // Close modal and display sound on Screen 6
+            // Check which screen is active
+            const screen3 = document.getElementById('screen3');
+            const screen6 = document.getElementById('screen6');
+            const screen7 = document.getElementById('screen7');
+
+            const isScreen3Active = screen3 && screen3.style.display !== 'none';
+            const isScreen6Active = screen6 && screen6.style.display !== 'none';
+            const isScreen7Active = screen7 && screen7.style.display !== 'none';
+
+            // Close modal
             setTimeout(() => {
                 closeSoundLibrary();
-                displaySelectedSoundOnScreen6(sound);
+                
+                // Route to appropriate screen handler
+                if (isScreen3Active) {
+                    displaySelectedSoundOnScreen3(sound);
+                } else if (isScreen6Active) {
+                    displaySelectedSoundOnScreen6(sound);
+                } else if (isScreen7Active) {
+                    displaySelectedSoundOnScreen6(sound);
+                }
             }, 800);
         }
 
@@ -21016,6 +21240,218 @@
                 displayPhotoPostSound();
                 console.log('🎵 Sound displayed on Screen 7 (photo post settings):', sound);
             }
+        }
+
+        // Display & Play Sound on Screen 3 (Video Edit)
+        function displaySelectedSoundOnScreen3(sound) {
+            console.log('🎵 Displaying sound on Screen 3:', sound.title);
+            
+            // Store sound in recordingState
+            recordingState.selectedSound = {
+                ...sound,
+                url: sound.audioUrl || sound.url || sound.preview_url || sound.filePath
+            };
+            
+            // Get audio element
+            const audioElement = document.getElementById('editVideoSoundAudio');
+            if (!audioElement) {
+                console.error('❌ Audio element not found');
+                return;
+            }
+            
+            // Set audio source
+            audioElement.src = recordingState.selectedSound.url;
+            
+            // Mute original video audio
+            const videoElement = document.getElementById('editVideoPreview');
+            if (videoElement) {
+                recordingState.videoOriginalVolume = videoElement.volume;
+                videoElement.muted = true;
+                console.log('🔇 Video audio muted');
+            }
+            
+            // Display sound info in Screen 3
+            displayScreen3SoundInfo(sound);
+            
+            // Initialize sync
+            initializeAudioVideoSync();
+            
+            // Auto-play if video is playing
+            if (videoElement && !videoElement.paused) {
+                audioElement.currentTime = videoElement.currentTime;
+                audioElement.play().catch(err => console.log('Audio auto-play prevented:', err));
+                console.log('▶️ Sound playback started');
+            }
+        }
+
+        // Display Sound Info in Screen 3 UI
+        function displayScreen3SoundInfo(sound) {
+            let soundDisplay = document.getElementById('screen3SoundDisplay');
+            
+            // Create display if doesn't exist
+            if (!soundDisplay) {
+                const editControls = document.querySelector('#screen3 .rec-edit-controls');
+                if (!editControls) return;
+                
+                soundDisplay = document.createElement('div');
+                soundDisplay.id = 'screen3SoundDisplay';
+                soundDisplay.className = 'screen3-sound-info';
+                soundDisplay.style.cssText = `
+                    background: rgba(255, 0, 80, 0.15);
+                    border: 1px solid rgba(255, 0, 80, 0.3);
+                    border-radius: 8px;
+                    padding: 12px;
+                    margin-bottom: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 10px;
+                `;
+                editControls.insertBefore(soundDisplay, editControls.firstChild);
+            }
+            
+            // Update content
+            soundDisplay.innerHTML = `
+                <div style="flex: 1; min-width: 0;">
+                    <div style="color: #fff; font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        🎵 ${sound.title}
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.6); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ${sound.artist || 'Unknown Artist'}
+                    </div>
+                </div>
+                <button onclick="removeScreen3Sound()" style="
+                    padding: 6px 12px;
+                    background: rgba(255, 0, 80, 0.3);
+                    border: 1px solid rgba(255, 0, 80, 0.5);
+                    color: #ff0050;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    font-weight: 600;
+                    transition: all 0.3s;
+                " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
+                    ✕ Remove
+                </button>
+            `;
+            
+            console.log('🎵 Sound info displayed on Screen 3');
+        }
+
+        // Remove Sound from Screen 3
+        function removeScreen3Sound() {
+            console.log('🔇 Removing sound from Screen 3');
+            
+            // Stop audio
+            const audioElement = document.getElementById('editVideoSoundAudio');
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                audioElement.src = '';
+            }
+            
+            // Unmute video
+            const videoElement = document.getElementById('editVideoPreview');
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.volume = recordingState.videoOriginalVolume || 1;
+                console.log('🔊 Video audio restored');
+            }
+            
+            // Clear recordingState
+            recordingState.selectedSound = null;
+            
+            // Remove display
+            const soundDisplay = document.getElementById('screen3SoundDisplay');
+            if (soundDisplay) {
+                soundDisplay.remove();
+            }
+            
+            showToastRecording('Sound removed', 'success', '✓');
+        }
+
+        // Initialize Audio-Video Sync
+        function initializeAudioVideoSync() {
+            const video = document.getElementById('editVideoPreview');
+            const audio = document.getElementById('editVideoSoundAudio');
+            
+            if (!video || !audio) return;
+            
+            // Remove old listeners to prevent duplicates
+            video.removeEventListener('timeupdate', window.syncAudioToVideo);
+            video.removeEventListener('ended', window.onVideoEnded);
+            audio.removeEventListener('timeupdate', window.syncVideoToAudio);
+            audio.removeEventListener('ended', window.onAudioEnded);
+            
+            // Define event handlers
+            window.syncAudioToVideo = function() {
+                if (!recordingState.selectedSound) return;
+                if (!video.duration || video.duration === 0) return;
+                
+                // If audio time exceeds video duration, stop audio
+                if (audio.currentTime >= video.duration) {
+                    audio.currentTime = 0;
+                    audio.pause();
+                    if (!video.paused) video.pause();
+                    console.log('⏹️ Audio duration exceeded, both stopped');
+                    return;
+                }
+                
+                // Sync audio to video
+                if (Math.abs(audio.currentTime - video.currentTime) > 0.15) {
+                    audio.currentTime = video.currentTime;
+                }
+            };
+            
+            window.syncVideoToAudio = function() {
+                if (!recordingState.selectedSound) return;
+                if (!video.duration || video.duration === 0) return;
+                
+                // Sync video to audio, but don't let audio push beyond video duration
+                if (audio.currentTime >= video.duration) {
+                    audio.currentTime = 0;
+                    audio.pause();
+                    if (!video.paused) video.pause();
+                    console.log('⏹️ Audio exceeded video duration');
+                    return;
+                }
+                
+                if (Math.abs(video.currentTime - audio.currentTime) > 0.15) {
+                    video.currentTime = audio.currentTime;
+                }
+            };
+            
+            window.onVideoEnded = function() {
+                // When video ends, stop audio immediately
+                if (audio && !audio.paused) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    console.log('⏹️ Video ended, audio stopped');
+                }
+            };
+            
+            window.onAudioEnded = function() {
+                // If audio ends, make sure it doesn't play past video
+                if (!video.paused && video.currentTime < video.duration) {
+                    // Audio ended but video is still playing - that's fine, let video continue
+                    console.log('ℹ️ Audio ended, video continues');
+                } else {
+                    if (!video.paused) {
+                        video.pause();
+                        console.log('⏹️ Audio ended, video paused');
+                    }
+                }
+            };
+            
+            // Add listeners
+            video.addEventListener('timeupdate', window.syncAudioToVideo);
+            video.addEventListener('ended', window.onVideoEnded);
+            audio.addEventListener('timeupdate', window.syncVideoToAudio);
+            audio.addEventListener('ended', window.onAudioEnded);
+            
+            console.log('✅ Audio-Video sync initialized');
+            console.log('📹 Video duration:', video.duration);
+            console.log('🎵 Audio duration:', audio.duration);
         }
 
         // Toggle Selected Sound Playback
