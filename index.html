@@ -821,7 +821,7 @@
             display: flex;
         }
 
-        /* Camera Preview */
+        /* Camera Preview - Responsive */
         .camera-preview {
             flex: 1;
             background: #000;
@@ -831,7 +831,8 @@
             color: rgba(255, 255, 255, 0.5);
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-height: calc(100vh - 100px);
+            object-fit: contain;
             transform: scaleX(-1);
             /* Performance optimizations */
             will-change: transform;
@@ -844,14 +845,25 @@
         video.camera-preview {
             display: block !important;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            max-height: calc(100vh - 120px);
+            object-fit: contain;
             background: #000;
             /* Performance optimizations */
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform: translate3d(0, 0, 0) scaleX(-1);
+        }
+
+        /* Edit screen video preview */
+        #editVideoPreview {
+            max-height: calc(100vh - 200px) !important;
+        }
+
+        /* Video controls responsive */
+        video::-webkit-media-controls {
+            max-height: 50px;
         }
 
         /* Ensure recording video element is visible */
@@ -963,51 +975,59 @@
             left: -15px;
         }
 
-        /* Top Bar */
+        /* Top Bar - Responsive */
         .rec-top-bar {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             z-index: 10;
+            gap: 10px;
         }
 
         .rec-icon-btn {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: none;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+
+        .rec-icon-btn:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(76, 29, 149, 0.6);
         }
 
         .rec-icon-btn:active {
-            transform: scale(0.9);
+            transform: scale(0.88);
         }
 
-        /* Left Side Menu */
+        /* Left Side Menu - Responsive */
         .rec-left-menu {
             position: absolute;
-            left: 20px;
-            top: 80px;
+            left: 16px;
+            top: 70px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(-10px) scale(0.95);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(-15px) scale(0.9);
+            transition: opacity 0.25s ease, transform 0.25s ease;
             z-index: 9;
         }
 
@@ -1018,19 +1038,75 @@
         }
 
         .rec-menu-item {
-            padding: 12px 20px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            font-size: 14px;
+            padding: 11px 18px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(76, 29, 149, 0.3);
+            border-radius: 22px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
             color: #fff;
         }
 
+        .rec-menu-item:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(76, 29, 149, 0.6);
+            transform: translateX(4px);
+        }
+
         .rec-menu-item:active {
-            transform: scale(0.95);
+            transform: scale(0.93);
+        }
+
+        /* Responsive Top Bar */
+        @media (max-width: 768px) {
+            .rec-top-bar {
+                padding: 12px;
+            }
+
+            .rec-icon-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .rec-left-menu {
+                left: 12px;
+                top: 60px;
+                gap: 8px;
+            }
+
+            .rec-menu-item {
+                padding: 9px 15px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rec-top-bar {
+                padding: 10px;
+            }
+
+            .rec-icon-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .rec-left-menu {
+                left: 10px;
+                top: 55px;
+                gap: 6px;
+            }
+
+            .rec-menu-item {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
         }
 
         /* Quick Stats Bar */
@@ -2452,61 +2528,170 @@
         }
 
         /* ====== EDIT CONTROLS - SCREEN 3 ====== */
+        /* ====== VIDEO EDITING SCREEN - RESPONSIVE ====== */
+
+        /* Edit Controls Container */
         .rec-edit-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 50;
+            max-height: 30vh;
+            overflow-y: auto;
         }
 
+        /* Sound Button */
         .rec-add-sound-btn {
             width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 13px 16px;
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.3), rgba(109, 40, 217, 0.3));
+            border: 1px solid rgba(76, 29, 149, 0.6);
             border-radius: 10px;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            margin-bottom: 15px;
-            transition: all 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .rec-add-sound-btn:hover {
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.5), rgba(109, 40, 217, 0.5));
+            border-color: rgba(76, 29, 149, 0.8);
         }
 
         .rec-add-sound-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
+        /* Action Buttons Wrapper */
         .rec-action-buttons {
             display: flex;
             gap: 10px;
+            width: 100%;
         }
 
+        /* Base Action Button */
         .rec-action-btn {
             flex: 1;
-            padding: 15px;
+            padding: 14px 16px;
             border-radius: 10px;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
+        .rec-action-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Draft Button */
         .rec-action-btn.draft {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        .rec-action-btn.draft:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Story Button */
         .rec-action-btn.story {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        .rec-action-btn.story:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Post Button - Primary CTA */
         .rec-action-btn.post {
-            background: #ff0050;
+            background: linear-gradient(135deg, #ff0050, #ff4081);
             color: #fff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 0, 80, 0.3);
+        }
+
+        .rec-action-btn.post:hover {
+            background: linear-gradient(135deg, #ff1a66, #ff5fa0);
+            box-shadow: 0 6px 20px rgba(255, 0, 80, 0.5);
+        }
+
+        /* ====== RESPONSIVE VIDEO EDIT ====== */
+
+        /* Large Screens */
+        @media (min-width: 1024px) {
+            .rec-edit-controls {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .rec-add-sound-btn {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+
+            .rec-action-btn {
+                padding: 16px 20px;
+                font-size: 15px;
+            }
+        }
+
+        /* Tablet */
+        @media (max-width: 768px) {
+            .rec-edit-controls {
+                padding: 12px;
+                gap: 10px;
+                max-height: 25vh;
+            }
+
+            .rec-add-sound-btn {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+
+            .rec-action-btn {
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            .rec-edit-controls {
+                padding: 10px;
+                gap: 8px;
+                max-height: 20vh;
+            }
+
+            .rec-add-sound-btn {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .rec-action-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .rec-action-buttons {
+                gap: 8px;
+            }
         }
 
         /* ====== TEXT MODE STYLING ====== */
@@ -7014,16 +7199,7 @@
                         </div>
                     </div>
 
-                    <!-- AFCON FACE FILTER -->
-                    <div class="rec-effects-category">
-                        <div class="rec-category-title">🏆 AFCON Face Filter</div>
-                        <div class="rec-effects-grid">
-                            <button class="rec-effect-circular" onclick="toggleRecordingEffect('afcon')" title="AFCON">
-                                <div class="rec-effect-circle">🏆</div>
-                                <span>AFCON</span>
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -7075,63 +7251,7 @@
                 </div>
             </div>
 
-            <!-- AFCON Country Selector Panel -->
-            <div class="rec-options-panel" id="recAfconPanel">
-                <div class="rec-options-header">
-                    <span style="flex: 1; text-align: center; color: white; font-weight: 600;">AFCON Country</span>
-                    <button class="rec-options-close" onclick="closeAfconPanel()">✕</button>
-                </div>
-                <div class="rec-options-grid" style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 400px; overflow-y: auto;">
-                    <button class="rec-option-btn" onclick="setAfconCountry('NG')" title="Nigeria 🇳🇬">
-                        <div class="rec-option-icon">🇳🇬</div>
-                        <span>Nigeria</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('CM')" title="Cameroon 🇨🇲">
-                        <div class="rec-option-icon">🇨🇲</div>
-                        <span>Cameroon</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('EG')" title="Egypt 🇪🇬">
-                        <div class="rec-option-icon">🇪🇬</div>
-                        <span>Egypt</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('SN')" title="Senegal 🇸🇳">
-                        <div class="rec-option-icon">🇸🇳</div>
-                        <span>Senegal</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('MA')" title="Morocco 🇲🇦">
-                        <div class="rec-option-icon">🇲🇦</div>
-                        <span>Morocco</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('GH')" title="Ghana 🇬🇭">
-                        <div class="rec-option-icon">🇬🇭</div>
-                        <span>Ghana</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('CI')" title="Ivory Coast 🇨🇮">
-                        <div class="rec-option-icon">🇨🇮</div>
-                        <span>Ivory Coast</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('KE')" title="Kenya 🇰🇪">
-                        <div class="rec-option-icon">🇰🇪</div>
-                        <span>Kenya</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('TN')" title="Tunisia 🇹🇳">
-                        <div class="rec-option-icon">🇹🇳</div>
-                        <span>Tunisia</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('UG')" title="Uganda 🇺🇬">
-                        <div class="rec-option-icon">🇺🇬</div>
-                        <span>Uganda</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('ZA')" title="South Africa 🇿🇦">
-                        <div class="rec-option-icon">🇿🇦</div>
-                        <span>South Africa</span>
-                    </button>
-                    <button class="rec-option-btn" onclick="setAfconCountry('BF')" title="Burkina Faso 🇧🇫">
-                        <div class="rec-option-icon">🇧🇫</div>
-                        <span>Burkina Faso</span>
-                    </button>
-                </div>
-            </div>
+
 
             <!-- Duration Options Panel -->
             <div class="rec-options-panel" id="recDurationPanel">
@@ -7232,15 +7352,24 @@
 
             <!-- AFCON Face Detection Canvas & Overlays -->
             <canvas id="afconFaceCanvas" style="position: absolute; top: 0; left: 0; display: none;"></canvas>
-            <div id="afconOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;">
+            <div id="afconOverlay"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;">
                 <!-- Face paint left cheek -->
-                <div id="afconLeftCheek" style="position: absolute; width: 60px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.8; display: none;"></div>
+                <div id="afconLeftCheek"
+                    style="position: absolute; width: 60px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.8; display: none;">
+                </div>
                 <!-- Face paint right cheek -->
-                <div id="afconRightCheek" style="position: absolute; width: 60px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.8; display: none;"></div>
+                <div id="afconRightCheek"
+                    style="position: absolute; width: 60px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.8; display: none;">
+                </div>
                 <!-- Flag/badge forehead -->
-                <div id="afconBadge" style="position: absolute; width: 50px; height: 50px; background-size: contain; background-repeat: no-repeat; background-position: center; display: none;"></div>
+                <div id="afconBadge"
+                    style="position: absolute; width: 50px; height: 50px; background-size: contain; background-repeat: no-repeat; background-position: center; display: none;">
+                </div>
                 <!-- Text overlay -->
-                <div id="afconText" style="position: absolute; color: white; font-weight: bold; font-size: 14px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); text-align: center; white-space: nowrap; display: none;"></div>
+                <div id="afconText"
+                    style="position: absolute; color: white; font-weight: bold; font-size: 14px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); text-align: center; white-space: nowrap; display: none;">
+                </div>
             </div>
         </div>
 
@@ -11536,6 +11665,10 @@
                 case 'clone':
                     renderCloneEffectToCanvas(ctx, canvas);
                     break;
+                // AFCON Face Effect
+                case 'afcon':
+                    renderAFCONEffectToCanvas(ctx, canvas);
+                    break;
                 default:
                     break;
             }
@@ -11898,7 +12031,7 @@
             const centerY = canvas.height / 2;
             const beamCount = 12;
             const rotation = (Date.now() / 50) % (Math.PI * 2);
-            
+
             for (let i = 0; i < beamCount; i++) {
                 const angle = (i / beamCount) * Math.PI * 2 + rotation;
                 ctx.strokeStyle = `rgba(255, 200, 0, 0.1)`;
@@ -11912,14 +12045,14 @@
                 ctx.stroke();
             }
         }
-        
+
         // ===== DISTORTION EFFECTS =====
         function renderWaveEffectToCanvas(ctx, canvas) {
             // Wave effect: skew animation matching applyWaveEffect()
             const wave = Math.sin(Date.now() / 200) * 5;
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             // Apply brightness boost (1.05x)
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.05);
@@ -11928,39 +12061,39 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderKaleidoscopeEffectToCanvas(ctx, canvas) {
             // Kaleidoscope: saturate(1.5) hue-rotate(45deg) brightness(1.1) contrast(1.2)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
                 const g = data[i + 1];
                 const b = data[i + 2];
-                
+
                 // Simple approximation: boost saturation and brightness
                 const max = Math.max(r, g, b);
                 const min = Math.min(r, g, b);
                 const delta = max - min;
-                
+
                 data[i] = Math.min(255, r * 1.1 * 1.2);
                 data[i + 1] = Math.min(255, g * 1.1 * 1.2);
                 data[i + 2] = Math.min(255, b * 1.1 * 1.2);
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderPixelateEffectToCanvas(ctx, canvas) {
             // Pixelate: blur(4px) effect - downsample and upsample
             const blockSize = 4;
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let y = 0; y < canvas.height; y += blockSize) {
                 for (let x = 0; x < canvas.width; x += blockSize) {
                     let r = 0, g = 0, b = 0, count = 0;
-                    
+
                     // Average block
                     for (let dy = 0; dy < blockSize && y + dy < canvas.height; dy++) {
                         for (let dx = 0; dx < blockSize && x + dx < canvas.width; dx++) {
@@ -11971,11 +12104,11 @@
                             count++;
                         }
                     }
-                    
+
                     r = Math.floor(r / count);
                     g = Math.floor(g / count);
                     b = Math.floor(b / count);
-                    
+
                     // Fill block with average
                     for (let dy = 0; dy < blockSize && y + dy < canvas.height; dy++) {
                         for (let dx = 0; dx < blockSize && x + dx < canvas.width; dx++) {
@@ -11989,12 +12122,12 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderFisheyeEffectToCanvas(ctx, canvas) {
             // Fisheye: blur(1px) brightness(1.1) - apply slight blur
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.1);
                 data[i + 1] = Math.min(255, data[i + 1] * 1.1);
@@ -12002,13 +12135,13 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         // ===== RETRO/FILM EFFECTS =====
         function renderVHSEffectToCanvas(ctx, canvas) {
             // VHS: contrast(1.1) brightness(0.9) hue-rotate(5deg)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, Math.max(0, data[i] * 1.1 * 0.9));
                 data[i + 1] = Math.min(255, Math.max(0, data[i + 1] * 1.1 * 0.9));
@@ -12016,45 +12149,45 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         let recordingGlitches = [];
-        
+
         function renderGlitchEffectToCanvas(ctx, canvas) {
             // Glitch: random colorful horizontal slices
             if (Math.random() > 0.85) {
                 const sliceHeight = Math.random() * 50 + 10;
                 const sliceY = Math.random() * canvas.height;
                 const offset = Math.random() * 20 - 10;
-                
+
                 ctx.fillStyle = 'rgba(255, 0, 100, 0.15)';
                 ctx.fillRect(0, sliceY, canvas.width, sliceHeight);
                 ctx.fillStyle = 'rgba(0, 255, 255, 0.1)';
                 ctx.fillRect(offset, sliceY, canvas.width, sliceHeight);
             }
         }
-        
+
         function renderFilmBurnEffectToCanvas(ctx, canvas) {
             // FilmBurn: sepia(30%) brightness(0.85) contrast(1.1) hue-rotate(15deg)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
                 const g = data[i + 1];
                 const b = data[i + 2];
-                
+
                 // Apply sepia tone slightly
                 const sepiaR = r * 0.393 + g * 0.769 + b * 0.189;
                 const sepiaG = r * 0.349 + g * 0.686 + b * 0.168;
                 const sepiaB = r * 0.272 + g * 0.534 + b * 0.131;
-                
+
                 data[i] = Math.min(255, sepiaR * 0.3 + r * 0.7) * 0.85 * 1.1;
                 data[i + 1] = Math.min(255, sepiaG * 0.3 + g * 0.7) * 0.85 * 1.1;
                 data[i + 2] = Math.min(255, sepiaB * 0.3 + b * 0.7) * 0.85 * 1.1;
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderScanlinesEffectToCanvas(ctx, canvas) {
             // Scanlines: horizontal black lines
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
@@ -12066,13 +12199,13 @@
                 ctx.stroke();
             }
         }
-        
+
         // ===== NEON & VIBRANT EFFECTS =====
         function renderNeonEffectToCanvas(ctx, canvas) {
             // Neon: brightness(1.2) saturate(1.8) contrast(1.3) hue-rotate(20deg) + glow
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.2 * 1.3);
                 data[i + 1] = Math.min(255, data[i + 1] * 1.2 * 1.3);
@@ -12080,12 +12213,12 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderCyberpunkEffectToCanvas(ctx, canvas) {
             // Cyberpunk: saturate(2) hue-rotate(-30deg) brightness(1.3) contrast(1.5)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.3 * 1.5);
                 data[i + 1] = Math.min(255, data[i + 1] * 1.3 * 1.5);
@@ -12093,12 +12226,12 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderVaporwaveEffectToCanvas(ctx, canvas) {
             // Vaporwave: hue-rotate(260deg) saturate(1.3) brightness(1.1) contrast(1.2)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.1 * 1.2);
                 data[i + 1] = Math.min(255, data[i + 1] * 1.1 * 1.2);
@@ -12106,24 +12239,24 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         // ===== MOOD EFFECTS =====
         function renderGhostEffectToCanvas(ctx, canvas) {
             // Ghost effect: semi-transparent overlay
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i + 3] = data[i + 3] * 0.7; // Semi-transparent
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderMaskEffectToCanvas(ctx, canvas) {
             // Mask: brightness(1.1) saturate(1.2) hue-rotate(30deg)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.1);
                 data[i + 1] = Math.min(255, data[i + 1] * 1.1);
@@ -12131,12 +12264,12 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderDreamyEffectToCanvas(ctx, canvas) {
             // Dreamy: blur(2px) brightness(1.2) contrast(0.9) saturate(0.8)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, data[i] * 1.2 * 0.9 * 0.8);
                 data[i + 1] = Math.min(255, data[i + 1] * 1.2 * 0.9 * 0.8);
@@ -12144,12 +12277,12 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         function renderNoirEffectToCanvas(ctx, canvas) {
             // Noir: grayscale(100%) contrast(1.3) brightness(0.95)
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
-            
+
             for (let i = 0; i < data.length; i += 4) {
                 const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
                 const adjusted = Math.min(255, Math.max(0, gray * 1.3 * 0.95));
@@ -12159,13 +12292,13 @@
             }
             ctx.putImageData(imageData, 0, 0);
         }
-        
+
         // ===== CLONE & MIRROR EFFECTS =====
         function renderMirrorEffectToCanvas(ctx, canvas) {
             // Mirror: left half normal, right half flipped (handled in recording canvas)
             // This is handled specially during canvas rendering
         }
-        
+
         function renderCloneEffectToCanvas(ctx, canvas) {
             // Clone: 4 scaled versions of video (handled in recording canvas)
             // This is handled specially during canvas rendering
@@ -14584,7 +14717,8 @@
                 'dreamy': 'Dreamy',
                 'noir': 'Noir',
                 'mirror': 'Mirror',
-                'clone': 'Clone'
+                'clone': 'Clone',
+                'afcon': 'AFCON Face'
             };
 
             // Check if this effect is already active
@@ -14753,13 +14887,17 @@
             } else if (effectName === 'clone') {
                 startCloneEffect();
             }
+            // AFCON Face Effect
+            else if (effectName === 'afcon') {
+                startAFCONEffect();
+            }
         }
 
         function stopEffect(effectName) {
             const video = getRecordingVideoElement();
 
             // Particle & Canvas-based Effects
-            const canvasEffects = ['sparkle', 'star', 'ghost', 'hearts', 'confetti', 'flowers', 'snow', 'bokeh', 'rainbow', 'clone'];
+            const canvasEffects = ['sparkle', 'star', 'ghost', 'hearts', 'confetti', 'flowers', 'snow', 'bokeh', 'rainbow', 'clone', 'afcon'];
             if (canvasEffects.includes(effectName)) {
                 if (effectsState.animationId) {
                     cancelAnimationFrame(effectsState.animationId);
@@ -15424,6 +15562,368 @@
                 effectsState.animationId = requestAnimationFrame(animate);
             };
             animate();
+        }
+
+        // ====== AFCON FACE EFFECT ======
+        const afconCountries = {
+            'NG': { primary: '#008751', secondary: '#FFFFFF', accent: '#FFD700', text: '#FFFFFF', name: 'Nigeria' },
+            'EG': { primary: '#CE1126', secondary: '#FFFFFF', accent: '#000000', text: '#FFFFFF', name: 'Egypt' },
+            'CM': { primary: '#007A5E', secondary: '#FFFFFF', accent: '#FFD700', text: '#FFFFFF', name: 'Cameroon' },
+            'RW': { primary: '#20B2AA', secondary: '#FFFFFF', accent: '#FFD700', text: '#FFFFFF', name: 'Rwanda' },
+            'SN': { primary: '#007A5E', secondary: '#FFFFFF', accent: '#FFD700', text: '#FFFFFF', name: 'Senegal' },
+            'CI': { primary: '#FF9900', secondary: '#FFFFFF', accent: '#008751', text: '#FFFFFF', name: 'Ivory Coast' },
+            'KE': { primary: '#000000', secondary: '#FFFFFF', accent: '#FF0000', text: '#FFFFFF', name: 'Kenya' },
+            'GH': { primary: '#CE1126', secondary: '#FFD700', accent: '#000000', text: '#FFFFFF', name: 'Ghana' }
+        };
+
+        let afconState = {
+            currentCountry: 'NG',
+            faceBox: null,
+            animationTime: 0
+        };
+
+        function startAFCONEffect() {
+            const canvas = effectsState.canvas;
+            const ctx = effectsState.ctx;
+
+            if (!canvas || !ctx) {
+                console.error('❌ Canvas not initialized for AFCON effect');
+                return;
+            }
+
+            showAFCONCountrySelector();
+
+            const animate = () => {
+                if (!recordingState.selectedEffects.includes('afcon')) return;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                renderAFCONEffect(ctx, canvas);
+
+                effectsState.animationId = requestAnimationFrame(animate);
+            };
+            animate();
+        }
+
+        function renderAFCONEffect(ctx, canvas) {
+            // Define face box (centered)
+            const faceBox = {
+                x: canvas.width * 0.3,
+                y: canvas.height * 0.22,
+                width: canvas.width * 0.4,
+                height: canvas.height * 0.55
+            };
+
+            // Calculate landmarks
+            const landmarks = {
+                leftCheek: {
+                    x: faceBox.x + faceBox.width * 0.25,
+                    y: faceBox.y + faceBox.height * 0.58
+                },
+                rightCheek: {
+                    x: faceBox.x + faceBox.width * 0.75,
+                    y: faceBox.y + faceBox.height * 0.58
+                },
+                forehead: {
+                    x: faceBox.x + faceBox.width * 0.5,
+                    y: faceBox.y + faceBox.height * 0.08
+                },
+                chin: {
+                    x: faceBox.x + faceBox.width * 0.5,
+                    y: faceBox.y + faceBox.height * 0.95
+                }
+            };
+
+            const country = afconCountries[afconState.currentCountry];
+
+            // Draw professional face paint with gradients
+            drawProfessionalFacePaint(ctx, landmarks, faceBox, country);
+
+            // Draw professional badge/crown
+            drawAFCONBadge(ctx, landmarks, country);
+        }
+
+        function drawProfessionalFacePaint(ctx, landmarks, faceBox, country) {
+            const paintWidth = faceBox.width * 0.14;
+            const paintHeight = faceBox.height * 0.12;
+
+            // Left cheek paint - vertical stripes
+            ctx.globalAlpha = 0.75;
+            const stripeWidth = paintWidth / 3;
+
+            // Left stripe - color 1
+            ctx.fillStyle = country.primary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.leftCheek.x - stripeWidth, landmarks.leftCheek.y, stripeWidth * 0.8, paintHeight, -Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Middle stripe - secondary
+            ctx.fillStyle = country.secondary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.leftCheek.x, landmarks.leftCheek.y, stripeWidth * 0.8, paintHeight, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right stripe - accent
+            ctx.fillStyle = country.accent;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.leftCheek.x + stripeWidth, landmarks.leftCheek.y, stripeWidth * 0.8, paintHeight, Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right cheek paint - mirror effect
+            ctx.fillStyle = country.primary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.rightCheek.x + stripeWidth, landmarks.rightCheek.y, stripeWidth * 0.8, paintHeight, Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = country.secondary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.rightCheek.x, landmarks.rightCheek.y, stripeWidth * 0.8, paintHeight, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = country.accent;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.rightCheek.x - stripeWidth, landmarks.rightCheek.y, stripeWidth * 0.8, paintHeight, -Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.globalAlpha = 1;
+        }
+
+        function drawAFCONBadge(ctx, landmarks, country) {
+            const badgeWidth = landmarks.forehead.x * 0.5;
+            const badgeHeight = landmarks.forehead.y * 0.4;
+
+            // Draw badge background with shadow
+            ctx.globalAlpha = 0.15;
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.roundRect(landmarks.forehead.x - badgeWidth - 8, landmarks.forehead.y - badgeHeight - 8, badgeWidth * 2 + 16, badgeHeight * 2 + 16, 12);
+            ctx.fill();
+
+            // Draw main badge
+            ctx.globalAlpha = 0.95;
+
+            // Background
+            ctx.fillStyle = country.primary;
+            ctx.beginPath();
+            ctx.roundRect(landmarks.forehead.x - badgeWidth, landmarks.forehead.y - badgeHeight, badgeWidth * 2, badgeHeight * 2, 10);
+            ctx.fill();
+
+            // Accent border
+            ctx.strokeStyle = country.accent;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(landmarks.forehead.x - badgeWidth, landmarks.forehead.y - badgeHeight, badgeWidth * 2, badgeHeight * 2, 10);
+            ctx.stroke();
+
+            // Secondary stripe
+            ctx.fillStyle = country.secondary;
+            ctx.fillRect(landmarks.forehead.x - badgeWidth, landmarks.forehead.y - badgeHeight * 0.3, badgeWidth * 2, badgeHeight * 0.6);
+
+            // Country code text
+            ctx.globalAlpha = 1;
+            ctx.font = `bold ${badgeHeight * 0.8}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = country.text;
+            ctx.fillText(afconState.currentCountry, landmarks.forehead.x, landmarks.forehead.y);
+
+            // Trophy emoji decoration
+            ctx.font = `${badgeHeight * 0.6}px Arial`;
+            ctx.fillText('🏆', landmarks.forehead.x - badgeWidth * 0.5, landmarks.forehead.y - badgeHeight * 0.4);
+            ctx.fillText('🏆', landmarks.forehead.x + badgeWidth * 0.5, landmarks.forehead.y - badgeHeight * 0.4);
+        }
+
+        function showAFCONCountrySelector() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #1a1a1a;
+                border: 2px solid #4C1D95;
+                border-radius: 12px;
+                padding: 20px;
+                z-index: 9999;
+                color: white;
+                text-align: center;
+                max-height: 80vh;
+                overflow-y: auto;
+                width: 90%;
+                max-width: 400px;
+            `;
+
+            let html = `
+                <h2 style="margin-top: 0; color: white;">Select AFCON Country</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
+            `;
+
+            Object.keys(afconCountries).forEach(code => {
+                const country = afconCountries[code];
+                html += `
+                    <button onclick="selectAFCONCountry('${code}'); this.closest('div').parentElement.remove();" style="
+                        padding: 15px;
+                        background: linear-gradient(135deg, ${country.primary}, ${country.secondary});
+                        border: 2px solid ${country.primary};
+                        border-radius: 8px;
+                        color: white;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    ">${code}<br><small>${country.name}</small></button>
+                `;
+            });
+
+            html += `
+                </div>
+                <button onclick="this.closest('div').remove();" style="
+                    padding: 10px 20px;
+                    background: #333;
+                    border: 1px solid #555;
+                    border-radius: 6px;
+                    color: white;
+                    cursor: pointer;
+                    margin-top: 10px;
+                ">Close</button>
+            `;
+
+            modal.innerHTML = html;
+            document.body.appendChild(modal);
+
+            // Add backdrop
+            const backdrop = document.createElement('div');
+            backdrop.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9998;
+            `;
+            backdrop.onclick = () => backdrop.remove() && modal.remove();
+            document.body.insertBefore(backdrop, modal);
+        }
+
+        function selectAFCONCountry(countryCode) {
+            afconState.currentCountry = countryCode;
+            showToastRecording(`🏆 ${afconCountries[countryCode].name} Selected`, 'info', '🏆');
+        }
+
+        function renderAFCONEffectToCanvas(ctx, canvas) {
+            // Define face box (centered)
+            const faceBox = {
+                x: canvas.width * 0.3,
+                y: canvas.height * 0.22,
+                width: canvas.width * 0.4,
+                height: canvas.height * 0.55
+            };
+
+            // Calculate landmarks
+            const landmarks = {
+                leftCheek: {
+                    x: faceBox.x + faceBox.width * 0.25,
+                    y: faceBox.y + faceBox.height * 0.58
+                },
+                rightCheek: {
+                    x: faceBox.x + faceBox.width * 0.75,
+                    y: faceBox.y + faceBox.height * 0.58
+                },
+                forehead: {
+                    x: faceBox.x + faceBox.width * 0.5,
+                    y: faceBox.y + faceBox.height * 0.08
+                },
+                chin: {
+                    x: faceBox.x + faceBox.width * 0.5,
+                    y: faceBox.y + faceBox.height * 0.95
+                }
+            };
+
+            const country = afconCountries[afconState.currentCountry];
+
+            // Draw professional face paint
+            const paintWidth = faceBox.width * 0.14;
+            const paintHeight = faceBox.height * 0.12;
+            const stripeWidth = paintWidth / 3;
+
+            // Left cheek paint - vertical stripes
+            ctx.globalAlpha = 0.75;
+
+            // Left stripe
+            ctx.fillStyle = country.primary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.leftCheek.x - stripeWidth, landmarks.leftCheek.y, stripeWidth * 0.8, paintHeight, -Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Middle stripe
+            ctx.fillStyle = country.secondary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.leftCheek.x, landmarks.leftCheek.y, stripeWidth * 0.8, paintHeight, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right stripe
+            ctx.fillStyle = country.accent;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.leftCheek.x + stripeWidth, landmarks.leftCheek.y, stripeWidth * 0.8, paintHeight, Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right cheek paint - mirror effect
+            ctx.fillStyle = country.primary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.rightCheek.x + stripeWidth, landmarks.rightCheek.y, stripeWidth * 0.8, paintHeight, Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = country.secondary;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.rightCheek.x, landmarks.rightCheek.y, stripeWidth * 0.8, paintHeight, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = country.accent;
+            ctx.beginPath();
+            ctx.ellipse(landmarks.rightCheek.x - stripeWidth, landmarks.rightCheek.y, stripeWidth * 0.8, paintHeight, -Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw badge with shadow
+            const badgeWidth = landmarks.forehead.x * 0.5;
+            const badgeHeight = landmarks.forehead.y * 0.4;
+
+            ctx.globalAlpha = 0.15;
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.roundRect(landmarks.forehead.x - badgeWidth - 8, landmarks.forehead.y - badgeHeight - 8, badgeWidth * 2 + 16, badgeHeight * 2 + 16, 12);
+            ctx.fill();
+
+            // Badge main
+            ctx.globalAlpha = 0.95;
+            ctx.fillStyle = country.primary;
+            ctx.beginPath();
+            ctx.roundRect(landmarks.forehead.x - badgeWidth, landmarks.forehead.y - badgeHeight, badgeWidth * 2, badgeHeight * 2, 10);
+            ctx.fill();
+
+            // Accent border
+            ctx.strokeStyle = country.accent;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(landmarks.forehead.x - badgeWidth, landmarks.forehead.y - badgeHeight, badgeWidth * 2, badgeHeight * 2, 10);
+            ctx.stroke();
+
+            // Secondary stripe
+            ctx.fillStyle = country.secondary;
+            ctx.fillRect(landmarks.forehead.x - badgeWidth, landmarks.forehead.y - badgeHeight * 0.3, badgeWidth * 2, badgeHeight * 0.6);
+
+            // Country code text
+            ctx.globalAlpha = 1;
+            ctx.font = `bold ${badgeHeight * 0.8}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = country.text;
+            ctx.fillText(afconState.currentCountry, landmarks.forehead.x, landmarks.forehead.y);
+
+            // Trophy emoji decoration
+            ctx.font = `${badgeHeight * 0.6}px Arial`;
+            ctx.fillText('🏆', landmarks.forehead.x - badgeWidth * 0.5, landmarks.forehead.y - badgeHeight * 0.4);
+            ctx.fillText('🏆', landmarks.forehead.x + badgeWidth * 0.5, landmarks.forehead.y - badgeHeight * 0.4);
+
+            ctx.globalAlpha = 1;
         }
 
         // ====== RECORDING FILTERS FUNCTIONS ======
@@ -21178,443 +21678,8 @@
 
     </script>
 
-    <!-- AFCON Face Filter System -->
-    <script>
-        // Load ml5.js dynamically
-        if (!window.ml5) {
-            const script = document.createElement('script');
-            script.src = 'https://unpkg.com/ml5@0.12.0/dist/ml5.min.js';
-            script.async = true;
-            document.head.appendChild(script);
-        }
-    </script>
-    <script>
-        // ====== AFCON FACE FILTER STATE ======
-        const afconState = {
-            enabled: false,
-            selectedCountry: null,
-            detector: null,
-            isDetecting: false,
-            faceDetectionInterval: null,
-            detectionFrameRate: 15, // 15 FPS for performance
-            lastDetectionTime: 0,
-            currentFace: null,
-            animationFrameId: null,
-            libraryReady: false
-        };
 
-        // ====== AFCON COUNTRY ASSETS ======
-        const afconCountries = {
-            'NG': {
-                name: 'Nigeria',
-                flag: '🇳🇬',
-                colors: ['#009B3A', '#FFFFFF', '#E41E22'],
-                theme: '#009B3A',
-                leftPaint: '🟢',
-                rightPaint: '🟢',
-                badgeText: 'NIGERIA'
-            },
-            'CM': {
-                name: 'Cameroon',
-                flag: '🇨🇲',
-                colors: ['#007A5E', '#FFFFFF', '#CE1126'],
-                theme: '#007A5E',
-                leftPaint: '🟢',
-                rightPaint: '🔴',
-                badgeText: 'CAMEROON'
-            },
-            'EG': {
-                name: 'Egypt',
-                flag: '🇪🇬',
-                colors: ['#CE1126', '#FFFFFF', '#007A5E'],
-                theme: '#CE1126',
-                leftPaint: '🔴',
-                rightPaint: '🔴',
-                badgeText: 'EGYPT'
-            },
-            'SN': {
-                name: 'Senegal',
-                flag: '🇸🇳',
-                colors: ['#007A5E', '#FCDCCF', '#CE1126'],
-                theme: '#007A5E',
-                leftPaint: '🟢',
-                rightPaint: '🔴',
-                badgeText: 'SENEGAL'
-            },
-            'MA': {
-                name: 'Morocco',
-                flag: '🇲🇦',
-                colors: ['#CE1126', '#007A5E', '#FFFFFF'],
-                theme: '#CE1126',
-                leftPaint: '🔴',
-                rightPaint: '🟢',
-                badgeText: 'MOROCCO'
-            },
-            'GH': {
-                name: 'Ghana',
-                flag: '🇬🇭',
-                colors: ['#007A5E', '#FFD100', '#CE1126'],
-                theme: '#007A5E',
-                leftPaint: '🟡',
-                rightPaint: '🔴',
-                badgeText: 'GHANA'
-            },
-            'CI': {
-                name: 'Ivory Coast',
-                flag: '🇨🇮',
-                colors: ['#FF7800', '#FFFFFF', '#007A5E'],
-                theme: '#FF7800',
-                leftPaint: '🟠',
-                rightPaint: '🟢',
-                badgeText: 'IVORY COAST'
-            },
-            'KE': {
-                name: 'Kenya',
-                flag: '🇰🇪',
-                colors: ['#000000', '#FFFFFF', '#CE1126'],
-                theme: '#000000',
-                leftPaint: '⚫',
-                rightPaint: '🔴',
-                badgeText: 'KENYA'
-            },
-            'TN': {
-                name: 'Tunisia',
-                flag: '🇹🇳',
-                colors: ['#CE1126', '#FFFFFF', '#007A5E'],
-                theme: '#CE1126',
-                leftPaint: '🔴',
-                rightPaint: '🔴',
-                badgeText: 'TUNISIA'
-            },
-            'UG': {
-                name: 'Uganda',
-                flag: '🇺🇬',
-                colors: ['#000000', '#FFD100', '#CE1126'],
-                theme: '#000000',
-                leftPaint: '⚫',
-                rightPaint: '🟡',
-                badgeText: 'UGANDA'
-            },
-            'ZA': {
-                name: 'South Africa',
-                flag: '🇿🇦',
-                colors: ['#000000', '#007A5E', '#FFD100'],
-                theme: '#000000',
-                leftPaint: '⚫',
-                rightPaint: '🟢',
-                badgeText: 'SOUTH AFRICA'
-            },
-            'BF': {
-                name: 'Burkina Faso',
-                flag: '🇧🇫',
-                colors: ['#CE1126', '#007A5E', '#FFD100'],
-                theme: '#CE1126',
-                leftPaint: '🔴',
-                rightPaint: '🟢',
-                badgeText: 'BURKINA FASO'
-            }
-        };
 
-        // ====== INITIALIZE FACE DETECTION ======
-        async function initAfconDetector() {
-            try {
-                console.log('🏆 AFCON: Starting initialization...');
-                
-                // Wait for ml5 to load with longer timeout
-                let attempts = 0;
-                const maxAttempts = 150; // 15 seconds at 100ms intervals
-                
-                while (typeof window.ml5 === 'undefined' && attempts < maxAttempts) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
-                }
-
-                if (typeof window.ml5 === 'undefined') {
-                    throw new Error('ml5.js library timeout - failed to load from CDN');
-                }
-
-                console.log('✅ AFCON: ml5.js library loaded');
-                console.log('🏆 AFCON: Initializing face detection...');
-                
-                // Initialize face detection with ml5
-                const detector = await window.ml5.faceApi();
-                
-                afconState.detector = detector;
-                console.log('✅ AFCON: Face detection ready');
-                afconState.libraryReady = true;
-                return true;
-            } catch (err) {
-                console.error('❌ AFCON: Failed to initialize face detection', err.message || err);
-                afconState.detector = null;
-                afconState.libraryReady = false;
-                return false;
-            }
-        }
-
-        // ====== DETECT FACES ======
-        async function detectAfconFace() {
-            if (!afconState.enabled || !afconState.selectedCountry) return;
-            if (!afconState.libraryReady || !afconState.detector) return;
-
-            const video = document.getElementById('videoPreview');
-            if (!video || !video.srcObject) return;
-
-            const now = Date.now();
-            if (now - afconState.lastDetectionTime < 1000 / afconState.detectionFrameRate) {
-                return;
-            }
-            afconState.lastDetectionTime = now;
-
-            try {
-                // Use ml5 to detect faces
-                const predictions = await afconState.detector.estimateFace(video);
-
-                if (predictions && predictions.length > 0) {
-                    // Get first face only (MVP requirement)
-                    const face = predictions[0];
-                    afconState.currentFace = face;
-                    renderAfconOverlaysML5(face);
-                } else {
-                    hideAfconOverlays();
-                    afconState.currentFace = null;
-                }
-            } catch (err) {
-                // Silently fail during detection
-                // No logging to reduce console spam
-            }
-        }
-
-        // ====== RENDER OVERLAYS (ML5.JS) ======
-        function renderAfconOverlaysML5(face) {
-            const video = document.getElementById('videoPreview');
-            const overlay = document.getElementById('afconOverlay');
-            const country = afconCountries[afconState.selectedCountry];
-
-            if (!video || !overlay || !country) return;
-
-            // Get video dimensions
-            const videoRect = video.getBoundingClientRect();
-            const videoWidth = video.videoWidth;
-            const videoHeight = video.videoHeight;
-
-            // ml5 returns normalized coordinates (0-1)
-            const scale = videoRect.width / videoWidth;
-            const offsetX = videoRect.left;
-            const offsetY = videoRect.top;
-
-            // Extract face box from ml5 predictions
-            const start = face.start;
-            const size = face.size;
-
-            // Convert to pixel coordinates
-            const faceX = start[0] * scale;
-            const faceY = start[1] * scale;
-            const faceWidth = size[0] * scale;
-            const faceHeight = size[1] * scale;
-
-            // Get landmarks if available
-            let leftCheekPos, rightCheekPos, foreheadPos;
-
-            if (face.landmarks && face.landmarks.length > 0) {
-                // ml5 provides landmarks as array of [x, y] pairs
-                // Use approximate landmark indices for face features
-                const midpoint = face.landmarks[8]; // Chin
-                const leftEye = face.landmarks[0]; // Left eye
-                const rightEye = face.landmarks[1]; // Right eye
-                
-                // Estimate cheek positions from face geometry
-                const faceCenter = {
-                    x: (start[0] + size[0] / 2) * scale,
-                    y: (start[1] + size[1] / 2) * scale
-                };
-
-                leftCheekPos = {
-                    x: offsetX + (start[0] + size[0] * 0.3) * scale - 30,
-                    y: offsetY + (start[1] + size[1] * 0.55) * scale - 30
-                };
-
-                rightCheekPos = {
-                    x: offsetX + (start[0] + size[0] * 0.7) * scale - 30,
-                    y: offsetY + (start[1] + size[1] * 0.55) * scale - 30
-                };
-
-                foreheadPos = {
-                    x: offsetX + (start[0] + size[0] * 0.5) * scale - 25,
-                    y: offsetY + (start[1] + size[1] * 0.15) * scale - 25
-                };
-            } else {
-                // Fallback positioning based on face bounding box
-                leftCheekPos = {
-                    x: offsetX + faceX + faceWidth * 0.3 - 30,
-                    y: offsetY + faceY + faceHeight * 0.55 - 30
-                };
-
-                rightCheekPos = {
-                    x: offsetX + faceX + faceWidth * 0.7 - 30,
-                    y: offsetY + faceY + faceHeight * 0.55 - 30
-                };
-
-                foreheadPos = {
-                    x: offsetX + faceX + faceWidth * 0.5 - 25,
-                    y: offsetY + faceY + faceHeight * 0.15 - 25
-                };
-            }
-
-            // Update left cheek
-            const leftCheek = document.getElementById('afconLeftCheek');
-            leftCheek.textContent = country.leftPaint;
-            leftCheek.style.left = leftCheekPos.x + 'px';
-            leftCheek.style.top = leftCheekPos.y + 'px';
-            leftCheek.style.fontSize = (faceWidth * 0.25) + 'px';
-            leftCheek.style.display = 'flex';
-            leftCheek.style.alignItems = 'center';
-            leftCheek.style.justifyContent = 'center';
-
-            // Update right cheek
-            const rightCheek = document.getElementById('afconRightCheek');
-            rightCheek.textContent = country.rightPaint;
-            rightCheek.style.left = rightCheekPos.x + 'px';
-            rightCheek.style.top = rightCheekPos.y + 'px';
-            rightCheek.style.fontSize = (faceWidth * 0.25) + 'px';
-            rightCheek.style.display = 'flex';
-            rightCheek.style.alignItems = 'center';
-            rightCheek.style.justifyContent = 'center';
-
-            // Update badge
-            const badge = document.getElementById('afconBadge');
-            badge.textContent = country.flag;
-            badge.style.left = foreheadPos.x + 'px';
-            badge.style.top = foreheadPos.y + 'px';
-            badge.style.fontSize = (faceWidth * 0.2) + 'px';
-            badge.style.display = 'flex';
-            badge.style.alignItems = 'center';
-            badge.style.justifyContent = 'center';
-
-            // Update text
-            const text = document.getElementById('afconText');
-            text.textContent = country.badgeText;
-            text.style.left = (offsetX + faceX + faceWidth / 2 - 50) + 'px';
-            text.style.top = (offsetY + faceY - 30) + 'px';
-            text.style.color = country.theme;
-            text.style.display = 'block';
-
-            overlay.style.display = 'block';
-        }
-
-        // ====== HIDE OVERLAYS ======
-        function hideAfconOverlays() {
-            document.getElementById('afconLeftCheek').style.display = 'none';
-            document.getElementById('afconRightCheek').style.display = 'none';
-            document.getElementById('afconBadge').style.display = 'none';
-            document.getElementById('afconText').style.display = 'none';
-        }
-
-        // ====== TOGGLE AFCON EFFECT ======
-        async function toggleAfconEffect() {
-            if (afconState.enabled) {
-                // Disable
-                afconState.enabled = false;
-                console.log('🏆 AFCON effect disabled');
-                
-                // Stop detection
-                if (afconState.faceDetectionInterval) {
-                    clearInterval(afconState.faceDetectionInterval);
-                    afconState.faceDetectionInterval = null;
-                }
-
-                hideAfconOverlays();
-                const afconPanel = document.getElementById('recAfconPanel');
-                if (afconPanel) {
-                    afconPanel.style.display = 'none';
-                }
-            } else {
-                // Enable
-                console.log('🏆 AFCON effect enabled - initializing face detection...');
-                afconState.enabled = true;
-                
-                if (!afconState.libraryReady) {
-                    const success = await initAfconDetector();
-                    
-                    if (!success) {
-                        console.error('❌ AFCON: Face detection library failed to initialize');
-                        afconState.enabled = false;
-                        alert('Face detection library failed to load. Please check your internet connection.');
-                        return;
-                    }
-                }
-
-                // Show country selector
-                const afconPanel = document.getElementById('recAfconPanel');
-                if (afconPanel) {
-                    afconPanel.style.display = 'block';
-                }
-
-                // Start detection loop
-                if (!afconState.faceDetectionInterval) {
-                    afconState.faceDetectionInterval = setInterval(() => {
-                        detectAfconFace();
-                    }, 100); // Check every 100ms
-                }
-            }
-        }
-
-        // ====== SET AFCON COUNTRY ======
-        function setAfconCountry(countryCode) {
-            if (!afconCountries[countryCode]) return;
-
-            afconState.selectedCountry = countryCode;
-            const country = afconCountries[countryCode];
-
-            console.log('AFCON: Selected', country.name);
-
-            // Mark selected button
-            document.querySelectorAll('#recAfconPanel .rec-option-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.closest('.rec-option-btn').classList.add('active');
-
-            // Start detection if not already running
-            if (afconState.enabled && !afconState.faceDetectionInterval) {
-                afconState.faceDetectionInterval = setInterval(() => {
-                    detectAfconFace();
-                }, 100);
-            }
-        }
-
-        // ====== CLOSE AFCON PANEL ======
-        function closeAfconPanel() {
-            const afconPanel = document.getElementById('recAfconPanel');
-            if (afconPanel) {
-                afconPanel.style.display = 'none';
-            }
-        }
-
-        // ====== INTEGRATION WITH RECORDING EFFECTS ======
-        // Override toggleRecordingEffect to handle AFCON
-        const originalToggleRecordingEffect = window.toggleRecordingEffect;
-        window.toggleRecordingEffect = function(effectName) {
-            if (effectName === 'afcon') {
-                toggleAfconEffect();
-            } else if (originalToggleRecordingEffect) {
-                originalToggleRecordingEffect(effectName);
-            }
-        };
-
-        // Initialize on page load
-        window.addEventListener('load', () => {
-            console.log('🏆 AFCON: System initialized. Ready when you enable the effect.');
-            // Don't auto-load models - wait until user enables the effect
-        });
-
-        // Also check when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                console.log('🏆 AFCON: DOM ready');
-            });
-        } else {
-            console.log('🏆 AFCON: DOM already ready');
-        }
-    </script>
 </body>
 
 </html>
