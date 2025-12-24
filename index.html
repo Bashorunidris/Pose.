@@ -9908,14 +9908,6 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label
-                            style="display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px;"><i
-                                class="fas fa-calendar"></i> Year</label>
-                        <input type="number" id="iTunesYearFilter" min="2000" max="2025" placeholder="e.g. 2024"
-                            oninput="handleYearFilterChange()"
-                            style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #444; color: white; border-radius: 6px; font-size: 12px;">
-                    </div>
                 </div>
             </div>
 
@@ -11870,9 +11862,9 @@
                 const constraints = {
                     video: {
                         facingMode: recordingState.cameraFacingMode,
-                        width: { ideal: 3840, max: 4096 },
-                        height: { ideal: 2160, max: 2160 },
-                        frameRate: { ideal: 60, max: 60 }
+                        width: { ideal: 1920, max: 1920 },
+                        height: { ideal: 1080, max: 1080 },
+                        frameRate: { ideal: 30, max: 30 }
                     },
                     audio: {
                         echoCancellation: true,
@@ -11902,7 +11894,7 @@
                         errorOverlay.style.display = 'none';
                     }
 
-                    console.log('✅ Camera ready (3840x2160 4K Ultra HD @ 60fps)');
+                    console.log('✅ Camera ready (1920x1080 Full HD @ 30fps - optimized for smooth recording)');
                     showToastRecording('📹 Ready to record', 'success', '✓');
                 }
             } catch (error) {
@@ -12001,9 +11993,9 @@
                     const constraints = {
                         video: {
                             facingMode: recordingState.cameraFacingMode,
-                            width: { ideal: 3840, max: 4096 },
-                            height: { ideal: 2160, max: 2160 },
-                            frameRate: { ideal: 60, max: 60 }
+                            width: { ideal: 1920, max: 1920 },
+                            height: { ideal: 1080, max: 1080 },
+                            frameRate: { ideal: 30, max: 30 }
                         },
                         audio: {
                             echoCancellation: true,
@@ -12025,7 +12017,7 @@
 
         // ====== RECORDING CONTROLS - TIKTOK SPEED OPTIMIZATION ======
 
-        function recordVideo() {
+        async function recordVideo() {
             // Check if duration is selected
             if (!recordingState.selectedDuration || recordingState.selectedDuration <= 0) {
                 showToastRecording('⚠️ Select duration first', 'warning', '⏳');
@@ -12052,9 +12044,9 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            // Get 4K dimensions - full resolution without quality reduction
-            let canvasWidth = 3840;  // 4K resolution
-            let canvasHeight = 2160; // 4K resolution
+            // Use 1080p for smooth recording (4K is too heavy and causes lag)
+            let canvasWidth = 1920;  // 1080p resolution
+            let canvasHeight = 1080; // 1080p resolution
 
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
@@ -12063,123 +12055,100 @@
             recordingState.canvasWidth = canvasWidth;
             recordingState.canvasHeight = canvasHeight;
 
-            console.log(`🎨 Canvas setup: ${canvas.width}x${canvas.height} (4K Ultra HD)`);
+            console.log(`🎨 Canvas setup: ${canvas.width}x${canvas.height} (1080p HD - optimized for smooth recording)`);
             console.log(`📹 Recording with effects: Filter="${recordingState.currentFilter}", Effects=${recordingState.selectedEffects.length}`);
 
-            // Get canvas stream for recording at 60fps
-            const canvasStream = canvas.captureStream(60); // 60 FPS for 4K
+            // Get canvas stream for recording at 24fps (smooth, less lag)
+            const canvasStream = canvas.captureStream(24); // 24 FPS for smooth recording with less lag
 
-            // ===== AUDIO: Combine microphone + background sound =====
-            // Initialize audio context for mixing
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            recordingState.audioContext = audioContext;
-
-            // Create audio destination to capture mixed audio
-            const audioDestination = audioContext.createMediaStreamDestination();
-
-            // Add microphone audio to mixed stream
-            const audioTracks = recordingState.stream.getAudioTracks();
-            let micSource = null;
-            if (audioTracks.length > 0) {
-                micSource = audioContext.createMediaStreamSource(recordingState.stream);
-                // Microphone at 70% volume
-                const micGain = audioContext.createGain();
-                micGain.gain.value = 0.7;
-                micSource.connect(micGain);
-                micGain.connect(audioDestination);
-            }
-
-            // Add background sound if selected
-            let backgroundAudioElement = null;
+            // ===== AUDIO SETUP: Use background music OR microphone (not both) =====
+            let finalStream = canvasStream;
+            
             if (recordingState.selectedSound) {
+                // Background music selected - Record ONLY music audio
+                console.log('🎵 Recording with background music ONLY (no microphone)');
+                
                 try {
-                    // Create audio element with proper CORS settings BEFORE setting src
-                    backgroundAudioElement = new Audio();
-                    backgroundAudioElement.crossOrigin = "anonymous";
-                    backgroundAudioElement.loop = true;
-                    backgroundAudioElement.src = recordingState.selectedSound.url;
-
-                    // Add to DOM (hidden) so it can load properly
-                    backgroundAudioElement.style.display = 'none';
-                    document.body.appendChild(backgroundAudioElement);
-
-                    // Create source from audio element
-                    const soundSource = audioContext.createMediaElementAudioSource(backgroundAudioElement);
-                    const soundGain = audioContext.createGain();
-                    soundGain.gain.value = 0.5;  // Background sound at 50%
-
-                    soundSource.connect(soundGain);
-                    soundGain.connect(audioDestination);
-
-                    recordingState.backgroundAudio = backgroundAudioElement;
-
-                    // Wait for audio to be loadable, then play
-                    const playSound = () => {
-                        backgroundAudioElement.play()
-                            .then(() => {
-                                console.log('🎵 Background sound playing in recording');
-                            })
-                            .catch(err => {
-                                console.warn('⚠️ Could not play background sound:', err);
-                                showToastRecording('⚠️ Background sound may not play', 'warning', '🔊');
-                            });
-                    };
-
-                    if (backgroundAudioElement.readyState >= 2) {
-                        // Audio is already loaded
-                        playSound();
+                    // Use preloaded audio (already fetched and decoded)
+                    let audioBuffer = recordingState.preloadedAudioBuffer;
+                    let audioContext = recordingState.preloadedAudioContext;
+                    
+                    // If not preloaded yet, create fresh (fallback)
+                    if (!audioBuffer || !audioContext) {
+                        console.log('⚠️ Audio not preloaded, creating fresh context...');
+                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const audioResponse = await fetch(recordingState.selectedSound.url);
+                        const audioBlob = await audioResponse.blob();
+                        audioBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer());
                     } else {
-                        // Wait for audio to load
-                        backgroundAudioElement.addEventListener('canplay', playSound, { once: true });
+                        console.log('✅ Using preloaded audio (no lag!)');
                     }
-
-                    console.log('🎵 Background sound added to recording mix');
+                    
+                    recordingState.audioContext = audioContext;
+                    
+                    // Step 1: Create destination to capture audio
+                    const destination = audioContext.createMediaStreamDestination();
+                    
+                    // Step 5: Prepare audio source (don't start yet)
+                    let audioSource = audioContext.createBufferSource();
+                    audioSource.buffer = audioBuffer;
+                    audioSource.loop = true;  // Loop the audio
+                    
+                    const gain = audioContext.createGain();
+                    gain.gain.value = 1.0;  // 100% volume
+                    
+                    audioSource.connect(gain);
+                    gain.connect(destination);  // Connect to video recording
+                    gain.connect(audioContext.destination);  // IMPORTANT: Also connect to speakers so user can HEAR it!
+                    console.log('✅ Audio source connected to destination AND speakers (NOT STARTED YET)');
+                    
+                    // Step 6: Add the mixed audio stream to canvas
+                    const audioTracks = destination.stream.getAudioTracks();
+                    if (audioTracks.length > 0) {
+                        canvasStream.addTrack(audioTracks[0]);
+                        console.log('✅ Music audio track added to video - WILL BE SAVED');
+                    } else {
+                        console.log('⚠️ No audio track in destination');
+                    }
+                    
+                    // Step 7: Store references for delayed start (1 second after recording starts)
+                    recordingState.audioSource = audioSource;
+                    recordingState.audioContext = audioContext;
+                    recordingState.audioDestination = destination;
+                    recordingState.audioStartPending = true;  // Flag for delayed start
+                    
                 } catch (error) {
-                    console.warn('⚠️ Could not create audio source for background sound:', error);
-                    // Fallback: just play the sound for user (not recorded)
-                    try {
-                        backgroundAudioElement = new Audio(recordingState.selectedSound.url);
-                        backgroundAudioElement.loop = true;
-                        backgroundAudioElement.volume = 0.5;
-                        backgroundAudioElement.style.display = 'none';
-                        document.body.appendChild(backgroundAudioElement);
-
-                        const playFallback = () => {
-                            backgroundAudioElement.play().catch(err => {
-                                console.warn('⚠️ Fallback audio play failed:', err);
-                                showToastRecording('❌ Sound failed to load', 'error', '🔊');
-                            });
-                        };
-
-                        if (backgroundAudioElement.readyState >= 2) {
-                            playFallback();
-                        } else {
-                            backgroundAudioElement.addEventListener('canplay', playFallback, { once: true });
-                        }
-                        recordingState.backgroundAudio = backgroundAudioElement;
-                    } catch (fallbackError) {
-                        console.error('❌ Fallback audio also failed:', fallbackError);
-                        showToastRecording('❌ Could not load sound', 'error', '🔊');
-                    }
+                    console.error('⚠️ Music audio setup error:', error);
+                    console.log('📌 Recording video only (no music audio - error occurred)');
+                }
+                
+            } else {
+                // No music - Record ONLY microphone audio
+                console.log('🎤 Recording with microphone ONLY (no background music)');
+                
+                const audioTracks = recordingState.stream.getAudioTracks();
+                if (audioTracks.length > 0) {
+                    canvasStream.addTrack(audioTracks[0]);
+                    console.log('✅ Microphone audio added to video');
+                } else {
+                    console.log('⚠️ No microphone available');
                 }
             }
+            
+            finalStream = canvasStream;
 
-            // Add mixed audio track to canvas stream
-            const mixedAudioTracks = audioDestination.stream.getAudioTracks();
-            if (mixedAudioTracks.length > 0) {
-                canvasStream.addTrack(mixedAudioTracks[0]);
-            }
+            console.log('📊 Recording setup complete - Ready to record');
 
             const options = {
                 mimeType: 'video/webm;codecs=vp8,opus',
-                videoBitsPerSecond: 8000000,  // 8 Mbps for 4K quality
-                audioBitsPerSecond: 320000    // 320 kbps for high-quality audio
+                videoBitsPerSecond: 1500000,  // 1.5 Mbps for 1080p 24fps (less lag)
+                audioBitsPerSecond: 128000    // 128 kbps audio (still good quality)
             };
 
             try {
-                recordingState.mediaRecorder = new MediaRecorder(canvasStream, options);
+                recordingState.mediaRecorder = new MediaRecorder(finalStream, options);
             } catch (e) {
-                recordingState.mediaRecorder = new MediaRecorder(canvasStream);
+                recordingState.mediaRecorder = new MediaRecorder(finalStream);
             }
 
             recordingState.mediaRecorder.ondataavailable = (event) => {
@@ -12222,6 +12191,18 @@
 
             const soundMessage = recordingState.selectedSound ? `🎵 "${recordingState.selectedSound.title}"` : '🔴';
             showToastRecording(`${soundMessage} Recording started...`, 'success', '✓');
+
+            // ===== DELAYED AUDIO START (1 second after recording starts) =====
+            if (recordingState.audioStartPending && recordingState.audioSource) {
+                console.log('⏳ Waiting 1 second before starting audio (to prevent lag)...');
+                setTimeout(() => {
+                    if (recordingState.audioSource && recordingState.isRecording) {
+                        recordingState.audioSource.start(0);
+                        console.log('▶️ Background music started playing (1 sec delayed)');
+                        recordingState.audioStartPending = false;
+                    }
+                }, 1000);  // 1 second delay
+            }
 
             // ===== START CANVAS RENDERING LOOP =====
             recordingState.isCanvasRendering = true;
@@ -12302,10 +12283,12 @@
             // This removes the heavy pixel-by-pixel processing that was causing lag
             // The canvas just captures the already-filtered frame
 
-            // Render individual effect based on selected effect
-            if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
-                renderRecordingEffects(ctx, canvas, recordingState.selectedEffects);
-            }
+            // OPTIMIZATION: Skip effects during recording to reduce lag
+            // Effects are more for preview - during actual recording we just capture the video
+            // If you want effects, comment out these lines:
+            // if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
+            //     renderRecordingEffects(ctx, canvas, recordingState.selectedEffects);
+            // }
 
             // Continue rendering next frame
             requestAnimationFrame(renderCanvasForRecording);
@@ -13269,9 +13252,11 @@
 
             // Close audio context
             if (recordingState.audioContext) {
-                recordingState.audioContext.close().catch(err => {
-                    console.warn('⚠️ Error closing audio context:', err);
-                });
+                try {
+                    recordingState.audioContext.close();
+                } catch (e) {
+                    console.warn('Audio context close error:', e);
+                }
                 recordingState.audioContext = null;
             }
 
@@ -20479,26 +20464,7 @@
         // AFROBEAT MUSIC LIBRARY - Real Artists & Dynamic Loading
         // ============================================================================
 
-        // Afrobeat Artists to fetch from iTunes API
-        const afrobeatArtists = [
-            'Zinoleisky',
-            'Bhad Boi OML',
-            'Balloranking',
-            'Wizkid',
-            'King Von',
-            'Davido',
-            'Burna Boy',
-            'Rema',
-            'Asake',
-            'Tiwa Savage',
-            'CKay',
-            'Olamide'
-        ];
-
-        // Trending songs (manually marked for badge)
-        const trendingSongs = new Set();
-
-        // Main Afrobeat Music Library (will be populated dynamically)
+        // Main Pose Music Library (loaded from Firebase)
         let poseMusicLibrary = [];
 
         // Music library state for rotation
@@ -20511,8 +20477,8 @@
             isLoading: false
         };
 
-        // Hardcoded Afrobeat Fallback Songs (if API fails)
-        const afrobeatFallbackSongs = [
+        // Hardcoded Fallback Songs (if Firebase is empty)
+        const fallbackSongs = [
             {
                 id: 'afro1',
                 title: 'Essence',
@@ -20625,70 +20591,83 @@
             }
         ];
 
-        // Fetch Afrobeat songs from iTunes API
-        async function fetchAfrobeatSongsFromItunes() {
+        // Load Pose Music from Firebase
+        async function loadPoseMusicFromFirebase() {
             try {
-                console.log('🎵 Fetching Afrobeat songs from iTunes API...');
+                console.log('🎵 Loading Pose Music from Firebase...');
                 musicLibraryState.isLoading = true;
 
-                let allSongs = [];
-                let successCount = 0;
-
-                // Fetch top 2-3 songs from each artist
-                for (const artist of afrobeatArtists) {
-                    try {
-                        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&entity=song&limit=5`;
-                        console.log(`Fetching from: ${url}`);
-
-                        const response = await fetch(url, {
-                            method: 'GET',
-                            mode: 'cors',
-                            headers: {
-                                'Accept': 'application/json'
-                            }
-                        });
-
-                        if (!response.ok) {
-                            console.warn(`⚠️ API returned status ${response.status} for artist: ${artist}`);
-                            continue;
-                        }
-
-                        const data = await response.json();
-                        console.log(`✅ Response for ${artist}:`, data.resultCount, 'results');
-
-                        if (data.results && data.results.length > 0) {
-                            // Filter and map iTunes results
-                            data.results.forEach((song, index) => {
-                                if (song.previewUrl && index < 2) { // Only songs with preview URLs, max 2 per artist
-                                    allSongs.push({
-                                        id: `song_${allSongs.length}`,
-                                        title: song.trackName || 'Unknown',
-                                        artist: song.artistName || artist,
-                                        duration: formatDuration(song.trackTimeMillis),
-                                        uses: `${Math.floor(Math.random() * 50) + 10}M`,
-                                        thumbnail: song.artworkUrl100 || song.artworkUrl60 || 'https://via.placeholder.com/200',
-                                        audioUrl: song.previewUrl,
-                                        category: 'Afrobeat',
-                                        trending: index === 0 // First song from each artist is trending
-                                    });
-                                    successCount++;
-                                }
-                            });
-                        }
-                    } catch (error) {
-                        console.warn(`⚠️ Error fetching from artist: ${artist}`, error.message);
-                    }
+                if (!currentUser) {
+                    console.warn('⚠️ User not authenticated, using fallback');
+                    musicLibraryState.allLoadedSongs = fallbackSongs;
+                    rotatePoseMusicLibrary();
+                    musicLibraryState.isLoading = false;
+                    return;
                 }
 
+                let allSongs = [];
+
+                // Query NEW structure (songs_by_date)
+                const newSnapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('songs_by_date')
+                    .orderBy('date', 'desc')
+                    .limit(100)
+                    .get();
+
+                newSnapshot.forEach(dateDoc => {
+                    const dateData = dateDoc.data();
+                    if (dateData.songs && Array.isArray(dateData.songs)) {
+                        dateData.songs.forEach(song => {
+                            allSongs.push({
+                                id: song.id || `song_${allSongs.length}`,
+                                title: song.title || 'Unknown',
+                                artist: song.artist || 'Unknown Artist',
+                                duration: song.duration || '0:00',
+                                uses: `${song.plays || 0} plays`,
+                                thumbnail: song.imageUrl || 'https://via.placeholder.com/200',
+                                audioUrl: song.audioUrl,
+                                category: song.genre || 'Music',
+                                trending: (song.plays || 0) > 5,
+                                country: song.country,
+                                genre: song.genre
+                            });
+                        });
+                    }
+                });
+
+                // Query LEGACY structure (songs) for backwards compatibility
+                const oldSnapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('songs')
+                    .limit(50)
+                    .get();
+
+                oldSnapshot.forEach(doc => {
+                    const song = doc.data();
+                    allSongs.push({
+                        id: song.id || doc.id,
+                        title: song.title || 'Unknown',
+                        artist: song.artist || 'Unknown Artist',
+                        duration: song.duration || '0:00',
+                        uses: `${song.plays || 0} plays`,
+                        thumbnail: song.imageUrl || song.thumbnail || 'https://via.placeholder.com/200',
+                        audioUrl: song.audioUrl,
+                        category: song.genre || 'Music',
+                        trending: (song.plays || 0) > 5,
+                        isLegacy: true
+                    });
+                });
+
                 if (allSongs.length === 0) {
-                    console.warn('⚠️ No songs fetched from iTunes, using fallback');
-                    musicLibraryState.allLoadedSongs = afrobeatFallbackSongs;
+                    console.warn('⚠️ No songs found in Firebase, using fallback');
+                    musicLibraryState.allLoadedSongs = fallbackSongs;
                 } else {
-                    console.log(`✅ Fetched ${allSongs.length} songs (${successCount} with preview URLs) from iTunes`);
+                    console.log(`✅ Loaded ${allSongs.length} songs from Firebase`);
+                    allSongs.sort((a, b) => b.trending - a.trending);
                     musicLibraryState.allLoadedSongs = allSongs;
                 }
 
-                // Load initial batch
                 rotatePoseMusicLibrary();
                 musicLibraryState.lastRefresh = Date.now();
                 musicLibraryState.isLoading = false;
@@ -20699,105 +20678,90 @@
                 });
 
             } catch (error) {
-                console.error('❌ Error fetching iTunes data:', error);
-                // Fallback to hardcoded songs
-                console.log('📀 Using fallback songs');
-                musicLibraryState.allLoadedSongs = afrobeatFallbackSongs;
+                console.error('❌ Error loading Firebase music:', error);
+                musicLibraryState.allLoadedSongs = fallbackSongs;
                 rotatePoseMusicLibrary();
                 musicLibraryState.isLoading = false;
             }
         }
 
-        // Format duration from milliseconds
-        function formatDuration(ms) {
-            if (!ms) return '0:00';
-            const seconds = Math.floor(ms / 1000);
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // ====== DYNAMIC iTUNES API SEARCH ======
-        async function searchiTunesAPI(genre = null, country = null, year = null) {
+        // Search Firebase Music Library
+        async function searchFirebaseMusicLibrary(searchTerm = null, genre = null, country = null) {
             try {
-                console.log('🔍 Searching iTunes API with filters:', { genre, country, year });
+                if (!currentUser) {
+                    showToastRecording('Sign in to search music', 'error', '❌');
+                    return;
+                }
+
+                console.log('🔍 Searching Firebase music:', { searchTerm, genre, country });
                 musicLibraryState.isLoading = true;
-
-                // Build search term from available filters
-                let searchTerms = [];
-                if (genre && genre !== '') searchTerms.push(genre);
-                if (country && country !== '') searchTerms.push(`country:${country}`);
-                if (year && year !== '') searchTerms.push(year);
-
-                if (searchTerms.length === 0) {
-                    console.warn('⚠️ No filters selected');
-                    musicLibraryState.isLoading = false;
-                    return;
-                }
-
-                const searchTerm = searchTerms.join(' ');
-                const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&country=${country || 'US'}&limit=20`;
-
-                console.log(`📡 iTunes API URL: ${url}`);
-
-                const response = await fetch(url, {
-                    method: 'GET',
-                    mode: 'cors',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    console.warn(`⚠️ API returned status ${response.status}`);
-                    musicLibraryState.isLoading = false;
-                    showToastRecording('Search failed, try again', 'error', '❌');
-                    return;
-                }
-
-                const data = await response.json();
-                console.log(`✅ Found ${data.resultCount} results from iTunes`);
 
                 let searchResults = [];
 
-                if (data.results && data.results.length > 0) {
-                    // Map iTunes results
-                    data.results.forEach((song, index) => {
-                        if (song.previewUrl) { // Only include songs with preview URLs
-                            searchResults.push({
-                                id: `search_${Date.now()}_${index}`,
-                                title: song.trackName || 'Unknown',
-                                artist: song.artistName || 'Unknown Artist',
-                                duration: formatDuration(song.trackTimeMillis),
-                                uses: `${Math.floor(Math.random() * 100) + 10}M`,
-                                thumbnail: song.artworkUrl100 || song.artworkUrl60 || 'https://via.placeholder.com/200',
-                                audioUrl: song.previewUrl,
-                                category: genre || 'Music',
-                                trending: index < 3 // First 3 results are trending
-                            });
-                        }
-                    });
-                }
+                // Query from NEW structure
+                const newSnapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('songs_by_date')
+                    .orderBy('date', 'desc')
+                    .get();
+
+                newSnapshot.forEach(dateDoc => {
+                    const dateData = dateDoc.data();
+                    if (dateData.songs && Array.isArray(dateData.songs)) {
+                        dateData.songs.forEach(song => {
+                            let matches = true;
+
+                            if (searchTerm) {
+                                const lowerSearch = searchTerm.toLowerCase();
+                                const titleMatch = (song.title || '').toLowerCase().includes(lowerSearch);
+                                const artistMatch = (song.artist || '').toLowerCase().includes(lowerSearch);
+                                matches = matches && (titleMatch || artistMatch);
+                            }
+
+                            if (genre && song.genre !== genre) {
+                                matches = false;
+                            }
+
+                            if (country && song.country !== country) {
+                                matches = false;
+                            }
+
+                            if (matches) {
+                                searchResults.push({
+                                    id: song.id || `song_${searchResults.length}`,
+                                    title: song.title || 'Unknown',
+                                    artist: song.artist || 'Unknown Artist',
+                                    duration: song.duration || '0:00',
+                                    uses: `${song.plays || 0} plays`,
+                                    thumbnail: song.imageUrl || 'https://via.placeholder.com/200',
+                                    audioUrl: song.audioUrl,
+                                    category: song.genre || 'Music',
+                                    trending: (song.plays || 0) > 5,
+                                    country: song.country,
+                                    genre: song.genre
+                                });
+                            }
+                        });
+                    }
+                });
 
                 if (searchResults.length === 0) {
-                    console.warn('⚠️ No songs with preview URLs found');
-                    showToastRecording('No preview available for these results', 'warning', '⚠️');
+                    console.warn('⚠️ No matching songs found');
+                    showToastRecording('No songs found', 'warning', '⚠️');
                     musicLibraryState.isLoading = false;
                     return;
                 }
 
-                // Replace library with search results
                 poseMusicLibrary = searchResults;
                 musicLibraryState.searchResults = searchResults;
                 musicLibraryState.isLoading = false;
 
-                // Display results
                 loadPoseMusicLibrary();
                 showToastRecording(`Found ${searchResults.length} songs!`, 'success', '✨');
                 console.log(`✅ Displayed ${searchResults.length} search results`);
 
             } catch (error) {
-                console.error('❌ Error searching iTunes:', error);
+                console.error('❌ Error searching music:', error);
                 musicLibraryState.isLoading = false;
                 showToastRecording('Search error', 'error', '❌');
             }
@@ -20809,11 +20773,15 @@
 
             if (searchInput.length < 2) {
                 console.log('ℹ️ Search input too short, showing default library');
+                if (musicLibraryState.allLoadedSongs.length > 0) {
+                    rotatePoseMusicLibrary();
+                    loadPoseMusicLibrary();
+                }
                 return;
             }
 
             console.log(`🎤 Searching for song/artist: ${searchInput}`);
-            searchiTunesAPI(searchInput, null, null);
+            searchFirebaseMusicLibrary(searchInput, null, null);
         }
 
         // Handle Genre Filter Change - Auto-search
@@ -20825,10 +20793,14 @@
 
             if (genre === '') {
                 console.log('ℹ️ No genre selected, using default library');
+                if (musicLibraryState.allLoadedSongs.length > 0) {
+                    rotatePoseMusicLibrary();
+                    loadPoseMusicLibrary();
+                }
                 return;
             }
 
-            searchiTunesAPI(genre, country || null, null);
+            searchFirebaseMusicLibrary(null, genre, country || null);
         }
 
         // Handle Country Filter Change - Auto-search
@@ -20840,26 +20812,14 @@
 
             if (country === '') {
                 console.log('ℹ️ No country selected, using default library');
+                if (musicLibraryState.allLoadedSongs.length > 0) {
+                    rotatePoseMusicLibrary();
+                    loadPoseMusicLibrary();
+                }
                 return;
             }
 
-            searchiTunesAPI(genre || null, country, null);
-        }
-
-        // Handle Year Filter Change - Auto-search
-        function handleYearFilterChange() {
-            const year = document.getElementById('iTunesYearFilter').value;
-            const genre = document.getElementById('iTunesGenreFilter').value;
-            const country = document.getElementById('iTunesCountryFilter').value;
-
-            console.log(`📅 Year entered: ${year || 'Any'}`);
-
-            if (year === '') {
-                console.log('ℹ️ No year selected, using default library');
-                return;
-            }
-
-            searchiTunesAPI(genre || null, country || null, year);
+            searchFirebaseMusicLibrary(null, genre || null, country);
         }
 
         // Rotate Pose Music Library every 20 minutes
@@ -20931,11 +20891,11 @@
                 // Initialize
                 initializeBannerAds();
 
-                // Fetch Afrobeat songs if not already loaded
+                // Load music from Firebase if not already loaded
                 if (musicLibraryState.allLoadedSongs.length === 0) {
-                    console.log('📥 Loading music library for first time...');
-                    await fetchAfrobeatSongsFromItunes();
-                    scheduleMusicsLibraryRotation(); // Start 20-min rotation
+                    console.log('📥 Loading music library from Firebase...');
+                    await loadPoseMusicFromFirebase();
+                    scheduleMusicsLibraryRotation();
                 } else {
                     console.log('✅ Using cached music library:', musicLibraryState.allLoadedSongs.length, 'songs');
                 }
@@ -21464,6 +21424,32 @@
         }
 
 
+        // Preload and decode audio in background (so it's ready when recording starts)
+        async function preloadAudioForRecording(sound) {
+            if (!sound) return;
+            
+            try {
+                const soundUrl = sound.audioUrl || sound.url || sound.preview_url || sound.filePath;
+                console.log('📥 Preloading audio:', soundUrl);
+                
+                const audioResponse = await fetch(soundUrl);
+                const audioBlob = await audioResponse.blob();
+                
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const audioBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer());
+                
+                // Store preloaded audio in recordingState
+                recordingState.preloadedAudioBuffer = audioBuffer;
+                recordingState.preloadedAudioContext = audioContext;
+                
+                console.log('✅ Audio preloaded and decoded:', audioBuffer.duration, 'seconds');
+                return true;
+            } catch (error) {
+                console.warn('⚠️ Audio preload error:', error);
+                return false;
+            }
+        }
+
         // Display Selected Sound on Screen 1 (Recording)
         function displaySelectedSoundOnScreen1(sound) {
             // Store sound in recordingState
@@ -21473,6 +21459,9 @@
             };
 
             console.log('🎵 Sound stored in recordingState:', recordingState.selectedSound);
+            
+            // Preload audio in background (non-blocking)
+            preloadAudioForRecording(sound);
 
             // Update Screen 1 display
             const display = document.getElementById('recSoundDisplay');
