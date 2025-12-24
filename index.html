@@ -2021,6 +2021,105 @@
             letter-spacing: 0.5px;
         }
 
+        /* Sound Display on Screen 1 */
+        .rec-sound-display {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 320px;
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.9), rgba(109, 40, 217, 0.9));
+            border: 1px solid rgba(100, 200, 255, 0.5);
+            border-radius: 12px;
+            padding: 10px 12px;
+            box-shadow: 0 4px 20px rgba(76, 29, 149, 0.4);
+            z-index: 50;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .rec-sound-display-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rec-sound-thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .rec-sound-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rec-sound-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rec-sound-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rec-sound-artist {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rec-sound-remove {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 100, 100, 0.2);
+            border: 1px solid rgba(255, 100, 100, 0.5);
+            color: #ff6464;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .rec-sound-remove:hover {
+            background: rgba(255, 100, 100, 0.4);
+            border-color: rgba(255, 100, 100, 0.8);
+            transform: scale(1.1);
+        }
+
         /* Mode Tabs */
         .rec-mode-tabs {
             display: flex;
@@ -7443,6 +7542,22 @@
                 </div>
             </div>
 
+            <!-- Selected Sound Display (Top Center) -->
+            <div class="rec-sound-display" id="recSoundDisplay" style="display: none;">
+                <div class="rec-sound-display-content">
+                    <div class="rec-sound-thumbnail" id="recSoundThumbnail">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="rec-sound-info">
+                        <div class="rec-sound-title" id="recSoundTitle">Sound Selected</div>
+                        <div class="rec-sound-artist" id="recSoundArtist">Artist Name</div>
+                    </div>
+                    <button class="rec-sound-remove" onclick="removeRecordingSound()" title="Remove Sound">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
             <!-- Top Bar -->
             <div class="rec-top-bar">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -7800,6 +7915,10 @@
                         <div class="rec-control-icon">✨</div>
                         <div class="rec-control-label">Effects</div>
                     </button>
+                    <button class="rec-control-btn" onclick="openRecordingSoundLibrary()">
+                        <div class="rec-control-icon">🎵</div>
+                        <div class="rec-control-label">Sound</div>
+                    </button>
                     <button class="rec-control-btn rec-timer-btn" onclick="toggleRecordingTimer()">
                         <div class="rec-control-icon">⏱</div>
                         <div class="rec-control-label" id="recTimerLabel">Off</div>
@@ -7835,7 +7954,7 @@
                     <!-- Quality Badge -->
                     <div class="rec-quality-badge" id="recQualityBadge">
                         <span class="rec-quality-icon">📹</span>
-                        <span class="rec-quality-text">HD</span>
+                        <span class="rec-quality-text">4K</span>
                     </div>
                 </div>
 
@@ -7877,7 +7996,7 @@
             <div class="edit-video-container">
                 <div class="edit-video-wrapper">
                     <video id="editVideoPreview" class="camera-preview" playsinline></video>
-                    
+
                     <!-- Hidden Audio Element for Sound Playback -->
                     <audio id="editVideoSoundAudio" style="display: none;"></audio>
 
@@ -9904,7 +10023,7 @@
         // ====== Upload Variables ======
         let postVideoUrl = null;
         let postVideoFileName = null;
-        let postVideoQuality = 'hd';
+        let postVideoQuality = '4k';
         let exclusiveVideoUrl = null;
         let exclusiveVideoFileName = null;
         let tweetMediaUrl = null;
@@ -9936,8 +10055,8 @@
         // ====== CLOUDINARY UPLOAD (REPLACED - use uploadToCloudinaryWithProgress instead) ======
 
         // ====== VIDEO COMPRESSION FUNCTION ======
-        async function compressVideo(file, quality = 'hd') {
-            const MAX_SIZE_GB = 4.5;
+        async function compressVideo(file, quality = '4k') {
+            const MAX_SIZE_GB = 8;
             const MAX_SIZE_BYTES = MAX_SIZE_GB * 1024 * 1024 * 1024;
 
             if (file.size <= MAX_SIZE_BYTES) {
@@ -10060,7 +10179,7 @@
         }
 
         // ====== UPLOAD WITH PROGRESS TRACKING ======
-        async function uploadToCloudinaryWithProgress(file, uploadType, quality = 'hd') {
+        async function uploadToCloudinaryWithProgress(file, uploadType, quality = '4k') {
             if (!currentUser || !file) return null;
 
             const fileName = `${Date.now()}_${file.name}`;
@@ -11716,7 +11835,10 @@
             canvasHeight: 0,
             // Screen 3 Sound properties
             selectedSound: null,
-            videoOriginalVolume: 1
+            videoOriginalVolume: 1,
+            // Background audio during recording
+            backgroundAudio: null,
+            audioContext: null
         };
 
         // ====== VIDEO CAMERA INITIALIZATION (SCREEN 1) - TIKTOK OPTIMIZED ======
@@ -11748,16 +11870,16 @@
                 const constraints = {
                     video: {
                         facingMode: recordingState.cameraFacingMode,
-                        width: { ideal: videoWidth, max: videoWidth + 160 },
-                        height: { ideal: videoHeight, max: videoHeight + 120 },
-                        frameRate: { ideal: 30, max: 30 }
+                        width: { ideal: 3840, max: 4096 },
+                        height: { ideal: 2160, max: 2160 },
+                        frameRate: { ideal: 60, max: 60 }
                     },
                     audio: {
                         echoCancellation: true,
                         noiseSuppression: true,
                         autoGainControl: true,
-                        sampleRate: 16000,
-                        channelCount: 1
+                        sampleRate: 48000,
+                        channelCount: 2
                     }
                 };
 
@@ -11780,7 +11902,7 @@
                         errorOverlay.style.display = 'none';
                     }
 
-                    console.log('✅ Camera ready (480x360 @ 30fps)');
+                    console.log('✅ Camera ready (3840x2160 4K Ultra HD @ 60fps)');
                     showToastRecording('📹 Ready to record', 'success', '✓');
                 }
             } catch (error) {
@@ -11879,10 +12001,16 @@
                     const constraints = {
                         video: {
                             facingMode: recordingState.cameraFacingMode,
-                            width: { ideal: 1280 },
-                            height: { ideal: 2260 }
+                            width: { ideal: 3840, max: 4096 },
+                            height: { ideal: 2160, max: 2160 },
+                            frameRate: { ideal: 60, max: 60 }
                         },
-                        audio: true
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            sampleRate: 48000,
+                            channelCount: 2
+                        }
                     };
 
                     recordingState.stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -11924,13 +12052,9 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            // Get responsive dimensions from video element or stream settings
-            let canvasWidth = videoElement.videoWidth || videoElement.clientWidth || 480;
-            let canvasHeight = videoElement.videoHeight || videoElement.clientHeight || 854;
-
-            // Ensure we have valid dimensions, fallback to 9:16 aspect ratio
-            if (canvasWidth <= 0) canvasWidth = 480;
-            if (canvasHeight <= 0) canvasHeight = Math.round(canvasWidth * 16 / 9);
+            // Get 4K dimensions - full resolution without quality reduction
+            let canvasWidth = 3840;  // 4K resolution
+            let canvasHeight = 2160; // 4K resolution
 
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
@@ -11939,21 +12063,117 @@
             recordingState.canvasWidth = canvasWidth;
             recordingState.canvasHeight = canvasHeight;
 
-            console.log(`🎨 Canvas setup: ${canvas.width}x${canvas.height} (responsive)`);
+            console.log(`🎨 Canvas setup: ${canvas.width}x${canvas.height} (4K Ultra HD)`);
             console.log(`📹 Recording with effects: Filter="${recordingState.currentFilter}", Effects=${recordingState.selectedEffects.length}`);
 
-            // Get canvas stream for recording
-            const canvasStream = canvas.captureStream(30); // 30 FPS
+            // Get canvas stream for recording at 60fps
+            const canvasStream = canvas.captureStream(60); // 60 FPS for 4K
 
-            // Combine canvas stream with audio from original stream
+            // ===== AUDIO: Combine microphone + background sound =====
+            // Initialize audio context for mixing
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            recordingState.audioContext = audioContext;
+
+            // Create audio destination to capture mixed audio
+            const audioDestination = audioContext.createMediaStreamDestination();
+
+            // Add microphone audio to mixed stream
             const audioTracks = recordingState.stream.getAudioTracks();
+            let micSource = null;
             if (audioTracks.length > 0) {
-                canvasStream.addTrack(audioTracks[0]);
+                micSource = audioContext.createMediaStreamSource(recordingState.stream);
+                // Microphone at 70% volume
+                const micGain = audioContext.createGain();
+                micGain.gain.value = 0.7;
+                micSource.connect(micGain);
+                micGain.connect(audioDestination);
+            }
+
+            // Add background sound if selected
+            let backgroundAudioElement = null;
+            if (recordingState.selectedSound) {
+                try {
+                    // Create audio element with proper CORS settings BEFORE setting src
+                    backgroundAudioElement = new Audio();
+                    backgroundAudioElement.crossOrigin = "anonymous";
+                    backgroundAudioElement.loop = true;
+                    backgroundAudioElement.src = recordingState.selectedSound.url;
+
+                    // Add to DOM (hidden) so it can load properly
+                    backgroundAudioElement.style.display = 'none';
+                    document.body.appendChild(backgroundAudioElement);
+
+                    // Create source from audio element
+                    const soundSource = audioContext.createMediaElementAudioSource(backgroundAudioElement);
+                    const soundGain = audioContext.createGain();
+                    soundGain.gain.value = 0.5;  // Background sound at 50%
+
+                    soundSource.connect(soundGain);
+                    soundGain.connect(audioDestination);
+
+                    recordingState.backgroundAudio = backgroundAudioElement;
+
+                    // Wait for audio to be loadable, then play
+                    const playSound = () => {
+                        backgroundAudioElement.play()
+                            .then(() => {
+                                console.log('🎵 Background sound playing in recording');
+                            })
+                            .catch(err => {
+                                console.warn('⚠️ Could not play background sound:', err);
+                                showToastRecording('⚠️ Background sound may not play', 'warning', '🔊');
+                            });
+                    };
+
+                    if (backgroundAudioElement.readyState >= 2) {
+                        // Audio is already loaded
+                        playSound();
+                    } else {
+                        // Wait for audio to load
+                        backgroundAudioElement.addEventListener('canplay', playSound, { once: true });
+                    }
+
+                    console.log('🎵 Background sound added to recording mix');
+                } catch (error) {
+                    console.warn('⚠️ Could not create audio source for background sound:', error);
+                    // Fallback: just play the sound for user (not recorded)
+                    try {
+                        backgroundAudioElement = new Audio(recordingState.selectedSound.url);
+                        backgroundAudioElement.loop = true;
+                        backgroundAudioElement.volume = 0.5;
+                        backgroundAudioElement.style.display = 'none';
+                        document.body.appendChild(backgroundAudioElement);
+
+                        const playFallback = () => {
+                            backgroundAudioElement.play().catch(err => {
+                                console.warn('⚠️ Fallback audio play failed:', err);
+                                showToastRecording('❌ Sound failed to load', 'error', '🔊');
+                            });
+                        };
+
+                        if (backgroundAudioElement.readyState >= 2) {
+                            playFallback();
+                        } else {
+                            backgroundAudioElement.addEventListener('canplay', playFallback, { once: true });
+                        }
+                        recordingState.backgroundAudio = backgroundAudioElement;
+                    } catch (fallbackError) {
+                        console.error('❌ Fallback audio also failed:', fallbackError);
+                        showToastRecording('❌ Could not load sound', 'error', '🔊');
+                    }
+                }
+            }
+
+            // Add mixed audio track to canvas stream
+            const mixedAudioTracks = audioDestination.stream.getAudioTracks();
+            if (mixedAudioTracks.length > 0) {
+                canvasStream.addTrack(mixedAudioTracks[0]);
             }
 
             const options = {
-                mimeType: 'video/webm;codecs=vp8',
-                videoBitsPerSecond: 1500000
+                mimeType: 'video/webm;codecs=vp8,opus',
+                videoBitsPerSecond: 8000000,  // 8 Mbps for 4K quality
+                audioBitsPerSecond: 320000    // 320 kbps for high-quality audio
             };
 
             try {
@@ -11967,6 +12187,13 @@
             };
 
             recordingState.mediaRecorder.onstop = () => {
+                // Stop background audio
+                if (recordingState.backgroundAudio) {
+                    recordingState.backgroundAudio.pause();
+                    recordingState.backgroundAudio.currentTime = 0;
+                    recordingState.backgroundAudio = null;
+                }
+
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const url = URL.createObjectURL(blob);
 
@@ -11975,12 +12202,16 @@
                     blob: blob,
                     duration: recordingState.recordingTime,
                     speed: recordingState.currentSpeed,
-                    hasEffects: recordingState.selectedEffects.length > 0 || recordingState.currentFilter !== 'none'
+                    hasEffects: recordingState.selectedEffects.length > 0 || recordingState.currentFilter !== 'none',
+                    hasBackgroundSound: recordingState.selectedSound ? true : false,
+                    selectedSound: recordingState.selectedSound
                 });
 
                 recordingState.recordedBlob = blob;
                 updateUIAfterRecording(false);
-                showToastRecording('✅ Recording saved with effects', 'success', '✓');
+
+                const soundInfo = recordingState.selectedSound ? `with "${recordingState.selectedSound.title}"` : '';
+                showToastRecording(`✅ Recording saved ${soundInfo}`, 'success', '✓');
 
                 // Stop canvas rendering
                 recordingState.isCanvasRendering = false;
@@ -11988,7 +12219,9 @@
 
             recordingState.mediaRecorder.start();
             updateUIAfterRecording(true);
-            showToastRecording('🔴 Recording with effects...', 'success', '✓');
+
+            const soundMessage = recordingState.selectedSound ? `🎵 "${recordingState.selectedSound.title}"` : '🔴';
+            showToastRecording(`${soundMessage} Recording started...`, 'success', '✓');
 
             // ===== START CANVAS RENDERING LOOP =====
             recordingState.isCanvasRendering = true;
@@ -12003,8 +12236,8 @@
         // ===== OPTIMIZED: Convert filter to CSS instead of pixel manipulation =====
         function getFilterString(filterName, adjustments = {}) {
             let filters = [];
-            
-            switch(filterName) {
+
+            switch (filterName) {
                 case 'bw':
                     filters.push('grayscale(100%)');
                     break;
@@ -12028,7 +12261,7 @@
                     filters.push('saturate(150%)');
                     break;
             }
-            
+
             // Apply adjustments (GPU-accelerated)
             if (adjustments.brightness) {
                 filters.push(`brightness(${100 + adjustments.brightness * 2}%)`);
@@ -12039,7 +12272,7 @@
             if (adjustments.saturation) {
                 filters.push(`saturate(${100 + adjustments.saturation * 2}%)`);
             }
-            
+
             return filters.join(' ');
         }
 
@@ -12047,10 +12280,10 @@
         function applyFilterToPreview(filterName, adjustments = {}) {
             const videoElement = document.getElementById('videoPreview');
             if (!videoElement) return;
-            
+
             const filterString = getFilterString(filterName, adjustments);
             videoElement.style.filter = filterString;
-            
+
             console.log('✅ GPU Filter applied:', filterName, '- Smooth 60fps preview');
         }
 
@@ -13022,6 +13255,25 @@
             recordingState.isRecording = false;
             recordingState.mediaRecorder.stop();
             stopRecordingTimer();
+
+            // Stop background audio if playing
+            if (recordingState.backgroundAudio) {
+                recordingState.backgroundAudio.pause();
+                recordingState.backgroundAudio.currentTime = 0;
+                // Remove from DOM if it's there
+                if (recordingState.backgroundAudio.parentNode) {
+                    recordingState.backgroundAudio.parentNode.removeChild(recordingState.backgroundAudio);
+                }
+                recordingState.backgroundAudio = null;
+            }
+
+            // Close audio context
+            if (recordingState.audioContext) {
+                recordingState.audioContext.close().catch(err => {
+                    console.warn('⚠️ Error closing audio context:', err);
+                });
+                recordingState.audioContext = null;
+            }
 
             // Stop canvas rendering loop
             recordingState.isCanvasRendering = false;
@@ -16697,6 +16949,29 @@
             }, 300);
         }
 
+        // ====== RECORDING SOUND LIBRARY ======
+        function openRecordingSoundLibrary() {
+            if (recordingState.isRecording) {
+                showToastRecording('⚠️ Stop recording to add sound', 'warning', '🎵');
+                return;
+            }
+            // Reuse existing sound library
+            openSoundLibrary();
+        }
+
+        // Remove selected sound from Screen 1
+        function removeRecordingSound() {
+            recordingState.selectedSound = null;
+
+            const display = document.getElementById('recSoundDisplay');
+            if (display) {
+                display.style.display = 'none';
+            }
+
+            showToastRecording('🎵 Sound removed', 'info', '✓');
+            console.log('🎵 Sound removed from recording');
+        }
+
         // ====== RECORDING TIMER FUNCTIONS ======
         function toggleRecordingTimer() {
             const timers = [0, 3, 5, 10];
@@ -19724,24 +19999,24 @@
                         console.error('❌ Play error:', error);
                     });
                 }
-                
+
                 // Play audio if sound is selected
                 if (audio && recordingState.selectedSound) {
                     // Set audio to video position
                     audio.currentTime = video.currentTime;
-                    
+
                     // Set loop to match video duration
                     if (video.duration && video.duration > 0) {
                         audio.loop = false;
                     }
-                    
+
                     audio.play().catch(err => console.log('Audio auto-play prevented:', err));
                     console.log('▶️ Sound playing with video');
                     console.log('🎵 Audio duration:', audio.duration);
                 }
             } else {
                 video.pause();
-                
+
                 // Pause audio
                 if (audio) {
                     audio.pause();
@@ -21161,10 +21436,12 @@
             console.log('Selected sound:', sound);
 
             // Check which screen is active
+            const screen1 = document.getElementById('screen1');
             const screen3 = document.getElementById('screen3');
             const screen6 = document.getElementById('screen6');
             const screen7 = document.getElementById('screen7');
 
+            const isScreen1Active = screen1 && screen1.classList.contains('active');
             const isScreen3Active = screen3 && screen3.style.display !== 'none';
             const isScreen6Active = screen6 && screen6.style.display !== 'none';
             const isScreen7Active = screen7 && screen7.style.display !== 'none';
@@ -21172,9 +21449,11 @@
             // Close modal
             setTimeout(() => {
                 closeSoundLibrary();
-                
+
                 // Route to appropriate screen handler
-                if (isScreen3Active) {
+                if (isScreen1Active) {
+                    displaySelectedSoundOnScreen1(sound);
+                } else if (isScreen3Active) {
                     displaySelectedSoundOnScreen3(sound);
                 } else if (isScreen6Active) {
                     displaySelectedSoundOnScreen6(sound);
@@ -21184,6 +21463,42 @@
             }, 800);
         }
 
+
+        // Display Selected Sound on Screen 1 (Recording)
+        function displaySelectedSoundOnScreen1(sound) {
+            // Store sound in recordingState
+            recordingState.selectedSound = {
+                ...sound,
+                url: sound.audioUrl || sound.url || sound.preview_url || sound.filePath
+            };
+
+            console.log('🎵 Sound stored in recordingState:', recordingState.selectedSound);
+
+            // Update Screen 1 display
+            const display = document.getElementById('recSoundDisplay');
+            const thumbnail = document.getElementById('recSoundThumbnail');
+            const title = document.getElementById('recSoundTitle');
+            const artist = document.getElementById('recSoundArtist');
+
+            if (display && thumbnail && title && artist) {
+                // Update text info
+                title.textContent = sound.title;
+                artist.textContent = sound.artist || 'Unknown Artist';
+
+                // Update thumbnail
+                if (sound.thumbnail) {
+                    thumbnail.innerHTML = `<img src="${sound.thumbnail}" alt="${sound.title}">`;
+                } else {
+                    thumbnail.innerHTML = '<i class="fas fa-music"></i>';
+                }
+
+                // Show display with animation
+                display.style.display = 'block';
+                display.style.animation = 'slideDown 0.4s ease-out';
+
+                console.log('✅ Sound displayed on Screen 1');
+            }
+        }
 
         // Display Selected Sound on Screen 6 or Screen 7
         function displaySelectedSoundOnScreen6(sound) {
@@ -21245,23 +21560,23 @@
         // Display & Play Sound on Screen 3 (Video Edit)
         function displaySelectedSoundOnScreen3(sound) {
             console.log('🎵 Displaying sound on Screen 3:', sound.title);
-            
+
             // Store sound in recordingState
             recordingState.selectedSound = {
                 ...sound,
                 url: sound.audioUrl || sound.url || sound.preview_url || sound.filePath
             };
-            
+
             // Get audio element
             const audioElement = document.getElementById('editVideoSoundAudio');
             if (!audioElement) {
                 console.error('❌ Audio element not found');
                 return;
             }
-            
+
             // Set audio source
             audioElement.src = recordingState.selectedSound.url;
-            
+
             // Mute original video audio
             const videoElement = document.getElementById('editVideoPreview');
             if (videoElement) {
@@ -21269,13 +21584,13 @@
                 videoElement.muted = true;
                 console.log('🔇 Video audio muted');
             }
-            
+
             // Display sound info in Screen 3
             displayScreen3SoundInfo(sound);
-            
+
             // Initialize sync
             initializeAudioVideoSync();
-            
+
             // Auto-play if video is playing
             if (videoElement && !videoElement.paused) {
                 audioElement.currentTime = videoElement.currentTime;
@@ -21287,12 +21602,12 @@
         // Display Sound Info in Screen 3 UI
         function displayScreen3SoundInfo(sound) {
             let soundDisplay = document.getElementById('screen3SoundDisplay');
-            
+
             // Create display if doesn't exist
             if (!soundDisplay) {
                 const editControls = document.querySelector('#screen3 .rec-edit-controls');
                 if (!editControls) return;
-                
+
                 soundDisplay = document.createElement('div');
                 soundDisplay.id = 'screen3SoundDisplay';
                 soundDisplay.className = 'screen3-sound-info';
@@ -21309,7 +21624,7 @@
                 `;
                 editControls.insertBefore(soundDisplay, editControls.firstChild);
             }
-            
+
             // Update content
             soundDisplay.innerHTML = `
                 <div style="flex: 1; min-width: 0;">
@@ -21334,14 +21649,14 @@
                     ✕ Remove
                 </button>
             `;
-            
+
             console.log('🎵 Sound info displayed on Screen 3');
         }
 
         // Remove Sound from Screen 3
         function removeScreen3Sound() {
             console.log('🔇 Removing sound from Screen 3');
-            
+
             // Stop audio
             const audioElement = document.getElementById('editVideoSoundAudio');
             if (audioElement) {
@@ -21349,7 +21664,7 @@
                 audioElement.currentTime = 0;
                 audioElement.src = '';
             }
-            
+
             // Unmute video
             const videoElement = document.getElementById('editVideoPreview');
             if (videoElement) {
@@ -21357,16 +21672,16 @@
                 videoElement.volume = recordingState.videoOriginalVolume || 1;
                 console.log('🔊 Video audio restored');
             }
-            
+
             // Clear recordingState
             recordingState.selectedSound = null;
-            
+
             // Remove display
             const soundDisplay = document.getElementById('screen3SoundDisplay');
             if (soundDisplay) {
                 soundDisplay.remove();
             }
-            
+
             showToastRecording('Sound removed', 'success', '✓');
         }
 
@@ -21374,20 +21689,20 @@
         function initializeAudioVideoSync() {
             const video = document.getElementById('editVideoPreview');
             const audio = document.getElementById('editVideoSoundAudio');
-            
+
             if (!video || !audio) return;
-            
+
             // Remove old listeners to prevent duplicates
             video.removeEventListener('timeupdate', window.syncAudioToVideo);
             video.removeEventListener('ended', window.onVideoEnded);
             audio.removeEventListener('timeupdate', window.syncVideoToAudio);
             audio.removeEventListener('ended', window.onAudioEnded);
-            
+
             // Define event handlers
-            window.syncAudioToVideo = function() {
+            window.syncAudioToVideo = function () {
                 if (!recordingState.selectedSound) return;
                 if (!video.duration || video.duration === 0) return;
-                
+
                 // If audio time exceeds video duration, stop audio
                 if (audio.currentTime >= video.duration) {
                     audio.currentTime = 0;
@@ -21396,17 +21711,17 @@
                     console.log('⏹️ Audio duration exceeded, both stopped');
                     return;
                 }
-                
+
                 // Sync audio to video
                 if (Math.abs(audio.currentTime - video.currentTime) > 0.15) {
                     audio.currentTime = video.currentTime;
                 }
             };
-            
-            window.syncVideoToAudio = function() {
+
+            window.syncVideoToAudio = function () {
                 if (!recordingState.selectedSound) return;
                 if (!video.duration || video.duration === 0) return;
-                
+
                 // Sync video to audio, but don't let audio push beyond video duration
                 if (audio.currentTime >= video.duration) {
                     audio.currentTime = 0;
@@ -21415,13 +21730,13 @@
                     console.log('⏹️ Audio exceeded video duration');
                     return;
                 }
-                
+
                 if (Math.abs(video.currentTime - audio.currentTime) > 0.15) {
                     video.currentTime = audio.currentTime;
                 }
             };
-            
-            window.onVideoEnded = function() {
+
+            window.onVideoEnded = function () {
                 // When video ends, stop audio immediately
                 if (audio && !audio.paused) {
                     audio.pause();
@@ -21429,8 +21744,8 @@
                     console.log('⏹️ Video ended, audio stopped');
                 }
             };
-            
-            window.onAudioEnded = function() {
+
+            window.onAudioEnded = function () {
                 // If audio ends, make sure it doesn't play past video
                 if (!video.paused && video.currentTime < video.duration) {
                     // Audio ended but video is still playing - that's fine, let video continue
@@ -21442,13 +21757,13 @@
                     }
                 }
             };
-            
+
             // Add listeners
             video.addEventListener('timeupdate', window.syncAudioToVideo);
             video.addEventListener('ended', window.onVideoEnded);
             audio.addEventListener('timeupdate', window.syncVideoToAudio);
             audio.addEventListener('ended', window.onAudioEnded);
-            
+
             console.log('✅ Audio-Video sync initialized');
             console.log('📹 Video duration:', video.duration);
             console.log('🎵 Audio duration:', audio.duration);
