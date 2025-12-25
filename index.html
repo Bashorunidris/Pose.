@@ -1256,6 +1256,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            z-index: 1;
         }
 
         /* Edit screen video wrapper and preview */
@@ -1269,6 +1270,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            z-index: 1;
         }
 
         #editVideoPreview {
@@ -1281,6 +1283,54 @@
             /* Override camera-preview scaleX(-1) flip */
             max-width: 100vw;
             max-height: calc(100vh - 150px);
+            aspect-ratio: 9 / 16;
+        }
+
+        /* RESPONSIVE VIDEO ON MOBILE */
+        @media (max-width: 768px) {
+            #editVideoPreview {
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+                max-height: calc(100vh - 200px);
+                aspect-ratio: 9 / 16;
+            }
+
+            .edit-video-wrapper {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 9 / 16;
+            }
+
+            .edit-video-container {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 9 / 16;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #editVideoPreview {
+                width: calc(100% - 4px);
+                height: auto;
+                max-width: calc(100vw - 4px);
+                max-height: calc(100vh - 220px);
+                aspect-ratio: 9 / 16;
+                padding: 2px;
+            }
+
+            .edit-video-wrapper {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 9 / 16;
+                padding: 0;
+            }
+
+            .edit-video-container {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 9 / 16;
+            }
         }
 
         /* Video Controls - Always visible like TikTok */
@@ -5023,6 +5073,177 @@
             border-radius: 4px;
             font-size: 10px;
             font-weight: 600;
+        }
+
+        /* ====== VIDEO PREVIEW IN POST SCREEN (SCREEN 4) ====== */
+        .video-post-preview-section {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.15), rgba(109, 40, 217, 0.15));
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 10px;
+            margin: 0 0 20px 0;
+        }
+
+        .video-post-preview-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            font-weight: 600;
+            color: #64c8ff;
+        }
+
+        .video-post-preview-container {
+            width: 100%;
+            max-height: 350px;
+            height: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            aspect-ratio: 9 / 16;
+        }
+
+        .screen4-video-element {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .video-post-preview-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+
+        .video-preview-play-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(76, 29, 149, 0.4);
+            border: 1px solid rgba(76, 29, 149, 0.6);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .video-preview-play-btn:hover {
+            background: rgba(76, 29, 149, 0.6);
+            border-color: #6D28D9;
+        }
+
+        .video-preview-play-btn:active {
+            transform: scale(0.9);
+        }
+
+        .video-preview-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .video-preview-fullscreen-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(100, 200, 255, 0.2);
+            border: 1px solid rgba(100, 200, 255, 0.4);
+            border-radius: 50%;
+            color: #64c8ff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .video-preview-fullscreen-btn:hover {
+            background: rgba(100, 200, 255, 0.3);
+            border-color: #64c8ff;
+        }
+
+        .video-preview-fullscreen-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* RESPONSIVE VIDEO PREVIEW */
+        @media (max-width: 768px) {
+            .video-post-preview-section {
+                padding: 10px;
+                margin: 0 0 15px 0;
+            }
+
+            .video-post-preview-container {
+                max-height: 300px;
+                aspect-ratio: 9 / 16;
+            }
+
+            .video-post-preview-header {
+                font-size: 11px;
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+            }
+
+            .video-preview-play-btn,
+            .video-preview-fullscreen-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-post-preview-section {
+                padding: 8px;
+                margin: 0 0 12px 0;
+                border-radius: 8px;
+            }
+
+            .video-post-preview-container {
+                max-height: 250px;
+                aspect-ratio: 9 / 16;
+                border-radius: 6px;
+                margin-bottom: 8px;
+            }
+
+            .video-post-preview-header {
+                font-size: 10px;
+                margin-bottom: 6px;
+                padding-bottom: 6px;
+            }
+
+            .video-preview-play-btn,
+            .video-preview-fullscreen-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 10px;
+            }
+
+            .video-preview-info {
+                gap: 1px;
+            }
+
+            .video-preview-info span {
+                font-size: 11px !important;
+            }
         }
 
         /* RESPONSIVE POST SCREENS */
@@ -9962,6 +10183,31 @@
                 <div></div>
             </div>
             <div class="rec-post-content">
+                <!-- VIDEO PREVIEW SECTION -->
+                <div class="video-post-preview-section">
+                    <div class="video-post-preview-header">
+                        <span style="flex: 1;">📹 Video Preview</span>
+                        <span id="videoPreviewDuration" style="font-size: 12px; color: #aaa;">0:00</span>
+                    </div>
+                    <div class="video-post-preview-container">
+                        <video id="screen4VideoPreview" class="screen4-video-element" playsinline controls>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="video-post-preview-controls">
+                        <button class="video-preview-play-btn" id="screen4PlayBtn" onclick="toggleScreen4VideoPlayPause()" title="Play/Pause">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="video-preview-info">
+                            <span id="screen4VideoTitle" style="font-size: 13px; color: #fff;">Recorded Video</span>
+                            <span id="screen4VideoSize" style="font-size: 12px; color: #aaa;">--</span>
+                        </div>
+                        <button class="video-preview-fullscreen-btn" onclick="toggleScreen4VideoFullscreen()" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="rec-post-section">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -13354,7 +13600,7 @@
                         facingMode: recordingState.cameraFacingMode,
                         width: { ideal: 1280, max: 1280 },
                         height: { ideal: 720, max: 720 },
-                        frameRate: { ideal: 24, max: 24 }
+                        frameRate: { ideal: 30, max: 30 }
                     },
                     audio: {
                         echoCancellation: true,
@@ -13485,7 +13731,7 @@
                             facingMode: recordingState.cameraFacingMode,
                             width: { ideal: 1280, max: 1280 },
                             height: { ideal: 720, max: 720 },
-                            frameRate: { ideal: 24, max: 24 }
+                            frameRate: { ideal: 30, max: 30 }
                         },
                         audio: {
                             echoCancellation: true,
@@ -13525,6 +13771,14 @@
             recordingState.recordingTime = 0;
             recordingState.recordingStartTime = Date.now();
             recordingState.maxDuration = recordingState.selectedDuration;
+
+            // Disable CSS filters on preview to reduce CPU load during recording
+            const videoPreview = document.getElementById('videoPreview');
+            if (videoPreview) {
+                recordingState.previewFilterBeforeRecording = videoPreview.style.filter;
+                videoPreview.style.filter = 'none';
+                console.log('🎬 CSS filters disabled during recording (smooth performance)');
+            }
 
             const chunks = [];
 
@@ -13623,8 +13877,8 @@
 
             const options = {
                 mimeType: 'video/webm;codecs=vp8,opus',
-                videoBitsPerSecond: 800000,   // 800 kbps for 720p 24fps (smooth)
-                audioBitsPerSecond: 96000     // 96 kbps audio
+                videoBitsPerSecond: 500000,   // 500 kbps for 720p 30fps (smooth, optimized)
+                audioBitsPerSecond: 64000     // 64 kbps audio (sufficient, less overhead)
             };
 
             try {
@@ -13638,6 +13892,13 @@
             };
 
             recordingState.mediaRecorder.onstop = () => {
+                // Re-apply filter after recording stops
+                const videoPreview = document.getElementById('videoPreview');
+                if (videoPreview && recordingState.previewFilterBeforeRecording) {
+                    videoPreview.style.filter = recordingState.previewFilterBeforeRecording;
+                    console.log('🎨 CSS filters re-enabled after recording');
+                }
+
                 // Stop background audio
                 if (recordingState.backgroundAudio) {
                     recordingState.backgroundAudio.pause();
@@ -16262,6 +16523,19 @@
                 console.log('Leaving screen 1 - stopping video camera');
                 stopVideoCamera();
             }
+            if (currentScreenId === 'screen3' && screenId !== 'screen3') {
+                console.log('Leaving screen 3 - stopping video playback');
+                const editVideoPreview = document.getElementById('editVideoPreview');
+                const editVideoSoundAudio = document.getElementById('editVideoSoundAudio');
+                if (editVideoPreview) {
+                    editVideoPreview.pause();
+                    editVideoPreview.currentTime = 0;
+                }
+                if (editVideoSoundAudio) {
+                    editVideoSoundAudio.pause();
+                    editVideoSoundAudio.currentTime = 0;
+                }
+            }
 
             // Hide all screens
             document.querySelectorAll('.recording-screen').forEach(screen => {
@@ -16323,8 +16597,22 @@
         }
 
         function backToScreen2() {
+            // Stop any ongoing playback in screen 3
+            const editVideoPreview = document.getElementById('editVideoPreview');
+            const editVideoSoundAudio = document.getElementById('editVideoSoundAudio');
+            if (editVideoPreview) {
+                editVideoPreview.pause();
+                editVideoPreview.currentTime = 0;
+            }
+            if (editVideoSoundAudio) {
+                editVideoSoundAudio.pause();
+                editVideoSoundAudio.currentTime = 0;
+            }
+            
             // Stop camera if navigating away from photo mode
             stopPhotoMode();
+            
+            console.log('✅ Back button - Cleaned up video, returning to Screen 2');
             showScreen('screen2');
         }
 
@@ -22442,7 +22730,127 @@
         }
 
         function goToPostSettings() {
+            console.log('🎬 Going to Screen 4 - Post Settings with Video Preview');
+            
+            // Hide edit menu if open
+            const editMenu = document.getElementById('recEditMenu');
+            if (editMenu) {
+                editMenu.style.display = 'none';
+            }
+            
+            // Load video preview
+            setTimeout(() => {
+                loadScreen4VideoPreview();
+            }, 100);
+            
+            // Show screen 4
             showScreen('screen4');
+            console.log('✅ Screen 4 displayed with video preview');
+        }
+
+        // ============================================================================
+        // SCREEN 4 VIDEO PREVIEW FUNCTIONS
+        // ============================================================================
+
+        function loadScreen4VideoPreview() {
+            console.log('📹 Loading Screen 4 video preview...');
+            
+            const videoElement = document.getElementById('screen4VideoPreview');
+            const titleElement = document.getElementById('screen4VideoTitle');
+            const sizeElement = document.getElementById('screen4VideoSize');
+            const durationElement = document.getElementById('videoPreviewDuration');
+            const playBtn = document.getElementById('screen4PlayBtn');
+
+            if (!videoElement) {
+                console.warn('⚠️ Video element not found in Screen 4');
+                return;
+            }
+
+            // Get the recorded video blob from recordingState
+            if (recordingState.recordedBlob) {
+                const videoUrl = URL.createObjectURL(recordingState.recordedBlob);
+                videoElement.src = videoUrl;
+                videoElement.load();
+
+                // Update file size
+                const fileSizeKB = (recordingState.recordedBlob.size / 1024).toFixed(2);
+                sizeElement.textContent = `${fileSizeKB} KB`;
+
+                // Update title
+                const recordDate = new Date().toLocaleTimeString();
+                titleElement.textContent = `Video • ${recordDate}`;
+
+                // Reset play button
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+
+                // Update duration when metadata loads
+                videoElement.onloadedmetadata = () => {
+                    const minutes = Math.floor(videoElement.duration / 60);
+                    const seconds = Math.floor(videoElement.duration % 60);
+                    const durationStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    durationElement.textContent = durationStr;
+                    console.log(`✅ Video duration: ${durationStr} | Size: ${fileSizeKB} KB`);
+                };
+
+                // Handle play/pause for button icon
+                videoElement.onplay = () => {
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                };
+
+                videoElement.onpause = () => {
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                };
+
+                console.log('✅ Screen 4 video preview loaded successfully');
+                showToastRecording('📹 Video loaded for review', 'success', '✓');
+            } else {
+                console.warn('⚠️ No recorded video found');
+                videoElement.src = '';
+                titleElement.textContent = 'No video recorded';
+                sizeElement.textContent = '--';
+                durationElement.textContent = '0:00';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                showToastRecording('⚠️ No video recorded', 'warning', '⚠️');
+            }
+        }
+
+        function toggleScreen4VideoPlayPause() {
+            const videoElement = document.getElementById('screen4VideoPreview');
+            const playBtn = document.getElementById('screen4PlayBtn');
+
+            if (!videoElement) {
+                console.warn('⚠️ Video element not found');
+                return;
+            }
+
+            if (videoElement.paused) {
+                videoElement.play().catch(err => {
+                    console.error('❌ Play failed:', err);
+                });
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                videoElement.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        }
+
+        function toggleScreen4VideoFullscreen() {
+            const container = document.querySelector('.video-post-preview-container');
+            if (!container) {
+                console.warn('⚠️ Container not found for fullscreen');
+                return;
+            }
+
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.warn('⚠️ Fullscreen not available:', err.message);
+                    showToastRecording('Fullscreen not supported', 'warning', '⚠️');
+                });
+            } else {
+                document.exitFullscreen().catch(err => {
+                    console.warn('⚠️ Exit fullscreen failed:', err);
+                });
+            }
         }
 
         // ============================================================================
