@@ -1974,56 +1974,25 @@
         /* ===== RESPONSIVE CONTROLS - LARGE SCREENS (1024px+) ===== */
         @media (min-width: 1024px) {
             .rec-bottom-controls {
-                padding: 32px 22px 42px 22px;
+                padding: 30px 20px 40px 20px;
             }
 
             .rec-control-row {
                 gap: 55px;
-                margin-bottom: 32px;
-            }
-
-            .rec-control-btn {
-                min-width: 88px;
-                min-height: 88px;
-                gap: 11px;
-                padding: 12px;
-            }
-
-            .rec-control-icon {
-                width: 70px;
-                height: 70px;
-                font-size: 36px;
-                border-radius: 18px;
-            }
-
-            .rec-control-label {
-                font-size: 16px;
-            }
-        }
-
-        /* ===== RESPONSIVE CONTROLS - TABLETS (768px - 1023px) ===== */
-        @media (max-width: 1023px) {
-            .rec-bottom-controls {
-                padding: 28px 18px 38px 18px;
-            }
-
-            .rec-control-row {
-                gap: 48px;
                 margin-bottom: 30px;
             }
 
             .rec-control-btn {
-                min-width: 84px;
-                min-height: 84px;
-                gap: 10px;
-                padding: 11px;
+                min-width: 76px;
+                min-height: 76px;
+                gap: 9px;
             }
 
             .rec-control-icon {
-                width: 66px;
-                height: 66px;
-                font-size: 34px;
-                border-radius: 16px;
+                width: 62px;
+                height: 62px;
+                font-size: 31px;
+                border-radius: 15px;
             }
 
             .rec-control-label {
@@ -2031,22 +2000,21 @@
             }
         }
 
-        /* ===== RESPONSIVE CONTROLS - LARGE PHONES (480px - 767px) ===== */
-        @media (max-width: 767px) {
+        /* ===== RESPONSIVE CONTROLS - TABLETS (768px - 1023px) ===== */
+        @media (max-width: 1023px) {
             .rec-bottom-controls {
-                padding: 24px 15px 34px 15px;
+                padding: 27px 17px 37px 17px;
             }
 
             .rec-control-row {
-                gap: 42px;
-                margin-bottom: 26px;
+                gap: 48px;
+                margin-bottom: 28px;
             }
 
             .rec-control-btn {
-                min-width: 76px;
-                min-height: 76px;
+                min-width: 74px;
+                min-height: 74px;
                 gap: 8px;
-                padding: 9px;
             }
 
             .rec-control-icon {
@@ -2061,29 +2029,28 @@
             }
         }
 
-        /* ===== RESPONSIVE CONTROLS - MOBILE PHONES (480px and below) ===== */
-        @media (max-width: 480px) {
+        /* ===== RESPONSIVE CONTROLS - LARGE PHONES (480px - 767px) ===== */
+        @media (max-width: 767px) {
             .rec-bottom-controls {
-                padding: 20px 13px 30px 13px;
+                padding: 23px 13px 33px 13px;
             }
 
             .rec-control-row {
-                gap: 38px;
-                margin-bottom: 22px;
+                gap: 42px;
+                margin-bottom: 25px;
             }
 
             .rec-control-btn {
-                min-width: 70px;
-                min-height: 70px;
+                min-width: 72px;
+                min-height: 72px;
                 gap: 7px;
-                padding: 8px;
             }
 
             .rec-control-icon {
-                width: 56px;
-                height: 56px;
-                font-size: 28px;
-                border-radius: 12px;
+                width: 58px;
+                height: 58px;
+                font-size: 29px;
+                border-radius: 13px;
             }
 
             .rec-control-label {
@@ -2091,33 +2058,61 @@
             }
         }
 
-        /* ===== RESPONSIVE CONTROLS - EXTRA SMALL PHONES (360px and below) ===== */
-        @media (max-width: 360px) {
+        /* ===== RESPONSIVE CONTROLS - MOBILE PHONES (480px and below) ===== */
+        @media (max-width: 480px) {
             .rec-bottom-controls {
-                padding: 18px 11px 28px 11px;
+                padding: 18px 12px 28px 12px;
             }
 
             .rec-control-row {
-                gap: 32px;
+                gap: 38px;
                 margin-bottom: 20px;
             }
 
             .rec-control-btn {
-                min-width: 66px;
-                min-height: 66px;
+                min-width: 68px;
+                min-height: 68px;
                 gap: 6px;
-                padding: 7px;
             }
 
             .rec-control-icon {
-                width: 52px;
-                height: 52px;
-                font-size: 26px;
-                border-radius: 11px;
+                width: 54px;
+                height: 54px;
+                font-size: 27px;
+                border-radius: 12px;
             }
 
             .rec-control-label {
                 font-size: 11px;
+            }
+        }
+
+        /* ===== RESPONSIVE CONTROLS - EXTRA SMALL PHONES (360px and below) ===== */
+        @media (max-width: 360px) {
+            .rec-bottom-controls {
+                padding: 16px 10px 26px 10px;
+            }
+
+            .rec-control-row {
+                gap: 32px;
+                margin-bottom: 18px;
+            }
+
+            .rec-control-btn {
+                min-width: 64px;
+                min-height: 64px;
+                gap: 5px;
+            }
+
+            .rec-control-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+                border-radius: 10px;
+            }
+
+            .rec-control-label {
+                font-size: 10px;
             }
         }
 
@@ -2233,9 +2228,37 @@
         /* Button Container */
         .rec-btn-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .rec-side-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.8), rgba(109, 40, 217, 0.8));
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+        }
+
+        .rec-side-btn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 12px 35px rgba(138, 43, 226, 0.7);
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.95), rgba(109, 40, 217, 0.95));
+        }
+
+        .rec-side-btn:active {
+            transform: scale(0.95);
         }
 
         .rec-record-btn {
@@ -2281,6 +2304,35 @@
 
         .rec-record-btn:active {
             transform: scale(0.95);
+        }
+
+        /* Responsive Side Buttons */
+        @media (max-width: 767px) {
+            .rec-btn-container {
+                gap: 20px;
+            }
+
+            .rec-side-btn {
+                width: 54px;
+                height: 54px;
+                border-width: 2.5px;
+                font-size: 24px;
+                box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rec-btn-container {
+                gap: 16px;
+            }
+
+            .rec-side-btn {
+                width: 50px;
+                height: 50px;
+                border-width: 2px;
+                font-size: 22px;
+                box-shadow: 0 5px 15px rgba(138, 43, 226, 0.35);
+            }
         }
 
         .rec-record-btn.recording {
@@ -9336,15 +9388,28 @@
                 <div class="rec-record-btn-wrapper">
 
 
-                    <!-- Main Record Button -->
+                    <!-- Main Record Button with Side Actions -->
                     <div class="rec-btn-container">
-                        <button class="rec-record-btn" id="recMainBtn"
-                            onclick="recordingState.isRecording ? stopRecording() : recordVideo()" title="Record video">
-                            <div class="rec-btn-inner">
-                                <div class="rec-btn-circle"></div>
-                            </div>
+                        <!-- Left Side Button: Sound -->
+                        <button class="rec-side-btn" onclick="openRecordingSoundLibrary()" title="Add Sound">
+                            🎵
                         </button>
-                        <div class="rec-btn-label" id="recBtnLabel">Start</div>
+
+                        <!-- Center: Main Record Button -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                            <button class="rec-record-btn" id="recMainBtn"
+                                onclick="recordingState.isRecording ? stopRecording() : recordVideo()" title="Record video">
+                                <div class="rec-btn-inner">
+                                    <div class="rec-btn-circle"></div>
+                                </div>
+                            </button>
+                            <div class="rec-btn-label" id="recBtnLabel">Start</div>
+                        </div>
+
+                        <!-- Right Side Button: Add Video -->
+                        <button class="rec-side-btn" onclick="openVideoLibrary()" title="Add Video">
+                            📹
+                        </button>
                     </div>
 
                     <!-- Recording Controls (visible during recording) -->
@@ -19071,6 +19136,83 @@
             }
             // Reuse existing sound library
             openSoundLibrary();
+        }
+
+        // Open video file input
+        function openVideoLibrary() {
+            if (recordingState.isRecording) {
+                showToastRecording('⚠️ Stop recording to add video', 'warning', '📹');
+                return;
+            }
+            
+            // Create or use existing file input for videos
+            let videoInput = document.getElementById('recVideoInput');
+            if (!videoInput) {
+                videoInput = document.createElement('input');
+                videoInput.id = 'recVideoInput';
+                videoInput.type = 'file';
+                videoInput.accept = 'video/*';
+                videoInput.style.display = 'none';
+                videoInput.addEventListener('change', handleVideoUpload);
+                document.body.appendChild(videoInput);
+            }
+            videoInput.click();
+        }
+
+        // Handle video upload
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check file size (max 100MB)
+            const maxSize = 100 * 1024 * 1024;
+            if (file.size > maxSize) {
+                showToastRecording('❌ Video too large (max 100MB)', 'error', '📹');
+                return;
+            }
+
+            // Create video object URL for preview
+            const videoURL = URL.createObjectURL(file);
+            
+            // Store video file and URL
+            recordingState.uploadedVideo = {
+                file: file,
+                url: videoURL,
+                name: file.name,
+                size: file.size,
+                type: file.type
+            };
+
+            showToastRecording(`📹 Video added: ${file.name.substring(0, 30)}...`, 'success', '✓');
+            console.log('📹 Video uploaded:', file.name);
+
+            // Optional: Display video preview info
+            const videoDisplay = document.getElementById('recVideoDisplay');
+            if (videoDisplay) {
+                videoDisplay.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; background: rgba(76, 29, 149, 0.2); padding: 10px; border-radius: 8px; color: white; font-size: 12px;">
+                        <span>📹 ${file.name.substring(0, 20)}...</span>
+                        <button onclick="removeRecordingVideo()" style="background: #ff4444; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">Remove</button>
+                    </div>
+                `;
+                videoDisplay.style.display = 'block';
+            }
+        }
+
+        // Remove selected video from Screen 1
+        function removeRecordingVideo() {
+            if (recordingState.uploadedVideo && recordingState.uploadedVideo.url) {
+                URL.revokeObjectURL(recordingState.uploadedVideo.url);
+            }
+            recordingState.uploadedVideo = null;
+
+            const display = document.getElementById('recVideoDisplay');
+            if (display) {
+                display.style.display = 'none';
+            }
+
+            showToastRecording('📹 Video removed', 'info', '✓');
+            console.log('📹 Video removed from recording');
         }
 
         // Remove selected sound from Screen 1
