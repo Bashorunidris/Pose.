@@ -75,7 +75,27 @@
             padding: 24px
         }
 
-        /* Modal Styles */
+        /* RESPONSIVE CONTAINER */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 20px;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+        }
+
+        /* Modal Styles - RESPONSIVE */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -87,6 +107,7 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal-overlay.active {
@@ -113,6 +134,17 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .modal h2 {
@@ -177,7 +209,138 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* ====== UPLOAD PROGRESS CONTAINER ====== */
+        /* RESPONSIVE MODAL */
+        @media (max-width: 1024px) {
+            .modal {
+                padding: 28px;
+                max-width: 380px;
+            }
+
+            .modal h2 {
+                font-size: 22px;
+                margin-bottom: 18px;
+            }
+
+            .modal input {
+                padding: 10px;
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+
+            .modal-btn {
+                padding: 10px;
+                font-size: 15px;
+            }
+
+            .modal-switch {
+                margin-top: 12px;
+                font-size: 13px;
+            }
+
+            .error-msg {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px;
+                max-width: 360px;
+                border-radius: 16px;
+            }
+
+            .modal-close {
+                font-size: 20px;
+                width: 28px;
+                height: 28px;
+                top: 12px;
+                right: 12px;
+            }
+
+            .modal h2 {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+
+            .modal input {
+                padding: 10px;
+                font-size: 12px;
+                margin-bottom: 12px;
+                border-radius: 8px;
+            }
+
+            .modal-btn {
+                padding: 10px;
+                font-size: 14px;
+                margin-top: 8px;
+                border-radius: 8px;
+            }
+
+            .modal-switch {
+                margin-top: 12px;
+                font-size: 12px;
+            }
+
+            .error-msg {
+                padding: 8px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-overlay {
+                padding: 16px;
+            }
+
+            .modal {
+                padding: 20px;
+                max-width: 100%;
+                width: 95%;
+                border-radius: 14px;
+            }
+
+            .modal-close {
+                font-size: 18px;
+                width: 26px;
+                height: 26px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .modal h2 {
+                font-size: 18px;
+                margin-bottom: 14px;
+            }
+
+            .modal input {
+                padding: 9px;
+                font-size: 11px;
+                margin-bottom: 10px;
+                border-radius: 8px;
+            }
+
+            .modal-btn {
+                padding: 9px;
+                font-size: 13px;
+                margin-top: 6px;
+                border-radius: 8px;
+            }
+
+            .modal-switch {
+                margin-top: 10px;
+                font-size: 11px;
+            }
+
+            .error-msg {
+                padding: 8px;
+                font-size: 11px;
+                border-radius: 8px;
+            }
+        }
+
+        /* ====== UPLOAD PROGRESS CONTAINER - RESPONSIVE ====== */
         .upload-progress-container {
             position: fixed;
             bottom: 20px;
@@ -196,6 +359,37 @@
 
         .upload-progress-container.active {
             display: flex;
+        }
+
+        /* RESPONSIVE UPLOAD PROGRESS CONTAINER */
+        @media (max-width: 1024px) {
+            .upload-progress-container {
+                width: 320px;
+                bottom: 18px;
+                right: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .upload-progress-container {
+                width: 300px;
+                bottom: 15px;
+                right: 15px;
+                border-radius: 10px;
+                max-height: 450px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .upload-progress-container {
+                width: calc(100% - 20px);
+                max-width: 280px;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                border-radius: 10px;
+                max-height: 400px;
+            }
         }
 
         .upload-progress-header {
@@ -4123,6 +4317,117 @@
             transform: scale(0.95);
             background: #333;
             border-color: #ff0050;
+        }
+
+        /* RESPONSIVE POPUPS */
+        @media (max-width: 1024px) {
+            .rec-popup {
+                padding: 18px;
+                max-height: 55vh;
+                border-radius: 18px 18px 0 0;
+            }
+
+            .rec-popup-close {
+                width: 36px;
+                height: 36px;
+                font-size: 22px;
+                top: 12px;
+                right: 12px;
+            }
+
+            .rec-popup-header {
+                gap: 8px;
+                margin-bottom: 18px;
+                padding-bottom: 12px;
+            }
+
+            .rec-popup-tab {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+
+            .rec-popup-content {
+                gap: 12px;
+            }
+
+            .rec-popup-item {
+                font-size: 30px;
+                border-radius: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .rec-popup {
+                padding: 16px;
+                max-height: 60vh;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .rec-popup-close {
+                width: 34px;
+                height: 34px;
+                font-size: 20px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .rec-popup-header {
+                gap: 8px;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+            }
+
+            .rec-popup-tab {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .rec-popup-content {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .rec-popup-item {
+                font-size: 28px;
+                border-radius: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rec-popup {
+                padding: 12px;
+                max-height: 65vh;
+                border-radius: 14px 14px 0 0;
+            }
+
+            .rec-popup-close {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+                top: 8px;
+                right: 8px;
+            }
+
+            .rec-popup-header {
+                gap: 6px;
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+            }
+
+            .rec-popup-tab {
+                font-size: 11px;
+                padding: 5px 8px;
+            }
+
+            .rec-popup-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .rec-popup-item {
+                font-size: 24px;
+                border-radius: 8px;
+            }
         }
 
         /* ====== POST SETTINGS SECTIONS ====== */
