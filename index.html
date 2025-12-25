@@ -9398,7 +9398,8 @@
                         <!-- Center: Main Record Button -->
                         <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
                             <button class="rec-record-btn" id="recMainBtn"
-                                onclick="recordingState.isRecording ? stopRecording() : recordVideo()" title="Record video">
+                                onclick="recordingState.isRecording ? stopRecording() : recordVideo()"
+                                title="Record video">
                                 <div class="rec-btn-inner">
                                     <div class="rec-btn-circle"></div>
                                 </div>
@@ -15075,6 +15076,206 @@
             }
         }
 
+        // ====== VIDEO FILE UPLOAD FROM DEVICE ======
+        function openVideoLibrary() {
+            // Create a hidden file input element
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'video/*';
+            fileInput.style.display = 'none';
+
+            fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Validate file type
+                if (!file.type.startsWith('video/')) {
+                    showToastRecording('❌ Please select a valid video file', 'error', '🚫');
+                    return;
+                }
+
+                // Show upload progress
+                showUploadProgressModal();
+                console.log('📹 Selected video file:', file.name, `(${(file.size / (1024 * 1024)).toFixed(2)} MB)`);
+
+                try {
+                    // Upload to Cloudinary
+                    const uploadResult = await uploadVideoFileToCloudinary(file);
+
+                    if (uploadResult && uploadResult.url) {
+                        console.log('✅ Video upload successful:', uploadResult.url);
+
+                        // Create clip object (similar to recorded videos)
+                        const videoClip = {
+                            url: uploadResult.url,
+                            blob: file,
+                            cloudinaryUrl: uploadResult.url,
+                            publicId: uploadResult.publicId,
+                            duration: 0, // Will be determined when video loads
+                            speed: 1,
+                            hasEffects: false,
+                            hasBackgroundSound: false,
+                            selectedSound: null,
+                            filter: 'none',
+                            isUploadedFile: true // Mark as uploaded file (not recorded)
+                        };
+
+                        // Add to clips
+                        recordingState.clips.push(videoClip);
+
+                        // Update success state
+                        updateUploadProgressModal(100, 'Upload Complete!', '✅', 'Ready to edit...');
+                        console.log('✅ Video ready for editing');
+
+                        // Save to Firebase in background
+                        saveUploadedVideoToFirebase(videoClip);
+
+                        // Transition to edit screen
+                        setTimeout(() => {
+                            closeUploadProgressModal();
+                            transitionToEditScreen();
+                        }, 500);
+                    } else {
+                        throw new Error('Upload failed - no URL returned');
+                    }
+
+                } catch (error) {
+                    console.error('❌ Video upload error:', error);
+                    updateUploadProgressModal(0, 'Upload Failed', '❌', error.message.substring(0, 50));
+
+                    setTimeout(() => {
+                        closeUploadProgressModal();
+                    }, 1500);
+                }
+            };
+
+            // Trigger file selection dialog
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
+        }
+
+        async function uploadVideoFileToCloudinary(videoFile) {
+            const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
+            const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
+            const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+
+                const fileName = `video_${Date.now()}_${videoFile.name}`;
+                formData.append('file', videoFile, fileName);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('tags', 'video_upload');
+                formData.append('folder', 'uploaded-videos');
+                formData.append('resource_type', 'auto');
+
+                // Timeout after 300 seconds (for large files)
+                const timeoutId = setTimeout(() => {
+                    xhr.abort();
+                    reject(new Error('Upload timeout'));
+                }, 300000);
+
+                // Track upload progress
+                const uploadStartTime = Date.now();
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = (e.loaded / e.total) * 100;
+                        const uploadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
+                        const totalMB = (e.total / (1024 * 1024)).toFixed(1);
+                        const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
+                        const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
+                        const remainingBytes = e.total - e.loaded;
+                        const etaSeconds = remainingBytes / (e.loaded / elapsedSeconds);
+
+                        // Update progress modal
+                        updateUploadProgressModal(
+                            percentComplete,
+                            `Uploading... ${Math.round(percentComplete)}%`,
+                            '📤',
+                            `${uploadedMB} MB of ${totalMB} MB`,
+                            uploadSpeed,
+                            Math.max(0, Math.ceil(etaSeconds))
+                        );
+
+                        console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    clearTimeout(timeoutId);
+
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            console.log('✅ Cloudinary upload response:', response);
+                            resolve({
+                                url: response.secure_url,
+                                publicId: response.public_id,
+                                fileName: fileName
+                            });
+                        } catch (error) {
+                            reject(new Error('Invalid Cloudinary response'));
+                        }
+                    } else {
+                        reject(new Error(`Upload failed: ${xhr.status}`));
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    clearTimeout(timeoutId);
+                    reject(new Error('Network error during upload'));
+                });
+
+                xhr.addEventListener('abort', () => {
+                    clearTimeout(timeoutId);
+                    reject(new Error('Upload cancelled'));
+                });
+
+                xhr.open('POST', CLOUDINARY_API_URL);
+                xhr.send(formData);
+            });
+        }
+
+        async function saveUploadedVideoToFirebase(clip) {
+            try {
+                const user = firebase.auth().currentUser;
+                if (!user) {
+                    console.log('⚠️ No user logged in, skipping Firebase save');
+                    return;
+                }
+
+                const db = firebase.firestore();
+                const userId = user.uid;
+
+                // Video upload data
+                const uploadData = {
+                    userId: userId,
+                    url: clip.url,
+                    cloudinaryUrl: clip.cloudinaryUrl,
+                    publicId: clip.publicId || '',
+                    type: 'uploaded', // Mark as uploaded file
+                    fileName: clip.fileName || 'video',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: Date.now()
+                };
+
+                // Save to user's videos collection
+                db.collection('users').doc(userId).collection('videos').add(uploadData)
+                    .then(docRef => {
+                        console.log('✅ Video saved to Firebase:', docRef.id);
+                        clip.firebaseId = docRef.id;
+                    })
+                    .catch(err => {
+                        console.log('⚠️ Firebase save error (preview still works):', err.message);
+                    });
+
+            } catch (error) {
+                console.error('⚠️ Firebase error:', error.message);
+            }
+        }
+
         function transitionToEditScreen() {
             // Load the latest recorded video into Screen 3
             if (recordingState.clips.length > 0) {
@@ -19136,83 +19337,6 @@
             }
             // Reuse existing sound library
             openSoundLibrary();
-        }
-
-        // Open video file input
-        function openVideoLibrary() {
-            if (recordingState.isRecording) {
-                showToastRecording('⚠️ Stop recording to add video', 'warning', '📹');
-                return;
-            }
-            
-            // Create or use existing file input for videos
-            let videoInput = document.getElementById('recVideoInput');
-            if (!videoInput) {
-                videoInput = document.createElement('input');
-                videoInput.id = 'recVideoInput';
-                videoInput.type = 'file';
-                videoInput.accept = 'video/*';
-                videoInput.style.display = 'none';
-                videoInput.addEventListener('change', handleVideoUpload);
-                document.body.appendChild(videoInput);
-            }
-            videoInput.click();
-        }
-
-        // Handle video upload
-        function handleVideoUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Check file size (max 100MB)
-            const maxSize = 100 * 1024 * 1024;
-            if (file.size > maxSize) {
-                showToastRecording('❌ Video too large (max 100MB)', 'error', '📹');
-                return;
-            }
-
-            // Create video object URL for preview
-            const videoURL = URL.createObjectURL(file);
-            
-            // Store video file and URL
-            recordingState.uploadedVideo = {
-                file: file,
-                url: videoURL,
-                name: file.name,
-                size: file.size,
-                type: file.type
-            };
-
-            showToastRecording(`📹 Video added: ${file.name.substring(0, 30)}...`, 'success', '✓');
-            console.log('📹 Video uploaded:', file.name);
-
-            // Optional: Display video preview info
-            const videoDisplay = document.getElementById('recVideoDisplay');
-            if (videoDisplay) {
-                videoDisplay.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px; background: rgba(76, 29, 149, 0.2); padding: 10px; border-radius: 8px; color: white; font-size: 12px;">
-                        <span>📹 ${file.name.substring(0, 20)}...</span>
-                        <button onclick="removeRecordingVideo()" style="background: #ff4444; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">Remove</button>
-                    </div>
-                `;
-                videoDisplay.style.display = 'block';
-            }
-        }
-
-        // Remove selected video from Screen 1
-        function removeRecordingVideo() {
-            if (recordingState.uploadedVideo && recordingState.uploadedVideo.url) {
-                URL.revokeObjectURL(recordingState.uploadedVideo.url);
-            }
-            recordingState.uploadedVideo = null;
-
-            const display = document.getElementById('recVideoDisplay');
-            if (display) {
-                display.style.display = 'none';
-            }
-
-            showToastRecording('📹 Video removed', 'info', '✓');
-            console.log('📹 Video removed from recording');
         }
 
         // Remove selected sound from Screen 1
