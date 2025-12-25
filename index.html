@@ -1523,7 +1523,10 @@
             pointer-events: none;
             transform: translateY(-15px) scale(0.9);
             transition: opacity 0.25s ease, transform 0.25s ease;
-            z-index: 9;
+            z-index: 999;
+            min-width: 160px;
+            width: max-content;
+            max-width: 200px;
         }
 
         .rec-left-menu.show {
@@ -1534,17 +1537,20 @@
 
         .rec-menu-item {
             padding: 11px 18px;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(76, 29, 149, 0.3);
-            border-radius: 22px;
+            border: 1px solid rgba(76, 29, 149, 0.4);
+            border-radius: 12px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
             color: #fff;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .rec-menu-item:hover {
@@ -1571,12 +1577,14 @@
 
             .rec-left-menu {
                 left: 12px;
-                top: 60px;
+                top: 65px;
                 gap: 8px;
+                min-width: 150px;
+                max-width: 180px;
             }
 
             .rec-menu-item {
-                padding: 9px 15px;
+                padding: 9px 14px;
                 font-size: 12px;
             }
         }
@@ -1593,14 +1601,17 @@
             }
 
             .rec-left-menu {
-                left: 10px;
-                top: 55px;
+                left: 8px;
+                top: 60px;
                 gap: 6px;
+                min-width: 140px;
+                max-width: 160px;
             }
 
             .rec-menu-item {
                 padding: 8px 12px;
                 font-size: 11px;
+                white-space: normal;
             }
         }
 
@@ -11339,7 +11350,17 @@
           opacity: 0;
         }
       }
-    `;
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      `;
                 document.head.appendChild(style);
             }
 
@@ -11993,9 +12014,9 @@
                     const constraints = {
                         video: {
                             facingMode: recordingState.cameraFacingMode,
-                            width: { ideal: 1920, max: 1920 },
-                            height: { ideal: 1080, max: 1080 },
-                            frameRate: { ideal: 30, max: 30 }
+                            width: { ideal: 1280, max: 1280 },
+                            height: { ideal: 720, max: 720 },
+                            frameRate: { ideal: 24, max: 24 }
                         },
                         audio: {
                             echoCancellation: true,
@@ -12038,41 +12059,33 @@
 
             const chunks = [];
 
-            // ===== CANVAS-BASED RECORDING WITH EFFECTS =====
-            // This approach records effects and filters INTO the video file
-            const videoElement = document.getElementById('videoPreview');
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            // ===== DIRECT CAMERA STREAM RECORDING (NO CANVAS LAG) =====
+            // Record directly from camera for smooth quality like TikTok
+            console.log(`📹 Recording directly from camera stream (smooth, no lag)`);
 
-            // Use 1080p for smooth recording (4K is too heavy and causes lag)
-            let canvasWidth = 1920;  // 1080p resolution
-            let canvasHeight = 1080; // 1080p resolution
+            // Get video stream directly from camera
+            const videoStream = recordingState.stream;
+            const recordingStream = new MediaStream();
 
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-
-            // Store canvas dimensions for particle scaling
-            recordingState.canvasWidth = canvasWidth;
-            recordingState.canvasHeight = canvasHeight;
-
-            console.log(`🎨 Canvas setup: ${canvas.width}x${canvas.height} (1080p HD - optimized for smooth recording)`);
-            console.log(`📹 Recording with effects: Filter="${recordingState.currentFilter}", Effects=${recordingState.selectedEffects.length}`);
-
-            // Get canvas stream for recording at 24fps (smooth, less lag)
-            const canvasStream = canvas.captureStream(24); // 24 FPS for smooth recording with less lag
+            // ===== ADD VIDEO TRACKS =====
+            // Add all video tracks from camera directly to recording stream
+            videoStream.getVideoTracks().forEach(track => {
+                recordingStream.addTrack(track);
+            });
+            console.log('✅ Video tracks added directly from camera');
 
             // ===== AUDIO SETUP: Use background music OR microphone (not both) =====
-            let finalStream = canvasStream;
-            
+            let finalStream = recordingStream;
+
             if (recordingState.selectedSound) {
                 // Background music selected - Record ONLY music audio
                 console.log('🎵 Recording with background music ONLY (no microphone)');
-                
+
                 try {
                     // Use preloaded audio (already fetched and decoded)
                     let audioBuffer = recordingState.preloadedAudioBuffer;
                     let audioContext = recordingState.preloadedAudioContext;
-                    
+
                     // If not preloaded yet, create fresh (fallback)
                     if (!audioBuffer || !audioContext) {
                         console.log('⚠️ Audio not preloaded, creating fresh context...');
@@ -12083,66 +12096,66 @@
                     } else {
                         console.log('✅ Using preloaded audio (no lag!)');
                     }
-                    
+
                     recordingState.audioContext = audioContext;
-                    
+
                     // Step 1: Create destination to capture audio
                     const destination = audioContext.createMediaStreamDestination();
-                    
+
                     // Step 5: Prepare audio source (don't start yet)
                     let audioSource = audioContext.createBufferSource();
                     audioSource.buffer = audioBuffer;
                     audioSource.loop = true;  // Loop the audio
-                    
+
                     const gain = audioContext.createGain();
                     gain.gain.value = 1.0;  // 100% volume
-                    
+
                     audioSource.connect(gain);
                     gain.connect(destination);  // Connect to video recording
                     gain.connect(audioContext.destination);  // IMPORTANT: Also connect to speakers so user can HEAR it!
                     console.log('✅ Audio source connected to destination AND speakers (NOT STARTED YET)');
-                    
+
                     // Step 6: Add the mixed audio stream to canvas
                     const audioTracks = destination.stream.getAudioTracks();
                     if (audioTracks.length > 0) {
-                        canvasStream.addTrack(audioTracks[0]);
+                        recordingStream.addTrack(audioTracks[0]);
                         console.log('✅ Music audio track added to video - WILL BE SAVED');
                     } else {
                         console.log('⚠️ No audio track in destination');
                     }
-                    
+
                     // Step 7: Store references for delayed start (1 second after recording starts)
                     recordingState.audioSource = audioSource;
                     recordingState.audioContext = audioContext;
                     recordingState.audioDestination = destination;
                     recordingState.audioStartPending = true;  // Flag for delayed start
-                    
+
                 } catch (error) {
                     console.error('⚠️ Music audio setup error:', error);
                     console.log('📌 Recording video only (no music audio - error occurred)');
                 }
-                
+
             } else {
                 // No music - Record ONLY microphone audio
                 console.log('🎤 Recording with microphone ONLY (no background music)');
-                
+
                 const audioTracks = recordingState.stream.getAudioTracks();
                 if (audioTracks.length > 0) {
-                    canvasStream.addTrack(audioTracks[0]);
+                    recordingStream.addTrack(audioTracks[0]);
                     console.log('✅ Microphone audio added to video');
                 } else {
                     console.log('⚠️ No microphone available');
                 }
             }
-            
-            finalStream = canvasStream;
+
+            finalStream = recordingStream;
 
             console.log('📊 Recording setup complete - Ready to record');
 
             const options = {
                 mimeType: 'video/webm;codecs=vp8,opus',
-                videoBitsPerSecond: 1500000,  // 1.5 Mbps for 1080p 24fps (less lag)
-                audioBitsPerSecond: 128000    // 128 kbps audio (still good quality)
+                videoBitsPerSecond: 800000,   // 800 kbps for 720p 24fps (smooth)
+                audioBitsPerSecond: 96000     // 96 kbps audio
             };
 
             try {
@@ -12184,6 +12197,9 @@
 
                 // Stop canvas rendering
                 recordingState.isCanvasRendering = false;
+
+                // Mark that onstop has been called
+                recordingState.mediaRecorderStopped = true;
             };
 
             recordingState.mediaRecorder.start();
@@ -12204,12 +12220,7 @@
                 }, 1000);  // 1 second delay
             }
 
-            // ===== START CANVAS RENDERING LOOP =====
-            recordingState.isCanvasRendering = true;
-            recordingState.canvasContext = ctx;
-            recordingState.recordingCanvas = canvas;
-
-            renderCanvasForRecording();
+            // No canvas rendering needed - recording directly from camera
             startRecordingTimer();
         }
 
@@ -13236,38 +13247,16 @@
             }
 
             recordingState.isRecording = false;
-            recordingState.mediaRecorder.stop();
             stopRecordingTimer();
 
-            // Stop background audio if playing
-            if (recordingState.backgroundAudio) {
-                recordingState.backgroundAudio.pause();
-                recordingState.backgroundAudio.currentTime = 0;
-                // Remove from DOM if it's there
-                if (recordingState.backgroundAudio.parentNode) {
-                    recordingState.backgroundAudio.parentNode.removeChild(recordingState.backgroundAudio);
-                }
-                recordingState.backgroundAudio = null;
-            }
-
-            // Close audio context
-            if (recordingState.audioContext) {
-                try {
-                    recordingState.audioContext.close();
-                } catch (e) {
-                    console.warn('Audio context close error:', e);
-                }
-                recordingState.audioContext = null;
-            }
-
-            // Stop canvas rendering loop
+            // Stop canvas rendering loop IMMEDIATELY (no wait)
             recordingState.isCanvasRendering = false;
             if (recordingState.recordingCanvas) {
                 recordingState.recordingCanvas = null;
                 recordingState.canvasContext = null;
             }
 
-            // Clear all recording effect particles for next recording
+            // Clear all recording effect particles IMMEDIATELY
             recordingSparkles = [];
             recordingHearts = [];
             recordingConfetti = [];
@@ -13277,15 +13266,66 @@
             recordingGlow = [];
             recordingBokeh = [];
 
-            console.log('✅ Recording stopped. Canvas rendering stopped.');
+            console.log('✅ Canvas rendering stopped immediately');
+
+            // Stop audio source if playing
+            if (recordingState.audioSource) {
+                try {
+                    recordingState.audioSource.stop();
+                } catch (e) {
+                    // Already stopped, safe to ignore
+                }
+                recordingState.audioSource = null;
+            }
+
+            // Close audio context async (non-blocking)
+            if (recordingState.audioContext && recordingState.audioContext.state !== 'closed') {
+                recordingState.audioContext.close().catch(() => {
+                    // Ignore close errors
+                });
+            }
+            recordingState.audioContext = null;
+
+            // Stop background audio element
+            if (recordingState.backgroundAudio) {
+                try {
+                    recordingState.backgroundAudio.pause();
+                    recordingState.backgroundAudio.currentTime = 0;
+                } catch (e) {
+                    // Ignore errors
+                }
+                recordingState.backgroundAudio = null;
+            }
 
             showToastRecording('⏹ Recording stopped, processing video...', 'success', '⏳');
             console.log('✅ Video recorded successfully:', recordingState.recordingTime + 's');
 
-            // Wait for mediaRecorder to finish saving, then process video
-            setTimeout(() => {
-                processRecordedVideo();
-            }, 100);
+            // Mark that we've initiated stop
+            recordingState.mediaRecorderStopped = false;
+            recordingState.mediaRecorder.stop();
+
+            // Stop stream tracks immediately (doesn't block MediaRecorder)
+            if (recordingState.stream) {
+                recordingState.stream.getTracks().forEach(track => {
+                    try {
+                        track.stop();
+                    } catch (e) {
+                        // Ignore errors
+                    }
+                });
+            }
+
+            // Wait for mediaRecorder.onstop event to fire, then process
+            // Use polling to avoid blocking, max wait 500ms
+            let waitCount = 0;
+            const maxWaitTime = 500; // max 500ms
+            const checkInterval = setInterval(() => {
+                waitCount += 10;
+                if (recordingState.mediaRecorderStopped || waitCount >= maxWaitTime) {
+                    clearInterval(checkInterval);
+                    processRecordedVideo();
+                }
+            }, 10);
         }
 
         function processRecordedVideo() {
@@ -13330,13 +13370,13 @@
 
             console.log('🎬 Starting Cloudinary upload (effects already baked in)...');
 
-            // Hide edit loading overlay and show professional upload progress
+            // Hide edit loading overlay and show professional upload progress (non-blocking)
             const editLoadingOverlay = document.getElementById('editLoadingOverlay');
             if (editLoadingOverlay) {
                 editLoadingOverlay.style.display = 'none';
             }
 
-            // Show professional upload progress modal
+            // Show professional upload progress modal (non-blocking)
             showUploadProgressModal();
 
             try {
@@ -13348,48 +13388,43 @@
                 if (uploadResult && uploadResult.url) {
                     console.log('✅ Upload successful:', uploadResult.url);
 
-                    // Use Cloudinary URL for preview
-                    const cloudinaryUrl = uploadResult.url;
-
-                    // Log metadata
-                    console.log('✅ Filter used:', recordingState.currentFilter);
-                    console.log('✅ Effects applied:', recordingState.selectedEffects.length);
-                    console.log('✅ Speed setting:', recordingState.currentSpeed);
-                    console.log('📹 Video URL (with effects baked in):', cloudinaryUrl);
-
-                    // Update the clip with Cloudinary URL
-                    latestClip.url = cloudinaryUrl;
+                    // Update the clip with Cloudinary URL (all updates in one step)
+                    latestClip.url = uploadResult.url;
                     latestClip.cloudinaryUrl = uploadResult.url;
                     latestClip.publicId = uploadResult.publicId;
                     latestClip.filter = recordingState.currentFilter;
                     latestClip.effects = recordingState.selectedEffects;
 
-                    // Show success state
-                    updateUploadProgressModal(100, 'Upload Complete!', '✅', 'Preparing to edit...');
-                    console.log('✅ Video upload and effects processing complete');
+                    console.log('✅ Filter used:', recordingState.currentFilter);
+                    console.log('✅ Effects applied:', recordingState.selectedEffects.length);
+                    console.log('✅ Speed setting:', recordingState.currentSpeed);
 
-                    // Save to Firebase in background (doesn't block)
+                    // Show success state
+                    updateUploadProgressModal(100, 'Upload Complete!', '✅', 'Ready to edit...');
+                    console.log('✅ Video upload complete');
+
+                    // Save to Firebase in background (fire and forget - doesn't block)
                     saveRecordingToFirebase(latestClip);
 
-                    // Transition to edit screen after 1 second
+                    // Transition to edit screen quickly (500ms instead of 1000ms)
                     setTimeout(() => {
                         closeUploadProgressModal();
                         transitionToEditScreen();
-                    }, 1000);
+                    }, 500);
                 } else {
-                    throw new Error('Upload failed');
+                    throw new Error('Upload failed - no URL returned');
                 }
 
             } catch (error) {
                 console.error('❌ Video upload error:', error);
                 // Show error state
-                updateUploadProgressModal(0, 'Upload Failed', '❌', 'Error: ' + error.message);
+                updateUploadProgressModal(0, 'Upload Failed', '❌', error.message.substring(0, 50));
 
-                // Transition to edit screen after 2 seconds
+                // Transition to edit screen after 1.5 seconds (quicker on error)
                 setTimeout(() => {
                     closeUploadProgressModal();
                     transitionToEditScreen();
-                }, 2000);
+                }, 1500);
             }
         }
 
@@ -14665,7 +14700,8 @@
         function toggleRecEditMenu() {
             const menu = document.getElementById('recEditMenu');
             if (menu) {
-                menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+                menu.classList.toggle('show');
+                console.log('Edit menu toggled, show class:', menu.classList.contains('show'));
             }
         }
 
@@ -15026,23 +15062,719 @@
         // ============================================================================
 
         function openVideoTextEditor() {
-            showToastRecording('Text editor (coming soon)', 'info', '📝');
+            console.log('📝 Opening video text editor');
             toggleRecEditMenu(); // Close menu
+            closeVideoTextModal(); // Close any existing modal
+
+            // Create text overlay modal with full controls
+            const modal = document.createElement('div');
+            modal.id = 'videoTextModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #1a1a1a;
+                border: 2px solid #4C1D95;
+                border-radius: 12px;
+                padding: 20px;
+                z-index: 3000;
+                min-width: 320px;
+                color: white;
+            `;
+
+            modal.innerHTML = `
+                <h3 style="margin-top: 0; color: #fff;">Add Text to Video</h3>
+                
+                <label style="display: block; color: #aaa; font-size: 12px; margin-bottom: 5px;">📝 Text</label>
+                <input type="text" id="videoTextInput" placeholder="Enter text..." style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; margin-bottom: 15px; font-size: 14px;">
+                
+                <label style="display: block; color: #aaa; font-size: 12px; margin-bottom: 5px;">🎨 Color</label>
+                <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 15px;">
+                    <button onclick="setVideoTextColor('#ffffff')" style="padding: 15px; background: white; border: 2px solid transparent; border-radius: 6px; cursor: pointer;" title="White"></button>
+                    <button onclick="setVideoTextColor('#000000')" style="padding: 15px; background: black; border: 2px solid transparent; border-radius: 6px; cursor: pointer;" title="Black"></button>
+                    <button onclick="setVideoTextColor('#ff0000')" style="padding: 15px; background: red; border: 2px solid transparent; border-radius: 6px; cursor: pointer;" title="Red"></button>
+                    <button onclick="setVideoTextColor('#ffff00')" style="padding: 15px; background: yellow; border: 2px solid transparent; border-radius: 6px; cursor: pointer;" title="Yellow"></button>
+                    <button onclick="setVideoTextColor('#00ff00')" style="padding: 15px; background: lime; border: 2px solid transparent; border-radius: 6px; cursor: pointer;" title="Green"></button>
+                    <button onclick="setVideoTextColor('#4C1D95')" style="padding: 15px; background: #4C1D95; border: 2px solid transparent; border-radius: 6px; cursor: pointer;" title="Purple"></button>
+                </div>
+                
+                <label style="display: block; color: #aaa; font-size: 12px; margin-bottom: 5px;">📏 Size: <span id="videoTextSizeDisplay">24</span>px</label>
+                <input type="range" id="videoTextSize" min="12" max="72" value="24" style="width: 100%; margin-bottom: 15px; cursor: pointer;" oninput="document.getElementById('videoTextSizeDisplay').textContent = this.value">
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="applyVideoText()" style="flex: 1; padding: 10px; background: #4C1D95; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Apply</button>
+                    <button onclick="closeVideoTextModal()" style="flex: 1; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            document.getElementById('videoTextInput').focus();
+            showToastRecording('💬 Enter text, select color & size', 'info', '📝');
+        }
+
+        function setVideoTextColor(color) {
+            recordingState.videoTextColor = color;
+            console.log('Video text color set to:', color);
+        }
+
+        function closeVideoTextModal() {
+            const modal = document.getElementById('videoTextModal');
+            if (modal) modal.remove();
+        }
+
+        function applyVideoText() {
+            const text = document.getElementById('videoTextInput').value.trim();
+            const size = document.getElementById('videoTextSize')?.value || 24;
+            const color = recordingState.videoTextColor || '#ffffff';
+
+            if (!text) {
+                showToastRecording('⚠️ Please enter some text', 'warning', '📝');
+                return;
+            }
+
+            // Store text settings in recordingState
+            recordingState.videoTextOverlay = {
+                text: text,
+                size: size,
+                color: color,
+                offsetX: 0,
+                offsetY: 0,
+                timestamp: Date.now()
+            };
+
+            // Apply text overlay to video preview
+            const screen3 = document.getElementById('screen3');
+            const videoPreview = screen3?.querySelector('#editVideoPreview');
+
+            if (!videoPreview) {
+                console.error('❌ Video preview not found in screen 3');
+                showToastRecording('❌ Video preview not found', 'error', '✗');
+                return;
+            }
+
+            // Ensure container is positioned relatively
+            const previewWrapper = videoPreview.parentElement;
+            if (window.getComputedStyle(previewWrapper).position === 'static') {
+                previewWrapper.style.position = 'relative';
+            }
+
+            // Remove old overlay if exists
+            const oldOverlay = previewWrapper.querySelector('#videoTextOverlay');
+            if (oldOverlay) oldOverlay.remove();
+
+            // Create and add new overlay to video preview
+            const overlay = document.createElement('div');
+            overlay.id = 'videoTextOverlay';
+            overlay.style.cssText = `
+                position: absolute;
+                top: calc(50% + ${recordingState.videoTextOverlay.offsetY}px);
+                left: calc(50% + ${recordingState.videoTextOverlay.offsetX}px);
+                transform: translate(-50%, -50%);
+                color: ${color};
+                font-size: ${size}px;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -2px -2px 4px rgba(0,0,0,0.8);
+                cursor: move;
+                z-index: 100;
+                white-space: nowrap;
+                max-width: 90%;
+                word-wrap: break-word;
+                text-align: center;
+                padding: 8px 12px;
+                border: 2px dashed rgba(76, 29, 149, 0.5);
+                border-radius: 6px;
+                background: rgba(0,0,0,0.3);
+            `;
+            overlay.textContent = text;
+
+            // Make text interactive and draggable
+            overlay.draggable = true;
+            overlay.onclick = (e) => {
+                e.stopPropagation();
+                openVideoTextEditor();
+            };
+
+            overlay.ondragstart = (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                recordingState.textDragStartX = e.clientX;
+                recordingState.textDragStartY = e.clientY;
+            };
+
+            previewWrapper.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+
+            previewWrapper.ondrop = (e) => {
+                e.preventDefault();
+                const rect = previewWrapper.getBoundingClientRect();
+                const newX = e.clientX - rect.left - (rect.width / 2);
+                const newY = e.clientY - rect.top - (rect.height / 2);
+
+                // Update position
+                recordingState.videoTextOverlay.offsetX = Math.round(newX);
+                recordingState.videoTextOverlay.offsetY = Math.round(newY);
+
+                // Update overlay position
+                overlay.style.left = `calc(50% + ${newX}px)`;
+                overlay.style.top = `calc(50% + ${newY}px)`;
+
+                console.log('✅ Text moved to:', { x: newX, y: newY });
+                showToastRecording('📍 Text moved', 'success', '✓');
+            };
+
+            previewWrapper.appendChild(overlay);
+
+            console.log('✅ Text overlay applied to video:', { text, size, color });
+            showToastRecording(`✅ Text added (${size}px) - Drag to move`, 'success', '✓');
+            closeVideoTextModal();
         }
 
         function openVideoTrimEditor() {
-            showToastRecording('Trim editor (coming soon)', 'info', '✂️');
+            console.log('✂️ Opening video trim editor');
             toggleRecEditMenu(); // Close menu
+            closeVideoTrimModal(); // Close any existing modal
+
+            const video = document.getElementById('editVideoPreview');
+            if (!video || !video.duration) {
+                showToastRecording('❌ Video not ready for trimming', 'error', '✂️');
+                return;
+            }
+
+            // Initialize trim values from existing trim or full video
+            const existingTrim = recordingState.videoTrim || { startPercent: 0, endPercent: 100 };
+
+            // Show trim editor modal
+            const modal = document.createElement('div');
+            modal.id = 'videoTrimModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #1a1a1a;
+                border: 2px solid #4C1D95;
+                border-radius: 12px;
+                padding: 20px;
+                z-index: 3000;
+                min-width: 320px;
+                color: white;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+
+            modal.innerHTML = `
+                <h3 style="margin-top: 0; color: #fff;">✂️ Trim Video</h3>
+                <p style="color: #aaa; font-size: 12px; margin-bottom: 15px;">Drag sliders to select keep portion</p>
+                
+                <div style="background: rgba(76, 29, 149, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 8px;">
+                        📍 Trim Start: <span id="trimStartLabel" style="color: #fff; font-weight: bold;">0:00</span>
+                    </label>
+                    <input type="range" id="trimStart" min="0" max="100" value="${existingTrim.startPercent}" 
+                        style="width: 100%; cursor: pointer; margin-bottom: 12px;"
+                        oninput="updateVideoTrimPreview()">
+                </div>
+                
+                <div style="background: rgba(76, 29, 149, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 8px;">
+                        📍 Trim End: <span id="trimEndLabel" style="color: #fff; font-weight: bold;">0:00</span>
+                    </label>
+                    <input type="range" id="trimEnd" min="0" max="100" value="${existingTrim.endPercent}" 
+                        style="width: 100%; cursor: pointer;"
+                        oninput="updateVideoTrimPreview()">
+                </div>
+
+                <div style="background: rgba(0, 255, 0, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(0, 255, 0, 0.3); margin-bottom: 15px; font-size: 12px; color: #86efac;">
+                    ✅ Keep Duration: <span id="trimDurationLabel">Full video</span>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="applyVideoTrim()" style="flex: 1; padding: 10px; background: #4C1D95; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Apply Trim</button>
+                    <button onclick="closeVideoTrimModal()" style="flex: 1; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            updateVideoTrimPreview();
+            showToastRecording('🎥 Adjust trim points - green area will be kept', 'info', '✂️');
+        }
+
+        function updateVideoTrimPreview() {
+            const video = document.getElementById('editVideoPreview');
+            if (!video || !video.duration) return;
+
+            const startSlider = document.getElementById('trimStart');
+            const endSlider = document.getElementById('trimEnd');
+
+            const startPercent = parseFloat(startSlider.value);
+            const endPercent = parseFloat(endSlider.value);
+
+            const startTime = (startPercent / 100) * video.duration;
+            const endTime = (endPercent / 100) * video.duration;
+            const keepDuration = endTime - startTime;
+
+            // Ensure valid range
+            if (startPercent >= endPercent) {
+                endSlider.value = Math.min(startPercent + 1, 100);
+            }
+
+            // Update labels
+            document.getElementById('trimStartLabel').textContent = formatTime(startTime);
+            document.getElementById('trimEndLabel').textContent = formatTime(endTime);
+            document.getElementById('trimDurationLabel').textContent = formatTime(keepDuration);
+
+            // Live preview - seek to start position
+            video.currentTime = startTime;
+        }
+
+        function closeVideoTrimModal() {
+            const modal = document.getElementById('videoTrimModal');
+            if (modal) modal.remove();
+        }
+
+        function applyVideoTrim() {
+            const video = document.getElementById('editVideoPreview');
+            const startPercent = parseFloat(document.getElementById('trimStart').value);
+            const endPercent = parseFloat(document.getElementById('trimEnd').value);
+
+            if (startPercent >= endPercent) {
+                showToastRecording('⚠️ Invalid trim range', 'warning', '✂️');
+                return;
+            }
+
+            // Store trim data in recording state
+            recordingState.videoTrim = {
+                startPercent,
+                endPercent,
+                startTime: (startPercent / 100) * video.duration,
+                endTime: (endPercent / 100) * video.duration
+            };
+
+            // Update video playable range visually
+            const startTime = recordingState.videoTrim.startTime;
+            const endTime = recordingState.videoTrim.endTime;
+
+            // Seek video to start position
+            video.currentTime = startTime;
+
+            console.log('✅ Video trim applied:', {
+                startPercent: startPercent.toFixed(1),
+                endPercent: endPercent.toFixed(1),
+                duration: ((endPercent - startPercent) / 100 * video.duration).toFixed(2) + 's'
+            });
+
+            showToastRecording(
+                `✅ Video trimmed: ${formatTime(startTime)} → ${formatTime(endTime)}`,
+                'success',
+                '✂️'
+            );
+            closeVideoTrimModal();
         }
 
         function openVideoEffectsEditor() {
-            showToastRecording('Effects editor (coming soon)', 'info', '✨');
             toggleRecEditMenu(); // Close menu
+
+            const effects = [
+                { name: '✨ Sparkle', id: 'sparkle' },
+                { name: '❤️ Hearts', id: 'hearts' },
+                { name: '🌟 Stars', id: 'stars' },
+                { name: '❄️ Snow', id: 'snow' },
+                { name: '⭐ Glow', id: 'glow' },
+                { name: '💫 Bokeh', id: 'bokeh' }
+            ];
+
+            const effectButtons = effects.map(effect =>
+                `<button class="modal-btn" style="margin-bottom: 10px;" onclick="applyVideoEffect('${effect.id}')">${effect.name}</button>`
+            ).join('');
+
+            const modal = document.createElement('div');
+            modal.id = 'videoEffectsModal';
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 400px;">
+                    <button class="modal-close" onclick="closeVideoEffectsEditor()">✕</button>
+                    <h2>Video Effects</h2>
+                    <p style="color: #aaa; font-size: 12px; margin-bottom: 15px;">Choose effect to apply:</p>
+                    ${effectButtons}
+                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1);" onclick="closeVideoEffectsEditor()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function applyVideoEffect(effectId) {
+            recordingState.videoEffect = effectId;
+            showToastRecording(`✅ Effect applied: ${effectId}`, 'success', '✨');
+            closeVideoEffectsEditor();
+        }
+
+        function closeVideoEffectsEditor() {
+            const modal = document.getElementById('videoEffectsModal');
+            if (modal) modal.remove();
         }
 
         function openVideoTemplates() {
-            showToastRecording('Templates gallery (coming soon)', 'info', '📐');
+            console.log('📐 Opening video templates');
             toggleRecEditMenu(); // Close menu
+            closeVideoTemplatesModal(); // Close any existing modal
+
+            const templates = [
+                {
+                    id: 'fade-transition',
+                    name: '🎬 Fade Transition',
+                    description: 'Smooth fade between clips',
+                    preview: '✨',
+                    type: 'transition'
+                },
+                {
+                    id: 'slide-transition',
+                    name: '➡️ Slide Transition',
+                    description: 'Slide from left to right',
+                    preview: '➡️',
+                    type: 'transition'
+                },
+                {
+                    id: 'zoom-transition',
+                    name: '🔍 Zoom Transition',
+                    description: 'Dynamic zoom effect',
+                    preview: '🔍',
+                    type: 'transition'
+                },
+                {
+                    id: 'border-frame',
+                    name: '🖼️ Border Frame',
+                    description: 'Add decorative border',
+                    preview: '🖼️',
+                    type: 'layout'
+                },
+                {
+                    id: 'split-screen',
+                    name: '📺 Split Screen',
+                    description: 'Multi-view layout',
+                    preview: '📺',
+                    type: 'layout'
+                },
+                {
+                    id: 'picture-in-picture',
+                    name: '🎥 Picture in Picture',
+                    description: 'Nested video view',
+                    preview: '🎥',
+                    type: 'layout'
+                },
+                {
+                    id: 'vignette',
+                    name: '🌙 Vignette',
+                    description: 'Dark edges fade effect',
+                    preview: '🌙',
+                    type: 'filter'
+                },
+                {
+                    id: 'vintage-film',
+                    name: '🎞️ Vintage Film',
+                    description: 'Classic film look',
+                    preview: '🎞️',
+                    type: 'filter'
+                }
+            ];
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.id = 'videoTemplatesModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #1a1a1a;
+                border: 2px solid #4C1D95;
+                border-radius: 12px;
+                padding: 20px;
+                z-index: 3000;
+                min-width: 350px;
+                max-width: 500px;
+                color: white;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+
+            const templateGrid = templates.map(template => `
+                <div onclick="applyVideoTemplate('${template.id}')" 
+                    style="
+                        background: rgba(76, 29, 149, 0.1);
+                        border: 2px solid rgba(76, 29, 149, 0.3);
+                        border-radius: 10px;
+                        padding: 15px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        margin-bottom: 10px;
+                    "
+                    onmouseover="this.style.background='rgba(76, 29, 149, 0.2)'; this.style.borderColor='rgba(76, 29, 149, 0.6)'"
+                    onmouseout="this.style.background='rgba(76, 29, 149, 0.1)'; this.style.borderColor='rgba(76, 29, 149, 0.3)'">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 32px;">${template.preview}</div>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-weight: 600; font-size: 14px;">${template.name}</div>
+                            <div style="color: #aaa; font-size: 12px; margin-top: 3px;">${template.description}</div>
+                            <div style="color: #888; font-size: 11px; margin-top: 4px;">Type: ${template.type.toUpperCase()}</div>
+                        </div>
+                        <div style="color: #64c8ff; font-size: 18px;">→</div>
+                    </div>
+                </div>
+            `).join('');
+
+            modal.innerHTML = `
+                <h3 style="margin-top: 0; color: #fff;">📐 Video Templates</h3>
+                <p style="color: #aaa; font-size: 12px; margin-bottom: 15px;">Choose a template to apply:</p>
+                
+                ${templateGrid}
+                
+                <button onclick="closeVideoTemplatesModal()" style="width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px;">Close</button>
+            `;
+
+            document.body.appendChild(modal);
+            showToastRecording('🎬 Select a template to apply', 'info', '📐');
+        }
+
+        function applyVideoTemplate(templateId) {
+            console.log('📐 Applying template:', templateId);
+
+            const video = document.getElementById('editVideoPreview');
+            const wrapper = document.querySelector('.edit-video-wrapper');
+
+            if (!video || !wrapper) {
+                showToastRecording('❌ Video not ready', 'error', '✗');
+                return;
+            }
+
+            // Store template in recording state
+            recordingState.videoTemplate = templateId;
+
+            // Remove existing split preview if any
+            const existingSplit = wrapper.querySelector('[data-split-preview]');
+            if (existingSplit) {
+                existingSplit.remove();
+            }
+
+            // For split-screen template: show split preview with original on both sides
+            if (templateId === 'split-screen') {
+                // Create split screen container
+                const splitContainer = document.createElement('div');
+                splitContainer.setAttribute('data-split-preview', 'true');
+                splitContainer.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    background: #000;
+                    overflow: hidden;
+                    z-index: 1;
+                `;
+
+                // Left side - Original video
+                const leftSide = document.createElement('div');
+                leftSide.style.cssText = `
+                    flex: 1;
+                    position: relative;
+                    background: #000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
+                const leftVideo = video.cloneNode(true);
+                leftVideo.style.width = '100%';
+                leftVideo.style.height = '100%';
+                leftVideo.style.objectFit = 'contain';
+                leftSide.appendChild(leftVideo);
+
+                // Add label
+                const leftLabel = document.createElement('div');
+                leftLabel.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: #aaa;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    z-index: 10;
+                `;
+                leftLabel.textContent = 'Original';
+                leftSide.appendChild(leftLabel);
+
+                // Right side - Original video (same)
+                const rightSide = document.createElement('div');
+                rightSide.style.cssText = `
+                    flex: 1;
+                    position: relative;
+                    background: #000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
+                const rightVideo = video.cloneNode(true);
+                rightVideo.style.width = '100%';
+                rightVideo.style.height = '100%';
+                rightVideo.style.objectFit = 'contain';
+                rightSide.appendChild(rightVideo);
+
+                // Add label
+                const rightLabel = document.createElement('div');
+                rightLabel.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(76, 29, 149, 0.9);
+                    color: #fff;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    z-index: 10;
+                `;
+                rightLabel.textContent = 'Original';
+                rightSide.appendChild(rightLabel);
+
+                // Sync play/pause between both videos
+                leftVideo.addEventListener('play', () => rightVideo.play());
+                leftVideo.addEventListener('pause', () => rightVideo.pause());
+                rightVideo.addEventListener('play', () => leftVideo.play());
+                rightVideo.addEventListener('pause', () => rightVideo.pause());
+
+                // Sync current time
+                leftVideo.addEventListener('timeupdate', () => {
+                    if (Math.abs(rightVideo.currentTime - leftVideo.currentTime) > 0.1) {
+                        rightVideo.currentTime = leftVideo.currentTime;
+                    }
+                });
+
+                // Add to wrapper
+                splitContainer.appendChild(leftSide);
+                splitContainer.appendChild(rightSide);
+                wrapper.appendChild(splitContainer);
+
+                // Hide original video
+                video.style.display = 'none';
+
+                showToastRecording('✅ Split preview - Both original sides', 'success', '👀');
+                console.log('✅ Split template preview created');
+                closeVideoTemplatesModal();
+            } else {
+                // For all other templates: apply directly to full video
+                video.style.display = 'block';
+
+                // Reset previous template styles
+                video.style.filter = '';
+                video.style.border = '';
+                video.style.borderRadius = '';
+                video.style.boxShadow = '';
+                video.style.animation = '';
+
+                // Apply template to full video
+                applyTemplateToElement(video, templateId);
+
+                const templateNames = {
+                    'fade-transition': '✨ Fade',
+                    'slide-transition': '➡️ Slide',
+                    'zoom-transition': '🔍 Zoom',
+                    'border-frame': '🖼️ Border',
+                    'picture-in-picture': '🎥 PiP',
+                    'vignette': '🌙 Vignette',
+                    'vintage-film': '🎞️ Vintage'
+                };
+
+                showToastRecording(`✅ ${templateNames[templateId] || templateId} applied`, 'success', '✨');
+                console.log('✅ Template applied:', templateId);
+                closeVideoTemplatesModal();
+            }
+        }
+
+        function applyTemplateToElement(videoElement, templateId) {
+            // Reset styles
+            videoElement.style.filter = '';
+            videoElement.style.border = '';
+            videoElement.style.borderRadius = '';
+            videoElement.style.boxShadow = '';
+            videoElement.style.animation = '';
+
+            // Apply template
+            switch (templateId) {
+                case 'fade-transition':
+                    videoElement.style.animation = 'fadeIn 0.5s ease forwards';
+                    break;
+                case 'slide-transition':
+                    videoElement.style.animation = 'slideInRight 0.6s ease forwards';
+                    break;
+                case 'zoom-transition':
+                    videoElement.style.animation = 'zoomIn 0.6s ease forwards';
+                    break;
+                case 'border-frame':
+                    videoElement.style.border = '10px solid rgba(76, 29, 149, 0.9)';
+                    videoElement.style.borderRadius = '12px';
+                    videoElement.style.boxShadow = '0 0 30px rgba(76, 29, 149, 0.6)';
+                    break;
+                case 'picture-in-picture':
+                    videoElement.style.filter = 'drop-shadow(0 8px 25px rgba(76, 29, 149, 0.7))';
+                    videoElement.style.borderRadius = '16px';
+                    break;
+                case 'vignette':
+                    videoElement.style.boxShadow = 'inset 0 0 40px rgba(0, 0, 0, 0.7)';
+                    break;
+                case 'vintage-film':
+                    videoElement.style.filter = 'sepia(0.35) contrast(0.85) brightness(0.9)';
+                    break;
+            }
+        }
+
+        function updateTemplateIndicator(templateId) {
+            // Remove previous indicator
+            const prevIndicator = document.querySelector('[data-template-indicator]');
+            if (prevIndicator) prevIndicator.remove();
+
+            // Add visual indicator showing current template
+            const templates = {
+                'fade-transition': '✨ Fade',
+                'slide-transition': '➡️ Slide',
+                'zoom-transition': '🔍 Zoom',
+                'border-frame': '🖼️ Border',
+                'split-screen': '📺 Split',
+                'picture-in-picture': '🎥 PiP',
+                'vignette': '🌙 Vignette',
+                'vintage-film': '🎞️ Vintage'
+            };
+
+            const indicator = document.createElement('div');
+            indicator.setAttribute('data-template-indicator', 'true');
+            indicator.style.cssText = `
+                position: fixed;
+                bottom: 120px;
+                left: 20px;
+                background: rgba(76, 29, 149, 0.9);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease forwards;
+            `;
+            indicator.textContent = templates[templateId] || templateId;
+            document.body.appendChild(indicator);
+
+            // Auto-remove after 2 seconds
+            setTimeout(() => {
+                if (indicator.parentElement) {
+                    indicator.style.animation = 'slideOutRight 0.3s ease forwards';
+                    setTimeout(() => indicator.remove(), 300);
+                }
+            }, 2000);
+        }
+
+        function closeVideoTemplatesModal() {
+            const modal = document.getElementById('videoTemplatesModal');
+            if (modal) modal.remove();
         }
 
         function openVideoSoundLibrary() {
@@ -21427,21 +22159,21 @@
         // Preload and decode audio in background (so it's ready when recording starts)
         async function preloadAudioForRecording(sound) {
             if (!sound) return;
-            
+
             try {
                 const soundUrl = sound.audioUrl || sound.url || sound.preview_url || sound.filePath;
                 console.log('📥 Preloading audio:', soundUrl);
-                
+
                 const audioResponse = await fetch(soundUrl);
                 const audioBlob = await audioResponse.blob();
-                
+
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const audioBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer());
-                
+
                 // Store preloaded audio in recordingState
                 recordingState.preloadedAudioBuffer = audioBuffer;
                 recordingState.preloadedAudioContext = audioContext;
-                
+
                 console.log('✅ Audio preloaded and decoded:', audioBuffer.duration, 'seconds');
                 return true;
             } catch (error) {
@@ -21459,7 +22191,7 @@
             };
 
             console.log('🎵 Sound stored in recordingState:', recordingState.selectedSound);
-            
+
             // Preload audio in background (non-blocking)
             preloadAudioForRecording(sound);
 
