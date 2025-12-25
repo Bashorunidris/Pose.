@@ -3418,6 +3418,126 @@
             letter-spacing: 0.5px;
         }
 
+        /* ===== RESPONSIVE BREAKPOINTS FOR REC-EFFECTS-PANEL ===== */
+        /* Large Screens (1024px+) */
+        @media (min-width: 1024px) {
+            .rec-effects-panel {
+                width: 90%;
+                max-width: 480px;
+                max-height: 600px;
+                border-radius: 32px;
+            }
+
+            .rec-effects-header {
+                padding: 14px 18px;
+            }
+
+            .rec-effects-category {
+                padding: 14px 18px;
+            }
+
+            .rec-category-title {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Tablets & Medium Screens (768px - 1023px) */
+        @media (max-width: 1023px) {
+            .rec-effects-panel {
+                width: 85%;
+                max-width: 420px;
+                max-height: 520px;
+                border-radius: 28px;
+                bottom: 200px;
+            }
+
+            .rec-effects-header {
+                padding: 12px 15px;
+            }
+
+            .rec-effects-category {
+                padding: 11px 14px;
+            }
+
+            .rec-category-title {
+                font-size: 11px;
+                margin-bottom: 7px;
+            }
+        }
+
+        /* Small Tablets & Large Phones (480px - 767px) */
+        @media (max-width: 767px) {
+            .rec-effects-panel {
+                width: 92%;
+                max-width: 360px;
+                max-height: 480px;
+                border-radius: 24px;
+                bottom: 180px;
+            }
+
+            .rec-effects-header {
+                padding: 11px 13px;
+            }
+
+            .rec-effects-category {
+                padding: 10px 12px;
+            }
+
+            .rec-category-title {
+                font-size: 10px;
+                margin-bottom: 6px;
+            }
+        }
+
+        /* Mobile Phones (480px and below) */
+        @media (max-width: 480px) {
+            .rec-effects-panel {
+                width: 95%;
+                max-width: 320px;
+                max-height: 450px;
+                border-radius: 20px;
+                bottom: 160px;
+            }
+
+            .rec-effects-header {
+                padding: 10px 12px;
+            }
+
+            .rec-effects-category {
+                padding: 9px 11px;
+            }
+
+            .rec-category-title {
+                font-size: 9px;
+                margin-bottom: 5px;
+            }
+        }
+
+        /* Extra Small Phones (360px and below) */
+        @media (max-width: 360px) {
+            .rec-effects-panel {
+                width: 96%;
+                max-width: 290px;
+                max-height: 420px;
+                border-radius: 18px;
+                bottom: 150px;
+            }
+
+            .rec-effects-header {
+                padding: 9px 11px;
+            }
+
+            .rec-effects-category {
+                padding: 8px 10px;
+            }
+
+            .rec-category-title {
+                font-size: 8px;
+                margin-bottom: 4px;
+            }
+        }
+
         .rec-effects-header {
             display: flex;
             align-items: center;
@@ -3589,6 +3709,108 @@
             font-weight: 500;
             position: relative;
             overflow: hidden;
+            min-height: 60px;
+        }
+
+        /* ===== RESPONSIVE GRID FOR EFFECTS ===== */
+        /* Large Screens (1024px+) */
+        @media (min-width: 1024px) {
+            .rec-effects-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+                padding: 18px;
+                max-height: 420px;
+            }
+
+            .rec-effect-circular {
+                font-size: 12px;
+                gap: 8px;
+                min-height: 65px;
+            }
+
+            .rec-effect-circle {
+                font-size: 30px;
+            }
+        }
+
+        /* Tablets & Medium Screens (768px - 1023px) */
+        @media (max-width: 1023px) {
+            .rec-effects-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                padding: 14px;
+                max-height: 380px;
+            }
+
+            .rec-effect-circular {
+                font-size: 10px;
+                gap: 6px;
+                min-height: 58px;
+            }
+
+            .rec-effect-circle {
+                font-size: 26px;
+            }
+        }
+
+        /* Small Tablets & Large Phones (480px - 767px) */
+        @media (max-width: 767px) {
+            .rec-effects-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                padding: 12px;
+                max-height: 350px;
+            }
+
+            .rec-effect-circular {
+                font-size: 9px;
+                gap: 5px;
+                min-height: 54px;
+            }
+
+            .rec-effect-circle {
+                font-size: 24px;
+            }
+        }
+
+        /* Mobile Phones (480px and below) */
+        @media (max-width: 480px) {
+            .rec-effects-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 12px;
+                max-height: 320px;
+            }
+
+            .rec-effect-circular {
+                font-size: 8px;
+                gap: 4px;
+                min-height: 50px;
+            }
+
+            .rec-effect-circle {
+                font-size: 20px;
+            }
+        }
+
+        /* Extra Small Phones (360px and below) */
+        @media (max-width: 360px) {
+            .rec-effects-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                padding: 10px;
+                max-height: 300px;
+            }
+
+            .rec-effect-circular {
+                font-size: 7px;
+                gap: 3px;
+                min-height: 46px;
+            }
+
+            .rec-effect-circle {
+                font-size: 18px;
+            }
         }
 
         .rec-effect-circular::before {
@@ -3665,19 +3887,6 @@
 
         .rec-effects-grid::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.4);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 480px) {
-            .rec-effects-panel {
-                width: 280px;
-            }
-
-            .rec-effects-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-                padding: 12px;
-            }
         }
 
         /* ====== RECORDING CONTROLS - SCREEN 2 ====== */
