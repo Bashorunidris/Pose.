@@ -4970,6 +4970,24 @@
             padding-bottom: 100px;
         }
 
+        /* VIDEO PREVIEW - Simple & Clean */
+        .post-preview {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .post-preview-video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            object-fit: contain;
+            background: #000;
+            border-radius: 8px;
+            display: block;
+        }
+
         .rec-post-section {
             margin-bottom: 20px;
             padding: 15px 0;
@@ -9601,6 +9619,19 @@
             </div>
         </div>
 
+        <!-- DISCARD VIDEO CONFIRMATION MODAL (Screen 3) -->
+        <div id="discardVideoModal" class="modal-overlay">
+            <div class="modal">
+                <h2>Discard Video?</h2>
+                <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this video and go back to recording?</p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                        onclick="closeDiscardVideoModal()">Stay</button>
+                    <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardVideo()">Discard</button>
+                </div>
+            </div>
+        </div>
+
         <!-- SCREEN 5: PHOTO MODE -->
         <div id="screen5" class="recording-screen">
             <div class="camera-preview">
@@ -10012,6 +10043,12 @@
                 <div></div>
             </div>
             <div class="rec-post-content">
+                <!-- VIDEO PREVIEW -->
+                <div class="post-preview">
+                    <video id="postPreviewVideo" class="post-preview-video" controls playsinline>
+                        <source src="" type="video/webm">
+                    </video>
+                </div>
                 <div class="rec-post-section">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -16401,7 +16438,31 @@
         }
 
         function backToScreen2() {
-            // Stop any ongoing playback in screen 3
+            // Show discard confirmation modal instead of immediately going back
+            showDiscardVideoModal();
+        }
+
+        // Show discard video confirmation modal
+        function showDiscardVideoModal() {
+            const modal = document.getElementById('discardVideoModal');
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        // Close discard video modal (stay on screen 3)
+        function closeDiscardVideoModal() {
+            const modal = document.getElementById('discardVideoModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // Confirm discard video and go back to screen 1
+        function confirmDiscardVideo() {
+            closeDiscardVideoModal();
+
+            // Stop any ongoing playback
             const editVideoPreview = document.getElementById('editVideoPreview');
             const editVideoSoundAudio = document.getElementById('editVideoSoundAudio');
             if (editVideoPreview) {
@@ -16412,12 +16473,19 @@
                 editVideoSoundAudio.pause();
                 editVideoSoundAudio.currentTime = 0;
             }
-            
-            // Stop camera if navigating away from photo mode
+
+            // Clear recorded video from state
+            recordingState.recordedBlob = null;
+            recordingState.clips = [];
+
+            // Stop photo mode camera if active
             stopPhotoMode();
-            
-            console.log('✅ Back button - Cleaned up video, returning to Screen 2');
-            showScreen('screen2');
+
+            console.log('🗑️ Video discarded, returning to Screen 1 to record again');
+            showToastRecording('🗑️ Video discarded', 'info', '✓');
+
+            // Go back to screen 1 (recording screen)
+            showScreen('screen1');
         }
 
         function backToScreen3() {
@@ -22535,6 +22603,38 @@
 
         function goToPostSettings() {
             showScreen('screen4');
+            loadPostPreview();
+        }
+
+        // Load video preview in Screen 4
+        function loadPostPreview() {
+            try {
+                const videoPreview = document.getElementById('postPreviewVideo');
+                if (!videoPreview) return;
+
+                // Get the recorded video blob
+                const recordedBlob = recordingState.recordedBlob || (recordingState.clips?.[0]?.blob);
+                
+                if (recordedBlob) {
+                    const videoUrl = URL.createObjectURL(recordedBlob);
+                    const source = videoPreview.querySelector('source');
+                    if (source) {
+                        source.src = videoUrl;
+                    } else {
+                        const newSource = document.createElement('source');
+                        newSource.src = videoUrl;
+                        newSource.type = 'video/webm';
+                        videoPreview.appendChild(newSource);
+                    }
+                    
+                    videoPreview.load();
+                    console.log('✅ Post preview loaded successfully');
+                } else {
+                    console.warn('⚠️ No recorded video found for preview');
+                }
+            } catch (error) {
+                console.error('❌ Error loading post preview:', error);
+            }
         }
 
         // ============================================================================
