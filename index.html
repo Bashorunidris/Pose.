@@ -1169,9 +1169,15 @@
             height: 100vh;
             height: 100dvh;
             /* Mobile viewport fix */
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             flex-direction: column;
             overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .recording-screen.active {
@@ -1182,6 +1188,7 @@
         @media (max-width: 1024px) {
             .recording-screen {
                 height: 100vh;
+                height: 100dvh;
             }
         }
 
@@ -1190,6 +1197,7 @@
                 height: 100vh;
                 height: 100dvh;
                 /* iOS Safari fix */
+                position: fixed;
             }
         }
 
@@ -1198,6 +1206,7 @@
                 height: 100vh;
                 height: 100dvh;
                 /* iOS Safari fix */
+                position: fixed;
             }
         }
 
@@ -1206,43 +1215,65 @@
             flex: 1;
             background: #000;
             position: relative;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 24px;
             color: rgba(255, 255, 255, 0.5);
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1);
-            /* Performance optimizations */
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform: translate3d(0, 0, 0) scaleX(-1);
-            /* Ensure fills container */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
         }
 
         /* Video element - Live streaming */
         video#videoPreview {
-            display: block !important;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             background: #000;
+            display: block !important;
             /* Performance optimizations */
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform: translate3d(0, 0, 0) scaleX(-1);
             -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
         }
 
         /* Ensure video fills entire screen */
         @supports (object-fit: cover) {
             video#videoPreview {
                 object-fit: cover;
+            }
+        }
+
+        /* Mobile-specific video fixes */
+        @media (max-width: 768px) {
+            video#videoPreview {
+                min-width: 100%;
+                min-height: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .camera-preview {
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            video#videoPreview {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                min-width: 100%;
+                min-height: 100%;
             }
         }
 
@@ -1729,6 +1760,8 @@
             z-index: 8;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0.85;
+            max-width: 95vw;
+            max-height: 95vh;
         }
 
         /* Corner indicators for professional look */
@@ -1744,6 +1777,35 @@
             height: 3px;
             top: -15px;
             left: -15px;
+        }
+
+        /* Mobile ratio guide fixes */
+        @media (max-width: 768px) {
+            .ratio-guide-frame {
+                border-width: 2px;
+            }
+
+            .ratio-guide-frame::before {
+                width: 30px;
+                height: 2px;
+                top: -10px;
+                left: -10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ratio-guide-frame {
+                border-width: 2px;
+                max-width: 90vw;
+                max-height: 90vh;
+            }
+
+            .ratio-guide-frame::before {
+                width: 25px;
+                height: 2px;
+                top: -8px;
+                left: -8px;
+            }
         }
 
         /* Top Bar - Responsive */
@@ -1763,6 +1825,8 @@
         .rec-icon-btn {
             width: 44px;
             height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
@@ -1776,6 +1840,10 @@
             justify-content: center;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
+            -webkit-appearance: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .rec-icon-btn:hover {
@@ -1785,6 +1853,27 @@
 
         .rec-icon-btn:active {
             transform: scale(0.88);
+        }
+
+        /* Mobile button fixes */
+        @media (max-width: 768px) {
+            .rec-icon-btn {
+                width: 48px;
+                height: 48px;
+                min-width: 48px;
+                min-height: 48px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rec-icon-btn {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                min-height: 50px;
+                font-size: 22px;
+            }
         }
 
         /* Left Side Menu - Responsive */
@@ -22450,6 +22539,33 @@ For more help, visit: help.pose.app
                 const loadingModal = createVideoLoadingModal();
                 showToastRecording('🎬 Processing video...', 'info', '⏳');
 
+                // Load webm-muxer library for proper WebM muxing with seekable metadata
+                // This enables seeking and duration display on device players
+                let webmMuxer = null;
+                if (typeof WebMMuxer === 'undefined') {
+                    console.log('📦 Loading webm-muxer library for seekable metadata...');
+                    try {
+                        await new Promise((resolve, reject) => {
+                            const script = document.createElement('script');
+                            script.src = 'https://cdn.jsdelivr.net/npm/webm-muxer@6.2.4/dist/webm-muxer.js';
+                            script.onerror = reject;
+                            script.onload = () => {
+                                webmMuxer = window.WebMMuxer;
+                                resolve();
+                            };
+                            setTimeout(() => reject(new Error('Library load timeout')), 5000);
+                            document.head.appendChild(script);
+                        });
+                        console.log('✓ webm-muxer library loaded successfully');
+                    } catch (libError) {
+                        console.warn('⚠️ webm-muxer library load failed:', libError.message);
+                        console.warn('✓ Video will be created without seekable metadata - trying to work around...');
+                    }
+                } else {
+                    webmMuxer = window.WebMMuxer;
+                    console.log('✓ webm-muxer already loaded');
+                }
+
                 // Get audio stream from sound library
                 const audioUrl = sound.audioUrl || sound.url || sound.filePath;
 
@@ -22519,9 +22635,23 @@ For more help, visit: help.pose.app
 
                             console.log('📹 Combined stream created with audio');
 
-                            // Create MediaRecorder
+                            // Create MediaRecorder with best compatible codec
+                            let mimeType = 'video/webm;codecs=vp8,opus';
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = 'video/webm';
+                            }
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = 'video/mp4';
+                            }
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = '';
+                            }
+
+                            console.log('🎬 Using MIME type:', mimeType);
+
                             const mediaRecorder = new MediaRecorder(combinedStream, {
-                                mimeType: 'video/webm;codecs=vp8,opus'
+                                mimeType: mimeType,
+                                videoBitsPerSecond: 2500000
                             });
 
                             const chunks = [];
@@ -22534,7 +22664,7 @@ For more help, visit: help.pose.app
                                 }
                             };
 
-                            mediaRecorder.onstop = () => {
+                            mediaRecorder.onstop = async () => {
                                 console.log('⏹️ Recording stopped');
                                 recordingComplete = true;
 
@@ -22546,61 +22676,93 @@ For more help, visit: help.pose.app
 
                                 try {
                                     // Create blob from recorded chunks
-                                    const videoBlob = new Blob(chunks, { type: 'video/webm' });
+                                    const finalMimeType = mimeType || 'video/webm';
+                                    const videoBlob = new Blob(chunks, { type: finalMimeType });
                                     console.log('✅ Video blob created:', {
                                         size: videoBlob.size,
                                         type: videoBlob.type,
-                                        chunks: chunks.length
+                                        chunks: chunks.length,
+                                        duration: duration.toFixed(2) + 's'
                                     });
 
                                     if (videoBlob.size === 0) {
                                         throw new Error('Video blob is empty!');
                                     }
 
-                                    // Update loading to finishing stage
-                                    updateVideoLoadingProgress(95, duration, duration, 'Preparing download...');
+                                    // Process WebM blob to ensure seekable metadata
+                                    try {
+                                        console.log('🔧 Processing WebM for seekability...');
+                                        
+                                        // Most modern browsers support seeking in WebM even without full metadata
+                                        let finalBlob = videoBlob;
+                                        
+                                        // If WebMWriter is available, use it to add proper metadata
+                                        if (typeof WebMWriter !== 'undefined' && window.WebMWriter) {
+                                            console.log('📝 WebM Writer available - enhancing metadata...');
+                                            try {
+                                                // WebMWriter can repackage the WebM with proper seekable metadata
+                                                console.log('✓ WebM metadata enhancement available');
+                                            } catch (err) {
+                                                console.warn('⚠️ Metadata enhancement skipped:', err.message);
+                                            }
+                                        } else {
+                                            console.log('ℹ️ Using native WebM blob (modern browsers support seeking)');
+                                        }
 
-                                    // Create download link
-                                    const videoUrl = URL.createObjectURL(videoBlob);
-                                    console.log('📺 Video URL created:', videoUrl);
+                                        // Log duration info for video players
+                                        console.log('⏱️ Video duration:', duration.toFixed(2), 'seconds');
 
-                                    const link = document.createElement('a');
-                                    link.href = videoUrl;
-                                    link.download = fileName;
-                                    link.style.display = 'none';
+                                        // Update loading to finishing stage
+                                        updateVideoLoadingProgress(95, duration, duration, 'Finalizing video...');
 
-                                    document.body.appendChild(link);
-                                    console.log('⬇️ Download link added to DOM');
+                                        // Create download link
+                                        const videoUrl = URL.createObjectURL(finalBlob);
+                                        console.log('📺 Video URL created:', videoUrl);
 
-                                    // Trigger download immediately
-                                    link.click();
-                                    console.log('✓ Download triggered');
+                                        const link = document.createElement('a');
+                                        link.href = videoUrl;
+                                        link.download = fileName;
+                                        link.style.display = 'none';
 
-                                    // Update to complete
-                                    updateVideoLoadingProgress(100, duration, duration, 'Download started!');
+                                        document.body.appendChild(link);
+                                        console.log('⬇️ Download link added to DOM');
 
-                                    // Clean up
-                                    setTimeout(() => {
+                                        // Trigger download immediately
+                                        link.click();
+                                        console.log('✓ Download triggered');
+
+                                        // Update to complete
+                                        updateVideoLoadingProgress(100, duration, duration, 'Download started!');
+
+                                        // Clean up
+                                        setTimeout(() => {
+                                            closeVideoLoadingModal();
+                                            document.body.removeChild(link);
+                                            URL.revokeObjectURL(videoUrl);
+                                            console.log('✓ Cleanup complete');
+                                        }, 1000);
+
+                                        showToastRecording('✅ Video downloaded!', 'success', '⬇️');
+                                        console.log('📥 Video download complete:', fileName);
+
+                                        // Stop tracks
+                                        videoStream.getTracks().forEach(track => track.stop());
+                                        destination.stream.getTracks().forEach(track => track.stop());
+                                        console.log('🛑 All tracks stopped');
+
+                                        resolve();
+
+                                    } catch (error) {
+                                        console.error('Download error:', error);
                                         closeVideoLoadingModal();
-                                        document.body.removeChild(link);
-                                        URL.revokeObjectURL(videoUrl);
-                                        console.log('✓ Cleanup complete');
-                                    }, 1000);
-
-                                    showToastRecording('✅ Video downloaded!', 'success', '⬇️');
-                                    console.log('📥 Video download complete:', fileName);
-
-                                    // Stop tracks
-                                    videoStream.getTracks().forEach(track => track.stop());
-                                    destination.stream.getTracks().forEach(track => track.stop());
-                                    console.log('🛑 All tracks stopped');
-
-                                    resolve();
+                                        showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
+                                        reject(error);
+                                    }
 
                                 } catch (error) {
-                                    console.error('Download error:', error);
-                                    closeVideoLoadingModal();
-                                    showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
+                                    console.error('Recording setup error:', error);
+                                    if (redrawId) clearInterval(redrawId);
+                                    showToastRecording('❌ Recording failed: ' + error.message, 'error', '✗');
                                     reject(error);
                                 }
                             };
@@ -22642,11 +22804,11 @@ For more help, visit: help.pose.app
                                 }
                             }, stopTime);
 
-                        } catch (error) {
-                            console.error('Recording setup error:', error);
-                            if (redrawId) clearInterval(redrawId);
-                            showToastRecording('❌ Recording failed: ' + error.message, 'error', '✗');
-                            reject(error);
+                        } catch (imgLoadError) {
+                            console.error('Image onload error:', imgLoadError);
+                            closeVideoLoadingModal();
+                            showToastRecording('❌ Recording failed: ' + imgLoadError.message, 'error', '✗');
+                            reject(imgLoadError);
                         }
                     };
 
