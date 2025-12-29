@@ -1277,11 +1277,12 @@
             }
         }
 
-        /* Edit video container - takes flex space */
+        /* Edit video container - VERTICAL TIKTOK LAYOUT */
         .edit-video-container {
             position: relative;
             flex: 1;
-            width: 100%;
+            width: 100vw;
+            height: 100vh;
             background: #000;
             overflow: hidden;
             display: flex;
@@ -1289,13 +1290,16 @@
             align-items: center;
             justify-content: flex-start;
             z-index: 1;
+            padding: 0;
+            margin: 0;
         }
 
-        /* Edit screen video wrapper and preview - VERTICAL LIKE TIKTOK */
+        /* Edit screen video wrapper - MOBILE FIRST, FILL SCREEN */
         .edit-video-wrapper {
             position: relative;
-            width: 100%;
-            max-width: 400px;
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
             aspect-ratio: 9 / 16;
             background: #000;
             display: flex;
@@ -1303,7 +1307,8 @@
             justify-content: center;
             overflow: hidden;
             z-index: 1;
-            margin: 0 auto;
+            margin: 0;
+            padding: 0;
         }
 
         #editVideoPreview {
@@ -1313,48 +1318,80 @@
             object-fit: cover;
             background: #000;
             transform: none !important;
-            /* Override camera-preview scaleX(-1) flip */
+            margin: 0;
+            padding: 0;
         }
 
-        /* RESPONSIVE VIDEO ON MOBILE - VERTICAL TIKTOK STYLE */
-        @media (max-width: 768px) {
+        /* DESKTOP: Constrain video width */
+        @media (min-width: 769px) {
+            .edit-video-wrapper {
+                width: 100%;
+                max-width: 400px;
+                height: auto;
+                aspect-ratio: 9 / 16;
+                margin: 0 auto;
+            }
+
+            .edit-video-container {
+                width: 100%;
+                height: auto;
+                overflow-y: auto;
+            }
+
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
             }
+        }
+
+        /* TABLET: Full width vertical */
+        @media (max-width: 768px) and (min-width: 481px) {
+            #editVideoPreview {
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+            }
 
             .edit-video-wrapper {
-                width: 100%;
-                max-width: 100%;
+                width: 100vw;
+                height: 100vh;
                 aspect-ratio: 9 / 16;
                 margin: 0;
             }
 
             .edit-video-container {
-                width: 100%;
-                justify-content: flex-start;
+                width: 100vw;
+                height: 100vh;
             }
         }
 
+        /* MOBILE: Full screen vertical (iPhone/Android) */
         @media (max-width: 480px) {
             #editVideoPreview {
-                width: 100%;
-                height: 100%;
+                width: 100vw;
+                height: 100vh;
                 object-fit: cover;
+                -webkit-user-select: none;
+                user-select: none;
             }
 
             .edit-video-wrapper {
-                width: 100%;
-                max-width: 100%;
+                width: 100vw;
+                height: 100vh;
+                max-height: 100vh;
                 aspect-ratio: 9 / 16;
                 margin: 0;
+                padding: 0;
                 border-radius: 0;
             }
 
             .edit-video-container {
-                width: 100%;
-                justify-content: flex-start;
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                border-radius: 0;
             }
         }
 
