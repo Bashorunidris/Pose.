@@ -1315,7 +1315,7 @@
             display: block !important;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             background: #000;
             transform: none !important;
             margin: 0;
@@ -1345,7 +1345,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
+                object-fit: contain;
                 -webkit-user-select: none;
                 user-select: none;
             }
@@ -1369,7 +1369,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
+                object-fit: contain;
             }
         }
 
@@ -1398,7 +1398,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: auto;
-                object-fit: cover;
+                object-fit: contain;
             }
         }
 
@@ -17273,6 +17273,7 @@ For more help, visit: help.pose.app
             if (recordingState.clips.length > 0) {
                 const latestClip = recordingState.clips[recordingState.clips.length - 1];
                 const editVideoElement = document.getElementById('editVideoPreview');
+                const editVideoWrapper = document.querySelector('.edit-video-wrapper');
                 const loadingOverlay = document.getElementById('editLoadingOverlay');
 
                 console.log('🎬 Transitioning to edit screen...');
@@ -17292,6 +17293,15 @@ For more help, visit: help.pose.app
                     // Handle when metadata is loaded
                     const onMetadataLoaded = () => {
                         console.log('✅ Video metadata loaded, duration:', editVideoElement.duration);
+                        console.log('📐 Video dimensions:', editVideoElement.videoWidth, 'x', editVideoElement.videoHeight);
+                        
+                        // Dynamically set aspect ratio based on actual video dimensions
+                        if (editVideoElement.videoWidth && editVideoElement.videoHeight && editVideoWrapper) {
+                            const videoAspectRatio = editVideoElement.videoWidth / editVideoElement.videoHeight;
+                            editVideoWrapper.style.aspectRatio = videoAspectRatio.toFixed(4);
+                            console.log('🎯 Set aspect ratio to:', videoAspectRatio.toFixed(4));
+                        }
+                        
                         if (loadingOverlay) {
                             loadingOverlay.style.display = 'none';
                         }
