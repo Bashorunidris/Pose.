@@ -1297,7 +1297,7 @@
         /* Edit screen video wrapper - MOBILE FIRST, FILL SCREEN */
         .edit-video-wrapper {
             position: relative;
-            width: 100vw;
+            width: 100%;
             height: 100vh;
             max-height: 100vh;
             aspect-ratio: 9 / 16;
@@ -1322,62 +1322,26 @@
             padding: 0;
         }
 
-        /* DESKTOP: Constrain video width */
-        @media (min-width: 769px) {
-            .edit-video-wrapper {
-                width: 100%;
-                max-width: 400px;
-                height: auto;
-                aspect-ratio: 9 / 16;
-                margin: 0 auto;
-            }
-
+        /* MOBILE: Full screen vertical (iPhone/Android) */
+        @media (max-width: 480px) {
             .edit-video-container {
                 width: 100%;
-                height: auto;
-                overflow-y: auto;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                border-radius: 0;
             }
 
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-            }
-        }
-
-        /* TABLET: Full width vertical */
-        @media (max-width: 768px) and (min-width: 481px) {
-            #editVideoPreview {
-                width: 100vw;
-                height: 100vh;
-                object-fit: cover;
-            }
-
-            .edit-video-wrapper {
-                width: 100vw;
-                height: 100vh;
-                aspect-ratio: 9 / 16;
-                margin: 0;
-            }
-
-            .edit-video-container {
-                width: 100vw;
-                height: 100vh;
-            }
-        }
-
-        /* MOBILE: Full screen vertical (iPhone/Android) */
-        @media (max-width: 480px) {
-            #editVideoPreview {
-                width: 100vw;
-                height: 100vh;
-                object-fit: cover;
                 -webkit-user-select: none;
                 user-select: none;
             }
 
             .edit-video-wrapper {
-                width: 100vw;
+                width: 100%;
                 height: 100vh;
                 max-height: 100vh;
                 aspect-ratio: 9 / 16;
@@ -1385,13 +1349,54 @@
                 padding: 0;
                 border-radius: 0;
             }
+        }
+
+        /* TABLET: Full width vertical */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .edit-video-container {
+                width: 100%;
+                height: 100vh;
+            }
+
+            #editVideoPreview {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .edit-video-wrapper {
+                width: 100%;
+                height: 100vh;
+                aspect-ratio: 9 / 16;
+                margin: 0;
+            }
+        }
+
+        /* DESKTOP: Constrain video width */
+        @media (min-width: 769px) {
+            .edit-video-wrapper {
+                width: 100%;
+                max-width: 450px;
+                height: auto;
+                aspect-ratio: 9 / 16;
+                margin: 0 auto;
+                padding-top: 20px;
+            }
 
             .edit-video-container {
-                width: 100vw;
-                height: 100vh;
-                margin: 0;
-                padding: 0;
-                border-radius: 0;
+                width: 100%;
+                height: auto;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            #editVideoPreview {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
             }
         }
 
