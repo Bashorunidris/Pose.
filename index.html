@@ -1282,85 +1282,79 @@
             position: relative;
             flex: 1;
             width: 100%;
-            height: 100%;
             background: #000;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             z-index: 1;
         }
 
-        /* Edit screen video wrapper and preview */
+        /* Edit screen video wrapper and preview - VERTICAL LIKE TIKTOK */
         .edit-video-wrapper {
             position: relative;
-            flex: 1;
             width: 100%;
-            height: 100%;
+            max-width: 400px;
+            aspect-ratio: 9 / 16;
             background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             z-index: 1;
+            margin: 0 auto;
         }
 
         #editVideoPreview {
             display: block !important;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background: #000;
             transform: none !important;
             /* Override camera-preview scaleX(-1) flip */
-            max-width: 100vw;
-            max-height: calc(100vh - 150px);
-            aspect-ratio: 9 / 16;
         }
 
-        /* RESPONSIVE VIDEO ON MOBILE */
+        /* RESPONSIVE VIDEO ON MOBILE - VERTICAL TIKTOK STYLE */
         @media (max-width: 768px) {
             #editVideoPreview {
                 width: 100%;
-                height: auto;
-                max-width: 100%;
-                max-height: calc(100vh - 200px);
-                aspect-ratio: 9 / 16;
+                height: 100%;
+                object-fit: cover;
             }
 
             .edit-video-wrapper {
                 width: 100%;
-                height: auto;
+                max-width: 100%;
                 aspect-ratio: 9 / 16;
+                margin: 0;
             }
 
             .edit-video-container {
                 width: 100%;
-                height: auto;
-                aspect-ratio: 9 / 16;
+                justify-content: flex-start;
             }
         }
 
         @media (max-width: 480px) {
             #editVideoPreview {
-                width: calc(100% - 4px);
-                height: auto;
-                max-width: calc(100vw - 4px);
-                max-height: calc(100vh - 220px);
-                aspect-ratio: 9 / 16;
-                padding: 2px;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
 
             .edit-video-wrapper {
                 width: 100%;
-                height: auto;
+                max-width: 100%;
                 aspect-ratio: 9 / 16;
-                padding: 0;
+                margin: 0;
+                border-radius: 0;
             }
 
             .edit-video-container {
                 width: 100%;
-                height: auto;
-                aspect-ratio: 9 / 16;
+                justify-content: flex-start;
             }
         }
 
@@ -22512,15 +22506,165 @@ For more help, visit: help.pose.app
                 const filterName = photo.settings.filter || 'original';
                 const videoFileName = `pose_photo_video_${timestamp}_${filterName}.mp4`;
 
-                showToastRecording('🎬 Creating video from photo + sound...', 'info', '⏳');
                 closePhotoDownloadModal();
 
-                await createVideoFromPhotoAndSound(photo, videoFileName);
+                // Show audio trim modal before creating video
+                await showAudioTrimModal(photo, videoFileName);
 
             } catch (error) {
                 console.error('Download error:', error);
                 showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
             }
+        }
+
+        // Audio Trim Modal
+        async function showAudioTrimModal(photo, videoFileName) {
+            const sound = photoState.selectedSound || soundLibraryState.selectedSound;
+            if (!sound) return;
+
+            // Decode audio to get duration
+            try {
+                const audioUrl = sound.audioUrl || sound.url || sound.filePath;
+                const audioResponse = await fetch(audioUrl);
+                const audioBuffer = await audioResponse.arrayBuffer();
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const decodedAudio = await audioContext.decodeAudioData(audioBuffer);
+                const totalDuration = decodedAudio.duration;
+
+                const existingTrim = sound.trimData || { startPercent: 0, endPercent: 100 };
+
+                // Create modal
+                const modal = document.createElement('div');
+                modal.id = 'audioTrimModal';
+                modal.style.cssText = `
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0, 0, 0, 0.9); z-index: 2000;
+                    display: flex; align-items: center; justify-content: center;
+                    padding: 20px;
+                `;
+
+                modal.innerHTML = `
+                    <div style="background: #1a1a1a; padding: 24px; border-radius: 12px; width: 100%; max-width: 400px; color: white;">
+                        <h3 style="margin-top: 0; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            🎵 Trim Audio
+                        </h3>
+                        <p style="color: #aaa; font-size: 12px; margin: 10px 0 20px 0;">
+                            Adjust trim points for the audio (max 30 seconds will be used)
+                        </p>
+
+                        <div style="background: rgba(76, 29, 149, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 8px;">
+                                ⏱️ Start: <span id="audioTrimStartLabel" style="color: #4ade80; font-weight: bold;">0:00</span>
+                            </label>
+                            <input type="range" id="audioTrimStart" min="0" max="100" value="${existingTrim.startPercent}"
+                                style="width: 100%; cursor: pointer;"
+                                oninput="updateAudioTrimPreview(${totalDuration})">
+                        </div>
+
+                        <div style="background: rgba(76, 29, 149, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 8px;">
+                                ⏱️ End: <span id="audioTrimEndLabel" style="color: #4ade80; font-weight: bold;">0:00</span>
+                            </label>
+                            <input type="range" id="audioTrimEnd" min="0" max="100" value="${existingTrim.endPercent}"
+                                style="width: 100%; cursor: pointer;"
+                                oninput="updateAudioTrimPreview(${totalDuration})">
+                        </div>
+
+                        <div style="background: rgba(0, 255, 0, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(0, 255, 0, 0.3); margin-bottom: 15px; font-size: 12px; color: #86efac;">
+                            ✂️ Duration: <span id="audioTrimDurationLabel">Full audio</span>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="applyAudioTrim('${videoFileName}')" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4C1D95, #6D28D9); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                                ✓ Create Video
+                            </button>
+                            <button onclick="closeAudioTrimModal()" style="flex: 1; padding: 12px; background: #333; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                updateAudioTrimPreview(totalDuration);
+                showToastRecording('🎵 Trim the audio (optional) - green area will be used', 'info', '✂️');
+
+            } catch (error) {
+                console.error('Error loading audio for trim:', error);
+                // Continue without trim if error
+                showToastRecording('🎬 Creating video from photo + sound...', 'info', '⏳');
+                await createVideoFromPhotoAndSound(photo, videoFileName);
+            }
+        }
+
+        function updateAudioTrimPreview(totalDuration) {
+            const startSlider = document.getElementById('audioTrimStart');
+            const endSlider = document.getElementById('audioTrimEnd');
+
+            const startPercent = parseFloat(startSlider.value);
+            const endPercent = parseFloat(endSlider.value);
+
+            const startTime = (startPercent / 100) * totalDuration;
+            const endTime = (endPercent / 100) * totalDuration;
+            const duration = endTime - startTime;
+
+            // Ensure valid range
+            if (startPercent >= endPercent) {
+                endSlider.value = Math.min(startPercent + 1, 100);
+                return updateAudioTrimPreview(totalDuration);
+            }
+
+            // Update labels
+            document.getElementById('audioTrimStartLabel').textContent = formatTime(startTime);
+            document.getElementById('audioTrimEndLabel').textContent = formatTime(endTime);
+            document.getElementById('audioTrimDurationLabel').textContent = formatTime(duration);
+        }
+
+        function applyAudioTrim(videoFileName) {
+            try {
+                // Get trim slider elements
+                const startSlider = document.getElementById('audioTrimStart');
+                const endSlider = document.getElementById('audioTrimEnd');
+
+                if (!startSlider || !endSlider) {
+                    console.error('Trim sliders not found');
+                    closeAudioTrimModal();
+                    return;
+                }
+
+                const startPercent = parseFloat(startSlider.value) || 0;
+                const endPercent = parseFloat(endSlider.value) || 100;
+
+                console.log('✂️ Applying audio trim:', { startPercent, endPercent });
+
+                // Store trim data in sound object
+                const sound = photoState.selectedSound || soundLibraryState.selectedSound;
+                if (sound) {
+                    sound.trimData = { startPercent, endPercent };
+                    console.log('✓ Trim data stored in sound object');
+                }
+
+                closeAudioTrimModal();
+
+                // Now create the video with trimmed audio
+                const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+                if (!photo) {
+                    showToastRecording('❌ No photo found', 'error', '✗');
+                    return;
+                }
+
+                showToastRecording('🎬 Creating video from photo + trimmed sound...', 'info', '⏳');
+                createVideoFromPhotoAndSound(photo, videoFileName);
+
+            } catch (error) {
+                console.error('Error applying audio trim:', error);
+                closeAudioTrimModal();
+                showToastRecording('❌ Error: ' + error.message, 'error', '✗');
+            }
+        }
+
+        function closeAudioTrimModal() {
+            const modal = document.getElementById('audioTrimModal');
+            if (modal) modal.remove();
         }
 
         // Create Video from Photo and Sound (Joined into Single File)
@@ -22539,32 +22683,9 @@ For more help, visit: help.pose.app
                 const loadingModal = createVideoLoadingModal();
                 showToastRecording('🎬 Processing video...', 'info', '⏳');
 
-                // Load webm-muxer library for proper WebM muxing with seekable metadata
-                // This enables seeking and duration display on device players
-                let webmMuxer = null;
-                if (typeof WebMMuxer === 'undefined') {
-                    console.log('📦 Loading webm-muxer library for seekable metadata...');
-                    try {
-                        await new Promise((resolve, reject) => {
-                            const script = document.createElement('script');
-                            script.src = 'https://cdn.jsdelivr.net/npm/webm-muxer@6.2.4/dist/webm-muxer.js';
-                            script.onerror = reject;
-                            script.onload = () => {
-                                webmMuxer = window.WebMMuxer;
-                                resolve();
-                            };
-                            setTimeout(() => reject(new Error('Library load timeout')), 5000);
-                            document.head.appendChild(script);
-                        });
-                        console.log('✓ webm-muxer library loaded successfully');
-                    } catch (libError) {
-                        console.warn('⚠️ webm-muxer library load failed:', libError.message);
-                        console.warn('✓ Video will be created without seekable metadata - trying to work around...');
-                    }
-                } else {
-                    webmMuxer = window.WebMMuxer;
-                    console.log('✓ webm-muxer already loaded');
-                }
+                // Note: Modern browsers natively support WebM seeking
+                // No external library needed - native MediaRecorder output is seekable
+                console.log('✓ Using native WebM encoding (all modern browsers support seeking)');
 
                 // Get audio stream from sound library
                 const audioUrl = sound.audioUrl || sound.url || sound.filePath;
@@ -22577,9 +22698,21 @@ For more help, visit: help.pose.app
 
                 console.log('🎵 Audio decoded, duration:', decodedAudio.duration);
 
-                // Apply trim values if available
-                const trimStart = sound.trimStart || 0;
-                let trimEnd = sound.trimEnd || decodedAudio.duration;
+                // Apply trim values if available (from trimData percentages)
+                let trimStart = 0;
+                let trimEnd = decodedAudio.duration;
+
+                if (sound.trimData) {
+                    const startPercent = sound.trimData.startPercent || 0;
+                    const endPercent = sound.trimData.endPercent || 100;
+                    trimStart = (startPercent / 100) * decodedAudio.duration;
+                    trimEnd = (endPercent / 100) * decodedAudio.duration;
+                    console.log('📍 Using trim data:', { startPercent, endPercent, trimStart: trimStart.toFixed(2), trimEnd: trimEnd.toFixed(2) });
+                } else if (sound.trimStart !== undefined || sound.trimEnd !== undefined) {
+                    // Fallback to old style trim values
+                    trimStart = sound.trimStart || 0;
+                    trimEnd = sound.trimEnd || decodedAudio.duration;
+                }
 
                 // Cap audio to 30 seconds maximum
                 const MAX_DURATION = 30;
@@ -22689,27 +22822,14 @@ For more help, visit: help.pose.app
                                         throw new Error('Video blob is empty!');
                                     }
 
-                                    // Process WebM blob to ensure seekable metadata
+                                    // Process WebM blob - native WebM seeking is supported
                                     try {
-                                        console.log('🔧 Processing WebM for seekability...');
+                                        console.log('🔧 Processing WebM video...');
                                         
-                                        // Most modern browsers support seeking in WebM even without full metadata
+                                        // Modern browsers natively support seeking in WebM
                                         let finalBlob = videoBlob;
                                         
-                                        // If WebMWriter is available, use it to add proper metadata
-                                        if (typeof WebMWriter !== 'undefined' && window.WebMWriter) {
-                                            console.log('📝 WebM Writer available - enhancing metadata...');
-                                            try {
-                                                // WebMWriter can repackage the WebM with proper seekable metadata
-                                                console.log('✓ WebM metadata enhancement available');
-                                            } catch (err) {
-                                                console.warn('⚠️ Metadata enhancement skipped:', err.message);
-                                            }
-                                        } else {
-                                            console.log('ℹ️ Using native WebM blob (modern browsers support seeking)');
-                                        }
-
-                                        // Log duration info for video players
+                                        console.log('✓ Native WebM blob ready for seeking');
                                         console.log('⏱️ Video duration:', duration.toFixed(2), 'seconds');
 
                                         // Update loading to finishing stage
@@ -26128,119 +26248,10 @@ For more help, visit: help.pose.app
             isLoading: false
         };
 
-        // Hardcoded Fallback Songs (if Firebase is empty)
-        const fallbackSongs = [
-            {
-                id: 'afro1',
-                title: 'Essence',
-                artist: 'Wizkid ft. Tems',
-                duration: '2:55',
-                uses: '45M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d6/2f/69/d62f69eb-fce9-72ac-e7c7-e1f47d14b1ed/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro2',
-                title: 'Ye',
-                artist: 'Burna Boy',
-                duration: '3:30',
-                uses: '38M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/8f/c3/e7/8fc3e7e9-c2ed-6cc9-b15b-fae7e2e2a77f/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro3',
-                title: 'Blinding Lights (Afrobeat Remix)',
-                artist: 'The Weeknd ft. Wizkid',
-                duration: '3:20',
-                uses: '52M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/cb/d8/5c/cbd85c4b-ba16-6b1b-c4f1-21ab5d8c86be/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro4',
-                title: 'Calm Down',
-                artist: 'Rema & Selena Gomez',
-                duration: '3:08',
-                uses: '40M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d1/5e/0f/d15e0fc1-65b8-3f4a-83db-29b67db04f98/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro5',
-                title: 'Sunroof',
-                artist: 'Nicky Youre ft. Afrobeat',
-                duration: '2:50',
-                uses: '35M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a2/e4/e0/a2e4e0e7-79ba-e52e-2c72-1f8c53f01f37/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro6',
-                title: 'Flowers',
-                artist: 'Miley Cyrus (Afrobeat Version)',
-                duration: '3:18',
-                uses: '48M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a6/21/3a/a6213a94-f825-fa06-b97e-5b4e3289c4d9/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro7',
-                title: 'Terminator',
-                artist: 'Zinoleisky',
-                duration: '3:25',
-                uses: '28M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/c9/f1/96/c9f196d2-6da1-c89e-80d4-8e3e7b5e0d2a/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro8',
-                title: 'Unavailable',
-                artist: 'Davido ft. Musa Keys',
-                duration: '3:42',
-                uses: '42M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/4d/f8/f4/4df8f4c9-f1e0-6c2a-83db-1f5e8c9d3e2f/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro9',
-                title: 'Aseju',
-                artist: 'Asake',
-                duration: '3:15',
-                uses: '32M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/9f/2d/c3/9f2dc3e5-6d9e-8f4a-92b8-3c4f5e6d7a8b/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro10',
-                title: 'Ye Her',
-                artist: 'Olamide',
-                duration: '2:58',
-                uses: '26M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/7b/8c/9d/7b8c9d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
-                category: 'Trending',
-                trending: true
-            }
-        ];
+        // Hardcoded Fallback Songs removed - FIREBASE ONLY
+        // SoundHelix and external music APIs have been removed
+        // All music is loaded from Firebase
+        const fallbackSongs = [];
 
         // Load Pose Music from Firebase
         async function loadPoseMusicFromFirebase() {
@@ -26989,39 +27000,11 @@ For more help, visit: help.pose.app
         }
 
         // Get Recommended Songs Based on Favorite
+        // NOTE: Removed iTunes API dependency - recommendations now from Firebase only
         async function getRecommendedSongs(favoriteSound) {
             try {
-                // Recommend based on same artist or category
-                const artist = favoriteSound.artist;
-                const category = favoriteSound.category || 'Afrobeat';
-
-                // Search for more songs by same artist
-                const response = await fetch(
-                    `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&entity=song&limit=10`,
-                    { mode: 'cors' }
-                );
-
-                const data = await response.json();
-
-                if (data.results && data.results.length > 1) {
-                    const recommended = data.results.slice(0, 5).map((song, index) => ({
-                        id: `rec_${Date.now()}_${index}`,
-                        title: song.trackName,
-                        artist: song.artistName || artist,
-                        duration: formatDuration(song.trackTimeMillis),
-                        thumbnail: song.artworkUrl100,
-                        audioUrl: song.previewUrl,
-                        category: category,
-                        isRecommended: true,
-                        trending: false,
-                        uses: '0M'
-                    })).filter(s => s.audioUrl); // Only include songs with previews
-
-                    if (recommended.length > 0) {
-                        showToastRecording(`✨ ${recommended.length} recommended songs added!`, 'success', '⭐');
-                        console.log(`✨ Recommendations for ${artist}:`, recommended);
-                    }
-                }
+                // Recommendation logic can be added via Firebase in future
+                console.log('ℹ️ Recommendations are loaded from Firebase sound library');
             } catch (error) {
                 console.warn('Could not fetch recommendations:', error.message);
             }
@@ -27890,8 +27873,8 @@ For more help, visit: help.pose.app
 
             // Use existing trim values or default to 0 and will detect actual duration
             const startVal = sound.trimStart !== undefined ? sound.trimStart : 0;
-            // Will be updated once audio loads
-            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : null;
+            // Will be updated once audio loads - default to 30 seconds
+            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : 30;
 
             modal.innerHTML = `
         <div class="modal" style="max-width: 95vw; width: 100%; max-height: 95vh; overflow-y: auto;">
@@ -27969,7 +27952,7 @@ For more help, visit: help.pose.app
                 </div>
                 
                 <div style="display: flex; gap: 10px;">
-                    <button onclick="applyAudioTrim()" class="modal-btn" style="flex: 1;">
+                    <button onclick="applySoundLibraryTrim()" class="modal-btn" style="flex: 1;">
                         <i class="fas fa-check"></i> Apply Trim
                     </button>
                     <button onclick="closeSoundTrimmer()" class="modal-btn" style="flex: 1; background: #666;">
@@ -28163,24 +28146,71 @@ For more help, visit: help.pose.app
             if (modal) modal.remove();
         }
 
-        // Apply Audio Trim
-        function applyAudioTrim() {
-            const startTime = parseFloat(document.getElementById('trimStart').value) || 0;
-            const endTime = parseFloat(document.getElementById('trimEnd').value) || 30;
+        // Apply Sound Library Trim
+        function applySoundLibraryTrim() {
+            // Get trim input elements - check if they exist first
+            const trimStartEl = document.getElementById('trimStart');
+            const trimEndEl = document.getElementById('trimEnd');
 
-            if (startTime >= endTime) {
-                showToastRecording('Start time must be less than end time', 'error', '❌');
-                return;
+            if (trimStartEl && trimEndEl) {
+                // Use number inputs
+                const startTime = parseFloat(trimStartEl.value) || 0;
+                const endTime = parseFloat(trimEndEl.value) || 30;
+
+                if (startTime >= endTime) {
+                    showToastRecording('Start time must be less than end time', 'error', '❌');
+                    return;
+                }
+
+                // Update selected sound with trim info
+                if (soundLibraryState && soundLibraryState.selectedSound) {
+                    soundLibraryState.selectedSound.trimStart = startTime;
+                    soundLibraryState.selectedSound.trimEnd = endTime;
+                    soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+
+                    closeSoundTrimmer();
+                    showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
+                    console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
+                    return;
+                }
             }
 
-            // Update selected sound with trim info
-            soundLibraryState.selectedSound.trimStart = startTime;
-            soundLibraryState.selectedSound.trimEnd = endTime;
-            soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+            // Try sliders instead
+            const startSlider = document.getElementById('startSlider');
+            const endSlider = document.getElementById('endSlider');
+            
+            if (startSlider && endSlider) {
+                const startTime = parseFloat(startSlider.value) || 0;
+                const endTime = parseFloat(endSlider.value) || 30;
+                
+                if (startTime >= endTime) {
+                    showToastRecording('Start time must be less than end time', 'error', '❌');
+                    return;
+                }
 
+                if (soundLibraryState && soundLibraryState.selectedSound) {
+                    soundLibraryState.selectedSound.trimStart = startTime;
+                    soundLibraryState.selectedSound.trimEnd = endTime;
+                    soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+
+                    closeSoundTrimmer();
+                    showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
+                    console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
+                    return;
+                }
+            }
+
+            // If we get here, no controls were found
+            console.error('❌ No trim controls found in DOM');
+            console.warn('Available elements:', {
+                trimStart: !!trimStartEl,
+                trimEnd: !!trimEndEl,
+                startSlider: !!startSlider,
+                endSlider: !!endSlider,
+                soundLibraryState: !!soundLibraryState
+            });
+            showToastRecording('Trim controls not accessible', 'error', '❌');
             closeSoundTrimmer();
-            showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
-            console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
         }
 
         // Genre mapping for iTunes API
@@ -28335,68 +28365,8 @@ For more help, visit: help.pose.app
                 .filter(result => result.score > 0)
                 .sort((a, b) => b.score - a.score);
 
-            // For poseMusic tab, also search iTunes API
+            // iTunes API removed - Using Firebase only for sound library
             let apiResultsWithScore = [];
-            if (tab === 'poseMusic' && queryTerms.length > 0) {
-                try {
-                    console.log(`🔍 Searching iTunes API for: "${query}"`);
-                    const iTunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=20`;
-                    console.log(`📡 API URL: ${iTunesUrl}`);
-
-                    const response = await fetch(iTunesUrl, {
-                        method: 'GET',
-                        mode: 'cors',
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    console.log(`📊 API Response Status: ${response.status}`);
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log(`✅ iTunes API returned ${data.resultCount} results`);
-
-                        if (data.results && data.results.length > 0) {
-                            const apiResults = data.results
-                                .filter(song => song.previewUrl && song.trackName && song.artistName)
-                                .map((song, index) => ({
-                                    id: `api_${Date.now()}_${index}`,
-                                    title: song.trackName || 'Unknown',
-                                    artist: song.artistName || 'Unknown Artist',
-                                    duration: formatDuration(song.trackTimeMillis),
-                                    fullDuration: formatDuration(song.trackTimeMillis),
-                                    previewNote: '(30s preview)',
-                                    thumbnail: song.artworkUrl100 || song.artworkUrl60,
-                                    audioUrl: song.previewUrl,
-                                    category: 'Search Result',
-                                    releaseYear: new Date(song.releaseDate).getFullYear() || new Date().getFullYear(),
-                                    uses: `${Math.floor(Math.random() * 100) + 10}K`,
-                                    trending: index === 0,
-                                    isTrimable: true,
-                                    isAPIResult: true
-                                }));
-
-                            apiResultsWithScore = apiResults
-                                .map(sound => ({
-                                    sound,
-                                    score: calculateSearchRelevance(sound, normalizedQuery, queryTerms) + 50, // Slight boost for API results
-                                    type: 'api'
-                                }))
-                                .filter(result => result.score > 0);
-
-                            console.log(`✅ Found ${apiResults.length} songs with preview from iTunes API`);
-                        } else {
-                            console.warn(`⚠️ iTunes API returned no results with preview URLs`);
-                        }
-                    } else {
-                        console.warn(`⚠️ iTunes API returned status ${response.status}`);
-                    }
-                } catch (error) {
-                    console.error('❌ iTunes API search error:', error.message, error);
-                    showToastRecording(`Error searching iTunes: ${error.message}`, 'error', '❌');
-                }
-            }
 
             // Combine results and sort by relevance
             let allResults = [...localResultsWithScore, ...apiResultsWithScore]
