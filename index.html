@@ -1228,6 +1228,433 @@
             -webkit-touch-callout: none;
         }
 
+        /* Edit Video Preview Container - Full Screen */
+        .editVideoPreview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+             height: 700vh;
+            height: 700dvh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        #editVideoPreview {
+            width: 100% !important;
+            height: 700vh;
+            height: 700dvh;
+            background: #000 !important;
+        }
+
+        /* Video Controls - Always visible like TikTok */
+        .edit-video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            padding: 16px 15px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            pointer-events: all;
+        }
+
+        .edit-video-controls.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .edit-video-wrapper:hover .edit-video-controls {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .edit-video-controls:hover {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Large center play button for tap-to-play */
+        .video-center-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 0, 80, 0.9);
+            border: none;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 20px rgba(255, 0, 80, 0.4);
+        }
+
+        .video-center-play:hover {
+            background: rgba(255, 0, 80, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 0, 80, 0.6);
+        }
+
+        .video-center-play:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        .video-center-play.hidden {
+            display: none;
+        }
+
+        /* Progress Bar */
+        .video-progress-bar {
+            position: relative;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .video-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0050, #ff4081);
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .video-progress-slider {
+            position: absolute;
+            top: -8px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .video-progress-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0050;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
+        }
+
+        .video-progress-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0050;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
+        }
+
+        /* Bottom Controls */
+        .video-controls-bottom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .video-play-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .video-play-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .video-play-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Time Display */
+        .video-time-display {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #fff;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            flex: 1;
+            padding: 0 8px;
+        }
+
+        .time-separator {
+            opacity: 0.6;
+            margin: 0 2px;
+        }
+
+        /* Fullscreen Button */
+        .video-fullscreen-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .video-fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .video-fullscreen-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Video controls responsive */
+        video::-webkit-media-controls {
+            max-height: 50px;
+        }
+
+        /* Video Controls Overlay Container */
+        .video-controls-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.4), transparent);
+            padding: 20px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+            pointer-events: all;
+        }
+
+        /* Responsive Video Controls */
+        @media (max-width: 1024px) {
+            .editVideoPreview {
+                max-height: 70vh;
+            }
+
+            .video-controls-overlay {
+                padding: 16px 14px 14px 14px;
+                gap: 10px;
+            }
+
+            .video-center-play {
+                width: 75px;
+                height: 75px;
+                font-size: 36px;
+            }
+
+            .video-progress-bar {
+                height: 4px;
+            }
+
+            .video-play-btn,
+            .video-fullscreen-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+
+            .video-time-display {
+                font-size: 11px;
+                gap: 3px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .editVideoPreview {
+                max-height: 65vh;
+            }
+
+            .video-controls-overlay {
+                padding: 12px 10px 10px;
+                gap: 8px;
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .video-center-play {
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
+                box-shadow: 0 4px 15px rgba(255, 0, 80, 0.3);
+            }
+
+            .video-progress-bar {
+                height: 6px;
+                cursor: pointer;
+            }
+
+            .video-progress-slider {
+                height: 30px;
+                top: -12px;
+            }
+
+            .video-play-btn,
+            .video-fullscreen-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+            }
+
+            .video-time-display {
+                font-size: 13px;
+                padding: 0 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .editVideoPreview {
+                max-height: 60vh;
+            }
+
+            .video-controls-overlay {
+                padding: 10px 8px 8px;
+                gap: 8px;
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .video-center-play {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+                box-shadow: 0 4px 12px rgba(255, 0, 80, 0.3);
+            }
+
+            .video-progress-bar {
+                height: 3px;
+                cursor: pointer;
+            }
+
+            .video-progress-slider {
+                height: 24px;
+                top: -10px;
+            }
+
+            .video-play-btn,
+            .video-fullscreen-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .video-time-display {
+                font-size: 10px;
+                gap: 2px;
+                padding: 0 8px;
+            }
+
+            .video-progress-slider::-webkit-slider-thumb {
+                width: 12px;
+                height: 12px;
+            }
+
+            .video-progress-slider::-moz-range-thumb {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .editVideoPreview {
+                max-height: 55vh;
+            }
+
+            .video-controls-overlay {
+                padding: 8px 6px 6px;
+                gap: 6px;
+            }
+
+            .video-center-play {
+                width: 52px;
+                height: 52px;
+                font-size: 24px;
+            }
+
+            .video-progress-bar {
+                height: 2px;
+            }
+
+            .video-play-btn,
+            .video-fullscreen-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .video-time-display {
+                font-size: 9px;
+                gap: 2px;
+                padding: 0 6px;
+            }
+        }
+
+        .edit-loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 6;
+        }
+
+        .edit-loading-overlay>div {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* Video element - Live streaming */
         video#videoPreview {
             position: absolute;
@@ -11269,46 +11696,44 @@
 
         <!-- SCREEN 3: VIDEO EDIT -->
         <div id="screen3" class="recording-screen">
-            <div class="edit-video-container">
-                <div class="edit-video-wrapper">
-                    <video id="editVideoPreview" playsinline></video>
+            <div class="editVideoPreview">
+                <video id="editVideoPreview" playsinline></video>
 
-                    <!-- Hidden Audio Element for Sound Playback -->
-                    <audio id="editVideoSoundAudio" style="display: none;"></audio>
+                <!-- Hidden Audio Element for Sound Playback -->
+                <audio id="editVideoSoundAudio" style="display: none;"></audio>
 
-                    <!-- Center Play Button (TikTok style) -->
-                    <button class="video-center-play" id="videoCenterPlay" onclick="toggleEditVideoPlayPause()"
-                        title="Play/Pause">
-                        <i class="fas fa-play"></i>
-                    </button>
+                <!-- Center Play Button (TikTok style) -->
+                <button class="video-center-play" id="videoCenterPlay" onclick="toggleEditVideoPlayPause()"
+                    title="Play/Pause">
+                    <i class="fas fa-play"></i>
+                </button>
 
-                    <!-- Video Controls Overlay -->
-                    <div class="edit-video-controls">
-                        <div class="video-progress-bar">
-                            <div class="video-progress-fill" id="videoProgressFill"></div>
-                            <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
-                                value="0">
+                <!-- Video Controls Overlay -->
+                <div class="video-controls-overlay">
+                    <div class="video-progress-bar">
+                        <div class="video-progress-fill" id="videoProgressFill"></div>
+                        <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
+                            value="0">
+                    </div>
+                    <div class="video-controls-bottom">
+                        <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
+                            title="Play/Pause">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="video-time-display">
+                            <span id="videoCurrentTime">0:00</span>
+                            <span class="time-separator">/</span>
+                            <span id="videoDuration">0:00</span>
                         </div>
-                        <div class="video-controls-bottom">
-                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
-                                title="Play/Pause">
-                                <i class="fas fa-play"></i>
-                            </button>
-                            <div class="video-time-display">
-                                <span id="videoCurrentTime">0:00</span>
-                                <span class="time-separator">/</span>
-                                <span id="videoDuration">0:00</span>
-                            </div>
-                            <button class="video-fullscreen-btn" id="editVideoFullscreen"
-                                onclick="toggleEditVideoFullscreen()" title="Fullscreen">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div>
+                        <button class="video-fullscreen-btn" id="editVideoFullscreen"
+                            onclick="toggleEditVideoFullscreen()" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="edit-loading-overlay" id="editLoadingOverlay" style="display: none;">
+            <div class="editVideoPreview" id="editLoadingOverlay" style="display: none;">
                 <div style="text-align: center; color: #fff;">
                     <div style="font-size: 32px; margin-bottom: 10px;">⏳</div>
                     <div style="font-size: 14px;">Loading video...</div>
