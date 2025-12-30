@@ -1169,9 +1169,15 @@
             height: 100vh;
             height: 100dvh;
             /* Mobile viewport fix */
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             flex-direction: column;
             overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .recording-screen.active {
@@ -1182,6 +1188,7 @@
         @media (max-width: 1024px) {
             .recording-screen {
                 height: 100vh;
+                height: 100dvh;
             }
         }
 
@@ -1190,6 +1197,7 @@
                 height: 100vh;
                 height: 100dvh;
                 /* iOS Safari fix */
+                position: fixed;
             }
         }
 
@@ -1198,6 +1206,7 @@
                 height: 100vh;
                 height: 100dvh;
                 /* iOS Safari fix */
+                position: fixed;
             }
         }
 
@@ -1206,37 +1215,36 @@
             flex: 1;
             background: #000;
             position: relative;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 24px;
             color: rgba(255, 255, 255, 0.5);
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1);
-            /* Performance optimizations */
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform: translate3d(0, 0, 0) scaleX(-1);
-            /* Ensure fills container */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
         }
 
         /* Video element - Live streaming */
         video#videoPreview {
-            display: block !important;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             background: #000;
+            display: block !important;
             /* Performance optimizations */
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform: translate3d(0, 0, 0) scaleX(-1);
             -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
         }
 
         /* Ensure video fills entire screen */
@@ -1246,125 +1254,34 @@
             }
         }
 
-        /* Edit video container - takes flex space */
-        .edit-video-container {
-            position: relative;
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            z-index: 1;
-        }
-
-        /* Edit screen video wrapper and preview */
-        .edit-video-wrapper {
-            position: relative;
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        #editVideoPreview {
-            display: block !important;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
-            transform: none !important;
-            /* Override camera-preview scaleX(-1) flip */
-            max-width: 100vw;
-            max-height: calc(100vh - 150px);
-            aspect-ratio: 9 / 16;
-        }
-
-        /* RESPONSIVE VIDEO ON MOBILE */
+        /* Mobile-specific video fixes */
         @media (max-width: 768px) {
-            #editVideoPreview {
-                width: 100%;
-                height: auto;
-                max-width: 100%;
-                max-height: calc(100vh - 200px);
-                aspect-ratio: 9 / 16;
-            }
-
-            .edit-video-wrapper {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 9 / 16;
-            }
-
-            .edit-video-container {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 9 / 16;
+            video#videoPreview {
+                min-width: 100%;
+                min-height: 100%;
             }
         }
 
         @media (max-width: 480px) {
-            #editVideoPreview {
-                width: calc(100% - 4px);
-                height: auto;
-                max-width: calc(100vw - 4px);
-                max-height: calc(100vh - 220px);
-                aspect-ratio: 9 / 16;
-                padding: 2px;
+            .camera-preview {
+                min-height: 100vh;
+                min-height: 100dvh;
             }
 
-            .edit-video-wrapper {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 9 / 16;
-                padding: 0;
-            }
-
-            .edit-video-container {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 9 / 16;
+            video#videoPreview {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                min-width: 100%;
+                min-height: 100%;
             }
         }
 
-        /* Video Controls - Always visible like TikTok */
-        .edit-video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-            padding: 16px 15px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-            pointer-events: all;
-        }
 
-        .edit-video-controls.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
+          
+           
 
-        .edit-video-wrapper:hover .edit-video-controls {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .edit-video-controls:hover {
-            opacity: 1;
-            pointer-events: all;
-        }
-
+     
         /* Large center play button for tap-to-play */
         .video-center-play {
             position: absolute;
@@ -1534,12 +1451,7 @@
 
         /* Responsive Video Controls */
         @media (max-width: 768px) {
-            .edit-video-controls {
-                padding: 12px 10px 10px;
-                gap: 8px;
-                opacity: 1;
-                pointer-events: all;
-            }
+          
 
             .video-center-play {
                 width: 70px;
@@ -1572,12 +1484,7 @@
         }
 
         @media (max-width: 480px) {
-            .edit-video-controls {
-                padding: 10px 8px 8px;
-                gap: 8px;
-                opacity: 1;
-                pointer-events: all;
-            }
+           
 
             .video-center-play {
                 width: 72px;
@@ -1729,6 +1636,8 @@
             z-index: 8;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0.85;
+            max-width: 95vw;
+            max-height: 95vh;
         }
 
         /* Corner indicators for professional look */
@@ -1744,6 +1653,35 @@
             height: 3px;
             top: -15px;
             left: -15px;
+        }
+
+        /* Mobile ratio guide fixes */
+        @media (max-width: 768px) {
+            .ratio-guide-frame {
+                border-width: 2px;
+            }
+
+            .ratio-guide-frame::before {
+                width: 30px;
+                height: 2px;
+                top: -10px;
+                left: -10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ratio-guide-frame {
+                border-width: 2px;
+                max-width: 90vw;
+                max-height: 90vh;
+            }
+
+            .ratio-guide-frame::before {
+                width: 25px;
+                height: 2px;
+                top: -8px;
+                left: -8px;
+            }
         }
 
         /* Top Bar - Responsive */
@@ -1763,6 +1701,8 @@
         .rec-icon-btn {
             width: 44px;
             height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
@@ -1776,6 +1716,10 @@
             justify-content: center;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
+            -webkit-appearance: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .rec-icon-btn:hover {
@@ -1785,6 +1729,27 @@
 
         .rec-icon-btn:active {
             transform: scale(0.88);
+        }
+
+        /* Mobile button fixes */
+        @media (max-width: 768px) {
+            .rec-icon-btn {
+                width: 48px;
+                height: 48px;
+                min-width: 48px;
+                min-height: 48px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rec-icon-btn {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                min-height: 50px;
+                font-size: 22px;
+            }
         }
 
         /* Left Side Menu - Responsive */
@@ -4229,9 +4194,37 @@
         /* ====== EDIT CONTROLS - SCREEN 3 ====== */
         /* ====== VIDEO EDITING SCREEN - RESPONSIVE ====== */
 
+        /* Photo Edit Container (Screen 6) */
+        .photo-edit-container {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        /* Photo Edit Wrapper */
+        .photo-edit-wrapper {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
         /* Edit Controls Container */
         .rec-edit-controls {
-            position: relative;
+            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
@@ -4242,7 +4235,6 @@
             flex-direction: column;
             gap: 12px;
             z-index: 50;
-            flex-shrink: 0;
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
         }
 
@@ -4336,6 +4328,16 @@
 
         /* Large Screens */
         @media (min-width: 1024px) {
+            .photo-edit-container {
+                flex: 1;
+                height: auto;
+            }
+
+            .photo-edit-wrapper {
+                flex: 1;
+                height: auto;
+            }
+
             .rec-edit-controls {
                 padding: 20px;
                 gap: 15px;
@@ -4354,6 +4356,16 @@
 
         /* Tablet */
         @media (max-width: 768px) {
+            .photo-edit-container {
+                flex: 1;
+                height: auto;
+            }
+
+            .photo-edit-wrapper {
+                flex: 1;
+                height: auto;
+            }
+
             .rec-edit-controls {
                 padding: 12px;
                 gap: 10px;
@@ -4372,6 +4384,16 @@
 
         /* Mobile */
         @media (max-width: 480px) {
+            .photo-edit-container {
+                flex: 1;
+                height: auto;
+            }
+
+            .photo-edit-wrapper {
+                flex: 1;
+                height: auto;
+            }
+
             .rec-edit-controls {
                 padding: 10px;
                 gap: 8px;
@@ -4966,32 +4988,46 @@
         .rec-post-content {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 0;
             padding-bottom: 100px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* VIDEO PREVIEW - Simple & Clean */
+        /* VIDEO PREVIEW - Full Width, Top to Caption */
         .post-preview {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
+            width: 100%;
+            flex: 0 0 auto;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            min-height: 300px;
         }
 
         .post-preview-video {
             width: 100%;
+            height: 100%;
+            max-height: 60vh;
             aspect-ratio: 9 / 16;
             object-fit: contain;
             background: #000;
-            border-radius: 8px;
+            border-radius: 0;
+            border: none;
             display: block;
+            box-shadow: none;
         }
 
         .rec-post-section {
             margin-bottom: 20px;
-            padding: 15px 0;
+            padding: 15px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rec-post-section:first-of-type {
+            padding-top: 20px;
         }
 
         .rec-section-header {
@@ -5100,13 +5136,25 @@
             }
 
             .rec-post-content {
-                padding: 18px;
+                padding: 0;
                 padding-bottom: 90px;
+            }
+
+            .post-preview {
+                min-height: 350px;
+            }
+
+            .post-preview-video {
+                max-height: 55vh;
             }
 
             .rec-post-section {
                 margin-bottom: 18px;
-                padding: 14px 0;
+                padding: 14px 18px;
+            }
+
+            .rec-post-section:first-of-type {
+                padding-top: 18px;
             }
 
             .rec-section-header {
@@ -5136,13 +5184,25 @@
             }
 
             .rec-post-content {
-                padding: 15px;
+                padding: 0;
                 padding-bottom: 85px;
+            }
+
+            .post-preview {
+                min-height: 300px;
+            }
+
+            .post-preview-video {
+                max-height: 50vh;
             }
 
             .rec-post-section {
                 margin-bottom: 15px;
-                padding: 12px 0;
+                padding: 12px 15px;
+            }
+
+            .rec-post-section:first-of-type {
+                padding-top: 15px;
             }
 
             .rec-section-header {
@@ -5195,13 +5255,25 @@
             }
 
             .rec-post-content {
-                padding: 12px;
+                padding: 0;
                 padding-bottom: 80px;
+            }
+
+            .post-preview {
+                min-height: 280px;
+            }
+
+            .post-preview-video {
+                max-height: 45vh;
             }
 
             .rec-post-section {
                 margin-bottom: 12px;
-                padding: 10px 0;
+                padding: 10px 12px;
+            }
+
+            .rec-post-section:first-of-type {
+                padding-top: 12px;
             }
 
             .rec-section-header {
@@ -7172,7 +7244,7 @@
             flex: 1;
         }
 
-        .camera-preview {
+        .record-container .camera-preview {
             position: absolute;
             top: 0;
             left: 0;
@@ -8538,21 +8610,23 @@
         /* ====== SELECTED SOUND DISPLAY - SCREEN 6 ====== */
         .selected-sound-container {
             position: absolute;
-            top: 20px;
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(255, 0, 80, 0.15);
             backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 12px 20px;
-            z-index: 15;
+            border-radius: 12px;
+            padding: 14px 16px;
+            z-index: 45;
             display: none;
             align-items: center;
             gap: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 0, 80, 0.4);
+            box-shadow: 0 8px 24px rgba(255, 0, 80, 0.2);
             animation: slideDown 0.3s ease;
+            width: auto;
             max-width: calc(100% - 40px);
+            backdrop-filter: blur(10px);
         }
 
         .selected-sound-container.show {
@@ -8575,7 +8649,7 @@
             width: 50px;
             height: 50px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff0050 0%, #ff4081 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -8583,6 +8657,7 @@
             font-size: 20px;
             flex-shrink: 0;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(255, 0, 80, 0.3);
         }
 
         .sound-display-thumbnail img {
@@ -8678,9 +8753,9 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgba(255, 0, 80, 0.2);
+            border: 1px solid rgba(255, 0, 80, 0.4);
+            color: #ff0050;
             font-size: 14px;
             cursor: pointer;
             display: flex;
@@ -8690,8 +8765,9 @@
         }
 
         .sound-remove-btn:hover {
-            background: #ff0050;
-            border-color: #ff0050;
+            background: rgba(255, 0, 80, 0.4);
+            border-color: rgba(255, 0, 80, 0.6);
+            transform: scale(1.05);
         }
 
         .sound-remove-btn:active {
@@ -9706,6 +9782,7 @@
                 opacity: 0;
                 transform: translateX(100%);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -10127,12 +10204,16 @@
         }
 
         @keyframes shake {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateX(0);
             }
+
             25% {
                 transform: translateX(-5px);
             }
+
             75% {
                 transform: translateX(5px);
             }
@@ -10465,9 +10546,11 @@
             </div>
             <!-- Wallet Button -->
             <div style="text-align: center; padding: 20px 0;">
-                <button onclick="openWallet()" style="padding: 12px 24px; background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 100%); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px;">💰 View Wallet</button>
+                <button onclick="openWallet()"
+                    style="padding: 12px 24px; background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 100%); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px;">💰
+                    View Wallet</button>
             </div>
-            </div>
+        </div>
         <script type="text/javascript">
             atOptions = {
                 'key': '9083b3df681674ed652cf9dd44c090a3',
@@ -10543,7 +10626,8 @@
                         </div>
                         <div class="settings-item">
                             <label class="settings-checkbox-label">
-                                <input type="checkbox" id="commentNotificationsToggle" checked class="settings-checkbox">
+                                <input type="checkbox" id="commentNotificationsToggle" checked
+                                    class="settings-checkbox">
                                 <span class="checkbox-text">Comment Notifications</span>
                             </label>
                         </div>
@@ -11129,6 +11213,14 @@
                             title="Pause/Resume" id="recPauseBtn">
                             <i class="fas fa-pause"></i>
                         </button>
+                        <button class="rec-control-action-btn" onclick="toggleRecordingFilters()" title="Filters"
+                            id="recFilterToggleBtn" style="display: none;">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                        <button class="rec-control-action-btn" onclick="toggleRecordingEffects()" title="Effects"
+                            id="recEffectToggleBtn" style="display: none;">
+                            <i class="fas fa-sparkles"></i>
+                        </button>
                         <button class="rec-control-action-btn rec-control-stop-btn" onclick="stopRecording()"
                             title="Stop Recording">
                             <i class="fas fa-stop"></i>
@@ -11179,7 +11271,7 @@
         <div id="screen3" class="recording-screen">
             <div class="edit-video-container">
                 <div class="edit-video-wrapper">
-                    <video id="editVideoPreview" class="camera-preview" playsinline></video>
+                    <video id="editVideoPreview" playsinline></video>
 
                     <!-- Hidden Audio Element for Sound Playback -->
                     <audio id="editVideoSoundAudio" style="display: none;"></audio>
@@ -11400,43 +11492,39 @@
 
         <!-- SCREEN 6: PHOTO EDIT -->
         <div id="screen6" class="recording-screen">
-            <div class="camera-preview">🖼️ Photo Preview</div>
-            <!-- Selected Sound Display -->
-            <div class="selected-sound-container" id="selectedSoundContainer">
-                <div class="sound-display-thumbnail" id="soundDisplayThumbnail"><i class="fas fa-music"></i></div>
-                <div class="sound-display-info">
-                    <div class="sound-display-title" id="soundDisplayTitle">Sound Name</div>
-                    <div class="sound-display-artist" id="soundDisplayArtist">Artist Name</div>
-                </div>
-                <div class="sound-display-controls">
-                    <button class="sound-play-btn" id="soundPlayBtn" onclick="toggleSelectedSoundPlayback()"
-                        title="Play/Pause"><i class="fas fa-play"></i></button>
-                    <button class="sound-trim-btn" id="soundTrimBtn" onclick="openSoundTrimmer()" title="Trim Sound"><i
-                            class="fas fa-cut"></i></button>
-                    <button class="sound-remove-btn" onclick="removeSelectedSound()" title="Remove"><i
-                            class="fas fa-times"></i></button>
-                </div>
-            </div>
+            <!-- Top Bar -->
             <div class="rec-top-bar">
                 <button class="rec-icon-btn" onclick="backToScreen5()">←</button>
                 <button class="rec-icon-btn" onclick="toggleRecPhotoEditMenu()">☰</button>
             </div>
+
+            <!-- Left Menu -->
             <div class="rec-left-menu" id="recPhotoEditMenu">
                 <div class="rec-menu-item" onclick="photoAddText()">📝 Text</div>
                 <div class="rec-menu-item" onclick="photoCrop()">✂ Crop</div>
                 <div class="rec-menu-item" onclick="photoAddEffects()">✨ Effects</div>
                 <div class="rec-menu-item" onclick="photoDraw()">✏ Draw</div>
             </div>
-            <div class="rec-edit-controls">
-                <button class="rec-add-sound-btn" onclick="openSoundLibrary()">🎵 Add Sound</button>
 
-                <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
-                    onclick="showPhotoDownloadOptions()">
-                    ⬇️ Download
-                </button>
-                <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
-                    Continue ➜
-                </button>
+            <!-- Photo Preview Container -->
+            <div class="photo-edit-container">
+                <div class="photo-edit-wrapper">
+                    <div class="camera-preview">🖼️ Photo Preview</div>
+                </div>
+
+                <!-- Edit Controls (Overlaid at bottom) -->
+                <div class="rec-edit-controls">
+                    <button class="rec-add-sound-btn" onclick="openSoundLibrary()">🎵 Add Sound</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                            onclick="showPhotoDownloadOptions()">
+                            ⬇️ Download
+                        </button>
+                        <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
+                            Continue ➜
+                        </button>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -11451,7 +11539,11 @@
                         onclick="downloadPhotoOnly()">
                         <i class="fas fa-image"></i> Picture Only
                     </button>
-
+                    <button id="downloadPhotoWithSoundBtn" class="modal-btn"
+                        style="flex: 1; background: linear-gradient(45deg, #FF1493, #FF69B4); cursor: pointer; opacity: 0.5;"
+                        onclick="downloadPhotoWithSoundAsVideo()" disabled>
+                        <i class="fas fa-video"></i> Picture + Sound as Video
+                    </button>
                     <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
                         onclick="closePhotoDownloadModal()">Cancel</button>
                 </div>
@@ -14407,11 +14499,11 @@
                 document.getElementById('privateAccountToggle').checked = userData.privateAccount || false;
 
                 // Load notification settings
-                document.getElementById('likeNotificationsToggle').checked = 
+                document.getElementById('likeNotificationsToggle').checked =
                     userData.notifications?.likes !== false;
-                document.getElementById('commentNotificationsToggle').checked = 
+                document.getElementById('commentNotificationsToggle').checked =
                     userData.notifications?.comments !== false;
-                document.getElementById('followNotificationsToggle').checked = 
+                document.getElementById('followNotificationsToggle').checked =
                     userData.notifications?.follows !== false;
 
             } catch (error) {
@@ -14521,13 +14613,13 @@ For more help, visit: help.pose.app
                 timestamp: new Date().toISOString(),
                 status: 'pending'
             })
-            .then(() => {
-                alert('✅ Thank you for reporting this issue. Our team will review it soon.');
-            })
-            .catch(error => {
-                console.error('Error reporting issue:', error);
-                alert('❌ Error submitting report');
-            });
+                .then(() => {
+                    alert('✅ Thank you for reporting this issue. Our team will review it soon.');
+                })
+                .catch(error => {
+                    console.error('Error reporting issue:', error);
+                    alert('❌ Error submitting report');
+                });
         }
 
         // Delete Account Modal
@@ -14573,7 +14665,7 @@ For more help, visit: help.pose.app
                 await currentUser.delete();
 
                 alert('✅ Account deleted successfully');
-                
+
                 // Redirect to home
                 location.href = '/';
             } catch (error) {
@@ -15191,30 +15283,53 @@ For more help, visit: help.pose.app
             recordingState.recordingStartTime = Date.now();
             recordingState.maxDuration = recordingState.selectedDuration;
 
-            // Disable CSS filters on preview to reduce CPU load during recording
+            // ===== INITIALIZE RECORDING CANVAS =====
+            // Create hidden canvas for recording (with filters and effects)
+            if (!recordingState.recordingCanvas) {
+                recordingState.recordingCanvas = document.createElement('canvas');
+                recordingState.recordingCanvas.width = 1280;
+                recordingState.recordingCanvas.height = 720;
+                recordingState.recordingCanvas.style.display = 'none';
+                document.body.appendChild(recordingState.recordingCanvas);
+                recordingState.canvasContext = recordingState.recordingCanvas.getContext('2d');
+                console.log('📊 Recording canvas created (1280x720)');
+            }
+
+            // Start canvas rendering loop
+            recordingState.isCanvasRendering = true;
+            renderCanvasForRecording();
+
+            // ✅ KEEP CSS filters ON preview video element during recording (TikTok style)
+            // Filters are ALSO applied to CANVAS for recording (ensures smooth preview + correct output)
             const videoPreview = document.getElementById('videoPreview');
             if (videoPreview) {
-                recordingState.previewFilterBeforeRecording = videoPreview.style.filter;
-                videoPreview.style.filter = 'none';
-                console.log('🎬 CSS filters disabled during recording (smooth performance)');
+                // Apply the current filter to preview (same as canvas)
+                if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
+                    const filterCSS = getFilterString(recordingState.currentFilter);
+                    videoPreview.style.filter = filterCSS;
+                    console.log('🎬 Camera preview filters ON - visible during recording (TikTok style, smooth 30 FPS)');
+                } else {
+                    videoPreview.style.filter = 'none';
+                    console.log('🎬 Camera preview - no filter applied');
+                }
             }
 
             const chunks = [];
 
             // ===== DIRECT CAMERA STREAM RECORDING (NO CANVAS LAG) =====
-            // Record directly from camera for smooth quality like TikTok
-            console.log(`📹 Recording directly from camera stream (smooth, no lag)`);
+            // Record from canvas (has filters & effects) for smooth quality with visual effects
+            console.log(`📹 Recording from canvas with filters & effects`);
 
-            // Get video stream directly from camera
-            const videoStream = recordingState.stream;
+            // Get canvas stream WITH filters and effects applied
+            const canvasStream = recordingState.recordingCanvas.captureStream(30); // 30 FPS
             const recordingStream = new MediaStream();
 
-            // ===== ADD VIDEO TRACKS =====
-            // Add all video tracks from camera directly to recording stream
-            videoStream.getVideoTracks().forEach(track => {
+            // ===== ADD VIDEO TRACKS FROM CANVAS =====
+            // Add video track from canvas (contains filters + effects)
+            canvasStream.getVideoTracks().forEach(track => {
                 recordingStream.addTrack(track);
             });
-            console.log('✅ Video tracks added directly from camera');
+            console.log('✅ Video tracks added from canvas (with filters & effects)');
 
             // ===== AUDIO SETUP: Use background music OR microphone (not both) =====
             let finalStream = recordingStream;
@@ -15435,23 +15550,50 @@ For more help, visit: help.pose.app
             const canvas = recordingState.recordingCanvas;
             const videoElement = document.getElementById('videoPreview');
 
-            // Draw video frame to canvas (video already has CSS filter applied for smooth preview)
+            // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Apply canvas filter if one is selected
+            if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
+                const filterCSS = getCanvasFilterString(recordingState.currentFilter);
+                ctx.filter = filterCSS;
+            } else {
+                ctx.filter = 'none';
+            }
+
+            // Draw video frame to canvas WITH canvas filter applied
             ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-            // NOTE: Filters now applied via CSS (GPU-accelerated) on the video element
-            // This removes the heavy pixel-by-pixel processing that was causing lag
-            // The canvas just captures the already-filtered frame
+            // Reset filter for next frame
+            ctx.filter = 'none';
 
-            // OPTIMIZATION: Skip effects during recording to reduce lag
-            // Effects are more for preview - during actual recording we just capture the video
-            // If you want effects, comment out these lines:
-            // if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
-            //     renderRecordingEffects(ctx, canvas, recordingState.selectedEffects);
-            // }
+            // Apply effects to canvas during recording
+            if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
+                renderRecordingEffects(ctx, canvas, recordingState.selectedEffects);
+            }
 
             // Continue rendering next frame
             requestAnimationFrame(renderCanvasForRecording);
+        }
+
+        // Helper function to convert filter name to canvas filter CSS string
+        function getCanvasFilterString(filterName) {
+            switch (filterName) {
+                case 'bw':
+                    return 'grayscale(100%)';
+                case 'sepia':
+                    return 'sepia(100%)';
+                case 'vintage':
+                    return 'sepia(50%) contrast(0.9) brightness(0.9)';
+                case 'vivid':
+                    return 'saturate(1.5) contrast(1.1)';
+                case 'warm':
+                    return 'brightness(1.1) saturate(1.3) hue-rotate(10deg)';
+                case 'cool':
+                    return 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)';
+                default:
+                    return 'none';
+            }
         }
 
         // ===== APPLY FILTERS TO CANVAS =====
@@ -15554,10 +15696,12 @@ For more help, visit: help.pose.app
         function renderRecordingEffects(ctx, canvas, selectedEffects) {
             if (!selectedEffects || selectedEffects.length === 0) return;
 
-            const effectType = selectedEffects[0];
+            // Get the last effect (most recently applied)
+            const effectObj = selectedEffects[selectedEffects.length - 1];
+            const effectName = typeof effectObj === 'string' ? effectObj : effectObj.name;
 
             // Delegate to the specific effect renderer based on effect type
-            switch (effectType) {
+            switch (effectName) {
                 // Particle Effects
                 case 'sparkle':
                     renderSparkleEffectToCanvas(ctx, canvas);
@@ -17079,12 +17223,18 @@ For more help, visit: help.pose.app
                     pauseBtn.title = 'Resume Recording';
                 }
 
+                // Show filter and effect buttons when paused
+                const filterToggleBtn = document.getElementById('recFilterToggleBtn');
+                const effectToggleBtn = document.getElementById('recEffectToggleBtn');
+                if (filterToggleBtn) filterToggleBtn.style.display = 'flex';
+                if (effectToggleBtn) effectToggleBtn.style.display = 'flex';
+
                 const mainBtn = document.getElementById('recMainBtn');
                 if (mainBtn) {
                     mainBtn.style.opacity = '0.6';
                 }
 
-                showToastRecording('⏸ Recording paused', 'info', '⏸');
+                showToastRecording('⏸ Recording paused - Tap filters/effects to edit', 'info', '⏸');
                 console.log('⏸ Recording paused at:', recordingState.recordingTime + 's');
             } else if (recordingState.mediaRecorder.state === 'paused') {
                 // Resume recording
@@ -17097,6 +17247,18 @@ For more help, visit: help.pose.app
                     pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     pauseBtn.title = 'Pause Recording';
                 }
+
+                // Hide filter and effect buttons when recording resumes
+                const filterToggleBtn = document.getElementById('recFilterToggleBtn');
+                const effectToggleBtn = document.getElementById('recEffectToggleBtn');
+                if (filterToggleBtn) filterToggleBtn.style.display = 'none';
+                if (effectToggleBtn) effectToggleBtn.style.display = 'none';
+
+                // Also close any open panels
+                const filtersPanel = document.querySelector('.rec-filters-panel');
+                if (filtersPanel) filtersPanel.classList.remove('show');
+                const effectsPanel = document.getElementById('recEffectsPanel');
+                if (effectsPanel) effectsPanel.style.display = 'none';
 
                 const mainBtn = document.getElementById('recMainBtn');
                 if (mainBtn) {
@@ -17326,8 +17488,55 @@ For more help, visit: help.pose.app
         }
 
         function applyEffect(effectType) {
-            recordingState.selectedEffects.push({ type: 'effect', name: effectType });
-            console.log('Effect applied:', effectType);
+            // MUTUALLY EXCLUSIVE: ALWAYS disable filter when effect is selected
+            const hadFilter = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+
+            // Always reset filter to 'none'
+            recordingState.currentFilter = 'none';
+
+            // Always clear filter button highlights
+            document.querySelectorAll('#recFiltersPanel .rec-filter-btn, #recScreen2FiltersPanel .rec-filter-btn, .rec-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Always set 'none' filter button as active
+            const noneBtn = document.querySelector('[onclick="applyRecordingFilter(\'none\')"]');
+            if (noneBtn) {
+                noneBtn.classList.add('active');
+            }
+
+            // Actually apply 'none' filter to video elements
+            const videoPreview = document.getElementById('videoPreview');
+            if (videoPreview) {
+                videoPreview.style.filter = 'none';
+            }
+
+            const recordingVideoPreview = document.getElementById('recordingVideoPreview');
+            if (recordingVideoPreview) {
+                recordingVideoPreview.style.filter = 'none';
+            }
+
+            const video = getRecordingVideoElement();
+            if (video) {
+                video.style.filter = 'none';
+            }
+
+            document.querySelectorAll('.camera-preview').forEach(el => {
+                el.style.filter = 'none';
+            });
+
+            // Show notification only if there was an active filter
+            if (hadFilter) {
+                console.log('✨ Effect selected - filter disabled (mutually exclusive with effects)');
+                showToastRecording('✨ Effect selected - Filter disabled', 'info', '✓');
+            }
+
+            // Use the same format as toggleRecordingEffect (just store the effect name)
+            recordingState.selectedEffects = [effectType];
+            console.log('✨ Effect applied:', effectType);
+            startEffect(effectType);
+
+            // Note: Music is NOT affected by filter/effect toggle - it plays independently
         }
 
         function addText() {
@@ -17928,6 +18137,12 @@ For more help, visit: help.pose.app
         // SCREEN NAVIGATION
         // ============================================================================
 
+        // ===== GET CURRENT SCREEN ID =====
+        function getCurrentScreen() {
+            const currentScreen = document.querySelector('.recording-screen.active');
+            return currentScreen?.id || 'screen1';
+        }
+
         function showScreen(screenId) {
             // Get current active screen before hiding
             const currentScreen = document.querySelector('.recording-screen.active');
@@ -17974,6 +18189,11 @@ For more help, visit: help.pose.app
                     } else {
                         console.log('Entering screen 1 - video camera already active');
                     }
+
+                    // Check for unfinished video draft
+                    setTimeout(() => {
+                        checkForUnfinishedVideo();
+                    }, 500);
                 }
 
                 // Initialize photo mode when showing screen 5
@@ -19221,7 +19441,7 @@ For more help, visit: help.pose.app
                 timer: 0,
                 filter: 'none',
                 grid: false,
-                ratio: '9:16',
+                ratio: '1:1',
                 effects: []
             },
             selectedSound: null,
@@ -19737,11 +19957,60 @@ For more help, visit: help.pose.app
 
             if (isCurrentlyActive) {
                 // Deactivate the effect
-                recordingState.selectedEffects = [];
                 stopEffect(effectName);
+                recordingState.selectedEffects = [];
                 const message = `✨ ${effectLabels[effectName]} Removed`;
                 showToastRecording(message, 'info', '✨');
+
+                // Hide effects canvas
+                if (effectsState.canvas) {
+                    effectsState.canvas.style.display = 'none';
+                }
             } else {
+                // MUTUALLY EXCLUSIVE: ALWAYS disable filter when effect is selected
+                // Even if currentFilter is already 'none', we need to clear buttons
+                const hadFilter = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+
+                // Always reset filter to 'none'
+                recordingState.currentFilter = 'none';
+
+                // Always clear filter button highlights from all panels
+                document.querySelectorAll('#recFiltersPanel .rec-filter-btn, #recScreen2FiltersPanel .rec-filter-btn, .rec-filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Always set 'none' filter button as active
+                const noneBtn = document.querySelector('[onclick="applyRecordingFilter(\'none\')"]');
+                if (noneBtn) {
+                    noneBtn.classList.add('active');
+                }
+
+                // Actually apply 'none' filter to video elements
+                const videoPreview = document.getElementById('videoPreview');
+                if (videoPreview) {
+                    videoPreview.style.filter = 'none';
+                }
+
+                const recordingVideoPreview = document.getElementById('recordingVideoPreview');
+                if (recordingVideoPreview) {
+                    recordingVideoPreview.style.filter = 'none';
+                }
+
+                const video = getRecordingVideoElement();
+                if (video) {
+                    video.style.filter = 'none';
+                }
+
+                document.querySelectorAll('.camera-preview').forEach(el => {
+                    el.style.filter = 'none';
+                });
+
+                // Show notification only if there was an active filter
+                if (hadFilter) {
+                    console.log('✨ Effect selected - filter disabled (mutually exclusive)');
+                    showToastRecording('✨ Effect selected - Filter disabled', 'info', '✓');
+                }
+
                 // Stop previous effect and start new one (exclusive mode)
                 if (recordingState.selectedEffects.length > 0) {
                     const previousEffect = recordingState.selectedEffects[0];
@@ -19773,6 +20042,11 @@ For more help, visit: help.pose.app
             }
 
             console.log('🎬 Starting effect:', effectName, 'Video:', video.id);
+
+            // Show effects canvas
+            if (effectsState.canvas) {
+                effectsState.canvas.style.display = 'block';
+            }
 
             // Create or reuse effects canvas
             if (!effectsState.canvas) {
@@ -20951,6 +21225,35 @@ For more help, visit: help.pose.app
         }
 
         function applyRecordingFilter(filterName) {
+            // MUTUALLY EXCLUSIVE: ALWAYS disable effects when any filter is selected (including 'none')
+            const hadEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
+
+            // ALWAYS clear all effects
+            if (hadEffects) {
+                recordingState.selectedEffects.forEach(effect => {
+                    stopEffect(effect);
+                });
+            }
+
+            // ALWAYS reset selectedEffects array
+            recordingState.selectedEffects = [];
+
+            // ALWAYS clear effect button highlights
+            document.querySelectorAll('.rec-effect-circular').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // ALWAYS hide effects canvas
+            if (effectsState.canvas) {
+                effectsState.canvas.style.display = 'none';
+            }
+
+            // Show notification only if there were active effects
+            if (hadEffects) {
+                console.log('🎨 Filter selected - all effects STOPPED (mutually exclusive with filters)');
+                showToastRecording('🎨 Filter selected - Effects disabled', 'info', '✓');
+            }
+
             // Update recordingState with selected filter
             recordingState.currentFilter = filterName;
 
@@ -22005,6 +22308,22 @@ For more help, visit: help.pose.app
             const modal = document.getElementById('photoDownloadModal');
             if (!modal) return;
 
+            // Enable/disable sound button based on whether sound is selected
+            const btn = document.getElementById('downloadPhotoWithSoundBtn');
+            const hasSound = photoState.selectedSound || soundLibraryState.selectedSound;
+
+            if (btn) {
+                if (hasSound) {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                } else {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                }
+            }
+
             modal.classList.add('active');
         }
 
@@ -22050,8 +22369,8 @@ For more help, visit: help.pose.app
             }
         }
 
-        // Download Photo With Sound
-        async function downloadPhotoWithSound() {
+        // Download Photo With Sound as Video
+        async function downloadPhotoWithSoundAsVideo() {
             try {
                 if (photoState.capturedPhotos.length === 0 || photoState.currentPhotoIndex < 0) {
                     showToastRecording('❌ No photo to download', 'error', '✗');
@@ -22067,17 +22386,537 @@ For more help, visit: help.pose.app
                 const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
                 const timestamp = new Date(photo.timestamp).toISOString().slice(0, 19).replace(/:/g, '-');
                 const filterName = photo.settings.filter || 'original';
-                const videoFileName = `pose_${timestamp}_${filterName}.mp4`;
+                const videoFileName = `pose_photo_video_${timestamp}_${filterName}.mp4`;
 
-                showToastRecording('🎬 Creating video from photo + sound...', 'info', '⏳');
                 closePhotoDownloadModal();
 
-                await createVideoFromPhotoAndSound(photo, videoFileName);
+                // Show audio trim modal before creating video
+                await showAudioTrimModal(photo, videoFileName);
 
             } catch (error) {
                 console.error('Download error:', error);
                 showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
             }
+        }
+
+        // Audio Trim Modal
+        async function showAudioTrimModal(photo, videoFileName) {
+            const sound = photoState.selectedSound || soundLibraryState.selectedSound;
+            if (!sound) return;
+
+            // Decode audio to get duration
+            try {
+                const audioUrl = sound.audioUrl || sound.url || sound.filePath;
+                const audioResponse = await fetch(audioUrl);
+                const audioBuffer = await audioResponse.arrayBuffer();
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const decodedAudio = await audioContext.decodeAudioData(audioBuffer);
+                const totalDuration = decodedAudio.duration;
+
+                const existingTrim = sound.trimData || { startPercent: 0, endPercent: 100 };
+
+                // Create modal
+                const modal = document.createElement('div');
+                modal.id = 'audioTrimModal';
+                modal.style.cssText = `
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0, 0, 0, 0.9); z-index: 2000;
+                    display: flex; align-items: center; justify-content: center;
+                    padding: 20px;
+                `;
+
+                modal.innerHTML = `
+                    <div style="background: #1a1a1a; padding: 24px; border-radius: 12px; width: 100%; max-width: 400px; color: white;">
+                        <h3 style="margin-top: 0; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            🎵 Trim Audio
+                        </h3>
+                        <p style="color: #aaa; font-size: 12px; margin: 10px 0 20px 0;">
+                            Adjust trim points for the audio (max 30 seconds will be used)
+                        </p>
+
+                        <div style="background: rgba(76, 29, 149, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 8px;">
+                                ⏱️ Start: <span id="audioTrimStartLabel" style="color: #4ade80; font-weight: bold;">0:00</span>
+                            </label>
+                            <input type="range" id="audioTrimStart" min="0" max="100" value="${existingTrim.startPercent}"
+                                style="width: 100%; cursor: pointer;"
+                                oninput="updateAudioTrimPreview(${totalDuration})">
+                        </div>
+
+                        <div style="background: rgba(76, 29, 149, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 8px;">
+                                ⏱️ End: <span id="audioTrimEndLabel" style="color: #4ade80; font-weight: bold;">0:00</span>
+                            </label>
+                            <input type="range" id="audioTrimEnd" min="0" max="100" value="${existingTrim.endPercent}"
+                                style="width: 100%; cursor: pointer;"
+                                oninput="updateAudioTrimPreview(${totalDuration})">
+                        </div>
+
+                        <div style="background: rgba(0, 255, 0, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(0, 255, 0, 0.3); margin-bottom: 15px; font-size: 12px; color: #86efac;">
+                            ✂️ Duration: <span id="audioTrimDurationLabel">Full audio</span>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="applyAudioTrim('${videoFileName}')" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4C1D95, #6D28D9); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                                ✓ Create Video
+                            </button>
+                            <button onclick="closeAudioTrimModal()" style="flex: 1; padding: 12px; background: #333; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                updateAudioTrimPreview(totalDuration);
+                showToastRecording('🎵 Trim the audio (optional) - green area will be used', 'info', '✂️');
+
+            } catch (error) {
+                console.error('Error loading audio for trim:', error);
+                // Continue without trim if error
+                showToastRecording('🎬 Creating video from photo + sound...', 'info', '⏳');
+                await createVideoFromPhotoAndSound(photo, videoFileName);
+            }
+        }
+
+        function updateAudioTrimPreview(totalDuration) {
+            const startSlider = document.getElementById('audioTrimStart');
+            const endSlider = document.getElementById('audioTrimEnd');
+
+            const startPercent = parseFloat(startSlider.value);
+            const endPercent = parseFloat(endSlider.value);
+
+            const startTime = (startPercent / 100) * totalDuration;
+            const endTime = (endPercent / 100) * totalDuration;
+            const duration = endTime - startTime;
+
+            // Ensure valid range
+            if (startPercent >= endPercent) {
+                endSlider.value = Math.min(startPercent + 1, 100);
+                return updateAudioTrimPreview(totalDuration);
+            }
+
+            // Update labels
+            document.getElementById('audioTrimStartLabel').textContent = formatTime(startTime);
+            document.getElementById('audioTrimEndLabel').textContent = formatTime(endTime);
+            document.getElementById('audioTrimDurationLabel').textContent = formatTime(duration);
+        }
+
+        function applyAudioTrim(videoFileName) {
+            try {
+                // Get trim slider elements
+                const startSlider = document.getElementById('audioTrimStart');
+                const endSlider = document.getElementById('audioTrimEnd');
+
+                if (!startSlider || !endSlider) {
+                    console.error('Trim sliders not found');
+                    closeAudioTrimModal();
+                    return;
+                }
+
+                const startPercent = parseFloat(startSlider.value) || 0;
+                const endPercent = parseFloat(endSlider.value) || 100;
+
+                console.log('✂️ Applying audio trim:', { startPercent, endPercent });
+
+                // Store trim data in sound object
+                const sound = photoState.selectedSound || soundLibraryState.selectedSound;
+                if (sound) {
+                    sound.trimData = { startPercent, endPercent };
+                    console.log('✓ Trim data stored in sound object');
+                }
+
+                closeAudioTrimModal();
+
+                // Now create the video with trimmed audio
+                const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
+                if (!photo) {
+                    showToastRecording('❌ No photo found', 'error', '✗');
+                    return;
+                }
+
+                showToastRecording('🎬 Creating video from photo + trimmed sound...', 'info', '⏳');
+                createVideoFromPhotoAndSound(photo, videoFileName);
+
+            } catch (error) {
+                console.error('Error applying audio trim:', error);
+                closeAudioTrimModal();
+                showToastRecording('❌ Error: ' + error.message, 'error', '✗');
+            }
+        }
+
+        function closeAudioTrimModal() {
+            const modal = document.getElementById('audioTrimModal');
+            if (modal) modal.remove();
+        }
+
+        // Create Video from Photo and Sound (Joined into Single File)
+        async function createVideoFromPhotoAndSound(photo, fileName) {
+            try {
+                // Get sound from either photo or library state
+                let sound = photoState.selectedSound || soundLibraryState.selectedSound;
+                if (!sound) {
+                    showToastRecording('❌ No sound available', 'error', '✗');
+                    return;
+                }
+
+                console.log('🎬 Creating video from photo + sound:', { photo, sound });
+
+                // Create and show loading modal with progress
+                const loadingModal = createVideoLoadingModal();
+                showToastRecording('🎬 Processing video...', 'info', '⏳');
+
+                // Note: Modern browsers natively support WebM seeking
+                // No external library needed - native MediaRecorder output is seekable
+                console.log('✓ Using native WebM encoding (all modern browsers support seeking)');
+
+                // Get audio stream from sound library
+                const audioUrl = sound.audioUrl || sound.url || sound.filePath;
+
+                // Fetch and decode audio
+                const audioResponse = await fetch(audioUrl);
+                const audioBuffer = await audioResponse.arrayBuffer();
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const decodedAudio = await audioContext.decodeAudioData(audioBuffer);
+
+                console.log('🎵 Audio decoded, duration:', decodedAudio.duration);
+
+                // Apply trim values if available (from trimData percentages)
+                let trimStart = 0;
+                let trimEnd = decodedAudio.duration;
+
+                if (sound.trimData) {
+                    const startPercent = sound.trimData.startPercent || 0;
+                    const endPercent = sound.trimData.endPercent || 100;
+                    trimStart = (startPercent / 100) * decodedAudio.duration;
+                    trimEnd = (endPercent / 100) * decodedAudio.duration;
+                    console.log('📍 Using trim data:', { startPercent, endPercent, trimStart: trimStart.toFixed(2), trimEnd: trimEnd.toFixed(2) });
+                } else if (sound.trimStart !== undefined || sound.trimEnd !== undefined) {
+                    // Fallback to old style trim values
+                    trimStart = sound.trimStart || 0;
+                    trimEnd = sound.trimEnd || decodedAudio.duration;
+                }
+
+                // Cap audio to 30 seconds maximum
+                const MAX_DURATION = 30;
+                const originalDuration = trimEnd - trimStart;
+                if (originalDuration > MAX_DURATION) {
+                    trimEnd = trimStart + MAX_DURATION;
+                    console.log('⚠️ Audio trimmed to 30 seconds (was', originalDuration.toFixed(2), 'seconds)');
+                }
+
+                const duration = Math.max(1, trimEnd - trimStart);
+
+                console.log('✂️ Audio trim:', { trimStart, trimEnd, duration: duration.toFixed(2) });
+
+                // Create canvas for the photo
+                const canvas = document.createElement('canvas');
+                canvas.width = 1080;
+                canvas.height = 1080;
+                const ctx = canvas.getContext('2d');
+
+                // Load and draw photo
+                const img = new Image();
+                img.src = photo.url;
+
+                return new Promise((resolve, reject) => {
+                    img.onload = () => {
+                        try {
+                            // Draw photo onto canvas for the first time
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            console.log('🖼️ Photo loaded onto canvas');
+
+                            // Create video stream from canvas
+                            const videoStream = canvas.captureStream(30); // 30 FPS
+                            console.log('📹 Video stream created');
+
+                            // Keep redrawing the image on canvas to ensure it's captured by the stream
+                            let redrawId = setInterval(() => {
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            }, 33); // Redraw approximately every frame (30 FPS)
+
+                            // Create audio source
+                            const audioSource = audioContext.createBufferSource();
+                            audioSource.buffer = decodedAudio;
+
+                            // Create media stream destination for audio
+                            const destination = audioContext.createMediaStreamDestination();
+                            audioSource.connect(destination);
+
+                            // Combine video and audio streams
+                            const combinedStream = new MediaStream([
+                                ...videoStream.getVideoTracks(),
+                                ...destination.stream.getAudioTracks()
+                            ]);
+
+                            console.log('📹 Combined stream created with audio');
+
+                            // Create MediaRecorder with best compatible codec
+                            let mimeType = 'video/webm;codecs=vp8,opus';
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = 'video/webm';
+                            }
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = 'video/mp4';
+                            }
+                            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                                mimeType = '';
+                            }
+
+                            console.log('🎬 Using MIME type:', mimeType);
+
+                            const mediaRecorder = new MediaRecorder(combinedStream, {
+                                mimeType: mimeType,
+                                videoBitsPerSecond: 2500000
+                            });
+
+                            const chunks = [];
+                            let recordingComplete = false;
+
+                            mediaRecorder.ondataavailable = (e) => {
+                                if (e.data.size > 0) {
+                                    chunks.push(e.data);
+                                    console.log('📊 Data chunk received:', e.data.size, 'bytes');
+                                }
+                            };
+
+                            mediaRecorder.onstop = async () => {
+                                console.log('⏹️ Recording stopped');
+                                recordingComplete = true;
+
+                                // Stop redrawing the canvas
+                                if (redrawId) {
+                                    clearInterval(redrawId);
+                                    console.log('✓ Canvas redraw stopped');
+                                }
+
+                                try {
+                                    // Create blob from recorded chunks
+                                    const finalMimeType = mimeType || 'video/webm';
+                                    const videoBlob = new Blob(chunks, { type: finalMimeType });
+                                    console.log('✅ Video blob created:', {
+                                        size: videoBlob.size,
+                                        type: videoBlob.type,
+                                        chunks: chunks.length,
+                                        duration: duration.toFixed(2) + 's'
+                                    });
+
+                                    if (videoBlob.size === 0) {
+                                        throw new Error('Video blob is empty!');
+                                    }
+
+                                    // Process WebM blob - native WebM seeking is supported
+                                    try {
+                                        console.log('🔧 Processing WebM video...');
+                                        
+                                        // Modern browsers natively support seeking in WebM
+                                        let finalBlob = videoBlob;
+                                        
+                                        console.log('✓ Native WebM blob ready for seeking');
+                                        console.log('⏱️ Video duration:', duration.toFixed(2), 'seconds');
+
+                                        // Update loading to finishing stage
+                                        updateVideoLoadingProgress(95, duration, duration, 'Finalizing video...');
+
+                                        // Create download link
+                                        const videoUrl = URL.createObjectURL(finalBlob);
+                                        console.log('📺 Video URL created:', videoUrl);
+
+                                        const link = document.createElement('a');
+                                        link.href = videoUrl;
+                                        link.download = fileName;
+                                        link.style.display = 'none';
+
+                                        document.body.appendChild(link);
+                                        console.log('⬇️ Download link added to DOM');
+
+                                        // Trigger download immediately
+                                        link.click();
+                                        console.log('✓ Download triggered');
+
+                                        // Update to complete
+                                        updateVideoLoadingProgress(100, duration, duration, 'Download started!');
+
+                                        // Clean up
+                                        setTimeout(() => {
+                                            closeVideoLoadingModal();
+                                            document.body.removeChild(link);
+                                            URL.revokeObjectURL(videoUrl);
+                                            console.log('✓ Cleanup complete');
+                                        }, 1000);
+
+                                        showToastRecording('✅ Video downloaded!', 'success', '⬇️');
+                                        console.log('📥 Video download complete:', fileName);
+
+                                        // Stop tracks
+                                        videoStream.getTracks().forEach(track => track.stop());
+                                        destination.stream.getTracks().forEach(track => track.stop());
+                                        console.log('🛑 All tracks stopped');
+
+                                        resolve();
+
+                                    } catch (error) {
+                                        console.error('Download error:', error);
+                                        closeVideoLoadingModal();
+                                        showToastRecording('❌ Download failed: ' + error.message, 'error', '✗');
+                                        reject(error);
+                                    }
+
+                                } catch (error) {
+                                    console.error('Recording setup error:', error);
+                                    if (redrawId) clearInterval(redrawId);
+                                    showToastRecording('❌ Recording failed: ' + error.message, 'error', '✗');
+                                    reject(error);
+                                }
+                            };
+
+                            mediaRecorder.onerror = (e) => {
+                                console.error('MediaRecorder error:', e);
+                                showToastRecording('❌ Recording failed: ' + e.error, 'error', '✗');
+                                reject(e);
+                            };
+
+                            // Start recording and audio playback
+                            console.log('▶️ Starting recording and audio...');
+                            mediaRecorder.start(1000); // Collect data every 1 second
+                            audioSource.start(0, trimStart, duration);
+
+                            console.log('▶️ Recording started for', duration.toFixed(2), 'seconds');
+
+                            // Update progress bar during recording
+                            const startTime = Date.now();
+                            const progressInterval = setInterval(() => {
+                                if (recordingComplete || mediaRecorder.state === 'inactive') {
+                                    clearInterval(progressInterval);
+                                    return;
+                                }
+
+                                const elapsed = (Date.now() - startTime) / 1000;
+                                const progress = Math.min(100, (elapsed / duration) * 100);
+                                updateVideoLoadingProgress(progress, elapsed, duration);
+                            }, 100);
+
+                            // Stop recording after audio duration
+                            const stopTime = (duration + 0.5) * 1000; // Small buffer
+                            setTimeout(() => {
+                                if (!recordingComplete && mediaRecorder.state !== 'inactive') {
+                                    console.log('⏹️ Stopping recording...');
+                                    clearInterval(progressInterval);
+                                    updateVideoLoadingProgress(100, duration, duration);
+                                    mediaRecorder.stop();
+                                }
+                            }, stopTime);
+
+                        } catch (imgLoadError) {
+                            console.error('Image onload error:', imgLoadError);
+                            closeVideoLoadingModal();
+                            showToastRecording('❌ Recording failed: ' + imgLoadError.message, 'error', '✗');
+                            reject(imgLoadError);
+                        }
+                    };
+
+                    img.onerror = (e) => {
+                        console.error('Image load error:', e);
+                        showToastRecording('❌ Failed to load photo', 'error', '✗');
+                        reject(new Error('Failed to load photo'));
+                    };
+                });
+
+            } catch (error) {
+                console.error('Video creation error:', error);
+                closeVideoLoadingModal();
+                showToastRecording('❌ Video creation failed: ' + error.message, 'error', '✗');
+            }
+        }
+
+        // Create Video Loading Modal
+        function createVideoLoadingModal() {
+            const modal = document.createElement('div');
+            modal.id = 'videoLoadingModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            `;
+
+            modal.innerHTML = `
+                <div style="
+                    background: #1a1a1a;
+                    border: 2px solid #ff0050;
+                    border-radius: 12px;
+                    padding: 30px;
+                    text-align: center;
+                    min-width: 300px;
+                    box-shadow: 0 10px 40px rgba(255, 0, 80, 0.3);
+                ">
+                    <div style="margin-bottom: 20px;">
+                        <h2 style="color: #fff; margin: 0 0 10px 0; font-size: 18px;">🎬 Creating Video</h2>
+                        <p style="color: #aaa; margin: 0; font-size: 13px;">Please wait...</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div id="videoProgressBar" style="
+                            width: 100%;
+                            height: 8px;
+                            background: rgba(255, 255, 255, 0.1);
+                            border-radius: 4px;
+                            overflow: hidden;
+                            margin-bottom: 10px;
+                        ">
+                            <div id="videoProgressFill" style="
+                                width: 0%;
+                                height: 100%;
+                                background: linear-gradient(90deg, #ff0050, #ff4081);
+                                transition: width 0.2s ease;
+                            "></div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; color: #999; font-size: 12px;">
+                            <span id="videoProgressPercent">0%</span>
+                            <span id="videoProgressTime">0s / 0s</span>
+                        </div>
+                    </div>
+
+                    <p id="videoProgressStatus" style="color: #ff0050; font-size: 12px; margin: 0;">Encoding...</p>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            return modal;
+        }
+
+        // Update Video Loading Progress
+        function updateVideoLoadingProgress(progress, elapsed, total, status) {
+            const fill = document.getElementById('videoProgressFill');
+            const percent = document.getElementById('videoProgressPercent');
+            const time = document.getElementById('videoProgressTime');
+            const statusEl = document.getElementById('videoProgressStatus');
+
+            if (fill) fill.style.width = progress + '%';
+            if (percent) percent.textContent = Math.round(progress) + '%';
+            if (time) time.textContent = elapsed.toFixed(1) + 's / ' + total.toFixed(1) + 's';
+            if (statusEl && status) statusEl.textContent = status;
+
+            console.log(`⏱️ Progress: ${Math.round(progress)}% (${elapsed.toFixed(1)}s / ${total.toFixed(1)}s)`);
+        }
+
+        // Close Video Loading Modal
+        function closeVideoLoadingModal() {
+            const modal = document.getElementById('videoLoadingModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Legacy function for backward compatibility
+        async function downloadPhotoWithSound() {
+            return downloadPhotoWithSoundAsVideo();
         }
 
 
@@ -24310,6 +25149,11 @@ For more help, visit: help.pose.app
                 console.log('✅ Draft saved to Firebase:', docId);
                 showToastRecording('Draft saved successfully', 'success', '💾');
 
+                // Reset Screen1 and Screen4 after 2 seconds
+                setTimeout(() => {
+                    resetScreen1Screen4();
+                }, 2000);
+
                 // Close UI after 3 seconds
                 setTimeout(() => {
                     closeRecordingUI();
@@ -24399,6 +25243,11 @@ For more help, visit: help.pose.app
                 console.log('✅ Post published to Firebase:', docId);
                 showToastRecording('Video posted successfully', 'success', '✓');
 
+                // Reset Screen1 and Screen4 after 2 seconds
+                setTimeout(() => {
+                    resetScreen1Screen4();
+                }, 2000);
+
                 // Close UI after 3 seconds
                 setTimeout(() => {
                     closeRecordingUI();
@@ -24471,6 +25320,11 @@ For more help, visit: help.pose.app
 
                 console.log('✅ Story added to Firebase:', docId);
                 showToastRecording('Added to your story', 'success', '📖');
+
+                // Reset Screen1 and Screen4 after 2 seconds
+                setTimeout(() => {
+                    resetScreen1Screen4();
+                }, 2000);
 
                 // Close UI after 3 seconds
                 setTimeout(() => {
@@ -24772,6 +25626,415 @@ For more help, visit: help.pose.app
             showScreen('screen1');
         }
 
+        // ===== CHECK FOR UNFINISHED VIDEO (SIMPLE LOGIC) =====
+        // If video blob exists but wasn't posted/saved/discarded = UNFINISHED
+        function checkForUnfinishedVideo() {
+            if (recordingState.recordedBlob) {
+                showUnfinishedVideoPopup();
+            }
+        }
+
+        // ===== SHOW UNFINISHED VIDEO POPUP =====
+        function showUnfinishedVideoPopup() {
+            // Create popup overlay
+            const popupOverlay = document.createElement('div');
+            popupOverlay.id = 'unfinishedVideoPopup';
+            popupOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.85);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5000;
+                padding: 20px;
+            `;
+
+            // Calculate duration display
+            const duration = recordingState.recordingTime || 0;
+            const durationStr = `${Math.floor(duration / 60)}:${String(Math.floor(duration % 60)).padStart(2, '0')}`;
+
+            // Create popup content
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+                border-radius: 16px;
+                padding: 30px;
+                max-width: 400px;
+                width: 100%;
+                color: white;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                border: 1px solid #4C1D95;
+            `;
+
+            popup.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">📹</div>
+                    <h2 style="margin: 0 0 10px 0; font-size: 22px; color: #fff;">Unfinished Video</h2>
+                    <p style="margin: 0; color: #aaa; font-size: 14px;">You have a video waiting</p>
+                    <p style="margin: 5px 0 0 0; color: #999; font-size: 13px;">Duration: ${durationStr}</p>
+                </div>
+
+                <div style="background: rgba(76, 29, 149, 0.1); border-left: 4px solid #4C1D95; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #ddd;">
+                    <strong>Ready to publish?</strong><br>
+                    Post, save as draft, or discard it.
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button onclick="continueEditingUnfinishedVideo()" style="
+                        width: 100%;
+                        padding: 14px;
+                        background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 100%);
+                        border: none;
+                        border-radius: 10px;
+                        color: white;
+                        font-weight: 600;
+                        font-size: 15px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                        ✏️ Continue Editing
+                    </button>
+                    <button onclick="viewUnfinishedVideoPreview()" style="
+                        width: 100%;
+                        padding: 14px;
+                        background: rgba(100, 150, 255, 0.2);
+                        border: 2px solid rgba(100, 150, 255, 0.5);
+                        border-radius: 10px;
+                        color: #fff;
+                        font-weight: 600;
+                        font-size: 15px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.borderColor='#6D28D9'" onmouseout="this.style.borderColor='rgba(100, 150, 255, 0.5)'">
+                        👁️ Preview
+                    </button>
+                    <button onclick="discardUnfinishedVideo()" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: transparent;
+                        border: 1px solid #333;
+                        border-radius: 8px;
+                        color: #999;
+                        font-weight: 600;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='#999'">
+                        🗑️ Discard
+                    </button>
+                </div>
+            `;
+
+            popupOverlay.appendChild(popup);
+            document.body.appendChild(popupOverlay);
+
+            console.log('📺 Unfinished video popup shown');
+        }
+
+        // ===== CONTINUE EDITING UNFINISHED VIDEO =====
+        function continueEditingUnfinishedVideo() {
+            // Close popup FIRST
+            closeUnfinishedVideoPopup();
+
+            // THEN navigate to Screen 3/4
+            setTimeout(() => {
+                goToPostSettings();
+            }, 100);
+        }
+
+        // ===== VIEW UNFINISHED VIDEO PREVIEW =====
+        function viewUnfinishedVideoPreview() {
+            if (!recordingState.recordedBlob) return;
+
+            // Create video preview modal
+            const previewOverlay = document.createElement('div');
+            previewOverlay.id = 'videoPreviewModal';
+            previewOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5001;
+                padding: 20px;
+            `;
+
+            const videoContainer = document.createElement('div');
+            videoContainer.style.cssText = `
+                position: relative;
+                width: 100%;
+                max-width: 500px;
+                aspect-ratio: 9 / 16;
+            `;
+
+            const video = document.createElement('video');
+            video.controls = true;
+            video.style.cssText = `
+                width: 100%;
+                height: 100%;
+                border-radius: 12px;
+                background: #000;
+            `;
+
+            // Set video source from blob
+            const url = URL.createObjectURL(recordingState.recordedBlob);
+            video.src = url;
+
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '✕';
+            closeBtn.style.cssText = `
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                z-index: 5002;
+                transition: all 0.3s;
+            `;
+            closeBtn.onmouseover = () => closeBtn.style.background = 'rgba(0, 0, 0, 0.8)';
+            closeBtn.onmouseout = () => closeBtn.style.background = 'rgba(0, 0, 0, 0.5)';
+            closeBtn.onclick = () => {
+                previewOverlay.remove();
+                URL.revokeObjectURL(url);
+            };
+
+            videoContainer.appendChild(video);
+            videoContainer.appendChild(closeBtn);
+            previewOverlay.appendChild(videoContainer);
+            document.body.appendChild(previewOverlay);
+
+            console.log('▶️ Preview unfinished video shown');
+        }
+
+        // ===== DISCARD UNFINISHED VIDEO =====
+        function discardUnfinishedVideo() {
+            showDiscardConfirmationPopup();
+        }
+
+        // ===== SHOW DISCARD CONFIRMATION POPUP =====
+        function showDiscardConfirmationPopup() {
+            // Create confirmation overlay
+            const confirmOverlay = document.createElement('div');
+            confirmOverlay.id = 'discardConfirmOverlay';
+            confirmOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.85);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5002;
+                padding: 20px;
+            `;
+
+            // Create confirmation popup
+            const confirmPopup = document.createElement('div');
+            confirmPopup.style.cssText = `
+                background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+                border-radius: 16px;
+                padding: 30px;
+                max-width: 320px;
+                width: 100%;
+                color: white;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                border: 1px solid #EF4444;
+                text-align: center;
+            `;
+
+            confirmPopup.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 44px; margin-bottom: 15px;">🗑️</div>
+                    <h2 style="margin: 0 0 10px 0; font-size: 20px; color: #fff;">Discard Video?</h2>
+                    <p style="margin: 0; color: #aaa; font-size: 14px;">This action cannot be undone</p>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button onclick="closeDiscardConfirmation()" style="
+                        flex: 1;
+                        padding: 12px;
+                        background: transparent;
+                        border: 2px solid #333;
+                        border-radius: 10px;
+                        color: #aaa;
+                        font-weight: 600;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.borderColor='#555'; this.style.color='#fff'" onmouseout="this.style.borderColor='#333'; this.style.color='#aaa'">
+                        No, Keep It
+                    </button>
+                    <button onclick="confirmDiscardVideo()" style="
+                        flex: 1;
+                        padding: 12px;
+                        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+                        border: none;
+                        border-radius: 10px;
+                        color: white;
+                        font-weight: 600;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(239, 68, 68, 0.4)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                        Yes, Discard
+                    </button>
+                </div>
+            `;
+
+            confirmOverlay.appendChild(confirmPopup);
+            document.body.appendChild(confirmOverlay);
+
+            console.log('🗑️ Discard confirmation popup shown');
+        }
+
+        // ===== CONFIRM DISCARD VIDEO =====
+        function confirmDiscardVideo() {
+            recordingState.recordedBlob = null;
+            recordingState.clips = [];
+            closeDiscardConfirmation();
+            closeUnfinishedVideoPopup();
+            console.log('🗑️ Unfinished video discarded');
+        }
+
+        // ===== CLOSE DISCARD CONFIRMATION =====
+        function closeDiscardConfirmation() {
+            const overlay = document.getElementById('discardConfirmOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
+        // ===== CLOSE UNFINISHED VIDEO POPUP =====
+        function closeUnfinishedVideoPopup() {
+            const popup = document.getElementById('unfinishedVideoPopup');
+            if (popup) {
+                popup.remove();
+            }
+        }
+
+        // ===== RESET SCREEN 1 AND SCREEN 4 =====
+        function resetScreen1Screen4() {
+            // SCREEN 1 - Reset camera recording state
+            // Clear recorded clips and blobs
+            if (recordingState) {
+                recordingState.recordedBlob = null;
+                recordingState.clips = [];
+                recordingState.currentFilter = 'none';
+                recordingState.selectedEffects = [];
+                recordingState.recordingTime = 0;
+                recordingState.isRecording = false;
+                recordingState.isCanvasRendering = false;
+                console.log('✅ Screen1 reset: Recording state cleared');
+            }
+
+            // Clear canvas
+            if (recordingState.recordingCanvas) {
+                recordingState.recordingCanvas = null;
+                recordingState.canvasContext = null;
+            }
+
+            // Clear video preview filter
+            const videoPreview = document.getElementById('videoPreview');
+            if (videoPreview) {
+                videoPreview.style.filter = 'none';
+            }
+
+            // Hide effects canvas
+            if (effectsState && effectsState.canvas) {
+                effectsState.canvas.style.display = 'none';
+            }
+
+            // Hide recording status bar
+            const recStatus = document.getElementById('recRecordingStatus');
+            if (recStatus) {
+                recStatus.style.display = 'none';
+            }
+
+            // Hide recording controls
+            const recControls = document.getElementById('recRecordingControls');
+            if (recControls) {
+                recControls.style.display = 'none';
+            }
+
+            // Reset filter panel to 'Original' (none)
+            const filterBtns = document.querySelectorAll('#recFiltersPanel .rec-filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            const originalBtn = document.querySelector('[onclick="applyRecordingFilter(\'none\')"]');
+            if (originalBtn) {
+                originalBtn.classList.add('active');
+            }
+
+            // Hide effects buttons
+            const filterToggleBtn = document.getElementById('recFilterToggleBtn');
+            const effectToggleBtn = document.getElementById('recEffectToggleBtn');
+            if (filterToggleBtn) filterToggleBtn.style.display = 'none';
+            if (effectToggleBtn) effectToggleBtn.style.display = 'none';
+
+            // Close any open panels
+            const filtersPanel = document.querySelector('.rec-filters-panel');
+            if (filtersPanel) filtersPanel.classList.remove('show');
+            const effectsPanel = document.getElementById('recEffectsPanel');
+            if (effectsPanel) effectsPanel.style.display = 'none';
+
+            // SCREEN 4 - Reset post form
+            // Clear caption
+            const captionInput = document.getElementById('recCaption');
+            if (captionInput) {
+                captionInput.value = '';
+                updateCaptionCounter();
+            }
+
+            // Clear hashtags
+            const hashtagInputs = document.querySelectorAll('input[placeholder="Add hashtags"]');
+            hashtagInputs.forEach(input => input.value = '');
+
+            // Clear tags
+            const tagInputs = document.querySelectorAll('input[placeholder="Tag people"]');
+            tagInputs.forEach(input => input.value = '');
+
+            // Reset privacy to "Everyone"
+            const privacySelects = document.querySelectorAll('select');
+            privacySelects.forEach(select => select.value = 'Everyone');
+
+            // Reset all toggles to checked (except download)
+            const toggles = document.querySelectorAll('#screen4 input[type="checkbox"]');
+            toggles.forEach((toggle, index) => {
+                if (index === 4) {
+                    // Allow Download - default unchecked
+                    toggle.checked = false;
+                } else {
+                    // All others - default checked
+                    toggle.checked = true;
+                }
+            });
+
+            // Clear post preview video
+            const postPreviewVideo = document.getElementById('postPreviewVideo');
+            if (postPreviewVideo) {
+                postPreviewVideo.src = '';
+            }
+
+            // Go back to Screen 1
+            showScreen('screen1');
+            console.log('✅ Screen4 reset: Post form cleared');
+        }
+
         function closeRecordingUI() {
             const overlay = document.getElementById('recordingUIOverlay');
             overlay.classList.remove('active');
@@ -24867,119 +26130,10 @@ For more help, visit: help.pose.app
             isLoading: false
         };
 
-        // Hardcoded Fallback Songs (if Firebase is empty)
-        const fallbackSongs = [
-            {
-                id: 'afro1',
-                title: 'Essence',
-                artist: 'Wizkid ft. Tems',
-                duration: '2:55',
-                uses: '45M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d6/2f/69/d62f69eb-fce9-72ac-e7c7-e1f47d14b1ed/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro2',
-                title: 'Ye',
-                artist: 'Burna Boy',
-                duration: '3:30',
-                uses: '38M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/8f/c3/e7/8fc3e7e9-c2ed-6cc9-b15b-fae7e2e2a77f/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro3',
-                title: 'Blinding Lights (Afrobeat Remix)',
-                artist: 'The Weeknd ft. Wizkid',
-                duration: '3:20',
-                uses: '52M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/cb/d8/5c/cbd85c4b-ba16-6b1b-c4f1-21ab5d8c86be/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro4',
-                title: 'Calm Down',
-                artist: 'Rema & Selena Gomez',
-                duration: '3:08',
-                uses: '40M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d1/5e/0f/d15e0fc1-65b8-3f4a-83db-29b67db04f98/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro5',
-                title: 'Sunroof',
-                artist: 'Nicky Youre ft. Afrobeat',
-                duration: '2:50',
-                uses: '35M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a2/e4/e0/a2e4e0e7-79ba-e52e-2c72-1f8c53f01f37/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro6',
-                title: 'Flowers',
-                artist: 'Miley Cyrus (Afrobeat Version)',
-                duration: '3:18',
-                uses: '48M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a6/21/3a/a6213a94-f825-fa06-b97e-5b4e3289c4d9/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro7',
-                title: 'Terminator',
-                artist: 'Zinoleisky',
-                duration: '3:25',
-                uses: '28M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/c9/f1/96/c9f196d2-6da1-c89e-80d4-8e3e7b5e0d2a/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro8',
-                title: 'Unavailable',
-                artist: 'Davido ft. Musa Keys',
-                duration: '3:42',
-                uses: '42M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/4d/f8/f4/4df8f4c9-f1e0-6c2a-83db-1f5e8c9d3e2f/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro9',
-                title: 'Aseju',
-                artist: 'Asake',
-                duration: '3:15',
-                uses: '32M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/9f/2d/c3/9f2dc3e5-6d9e-8f4a-92b8-3c4f5e6d7a8b/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
-                category: 'Trending',
-                trending: true
-            },
-            {
-                id: 'afro10',
-                title: 'Ye Her',
-                artist: 'Olamide',
-                duration: '2:58',
-                uses: '26M',
-                thumbnail: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/7b/8c/9d/7b8c9d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e/source/400x400bb.jpg',
-                audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
-                category: 'Trending',
-                trending: true
-            }
-        ];
+        // Hardcoded Fallback Songs removed - FIREBASE ONLY
+        // SoundHelix and external music APIs have been removed
+        // All music is loaded from Firebase
+        const fallbackSongs = [];
 
         // Load Pose Music from Firebase
         async function loadPoseMusicFromFirebase() {
@@ -25728,39 +26882,11 @@ For more help, visit: help.pose.app
         }
 
         // Get Recommended Songs Based on Favorite
+        // NOTE: Removed iTunes API dependency - recommendations now from Firebase only
         async function getRecommendedSongs(favoriteSound) {
             try {
-                // Recommend based on same artist or category
-                const artist = favoriteSound.artist;
-                const category = favoriteSound.category || 'Afrobeat';
-
-                // Search for more songs by same artist
-                const response = await fetch(
-                    `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&entity=song&limit=10`,
-                    { mode: 'cors' }
-                );
-
-                const data = await response.json();
-
-                if (data.results && data.results.length > 1) {
-                    const recommended = data.results.slice(0, 5).map((song, index) => ({
-                        id: `rec_${Date.now()}_${index}`,
-                        title: song.trackName,
-                        artist: song.artistName || artist,
-                        duration: formatDuration(song.trackTimeMillis),
-                        thumbnail: song.artworkUrl100,
-                        audioUrl: song.previewUrl,
-                        category: category,
-                        isRecommended: true,
-                        trending: false,
-                        uses: '0M'
-                    })).filter(s => s.audioUrl); // Only include songs with previews
-
-                    if (recommended.length > 0) {
-                        showToastRecording(`✨ ${recommended.length} recommended songs added!`, 'success', '⭐');
-                        console.log(`✨ Recommendations for ${artist}:`, recommended);
-                    }
-                }
+                // Recommendation logic can be added via Firebase in future
+                console.log('ℹ️ Recommendations are loaded from Firebase sound library');
             } catch (error) {
                 console.warn('Could not fetch recommendations:', error.message);
             }
@@ -25792,9 +26918,9 @@ For more help, visit: help.pose.app
             const screen7 = document.getElementById('screen7');
 
             const isScreen1Active = screen1 && screen1.classList.contains('active');
-            const isScreen3Active = screen3 && screen3.style.display !== 'none';
-            const isScreen6Active = screen6 && screen6.style.display !== 'none';
-            const isScreen7Active = screen7 && screen7.style.display !== 'none';
+            const isScreen3Active = screen3 && screen3.classList.contains('active');
+            const isScreen6Active = screen6 && screen6.classList.contains('active');
+            const isScreen7Active = screen7 && screen7.classList.contains('active');
 
             // Close modal
             setTimeout(() => {
@@ -25882,57 +27008,325 @@ For more help, visit: help.pose.app
         // Display Selected Sound on Screen 6 or Screen 7
         function displaySelectedSoundOnScreen6(sound) {
             // Store sound in photoState for download detection
-            // Use the entire sound object plus the soundLibraryState reference
             photoState.selectedSound = {
                 ...sound,
                 url: sound.audioUrl || sound.url || sound.preview_url || sound.filePath
             };
 
             console.log('🎵 Sound stored in photoState:', photoState.selectedSound);
-            console.log('🎵 Sound audioUrl:', sound.audioUrl);
 
             // Check which screen is active
             const screen6 = document.getElementById('screen6');
             const screen7 = document.getElementById('screen7');
 
-            const isScreen6Active = screen6 && screen6.style.display !== 'none';
-            const isScreen7Active = screen7 && screen7.style.display !== 'none';
+            const isScreen6Active = screen6 && screen6.classList.contains('active');
+            const isScreen7Active = screen7 && screen7.classList.contains('active');
 
-            // If on Screen 6 (editing), update Screen 6 UI
+            // If on Screen 6 (editing), create dynamic sound display
             if (isScreen6Active) {
-                const container = document.getElementById('selectedSoundContainer');
-                const thumbnail = document.getElementById('soundDisplayThumbnail');
-                const title = document.getElementById('soundDisplayTitle');
-                const artist = document.getElementById('soundDisplayArtist');
-                const playBtn = document.getElementById('soundPlayBtn');
-
-                if (container && thumbnail && title && artist && playBtn) {
-                    // Update display info
-                    title.textContent = sound.title;
-                    artist.textContent = sound.artist || 'Unknown Artist';
-
-                    // Update thumbnail
-                    if (sound.thumbnail) {
-                        thumbnail.innerHTML = `<img src="${sound.thumbnail}" alt="${sound.title}">`;
-                    } else {
-                        thumbnail.innerHTML = '<i class="fas fa-music"></i>';
-                    }
-
-                    // Reset play button
-                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                    playBtn.classList.remove('playing');
-
-                    // Show container
-                    container.classList.add('show');
-
-                    console.log('🎵 Sound displayed on Screen 6:', sound);
-                }
+                displayScreen6SoundInfo(sound);
+                console.log('🎵 Sound displayed on Screen 6:', sound);
             }
 
             // If on Screen 7 (posting), update Screen 7 UI
             if (isScreen7Active) {
                 displayPhotoPostSound();
                 console.log('🎵 Sound displayed on Screen 7 (photo post settings):', sound);
+            }
+        }
+
+        // Create and display sound info on Screen 6 (dynamically)
+        function displayScreen6SoundInfo(sound) {
+            let soundDisplay = document.getElementById('screen6SoundDisplay');
+
+            // Create display if doesn't exist
+            if (!soundDisplay) {
+                const editControls = document.querySelector('#screen6 .rec-edit-controls');
+                if (!editControls) return;
+
+                soundDisplay = document.createElement('div');
+                soundDisplay.id = 'screen6SoundDisplay';
+                soundDisplay.className = 'screen6-sound-info';
+                soundDisplay.style.cssText = `
+                    background: rgba(255, 0, 80, 0.15);
+                    border: 1px solid rgba(255, 0, 80, 0.4);
+                    border-radius: 12px;
+                    padding: 14px 16px;
+                    margin-bottom: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 12px;
+                `;
+                editControls.insertBefore(soundDisplay, editControls.firstChild);
+            }
+
+            // Update content
+            soundDisplay.innerHTML = `
+                <div style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #ff0050 0%, #ff4081 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; flex-shrink: 0;">
+                        ${sound.thumbnail ? `<img src="${sound.thumbnail}" alt="${sound.title}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">` : '<i class="fas fa-music"></i>'}
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="color: #fff; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            🎵 ${sound.title}
+                        </div>
+                        <div style="color: rgba(255, 255, 255, 0.6); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${sound.artist || 'Unknown Artist'}
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                    <button onclick="toggleScreen6SoundPlayback()" style="
+                        width: 36px;
+                        height: 36px;
+                        border-radius: 50%;
+                        background: #ff0050;
+                        border: none;
+                        color: white;
+                        font-size: 14px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.3s;
+                    " id="screen6PlayBtn" title="Play/Pause">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button onclick="openScreen6SoundTrimmer()" style="
+                        width: 36px;
+                        height: 36px;
+                        border-radius: 50%;
+                        background: #6366f1;
+                        border: none;
+                        color: white;
+                        font-size: 14px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.3s;
+                    " title="Trim Sound">
+                        <i class="fas fa-cut"></i>
+                    </button>
+                    <button onclick="removeScreen6Sound()" style="
+                        padding: 6px 12px;
+                        background: rgba(255, 0, 80, 0.3);
+                        border: 1px solid rgba(255, 0, 80, 0.5);
+                        color: #ff0050;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        font-weight: 600;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
+                        ✕ Remove
+                    </button>
+                </div>
+            `;
+
+            console.log('🎵 Sound info displayed on Screen 6');
+        }
+
+        // Toggle sound playback on Screen 6
+        function toggleScreen6SoundPlayback() {
+            if (!soundLibraryState.selectedSound) return;
+
+            const sound = soundLibraryState.selectedSound;
+            const btn = document.getElementById('screen6PlayBtn');
+
+            if (soundLibraryState.isPlaying && soundLibraryState.currentAudio?.src === sound.audioUrl) {
+                // Pause current
+                soundLibraryState.currentAudio.pause();
+                soundLibraryState.isPlaying = false;
+                btn.innerHTML = '<i class="fas fa-play"></i>';
+                btn.classList.remove('playing');
+            } else {
+                // Stop any current audio
+                stopCurrentAudio();
+
+                // Play selected sound
+                soundLibraryState.currentAudio = new Audio(sound.audioUrl);
+                soundLibraryState.currentAudio.volume = 1;
+
+                // Apply trim start if available
+                const trimStart = sound.trimStart || 0;
+                const trimEnd = sound.trimEnd || null;
+
+                soundLibraryState.currentAudio.currentTime = trimStart;
+
+                soundLibraryState.currentAudio.play();
+                soundLibraryState.isPlaying = true;
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
+                btn.classList.add('playing');
+
+                // Auto stop when finished or at trim end
+                soundLibraryState.currentAudio.onended = () => {
+                    soundLibraryState.isPlaying = false;
+                    btn.innerHTML = '<i class="fas fa-play"></i>';
+                    btn.classList.remove('playing');
+                };
+
+                // Check for trim end during playback
+                const checkTrimEnd = () => {
+                    const audio = soundLibraryState.currentAudio;
+                    if (trimEnd !== null && audio.currentTime >= trimEnd) {
+                        audio.pause();
+                        soundLibraryState.isPlaying = false;
+                        btn.innerHTML = '<i class="fas fa-play"></i>';
+                        btn.classList.remove('playing');
+                    } else if (!audio.paused) {
+                        requestAnimationFrame(checkTrimEnd);
+                    }
+                };
+                checkTrimEnd();
+
+                showToastRecording(`🎵 Playing "${sound.title}"`, 'info', '♪');
+            }
+        }
+
+        // Remove Sound from Screen 6
+        function removeScreen6Sound() {
+            console.log('🔇 Removing sound from Screen 6');
+
+            if (soundLibraryState.currentAudio) {
+                soundLibraryState.currentAudio.pause();
+                soundLibraryState.currentAudio = null;
+                soundLibraryState.isPlaying = false;
+            }
+
+            soundLibraryState.selectedSound = null;
+            photoState.selectedSound = null;
+
+            const soundDisplay = document.getElementById('screen6SoundDisplay');
+            if (soundDisplay) {
+                soundDisplay.remove();
+            }
+
+            showToastRecording('🎵 Sound removed', 'info', '✓');
+            console.log('🎵 Sound removed from Screen 6');
+        }
+
+        // Open Sound Trimmer for Screen 6
+        function openScreen6SoundTrimmer() {
+            if (!soundLibraryState.selectedSound) {
+                showToastRecording('No sound selected', 'error', '❌');
+                return;
+            }
+
+            const sound = soundLibraryState.selectedSound;
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.id = 'soundTrimmerModal';
+
+            // Use existing trim values or default to 0 and will detect actual duration
+            const startVal = sound.trimStart !== undefined ? sound.trimStart : 0;
+            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : null;
+
+            // Create audio element to detect duration
+            const tempAudio = new Audio(sound.audioUrl);
+            tempAudio.onloadedmetadata = () => {
+                const duration = tempAudio.duration;
+                const finalEndVal = endVal !== null ? endVal : duration;
+
+                modal.innerHTML = `
+                    <div class="modal">
+                        <h2>Trim Sound</h2>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; color: #aaa; margin-bottom: 10px; font-size: 13px;">
+                                Start Time (seconds):
+                            </label>
+                            <input type="range" id="trimStartSlider" min="0" max="${duration}" step="0.1" value="${startVal}"
+                                style="width: 100%; cursor: pointer;">
+                            <div style="display: flex; justify-content: space-between; color: #999; font-size: 12px; margin-top: 5px;">
+                                <span id="trimStartValue">${startVal.toFixed(1)}s</span>
+                                <span id="trimDuration">${(finalEndVal - startVal).toFixed(1)}s</span>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; color: #aaa; margin-bottom: 10px; font-size: 13px;">
+                                End Time (seconds):
+                            </label>
+                            <input type="range" id="trimEndSlider" min="0" max="${duration}" step="0.1" value="${finalEndVal}"
+                                style="width: 100%; cursor: pointer;">
+                            <div style="display: flex; justify-content: space-between; color: #999; font-size: 12px; margin-top: 5px;">
+                                <span id="trimEndValue">${finalEndVal.toFixed(1)}s</span>
+                                <span>${duration.toFixed(1)}s</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="modal-btn" style="flex: 1; background: linear-gradient(135deg, #ff0050, #ff4081);"
+                                onclick="applyScreen6SoundTrim(${startVal}, ${finalEndVal}, this)">
+                                ✂️ Apply
+                            </button>
+                            <button class="modal-btn" style="flex: 1; background: #666;" onclick="closeScreen6SoundTrimmer()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                // Add event listeners for real-time updates
+                const startSlider = modal.querySelector('#trimStartSlider');
+                const endSlider = modal.querySelector('#trimEndSlider');
+                const startValue = modal.querySelector('#trimStartValue');
+                const endValue = modal.querySelector('#trimEndValue');
+                const durationSpan = modal.querySelector('#trimDuration');
+
+                startSlider.addEventListener('input', (e) => {
+                    const val = parseFloat(e.target.value);
+                    if (val < parseFloat(endSlider.value)) {
+                        startValue.textContent = val.toFixed(1) + 's';
+                        durationSpan.textContent = (parseFloat(endSlider.value) - val).toFixed(1) + 's';
+                    }
+                });
+
+                endSlider.addEventListener('input', (e) => {
+                    const val = parseFloat(e.target.value);
+                    if (val > parseFloat(startSlider.value)) {
+                        endValue.textContent = val.toFixed(1) + 's';
+                        durationSpan.textContent = (val - parseFloat(startSlider.value)).toFixed(1) + 's';
+                    }
+                });
+            };
+        }
+
+        // Apply trim to Screen 6 sound
+        function applyScreen6SoundTrim(originalStart, originalEnd, btn) {
+            const modal = document.getElementById('soundTrimmerModal');
+            const startSlider = modal.querySelector('#trimStartSlider');
+            const endSlider = modal.querySelector('#trimEndSlider');
+
+            const trimStart = parseFloat(startSlider.value);
+            const trimEnd = parseFloat(endSlider.value);
+
+            if (trimStart >= trimEnd) {
+                showToastRecording('Invalid trim range', 'error', '❌');
+                return;
+            }
+
+            // Update sound object with trim values
+            soundLibraryState.selectedSound.trimStart = trimStart;
+            soundLibraryState.selectedSound.trimEnd = trimEnd;
+            soundLibraryState.selectedSound.trimDuration = (trimEnd - trimStart).toFixed(1);
+
+            // Also update photoState
+            photoState.selectedSound.trimStart = trimStart;
+            photoState.selectedSound.trimEnd = trimEnd;
+            photoState.selectedSound.trimDuration = (trimEnd - trimStart).toFixed(1);
+
+            closeScreen6SoundTrimmer();
+            showToastRecording(`✂️ Sound trimmed to ${(trimEnd - trimStart).toFixed(1)}s`, 'success', '✓');
+            console.log('🎵 Sound trimmed for Screen 6:', { trimStart, trimEnd });
+        }
+
+        // Close Sound Trimmer
+        function closeScreen6SoundTrimmer() {
+            const modal = document.getElementById('soundTrimmerModal');
+            if (modal) {
+                modal.remove();
             }
         }
 
@@ -26014,19 +27408,47 @@ For more help, visit: help.pose.app
                         ${sound.artist || 'Unknown Artist'}
                     </div>
                 </div>
-                <button onclick="removeScreen3Sound()" style="
-                    padding: 6px 12px;
-                    background: rgba(255, 0, 80, 0.3);
-                    border: 1px solid rgba(255, 0, 80, 0.5);
-                    color: #ff0050;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 12px;
-                    font-weight: 600;
-                    transition: all 0.3s;
-                " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
-                    ✕ Remove
-                </button>
+                <div style="display: flex; gap: 6px;">
+                    <button id="screen3PlayBtn" onclick="toggleScreen3SoundPlayback()" style="
+                        padding: 6px 12px;
+                        background: rgba(255, 0, 80, 0.3);
+                        border: 1px solid rgba(255, 0, 80, 0.5);
+                        color: #ff0050;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        font-weight: 600;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button onclick="openScreen3SoundTrimmer()" style="
+                        padding: 6px 12px;
+                        background: rgba(255, 0, 80, 0.3);
+                        border: 1px solid rgba(255, 0, 80, 0.5);
+                        color: #ff0050;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        font-weight: 600;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
+                        ✂️ Trim
+                    </button>
+                    <button onclick="removeScreen3Sound()" style="
+                        padding: 6px 12px;
+                        background: rgba(255, 0, 80, 0.3);
+                        border: 1px solid rgba(255, 0, 80, 0.5);
+                        color: #ff0050;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        font-weight: 600;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
+                        ✕ Remove
+                    </button>
+                </div>
             `;
 
             console.log('🎵 Sound info displayed on Screen 3');
@@ -26062,6 +27484,174 @@ For more help, visit: help.pose.app
             }
 
             showToastRecording('Sound removed', 'success', '✓');
+        }
+
+        // Toggle Screen 3 Sound Playback (respects trim values)
+        function toggleScreen3SoundPlayback() {
+            if (!recordingState.selectedSound) return;
+
+            const sound = recordingState.selectedSound;
+            const audioElement = document.getElementById('editVideoSoundAudio');
+            const btn = document.getElementById('screen3PlayBtn');
+
+            if (!audioElement) return;
+
+            if (!audioElement.paused && audioElement.src === sound.url) {
+                // Pause current
+                audioElement.pause();
+                btn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                // Set audio source if not already set
+                if (audioElement.src !== sound.url) {
+                    audioElement.src = sound.url;
+                }
+
+                // Apply trim start if available
+                const trimStart = sound.trimStart || 0;
+                const trimEnd = sound.trimEnd || audioElement.duration || null;
+
+                audioElement.currentTime = trimStart;
+
+                // Play
+                audioElement.play().catch(err => console.log('Audio play prevented:', err));
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
+
+                // Monitor for trim end
+                audioElement.onended = () => {
+                    btn.innerHTML = '<i class="fas fa-play"></i>';
+                };
+
+                // Check for trim end during playback
+                const checkTrimEnd = () => {
+                    if (audioElement.currentTime >= trimEnd && trimEnd !== null) {
+                        audioElement.pause();
+                        btn.innerHTML = '<i class="fas fa-play"></i>';
+                    } else if (!audioElement.paused) {
+                        requestAnimationFrame(checkTrimEnd);
+                    }
+                };
+                checkTrimEnd();
+
+                showToastRecording(`🎵 Playing "${sound.title}"`, 'info', '♪');
+            }
+        }
+
+        // Open Screen 3 Sound Trimmer
+        function openScreen3SoundTrimmer() {
+            if (!recordingState.selectedSound) {
+                showToastRecording('No sound selected', 'error', '❌');
+                return;
+            }
+
+            const sound = recordingState.selectedSound;
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.id = 'screen3SoundTrimmerModal';
+
+            // Use existing trim values or default to 0 and will detect actual duration
+            const startVal = sound.trimStart !== undefined ? sound.trimStart : 0;
+            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : null;
+
+            // Create audio element to detect duration
+            const tempAudio = new Audio(sound.url);
+            tempAudio.onloadedmetadata = () => {
+                const duration = tempAudio.duration;
+                const finalEndVal = endVal !== null ? endVal : duration;
+
+                modal.innerHTML = `
+                     <div class="modal">
+                         <h2>Trim Sound</h2>
+                         <div style="margin-bottom: 20px;">
+                             <label style="display: block; color: #aaa; margin-bottom: 10px; font-size: 13px;">
+                                 Start Time (seconds):
+                             </label>
+                             <input type="range" id="trimStartSlider" min="0" max="${duration}" step="0.1" value="${startVal}"
+                                 style="width: 100%; cursor: pointer;">
+                             <div style="display: flex; justify-content: space-between; color: #999; font-size: 12px; margin-top: 5px;">
+                                 <span id="trimStartValue">${startVal.toFixed(1)}s</span>
+                                 <span id="trimDuration">${(finalEndVal - startVal).toFixed(1)}s</span>
+                             </div>
+                         </div>
+                         <div style="margin-bottom: 20px;">
+                             <label style="display: block; color: #aaa; margin-bottom: 10px; font-size: 13px;">
+                                 End Time (seconds):
+                             </label>
+                             <input type="range" id="trimEndSlider" min="0" max="${duration}" step="0.1" value="${finalEndVal}"
+                                 style="width: 100%; cursor: pointer;">
+                             <div style="display: flex; justify-content: space-between; color: #999; font-size: 12px; margin-top: 5px;">
+                                 <span id="trimEndValue">${finalEndVal.toFixed(1)}s</span>
+                                 <span>${duration.toFixed(1)}s</span>
+                             </div>
+                         </div>
+                         <div style="display: flex; gap: 10px;">
+                             <button class="modal-btn" style="flex: 1; background: linear-gradient(135deg, #ff0050, #ff4081);"
+                                 onclick="applyScreen3SoundTrim(${startVal}, ${finalEndVal}, this)">
+                                 ✂️ Apply
+                             </button>
+                             <button class="modal-btn" style="flex: 1; background: #666;" onclick="closeScreen3SoundTrimmer()">
+                                 Cancel
+                             </button>
+                         </div>
+                     </div>
+                 `;
+
+                document.body.appendChild(modal);
+
+                // Add event listeners for real-time updates
+                const startSlider = modal.querySelector('#trimStartSlider');
+                const endSlider = modal.querySelector('#trimEndSlider');
+                const startValue = modal.querySelector('#trimStartValue');
+                const endValue = modal.querySelector('#trimEndValue');
+                const durationSpan = modal.querySelector('#trimDuration');
+
+                startSlider.addEventListener('input', (e) => {
+                    const val = parseFloat(e.target.value);
+                    if (val < parseFloat(endSlider.value)) {
+                        startValue.textContent = val.toFixed(1) + 's';
+                        durationSpan.textContent = (parseFloat(endSlider.value) - val).toFixed(1) + 's';
+                    }
+                });
+
+                endSlider.addEventListener('input', (e) => {
+                    const val = parseFloat(e.target.value);
+                    if (val > parseFloat(startSlider.value)) {
+                        endValue.textContent = val.toFixed(1) + 's';
+                        durationSpan.textContent = (val - parseFloat(startSlider.value)).toFixed(1) + 's';
+                    }
+                });
+            };
+        }
+
+        // Apply trim to Screen 3 sound
+        function applyScreen3SoundTrim(originalStart, originalEnd, btn) {
+            const modal = document.getElementById('screen3SoundTrimmerModal');
+            const startSlider = modal.querySelector('#trimStartSlider');
+            const endSlider = modal.querySelector('#trimEndSlider');
+
+            const trimStart = parseFloat(startSlider.value);
+            const trimEnd = parseFloat(endSlider.value);
+
+            if (trimStart >= trimEnd) {
+                showToastRecording('Invalid trim range', 'error', '❌');
+                return;
+            }
+
+            // Update sound object with trim values
+            recordingState.selectedSound.trimStart = trimStart;
+            recordingState.selectedSound.trimEnd = trimEnd;
+            recordingState.selectedSound.trimDuration = (trimEnd - trimStart).toFixed(1);
+
+            closeScreen3SoundTrimmer();
+            showToastRecording(`✂️ Sound trimmed to ${(trimEnd - trimStart).toFixed(1)}s`, 'success', '✓');
+            console.log('🎵 Sound trimmed for Screen 3:', { trimStart, trimEnd });
+        }
+
+        // Close Screen 3 Sound Trimmer
+        function closeScreen3SoundTrimmer() {
+            const modal = document.getElementById('screen3SoundTrimmerModal');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         // Initialize Audio-Video Sync
@@ -26149,78 +27739,7 @@ For more help, visit: help.pose.app
         }
 
         // Toggle Selected Sound Playback
-        function toggleSelectedSoundPlayback() {
-            if (!soundLibraryState.selectedSound) return;
 
-            const sound = soundLibraryState.selectedSound;
-            const btn = document.getElementById('soundPlayBtn');
-
-            if (soundLibraryState.isPlaying && soundLibraryState.currentAudio?.src === sound.audioUrl) {
-                // Pause current
-                soundLibraryState.currentAudio.pause();
-                soundLibraryState.isPlaying = false;
-                btn.innerHTML = '<i class="fas fa-play"></i>';
-                btn.classList.remove('playing');
-            } else {
-                // Stop any current audio
-                stopCurrentAudio();
-
-                // Play selected sound
-                soundLibraryState.currentAudio = new Audio(sound.audioUrl);
-                soundLibraryState.currentAudio.volume = 1;
-
-                // Get trim boundaries (if trimmed)
-                const startTime = sound.trimStart || 0;
-                const endTime = sound.trimEnd || soundLibraryState.currentAudio.duration;
-
-                // Start from trim point
-                soundLibraryState.currentAudio.currentTime = startTime;
-                soundLibraryState.currentAudio.play();
-                soundLibraryState.isPlaying = true;
-                btn.innerHTML = '<i class="fas fa-pause"></i>';
-                btn.classList.add('playing');
-
-                // Monitor playback and stop at trim end
-                soundLibraryState.currentAudio.ontimeupdate = () => {
-                    if (soundLibraryState.currentAudio.currentTime >= endTime) {
-                        soundLibraryState.currentAudio.pause();
-                        soundLibraryState.isPlaying = false;
-                        btn.innerHTML = '<i class="fas fa-play"></i>';
-                        btn.classList.remove('playing');
-                    }
-                };
-
-                // Auto stop when finished
-                soundLibraryState.currentAudio.onended = () => {
-                    soundLibraryState.isPlaying = false;
-                    btn.innerHTML = '<i class="fas fa-play"></i>';
-                    btn.classList.remove('playing');
-                };
-
-                const trimInfo = sound.trimStart ? ` (${sound.trimDuration}s trimmed)` : '';
-                showToastRecording(`🎵 Playing "${sound.title}"${trimInfo}`, 'info', '♪');
-            }
-        }
-
-        // Remove Selected Sound
-        function removeSelectedSound() {
-            if (soundLibraryState.currentAudio) {
-                soundLibraryState.currentAudio.pause();
-                soundLibraryState.currentAudio = null;
-                soundLibraryState.isPlaying = false;
-            }
-
-            soundLibraryState.selectedSound = null;
-            // Also clear from photoState
-            photoState.selectedSound = null;
-
-            document.getElementById('selectedSoundContainer').classList.remove('show');
-            document.getElementById('soundPlayBtn').innerHTML = '<i class="fas fa-play"></i>';
-            document.getElementById('soundPlayBtn').classList.remove('playing');
-
-            showToastRecording('🎵 Sound removed', 'info', '✓');
-            console.log('🎵 Selected sound removed');
-        }
 
         // Open Sound Trimmer
         function openSoundTrimmer() {
@@ -26236,8 +27755,8 @@ For more help, visit: help.pose.app
 
             // Use existing trim values or default to 0 and will detect actual duration
             const startVal = sound.trimStart !== undefined ? sound.trimStart : 0;
-            // Will be updated once audio loads
-            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : null;
+            // Will be updated once audio loads - default to 30 seconds
+            const endVal = sound.trimEnd !== undefined ? sound.trimEnd : 30;
 
             modal.innerHTML = `
         <div class="modal" style="max-width: 95vw; width: 100%; max-height: 95vh; overflow-y: auto;">
@@ -26315,7 +27834,7 @@ For more help, visit: help.pose.app
                 </div>
                 
                 <div style="display: flex; gap: 10px;">
-                    <button onclick="applyAudioTrim()" class="modal-btn" style="flex: 1;">
+                    <button onclick="applySoundLibraryTrim()" class="modal-btn" style="flex: 1;">
                         <i class="fas fa-check"></i> Apply Trim
                     </button>
                     <button onclick="closeSoundTrimmer()" class="modal-btn" style="flex: 1; background: #666;">
@@ -26509,24 +28028,71 @@ For more help, visit: help.pose.app
             if (modal) modal.remove();
         }
 
-        // Apply Audio Trim
-        function applyAudioTrim() {
-            const startTime = parseFloat(document.getElementById('trimStart').value) || 0;
-            const endTime = parseFloat(document.getElementById('trimEnd').value) || 30;
+        // Apply Sound Library Trim
+        function applySoundLibraryTrim() {
+            // Get trim input elements - check if they exist first
+            const trimStartEl = document.getElementById('trimStart');
+            const trimEndEl = document.getElementById('trimEnd');
 
-            if (startTime >= endTime) {
-                showToastRecording('Start time must be less than end time', 'error', '❌');
-                return;
+            if (trimStartEl && trimEndEl) {
+                // Use number inputs
+                const startTime = parseFloat(trimStartEl.value) || 0;
+                const endTime = parseFloat(trimEndEl.value) || 30;
+
+                if (startTime >= endTime) {
+                    showToastRecording('Start time must be less than end time', 'error', '❌');
+                    return;
+                }
+
+                // Update selected sound with trim info
+                if (soundLibraryState && soundLibraryState.selectedSound) {
+                    soundLibraryState.selectedSound.trimStart = startTime;
+                    soundLibraryState.selectedSound.trimEnd = endTime;
+                    soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+
+                    closeSoundTrimmer();
+                    showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
+                    console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
+                    return;
+                }
             }
 
-            // Update selected sound with trim info
-            soundLibraryState.selectedSound.trimStart = startTime;
-            soundLibraryState.selectedSound.trimEnd = endTime;
-            soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+            // Try sliders instead
+            const startSlider = document.getElementById('startSlider');
+            const endSlider = document.getElementById('endSlider');
+            
+            if (startSlider && endSlider) {
+                const startTime = parseFloat(startSlider.value) || 0;
+                const endTime = parseFloat(endSlider.value) || 30;
+                
+                if (startTime >= endTime) {
+                    showToastRecording('Start time must be less than end time', 'error', '❌');
+                    return;
+                }
 
+                if (soundLibraryState && soundLibraryState.selectedSound) {
+                    soundLibraryState.selectedSound.trimStart = startTime;
+                    soundLibraryState.selectedSound.trimEnd = endTime;
+                    soundLibraryState.selectedSound.trimDuration = (endTime - startTime).toFixed(2);
+
+                    closeSoundTrimmer();
+                    showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
+                    console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
+                    return;
+                }
+            }
+
+            // If we get here, no controls were found
+            console.error('❌ No trim controls found in DOM');
+            console.warn('Available elements:', {
+                trimStart: !!trimStartEl,
+                trimEnd: !!trimEndEl,
+                startSlider: !!startSlider,
+                endSlider: !!endSlider,
+                soundLibraryState: !!soundLibraryState
+            });
+            showToastRecording('Trim controls not accessible', 'error', '❌');
             closeSoundTrimmer();
-            showToastRecording(`✂️ Trimmed to ${soundLibraryState.selectedSound.trimDuration}s`, 'success', '✓');
-            console.log('🎵 Sound trimmed:', soundLibraryState.selectedSound.trimStart, '-', soundLibraryState.selectedSound.trimEnd);
         }
 
         // Genre mapping for iTunes API
@@ -26681,68 +28247,8 @@ For more help, visit: help.pose.app
                 .filter(result => result.score > 0)
                 .sort((a, b) => b.score - a.score);
 
-            // For poseMusic tab, also search iTunes API
+            // iTunes API removed - Using Firebase only for sound library
             let apiResultsWithScore = [];
-            if (tab === 'poseMusic' && queryTerms.length > 0) {
-                try {
-                    console.log(`🔍 Searching iTunes API for: "${query}"`);
-                    const iTunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=20`;
-                    console.log(`📡 API URL: ${iTunesUrl}`);
-
-                    const response = await fetch(iTunesUrl, {
-                        method: 'GET',
-                        mode: 'cors',
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    console.log(`📊 API Response Status: ${response.status}`);
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log(`✅ iTunes API returned ${data.resultCount} results`);
-
-                        if (data.results && data.results.length > 0) {
-                            const apiResults = data.results
-                                .filter(song => song.previewUrl && song.trackName && song.artistName)
-                                .map((song, index) => ({
-                                    id: `api_${Date.now()}_${index}`,
-                                    title: song.trackName || 'Unknown',
-                                    artist: song.artistName || 'Unknown Artist',
-                                    duration: formatDuration(song.trackTimeMillis),
-                                    fullDuration: formatDuration(song.trackTimeMillis),
-                                    previewNote: '(30s preview)',
-                                    thumbnail: song.artworkUrl100 || song.artworkUrl60,
-                                    audioUrl: song.previewUrl,
-                                    category: 'Search Result',
-                                    releaseYear: new Date(song.releaseDate).getFullYear() || new Date().getFullYear(),
-                                    uses: `${Math.floor(Math.random() * 100) + 10}K`,
-                                    trending: index === 0,
-                                    isTrimable: true,
-                                    isAPIResult: true
-                                }));
-
-                            apiResultsWithScore = apiResults
-                                .map(sound => ({
-                                    sound,
-                                    score: calculateSearchRelevance(sound, normalizedQuery, queryTerms) + 50, // Slight boost for API results
-                                    type: 'api'
-                                }))
-                                .filter(result => result.score > 0);
-
-                            console.log(`✅ Found ${apiResults.length} songs with preview from iTunes API`);
-                        } else {
-                            console.warn(`⚠️ iTunes API returned no results with preview URLs`);
-                        }
-                    } else {
-                        console.warn(`⚠️ iTunes API returned status ${response.status}`);
-                    }
-                } catch (error) {
-                    console.error('❌ iTunes API search error:', error.message, error);
-                    showToastRecording(`Error searching iTunes: ${error.message}`, 'error', '❌');
-                }
-            }
 
             // Combine results and sort by relevance
             let allResults = [...localResultsWithScore, ...apiResultsWithScore]
@@ -27397,7 +28903,7 @@ For more help, visit: help.pose.app
         });
 
         // ========== WALLET FUNCTIONS ==========
-        
+
         // Open wallet modal
         function openWallet() {
             const walletModal = document.getElementById('walletModal');
@@ -27425,7 +28931,7 @@ For more help, visit: help.pose.app
 
                 const userDoc = await db.collection('users').doc(currentUser.uid).get();
                 const userData = userDoc.data() || {};
-                
+
                 const walletBalance = userData.walletBalance || 0;
                 const pCoinBalance = userData.pCoinBalance || 0;
 
@@ -27518,7 +29024,7 @@ For more help, visit: help.pose.app
         async function saveWalletToFirebase() {
             try {
                 if (!currentUser) return;
-                
+
                 await db.collection('users').doc(currentUser.uid).update({
                     walletData: walletData
                 });
@@ -27837,7 +29343,7 @@ For more help, visit: help.pose.app
             console.log('🔴 purchasePost called with:', { postId, creatorId, price });
             console.log('🔴 currentUser:', currentUser);
             console.log('🔴 db:', db);
-            
+
             if (!currentUser) {
                 console.error('❌ No currentUser');
                 alert('❌ Please sign in first');
@@ -28006,7 +29512,7 @@ For more help, visit: help.pose.app
             // Reset form
             clearPinInputs();
             pinAttempts = 0;
-            
+
             if (action === 'create') {
                 title.textContent = 'Create Wallet PIN';
                 subtitle.textContent = 'Set a 6-digit PIN to secure your wallet';
@@ -28030,7 +29536,7 @@ For more help, visit: help.pose.app
             // Store action for later use
             window.pinAction = action;
             overlay.classList.add('active');
-            
+
             // Focus first input
             document.getElementById('pinInput1').focus();
         }
@@ -28050,7 +29556,7 @@ For more help, visit: help.pose.app
             for (let i = 1; i <= 6; i++) {
                 document.getElementById(`pinInput${i}`).value = '';
                 document.getElementById(`pinInput${i}`).classList.remove('error', 'filled');
-                
+
                 if (document.getElementById(`pinConfirmInput${i}`)) {
                     document.getElementById(`pinConfirmInput${i}`).value = '';
                     document.getElementById(`pinConfirmInput${i}`).classList.remove('error', 'filled');
@@ -28154,11 +29660,11 @@ For more help, visit: help.pose.app
         // Toggle PIN visibility
         function togglePinVisibility() {
             const toggle = document.getElementById('pinVisibilityToggle').checked;
-            
+
             for (let i = 1; i <= 6; i++) {
                 const mainInput = document.getElementById(`pinInput${i}`);
                 const confirmInput = document.getElementById(`pinConfirmInput${i}`);
-                
+
                 mainInput.type = toggle ? 'text' : 'password';
                 if (confirmInput) {
                     confirmInput.type = toggle ? 'text' : 'password';
@@ -28187,7 +29693,7 @@ For more help, visit: help.pose.app
                         statusDiv.textContent = '❌ PINs do not match. Please try again.';
                         document.getElementById('pinInput1').classList.add('error');
                         document.getElementById('pinConfirmInput1').classList.add('error');
-                        
+
                         setTimeout(() => {
                             clearPinInputs();
                             document.getElementById('pinInput1').focus();
@@ -28218,8 +29724,8 @@ For more help, visit: help.pose.app
                     });
 
                     statusDiv.className = 'pin-status success';
-                    statusDiv.textContent = action === 'create' 
-                        ? '✅ Wallet PIN created successfully!' 
+                    statusDiv.textContent = action === 'create'
+                        ? '✅ Wallet PIN created successfully!'
                         : '✅ Wallet PIN updated successfully!';
 
                     setTimeout(() => {
@@ -28244,9 +29750,9 @@ For more help, visit: help.pose.app
 
                         statusDiv.className = 'pin-status error';
                         statusDiv.textContent = `❌ Incorrect PIN. Attempts remaining: ${remaining}`;
-                        
+
                         document.getElementById('pinInput1').classList.add('error');
-                        
+
                         if (pinAttempts >= MAX_PIN_ATTEMPTS) {
                             setTimeout(() => {
                                 closePinModal();
@@ -28295,7 +29801,7 @@ For more help, visit: help.pose.app
 
                 const userDoc = await db.collection('users').doc(currentUser.uid).get();
                 const userData = userDoc.data() || {};
-                
+
                 if (userData.walletPin) {
                     // PIN exists, show change option
                     openPinModal('change');
@@ -28323,10 +29829,10 @@ For more help, visit: help.pose.app
 
                 if (userData.walletPin) {
                     // PIN is set
-                    const createdAt = userData.walletPinCreatedAt 
+                    const createdAt = userData.walletPinCreatedAt
                         ? new Date(userData.walletPinCreatedAt).toLocaleDateString()
                         : 'Unknown';
-                    
+
                     pinStatusText.innerHTML = `
                         <div style="color: #22c55e; margin-bottom: 0.5rem;">✅ PIN is Protected</div>
                         <div style="color: #999; font-size: 0.9rem;">Created: ${createdAt}</div>
@@ -28349,7 +29855,7 @@ For more help, visit: help.pose.app
 
         // Update PIN status when wallet is opened
         const originalOpenWallet = window.openWallet;
-        window.openWallet = function() {
+        window.openWallet = function () {
             originalOpenWallet();
             setTimeout(() => {
                 updatePinStatus();
@@ -28374,158 +29880,163 @@ For more help, visit: help.pose.app
                 </div>
 
                 <div class="wallet-balance-display">
-                <div class="wallet-balance-label">Balance</div>
-                <div class="wallet-balance-amount" id="walletBalance">₦0</div>
-                
-                <!-- pCoin Balance -->
-                <div class="pcoin-section">
-                    <div class="pcoin-label">💎 pCoin Balance</div>
-                    <div class="pcoin-balance" id="walletPCoinBalance">0 pCoin</div>
-                    <div class="pcoin-rate">₦25 per pCoin</div>
-                </div>
-            </div>
+                    <div class="wallet-balance-label">Balance</div>
+                    <div class="wallet-balance-amount" id="walletBalance">₦0</div>
 
-            <div class="wallet-action-btns">
-                <button class="wallet-action-btn" onclick="openWithdrawalModal()">
-                    💸<br>Withdraw
-                </button>
-                <button class="wallet-action-btn" onclick="openDepositModal()">
-                    💳<br>Deposit
-                </button>
-                <button class="wallet-action-btn" onclick="openBuyPCoinModal()">
-                    💎<br>Buy pCoin
-                </button>
-            </div>
-
-            <!-- Wallet Tabs -->
-            <div class="wallet-tabs">
-                <button class="wallet-tab-btn active" onclick="switchWalletTab('set-bank')">
-                    🏦 Set Bank
-                </button>
-                <button class="wallet-tab-btn" onclick="switchWalletTab('history')">
-                    📜 History
-                </button>
-                <button class="wallet-tab-btn" onclick="switchWalletTab('security')">
-                    🔐 Security
-                </button>
-            </div>
-
-            <!-- Set Bank Tab -->
-            <div class="wallet-tab-content active" id="set-bank">
-                <h3 style="color: #FFFFFF; margin-bottom: 1.5rem;">Bank Account Information</h3>
-
-                <div class="wallet-form-group">
-                    <label class="wallet-form-label">Bank Name</label>
-                    <input type="text" class="wallet-form-input" id="bankName"
-                        placeholder="e.g., First Bank, GTBank, Zenith Bank">
-                </div>
-
-                <div class="wallet-form-group">
-                    <label class="wallet-form-label">Account Number</label>
-                    <input type="text" class="wallet-form-input" id="accountNumber"
-                        placeholder="10 digit account number" maxlength="10">
-                </div>
-
-                <div class="wallet-form-group">
-                    <label class="wallet-form-label">Account Holder Name</label>
-                    <input type="text" class="wallet-form-input" id="accountName"
-                        placeholder="Your full name as on bank account">
-                </div>
-
-                <button class="wallet-submit-btn" onclick="saveBankDetails()">
-                    Save Bank Details
-                </button>
-
-                <div id="savedBankInfo"
-                    style="display: none; margin-top: 2rem; padding: 1.5rem; background: #0a0a0a; border-radius: 10px; border-left: 4px solid #22c55e;">
-                    <div style="color: #22c55e; font-weight: 700; margin-bottom: 1rem;">✅ Saved Bank Account</div>
-                    <div style="color: #999; font-size: 0.9rem;">
-                        <div>Bank: <span id="displayBankName" style="color: #FFFFFF;">-</span></div>
-                        <div>Account: <span id="displayAccountNumber" style="color: #FFFFFF;">****</span></div>
-                        <div>Holder: <span id="displayAccountName" style="color: #FFFFFF;">-</span></div>
+                    <!-- pCoin Balance -->
+                    <div class="pcoin-section">
+                        <div class="pcoin-label">💎 pCoin Balance</div>
+                        <div class="pcoin-balance" id="walletPCoinBalance">0 pCoin</div>
+                        <div class="pcoin-rate">₦25 per pCoin</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- History Tab -->
-            <div class="wallet-tab-content" id="history">
-                <h3 style="color: #FFFFFF; margin-bottom: 1.5rem;">Transaction History</h3>
+                <div class="wallet-action-btns">
+                    <button class="wallet-action-btn" onclick="openWithdrawalModal()">
+                        💸<br>Withdraw
+                    </button>
+                    <button class="wallet-action-btn" onclick="openDepositModal()">
+                        💳<br>Deposit
+                    </button>
+                    <button class="wallet-action-btn" onclick="openBuyPCoinModal()">
+                        💎<br>Buy pCoin
+                    </button>
+                </div>
 
-                <div id="walletHistoryContainer">
-                    <div style="text-align: center; color: #999; padding: 2rem;">
-                        No transactions yet
+                <!-- Wallet Tabs -->
+                <div class="wallet-tabs">
+                    <button class="wallet-tab-btn active" onclick="switchWalletTab('set-bank')">
+                        🏦 Set Bank
+                    </button>
+                    <button class="wallet-tab-btn" onclick="switchWalletTab('history')">
+                        📜 History
+                    </button>
+                    <button class="wallet-tab-btn" onclick="switchWalletTab('security')">
+                        🔐 Security
+                    </button>
+                </div>
+
+                <!-- Set Bank Tab -->
+                <div class="wallet-tab-content active" id="set-bank">
+                    <h3 style="color: #FFFFFF; margin-bottom: 1.5rem;">Bank Account Information</h3>
+
+                    <div class="wallet-form-group">
+                        <label class="wallet-form-label">Bank Name</label>
+                        <input type="text" class="wallet-form-input" id="bankName"
+                            placeholder="e.g., First Bank, GTBank, Zenith Bank">
+                    </div>
+
+                    <div class="wallet-form-group">
+                        <label class="wallet-form-label">Account Number</label>
+                        <input type="text" class="wallet-form-input" id="accountNumber"
+                            placeholder="10 digit account number" maxlength="10">
+                    </div>
+
+                    <div class="wallet-form-group">
+                        <label class="wallet-form-label">Account Holder Name</label>
+                        <input type="text" class="wallet-form-input" id="accountName"
+                            placeholder="Your full name as on bank account">
+                    </div>
+
+                    <button class="wallet-submit-btn" onclick="saveBankDetails()">
+                        Save Bank Details
+                    </button>
+
+                    <div id="savedBankInfo"
+                        style="display: none; margin-top: 2rem; padding: 1.5rem; background: #0a0a0a; border-radius: 10px; border-left: 4px solid #22c55e;">
+                        <div style="color: #22c55e; font-weight: 700; margin-bottom: 1rem;">✅ Saved Bank Account</div>
+                        <div style="color: #999; font-size: 0.9rem;">
+                            <div>Bank: <span id="displayBankName" style="color: #FFFFFF;">-</span></div>
+                            <div>Account: <span id="displayAccountNumber" style="color: #FFFFFF;">****</span></div>
+                            <div>Holder: <span id="displayAccountName" style="color: #FFFFFF;">-</span></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Security Tab -->
-            <div class="wallet-tab-content" id="security">
-                <h3 style="color: #FFFFFF; margin-bottom: 1.5rem;">🔐 Wallet Security</h3>
+                <!-- History Tab -->
+                <div class="wallet-tab-content" id="history">
+                    <h3 style="color: #FFFFFF; margin-bottom: 1.5rem;">Transaction History</h3>
 
-                <div style="background: rgba(76, 29, 149, 0.1); border-left: 4px solid #4C1D95; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
-                    <div style="color: #4C1D95; font-weight: 700; margin-bottom: 0.75rem;">🛡️ PIN Protection</div>
-                    <p style="color: #FFFFFF; font-size: 0.9rem; line-height: 1.6;">
-                        A 6-digit PIN adds an extra layer of security to your wallet. You'll be asked to enter it when making transactions or withdrawals.
-                    </p>
+                    <div id="walletHistoryContainer">
+                        <div style="text-align: center; color: #999; padding: 2rem;">
+                            No transactions yet
+                        </div>
+                    </div>
                 </div>
 
-                <div id="pinStatusDisplay" style="margin-bottom: 2rem; padding: 1.5rem; background: #0a0a0a; border-radius: 10px; border-left: 4px solid #999;">
-                    <div style="color: #999; font-weight: 700; margin-bottom: 0.75rem;">PIN Status</div>
-                    <div style="color: #FFFFFF; font-size: 1.1rem;" id="pinStatusText">🔒 Checking...</div>
-                </div>
+                <!-- Security Tab -->
+                <div class="wallet-tab-content" id="security">
+                    <h3 style="color: #FFFFFF; margin-bottom: 1.5rem;">🔐 Wallet Security</h3>
 
-                <button class="wallet-submit-btn" id="pinActionBtn" onclick="handlePinAction()" style="width: 100%;">
-                    🔐 Create PIN
-                </button>
+                    <div
+                        style="background: rgba(76, 29, 149, 0.1); border-left: 4px solid #4C1D95; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                        <div style="color: #4C1D95; font-weight: 700; margin-bottom: 0.75rem;">🛡️ PIN Protection</div>
+                        <p style="color: #FFFFFF; font-size: 0.9rem; line-height: 1.6;">
+                            A 6-digit PIN adds an extra layer of security to your wallet. You'll be asked to enter it
+                            when making transactions or withdrawals.
+                        </p>
+                    </div>
 
-                <div style="margin-top: 1.5rem; padding: 1.5rem; background: #0a0a0a; border-radius: 10px; border-left: 4px solid #FFD700;">
-                    <div style="color: #FFD700; font-weight: 700; margin-bottom: 0.75rem;">⚠️ Important</div>
-                    <ul style="color: #999; font-size: 0.9rem; line-height: 1.8; margin: 0; padding-left: 1.5rem;">
-                        <li>Remember your PIN - you cannot recover it if forgotten</li>
-                        <li>Never share your PIN with anyone</li>
-                        <li>Never enter your PIN on untrusted websites</li>
-                        <li>You can change your PIN anytime from this screen</li>
-                    </ul>
+                    <div id="pinStatusDisplay"
+                        style="margin-bottom: 2rem; padding: 1.5rem; background: #0a0a0a; border-radius: 10px; border-left: 4px solid #999;">
+                        <div style="color: #999; font-weight: 700; margin-bottom: 0.75rem;">PIN Status</div>
+                        <div style="color: #FFFFFF; font-size: 1.1rem;" id="pinStatusText">🔒 Checking...</div>
+                    </div>
+
+                    <button class="wallet-submit-btn" id="pinActionBtn" onclick="handlePinAction()"
+                        style="width: 100%;">
+                        🔐 Create PIN
+                    </button>
+
+                    <div
+                        style="margin-top: 1.5rem; padding: 1.5rem; background: #0a0a0a; border-radius: 10px; border-left: 4px solid #FFD700;">
+                        <div style="color: #FFD700; font-weight: 700; margin-bottom: 0.75rem;">⚠️ Important</div>
+                        <ul style="color: #999; font-size: 0.9rem; line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+                            <li>Remember your PIN - you cannot recover it if forgotten</li>
+                            <li>Never share your PIN with anyone</li>
+                            <li>Never enter your PIN on untrusted websites</li>
+                            <li>You can change your PIN anytime from this screen</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
 
     <!-- Purchase Modal for pCoin -->
     <div class="purchase-modal" id="purchaseModal">
-       <div class="purchase-content">
-           <button class="purchase-close" onclick="closePurchaseModal()">×</button>
-           
-           <div class="purchase-header">
-               <span class="purchase-icon">🔓</span>
-               <h2 id="purchaseTitle">Premium Content</h2>
-           </div>
+        <div class="purchase-content">
+            <button class="purchase-close" onclick="closePurchaseModal()">×</button>
 
-           <div class="purchase-details">
-               <div class="purchase-detail-item">
-                   <span class="purchase-label">Content Title</span>
-                   <span class="purchase-value" id="purchaseTitle2">-</span>
-               </div>
-               <div class="purchase-detail-item">
-                   <span class="purchase-label">Your Balance</span>
-                   <span class="purchase-value" id="purchaseBalance">0 pCoin</span>
-               </div>
-               <div class="purchase-detail-item">
-                   <span class="purchase-label">Cost</span>
-                   <span class="purchase-value purchase-price" id="purchaseCostDisplay">0 pCoin</span>
-               </div>
-           </div>
+            <div class="purchase-header">
+                <span class="purchase-icon">🔓</span>
+                <h2 id="purchaseTitle">Premium Content</h2>
+            </div>
 
-           <div class="purchase-warning">
-               <p id="purchaseWarningText">This action cannot be undone. You will lose pCoins from your balance.</p>
-           </div>
+            <div class="purchase-details">
+                <div class="purchase-detail-item">
+                    <span class="purchase-label">Content Title</span>
+                    <span class="purchase-value" id="purchaseTitle2">-</span>
+                </div>
+                <div class="purchase-detail-item">
+                    <span class="purchase-label">Your Balance</span>
+                    <span class="purchase-value" id="purchaseBalance">0 pCoin</span>
+                </div>
+                <div class="purchase-detail-item">
+                    <span class="purchase-label">Cost</span>
+                    <span class="purchase-value purchase-price" id="purchaseCostDisplay">0 pCoin</span>
+                </div>
+            </div>
 
-           <div class="purchase-buttons">
-               <button class="purchase-btn-cancel" onclick="closePurchaseModal()">Cancel</button>
-               <button class="purchase-btn-confirm" onclick="confirmPurchase()">✅ Confirm</button>
-           </div>
-       </div>
+            <div class="purchase-warning">
+                <p id="purchaseWarningText">This action cannot be undone. You will lose pCoins from your balance.</p>
+            </div>
+
+            <div class="purchase-buttons">
+                <button class="purchase-btn-cancel" onclick="closePurchaseModal()">Cancel</button>
+                <button class="purchase-btn-confirm" onclick="confirmPurchase()">✅ Confirm</button>
+            </div>
+        </div>
     </div>
 
     <!-- Deposit Modal -->
@@ -28716,7 +30227,8 @@ For more help, visit: help.pose.app
                         <span>pCoin to Receive:</span>
                         <span id="pcoinReceiveAmount">0 pCoin</span>
                     </div>
-                    <div style="color: #999; font-size: 0.75rem; margin-top: 0.5rem; text-align: center;">@ ₦25 per pCoin
+                    <div style="color: #999; font-size: 0.75rem; margin-top: 0.5rem; text-align: center;">@ ₦25 per
+                        pCoin
                     </div>
                 </div>
 
@@ -28753,12 +30265,18 @@ For more help, visit: help.pose.app
             <div class="pin-status" id="pinStatus"></div>
 
             <div class="pin-input-group" id="pinInputGroup">
-                <input type="password" class="pin-input" id="pinInput1" maxlength="1" placeholder="•" oninput="handlePinInput(event, 1)">
-                <input type="password" class="pin-input" id="pinInput2" maxlength="1" placeholder="•" oninput="handlePinInput(event, 2)">
-                <input type="password" class="pin-input" id="pinInput3" maxlength="1" placeholder="•" oninput="handlePinInput(event, 3)">
-                <input type="password" class="pin-input" id="pinInput4" maxlength="1" placeholder="•" oninput="handlePinInput(event, 4)">
-                <input type="password" class="pin-input" id="pinInput5" maxlength="1" placeholder="•" oninput="handlePinInput(event, 5)">
-                <input type="password" class="pin-input" id="pinInput6" maxlength="1" placeholder="•" oninput="handlePinInput(event, 6)">
+                <input type="password" class="pin-input" id="pinInput1" maxlength="1" placeholder="•"
+                    oninput="handlePinInput(event, 1)">
+                <input type="password" class="pin-input" id="pinInput2" maxlength="1" placeholder="•"
+                    oninput="handlePinInput(event, 2)">
+                <input type="password" class="pin-input" id="pinInput3" maxlength="1" placeholder="•"
+                    oninput="handlePinInput(event, 3)">
+                <input type="password" class="pin-input" id="pinInput4" maxlength="1" placeholder="•"
+                    oninput="handlePinInput(event, 4)">
+                <input type="password" class="pin-input" id="pinInput5" maxlength="1" placeholder="•"
+                    oninput="handlePinInput(event, 5)">
+                <input type="password" class="pin-input" id="pinInput6" maxlength="1" placeholder="•"
+                    oninput="handlePinInput(event, 6)">
             </div>
 
             <div class="pin-toggle-visibility">
@@ -28773,22 +30291,29 @@ For more help, visit: help.pose.app
                     Confirm your PIN
                 </div>
                 <div class="pin-input-group" id="pinConfirmInputGroup">
-                    <input type="password" class="pin-input confirm" id="pinConfirmInput1" maxlength="1" placeholder="•" oninput="handleConfirmPinInput(event, 1)">
-                    <input type="password" class="pin-input confirm" id="pinConfirmInput2" maxlength="1" placeholder="•" oninput="handleConfirmPinInput(event, 2)">
-                    <input type="password" class="pin-input confirm" id="pinConfirmInput3" maxlength="1" placeholder="•" oninput="handleConfirmPinInput(event, 3)">
-                    <input type="password" class="pin-input confirm" id="pinConfirmInput4" maxlength="1" placeholder="•" oninput="handleConfirmPinInput(event, 4)">
-                    <input type="password" class="pin-input confirm" id="pinConfirmInput5" maxlength="1" placeholder="•" oninput="handleConfirmPinInput(event, 5)">
-                    <input type="password" class="pin-input confirm" id="pinConfirmInput6" maxlength="1" placeholder="•" oninput="handleConfirmPinInput(event, 6)">
+                    <input type="password" class="pin-input confirm" id="pinConfirmInput1" maxlength="1" placeholder="•"
+                        oninput="handleConfirmPinInput(event, 1)">
+                    <input type="password" class="pin-input confirm" id="pinConfirmInput2" maxlength="1" placeholder="•"
+                        oninput="handleConfirmPinInput(event, 2)">
+                    <input type="password" class="pin-input confirm" id="pinConfirmInput3" maxlength="1" placeholder="•"
+                        oninput="handleConfirmPinInput(event, 3)">
+                    <input type="password" class="pin-input confirm" id="pinConfirmInput4" maxlength="1" placeholder="•"
+                        oninput="handleConfirmPinInput(event, 4)">
+                    <input type="password" class="pin-input confirm" id="pinConfirmInput5" maxlength="1" placeholder="•"
+                        oninput="handleConfirmPinInput(event, 5)">
+                    <input type="password" class="pin-input confirm" id="pinConfirmInput6" maxlength="1" placeholder="•"
+                        oninput="handleConfirmPinInput(event, 6)">
                 </div>
             </div>
 
             <div class="pin-button-group">
                 <button class="pin-action-btn secondary" onclick="closePinModal()">Cancel</button>
-                <button class="pin-action-btn primary" id="pinSubmitBtn" onclick="submitPin()" disabled>Create PIN</button>
+                <button class="pin-action-btn primary" id="pinSubmitBtn" onclick="submitPin()" disabled>Create
+                    PIN</button>
             </div>
         </div>
     </div>
 
-    </body>
+</body>
 
 </html>
