@@ -1292,30 +1292,28 @@
         }
 
         .video-play-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
             flex-shrink: 0;
-            backdrop-filter: blur(2px);
         }
 
         .video-play-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: scale(1.08);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .video-play-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         /* Time Display */
@@ -1324,13 +1322,11 @@
             align-items: center;
             gap: 4px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             font-family: 'Courier New', monospace;
             font-weight: 500;
             flex: 1;
-            padding: 0 10px;
-            text-align: center;
-            letter-spacing: 0.5px;
+            padding: 0 8px;
         }
 
         .time-separator {
@@ -1340,30 +1336,28 @@
 
         /* Fullscreen Button */
         .video-fullscreen-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
             flex-shrink: 0;
-            backdrop-filter: blur(2px);
         }
 
         .video-fullscreen-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: scale(1.08);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .video-fullscreen-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         /* Video controls responsive */
@@ -10475,21 +10469,19 @@
         .video-progress-bar {
             position: relative;
             width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 2.5px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
             cursor: pointer;
             overflow: hidden;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .video-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #ff0050, #ff4081);
             width: 0%;
-            border-radius: 2.5px;
+            border-radius: 2px;
             transition: width 0.1s linear;
-            box-shadow: 0 0 6px rgba(255, 0, 80, 0.4);
         }
 
         .video-progress-slider {
@@ -10610,17 +10602,16 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.5) 100%);
-            padding: 24px 16px 16px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7), transparent);
+            padding: 20px 15px 12px;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 10px;
             opacity: 1;
             transition: opacity 0.3s ease;
             z-index: 55;
             pointer-events: all;
-            max-height: 140px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            max-height: 120px;
         }
 
         /* Video Controls Sections - Well Structured */
@@ -10633,16 +10624,13 @@
 
         .progress-section {
             flex-direction: column;
-            gap: 8px;
-            width: 100%;
+            gap: 0;
         }
 
         .playback-section {
             flex-direction: row;
-            gap: 14px;
+            gap: 12px;
             align-items: center;
-            justify-content: center;
-            width: 100%;
         }
 
         .edit-video-controls.visible {
@@ -10674,13 +10662,8 @@
                 width: 100%;
             }
 
-            .progress-section {
-                gap: 6px;
-            }
-
             .playback-section {
-                gap: 11px;
-                justify-content: center;
+                gap: 10px;
             }
 
             .video-center-play {
@@ -11951,15 +11934,13 @@
                         <div class="video-controls-section progress-section">
                             <div class="video-progress-bar">
                                 <div class="video-progress-fill" id="videoProgressFill"></div>
-                                <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0"
-                                    max="100" value="0">
+                                <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100" value="0">
                             </div>
                         </div>
 
                         <!-- Playback Controls Section -->
                         <div class="video-controls-section playback-section">
-                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
-                                title="Play/Pause">
+                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()" title="Play/Pause">
                                 <i class="fas fa-play"></i>
                             </button>
                             <div class="video-time-display">
@@ -11967,8 +11948,7 @@
                                 <span class="time-separator">/</span>
                                 <span id="videoDuration">0:00</span>
                             </div>
-                            <button class="video-fullscreen-btn" id="editVideoFullscreen"
-                                onclick="toggleEditVideoFullscreen()" title="Fullscreen">
+                            <button class="video-fullscreen-btn" id="editVideoFullscreen" onclick="toggleEditVideoFullscreen()" title="Fullscreen">
                                 <i class="fas fa-expand"></i>
                             </button>
                         </div>
