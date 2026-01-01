@@ -4135,6 +4135,7 @@
             justify-content: center;
             overflow: hidden;
             z-index: 1;
+            aspect-ratio: 1 / 1;
         }
 
         /* Sound Display Panel */
@@ -10360,6 +10361,7 @@
             display: block !important;
             width: 100%;
             height: 100%;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
             background: #000;
             transform: none !important;
@@ -10380,6 +10382,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
+                aspect-ratio: 1 / 1;
                 object-fit: cover;
             }
         }
@@ -10398,6 +10401,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
+                aspect-ratio: 1 / 1;
                 object-fit: cover;
             }
         }
@@ -10735,6 +10739,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
+                aspect-ratio: 1 / 1;
                 object-fit: cover;
             }
 
@@ -17758,21 +17763,6 @@ For more help, visit: help.pose.app
                     // Handle when metadata is loaded
                     const onMetadataLoaded = () => {
                         console.log('✅ Video metadata loaded, duration:', editVideoElement.duration);
-                        console.log('📐 Video dimensions:', editVideoElement.videoWidth, 'x', editVideoElement.videoHeight);
-                        
-                        // TikTok style: Adjust container to match video aspect ratio
-                        if (editVideoElement.videoWidth && editVideoElement.videoHeight) {
-                            const aspectRatio = editVideoElement.videoWidth / editVideoElement.videoHeight;
-                            const container = document.querySelector('.edit-video-wrapper');
-                            if (container) {
-                                // Set max-width based on aspect ratio to prevent stretching
-                                if (aspectRatio < 1) {
-                                    // Portrait video - keep it portrait
-                                    container.style.maxWidth = 'min(100%, ' + (window.innerHeight * aspectRatio) + 'px)';
-                                }
-                            }
-                        }
-                        
                         if (loadingOverlay) {
                             loadingOverlay.style.display = 'none';
                         }
