@@ -10340,7 +10340,7 @@
         .edit-video-container {
             position: relative;
             width: 100%;
-            height: 100vh;
+            height: calc(100vh - 180px);
             background: #000;
             overflow: hidden;
             z-index: 1;
@@ -10360,9 +10360,7 @@
             display: block !important;
             width: 100%;
             height: 100%;
-            aspect-ratio: 9 / 16;
             object-fit: cover;
-            object-position: center;
             background: #000;
             transform: none !important;
         }
@@ -10371,7 +10369,7 @@
         @media (max-width: 768px) {
             .edit-video-container {
                 width: 100%;
-                height: 100vh;
+                height: calc(100vh - 170px);
             }
 
             .edit-video-wrapper {
@@ -10382,16 +10380,14 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
-                aspect-ratio: 9 / 16;
                 object-fit: cover;
-                object-position: center;
             }
         }
 
         @media (max-width: 480px) {
             .edit-video-container {
                 width: 100%;
-                height: 100vh;
+                height: calc(100vh - 160px);
             }
 
             .edit-video-wrapper {
@@ -10402,9 +10398,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
-                aspect-ratio: 9 / 16;
                 object-fit: cover;
-                object-position: center;
             }
         }
 
@@ -10741,9 +10735,7 @@
             #editVideoPreview {
                 width: 100%;
                 height: 100%;
-                aspect-ratio: 9 / 16;
                 object-fit: cover;
-                object-position: center;
             }
 
             /* Top bar mobile - better spacing */
@@ -17766,6 +17758,21 @@ For more help, visit: help.pose.app
                     // Handle when metadata is loaded
                     const onMetadataLoaded = () => {
                         console.log('✅ Video metadata loaded, duration:', editVideoElement.duration);
+                        console.log('📐 Video dimensions:', editVideoElement.videoWidth, 'x', editVideoElement.videoHeight);
+                        
+                        // TikTok style: Adjust container to match video aspect ratio
+                        if (editVideoElement.videoWidth && editVideoElement.videoHeight) {
+                            const aspectRatio = editVideoElement.videoWidth / editVideoElement.videoHeight;
+                            const container = document.querySelector('.edit-video-wrapper');
+                            if (container) {
+                                // Set max-width based on aspect ratio to prevent stretching
+                                if (aspectRatio < 1) {
+                                    // Portrait video - keep it portrait
+                                    container.style.maxWidth = 'min(100%, ' + (window.innerHeight * aspectRatio) + 'px)';
+                                }
+                            }
+                        }
+                        
                         if (loadingOverlay) {
                             loadingOverlay.style.display = 'none';
                         }
