@@ -10348,20 +10348,23 @@
             justify-content: center;
             flex-direction: column;
             z-index: 1;
+            padding: 20px;
         }
 
         /* Edit screen video wrapper and preview - VERTICAL 9:16 TIKTOK FORMAT */
         .edit-video-wrapper {
             position: relative;
             width: 100%;
-            height: 100%;
+            max-width: 360px;
+            aspect-ratio: 9 / 16;
             background: #000;
+            border-radius: 12px;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            aspect-ratio: 9 / 16;
             z-index: 1;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         }
 
         #editVideoPreview {
@@ -10373,51 +10376,54 @@
             transform: none !important;
         }
 
-        /* RESPONSIVE VIDEO ON MOBILE */
+        /* RESPONSIVE VIDEO ON TABLET */
         @media (max-width: 768px) {
-            #editVideoPreview {
+            .edit-video-container {
                 width: 100%;
-                height: 100%;
-                object-fit: cover;
+                height: calc(100vh - 170px);
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .edit-video-wrapper {
                 width: 100%;
-                height: auto;
+                max-width: 340px;
                 aspect-ratio: 9 / 16;
-                max-height: calc(100vh - 170px);
+                border-radius: 10px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
             }
 
-            .edit-video-container {
+            #editVideoPreview {
                 width: 100%;
-                height: calc(100vh - 170px);
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                height: 100%;
+                object-fit: cover;
             }
         }
 
         @media (max-width: 480px) {
-            #editVideoPreview {
+            .edit-video-container {
                 width: 100%;
-                height: 100%;
-                object-fit: cover;
+                height: calc(100vh - 160px);
+                padding: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .edit-video-wrapper {
                 width: 100%;
-                height: auto;
+                max-width: 320px;
                 aspect-ratio: 9 / 16;
-                max-height: calc(100vh - 160px);
-                max-width: 100%;
+                border-radius: 10px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
             }
 
-            .edit-video-container {
+            #editVideoPreview {
                 width: 100%;
-                height: calc(100vh - 160px);
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                height: 100%;
+                object-fit: cover;
             }
         }
 
@@ -10742,22 +10748,24 @@
             .edit-video-container {
                 width: 100%;
                 height: calc(100vh - 160px);
+                padding: 12px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
-            /* Video wrapper mobile - 9:16 ASPECT RATIO */
+            /* Video wrapper mobile - 9:16 ASPECT RATIO (NO SQUEEZE) */
             .edit-video-wrapper {
                 width: 100%;
-                height: auto;
+                max-width: 320px;
                 aspect-ratio: 9 / 16;
-                max-height: calc(100vh - 160px);
-                max-width: 100%;
+                border-radius: 10px;
                 position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+                overflow: hidden;
             }
 
             /* Video element mobile - NO SQUEEZE */
