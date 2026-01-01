@@ -10614,25 +10614,6 @@
             max-height: 120px;
         }
 
-        /* Video Controls Sections - Well Structured */
-        .video-controls-section {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .progress-section {
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .playback-section {
-            flex-direction: row;
-            gap: 12px;
-            align-items: center;
-        }
-
         .edit-video-controls.visible {
             opacity: 1;
             pointer-events: all;
@@ -10656,14 +10637,6 @@
                 opacity: 1;
                 pointer-events: all;
                 max-height: 115px;
-            }
-
-            .video-controls-section {
-                width: 100%;
-            }
-
-            .playback-section {
-                gap: 10px;
             }
 
             .video-center-play {
@@ -11916,7 +11889,6 @@
         <div id="screen3" class="recording-screen">
             <div class="edit-video-container">
                 <div class="edit-video-wrapper">
-                    <!-- Video Element -->
                     <video id="editVideoPreview" playsinline></video>
 
                     <!-- Hidden Audio Element for Sound Playback -->
@@ -11928,19 +11900,16 @@
                         <i class="fas fa-play"></i>
                     </button>
 
-                    <!-- Video Controls Overlay - Inside Video Area -->
+                    <!-- Video Controls Overlay -->
                     <div class="edit-video-controls">
-                        <!-- Progress Bar Section -->
-                        <div class="video-controls-section progress-section">
-                            <div class="video-progress-bar">
-                                <div class="video-progress-fill" id="videoProgressFill"></div>
-                                <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100" value="0">
-                            </div>
+                        <div class="video-progress-bar">
+                            <div class="video-progress-fill" id="videoProgressFill"></div>
+                            <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
+                                value="0">
                         </div>
-
-                        <!-- Playback Controls Section -->
-                        <div class="video-controls-section playback-section">
-                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()" title="Play/Pause">
+                        <div class="video-controls-bottom">
+                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
+                                title="Play/Pause">
                                 <i class="fas fa-play"></i>
                             </button>
                             <div class="video-time-display">
@@ -11948,7 +11917,8 @@
                                 <span class="time-separator">/</span>
                                 <span id="videoDuration">0:00</span>
                             </div>
-                            <button class="video-fullscreen-btn" id="editVideoFullscreen" onclick="toggleEditVideoFullscreen()" title="Fullscreen">
+                            <button class="video-fullscreen-btn" id="editVideoFullscreen"
+                                onclick="toggleEditVideoFullscreen()" title="Fullscreen">
                                 <i class="fas fa-expand"></i>
                             </button>
                         </div>
