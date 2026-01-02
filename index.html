@@ -4161,11 +4161,8 @@
         }
 
         .video-review-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: relative;
+            flex: 1;
             width: 100%;
             height: 100%;
             background: #000;
@@ -4175,13 +4172,17 @@
             justify-content: center;
             overflow: hidden;
             z-index: 1;
+            padding: 60px 16px 120px 16px;
         }
 
         .video-review-wrapper video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
             background: #000;
+            border-radius: 8px;
         }
 
         /* Top bar overlaid on video */
@@ -4224,6 +4225,10 @@
 
         /* ===== TIKTOK RESPONSIVE VIDEO REVIEW - TABLETS (768px - 1023px) ===== */
         @media (max-width: 1023px) and (min-width: 768px) {
+            .video-review-wrapper {
+                padding: 70px 20px 130px 20px;
+            }
+
             #screen3 .rec-top-bar {
                 padding: 14px 16px;
             }
@@ -4256,6 +4261,10 @@
 
         /* ===== TIKTOK RESPONSIVE VIDEO REVIEW - LARGE PHONES (480px - 767px) ===== */
         @media (max-width: 767px) {
+            .video-review-wrapper {
+                padding: 55px 14px 115px 14px;
+            }
+
             #screen3 .rec-top-bar {
                 padding: 12px 14px;
                 gap: 8px;
@@ -4298,6 +4307,10 @@
 
         /* ===== TIKTOK RESPONSIVE VIDEO REVIEW - SMALL PHONES (480px and below) ===== */
         @media (max-width: 480px) {
+            .video-review-wrapper {
+                padding: 50px 12px 110px 12px;
+            }
+
             #screen3 .rec-top-bar {
                 padding: 10px 12px;
                 gap: 8px;
