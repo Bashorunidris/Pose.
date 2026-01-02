@@ -10340,11 +10340,14 @@
         /* ===== SCREEN 3: VIDEO EDIT STYLES ===== */
         .edit-video-container {
             position: relative;
+            flex: 1;
             width: 100%;
-            height: calc(100vh - 180px);
             background: #000;
             overflow: hidden;
             z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Edit screen video wrapper and preview - FULL DEVICE WIDTH */
@@ -10355,14 +10358,17 @@
             background: #000;
             overflow: hidden;
             z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #editVideoPreview {
             display: block !important;
-            width: 100%;
-            height: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: center;
             background: #000;
             transform: none !important;
         }
@@ -10371,7 +10377,6 @@
         @media (max-width: 768px) {
             .edit-video-container {
                 width: 100%;
-                height: calc(100vh - 170px);
             }
 
             .edit-video-wrapper {
@@ -10380,17 +10385,15 @@
             }
 
             #editVideoPreview {
-                width: 100%;
-                height: 100%;
-                aspect-ratio: 1 / 1;
-                object-fit: cover;
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
             }
         }
 
         @media (max-width: 480px) {
             .edit-video-container {
                 width: 100%;
-                height: calc(100vh - 160px);
             }
 
             .edit-video-wrapper {
@@ -10399,10 +10402,9 @@
             }
 
             #editVideoPreview {
-                width: 100%;
-                height: 100%;
-                aspect-ratio: 1 / 1;
-                object-fit: cover;
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
             }
         }
 
@@ -10737,10 +10739,9 @@
 
             /* Video element mobile - FULL DEVICE WIDTH */
             #editVideoPreview {
-                width: 100%;
-                height: 100%;
-                aspect-ratio: 1 / 1;
-                object-fit: cover;
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
             }
 
             /* Top bar mobile - better spacing */
