@@ -10366,15 +10366,17 @@
 
         #editVideoPreview {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
             display: block !important;
             width: 100%;
             height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            transform: translate(-50%, -50%);
             object-fit: cover;
             object-position: center;
             background: #000;
-            transform: none !important;
         }
 
         /* RESPONSIVE VIDEO ON TABLET */
@@ -10425,15 +10427,17 @@
 
             #editVideoPreview {
                 position: absolute;
-                top: 0;
-                left: 0;
+                top: 50%;
+                left: 50%;
                 width: 100vw;
                 height: 100vh;
                 height: 100dvh;
+                max-width: 100vw;
+                max-height: 100vh;
+                max-height: 100dvh;
+                transform: translate(-50%, -50%);
                 object-fit: cover;
                 object-position: center;
-                min-width: 100%;
-                min-height: 100%;
             }
         }
 
