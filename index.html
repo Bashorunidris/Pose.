@@ -29791,7 +29791,7 @@ For more help, visit: help.pose.app
                 <button class="v2-top-next-btn" onclick="v2UploadVideo()">✓</button>
             </div>
 
-            <video id="v2EditVideo" playsinline autoplay muted style="width: 100%; height: 100%; background: #000;"></video>
+            <video id="v2EditVideo" playsinline autoplay style="width: 100%; height: 100%; background: #000;"></video>
 
             <div class="v2-time-indicator" id="v2TimeIndicator">0:00</div>
 
@@ -29935,15 +29935,24 @@ For more help, visit: help.pose.app
             v2InitCamera();
         }
 
-        // Initialize camera
+        // Initialize camera - uses same stream as screen1
         async function v2InitCamera() {
             try {
-                v2MediaStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: v2FacingMode, width: { ideal: 1280 }, height: { ideal: 1920 } },
-                    audio: true
-                });
+                // Use existing recordingState stream if available
+                if (recordingState && recordingState.stream && recordingState.stream.active) {
+                    v2MediaStream = recordingState.stream;
+                    document.getElementById('v2RecordVideo').srcObject = v2MediaStream;
+                    document.getElementById('v2CameraPlaceholder').style.display = 'none';
+                    console.log('✅ Using shared camera stream from screen1');
+                    return;
+                }
+                
+                // If not available, initialize screen1 camera first
+                await initializeVideoCamera();
+                v2MediaStream = recordingState.stream;
                 document.getElementById('v2RecordVideo').srcObject = v2MediaStream;
                 document.getElementById('v2CameraPlaceholder').style.display = 'none';
+                console.log('✅ Camera initialized and shared');
             } catch (err) {
                 console.error('Camera error:', err);
                 document.getElementById('v2CameraPlaceholder').innerHTML = `
@@ -29970,6 +29979,23 @@ For more help, visit: help.pose.app
 
             v2RecordedChunks = [];
             try {
+                // Prepare stream with both video and audio
+                const recordingStream = new MediaStream();
+                const stream = v2MediaStream || recordingState.stream;
+                
+                // Add all video tracks
+                stream.getVideoTracks().forEach(track => {
+                    recordingStream.addTrack(track);
+                });
+                
+                // Add all audio tracks
+                stream.getAudioTracks().forEach(track => {
+                    recordingStream.addTrack(track);
+                });
+                
+                console.log('Video tracks:', recordingStream.getVideoTracks().length);
+                console.log('Audio tracks:', recordingStream.getAudioTracks().length);
+                
                 let options = { mimeType: 'video/webm;codecs=vp9' };
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
                     options = { mimeType: 'video/webm;codecs=vp8' };
@@ -29982,7 +30008,7 @@ For more help, visit: help.pose.app
                 }
                 
                 console.log('Using codec:', options.mimeType || 'default');
-                v2MediaRecorder = new MediaRecorder(v2MediaStream, options);
+                v2MediaRecorder = new MediaRecorder(recordingStream, options);
 
                 v2MediaRecorder.ondataavailable = (e) => {
                     if (e.data.size > 0) v2RecordedChunks.push(e.data);
@@ -30180,8 +30206,7 @@ For more help, visit: help.pose.app
             }, 2000);
         }
 
-        // Initialize on load
-        window.addEventListener('load', v2InitCamera);
+        // Camera initialization removed - only initializes when recording screen is opened
     </script>
 
 </body>
