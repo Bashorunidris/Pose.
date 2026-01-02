@@ -4138,6 +4138,238 @@
             aspect-ratio: 1 / 1;
         }
 
+        /* ===== VIDEO REVIEW CONTAINER (Screen3) ===== */
+        .video-review-container {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+            padding-top: 60px;
+            padding-bottom: 120px;
+        }
+
+        .video-review-wrapper {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .video-review-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        /* ===== RESPONSIVE VIDEO REVIEW - TABLETS (768px - 1023px) ===== */
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .video-review-container {
+                padding-top: 55px;
+                padding-bottom: 110px;
+            }
+
+            #screen3 .rec-top-bar {
+                padding: 12px 16px;
+            }
+
+            #screen3 .rec-top-bar h2 {
+                font-size: 18px;
+            }
+
+            #screen3 .rec-icon-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            #screen3 .rec-edit-controls {
+                padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0)) 16px;
+                gap: 12px;
+            }
+
+            #screen3 .rec-add-sound-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            #screen3 .rec-action-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* ===== RESPONSIVE VIDEO REVIEW - LARGE PHONES (480px - 767px) ===== */
+        @media (max-width: 767px) {
+            .video-review-container {
+                padding-top: 50px;
+                padding-bottom: 105px;
+            }
+
+            #screen3 .rec-top-bar {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+
+            #screen3 .rec-top-bar h2 {
+                font-size: 16px;
+                margin: 0;
+            }
+
+            #screen3 .rec-icon-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 16px;
+                min-width: 38px;
+                min-height: 38px;
+            }
+
+            #screen3 .rec-edit-controls {
+                padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0)) 12px;
+                gap: 10px;
+                flex-direction: column;
+            }
+
+            #screen3 .rec-add-sound-btn {
+                padding: 11px 14px;
+                font-size: 13px;
+                width: 100%;
+            }
+
+            #screen3 .rec-action-btn {
+                padding: 11px 14px;
+                font-size: 13px;
+                width: 100%;
+                border-radius: 8px;
+            }
+        }
+
+        /* ===== RESPONSIVE VIDEO REVIEW - SMALL PHONES (480px and below) ===== */
+        @media (max-width: 480px) {
+            .video-review-container {
+                padding-top: 45px;
+                padding-bottom: 100px;
+            }
+
+            #screen3 .rec-top-bar {
+                padding: 8px 10px;
+                gap: 6px;
+                position: fixed;
+                top: 0;
+                z-index: 50;
+            }
+
+            #screen3 .rec-top-bar h2 {
+                font-size: 14px;
+                margin: 0;
+                flex: 1;
+                text-align: center;
+            }
+
+            #screen3 .rec-icon-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+                min-width: 36px;
+                min-height: 36px;
+                padding: 0;
+            }
+
+            #screen3 .rec-edit-controls {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0)) 10px;
+                gap: 8px;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.95);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                z-index: 45;
+            }
+
+            #screen3 .rec-add-sound-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+                width: 100%;
+                border-radius: 6px;
+            }
+
+            #screen3 .rec-add-sound-btn:active {
+                transform: scale(0.98);
+            }
+
+            #screen3 .rec-action-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+                width: 100%;
+                border-radius: 6px;
+                flex: 1;
+            }
+
+            #screen3 .rec-action-btn:active {
+                transform: scale(0.98);
+            }
+
+            #screen3 .rec-action-btn.post {
+                background: linear-gradient(45deg, #4C1D95, #6D28D9);
+            }
+
+            /* Stack buttons vertically on very small screens */
+            #screen3 .rec-edit-controls>div:last-child {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            #screen3 .rec-edit-controls>div:last-child .rec-action-btn {
+                width: 100%;
+            }
+
+            /* Video player touch-friendly */
+            #recordedVideoPreview {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            /* Ensure video controls are visible on mobile */
+            video::-webkit-media-controls {
+                display: flex;
+            }
+
+            video::cue {
+                background-image: none;
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* iPhone Safe Area Adjustments */
+        @supports (padding: max(0px)) {
+            @media (max-width: 480px) {
+                #screen3 .rec-top-bar {
+                    padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-left)) 8px max(10px, env(safe-area-inset-right));
+                }
+
+                #screen3 .rec-edit-controls {
+                    padding: 8px max(10px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-right));
+                }
+            }
+        }
+
         /* Sound Display Panel */
         .rec-sound-display {
             position: absolute;
@@ -10337,545 +10569,104 @@
             }
         }
 
-        /* ===== SCREEN 3: VIDEO EDIT STYLES ===== */
-        .edit-video-container {
-            position: relative;
-            flex: 1;
-            width: 100%;
-            background: #000;
-            overflow: hidden;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+
+        /* Sound display mobile */
+        .rec-sound-display {
+            bottom: calc(110px + env(safe-area-inset-bottom, 0));
+            left: env(safe-area-inset-left, 0);
+            right: env(safe-area-inset-right, 0);
+            padding: 10px 12px;
         }
 
-        /* Edit screen video wrapper and preview - FULL DEVICE WIDTH */
-        .edit-video-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            overflow: hidden;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .rec-sound-title {
+            font-size: 13px;
         }
 
-        #editVideoPreview {
-            display: block !important;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            object-position: center;
-            background: #000;
-            transform: none !important;
+        .rec-sound-artist {
+            font-size: 11px;
         }
 
-        /* RESPONSIVE VIDEO ON TABLET */
-        @media (max-width: 768px) {
-            .edit-video-container {
-                width: 100%;
-            }
-
-            .edit-video-wrapper {
-                width: 100%;
-                height: 100%;
-            }
-
-            #editVideoPreview {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
-            }
+        .rec-sound-remove-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
         }
 
-        @media (max-width: 480px) {
-            .edit-video-container {
-                width: 100%;
-            }
-
-            .edit-video-wrapper {
-                width: 100%;
-                height: 100%;
-            }
-
-            #editVideoPreview {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
-            }
+        /* Edit controls mobile - better touch targets */
+        .edit-video-controls {
+            bottom: env(safe-area-inset-bottom, 0);
+            padding: 14px 10px calc(12px + env(safe-area-inset-bottom, 0)) 10px;
+            gap: 8px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.75), transparent);
+            max-height: 110px;
         }
 
-        .edit-loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 6;
-        }
-
-        .edit-loading-overlay>div {
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Large center play button for tap-to-play */
+        /* Center play button mobile */
         .video-center-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(255, 0, 80, 0.9);
-            border: none;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 35;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(255, 0, 80, 0.4);
-        }
-
-        .video-center-play:hover {
-            background: rgba(255, 0, 80, 1);
-            transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 6px 25px rgba(255, 0, 80, 0.6);
+            width: 70px;
+            height: 70px;
+            font-size: 32px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .video-center-play:active {
-            transform: translate(-50%, -50%) scale(0.95);
+            transform: translate(-50%, -50%) scale(0.88);
         }
 
-        .video-center-play.hidden {
-            display: none;
-        }
-
-        /* Progress Bar */
+        /* Progress bar mobile */
         .video-progress-bar {
-            position: relative;
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .video-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff0050, #ff4081);
-            width: 0%;
-            border-radius: 2px;
-            transition: width 0.1s linear;
+            height: 6px;
+            margin-bottom: 8px;
         }
 
         .video-progress-slider {
-            position: absolute;
-            top: -8px;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            cursor: pointer;
-            opacity: 0;
-            z-index: 5;
-        }
-
-        .video-progress-slider::-webkit-slider-thumb {
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff0050;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
-        }
-
-        .video-progress-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff0050;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
-        }
-
-        /* Bottom Controls */
-        .video-controls-bottom {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .video-play-btn {
-            width: 36px;
             height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
+            top: -15px;
         }
 
-        .video-play-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .video-play-btn:active {
-            transform: scale(0.92);
-        }
-
-        /* Time Display */
-        .video-time-display {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: #fff;
-            font-size: 12px;
-            font-family: 'Courier New', monospace;
-            font-weight: 500;
-            flex: 1;
-            padding: 0 8px;
-        }
-
-        .time-separator {
-            opacity: 0.6;
-            margin: 0 2px;
-        }
-
-        /* Fullscreen Button */
+        /* Play and fullscreen buttons mobile */
+        .video-play-btn,
         .video-fullscreen-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            font-size: 12px;
-            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .video-play-btn:active,
+        .video-fullscreen-btn:active {
+            transform: scale(0.88);
+        }
+
+        /* Time display mobile */
+        .video-time-display {
+            font-size: 11px;
+            padding: 0 8px;
+            min-height: 44px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
         }
 
-        .video-fullscreen-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
+        /* Action buttons mobile */
+        .rec-add-sound-btn,
+        .rec-action-btn {
+            padding: 12px 14px;
+            font-size: 13px;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
-        .video-fullscreen-btn:active {
-            transform: scale(0.92);
+        .rec-add-sound-btn:active,
+        .rec-action-btn:active {
+            transform: scale(0.95);
         }
 
-        /* Video controls responsive */
-        video::-webkit-media-controls {
-            max-height: 50px;
-        }
-
-        /* Video Controls - Always visible like TikTok */
-        .edit-video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7), transparent);
-            padding: 20px 15px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            z-index: 55;
-            pointer-events: all;
-            max-height: 120px;
-        }
-
-        .edit-video-controls.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .edit-video-wrapper:hover .edit-video-controls {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .edit-video-controls:hover {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        /* Responsive Video Controls */
-        @media (max-width: 768px) {
-            .edit-video-controls {
-                padding: 16px 10px 10px;
-                gap: 8px;
-                opacity: 1;
-                pointer-events: all;
-                max-height: 115px;
-            }
-
-            .video-center-play {
-                width: 70px;
-                height: 70px;
-                font-size: 32px;
-                box-shadow: 0 4px 15px rgba(255, 0, 80, 0.3);
-            }
-
-            .video-progress-bar {
-                height: 6px;
-                cursor: pointer;
-            }
-
-            .video-progress-slider {
-                height: 30px;
-                top: -12px;
-            }
-
-            .video-play-btn,
-            .video-fullscreen-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 16px;
-            }
-
-            .video-time-display {
-                font-size: 13px;
-                padding: 0 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .edit-video-controls {
-                padding: 14px 8px 8px;
-                gap: 8px;
-                opacity: 1;
-                pointer-events: all;
-                max-height: 110px;
-            }
-
-            .video-center-play {
-                width: 72px;
-                height: 72px;
-                font-size: 36px;
-                box-shadow: 0 4px 18px rgba(255, 0, 80, 0.4);
-            }
-
-            .video-progress-bar {
-                height: 8px;
-                cursor: pointer;
-            }
-
-            .video-progress-slider {
-                height: 40px;
-                top: -16px;
-            }
-
-            .video-play-btn,
-            .video-fullscreen-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 18px;
-            }
-
-            .video-time-display {
-                font-size: 12px;
-                padding: 0 10px;
-            }
-        }
-
-        /* ====== SCREEN 3 MOBILE RESPONSIVE - IPHONE & ANDROID ====== */
-        @media (max-width: 480px) {
-
-            /* Safe area support for notch/home bar */
-            .recording-screen {
-                padding-top: max(16px, env(safe-area-inset-top));
-                padding-bottom: max(16px, env(safe-area-inset-bottom));
-                padding-left: max(0px, env(safe-area-inset-left));
-                padding-right: max(0px, env(safe-area-inset-right));
-            }
-
-            /* Video edit container mobile - FULL DEVICE WIDTH */
-            .edit-video-container {
-                width: 100%;
-                height: calc(100vh - 160px);
-            }
-
-            /* Video wrapper mobile - FULL DEVICE WIDTH */
-            .edit-video-wrapper {
-                width: 100%;
-                height: 100%;
-            }
-
-            /* Video element mobile - FULL DEVICE WIDTH */
-            #editVideoPreview {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
-            }
-
-            /* Top bar mobile - better spacing */
-            .rec-top-bar {
-                top: env(safe-area-inset-top, 0);
-                padding: max(8px, env(safe-area-inset-top)) 12px 12px 12px;
-                z-index: 40;
-            }
-
-            /* Icon buttons mobile touch target */
-            .rec-icon-btn {
-                width: 50px;
-                height: 50px;
-                min-width: 50px;
-                min-height: 50px;
-                font-size: 20px;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-
-            .rec-icon-btn:active {
-                transform: scale(0.85);
-            }
-
-            /* Left menu mobile */
-            .rec-left-menu {
-                top: calc(70px + env(safe-area-inset-top, 0));
-                left: 16px;
-            }
-
-            .rec-menu-item {
-                padding: 12px 16px;
-                font-size: 14px;
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-            }
-
-            /* Sound display mobile */
-            .rec-sound-display {
-                bottom: calc(110px + env(safe-area-inset-bottom, 0));
-                left: env(safe-area-inset-left, 0);
-                right: env(safe-area-inset-right, 0);
-                padding: 10px 12px;
-            }
-
-            .rec-sound-title {
-                font-size: 13px;
-            }
-
-            .rec-sound-artist {
-                font-size: 11px;
-            }
-
-            .rec-sound-remove-btn {
-                width: 32px;
-                height: 32px;
-                min-width: 32px;
-            }
-
-            /* Edit controls mobile - better touch targets */
-            .edit-video-controls {
-                bottom: env(safe-area-inset-bottom, 0);
-                padding: 14px 10px calc(12px + env(safe-area-inset-bottom, 0)) 10px;
-                gap: 8px;
-                background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.75), transparent);
-                max-height: 110px;
-            }
-
-            /* Center play button mobile */
-            .video-center-play {
-                width: 70px;
-                height: 70px;
-                font-size: 32px;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-
-            .video-center-play:active {
-                transform: translate(-50%, -50%) scale(0.88);
-            }
-
-            /* Progress bar mobile */
-            .video-progress-bar {
-                height: 6px;
-                margin-bottom: 8px;
-            }
-
-            .video-progress-slider {
-                height: 36px;
-                top: -15px;
-            }
-
-            /* Play and fullscreen buttons mobile */
-            .video-play-btn,
-            .video-fullscreen-btn {
-                width: 44px;
-                height: 44px;
-                min-width: 44px;
-                min-height: 44px;
-                font-size: 16px;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-
-            .video-play-btn:active,
-            .video-fullscreen-btn:active {
-                transform: scale(0.88);
-            }
-
-            /* Time display mobile */
-            .video-time-display {
-                font-size: 11px;
-                padding: 0 8px;
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-            }
-
-            /* Action buttons mobile */
-            .rec-add-sound-btn,
-            .rec-action-btn {
-                padding: 12px 14px;
-                font-size: 13px;
-                min-height: 44px;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-
-            .rec-add-sound-btn:active,
-            .rec-action-btn:active {
-                transform: scale(0.95);
-            }
-        }
 
         /* Landscape mobile orientation */
         @media (max-width: 480px) and (orientation: landscape) {
@@ -11890,107 +11681,36 @@
                     style="position: absolute; color: white; font-weight: bold; font-size: 14px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); text-align: center; white-space: nowrap; display: none;">
                 </div>
             </div>
-        </div> <!-- SCREEN 3: VIDEO EDIT -->
-        <div id="screen3" class="recording-screen">
-            <div class="edit-video-container">
-                <div class="edit-video-wrapper">
-                    <video id="editVideoPreview" playsinline></video>
-
-                    <!-- Hidden Audio Element for Sound Playback -->
-                    <audio id="editVideoSoundAudio" style="display: none;"></audio>
-
-                    <!-- Center Play Button (TikTok style) -->
-                    <button class="video-center-play" id="videoCenterPlay" onclick="toggleEditVideoPlayPause()"
-                        title="Play/Pause">
-                        <i class="fas fa-play"></i>
-                    </button>
-
-                    <!-- Video Controls Overlay -->
-                    <div class="edit-video-controls">
-                        <div class="video-progress-bar">
-                            <div class="video-progress-fill" id="videoProgressFill"></div>
-                            <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
-                                value="0">
-                        </div>
-                        <div class="video-controls-bottom">
-                            <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
-                                title="Play/Pause">
-                                <i class="fas fa-play"></i>
-                            </button>
-                            <div class="video-time-display">
-                                <span id="videoCurrentTime">0:00</span>
-                                <span class="time-separator">/</span>
-                                <span id="videoDuration">0:00</span>
-                            </div>
-                            <button class="video-fullscreen-btn" id="editVideoFullscreen"
-                                onclick="toggleEditVideoFullscreen()" title="Fullscreen">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="edit-loading-overlay" id="editLoadingOverlay" style="display: none;">
-                <div style="text-align: center; color: #fff;">
-                    <div style="font-size: 32px; margin-bottom: 10px;">⏳</div>
-                    <div style="font-size: 14px;">Loading video...</div>
-                </div>
-            </div>
-
-            <!-- Top Bar -->
-            <div class="rec-top-bar">
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="rec-icon-btn" onclick="backToScreen2()"><i
-                            class="fa-solid fa-arrow-left"></i></button>
-                    <button class="rec-icon-btn" onclick="toggleRecEditMenu()"><i
-                            class="fa-solid fa-caret-down"></i></button>
-                </div>
-            </div>
-
-            <!-- Left Menu -->
-            <div class="rec-left-menu" id="recEditMenu">
-                <div class="rec-menu-item" onclick="openVideoTextEditor()">📝 Text</div>
-                <div class="rec-menu-item" onclick="openVideoTrimEditor()">✂️ Trim</div>
-                <div class="rec-menu-item" onclick="openVideoEffectsEditor()">✨ Effects</div>
-                <div class="rec-menu-item" onclick="openVideoTemplates()">📐 Templates</div>
-                <div class="rec-menu-item" onclick="toggleRecEditMenu()">✏️ Close</div>
-            </div>
-
-            <!-- Sound Display Panel -->
-            <div id="screen3SoundDisplay" class="rec-sound-display" style="display: none;">
-                <div class="rec-sound-info">
-                    <div class="rec-sound-details">
-                        <div id="screen3SoundTitle" class="rec-sound-title">Selected Sound</div>
-                        <div id="screen3SoundArtist" class="rec-sound-artist">Artist</div>
-                    </div>
-                    <button class="rec-sound-remove-btn" onclick="removeScreen3Sound()" title="Remove Sound">×</button>
-                </div>
-            </div>
-
-            <!-- Edit Controls -->
-            <div class="rec-edit-controls">
-                <button class="rec-add-sound-btn" onclick="openVideoSoundLibrary()">
-                    🎵 Add Sound
-                </button>
-                <div style="display: flex; gap: 10px;">
-                    <button class="rec-action-btn draft" style="flex: 1;" onclick="saveVideoAsDraft()">📝 Draft</button>
-                    <button class="rec-action-btn post" style="flex: 1;" onclick="goToPostSettings()">Continue
-                        →</button>
-                </div>
-            </div>
         </div>
 
-        <!-- DISCARD VIDEO CONFIRMATION MODAL (Screen 3) -->
-        <div id="discardVideoModal" class="modal-overlay">
-            <div class="modal">
-                <h2>Discard Video?</h2>
-                <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this video and go back to
-                    recording?</p>
+        <!-- SCREEN 3: VIDEO PREVIEW/PLAYBACK -->
+        <div id="screen3" class="recording-screen">
+            <!-- Top Bar -->
+            <div class="rec-top-bar">
+                <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
+                <h2 style="color: #fff; margin: 0; flex: 1; text-align: center;">Review Video</h2>
+                <div></div>
+            </div>
+
+            <!-- Video Container -->
+            <div class="video-review-container">
+                <div class="video-review-wrapper">
+                    <video id="recordedVideoPreview" class="camera-preview" controls playsinline>
+                    </video>
+                </div>
+            </div>
+
+            <!-- Bottom Controls (3 Buttons) -->
+            <div class="rec-edit-controls">
+                <button class="rec-add-sound-btn" onclick="openSoundLibrary()">🎵 Add Sound</button>
                 <div style="display: flex; gap: 10px;">
-                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
-                        onclick="closeDiscardVideoModal()">Stay</button>
-                    <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardVideo()">Discard</button>
+                    <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                        onclick="downloadVideo()">
+                        ⬇️ Save
+                    </button>
+                    <button class="rec-action-btn post" style="flex: 1;" onclick="goToVideoPostSettings()">
+                        Continue ➜
+                    </button>
                 </div>
             </div>
         </div>
@@ -17333,10 +17053,10 @@ For more help, visit: help.pose.app
                     // Save to Firebase in background (fire and forget - doesn't block)
                     saveRecordingToFirebase(latestClip);
 
-                    // Transition to edit screen quickly (500ms instead of 1000ms)
+                    // Transition to Screen3 quickly (500ms instead of 1000ms)
                     setTimeout(() => {
                         closeUploadProgressModal();
-                        transitionToEditScreen();
+                        transitionToScreen3();
                     }, 500);
                 } else {
                     throw new Error('Upload failed - no URL returned');
@@ -17347,10 +17067,10 @@ For more help, visit: help.pose.app
                 // Show error state
                 updateUploadProgressModal(0, 'Upload Failed', '❌', error.message.substring(0, 50));
 
-                // Transition to edit screen after 1.5 seconds (quicker on error)
+                // Transition to Screen3 after 1.5 seconds (quicker on error)
                 setTimeout(() => {
                     closeUploadProgressModal();
-                    transitionToEditScreen();
+                    transitionToScreen3();
                 }, 1500);
             }
         }
@@ -19271,6 +18991,18 @@ For more help, visit: help.pose.app
         };
 
         // Initialize photo camera - request permissions once
+        function initEditVideoControls() {
+            // Initialize Screen3 video controls
+            const videoElement = document.getElementById('recordedVideoPreview');
+            if (!videoElement) {
+                console.error('❌ Video element not found');
+                return;
+            }
+
+            console.log('✅ Screen3 video controls initialized');
+            console.log('📹 Video loaded:', videoElement.src);
+        }
+
         async function initializePhotoMode() {
             try {
                 // Check if camera is already initialized
@@ -24562,6 +24294,69 @@ For more help, visit: help.pose.app
         }
 
         // ============================================================================
+        // SCREEN 3: VIDEO PREVIEW/PLAYBACK
+        // ============================================================================
+
+        function loadRecordedVideoToScreen3() {
+            // Load the latest recorded video into Screen 3
+            console.log('🎬 Loading video to Screen3...');
+            if (recordingState.clips.length > 0) {
+                const latestClip = recordingState.clips[recordingState.clips.length - 1];
+                const videoElement = document.getElementById('recordedVideoPreview');
+
+                if (videoElement && latestClip.url) {
+                    videoElement.src = latestClip.url;
+                    videoElement.load();
+                    console.log('✅ Video loaded into Screen3 player:', latestClip.url);
+                    return true;
+                } else {
+                    console.error('❌ Video element or URL not found');
+                    console.log('videoElement:', videoElement);
+                    console.log('latestClip.url:', latestClip?.url);
+                }
+            } else {
+                console.error('❌ No clips recorded');
+            }
+            return false;
+        }
+
+        function downloadVideo() {
+            const videoElement = document.getElementById('recordedVideoPreview');
+            if (!videoElement || !videoElement.src) {
+                showToastRecording('❌ No video to download', 'error', '✗');
+                return;
+            }
+
+            // Create download link
+            const link = document.createElement('a');
+            link.href = videoElement.src;
+            link.download = `video_${Date.now()}.mp4`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToastRecording('✓ Video downloading...', 'success', '⬇️');
+            console.log('📥 Video download initiated');
+        }
+
+        function goToVideoPostSettings() {
+            console.log('🎬 Going to video post settings from Screen3');
+            showToastRecording('Coming soon...', 'info', '📝');
+        }
+
+        function transitionToScreen3() {
+            console.log('🎬 Transitioning to Screen3...');
+            if (loadRecordedVideoToScreen3()) {
+                console.log('✅ About to show screen3');
+                showScreen('screen3');
+                console.log('✅ Screen3 displayed');
+            } else {
+                console.error('❌ Failed to load video to Screen3');
+                showToastRecording('Failed to load video', 'error', '✗');
+            }
+        }
+
+        // ============================================================================
         // TEXT MODE
         // ============================================================================
 
@@ -29199,230 +28994,7 @@ For more help, visit: help.pose.app
         };
 
         /* ===== SCREEN 3: VIDEO EDIT FUNCTIONS ===== */
-        function initEditVideoControls() {
-            const video = document.getElementById('editVideoPreview');
-            const playBtn = document.getElementById('editVideoPausePlay');
-            const centerPlayBtn = document.getElementById('videoCenterPlay');
-            const progressSlider = document.getElementById('videoProgressSlider');
-            const progressFill = document.getElementById('videoProgressFill');
-            const currentTimeEl = document.getElementById('videoCurrentTime');
-            const durationEl = document.getElementById('videoDuration');
 
-            if (!video || !playBtn || !progressSlider) return;
-
-            console.log('🎬 Initializing video controls...');
-            console.log('Video duration:', video.duration);
-            console.log('Video src:', video.src);
-
-            // Helper to set duration
-            const updateDuration = () => {
-                if (video.duration && !isNaN(video.duration)) {
-                    durationEl.textContent = formatTime(video.duration);
-                    progressSlider.max = Math.floor(video.duration);
-                    console.log('⏱️ Video duration updated:', formatTime(video.duration));
-                }
-            };
-
-            // Update duration when metadata loads
-            video.addEventListener('loadedmetadata', updateDuration);
-
-            // If metadata is already loaded, update immediately
-            if (video.duration && !isNaN(video.duration)) {
-                updateDuration();
-            }
-
-            // Update progress bar and time display
-            video.addEventListener('timeupdate', function () {
-                if (!isNaN(video.duration) && video.duration > 0) {
-                    const percent = (video.currentTime / video.duration) * 100;
-                    progressFill.style.width = percent + '%';
-                    currentTimeEl.textContent = formatTime(video.currentTime);
-                    progressSlider.value = Math.floor(video.currentTime);
-                }
-            });
-
-            // Update play/pause button icons (both top button and center)
-            video.addEventListener('play', function () {
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                if (centerPlayBtn) centerPlayBtn.classList.add('hidden');
-            });
-
-            video.addEventListener('pause', function () {
-                playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                if (centerPlayBtn) centerPlayBtn.classList.remove('hidden');
-            });
-
-            video.addEventListener('ended', function () {
-                playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                if (centerPlayBtn) centerPlayBtn.classList.remove('hidden');
-            });
-
-            // Handle progress slider drag
-            progressSlider.addEventListener('input', function () {
-                video.currentTime = parseFloat(progressSlider.value);
-            });
-
-            // Click on progress bar to seek
-            const progressBar = document.querySelector('.video-progress-bar');
-            if (progressBar) {
-                const seekVideo = (e) => {
-                    if (video.duration && !isNaN(video.duration)) {
-                        const rect = progressBar.getBoundingClientRect();
-                        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                        const percent = (clientX - rect.left) / rect.width;
-                        video.currentTime = percent * video.duration;
-                    }
-                };
-
-                progressBar.addEventListener('click', seekVideo);
-                progressBar.addEventListener('touchstart', seekVideo, false);
-                progressBar.addEventListener('touchmove', seekVideo, false);
-            }
-
-            // Mobile: Show controls on tap
-            const videoWrapper = document.querySelector('.edit-video-wrapper');
-            if (videoWrapper) {
-                let controlsTimeout;
-                const showControls = () => {
-                    const controls = document.querySelector('.edit-video-controls');
-                    if (controls) {
-                        controls.classList.add('visible');
-                        clearTimeout(controlsTimeout);
-                        controlsTimeout = setTimeout(() => {
-                            controls.classList.remove('visible');
-                        }, 5000);
-                    }
-                };
-
-                videoWrapper.addEventListener('touchstart', showControls, false);
-                videoWrapper.addEventListener('click', showControls);
-            }
-
-            console.log('✅ Video controls initialized with touch support');
-        }
-
-        function toggleEditVideoPlayPause() {
-            const video = document.getElementById('editVideoPreview');
-            const audio = document.getElementById('editVideoSoundAudio');
-            if (!video) {
-                console.error('❌ Video element not found');
-                return;
-            }
-
-            console.log('▶️ Toggling play/pause. Current state:', video.paused ? 'paused' : 'playing');
-            console.log('📹 Video duration:', video.duration, '| Current time:', video.currentTime);
-
-            if (video.paused) {
-                const promise = video.play();
-                if (promise !== undefined) {
-                    promise.catch(error => {
-                        console.error('❌ Play error:', error);
-                    });
-                }
-
-                // Play audio if sound is selected
-                if (audio && recordingState.selectedSound) {
-                    // Set audio to video position
-                    audio.currentTime = video.currentTime;
-
-                    // Set loop to match video duration
-                    if (video.duration && video.duration > 0) {
-                        audio.loop = false;
-                    }
-
-                    audio.play().catch(err => console.log('Audio auto-play prevented:', err));
-                    console.log('▶️ Sound playing with video');
-                    console.log('🎵 Audio duration:', audio.duration);
-                }
-            } else {
-                video.pause();
-
-                // Pause audio
-                if (audio) {
-                    audio.pause();
-                    console.log('⏸️ Sound paused with video');
-                }
-            }
-        }
-
-        function toggleEditVideoFullscreen() {
-            const wrapper = document.querySelector('.edit-video-wrapper');
-            if (!document.fullscreenElement) {
-                if (wrapper.requestFullscreen) {
-                    wrapper.requestFullscreen();
-                } else if (wrapper.webkitRequestFullscreen) {
-                    wrapper.webkitRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-        }
-
-        function openVideoSoundLibrary() {
-            // For now, show a notification
-            // TODO: Integrate full sound library from poseapp.html
-            showToastRecording('Sound library integration coming soon!', 'info');
-        }
-
-        function openVideoTextEditor() {
-            showToastRecording('Video text editor coming soon!', 'info');
-        }
-
-        function openVideoTrimEditor() {
-            showToastRecording('Video trim editor coming soon!', 'info');
-        }
-
-        function openVideoEffectsEditor() {
-            showToastRecording('Video effects editor coming soon!', 'info');
-        }
-
-        function openVideoTemplates() {
-            showToastRecording('Video templates coming soon!', 'info');
-        }
-
-        function toggleRecEditMenu() {
-            const menu = document.getElementById('recEditMenu');
-            if (menu) {
-                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-            }
-        }
-
-        function saveVideoAsDraft() {
-            showToastRecording('Saving video as draft...', 'info');
-            // TODO: Implement video draft save
-        }
-
-        function displaySelectedSoundOnScreen3(sound) {
-            const soundDisplay = document.getElementById('screen3SoundDisplay');
-            if (!soundDisplay) return;
-
-            if (sound) {
-                soundDisplay.style.display = 'block';
-                document.getElementById('screen3SoundTitle').textContent = sound.title || 'Unknown Title';
-                document.getElementById('screen3SoundArtist').textContent = sound.artist || 'Unknown Artist';
-
-                // Load sound to audio element
-                const audio = document.getElementById('editVideoSoundAudio');
-                if (audio && sound.url) {
-                    audio.src = sound.url;
-                    recordingState.selectedSound = sound;
-                    recordingState.selectedSoundUrl = sound.url;
-                }
-            } else {
-                soundDisplay.style.display = 'none';
-            }
-        }
-
-        function removeScreen3Sound() {
-            document.getElementById('editVideoSoundAudio').src = '';
-            recordingState.selectedSound = null;
-            recordingState.selectedSoundUrl = null;
-            const soundDisplay = document.getElementById('screen3SoundDisplay');
-            if (soundDisplay) soundDisplay.style.display = 'none';
-            showToastRecording('Sound removed', 'info');
-        }
 
     </script>
 
