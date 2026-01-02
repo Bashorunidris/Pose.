@@ -10337,7 +10337,7 @@
         }
 
         /* ===== SCREEN 3: VIDEO EDIT STYLES ===== */
-        /* Edit Video Preview - Using same styling as camera preview during recording */
+        /* Edit Video Preview - Desktop: Fill and cover */
         video#editVideoPreview {
             position: absolute;
             top: 0;
@@ -10345,6 +10345,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             background: #000;
             display: block !important;
             will-change: transform;
@@ -10358,21 +10359,39 @@
             }
         }
 
-        /* Mobile-specific video fixes */
+        /* Tablet: Maintain aspect ratio */
         @media (max-width: 768px) {
             video#editVideoPreview {
-                min-width: 100%;
-                min-height: 100%;
+                object-fit: contain;
+                object-position: center;
+                width: 100%;
+                height: 100%;
             }
         }
 
+        /* Mobile/iPhone: Responsive aspect ratio fit */
         @media (max-width: 480px) {
             video#editVideoPreview {
-                width: 100vw;
-                height: 100vh;
-                height: 100dvh;
-                min-width: 100%;
-                min-height: 100%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: auto;
+                height: auto;
+                max-width: 100vw;
+                max-height: 100vh;
+                max-height: 100dvh;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+
+        /* Ultra-small phones */
+        @media (max-width: 360px) {
+            video#editVideoPreview {
+                max-width: 100vw;
+                max-height: 100vh;
+                max-height: 100dvh;
             }
         }
 
