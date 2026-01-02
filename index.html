@@ -10337,61 +10337,83 @@
         }
 
         /* ===== SCREEN 3: VIDEO EDIT STYLES ===== */
-        /* Edit Video Preview - Desktop: Fill and cover */
-        video#editVideoPreview {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .edit-video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Edit screen video wrapper - TikTok style 9:16 vertical */
+        .edit-video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 100vw;
+            aspect-ratio: 9 / 16;
+            background: #000;
+            overflow: hidden;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #editVideoPreview {
+            display: block !important;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            aspect-ratio: 9 / 16;
+            object-fit: contain;
             object-position: center;
             background: #000;
-            display: block !important;
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
+            transform: none !important;
         }
 
-        @supports (object-fit: cover) {
-            video#editVideoPreview {
-                object-fit: cover;
-            }
-        }
-
-        /* Tablet: Maintain aspect ratio */
+        /* RESPONSIVE VIDEO ON TABLET */
         @media (max-width: 768px) {
-            video#editVideoPreview {
-                object-fit: contain;
-                object-position: center;
+            .edit-video-container {
+                width: 100%;
+                height: 100vh;
+            }
+
+            .edit-video-wrapper {
+                width: 100%;
+                height: 100vh;
+                aspect-ratio: 9 / 16;
+            }
+
+            #editVideoPreview {
                 width: 100%;
                 height: 100%;
-            }
-        }
-
-        /* Mobile/iPhone: Responsive aspect ratio fit */
-        @media (max-width: 480px) {
-            video#editVideoPreview {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: auto;
-                height: auto;
-                max-width: 100vw;
-                max-height: 100vh;
-                max-height: 100dvh;
+                aspect-ratio: 9 / 16;
                 object-fit: contain;
                 object-position: center;
             }
         }
 
-        /* Ultra-small phones */
-        @media (max-width: 360px) {
-            video#editVideoPreview {
-                max-width: 100vw;
-                max-height: 100vh;
-                max-height: 100dvh;
+        @media (max-width: 480px) {
+            .edit-video-container {
+                width: 100%;
+                height: 100vh;
+            }
+
+            .edit-video-wrapper {
+                width: 100%;
+                height: 100vh;
+                aspect-ratio: 9 / 16;
+            }
+
+            #editVideoPreview {
+                width: 100%;
+                height: 100%;
+                aspect-ratio: 9 / 16;
+                object-fit: contain;
+                object-position: center;
             }
         }
 
@@ -10701,6 +10723,269 @@
             }
         }
 
+        /* ====== TIKTOK STYLE CONTROLS - NEW LAYOUT ====== */
+        /* Top Bar - Minimal, TikTok style */
+        .tiktok-top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent);
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            z-index: 50;
+            padding-top: max(12px, env(safe-area-inset-top));
+        }
+
+        .tiktok-back-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .tiktok-back-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .tiktok-back-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Bottom Control Bar - TikTok style */
+        .tiktok-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7), transparent);
+            padding: 20px 16px 16px;
+            z-index: 50;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+
+        .tiktok-progress-bar {
+            position: relative;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .tiktok-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0050, #ff4081);
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .tiktok-progress-slider {
+            position: absolute;
+            top: -8px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .tiktok-progress-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0050;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
+        }
+
+        .tiktok-progress-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0050;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.5);
+        }
+
+        .tiktok-controls-bottom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tiktok-play-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .tiktok-play-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tiktok-play-btn:active {
+            transform: scale(0.92);
+        }
+
+        .tiktok-time-display {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #fff;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+
+        /* Right-Side Action Menu (TikTok style) */
+        .tiktok-side-menu {
+            position: fixed;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 40;
+        }
+
+        .tiktok-menu-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+            position: relative;
+        }
+
+        .tiktok-menu-btn span {
+            position: absolute;
+            bottom: -28px;
+            font-size: 11px;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .tiktok-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.15);
+        }
+
+        .tiktok-menu-btn:hover span {
+            opacity: 1;
+        }
+
+        .tiktok-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Bottom Action Buttons */
+        .tiktok-action-buttons {
+            position: fixed;
+            bottom: calc(80px + env(safe-area-inset-bottom));
+            left: 16px;
+            right: 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 45;
+        }
+
+        .tiktok-draft-btn {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tiktok-draft-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tiktok-draft-btn:active {
+            transform: scale(0.95);
+        }
+
+        .tiktok-continue-btn {
+            flex: 1;
+            padding: 12px 16px;
+            background: linear-gradient(45deg, #ff0050, #ff4081);
+            border: none;
+            border-radius: 24px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 0, 80, 0.4);
+        }
+
+        .tiktok-continue-btn:hover {
+            box-shadow: 0 6px 20px rgba(255, 0, 80, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .tiktok-continue-btn:active {
+            transform: scale(0.95);
+        }
+
         /* ====== SCREEN 3 MOBILE RESPONSIVE - IPHONE & ANDROID ====== */
         @media (max-width: 480px) {
 
@@ -10715,13 +11000,14 @@
             /* Video edit container mobile - FULL DEVICE WIDTH */
             .edit-video-container {
                 width: 100%;
-                height: calc(100vh - 160px);
+                height: 100vh;
             }
 
             /* Video wrapper mobile - FULL DEVICE WIDTH */
             .edit-video-wrapper {
                 width: 100%;
-                height: 100%;
+                height: 100vh;
+                aspect-ratio: 9 / 16;
             }
 
             /* Video element mobile - FULL DEVICE WIDTH */
@@ -10729,8 +11015,46 @@
                 width: 100%;
                 height: 100%;
                 aspect-ratio: 9 / 16;
-                object-fit: cover;
+                object-fit: contain;
                 object-position: center;
+            }
+
+            /* Top Bar mobile */
+            .tiktok-top-bar {
+                height: 56px;
+                padding: max(12px, env(safe-area-inset-top)) 12px 12px;
+            }
+
+            /* Side menu mobile */
+            .tiktok-side-menu {
+                right: 12px;
+            }
+
+            .tiktok-menu-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 22px;
+            }
+
+            /* Bottom bar mobile */
+            .tiktok-bottom-bar {
+                padding: 16px 12px;
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+
+            /* Action buttons mobile */
+            .tiktok-action-buttons {
+                bottom: calc(75px + env(safe-area-inset-bottom));
+                left: 12px;
+                right: 12px;
+                gap: 10px;
+            }
+
+            .tiktok-draft-btn,
+            .tiktok-continue-btn {
+                padding: 10px 14px;
+                font-size: 13px;
+                border-radius: 20px;
             }
 
             /* Top bar mobile - better spacing */
@@ -11881,69 +12205,75 @@
             </div>
         </div> <!-- SCREEN 3: VIDEO EDIT -->
         <div id="screen3" class="recording-screen">
-            <!-- Video Preview - Same simple structure as Screen 1 -->
-            <video id="editVideoPreview" class="camera-preview" playsinline></video>
+            <!-- Main Video Container -->
+            <div class="edit-video-container">
+                <div class="edit-video-wrapper">
+                    <video id="editVideoPreview" playsinline></video>
+                    <audio id="editVideoSoundAudio" style="display: none;"></audio>
 
-            <!-- Hidden Audio Element for Sound Playback -->
-            <audio id="editVideoSoundAudio" style="display: none;"></audio>
-
-            <!-- Center Play Button (TikTok style) -->
-            <button class="video-center-play" id="videoCenterPlay" onclick="toggleEditVideoPlayPause()"
-                title="Play/Pause">
-                <i class="fas fa-play"></i>
-            </button>
-
-            <!-- Video Controls Overlay -->
-            <div class="edit-video-controls">
-                <div class="video-progress-bar">
-                    <div class="video-progress-fill" id="videoProgressFill"></div>
-                    <input type="range" id="videoProgressSlider" class="video-progress-slider" min="0" max="100"
-                        value="0">
-                </div>
-                <div class="video-controls-bottom">
-                    <button class="video-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
+                    <!-- TikTok-Style Center Play Button -->
+                    <button class="video-center-play" id="videoCenterPlay" onclick="toggleEditVideoPlayPause()"
                         title="Play/Pause">
                         <i class="fas fa-play"></i>
                     </button>
-                    <div class="video-time-display">
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="edit-loading-overlay" id="editLoadingOverlay" style="display: none;">
+                <div style="text-align: center; color: #fff;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">⏳</div>
+                    <div style="font-size: 14px;">Processing video...</div>
+                </div>
+            </div>
+
+            <!-- Top Back Button (TikTok style) -->
+            <div class="tiktok-top-bar">
+                <button class="tiktok-back-btn" onclick="backToScreen2()"><i
+                        class="fa-solid fa-arrow-left"></i></button>
+            </div>
+
+            <!-- Bottom Control Bar (TikTok style) -->
+            <div class="tiktok-bottom-bar">
+                <div class="tiktok-progress-bar">
+                    <div class="tiktok-progress-fill" id="videoProgressFill"></div>
+                    <input type="range" id="videoProgressSlider" class="tiktok-progress-slider" min="0" max="100"
+                        value="0">
+                </div>
+                <div class="tiktok-controls-bottom">
+                    <button class="tiktok-play-btn" id="editVideoPausePlay" onclick="toggleEditVideoPlayPause()"
+                        title="Play/Pause">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="tiktok-time-display">
                         <span id="videoCurrentTime">0:00</span>
                         <span class="time-separator">/</span>
                         <span id="videoDuration">0:00</span>
                     </div>
-                    <button class="video-fullscreen-btn" id="editVideoFullscreen"
-                        onclick="toggleEditVideoFullscreen()" title="Fullscreen">
-                        <i class="fas fa-expand"></i>
-                    </button>
                 </div>
             </div>
 
-            <div class="edit-loading-overlay" id="editLoadingOverlay" style="display: none;">
-                <div style="text-align: center; color: #fff;">
-                    <div style="font-size: 32px; margin-bottom: 10px;">⏳</div>
-                    <div style="font-size: 14px;">Loading video...</div>
-                </div>
+            <!-- Right-Side Action Menu (Overlay) -->
+            <div class="tiktok-side-menu">
+                <button class="tiktok-menu-btn" onclick="openVideoTextEditor()" title="Add Text">
+                    <i class="fas fa-font"></i>
+                    <span>Text</span>
+                </button>
+                <button class="tiktok-menu-btn" onclick="openVideoTrimEditor()" title="Trim">
+                    <i class="fas fa-scissors"></i>
+                    <span>Trim</span>
+                </button>
+                <button class="tiktok-menu-btn" onclick="openVideoEffectsEditor()" title="Effects">
+                    <i class="fas fa-sparkles"></i>
+                    <span>Effects</span>
+                </button>
+                <button class="tiktok-menu-btn" onclick="openVideoSoundLibrary()" title="Add Sound">
+                    <i class="fas fa-music"></i>
+                    <span>Sound</span>
+                </button>
             </div>
 
-            <!-- Top Bar -->
-            <div class="rec-top-bar">
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="rec-icon-btn" onclick="backToScreen2()"><i
-                            class="fa-solid fa-arrow-left"></i></button>
-                    <button class="rec-icon-btn" onclick="toggleRecEditMenu()"><i
-                            class="fa-solid fa-caret-down"></i></button>
-                </div>
-            </div>
-
-            <!-- Left Menu -->
-            <div class="rec-left-menu" id="recEditMenu">
-                <div class="rec-menu-item" onclick="openVideoTextEditor()">📝 Text</div>
-                <div class="rec-menu-item" onclick="openVideoTrimEditor()">✂️ Trim</div>
-                <div class="rec-menu-item" onclick="openVideoEffectsEditor()">✨ Effects</div>
-                <div class="rec-menu-item" onclick="openVideoTemplates()">📐 Templates</div>
-                <div class="rec-menu-item" onclick="toggleRecEditMenu()">✏️ Close</div>
-            </div>
-
-            <!-- Sound Display Panel -->
+            <!-- Sound Display Panel (Bottom-Left) -->
             <div id="screen3SoundDisplay" class="rec-sound-display" style="display: none;">
                 <div class="rec-sound-info">
                     <div class="rec-sound-details">
@@ -11954,517 +12284,510 @@
                 </div>
             </div>
 
-            <!-- Edit Controls -->
-            <div class="rec-edit-controls">
-                <button class="rec-add-sound-btn" onclick="openVideoSoundLibrary()">
-                    🎵 Add Sound
+            <!-- Bottom Action Buttons -->
+            <div class="tiktok-action-buttons">
+                <button class="tiktok-draft-btn" onclick="saveVideoAsDraft()">
+                    <i class="fas fa-bookmark"></i> Save Draft
                 </button>
-                <div style="display: flex; gap: 10px;">
-                    <button class="rec-action-btn draft" style="flex: 1;" onclick="saveVideoAsDraft()">📝 Draft</button>
-                    <button class="rec-action-btn post" style="flex: 1;" onclick="goToPostSettings()">Continue
-                        →</button>
+                <button class="tiktok-continue-btn" onclick="goToPostSettings()">
+                    Continue <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DISCARD VIDEO CONFIRMATION MODAL (Screen 3) -->
+    <div id="discardVideoModal" class="modal-overlay">
+        <div class="modal">
+            <h2>Discard Video?</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this video and go back to
+                recording?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                    onclick="closeDiscardVideoModal()">Stay</button>
+                <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardVideo()">Discard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: PHOTO MODE -->
+    <div id="screen5" class="recording-screen">
+        <div class="camera-preview">
+            <!-- Ratio Guide Frame (Live Preview) -->
+            <div id="ratioGuide" class="ratio-guide-frame"></div>
+        </div>
+        <div class="rec-top-bar">
+            <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
+            <button class="rec-icon-btn" onclick="toggleRecLeftMenu()">☰</button>
+            <button class="rec-icon-btn" onclick="switchPhotoCamera()">🔄</button>
+        </div>
+        <div class="rec-left-menu" id="recPhotoLeftMenu">
+            <div class="rec-menu-item" onclick="togglePhotoFlash()">⚡ Flash</div>
+            <div class="rec-menu-item" onclick="togglePhotoTimer()">⏱ Timer</div>
+            <div class="rec-menu-item" onclick="togglePhotoFilters()">🎨 Filters</div>
+            <div class="rec-menu-item" onclick="togglePhotoRatio()">📐 Ratio</div>
+        </div>
+        <div class="rec-effects-bar">
+
+
+            <!-- Filters Panel (Right Side, Scrollable) -->
+            <div class="photo-filters-panel" id="photoFiltersPanel">
+                <div class="photo-filters-scroll" id="photoFiltersScroll">
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('none')" title="Original">
+                        <div class="photo-filter-preview original"></div>
+                        <span>Original</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('bw')" title="Black & White">
+                        <div class="photo-filter-preview bw"></div>
+                        <span>B&W</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('sepia')" title="Sepia">
+                        <div class="photo-filter-preview sepia"></div>
+                        <span>Sepia</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('vintage')" title="Vintage">
+                        <div class="photo-filter-preview vintage"></div>
+                        <span>Vintage</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('vivid')" title="Vivid">
+                        <div class="photo-filter-preview vivid"></div>
+                        <span>Vivid</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('warm')" title="Warm">
+                        <div class="photo-filter-preview warm"></div>
+                        <span>Warm</span>
+                    </button>
+                    <button class="photo-filter-btn" onclick="applyPhotoFilter('cool')" title="Cool">
+                        <div class="photo-filter-preview cool"></div>
+                        <span>Cool</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- DISCARD VIDEO CONFIRMATION MODAL (Screen 3) -->
-        <div id="discardVideoModal" class="modal-overlay">
-            <div class="modal">
-                <h2>Discard Video?</h2>
-                <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this video and go back to
-                    recording?</p>
-                <div style="display: flex; gap: 10px;">
-                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
-                        onclick="closeDiscardVideoModal()">Stay</button>
-                    <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardVideo()">Discard</button>
+        <div class="rec-bottom-controls photo-controls">
+            <div class="photo-control-row">
+                <button class="photo-control-btn" onclick="openPhotoGallery()">
+                    <div class="rec-control-icon">🖼️</div>
+                    <div class="rec-control-label">Gallery</div>
+                </button>
+                <button class="photo-control-btn" onclick="togglePhotoFlash()">
+                    <div class="rec-control-icon">⚡</div>
+                    <div class="rec-control-label">Flash</div>
+                </button>
+                <button class="photo-control-btn" onclick="togglePhotoTimer()">
+                    <div class="rec-control-icon">⏱</div>
+                    <div class="rec-control-label">Timer</div>
+                </button>
+                <button class="photo-control-btn" onclick="togglePhotoPanelCollapse()">
+                    <div class="rec-control-icon">🎨</div>
+                    <div class="rec-control-label">Filters</div>
+                </button>
+            </div>
+
+            <div class="photo-record-btn-wrapper">
+                <button class="photo-record-btn" onclick="capturePhoto()"></button>
+            </div>
+
+            <div class="rec-mode-tabs">
+                <button class="rec-mode-tab" onclick="switchRecMode('video'); return false;">Video</button>
+                <button class="rec-mode-tab active" onclick="switchRecMode('photo'); return false;">Photo</button>
+                <button class="rec-mode-tab" onclick="switchRecMode('text'); return false;">Text</button>
+            </div>
+
+            <!-- Bottom Filters Panel -->
+            <div class="photo-filters-bottom-panel" id="photoFiltersBottomPanel">
+                <div class="photo-filters-toggle-header" onclick="togglePhotoFiltersBottom()">
+                    <span class="toggle-arrow">∧</span>
+                    <span>🎨 Filters</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- SCREEN 5: PHOTO MODE -->
-        <div id="screen5" class="recording-screen">
-            <div class="camera-preview">
-                <!-- Ratio Guide Frame (Live Preview) -->
-                <div id="ratioGuide" class="ratio-guide-frame"></div>
-            </div>
-            <div class="rec-top-bar">
-                <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
-                <button class="rec-icon-btn" onclick="toggleRecLeftMenu()">☰</button>
-                <button class="rec-icon-btn" onclick="switchPhotoCamera()">🔄</button>
-            </div>
-            <div class="rec-left-menu" id="recPhotoLeftMenu">
-                <div class="rec-menu-item" onclick="togglePhotoFlash()">⚡ Flash</div>
-                <div class="rec-menu-item" onclick="togglePhotoTimer()">⏱ Timer</div>
-                <div class="rec-menu-item" onclick="togglePhotoFilters()">🎨 Filters</div>
-                <div class="rec-menu-item" onclick="togglePhotoRatio()">📐 Ratio</div>
-            </div>
-            <div class="rec-effects-bar">
-
-
-                <!-- Filters Panel (Right Side, Scrollable) -->
-                <div class="photo-filters-panel" id="photoFiltersPanel">
-                    <div class="photo-filters-scroll" id="photoFiltersScroll">
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('none')" title="Original">
+                <div class="photo-filters-bottom-content">
+                    <div class="photo-filters-grid">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('none')" title="Original">
                             <div class="photo-filter-preview original"></div>
                             <span>Original</span>
                         </button>
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('bw')" title="Black & White">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('bw')" title="Black & White">
                             <div class="photo-filter-preview bw"></div>
                             <span>B&W</span>
                         </button>
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('sepia')" title="Sepia">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('sepia')" title="Sepia">
                             <div class="photo-filter-preview sepia"></div>
                             <span>Sepia</span>
                         </button>
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('vintage')" title="Vintage">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('vintage')" title="Vintage">
                             <div class="photo-filter-preview vintage"></div>
                             <span>Vintage</span>
                         </button>
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('vivid')" title="Vivid">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('vivid')" title="Vivid">
                             <div class="photo-filter-preview vivid"></div>
                             <span>Vivid</span>
                         </button>
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('warm')" title="Warm">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('warm')" title="Warm">
                             <div class="photo-filter-preview warm"></div>
                             <span>Warm</span>
                         </button>
-                        <button class="photo-filter-btn" onclick="applyPhotoFilter('cool')" title="Cool">
+                        <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('cool')" title="Cool">
                             <div class="photo-filter-preview cool"></div>
                             <span>Cool</span>
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="rec-bottom-controls photo-controls">
-                <div class="photo-control-row">
-                    <button class="photo-control-btn" onclick="openPhotoGallery()">
-                        <div class="rec-control-icon">🖼️</div>
-                        <div class="rec-control-label">Gallery</div>
-                    </button>
-                    <button class="photo-control-btn" onclick="togglePhotoFlash()">
-                        <div class="rec-control-icon">⚡</div>
-                        <div class="rec-control-label">Flash</div>
-                    </button>
-                    <button class="photo-control-btn" onclick="togglePhotoTimer()">
-                        <div class="rec-control-icon">⏱</div>
-                        <div class="rec-control-label">Timer</div>
-                    </button>
-                    <button class="photo-control-btn" onclick="togglePhotoPanelCollapse()">
-                        <div class="rec-control-icon">🎨</div>
-                        <div class="rec-control-label">Filters</div>
-                    </button>
-                </div>
-
-                <div class="photo-record-btn-wrapper">
-                    <button class="photo-record-btn" onclick="capturePhoto()"></button>
-                </div>
-
-                <div class="rec-mode-tabs">
-                    <button class="rec-mode-tab" onclick="switchRecMode('video'); return false;">Video</button>
-                    <button class="rec-mode-tab active" onclick="switchRecMode('photo'); return false;">Photo</button>
-                    <button class="rec-mode-tab" onclick="switchRecMode('text'); return false;">Text</button>
-                </div>
-
-                <!-- Bottom Filters Panel -->
-                <div class="photo-filters-bottom-panel" id="photoFiltersBottomPanel">
-                    <div class="photo-filters-toggle-header" onclick="togglePhotoFiltersBottom()">
-                        <span class="toggle-arrow">∧</span>
-                        <span>🎨 Filters</span>
-                    </div>
-                    <div class="photo-filters-bottom-content">
-                        <div class="photo-filters-grid">
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('none')" title="Original">
-                                <div class="photo-filter-preview original"></div>
-                                <span>Original</span>
-                            </button>
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('bw')"
-                                title="Black & White">
-                                <div class="photo-filter-preview bw"></div>
-                                <span>B&W</span>
-                            </button>
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('sepia')" title="Sepia">
-                                <div class="photo-filter-preview sepia"></div>
-                                <span>Sepia</span>
-                            </button>
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('vintage')"
-                                title="Vintage">
-                                <div class="photo-filter-preview vintage"></div>
-                                <span>Vintage</span>
-                            </button>
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('vivid')" title="Vivid">
-                                <div class="photo-filter-preview vivid"></div>
-                                <span>Vivid</span>
-                            </button>
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('warm')" title="Warm">
-                                <div class="photo-filter-preview warm"></div>
-                                <span>Warm</span>
-                            </button>
-                            <button class="photo-filter-btn-bottom" onclick="applyPhotoFilter('cool')" title="Cool">
-                                <div class="photo-filter-preview cool"></div>
-                                <span>Cool</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- SCREEN 6: PHOTO EDIT -->
+    <div id="screen6" class="recording-screen">
+        <!-- Top Bar -->
+        <div class="rec-top-bar">
+            <button class="rec-icon-btn" onclick="backToScreen5()">←</button>
+            <button class="rec-icon-btn" onclick="toggleRecPhotoEditMenu()">☰</button>
         </div>
 
-        <!-- SCREEN 6: PHOTO EDIT -->
-        <div id="screen6" class="recording-screen">
-            <!-- Top Bar -->
-            <div class="rec-top-bar">
-                <button class="rec-icon-btn" onclick="backToScreen5()">←</button>
-                <button class="rec-icon-btn" onclick="toggleRecPhotoEditMenu()">☰</button>
-            </div>
-
-            <!-- Left Menu -->
-            <div class="rec-left-menu" id="recPhotoEditMenu">
-                <div class="rec-menu-item" onclick="photoAddText()">📝 Text</div>
-                <div class="rec-menu-item" onclick="photoCrop()">✂ Crop</div>
-                <div class="rec-menu-item" onclick="photoAddEffects()">✨ Effects</div>
-                <div class="rec-menu-item" onclick="photoDraw()">✏ Draw</div>
-            </div>
-
-            <!-- Photo Preview Container -->
-            <div class="photo-edit-container">
-                <div class="photo-edit-wrapper">
-                    <div class="camera-preview">🖼️ Photo Preview</div>
-                </div>
-
-                <!-- Edit Controls (Overlaid at bottom) -->
-                <div class="rec-edit-controls">
-                    <button class="rec-add-sound-btn" onclick="openSoundLibrary()">🎵 Add Sound</button>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
-                            onclick="showPhotoDownloadOptions()">
-                            ⬇️ Download
-                        </button>
-                        <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
-                            Continue ➜
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Left Menu -->
+        <div class="rec-left-menu" id="recPhotoEditMenu">
+            <div class="rec-menu-item" onclick="photoAddText()">📝 Text</div>
+            <div class="rec-menu-item" onclick="photoCrop()">✂ Crop</div>
+            <div class="rec-menu-item" onclick="photoAddEffects()">✨ Effects</div>
+            <div class="rec-menu-item" onclick="photoDraw()">✏ Draw</div>
         </div>
 
-        <!-- Photo Download Options Modal -->
-        <div id="photoDownloadModal" class="modal-overlay">
-            <div class="modal">
-                <h2>Download Options</h2>
-                <p style="color: #aaa; margin-bottom: 20px; font-size: 14px;">What would you like to download?</p>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="modal-btn" style="flex: 1; background: linear-gradient(45deg, #4C1D95, #6D28D9);"
-                        onclick="downloadPhotoOnly()">
-                        <i class="fas fa-image"></i> Picture Only
-                    </button>
-                    <button id="downloadPhotoWithSoundBtn" class="modal-btn"
-                        style="flex: 1; background: linear-gradient(45deg, #FF1493, #FF69B4); cursor: pointer; opacity: 0.5;"
-                        onclick="downloadPhotoWithSoundAsVideo()" disabled>
-                        <i class="fas fa-video"></i> Picture + Sound as Video
-                    </button>
-                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
-                        onclick="closePhotoDownloadModal()">Cancel</button>
-                </div>
+        <!-- Photo Preview Container -->
+        <div class="photo-edit-container">
+            <div class="photo-edit-wrapper">
+                <div class="camera-preview">🖼️ Photo Preview</div>
             </div>
-        </div>
 
-        <div id="discardPhotoModal" class="modal-overlay">
-            <div class="modal">
-                <h2>Discard Photo?</h2>
-                <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this photo?</p>
+            <!-- Edit Controls (Overlaid at bottom) -->
+            <div class="rec-edit-controls">
+                <button class="rec-add-sound-btn" onclick="openSoundLibrary()">🎵 Add Sound</button>
                 <div style="display: flex; gap: 10px;">
-                    <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
-                        onclick="closeDiscardModal()">Stay</button>
-                    <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardPhoto()">Discard</button>
-                </div>
-            </div>
-        </div>
-        <!-- SCREEN 7: PHOTO POST SETTINGS -->
-        <div id="screen7" class="recording-screen">
-            <div class="rec-post-header">
-                <button class="rec-icon-btn" onclick="backToScreen6()">←</button>
-                <h2 style="color: #fff; margin: 0;">Post Photo</h2>
-                <div></div>
-            </div>
-
-            <!-- PHOTO PREVIEW SECTION -->
-            <div class="photo-post-preview-section">
-                <div class="photo-post-preview-header">
-                    <span style="font-size: 12px; color: #aaa;">Preview of your photo:</span>
-                    <span id="photoEditsDisplayInfo"
-                        style="font-size: 11px; color: #64c8ff; font-weight: 600; margin-left: auto;"></span>
-                </div>
-                <div class="photo-post-preview-container" id="photoPostPreviewContainer">
-                    <img id="photoPostPreviewImage" src="" alt="Photo preview" class="photo-post-preview-img">
-                </div>
-                <div class="photo-post-edits-info" id="photoPostEditsInfo" style="display: none;">
-                    <div style="font-size: 12px; color: #fff; margin-bottom: 8px; font-weight: 600;">✅ Applied Edits:
-                    </div>
-                    <div id="photoEditsListContainer" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                        <!-- Edit badges will be populated here -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="rec-post-content">
-                <!-- Sound Section -->
-                <div class="rec-post-section">
-                    <div class="rec-section-header">🎵 Sound</div>
-                    <div id="photoPostSoundDisplay"
-                        style="display: none; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 10px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div id="photoPostSoundTitle" style="color: #fff; font-weight: 600; font-size: 13px;">
-                                </div>
-                                <div id="photoPostSoundArtist"
-                                    style="color: rgba(255, 255, 255, 0.6); font-size: 11px; margin-top: 3px;"></div>
-                            </div>
-                            <button class="rec-action-btn" style="padding: 6px 12px; font-size: 12px;"
-                                onclick="removePhotoPostSound()">Remove</button>
-                        </div>
-                    </div>
-                    <button class="rec-action-btn"
-                        style="width: 100%; background: rgba(100, 200, 255, 0.3); color: #64c8ff; border: 1px solid rgba(100, 200, 255, 0.5);"
-                        onclick="openSoundLibrary()">
-                        🎵 Add Sound
+                    <button class="rec-action-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                        onclick="showPhotoDownloadOptions()">
+                        ⬇️ Download
+                    </button>
+                    <button class="rec-action-btn post" style="flex: 1;" onclick="goToPhotoPostSettings()">
+                        Continue ➜
                     </button>
                 </div>
-
-                <div class="rec-post-section">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <div class="rec-section-header" style="margin: 0;">Caption</div>
-                        <span id="photoCaptionCounter" style="color: #999; font-size: 12px;">0/300</span>
-                    </div>
-                    <textarea class="rec-caption-input" id="photoCaption" placeholder="Add a caption..." maxlength="300"
-                        oninput="updatePhotoCaptionCounter()"></textarea>
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header"># Hashtags</div>
-                    <input type="text" class="rec-input-field" placeholder="Add hashtags">
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header">@ Tags</div>
-                    <input type="text" class="rec-input-field" placeholder="Tag people">
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header">👁️ Privacy</div>
-                    <select class="rec-input-field">
-                        <option>Everyone</option>
-                        <option>Friends</option>
-                        <option>Only me</option>
-                    </select>
-                </div>
-            </div>
-            <div class="rec-post-actions">
-                <button class="rec-action-btn draft" onclick="saveDraftPhoto()">Draft</button>
-                <button class="rec-action-btn story" onclick="postPhotoStory()">Your Story</button>
-                <button class="rec-action-btn post" onclick="publishPhotoPost()">Post</button>
             </div>
         </div>
 
-        <!-- SCREEN 8: TEXT MODE -->
-        <div id="screen8" class="recording-screen">
-            <div class="rec-text-editor-container">
-                <!-- Color Picker Bar -->
-                <div class="rec-color-picker-bar">
-                    <div class="rec-color-option active"
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
-                        onclick="changeTextBg(this)">
-                    </div>
-                    <div class="rec-color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
-                        onclick="changeTextBg(this)"></div>
-                    <div class="rec-color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
-                        onclick="changeTextBg(this)"></div>
-                    <div class="rec-color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"
-                        onclick="changeTextBg(this)"></div>
-                    <div class="rec-color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
-                        onclick="changeTextBg(this)"></div>
-                    <div class="rec-color-option" style="background: #000;" onclick="changeTextBg(this)"></div>
-                    <div class="rec-color-option" style="background: #fff;" onclick="changeTextBg(this)"></div>
-                </div>
+    </div>
 
-                <div class="rec-top-bar">
-                    <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
-                    <button class="rec-icon-btn" onclick="closeRecordingUI()">✕</button>
-                </div>
+    <!-- Photo Download Options Modal -->
+    <div id="photoDownloadModal" class="modal-overlay">
+        <div class="modal">
+            <h2>Download Options</h2>
+            <p style="color: #aaa; margin-bottom: 20px; font-size: 14px;">What would you like to download?</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="modal-btn" style="flex: 1; background: linear-gradient(45deg, #4C1D95, #6D28D9);"
+                    onclick="downloadPhotoOnly()">
+                    <i class="fas fa-image"></i> Picture Only
+                </button>
+                <button id="downloadPhotoWithSoundBtn" class="modal-btn"
+                    style="flex: 1; background: linear-gradient(45deg, #FF1493, #FF69B4); cursor: pointer; opacity: 0.5;"
+                    onclick="downloadPhotoWithSoundAsVideo()" disabled>
+                    <i class="fas fa-video"></i> Picture + Sound as Video
+                </button>
+                <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                    onclick="closePhotoDownloadModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-                <!-- Text Input Area -->
-                <div class="text-canvas" id="textEditorBg">
-                    <textarea class="rec-text-input" id="textInput" placeholder="Type something..."
-                        maxlength="500"></textarea>
-                </div>
-                <!-- Text Formatting Tools -->
-                <div class="rec-text-tools">
-                    <button class="rec-text-tool-btn" onclick="changeTextAlign('left')"><i
-                            class="fa-solid fa-align-left"></i></button>
-                    <button class="rec-text-tool-btn active" onclick="changeTextAlign('center')"><i
-                            class="fa-solid fa-align-center"></i></button>
-                    <button class="rec-text-tool-btn" onclick="changeTextAlign('right')"><i
-                            class="fa-solid fa-align-right"></i></button>
-                    <button class="rec-text-tool-btn" onclick="toggleBold()"><i class="fa-solid fa-bold"></i></button>
-                    <button class="rec-text-tool-btn" onclick="changeTextColor()"><i
-                            class="fa-solid fa-palette"></i></button>
-                </div>
+    <div id="discardPhotoModal" class="modal-overlay">
+        <div class="modal">
+            <h2>Discard Photo?</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Are you sure you want to discard this photo?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="modal-btn" style="background: rgba(255, 255, 255, 0.1); flex: 1;"
+                    onclick="closeDiscardModal()">Stay</button>
+                <button class="modal-btn" style="flex: 1;" onclick="confirmDiscardPhoto()">Discard</button>
+            </div>
+        </div>
+    </div>
+    <!-- SCREEN 7: PHOTO POST SETTINGS -->
+    <div id="screen7" class="recording-screen">
+        <div class="rec-post-header">
+            <button class="rec-icon-btn" onclick="backToScreen6()">←</button>
+            <h2 style="color: #fff; margin: 0;">Post Photo</h2>
+            <div></div>
+        </div>
 
-                <div style="position: absolute; bottom: 40px; right: 20px;">
-                    <button onclick="goToTextPostSettings()"
-                        style="width: 60px; height: 60px; border-radius: 50%; background: #ff0050; border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">→</button>
+        <!-- PHOTO PREVIEW SECTION -->
+        <div class="photo-post-preview-section">
+            <div class="photo-post-preview-header">
+                <span style="font-size: 12px; color: #aaa;">Preview of your photo:</span>
+                <span id="photoEditsDisplayInfo"
+                    style="font-size: 11px; color: #64c8ff; font-weight: 600; margin-left: auto;"></span>
+            </div>
+            <div class="photo-post-preview-container" id="photoPostPreviewContainer">
+                <img id="photoPostPreviewImage" src="" alt="Photo preview" class="photo-post-preview-img">
+            </div>
+            <div class="photo-post-edits-info" id="photoPostEditsInfo" style="display: none;">
+                <div style="font-size: 12px; color: #fff; margin-bottom: 8px; font-weight: 600;">✅ Applied Edits:
+                </div>
+                <div id="photoEditsListContainer" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <!-- Edit badges will be populated here -->
                 </div>
             </div>
         </div>
 
-        <!-- SCREEN 9: TEXT POST SETTINGS -->
-        <div id="screen9" class="recording-screen">
-            <div class="rec-post-header">
-                <button class="rec-icon-btn" onclick="backToScreen8()">←</button>
-                <h2 style="color: #fff; margin: 0;">Post Text</h2>
-                <div></div>
-            </div>
-            <div class="rec-post-content">
-                <!-- Text Preview Thumbnail -->
-                <div class="post-preview">
-                    <div class="rec-text-preview-thumbnail" id="textPreview">
-                        <span>Your Text</span>
+        <div class="rec-post-content">
+            <!-- Sound Section -->
+            <div class="rec-post-section">
+                <div class="rec-section-header">🎵 Sound</div>
+                <div id="photoPostSoundDisplay"
+                    style="display: none; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div id="photoPostSoundTitle" style="color: #fff; font-weight: 600; font-size: 13px;">
+                            </div>
+                            <div id="photoPostSoundArtist"
+                                style="color: rgba(255, 255, 255, 0.6); font-size: 11px; margin-top: 3px;"></div>
+                        </div>
+                        <button class="rec-action-btn" style="padding: 6px 12px; font-size: 12px;"
+                            onclick="removePhotoPostSound()">Remove</button>
                     </div>
                 </div>
-                <div class="rec-post-section">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <div class="rec-section-header" style="margin: 0;">Caption</div>
-                        <span id="textPostCaptionCounter" style="color: #999; font-size: 12px;">0/300</span>
-                    </div>
-                    <textarea class="rec-caption-input" id="textPostCaption" placeholder="Add a caption..."
-                        maxlength="300" oninput="updateTextPostCaptionCounter()"></textarea>
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header"># Hashtags</div>
-                    <input type="text" class="rec-input-field" placeholder="Add hashtags">
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header">@ Tags</div>
-                    <input type="text" class="rec-input-field" placeholder="Tag people">
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header">👁️ Privacy</div>
-                    <select class="rec-input-field">
-                        <option>Everyone</option>
-                        <option>Friends</option>
-                        <option>Only me</option>
-                    </select>
-                </div>
-
-                <!-- Allow Comments -->
-                <div class="post-section toggle-section">
-                    <div class="section-header">
-                        <i class="fa-solid fa-comment"></i>
-                        <span>Allow comments</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="rec-post-section toggle-section">
-                    <div class="rec-section-header">💬 Allow Comments</div>
-                    <label class="rec-toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="rec-toggle-slider"></span>
-                    </label>
-                </div>
-
+                <button class="rec-action-btn"
+                    style="width: 100%; background: rgba(100, 200, 255, 0.3); color: #64c8ff; border: 1px solid rgba(100, 200, 255, 0.5);"
+                    onclick="openSoundLibrary()">
+                    🎵 Add Sound
+                </button>
             </div>
 
-            <div class="rec-post-actions">
-                <button class="rec-action-btn draft" onclick="saveDraftText()">Draft</button>
-                <button class="rec-action-btn story" onclick="postTextStory()">Your Story</button>
-                <button class="rec-action-btn post" onclick="publishTextPost()">Post</button>
+            <div class="rec-post-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div class="rec-section-header" style="margin: 0;">Caption</div>
+                    <span id="photoCaptionCounter" style="color: #999; font-size: 12px;">0/300</span>
+                </div>
+                <textarea class="rec-caption-input" id="photoCaption" placeholder="Add a caption..." maxlength="300"
+                    oninput="updatePhotoCaptionCounter()"></textarea>
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header"># Hashtags</div>
+                <input type="text" class="rec-input-field" placeholder="Add hashtags">
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header">@ Tags</div>
+                <input type="text" class="rec-input-field" placeholder="Tag people">
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header">👁️ Privacy</div>
+                <select class="rec-input-field">
+                    <option>Everyone</option>
+                    <option>Friends</option>
+                    <option>Only me</option>
+                </select>
             </div>
         </div>
+        <div class="rec-post-actions">
+            <button class="rec-action-btn draft" onclick="saveDraftPhoto()">Draft</button>
+            <button class="rec-action-btn story" onclick="postPhotoStory()">Your Story</button>
+            <button class="rec-action-btn post" onclick="publishPhotoPost()">Post</button>
+        </div>
+    </div>
 
-        <!-- SCREEN 4: POST SETTINGS -->
-        <div id="screen4" class="recording-screen">
-            <div class="rec-post-header">
-                <button class="rec-icon-btn" onclick="closeRecordingUI()">←</button>
-                <h2 style="color: #fff; margin: 0;">Post</h2>
-                <div></div>
+    <!-- SCREEN 8: TEXT MODE -->
+    <div id="screen8" class="recording-screen">
+        <div class="rec-text-editor-container">
+            <!-- Color Picker Bar -->
+            <div class="rec-color-picker-bar">
+                <div class="rec-color-option active"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="changeTextBg(this)">
+                </div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
+                    onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: #000;" onclick="changeTextBg(this)"></div>
+                <div class="rec-color-option" style="background: #fff;" onclick="changeTextBg(this)"></div>
             </div>
-            <div class="rec-post-content">
-                <!-- VIDEO PREVIEW -->
-                <div class="post-preview">
-                    <video id="postPreviewVideo" class="post-preview-video" controls playsinline>
-                        <source src="" type="video/webm">
-                    </video>
-                </div>
-                <div class="rec-post-section">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <div class="rec-section-header" style="margin: 0;">Caption</div>
-                        <span id="captionCounter" style="color: #999; font-size: 12px;">0/300</span>
-                    </div>
-                    <textarea class="rec-caption-input" id="recCaption" placeholder="Add a caption..." maxlength="300"
-                        oninput="updateCaptionCounter()"></textarea>
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header"># Hashtags</div>
-                    <input type="text" class="rec-input-field" placeholder="Add hashtags">
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header">@ Tags</div>
-                    <input type="text" class="rec-input-field" placeholder="Tag people">
-                </div>
-                <div class="rec-post-section">
-                    <div class="rec-section-header">👁️ Privacy</div>
-                    <select class="rec-input-field">
-                        <option>Everyone</option>
-                        <option>Friends</option>
-                        <option>Only me</option>
-                    </select>
-                </div>
-                <div class="rec-post-section toggle-section">
-                    <div class="rec-section-header">💬 Allow Comments</div>
-                    <label class="rec-toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="rec-toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="rec-post-section toggle-section">
-                    <div class="rec-section-header">👥 Allow Duet</div>
-                    <label class="rec-toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="rec-toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="rec-post-section toggle-section">
-                    <div class="rec-section-header">✂️ Allow Stitch</div>
-                    <label class="rec-toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="rec-toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="rec-post-section toggle-section">
-                    <div class="rec-section-header">🎵 Allow Sound Reuse</div>
-                    <label class="rec-toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="rec-toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="rec-post-section toggle-section">
-                    <div class="rec-section-header">⬇️ Allow Download</div>
-                    <label class="rec-toggle-switch">
-                        <input type="checkbox">
-                        <span class="rec-toggle-slider"></span>
-                    </label>
-                </div>
+
+            <div class="rec-top-bar">
+                <button class="rec-icon-btn" onclick="backToScreen1()">←</button>
+                <button class="rec-icon-btn" onclick="closeRecordingUI()">✕</button>
             </div>
-            <div class="rec-post-actions">
-                <button class="rec-action-btn draft" onclick="saveDraftRecording()">Draft</button>
-                <button class="rec-action-btn story" onclick="postStory()">Your Story</button>
-                <button class="rec-action-btn post" onclick="publishRecordingPost()">Post</button>
+
+            <!-- Text Input Area -->
+            <div class="text-canvas" id="textEditorBg">
+                <textarea class="rec-text-input" id="textInput" placeholder="Type something..."
+                    maxlength="500"></textarea>
+            </div>
+            <!-- Text Formatting Tools -->
+            <div class="rec-text-tools">
+                <button class="rec-text-tool-btn" onclick="changeTextAlign('left')"><i
+                        class="fa-solid fa-align-left"></i></button>
+                <button class="rec-text-tool-btn active" onclick="changeTextAlign('center')"><i
+                        class="fa-solid fa-align-center"></i></button>
+                <button class="rec-text-tool-btn" onclick="changeTextAlign('right')"><i
+                        class="fa-solid fa-align-right"></i></button>
+                <button class="rec-text-tool-btn" onclick="toggleBold()"><i class="fa-solid fa-bold"></i></button>
+                <button class="rec-text-tool-btn" onclick="changeTextColor()"><i
+                        class="fa-solid fa-palette"></i></button>
+            </div>
+
+            <div style="position: absolute; bottom: 40px; right: 20px;">
+                <button onclick="goToTextPostSettings()"
+                    style="width: 60px; height: 60px; border-radius: 50%; background: #ff0050; border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">→</button>
             </div>
         </div>
+    </div>
+
+    <!-- SCREEN 9: TEXT POST SETTINGS -->
+    <div id="screen9" class="recording-screen">
+        <div class="rec-post-header">
+            <button class="rec-icon-btn" onclick="backToScreen8()">←</button>
+            <h2 style="color: #fff; margin: 0;">Post Text</h2>
+            <div></div>
+        </div>
+        <div class="rec-post-content">
+            <!-- Text Preview Thumbnail -->
+            <div class="post-preview">
+                <div class="rec-text-preview-thumbnail" id="textPreview">
+                    <span>Your Text</span>
+                </div>
+            </div>
+            <div class="rec-post-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div class="rec-section-header" style="margin: 0;">Caption</div>
+                    <span id="textPostCaptionCounter" style="color: #999; font-size: 12px;">0/300</span>
+                </div>
+                <textarea class="rec-caption-input" id="textPostCaption" placeholder="Add a caption..." maxlength="300"
+                    oninput="updateTextPostCaptionCounter()"></textarea>
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header"># Hashtags</div>
+                <input type="text" class="rec-input-field" placeholder="Add hashtags">
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header">@ Tags</div>
+                <input type="text" class="rec-input-field" placeholder="Tag people">
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header">👁️ Privacy</div>
+                <select class="rec-input-field">
+                    <option>Everyone</option>
+                    <option>Friends</option>
+                    <option>Only me</option>
+                </select>
+            </div>
+
+            <!-- Allow Comments -->
+            <div class="post-section toggle-section">
+                <div class="section-header">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>Allow comments</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="rec-post-section toggle-section">
+                <div class="rec-section-header">💬 Allow Comments</div>
+                <label class="rec-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="rec-toggle-slider"></span>
+                </label>
+            </div>
+
+        </div>
+
+        <div class="rec-post-actions">
+            <button class="rec-action-btn draft" onclick="saveDraftText()">Draft</button>
+            <button class="rec-action-btn story" onclick="postTextStory()">Your Story</button>
+            <button class="rec-action-btn post" onclick="publishTextPost()">Post</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: POST SETTINGS -->
+    <div id="screen4" class="recording-screen">
+        <div class="rec-post-header">
+            <button class="rec-icon-btn" onclick="closeRecordingUI()">←</button>
+            <h2 style="color: #fff; margin: 0;">Post</h2>
+            <div></div>
+        </div>
+        <div class="rec-post-content">
+            <!-- VIDEO PREVIEW -->
+            <div class="post-preview">
+                <video id="postPreviewVideo" class="post-preview-video" controls playsinline>
+                    <source src="" type="video/webm">
+                </video>
+            </div>
+            <div class="rec-post-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div class="rec-section-header" style="margin: 0;">Caption</div>
+                    <span id="captionCounter" style="color: #999; font-size: 12px;">0/300</span>
+                </div>
+                <textarea class="rec-caption-input" id="recCaption" placeholder="Add a caption..." maxlength="300"
+                    oninput="updateCaptionCounter()"></textarea>
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header"># Hashtags</div>
+                <input type="text" class="rec-input-field" placeholder="Add hashtags">
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header">@ Tags</div>
+                <input type="text" class="rec-input-field" placeholder="Tag people">
+            </div>
+            <div class="rec-post-section">
+                <div class="rec-section-header">👁️ Privacy</div>
+                <select class="rec-input-field">
+                    <option>Everyone</option>
+                    <option>Friends</option>
+                    <option>Only me</option>
+                </select>
+            </div>
+            <div class="rec-post-section toggle-section">
+                <div class="rec-section-header">💬 Allow Comments</div>
+                <label class="rec-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="rec-toggle-slider"></span>
+                </label>
+            </div>
+            <div class="rec-post-section toggle-section">
+                <div class="rec-section-header">👥 Allow Duet</div>
+                <label class="rec-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="rec-toggle-slider"></span>
+                </label>
+            </div>
+            <div class="rec-post-section toggle-section">
+                <div class="rec-section-header">✂️ Allow Stitch</div>
+                <label class="rec-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="rec-toggle-slider"></span>
+                </label>
+            </div>
+            <div class="rec-post-section toggle-section">
+                <div class="rec-section-header">🎵 Allow Sound Reuse</div>
+                <label class="rec-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="rec-toggle-slider"></span>
+                </label>
+            </div>
+            <div class="rec-post-section toggle-section">
+                <div class="rec-section-header">⬇️ Allow Download</div>
+                <label class="rec-toggle-switch">
+                    <input type="checkbox">
+                    <span class="rec-toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="rec-post-actions">
+            <button class="rec-action-btn draft" onclick="saveDraftRecording()">Draft</button>
+            <button class="rec-action-btn story" onclick="postStory()">Your Story</button>
+            <button class="rec-action-btn post" onclick="publishRecordingPost()">Post</button>
+        </div>
+    </div>
     </div>
 
     <!-- Effects Popup -->
