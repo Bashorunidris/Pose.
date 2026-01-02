@@ -15925,6 +15925,18 @@ For more help, visit: help.pose.app
                     };
 
                     recordingState.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    
+                    // Verify audio tracks are present
+                    const audioTracks = recordingState.stream.getAudioTracks();
+                    const videoTracks = recordingState.stream.getVideoTracks();
+                    console.log('✅ Stream initialized - Audio tracks:', audioTracks.length, 'Video tracks:', videoTracks.length);
+                    
+                    if (audioTracks.length === 0) {
+                        console.warn('⚠️ WARNING: No audio tracks in stream - mic audio will NOT be recorded');
+                    } else {
+                        console.log('🎤 Microphone ready for recording');
+                    }
+                    
                     const videoElement = document.getElementById('cameraPreview');
                     videoElement.srcObject = recordingState.stream;
                 }
@@ -16068,12 +16080,14 @@ For more help, visit: help.pose.app
                 // No music - Record ONLY microphone audio
                 console.log('🎤 Recording with microphone ONLY (no background music)');
 
-                const audioTracks = recordingState.stream.getAudioTracks();
-                if (audioTracks.length > 0) {
+                // Ensure we have a camera stream with audio
+                if (recordingState.stream && recordingState.stream.getAudioTracks().length > 0) {
+                    const audioTracks = recordingState.stream.getAudioTracks();
                     recordingStream.addTrack(audioTracks[0]);
-                    console.log('✅ Microphone audio added to video');
+                    console.log('✅ Microphone audio track added to video - AUDIO WILL BE RECORDED');
                 } else {
-                    console.log('⚠️ No microphone available');
+                    console.warn('⚠️ Warning: No microphone audio available in stream');
+                    console.log('📌 Recording video only (audio will be silent)');
                 }
             }
 
@@ -24693,8 +24707,20 @@ For more help, visit: help.pose.app
                         videoPreview.appendChild(newSource);
                     }
 
+                    // Ensure video element can play audio
+                    videoPreview.muted = false;
+                    videoPreview.volume = 1.0;
+                    
                     videoPreview.load();
                     console.log('✅ Post preview loaded successfully');
+                    console.log('🔊 Audio enabled - volume:', videoPreview.volume, 'muted:', videoPreview.muted);
+                    
+                    // Test audio availability after a brief delay
+                    setTimeout(() => {
+                        if (videoPreview.readyState >= 1) {
+                            console.log('📊 Video metadata loaded - duration:', videoPreview.duration, 'has audio tracks:', videoPreview.mozAudioTracks ? videoPreview.mozAudioTracks.length > 0 : 'unknown');
+                        }
+                    }, 500);
                 } else {
                     console.warn('⚠️ No recorded video found for preview');
                 }
