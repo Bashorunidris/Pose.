@@ -17744,50 +17744,15 @@ For more help, visit: help.pose.app
             if (recordingState.clips.length > 0) {
                 const latestClip = recordingState.clips[recordingState.clips.length - 1];
                 const editVideoElement = document.getElementById('editVideoPreview');
-                const loadingOverlay = document.getElementById('editLoadingOverlay');
 
-                console.log('🎬 Transitioning to edit screen...');
-                console.log('📹 Video URL:', latestClip.url);
-
-                if (editVideoElement) {
-                    // Set video source
+                if (editVideoElement && latestClip.url) {
                     editVideoElement.src = latestClip.url;
-                    editVideoElement.preload = 'auto';
-                    editVideoElement.crossOrigin = 'anonymous';
-                    editVideoElement.autoplay = false;
-                    editVideoElement.muted = false;
-
-                    // Load the video
                     editVideoElement.load();
-
-                    // Handle when metadata is loaded
-                    const onMetadataLoaded = () => {
-                        console.log('✅ Video metadata loaded, duration:', editVideoElement.duration);
-                        if (loadingOverlay) {
-                            loadingOverlay.style.display = 'none';
-                        }
-                        editVideoElement.removeEventListener('loadedmetadata', onMetadataLoaded);
-                    };
-
-                    editVideoElement.addEventListener('loadedmetadata', onMetadataLoaded, { once: true });
-
-                    // Fallback: hide overlay after timeout
-                    setTimeout(() => {
-                        if (loadingOverlay) {
-                            loadingOverlay.style.display = 'none';
-                        }
-                    }, 2000);
-
-                    editVideoElement.onerror = (err) => {
-                        console.error('❌ Video load error:', err);
-                        if (loadingOverlay) loadingOverlay.style.display = 'none';
-                    };
+                    console.log('✅ Video loaded into edit container');
                 }
             }
 
-            // Show screen immediately
             showScreen('screen3');
-            console.log('📺 Screen 3 shown');
         }
 
         function startRecordingTimer() {
