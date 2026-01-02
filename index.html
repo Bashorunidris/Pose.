@@ -4138,10 +4138,19 @@
             aspect-ratio: 1 / 1;
         }
 
-        /* ===== VIDEO REVIEW CONTAINER (Screen3) ===== */
+        /* ===== TIKTOK-STYLE FULL PAGE VIDEO REVIEW (Screen3) ===== */
+        #screen3.recording-screen {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
         .video-review-container {
-            position: relative;
-            flex: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             background: #000;
@@ -4149,13 +4158,14 @@
             display: flex;
             flex-direction: column;
             z-index: 1;
-            padding-top: 60px;
-            padding-bottom: 120px;
         }
 
         .video-review-wrapper {
-            position: relative;
-            flex: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             background: #000;
@@ -4170,19 +4180,52 @@
         .video-review-wrapper video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background: #000;
         }
 
-        /* ===== RESPONSIVE VIDEO REVIEW - TABLETS (768px - 1023px) ===== */
-        @media (max-width: 1023px) and (min-width: 768px) {
-            .video-review-container {
-                padding-top: 55px;
-                padding-bottom: 110px;
-            }
+        /* Top bar overlaid on video */
+        #screen3 .rec-top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 100%);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
 
+        #screen3 .rec-top-bar h2 {
+            color: #fff;
+            font-size: 18px;
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Bottom controls overlaid on video */
+        #screen3 .rec-edit-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 45;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.9) 100%);
+            padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0)) 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* ===== TIKTOK RESPONSIVE VIDEO REVIEW - TABLETS (768px - 1023px) ===== */
+        @media (max-width: 1023px) and (min-width: 768px) {
             #screen3 .rec-top-bar {
-                padding: 12px 16px;
+                padding: 14px 16px;
             }
 
             #screen3 .rec-top-bar h2 {
@@ -4196,7 +4239,7 @@
             }
 
             #screen3 .rec-edit-controls {
-                padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0)) 16px;
+                padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0)) 16px;
                 gap: 12px;
             }
 
@@ -4211,16 +4254,12 @@
             }
         }
 
-        /* ===== RESPONSIVE VIDEO REVIEW - LARGE PHONES (480px - 767px) ===== */
+        /* ===== TIKTOK RESPONSIVE VIDEO REVIEW - LARGE PHONES (480px - 767px) ===== */
         @media (max-width: 767px) {
-            .video-review-container {
-                padding-top: 50px;
-                padding-bottom: 105px;
-            }
-
             #screen3 .rec-top-bar {
-                padding: 10px 12px;
+                padding: 12px 14px;
                 gap: 8px;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 100%);
             }
 
             #screen3 .rec-top-bar h2 {
@@ -4237,9 +4276,10 @@
             }
 
             #screen3 .rec-edit-controls {
-                padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0)) 12px;
+                padding: 16px 12px calc(16px + env(safe-area-inset-bottom, 0)) 12px;
                 gap: 10px;
                 flex-direction: column;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.95) 100%);
             }
 
             #screen3 .rec-add-sound-btn {
@@ -4256,18 +4296,16 @@
             }
         }
 
-        /* ===== RESPONSIVE VIDEO REVIEW - SMALL PHONES (480px and below) ===== */
+        /* ===== TIKTOK RESPONSIVE VIDEO REVIEW - SMALL PHONES (480px and below) ===== */
         @media (max-width: 480px) {
-            .video-review-container {
-                padding-top: 45px;
-                padding-bottom: 100px;
-            }
-
             #screen3 .rec-top-bar {
-                padding: 8px 10px;
-                gap: 6px;
-                position: fixed;
+                padding: 10px 12px;
+                gap: 8px;
+                position: absolute;
                 top: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 100%);
                 z-index: 50;
             }
 
@@ -4276,6 +4314,7 @@
                 margin: 0;
                 flex: 1;
                 text-align: center;
+                color: #fff;
             }
 
             #screen3 .rec-icon-btn {
@@ -4285,53 +4324,66 @@
                 min-width: 36px;
                 min-height: 36px;
                 padding: 0;
+                background: rgba(0, 0, 0, 0.6);
+                border: 1px solid rgba(255, 255, 255, 0.2);
             }
 
             #screen3 .rec-edit-controls {
-                position: fixed;
+                position: absolute;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0)) 10px;
-                gap: 8px;
+                padding: 16px 12px calc(16px + env(safe-area-inset-bottom, 0)) 12px;
+                gap: 10px;
                 flex-direction: column;
-                background: rgba(0, 0, 0, 0.95);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.98) 100%);
+                border-top: none;
                 z-index: 45;
+                width: 100%;
             }
 
             #screen3 .rec-add-sound-btn {
-                padding: 10px 12px;
-                font-size: 12px;
+                padding: 11px 14px;
+                font-size: 13px;
                 width: 100%;
-                border-radius: 6px;
+                border-radius: 8px;
+                font-weight: 600;
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                cursor: pointer;
             }
 
             #screen3 .rec-add-sound-btn:active {
-                transform: scale(0.98);
+                transform: scale(0.96);
+                background: rgba(255, 255, 255, 0.25);
             }
 
             #screen3 .rec-action-btn {
-                padding: 10px 12px;
-                font-size: 12px;
+                padding: 11px 14px;
+                font-size: 13px;
                 width: 100%;
-                border-radius: 6px;
+                border-radius: 8px;
                 flex: 1;
+                font-weight: 600;
+                border: none;
             }
 
             #screen3 .rec-action-btn:active {
-                transform: scale(0.98);
+                transform: scale(0.96);
+                opacity: 0.9;
             }
 
             #screen3 .rec-action-btn.post {
-                background: linear-gradient(45deg, #4C1D95, #6D28D9);
+                background: linear-gradient(135deg, #FF0050, #FF4081);
+                color: #fff;
             }
 
             /* Stack buttons vertically on very small screens */
             #screen3 .rec-edit-controls>div:last-child {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: 10px;
                 width: 100%;
             }
 
@@ -4339,11 +4391,11 @@
                 width: 100%;
             }
 
-            /* Video player touch-friendly */
+            /* Video player fill entire screen */
             #recordedVideoPreview {
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
+                object-fit: cover;
             }
 
             /* Ensure video controls are visible on mobile */
