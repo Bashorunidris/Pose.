@@ -1247,10 +1247,13 @@
             background: #000;
             display: block !important;
             /* Performance optimizations */
-            will-change: transform;
+            will-change: auto;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            transform: translate3d(0, 0, 0);
+            /* Mirror front-facing camera naturally */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
         }
 
         /* Ensure video fills entire screen */
@@ -1467,6 +1470,10 @@
             height: 100%;
             object-fit: cover;
             background: #000;
+            /* Mirror front-facing camera to show correct orientation */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
         }
 
         .camera-error-overlay {
@@ -10463,6 +10470,10 @@
             height: 100%;
             object-fit: cover;
             background: #000;
+            /* Mirror front-facing camera to show correct orientation */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
         }
 
         /* Camera Placeholder */
@@ -10711,6 +10722,10 @@
             object-fit: cover;
             background: #000;
             display: block !important;
+            /* Mirror front-facing camera to show correct orientation */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
         }
 
         /* Edit Top Bar */
@@ -19395,10 +19410,12 @@ For more help, visit: help.pose.app
                     image-rendering: -webkit-optimize-contrast;
                     image-rendering: crisp-edges;
                     
-                    /* Hardware acceleration for smooth rendering */
-                    transform: translate3d(0, 0, 0);
+                    /* Mirror front-facing camera to show correct orientation */
+                    transform: scaleX(-1);
+                    -webkit-transform: scaleX(-1);
+                    -moz-transform: scaleX(-1);
                     backface-visibility: hidden;
-                    will-change: transform;
+                    will-change: auto;
                     
                     /* Prevent flickering */
                     perspective: 1000px;
