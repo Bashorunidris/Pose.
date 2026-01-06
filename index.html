@@ -2579,24 +2579,24 @@
             letter-spacing: 0.5px;
         }
 
-        /* Sound Display on Screen 1 */
-        .rec-sound-display {
-            position: absolute;
-            top: 60px;
+        /* Sound Display Panel - Compact */
+        .sound-display-panel {
+            position: fixed;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 320px;
-            background: linear-gradient(135deg, rgba(76, 29, 149, 0.9), rgba(109, 40, 217, 0.9));
-            border: 1px solid rgba(100, 200, 255, 0.5);
-            border-radius: 12px;
-            padding: 10px 12px;
-            box-shadow: 0 4px 20px rgba(76, 29, 149, 0.4);
-            z-index: 50;
-            animation: slideDown 0.4s ease-out;
+            width: 85%;
+            max-width: 280px;
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.85), rgba(109, 40, 217, 0.85));
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 10px;
+            padding: 8px 10px;
+            box-shadow: 0 4px 12px rgba(76, 29, 149, 0.3);
+            z-index: 40;
+            animation: slidePanelDown 0.3s ease-out;
         }
 
-        @keyframes slideDown {
+        @keyframes slidePanelDown {
             from {
                 opacity: 0;
                 transform: translateX(-50%) translateY(-10px);
@@ -2608,39 +2608,39 @@
             }
         }
 
-        .rec-sound-display-content {
+        .sound-panel-wrapper {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .rec-sound-thumbnail {
-            width: 40px;
-            height: 40px;
+        .sound-panel-thumbnail {
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             color: #fff;
             flex-shrink: 0;
-            overflow: hidden;
         }
 
-        .rec-sound-thumbnail img {
+        .sound-panel-thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 8px;
         }
 
-        .rec-sound-info {
+        .sound-panel-info {
             flex: 1;
             min-width: 0;
         }
 
-        .rec-sound-title {
-            font-size: 13px;
+        .sound-panel-title {
+            font-size: 12px;
             font-weight: 600;
             color: #fff;
             white-space: nowrap;
@@ -2648,34 +2648,144 @@
             text-overflow: ellipsis;
         }
 
-        .rec-sound-artist {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
+        .sound-panel-artist {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-top: 2px;
         }
 
-        .rec-sound-remove {
+        .sound-panel-remove-btn {
             width: 28px;
             height: 28px;
             border-radius: 50%;
             background: rgba(255, 100, 100, 0.2);
-            border: 1px solid rgba(255, 100, 100, 0.5);
-            color: #ff6464;
-            font-size: 14px;
+            border: 1px solid rgba(255, 100, 100, 0.35);
+            color: #ff8080;
+            font-size: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
-        .rec-sound-remove:hover {
-            background: rgba(255, 100, 100, 0.4);
-            border-color: rgba(255, 100, 100, 0.8);
+        .sound-panel-remove-btn:hover {
+            background: rgba(255, 100, 100, 0.3);
+            border-color: rgba(255, 100, 100, 0.5);
             transform: scale(1.1);
+        }
+
+        /* Responsive - Tablets */
+        @media (max-width: 1023px) {
+            .sound-display-panel {
+                top: 48px;
+                width: 82%;
+                max-width: 260px;
+                padding: 7px 9px;
+            }
+
+            .sound-panel-thumbnail {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+
+            .sound-panel-title {
+                font-size: 11px;
+            }
+
+            .sound-panel-artist {
+                font-size: 9px;
+                margin-top: 1px;
+            }
+
+            .sound-panel-remove-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 11px;
+            }
+        }
+
+        /* Responsive - Large Mobile (480px - 767px) */
+        @media (max-width: 767px) {
+            .sound-display-panel {
+                top: 46px;
+                width: 80%;
+                max-width: 240px;
+                padding: 6px 8px;
+                gap: 6px;
+            }
+
+            .sound-panel-wrapper {
+                gap: 6px;
+            }
+
+            .sound-panel-thumbnail {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            .sound-panel-title {
+                font-size: 11px;
+            }
+
+            .sound-panel-artist {
+                font-size: 9px;
+                margin-top: 1px;
+            }
+
+            .sound-panel-remove-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+        }
+
+        /* Responsive - Mobile (480px and below) */
+        @media (max-width: 480px) {
+            .sound-display-panel {
+                top: 44px;
+                width: 78%;
+                max-width: 220px;
+                padding: 5px 7px;
+                border-radius: 8px;
+                gap: 5px;
+            }
+
+            .sound-panel-wrapper {
+                gap: 5px;
+            }
+
+            .sound-panel-thumbnail {
+                width: 30px;
+                height: 30px;
+                border-radius: 6px;
+                font-size: 13px;
+            }
+
+            .sound-panel-title {
+                font-size: 10px;
+            }
+
+            .sound-panel-artist {
+                font-size: 8px;
+                margin-top: 1px;
+            }
+
+            .sound-panel-remove-btn {
+                width: 22px;
+                height: 22px;
+                font-size: 9px;
+            }
+
+            .sound-panel-remove-btn:hover {
+                transform: scale(1.05);
+            }
         }
 
         /* Mode Tabs */
@@ -4143,69 +4253,7 @@
             z-index: 1;
         }
 
-        /* Sound Display Panel */
-        .rec-sound-display {
-            position: absolute;
-            bottom: 110px;
-            left: 0;
-            right: 0;
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(0, 0, 0, 0.7);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 45;
-        }
 
-        .rec-sound-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .rec-sound-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .rec-sound-title {
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .rec-sound-artist {
-            color: #aaa;
-            font-size: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-top: 2px;
-        }
-
-        .rec-sound-remove-btn {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            font-size: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .rec-sound-remove-btn:hover {
-            background: rgba(255, 100, 100, 0.3);
-            border-color: rgba(255, 100, 100, 0.6);
-        }
 
         /* Edit Controls Container */
         .rec-edit-controls {
@@ -10451,10 +10499,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
             flex: 1;
             border-radius: 0;
             padding: 0;
+            isolation: isolate;
         }
 
         @media (max-width: 768px) {
@@ -10465,11 +10514,18 @@
             }
         }
 
-        #v2RecordVideo {
+        #v2RecordVideo,
+        #v2RecordCanvas {
             width: 100%;
             height: 100%;
             object-fit: cover;
             background: #000;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #v2RecordVideo {
             /* Mirror front-facing camera to show correct orientation */
             transform: scaleX(-1);
             -webkit-transform: scaleX(-1);
@@ -10529,8 +10585,15 @@
         }
 
         @keyframes v2-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         /* Timer Display */
@@ -10561,6 +10624,151 @@
         @media (max-width: 480px) {
             .v2-record-timer {
                 font-size: 40px;
+            }
+        }
+
+        /* Settings Display Panel */
+        .v2-record-settings-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 16px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            pointer-events: auto;
+        }
+
+        .v2-setting-item {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .v2-setting-label {
+            color: #aaa;
+            font-weight: 600;
+        }
+
+        .v2-setting-value {
+            color: #FF0050;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .v2-record-settings-panel {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px 12px;
+                top: 10px;
+                left: 10px;
+                font-size: 11px;
+            }
+
+            .v2-setting-item {
+                gap: 4px;
+            }
+        }
+
+        /* V2 Sound Display Panel */
+        .v2-record-sound-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            border: 1px solid rgba(255, 0, 80, 0.3);
+            max-width: 300px;
+        }
+
+        .v2-sound-thumbnail {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-size: 24px;
+        }
+
+        .v2-sound-thumbnail img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .v2-sound-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .v2-sound-title {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .v2-sound-artist {
+            color: #aaa;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .v2-sound-remove-btn {
+            background: rgba(255, 0, 80, 0.2);
+            border: 1px solid rgba(255, 0, 80, 0.5);
+            color: #FF0050;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .v2-sound-remove-btn:hover {
+            background: rgba(255, 0, 80, 0.4);
+            border-color: rgba(255, 0, 80, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .v2-record-sound-panel {
+                max-width: 85%;
+                padding: 12px;
+            }
+
+            .v2-sound-title {
+                font-size: 12px;
+            }
+
+            .v2-sound-artist {
+                font-size: 10px;
             }
         }
 
@@ -10712,7 +10920,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
             flex: 1;
         }
 
@@ -10738,7 +10946,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
             z-index: 100;
         }
 
@@ -10835,13 +11043,56 @@
             color: #fff;
         }
 
+        /* Edit Metadata Display */
+        .v2-edit-metadata {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 14px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            pointer-events: auto;
+        }
+
+        .v2-meta-item {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .v2-meta-label {
+            color: #aaa;
+            font-weight: 600;
+        }
+
+        .v2-meta-value {
+            color: #FF0050;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .v2-edit-metadata {
+                flex-direction: column;
+                gap: 6px;
+                padding: 8px 10px;
+                top: 10px;
+                right: 10px;
+                font-size: 10px;
+            }
+        }
+
         /* Edit Bottom Sheet */
         .v2-edit-bottom-sheet {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.95) 100%);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.95) 100%);
             padding: 40px 16px 30px;
             max-height: 50vh;
             overflow-y: auto;
@@ -11110,6 +11361,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -11587,16 +11839,16 @@
             </div>
 
             <!-- Selected Sound Display (Top Center) -->
-            <div class="rec-sound-display" id="recSoundDisplay" style="display: none;">
-                <div class="rec-sound-display-content">
-                    <div class="rec-sound-thumbnail" id="recSoundThumbnail">
+            <div class="sound-display-panel" id="recSoundDisplay" style="display: none;">
+                <div class="sound-panel-wrapper">
+                    <div class="sound-panel-thumbnail" id="recSoundThumbnail">
                         <i class="fas fa-music"></i>
                     </div>
-                    <div class="rec-sound-info">
-                        <div class="rec-sound-title" id="recSoundTitle">Sound Selected</div>
-                        <div class="rec-sound-artist" id="recSoundArtist">Artist Name</div>
+                    <div class="sound-panel-info">
+                        <div class="sound-panel-title" id="recSoundTitle">Sound Selected</div>
+                        <div class="sound-panel-artist" id="recSoundArtist">Artist Name</div>
                     </div>
-                    <button class="rec-sound-remove" onclick="removeRecordingSound()" title="Remove Sound">
+                    <button class="sound-panel-remove-btn" onclick="removeRecordingSound()" title="Remove Sound">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -11975,8 +12227,8 @@
 
                         <!-- Center: Main Record Button -->
                         <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                            <button class="rec-record-btn" id="recMainBtn"
-                                title="Record video" onclick="openV2RecordScreen()">
+                            <button class="rec-record-btn" id="recMainBtn" title="Record video"
+                                onclick="openV2RecordScreen()">
                                 <div class="rec-btn-inner">
                                     <div class="rec-btn-circle"></div>
                                 </div>
@@ -15759,13 +16011,23 @@ For more help, visit: help.pose.app
             canvasContext: null,
             canvasWidth: 0,
             canvasHeight: 0,
+            filterAnimationId: null,
             // Screen 3 Sound properties
             selectedSound: null,
             videoOriginalVolume: 1,
             // Background audio during recording
             backgroundAudio: null,
-            audioContext: null
+            audioContext: null,
+            // Audio sync flags
+            audioStarted: false,
+            audioSource: null,
+            audioDestination: null,
+            audioBuffer: null,
+            preloadedAudioBuffer: null,
+            preloadedAudioContext: null
         };
+
+
 
         // ====== VIDEO CAMERA INITIALIZATION (SCREEN 1) - TIKTOK OPTIMIZED ======
         async function initializeVideoCamera() {
@@ -15940,18 +16202,18 @@ For more help, visit: help.pose.app
                     };
 
                     recordingState.stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    
+
                     // Verify audio tracks are present
                     const audioTracks = recordingState.stream.getAudioTracks();
                     const videoTracks = recordingState.stream.getVideoTracks();
                     console.log('✅ Stream initialized - Audio tracks:', audioTracks.length, 'Video tracks:', videoTracks.length);
-                    
+
                     if (audioTracks.length === 0) {
                         console.warn('⚠️ WARNING: No audio tracks in stream - mic audio will NOT be recorded');
                     } else {
                         console.log('🎤 Microphone ready for recording');
                     }
-                    
+
                     const videoElement = document.getElementById('cameraPreview');
                     videoElement.srcObject = recordingState.stream;
                 }
@@ -19889,6 +20151,60 @@ For more help, visit: help.pose.app
                 return;
             }
 
+            // MUTUALLY EXCLUSIVE: Clear any active filter when effect is selected
+            if (recordingState.currentFilter && recordingState.currentFilter !== 'none') {
+                recordingState.currentFilter = 'none';
+                console.log('🎨 Filter cleared (mutually exclusive with effects)');
+
+                // Reset filter button UI
+                document.querySelectorAll('.rec-filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                const noneFilterBtn = document.querySelector(`button[onclick*="applyRecordingFilter('none')"]`);
+                if (noneFilterBtn) {
+                    noneFilterBtn.classList.add('active');
+                }
+
+                // Reset filter label
+                const label = document.getElementById('recFiltersLabel');
+                if (label) {
+                    label.textContent = 'Original';
+                }
+
+                // Clear filter from video element
+                if (video) {
+                    video.style.filter = 'none';
+                }
+
+                const v2Video = document.getElementById('v2RecordVideo');
+                if (v2Video) {
+                    v2Video.style.filter = 'none';
+                }
+
+                showToastRecording('🎨 Filter cleared - Effect selected', 'info', '✓');
+            }
+
+            // Add effect to recordingState.selectedEffects if not already there
+            if (!recordingState.selectedEffects.includes(effectName)) {
+                recordingState.selectedEffects.push(effectName);
+                console.log('✨ Effect added to recording state:', effectName);
+                console.log('📊 Current selectedEffects:', recordingState.selectedEffects);
+            }
+
+            // Start live preview if on recording screen
+            const v2RecordScreen = document.getElementById('v2RecordScreen');
+            const isOnRecordingScreen = v2RecordScreen && (v2RecordScreen.classList.contains('active') || !v2RecordScreen.classList.contains('hidden'));
+
+            console.log('🎬 Is on recording screen?', isOnRecordingScreen, 'Screen classes:', v2RecordScreen?.className);
+
+            if (isOnRecordingScreen) {
+                console.log('▶️ Starting live preview for effect');
+                v2StartLiveFilterPreview();
+            } else {
+                console.log('⏭️ Not on recording screen, skipping live preview');
+            }
+
             console.log('🎬 Starting effect:', effectName, 'Video:', video.id);
 
             // Show effects canvas
@@ -21096,6 +21412,12 @@ For more help, visit: help.pose.app
                 effectsState.canvas.style.display = 'none';
             }
 
+            // Clear any animation IDs for effects
+            if (effectsState.animationId) {
+                cancelAnimationFrame(effectsState.animationId);
+                effectsState.animationId = null;
+            }
+
             // Show notification only if there were active effects
             if (hadEffects) {
                 console.log('🎨 Filter selected - all effects STOPPED (mutually exclusive with filters)');
@@ -21159,6 +21481,13 @@ For more help, visit: help.pose.app
                 video.style.filter = filter;
             }
 
+            // Also apply to v2 recording screen video
+            const v2Video = document.getElementById('v2RecordVideo');
+            if (v2Video) {
+                v2Video.style.filter = filter;
+                console.log('🎨 Filter applied to v2RecordVideo:', filter);
+            }
+
             // Also apply to any video element with camera-preview class
             document.querySelectorAll('.camera-preview').forEach(el => {
                 el.style.filter = filter;
@@ -21194,7 +21523,7 @@ For more help, visit: help.pose.app
             }
 
             // Log for debugging
-            console.log('✅ Filter applied:', filterName, 'to screen:', activeScreen?.id);
+            console.log('✅ Filter applied:', filterName);
             showToastRecording(`🎨 ${filterString} Applied`, 'info', '✓');
 
             // Update button label
@@ -21213,6 +21542,12 @@ For more help, visit: help.pose.app
                     filterBtn.style.background = '';
                     filterBtn.style.borderColor = '';
                 }
+            }
+
+            // Start live filter preview if on recording screen
+            if (document.getElementById('v2RecordScreen')?.classList.contains('active') ||
+                !document.getElementById('v2RecordScreen')?.classList.contains('hidden')) {
+                v2StartLiveFilterPreview();
             }
 
             // Show notification
@@ -21250,6 +21585,8 @@ For more help, visit: help.pose.app
             showToastRecording('🎵 Sound removed', 'info', '✓');
             console.log('🎵 Sound removed from recording');
         }
+
+        // ====== V2 VOICE RECORDING FUNCTIONS - REMOVED ======
 
         // ====== RECORDING TIMER FUNCTIONS ======
         function toggleRecordingTimer() {
@@ -24727,11 +25064,11 @@ For more help, visit: help.pose.app
                     // Ensure video element can play audio
                     videoPreview.muted = false;
                     videoPreview.volume = 1.0;
-                    
+
                     videoPreview.load();
                     console.log('✅ Post preview loaded successfully');
                     console.log('🔊 Audio enabled - volume:', videoPreview.volume, 'muted:', videoPreview.muted);
-                    
+
                     // Test audio availability after a brief delay
                     setTimeout(() => {
                         if (videoPreview.readyState >= 1) {
@@ -25738,13 +26075,11 @@ For more help, visit: help.pose.app
             stopPhotoMode();
 
             // Reset state
-            recordingUIState = {
-                currentScreen: 1,
-                isRecording: false,
-                recordingTime: 0,
-                caption: '',
-                videoBlob: null
-            };
+            recordingUIState.currentScreen = 1;
+            recordingUIState.isRecording = false;
+            recordingUIState.recordingTime = 0;
+            recordingUIState.caption = '';
+            recordingUIState.videoBlob = null;
 
             console.log('📷 Recording UI closed - Camera streams stopped');
         }
@@ -28082,21 +28417,6 @@ For more help, visit: help.pose.app
             }
         }
 
-        // Use Voice Recording (like selectSound)
-        function useVoiceRecording() {
-            const sound = soundLibraryState.selectedSound;
-            if (!sound) return;
-
-            // Show success feedback
-            showToastRecording(`🎙️ "${sound.title}" selected`, 'success', '✓');
-
-            // Close modals
-            closeVoiceSuccessModal();
-            setTimeout(() => {
-                closeSoundLibrary();
-                displaySelectedSoundOnScreen6(sound);
-            }, 600);
-        }
 
         // ====== YOUR MUSIC MANAGEMENT ======
 
@@ -29794,6 +30114,8 @@ For more help, visit: help.pose.app
     <div class="v2-screen v2-record-screen hidden" id="v2RecordScreen">
         <div class="v2-record-video-wrapper">
             <video id="v2RecordVideo" playsinline autoplay muted></video>
+            <!-- Canvas for filter rendering during recording -->
+            <canvas id="v2RecordCanvas" style="display: none;"></canvas>
             <div class="v2-camera-placeholder" id="v2CameraPlaceholder">
                 <i class="fas fa-video"></i>
                 <p>Click to start recording</p>
@@ -29806,8 +30128,27 @@ For more help, visit: help.pose.app
 
             <div class="v2-record-timer" id="v2RecordTimer">0:00</div>
 
+            <!-- Settings Display Panel -->
+            <div class="v2-record-settings-panel" id="v2RecordSettingsPanel">
+                <div class="v2-setting-item">
+                    <span class="v2-setting-label">Layout:</span>
+                    <span class="v2-setting-value" id="v2DisplayLayout">Full</span>
+                </div>
+                <div class="v2-setting-item">
+                    <span class="v2-setting-label">Speed:</span>
+                    <span class="v2-setting-value" id="v2DisplaySpeed">1x</span>
+                </div>
+                <div class="v2-setting-item">
+                    <span class="v2-setting-label">Duration:</span>
+                    <span class="v2-setting-value" id="v2DisplayDuration">30s</span>
+                </div>
+            </div>
+
+
+
             <div class="v2-record-controls">
-                <button class="v2-record-action-btn" id="v2SwitchCameraBtn" onclick="v2SwitchCamera()" title="Switch Camera">
+                <button class="v2-record-action-btn" id="v2SwitchCameraBtn" onclick="v2SwitchCamera()"
+                    title="Switch Camera">
                     <i class="fas fa-sync"></i>
                 </button>
                 <button class="v2-record-btn" id="v2RecordBtn" onclick="v2ToggleRecord()">
@@ -29831,7 +30172,20 @@ For more help, visit: help.pose.app
                 <button class="v2-top-next-btn" onclick="v2UploadVideo()">✓</button>
             </div>
 
-            <video id="v2EditVideo" playsinline autoplay style="width: 100%; height: 100%; background: #000;"></video>
+            <video id="v2EditVideo" playsinline controls preload="auto"
+                style="width: 100%; height: 100%; background: #000;"></video>
+
+            <!-- Recording Metadata Display -->
+            <div class="v2-edit-metadata" id="v2EditMetadata">
+                <div class="v2-meta-item">
+                    <span class="v2-meta-label">Layout:</span>
+                    <span class="v2-meta-value" id="v2EditMetaLayout">Full</span>
+                </div>
+                <div class="v2-meta-item">
+                    <span class="v2-meta-label">Speed:</span>
+                    <span class="v2-meta-value" id="v2EditMetaSpeed">1x</span>
+                </div>
+            </div>
 
             <div class="v2-time-indicator" id="v2TimeIndicator">0:00</div>
 
@@ -29848,6 +30202,9 @@ For more help, visit: help.pose.app
                 </button>
                 <button class="v2-edit-side-btn" onclick="v2ToggleEditTool('volume')" title="Volume">
                     <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="v2-edit-side-btn" onclick="v2ToggleEditTool('voice')" title="Voice">
+                    <i class="fas fa-microphone"></i>
                 </button>
             </div>
         </div>
@@ -29924,9 +30281,25 @@ For more help, visit: help.pose.app
                     <i class="fas fa-volume-up"></i> Volume
                 </div>
                 <div class="v2-volume-section">
-                    <input type="range" class="v2-volume-slider" min="0" max="100" value="100" oninput="v2UpdateVolume(this)">
+                    <input type="range" class="v2-volume-slider" min="0" max="100" value="100"
+                        oninput="v2UpdateVolume(this)">
                     <div class="v2-volume-value" id="v2VolumeValue">100%</div>
                 </div>
+            </div>
+
+            <!-- Voice Recording Tool -->
+            <div class="v2-edit-tool-section" id="v2VoiceRecordingTool">
+                <div class="v2-tool-section-title">
+                    <i class="fas fa-microphone"></i> Add Voice
+                </div>
+
+
+
+                <!-- Select from Library -->
+                <button class="v2-action-btn v2-action-btn-save" onclick="openRecordingSoundLibrary()"
+                    style="width: 100%;">
+                    <i class="fas fa-music"></i> Choose from Library
+                </button>
             </div>
 
             <!-- Action Buttons -->
@@ -29960,10 +30333,10 @@ For more help, visit: help.pose.app
 
         // Open recording screen
         function openV2RecordScreen() {
-            console.log('Opening v2 recording screen...');
+            console.log('Opening v2 recording screen and auto-starting recording...');
             const recordScreen = document.getElementById('v2RecordScreen');
             const editScreen = document.getElementById('v2EditScreen');
-            
+
             if (recordScreen) {
                 recordScreen.classList.remove('hidden');
                 console.log('Record screen shown');
@@ -29971,8 +30344,147 @@ For more help, visit: help.pose.app
             if (editScreen) {
                 editScreen.classList.add('hidden');
             }
-            
+
+            // Transfer Screen1 settings to V2 Record
+            v2ApplyScreen1Settings();
+
             v2InitCamera();
+
+            // If there are already filters or effects selected, start live preview
+            const hasFilter = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+            const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
+
+            console.log('📊 Check for existing effects/filters:', { hasFilter, hasEffects });
+
+            if (hasFilter || hasEffects) {
+                console.log('🎨 Starting live preview for existing filters/effects');
+                // Use setTimeout to ensure camera is initialized first
+                setTimeout(() => {
+                    // Create effects canvas on v2 screen if effects are active
+                    if (hasEffects) {
+                        v2CreateEffectsCanvas();
+                    }
+                    v2StartLiveFilterPreview();
+                }, 500);
+            }
+
+            // ===== AUTO-START RECORDING WITH PRELOADED AUDIO =====
+            // This matches poseapp.html behavior: Open screen + auto-start with sound
+            setTimeout(() => {
+                console.log('⏱️ Camera ready, auto-starting recording...');
+                v2StartRecording();
+            }, 1000);
+        }
+
+        // Create effects canvas specifically for v2 recording screen
+        function v2CreateEffectsCanvas() {
+            const video = document.getElementById('v2RecordVideo');
+            const wrapper = document.getElementById('v2RecordScreen').querySelector('.v2-record-video-wrapper');
+
+            if (!video || !wrapper) {
+                console.log('Video or wrapper not found');
+                return;
+            }
+
+            // Check if canvas already exists on v2
+            let canvas = document.getElementById('v2EffectsCanvas');
+            if (canvas) {
+                console.log('✅ Effects canvas already exists on v2');
+                return;
+            }
+
+            // Create canvas
+            canvas = document.createElement('canvas');
+            canvas.id = 'v2EffectsCanvas';
+            canvas.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10;
+                pointer-events: none;
+                display: block;
+                background: transparent;
+                object-fit: cover;
+                image-rendering: auto;
+            `;
+
+            // Ensure wrapper is positioned
+            if (window.getComputedStyle(wrapper).position === 'static') {
+                wrapper.style.position = 'relative';
+            }
+
+            wrapper.appendChild(canvas);
+
+            // Set canvas to actual wrapper dimensions for proper effect display
+            // This ensures particles are positioned correctly in the visible container
+            const displayWidth = wrapper.offsetWidth || 500;
+            const displayHeight = wrapper.offsetHeight || 900;
+            canvas.width = displayWidth;
+            canvas.height = displayHeight;
+
+            console.log('✅ v2 Effects canvas created with display dimensions:', canvas.width, 'x', canvas.height, 'Wrapper:', displayWidth, 'x', displayHeight);
+
+            // Store in effectsState for the rendering functions to use
+            const oldCanvas = effectsState.canvas;
+            effectsState.canvas = canvas;
+            effectsState.ctx = canvas.getContext('2d');
+
+            // Start the effect animation on this canvas
+            if (recordingState.selectedEffects && recordingState.selectedEffects.length > 0) {
+                const effect = recordingState.selectedEffects[recordingState.selectedEffects.length - 1];
+                console.log('🎬 Re-triggering effect on v2 canvas:', effect);
+
+                // Start the effect
+                startEffect(effect);
+            }
+        }
+
+        // Apply Screen1 Settings to V2 Record Screen
+        function v2ApplyScreen1Settings() {
+            console.log('📊 Applying Screen1 settings to V2 Record...');
+
+            // Get current settings from Screen1
+            const layout = recordingState.layout || recordingState.aspectRatio || 'full';
+            const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
+            const duration = recordingState.selectedDuration || recordingState.maxDuration || 30;
+            const sound = recordingState.selectedSound;
+
+            // Display settings in V2 Record
+            const layoutNames = {
+                'full': 'Full',
+                '16:9': '16:9',
+                '1:1': '1:1'
+            };
+
+            document.getElementById('v2DisplayLayout').textContent = layoutNames[layout] || layout;
+            document.getElementById('v2DisplaySpeed').textContent = `${speed}x`;
+            document.getElementById('v2DisplayDuration').textContent = `${duration}s`;
+
+            // Apply layout constraint to V2 video wrapper
+            const v2Wrapper = document.querySelector('.v2-record-video-wrapper');
+            if (v2Wrapper) {
+                if (layout === '16:9') {
+                    v2Wrapper.style.aspectRatio = '16/9';
+                } else if (layout === '1:1') {
+                    v2Wrapper.style.aspectRatio = '1/1';
+                } else {
+                    v2Wrapper.style.aspectRatio = '9/16'; // Default full
+                }
+                console.log('📐 Layout applied:', layout);
+            }
+
+            // Apply speed to video element
+            const v2Video = document.getElementById('v2RecordVideo');
+            if (v2Video) {
+                v2Video.playbackRate = speed;
+                console.log('⚡ Speed applied to preview:', speed);
+            }
+
+
+
+            console.log('✅ V2 Settings Applied:', { layout, speed, duration, sound: sound?.title });
         }
 
         // Initialize camera - uses same stream as screen1
@@ -29986,7 +30498,7 @@ For more help, visit: help.pose.app
                     console.log('✅ Using shared camera stream from screen1');
                     return;
                 }
-                
+
                 // If not available, initialize screen1 camera first
                 await initializeVideoCamera();
                 v2MediaStream = recordingState.stream;
@@ -30002,6 +30514,164 @@ For more help, visit: help.pose.app
             }
         }
 
+        // Live filter preview on recording screen - SIMPLE VERSION
+        function v2StartLiveFilterPreview() {
+            const video = document.getElementById('v2RecordVideo');
+
+            if (!video || !video.srcObject) {
+                console.log('Video not ready for preview');
+                return;
+            }
+
+            // Determine what's active and ENFORCE mutual exclusivity
+            let hasFilter = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+            let hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
+
+            // ENFORCE: Only one can be active - if both somehow exist, filter wins
+            if (hasFilter && hasEffects) {
+                console.warn('⚠️ Both filter and effects detected in preview - clearing effects');
+                recordingState.selectedEffects = [];
+                hasEffects = false;
+            }
+
+            console.log('🎬 Preview state:', { hasFilter, hasEffects, filter: recordingState.currentFilter, effects: recordingState.selectedEffects });
+
+            // Apply filter directly to video element (CSS filter - no canvas overlay)
+            if (hasFilter) {
+                const filterCSS = getFilterStringForEdit(recordingState.currentFilter);
+                video.style.filter = filterCSS;
+                console.log('🎨 Filter applied to video:', recordingState.currentFilter, '→', filterCSS);
+            } else {
+                video.style.filter = 'none';
+            }
+
+            // Effects will be shown via the effects canvas created by startEffect()
+            // No need to duplicate here
+            if (hasEffects) {
+                console.log('✨ Effects active:', recordingState.selectedEffects);
+            }
+        }
+
+        // Canvas recording with filter support
+        function v2SetupCanvasRecording() {
+            const canvas = document.getElementById('v2RecordCanvas');
+            const video = document.getElementById('v2RecordVideo');
+            const ctx = canvas.getContext('2d');
+
+            // Use actual video dimensions for proper recording
+            // This ensures effects scale correctly when recorded
+            const recordingWidth = video.videoWidth || 1280;
+            const recordingHeight = video.videoHeight || 720;
+            canvas.width = recordingWidth;
+            canvas.height = recordingHeight;
+
+            console.log('📐 Recording canvas dimensions:', canvas.width, 'x', canvas.height, '(Video:', recordingWidth, 'x', recordingHeight, ')');
+
+            // Create stream from canvas
+            const canvasStream = canvas.captureStream(30); // 30 fps
+
+            // Create new stream with canvas video
+            const recordingStream = new MediaStream();
+            canvasStream.getVideoTracks().forEach(track => recordingStream.addTrack(track));
+            console.log('✅ Video track from canvas added');
+            
+            // Audio will be added AFTER this function returns:
+            // - If selectedSound: Add ONLY music audio (via v2SetupBackgroundAudioTrack)
+            // - If no sound: Add camera audio (microphone)
+
+            // Start rendering video with filter AND effects to canvas
+            let frameCount = 0;
+            const hasFilter = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+            const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
+
+            console.log('🎬 Canvas recording setup:', { hasFilter, hasEffects, filter: recordingState.currentFilter, effects: recordingState.selectedEffects });
+
+            function renderFilteredFrame() {
+                // Always draw the video frame first
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Apply filter if present (and no effects, since they're mutually exclusive)
+                if (hasFilter && !hasEffects) {
+                    const filterCSS = getCanvasFilterString(recordingState.currentFilter);
+                    if (filterCSS && filterCSS !== 'none') {
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        applyCanvasFilterEffect(imageData, recordingState.currentFilter);
+                        ctx.putImageData(imageData, 0, 0);
+                    }
+                }
+
+                // For effects: Draw the effects canvas ON TOP of the video (composite, not replace)
+                if (hasEffects && !hasFilter) {
+                    // Get the effects canvas that's being rendered to
+                    const effectsCanvas = effectsState.canvas || document.getElementById('v2EffectsCanvas');
+                    if (effectsCanvas && effectsCanvas.width > 0 && effectsCanvas.height > 0) {
+                        // Draw effects canvas on top (transparent areas stay transparent, particles show)
+                        ctx.drawImage(effectsCanvas, 0, 0);
+                        console.log('📹 Effects composited to recording canvas');
+                    }
+                }
+
+                // Debug logging first frame only
+                if (frameCount === 0) {
+                    console.log('✅ Canvas recording frame 1 - Filter:', recordingState.currentFilter, 'Effects:', recordingState.selectedEffects.length);
+                    frameCount++;
+                }
+
+                recordingState.filterAnimationId = requestAnimationFrame(renderFilteredFrame);
+            }
+
+            renderFilteredFrame();
+            return recordingStream;
+        }
+
+        // Helper function to apply filter effects to canvas pixels
+        function applyCanvasFilterEffect(imageData, filterName) {
+            const data = imageData.data;
+
+            switch (filterName) {
+                case 'sepia':
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i], g = data[i + 1], b = data[i + 2];
+                        data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
+                        data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
+                        data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
+                    }
+                    break;
+                case 'grayscale':
+                    for (let i = 0; i < data.length; i += 4) {
+                        const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                        data[i] = data[i + 1] = data[i + 2] = gray;
+                    }
+                    break;
+                case 'invert':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = 255 - data[i];
+                        data[i + 1] = 255 - data[i + 1];
+                        data[i + 2] = 255 - data[i + 2];
+                    }
+                    break;
+                case 'cold':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.max(0, data[i] - 20);
+                        data[i + 2] = Math.min(255, data[i + 2] + 30);
+                    }
+                    break;
+                case 'warm':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.min(255, data[i] + 30);
+                        data[i + 2] = Math.max(0, data[i + 2] - 20);
+                    }
+                    break;
+                case 'vivid':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.min(255, data[i] * 1.2);
+                        data[i + 1] = Math.min(255, data[i + 1] * 1.2);
+                        data[i + 2] = Math.min(255, data[i + 2] * 1.2);
+                    }
+                    break;
+            }
+        }
+
         // Toggle recording
         function v2ToggleRecord() {
             if (!v2IsRecording) {
@@ -30011,32 +30681,43 @@ For more help, visit: help.pose.app
             }
         }
 
-        function v2StartRecording() {
+        async function v2StartRecording() {
             if (!v2MediaStream && !document.getElementById('v2RecordVideo').srcObject) {
                 v2SimulateRecording();
                 return;
             }
 
             v2RecordedChunks = [];
+
             try {
-                // Prepare stream with both video and audio
-                const recordingStream = new MediaStream();
-                const stream = v2MediaStream || recordingState.stream;
-                
-                // Add all video tracks
-                stream.getVideoTracks().forEach(track => {
-                    recordingStream.addTrack(track);
-                });
-                
-                // Add all audio tracks
-                stream.getAudioTracks().forEach(track => {
-                    recordingStream.addTrack(track);
-                });
-                
-                console.log('Video tracks:', recordingStream.getVideoTracks().length);
-                console.log('Audio tracks:', recordingStream.getAudioTracks().length);
-                
-                let options = { mimeType: 'video/webm;codecs=vp9' };
+                let recordingStream = v2SetupCanvasRecording();
+
+                // SETUP AUDIO: Similar to poseapp.html Screen1
+                // If background sound selected: Use ONLY music audio
+                // If no sound: Use ONLY microphone audio (camera audio)
+                const selectedSound = recordingState.selectedSound;
+                if (selectedSound && selectedSound.url) {
+                    console.log('🎵 Recording with background music ONLY (no microphone)');
+                    await v2SetupBackgroundAudioTrack(selectedSound, recordingStream);
+                } else {
+                    // No sound selected - add microphone audio instead
+                    console.log('🎤 Recording with microphone ONLY (no background music)');
+                    const audioStream = v2MediaStream || recordingState.stream;
+                    const audioTracks = audioStream.getAudioTracks();
+                    if (audioTracks.length > 0) {
+                        recordingStream.addTrack(audioTracks[0]);
+                        console.log('✅ Microphone audio track added to recording stream');
+                    } else {
+                        console.log('⚠️ No microphone available');
+                    }
+                }
+
+                let options = {
+                    mimeType: 'video/webm;codecs=vp8,opus',
+                    videoBitsPerSecond: 500000,
+                    audioBitsPerSecond: 64000
+                };
+
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
                     options = { mimeType: 'video/webm;codecs=vp8' };
                 }
@@ -30046,8 +30727,7 @@ For more help, visit: help.pose.app
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
                     options = {};
                 }
-                
-                console.log('Using codec:', options.mimeType || 'default');
+
                 v2MediaRecorder = new MediaRecorder(recordingStream, options);
 
                 v2MediaRecorder.ondataavailable = (e) => {
@@ -30055,9 +30735,37 @@ For more help, visit: help.pose.app
                 };
 
                 v2MediaRecorder.onstop = () => {
+                    if (recordingState.filterAnimationId) {
+                        cancelAnimationFrame(recordingState.filterAnimationId);
+                    }
+
+                    // Stop audio if playing
+                    if (recordingState.audioSource) {
+                        try {
+                            recordingState.audioSource.stop();
+                            console.log('🎵✅ Audio source stopped');
+                        } catch (e) {
+                            console.log('Audio stop - already stopped');
+                        }
+                    }
+
                     v2RecordedBlob = new Blob(v2RecordedChunks, { type: 'video/webm' });
-                    v2StartEditing();
+                    const blobSizeMB = (v2RecordedBlob.size / 1024 / 1024).toFixed(2);
+                    console.log('✅ Blob created:', blobSizeMB, 'MB');
+                    console.log('📊 Chunks recorded:', v2RecordedChunks.length);
+                    console.log('📊 Recording stream tracks:', recordingStream.getTracks().length);
+                    console.log('📊 Recording stream audio tracks:', recordingStream.getAudioTracks().length);
+                    console.log('📊 Recording stream video tracks:', recordingStream.getVideoTracks().length);
+                    
+                    if (recordingStream.getAudioTracks().length === 0) {
+                        console.warn('⚠️ WARNING: No audio tracks in recording stream!');
+                    }
+                    
+                    // UPLOAD ON STOP
+                    v2UploadAndShare();
                 };
+
+                const maxDuration = recordingState.selectedDuration || 30;
 
                 v2MediaRecorder.start();
                 v2IsRecording = true;
@@ -30068,24 +30776,120 @@ For more help, visit: help.pose.app
                 document.getElementById('v2RecordTimer').classList.add('show');
                 document.getElementById('v2RecordTimer').textContent = '0:00';
 
+                // ===== DELAYED AUDIO START (1 second after recording starts) =====
+                // (matching poseapp.html - audio starts 1 second after recording begins)
+                if (recordingState.audioStartPending && recordingState.audioSource) {
+                    console.log('⏳ Waiting 1 second before starting audio (to prevent lag)...');
+                    setTimeout(() => {
+                        if (recordingState.audioSource && v2IsRecording) {
+                            recordingState.audioSource.start(0);
+                            console.log('▶️ Background music started playing (1 sec delayed)');
+                            recordingState.audioStartPending = false;
+                        }
+                    }, 1000);  // 1 second delay
+                }
+
                 v2RecordingInterval = setInterval(() => {
                     v2RecordingTime++;
                     const mins = Math.floor(v2RecordingTime / 60);
                     const secs = v2RecordingTime % 60;
                     document.getElementById('v2RecordTimer').textContent = `${mins}:${String(secs).padStart(2, '0')}`;
+
+                    if (v2RecordingTime >= maxDuration) {
+                        console.log(`⏸ Duration limit (${maxDuration}s) reached`);
+                        v2StopRecording();
+                    }
                 }, 1000);
 
-                v2ShowNotification('Recording started...');
+                v2ShowNotification(`Recording started... (${maxDuration}s limit)`);
             } catch (err) {
                 console.error('Recording error:', err);
                 v2SimulateRecording();
             }
         }
 
+        // V2 Audio variables
+        let v2BackgroundAudio = null;
+        let v2BackgroundAudioContext = null;
+        let v2BackgroundAudioSource = null;
+        let v2BackgroundAudioDestination = null;
+
+        // Setup audio track - add to recording stream
+        async function v2SetupBackgroundAudioTrack(sound, recordingStream) {
+            if (!sound || !sound.url) return;
+
+            try {
+                console.log('🎵 V2: Setting up background audio track (matching poseapp.html)');
+
+                // Use preloaded audio from Screen1 (exactly like poseapp)
+                let audioBuffer = recordingState.preloadedAudioBuffer;
+                let audioContext = recordingState.preloadedAudioContext;
+
+                // If not preloaded yet, create fresh (fallback - exactly like poseapp)
+                if (!audioBuffer || !audioContext) {
+                    console.log('⚠️ Audio not preloaded, creating fresh context...');
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const audioResponse = await fetch(sound.url);
+                    const audioBlob = await audioResponse.blob();
+                    audioBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer());
+                } else {
+                    console.log('✅ Using preloaded audio (no lag!)');
+                }
+
+                recordingState.audioContext = audioContext;
+
+                // Step 1: Create destination to capture audio (exactly like poseapp)
+                const destination = audioContext.createMediaStreamDestination();
+
+                // Step 2: Prepare audio source (don't start yet - exactly like poseapp)
+                let audioSource = audioContext.createBufferSource();
+                audioSource.buffer = audioBuffer;
+                audioSource.loop = true;  // Loop the audio
+
+                const gain = audioContext.createGain();
+                gain.gain.value = 1.0;  // 100% volume (matching poseapp, not 3x)
+
+                audioSource.connect(gain);
+                gain.connect(destination);  // Connect to video recording
+                gain.connect(audioContext.destination);  // IMPORTANT: Also connect to speakers so user can HEAR it!
+                console.log('✅ Audio source connected to destination AND speakers (NOT STARTED YET)');
+
+                // Step 3: Add the mixed audio stream to recording
+                const audioTracks = destination.stream.getAudioTracks();
+                if (audioTracks.length > 0) {
+                    recordingStream.addTrack(audioTracks[0]);
+                    console.log('✅ Music audio track added to video - WILL BE SAVED');
+                } else {
+                    console.log('⚠️ No audio track in destination');
+                }
+
+                // Step 4: Store references for delayed start (1 second after recording starts)
+                recordingState.audioSource = audioSource;
+                recordingState.audioContext = audioContext;
+                recordingState.audioDestination = destination;
+                recordingState.audioStartPending = true;  // Flag for delayed start
+
+                v2BackgroundAudioContext = audioContext;
+                v2BackgroundAudioDestination = destination;
+                v2BackgroundAudioSource = audioSource;
+
+            } catch (error) {
+                console.error('⚠️ Music audio setup error:', error);
+                console.log('📌 Recording video only (no music audio - error occurred)');
+            }
+        }
+
+        // STEP 2: Start audio after 1 second (matching poseapp.html Screen 1)
+        function v2StartAudioPlayback(sound, maxDuration) {
+            // This is handled via setTimeout in v2StartRecording
+            // No need to do anything here
+        }
+
         function v2StopRecording() {
             if (v2MediaRecorder && v2MediaRecorder.state !== 'inactive') {
                 v2MediaRecorder.stop();
             }
+
             v2IsRecording = false;
             clearInterval(v2RecordingInterval);
 
@@ -30094,7 +30898,7 @@ For more help, visit: help.pose.app
             document.getElementById('v2RecordTimer').classList.remove('show');
 
             v2ShowNotification('Recording stopped! Opening editor...');
-            
+
             if (v2RecordedChunks.length === 0) {
                 setTimeout(() => v2StartEditing(), 800);
             }
@@ -30132,30 +30936,196 @@ For more help, visit: help.pose.app
             v2ShowNotification('Flash toggled');
         }
 
+        // UPLOAD AND SHARE
+        async function v2UploadAndShare() {
+            if (!v2RecordedBlob) {
+                v2ShowNotification('No video to upload');
+                return;
+            }
+
+            showUploadProgressModal();
+            try {
+                const uploadResult = await uploadToCloudinaryWithProgress(v2RecordedBlob, 'v2-recording');
+                if (!uploadResult) throw new Error('Upload failed');
+
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    const db = firebase.firestore();
+                    // Store in separate v2_recordings collection to avoid mixing with old recordings
+                    const docRef = await db.collection('users').doc(user.uid).collection('v2_recordings').add({
+                        userId: user.uid,
+                        url: uploadResult.url,
+                        cloudinaryUrl: uploadResult.url,
+                        publicId: uploadResult.publicId,
+                        duration: 0,
+                        speed: 1,
+                        filter: 'none',
+                        effects: [],
+                        layout: 'full',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        timestamp: Date.now(),
+                        source: 'v2'
+                    });
+                    console.log('✅ Saved to Firebase v2_recordings:', docRef.id);
+                    // Store the document ID for easy retrieval
+                    recordingState.currentV2RecordingId = docRef.id;
+                }
+
+                closeUploadProgressModal();
+                v2ShowNotification('✅ Uploaded!');
+                v2StartEditing();
+            } catch (error) {
+                closeUploadProgressModal();
+                v2ShowNotification('❌ Upload failed');
+                console.error(error);
+            }
+        }
+
         // EDIT SCREEN FUNCTIONS
         function v2StartEditing() {
             document.getElementById('v2RecordScreen').classList.add('hidden');
             document.getElementById('v2EditScreen').classList.remove('hidden');
 
+            // Display recording metadata in edit screen
+            const layout = recordingState.layout || recordingState.aspectRatio || 'full';
+            const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
+
+            const layoutNames = {
+                'full': 'Full',
+                '16:9': '16:9',
+                '1:1': '1:1'
+            };
+
+            document.getElementById('v2EditMetaLayout').textContent = layoutNames[layout] || layout;
+            document.getElementById('v2EditMetaSpeed').textContent = `${speed}x`;
+
+            // Apply layout constraint to V2 Edit wrapper
+            const v2EditWrapper = document.querySelector('.v2-edit-video-wrapper');
+            if (v2EditWrapper) {
+                if (layout === '16:9') {
+                    v2EditWrapper.style.aspectRatio = '16/9';
+                } else if (layout === '1:1') {
+                    v2EditWrapper.style.aspectRatio = '1/1';
+                } else {
+                    v2EditWrapper.style.aspectRatio = '9/16'; // Default full
+                }
+                console.log('📐 Edit layout applied:', layout);
+            }
+
+            console.log('📊 V2 Edit metadata set:', { layout, speed });
+
             const editVideo = document.getElementById('v2EditVideo');
-            
-            if (v2RecordedBlob && v2RecordedChunks.length > 0) {
+
+            // Apply stored filter to edit video (if filter was used, not effects)
+            // NOTE: Effects are already baked into the recorded video, so don't re-apply them
+            const hasFilter = recordingState.currentFilter && recordingState.currentFilter !== 'none';
+            const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
+
+            if (hasFilter && !hasEffects) {
+                // Only apply filter if NO effects (they're mutually exclusive)
+                const filter = getFilterStringForEdit(recordingState.currentFilter);
+                editVideo.style.filter = filter;
+                console.log('🎨 Applied filter to edit video:', recordingState.currentFilter, '→', filter);
+            } else {
+                // No filter, or effects are present (effects already in video)
+                editVideo.style.filter = 'none';
+                if (hasEffects) {
+                    console.log('✨ Effects already baked into recorded video, no CSS re-application needed:', recordingState.selectedEffects);
+                } else {
+                    console.log('📹 No filter or effects - clean playback');
+                }
+            }
+
+            // Load from Firebase (which has the URL from Cloudinary)
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const db = firebase.firestore();
+                // Query v2_recordings collection, ordered by most recent first
+                db.collection('users').doc(user.uid).collection('v2_recordings')
+                    .orderBy('createdAt', 'desc')
+                    .limit(1)
+                    .get()
+                    .then(snapshot => {
+                        if (!snapshot.empty) {
+                            const doc = snapshot.docs[0];
+                            const videoUrl = doc.data().cloudinaryUrl;
+                            editVideo.src = videoUrl;
+                            editVideo.muted = false;
+                            editVideo.volume = 1.0;
+                            console.log('📹 Loaded from Firebase v2_recordings:', doc.id);
+                            console.log('📹 Video URL:', videoUrl);
+                        } else {
+                            console.log('⚠️ No v2_recordings found, trying fallback from blob');
+                            if (v2RecordedBlob && v2RecordedChunks.length > 0) {
+                                const videoURL = URL.createObjectURL(v2RecordedBlob);
+                                editVideo.src = videoURL;
+                                console.log('🎬 Loaded from blob (fallback)');
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error loading from v2_recordings:', err);
+                        // Fallback: try to load from blob if Firebase fails
+                        if (v2RecordedBlob && v2RecordedChunks.length > 0) {
+                            const videoURL = URL.createObjectURL(v2RecordedBlob);
+                            editVideo.src = videoURL;
+                            console.log('🎬 Loaded from blob (error fallback)');
+                        }
+                    });
+            } else if (v2RecordedBlob && v2RecordedChunks.length > 0) {
                 const videoURL = URL.createObjectURL(v2RecordedBlob);
                 editVideo.src = videoURL;
-                
+                editVideo.muted = false;
+                editVideo.volume = 1.0;
+                console.log('🎬 Loaded from blob');
+            } else {
+                console.log('No video to load');
+                return;
+            }
+
+            if (v2RecordedBlob && v2RecordedChunks.length > 0) {
+                console.log('🎬 V2 Edit Screen Loading:');
+                console.log('  - Blob size:', (v2RecordedBlob.size / 1024 / 1024).toFixed(2), 'MB');
+                console.log('  - Contains: video + audio (both captured by MediaRecorder)');
+                console.log('  - Audio should play when you hit play button');
+
+                // Apply speed to edit video
+                const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
+                editVideo.playbackRate = speed;
+                console.log('⚡ Speed applied to edit video:', speed);
+
                 editVideo.onloadedmetadata = () => {
                     const duration = Math.floor(editVideo.duration);
                     document.getElementById('v2TrimStartTime').textContent = `Start: 0:00`;
                     document.getElementById('v2TrimEndTime').textContent = `End: ${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, '0')}`;
-                    
+
                     document.querySelectorAll('.v2-trim-slider')[0].max = duration;
                     document.querySelectorAll('.v2-trim-slider')[1].max = duration;
                     document.querySelectorAll('.v2-trim-slider')[1].value = duration;
+
+                    console.log('✅ Video metadata loaded - duration:', duration, 'seconds');
+                    console.log('✅ Audio should be present and ready to play');
+
+                    // Additional logging to verify audio is actually being played
+                    editVideo.onplay = () => {
+                        console.log('▶️ Video started playing');
+                        console.log('🔊 Current volume:', editVideo.volume);
+                        console.log('🔇 Muted:', editVideo.muted);
+                        console.log('🔄 playbackRate:', editVideo.playbackRate);
+                    };
+
+                    editVideo.onpause = () => {
+                        console.log('⏸️ Video paused');
+                    };
+
+                    editVideo.onerror = (e) => {
+                        console.error('❌ Video playback error:', e);
+                    };
                 };
             } else {
                 editVideo.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
                 editVideo.src = '';
-                
+
                 document.getElementById('v2TrimStartTime').textContent = `Start: 0:00`;
                 document.getElementById('v2TrimEndTime').textContent = `End: 0:15`;
                 document.querySelectorAll('.v2-trim-slider')[0].max = 15;
@@ -30164,6 +31134,71 @@ For more help, visit: help.pose.app
             }
 
             v2ShowNotification('Video ready to edit!');
+        }
+
+        // Helper function to get filter CSS string for edit preview
+        function getFilterStringForEdit(filterName) {
+            switch (filterName) {
+                case 'none':
+                    return 'none';
+                case 'bw':
+                    return 'grayscale(100%)';
+                case 'sepia':
+                    return 'sepia(100%)';
+                case 'vintage':
+                    return 'sepia(50%) contrast(0.9) brightness(0.9)';
+                case 'vivid':
+                    return 'saturate(1.5) contrast(1.1)';
+                case 'warm':
+                    return 'brightness(1.1) saturate(1.3) hue-rotate(10deg)';
+                case 'cool':
+                    return 'hue-rotate(-20deg) saturate(1.2) brightness(0.95)';
+                default:
+                    return 'none';
+            }
+        }
+
+        // Apply effects to edit video
+        function applyEffectsToEditVideo(effects) {
+            const editVideo = document.getElementById('v2EditVideo');
+            if (!editVideo) return;
+
+            // Get the last applied effect (effects are mutually exclusive)
+            const effect = Array.isArray(effects) ? effects[effects.length - 1] : effects;
+            const effectName = typeof effect === 'string' ? effect : effect.name;
+
+            // Map effects to CSS filters (for effects that support it)
+            const effectFilters = {
+                'glow': 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))',
+                'vhs': 'contrast(1.1) saturate(0.8)',
+                'glitch': 'contrast(1.2)',
+                'neon': 'saturate(1.5) contrast(1.3)',
+                'cyberpunk': 'hue-rotate(280deg) saturate(1.8)',
+                'vaporwave': 'hue-rotate(250deg) saturate(1.2) contrast(1.1)',
+                'noir': 'grayscale(100%) contrast(1.2)',
+                'dreamy': 'blur(2px) brightness(1.15) saturate(0.8)',
+                'pixelate': 'contrast(1.1)',
+                'wave': 'contrast(1.05)',
+                'fisheye': 'brightness(1.05)',
+                'kaleidoscope': 'contrast(1.15)',
+                'sunbeam': 'brightness(1.2)',
+                'mask': 'contrast(1.1)',
+                'mirror': 'contrast(1.05)',
+                'filmburn': 'sepia(0.3) contrast(1.15) brightness(0.9)',
+                'scanlines': 'contrast(1.1)'
+            };
+
+            const cssFilter = effectFilters[effectName];
+            if (cssFilter) {
+                // Combine with existing filter
+                const existingFilter = editVideo.style.filter;
+                if (existingFilter && existingFilter !== 'none') {
+                    editVideo.style.filter = `${existingFilter} ${cssFilter}`;
+                } else {
+                    editVideo.style.filter = cssFilter;
+                }
+                console.log('✨ CSS effect applied to edit video:', effectName, '→', cssFilter);
+            }
         }
 
         function v2BackToRecord() {
@@ -30179,6 +31214,7 @@ For more help, visit: help.pose.app
             document.getElementById('v2SpeedTool').style.display = 'none';
             document.getElementById('v2EffectsTool').style.display = 'none';
             document.getElementById('v2VolumeTool').style.display = 'none';
+            document.getElementById('v2VoiceRecordingTool').style.display = 'none';
 
             document.querySelectorAll('.v2-edit-side-btn').forEach(btn => btn.classList.remove('active'));
 
