@@ -1293,42 +1293,7 @@
             -moz-transform: scaleX(-1);
         }
 
-        /* ===== DEDICATED PHOTO EDIT CONTAINER (Screen 6) ===== */
-        .photo-preview-container {
-            flex: 1;
-            background: #000;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.5);
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-        }
 
-        /* Photo images in edit screen (Screen 6) - Match Screen 5 video positioning */
-        .photo-preview-container img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
-            display: block !important;
-            will-change: auto;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            /* Apply same flip as Screen 5 video (CSS-based, not code-based) */
-            transform: scaleX(-1);
-            -webkit-transform: scaleX(-1);
-            -moz-transform: scaleX(-1);
-        }
 
         /* Ensure video fills entire screen */
         @supports (object-fit: cover) {
@@ -4298,34 +4263,6 @@
         }
 
         /* ====== VIDEO EDITING SCREEN - RESPONSIVE ====== */
-
-        /* Photo Edit Container (Screen 6) */
-        .photo-edit-container {
-            position: relative;
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            z-index: 1;
-        }
-
-        /* Photo Edit Wrapper */
-        .photo-edit-wrapper {
-            position: relative;
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1;
-        }
 
 
 
@@ -12455,24 +12392,17 @@
 
         <!-- SCREEN 6: PHOTO EDIT -->
         <div id="screen6" class="recording-screen">
-            <!-- Top Bar -->
-            <div class="rec-top-bar">
-                <button class="rec-icon-btn" onclick="backToScreen5()">←</button>
-                <button class="rec-icon-btn" onclick="toggleRecPhotoEditMenu()">☰</button>
-            </div>
+            <div class="v2-record-video-wrapper">
+                <!-- Back Button -->
+                <button class="v2-record-back-btn" onclick="backToScreen5()" title="Back">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
 
-            <!-- Left Menu -->
-            <div class="rec-left-menu" id="recPhotoEditMenu">
-                <div class="rec-menu-item" onclick="photoAddText()">📝 Text</div>
-                <div class="rec-menu-item" onclick="photoCrop()">✂ Crop</div>
-                <div class="rec-menu-item" onclick="photoAddEffects()">✨ Effects</div>
-                <div class="rec-menu-item" onclick="photoDraw()">✏ Draw</div>
-            </div>
-
-            <!-- Photo Preview Container -->
-            <div class="photo-edit-container">
-                <div class="photo-edit-wrapper">
-                    <div class="photo-preview-container">🖼️ Photo Preview</div>
+                <img id="screen6Photo" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+                <!-- Placeholder -->
+                <div class="v2-camera-placeholder" id="screen6Placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>Photo Preview</p>
                 </div>
 
                 <!-- Edit Controls (Overlaid at bottom) -->
@@ -22491,14 +22421,19 @@ For more help, visit: help.pose.app
             if (photoState.capturedPhotos.length === 0) return;
 
             const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-            const preview = document.querySelector('#screen6 .photo-preview-container');
+            const photoImg = document.getElementById('screen6Photo');
+            const placeholder = document.getElementById('screen6Placeholder');
 
-            if (preview) {
+            if (photoImg) {
                 // Use edited URL if available, otherwise use original
                 const photoUrl = photo.editedUrl || photo.url;
-                // Use CSS class styling - no inline styles needed
-                let imgHTML = `<img src="${photoUrl}" id="screen6PhotoImg">`;
-                preview.innerHTML = imgHTML;
+                photoImg.src = photoUrl;
+                photoImg.style.display = 'block';
+                
+                // Hide placeholder
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
 
                 // Apply any stored effects
                 if (photo.effect) {
@@ -22508,7 +22443,7 @@ For more help, visit: help.pose.app
         }
 
         function applyStoredEffectToScreen6(effect) {
-            const photoImg = document.getElementById('screen6PhotoImg');
+            const photoImg = document.getElementById('screen6Photo');
             if (!photoImg) return;
 
             switch (effect) {
