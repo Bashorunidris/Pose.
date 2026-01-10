@@ -1256,6 +1256,80 @@
             -moz-transform: scaleX(-1);
         }
 
+        /* ===== DEDICATED PHOTO PREVIEW STYLES (Photo Mode - Screen 5) ===== */
+        .photo-preview-wrapper {
+            flex: 1;
+            background: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* Photo video in preview wrapper (Screen 5 live preview) */
+        #photoPreviewVideo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            display: block !important;
+            will-change: auto;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            /* Mirror front-facing camera naturally */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
+        }
+
+        /* ===== DEDICATED PHOTO EDIT CONTAINER (Screen 6) ===== */
+        .photo-preview-container {
+            flex: 1;
+            background: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* Photo images in edit screen (Screen 6) - Match Screen 5 video positioning */
+        .photo-preview-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            display: block !important;
+            will-change: auto;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            /* Apply same flip as Screen 5 video (CSS-based, not code-based) */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            -moz-transform: scaleX(-1);
+        }
+
         /* Ensure video fills entire screen */
         @supports (object-fit: cover) {
             video#videoPreview {
@@ -12257,7 +12331,7 @@
 
         <!-- SCREEN 5: PHOTO MODE -->
         <div id="screen5" class="recording-screen">
-            <div class="camera-preview">
+            <div class="photo-preview-wrapper">
                 <!-- Ratio Guide Frame (Live Preview) -->
                 <div id="ratioGuide" class="ratio-guide-frame"></div>
             </div>
@@ -12267,7 +12341,6 @@
                 <button class="rec-icon-btn" onclick="switchPhotoCamera()">🔄</button>
             </div>
             <div class="rec-left-menu" id="recPhotoLeftMenu">
-                <div class="rec-menu-item" onclick="togglePhotoFlash()">⚡ Flash</div>
                 <div class="rec-menu-item" onclick="togglePhotoTimer()">⏱ Timer</div>
                 <div class="rec-menu-item" onclick="togglePhotoFilters()">🎨 Filters</div>
                 <div class="rec-menu-item" onclick="togglePhotoRatio()">📐 Ratio</div>
@@ -12315,10 +12388,6 @@
                     <button class="photo-control-btn" onclick="openPhotoGallery()">
                         <div class="rec-control-icon">🖼️</div>
                         <div class="rec-control-label">Gallery</div>
-                    </button>
-                    <button class="photo-control-btn" onclick="togglePhotoFlash()">
-                        <div class="rec-control-icon">⚡</div>
-                        <div class="rec-control-label">Flash</div>
                     </button>
                     <button class="photo-control-btn" onclick="togglePhotoTimer()">
                         <div class="rec-control-icon">⏱</div>
@@ -12403,7 +12472,7 @@
             <!-- Photo Preview Container -->
             <div class="photo-edit-container">
                 <div class="photo-edit-wrapper">
-                    <div class="camera-preview">🖼️ Photo Preview</div>
+                    <div class="photo-preview-container">🖼️ Photo Preview</div>
                 </div>
 
                 <!-- Edit Controls (Overlaid at bottom) -->
@@ -16382,6 +16451,10 @@ For more help, visit: help.pose.app
                 });
 
                 recordingState.recordedBlob = blob;
+
+                // Save video blob to localStorage for recovery if page reloads
+                saveUnfinishedVideoToStorage(blob);
+
                 updateUIAfterRecording(false);
 
                 const soundInfo = recordingState.selectedSound ? `with "${recordingState.selectedSound.title}"` : '';
@@ -19690,7 +19763,7 @@ For more help, visit: help.pose.app
 
             console.log('✅ Stream is active');
 
-            const container = document.querySelector('#screen5 .camera-preview');
+            const container = document.querySelector('#screen5 .photo-preview-wrapper');
             if (!container) {
                 console.error('❌ Screen 5 container not found');
                 return false;
@@ -22357,17 +22430,9 @@ For more help, visit: help.pose.app
                 }
 
                 // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
-                // For front-facing camera, flip horizontally to match what user sees
-                if (photoState.cameraFacingMode === 'user') {
-                    // Flip for front camera
-                    photoState.ctx.save();
-                    photoState.ctx.scale(-1, 1);
-                    photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, -canvasWidth, 0, canvasWidth, canvasHeight);
-                    photoState.ctx.restore();
-                } else {
-                    // No flip for back camera
-                    photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
-                }
+                // DON'T flip in code - let CSS handle it (Screen 5 video already has CSS scaleX(-1))
+                // Draw as-is from the video element
+                photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
                 // STEP 6: Apply flash effect if enabled (brightness boost to capture)
                 if (photoState.photoSettings.flash) {
@@ -22426,12 +22491,13 @@ For more help, visit: help.pose.app
             if (photoState.capturedPhotos.length === 0) return;
 
             const photo = photoState.capturedPhotos[photoState.currentPhotoIndex];
-            const preview = document.querySelector('#screen6 .camera-preview');
+            const preview = document.querySelector('#screen6 .photo-preview-container');
 
             if (preview) {
                 // Use edited URL if available, otherwise use original
                 const photoUrl = photo.editedUrl || photo.url;
-                let imgHTML = `<img src="${photoUrl}" id="screen6PhotoImg" style="width:100%; height:100%; object-fit:cover;">`;
+                // Use CSS class styling - no inline styles needed
+                let imgHTML = `<img src="${photoUrl}" id="screen6PhotoImg">`;
                 preview.innerHTML = imgHTML;
 
                 // Apply any stored effects
@@ -25714,10 +25780,76 @@ For more help, visit: help.pose.app
             showScreen('screen1');
         }
 
+        // ===== SAVE & RESTORE UNFINISHED VIDEO FROM STORAGE =====
+        function saveUnfinishedVideoToStorage(blob) {
+            try {
+                // Convert blob to base64 and store in localStorage
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    const base64data = reader.result;
+                    localStorage.setItem('unfinishedVideoBlobData', base64data);
+                    localStorage.setItem('unfinishedVideoSaved', Date.now().toString());
+                    console.log('✅ Unfinished video saved to localStorage');
+                };
+                reader.readAsDataURL(blob);
+            } catch (error) {
+                console.error('❌ Failed to save to localStorage:', error);
+            }
+        }
+
+        function loadUnfinishedVideoFromStorage() {
+            try {
+                const blobData = localStorage.getItem('unfinishedVideoBlobData');
+                const savedTime = localStorage.getItem('unfinishedVideoSaved');
+
+                if (!blobData || !savedTime) {
+                    console.log('No unfinished video in storage');
+                    return null;
+                }
+
+                // Check if video is older than 7 days (discard old unfinished videos)
+                const ageInDays = (Date.now() - parseInt(savedTime)) / (1000 * 60 * 60 * 24);
+                if (ageInDays > 7) {
+                    console.log('Unfinished video is too old, discarding');
+                    clearUnfinishedVideoStorage();
+                    return null;
+                }
+
+                // Convert base64 back to blob
+                const bstr = atob(blobData.split(',')[1]);
+                const n = bstr.length;
+                const u8arr = new Uint8Array(n);
+                for (let i = 0; i < n; i++) {
+                    u8arr[i] = bstr.charCodeAt(i);
+                }
+                const blob = new Blob([u8arr], { type: 'video/webm' });
+                console.log('✅ Unfinished video loaded from storage:', blob.size, 'bytes');
+                return blob;
+            } catch (error) {
+                console.error('❌ Failed to load from localStorage:', error);
+                return null;
+            }
+        }
+
+        function clearUnfinishedVideoStorage() {
+            localStorage.removeItem('unfinishedVideoBlobData');
+            localStorage.removeItem('unfinishedVideoSaved');
+            console.log('✅ Cleared unfinished video from storage');
+        }
+
         // ===== CHECK FOR UNFINISHED VIDEO (SIMPLE LOGIC) =====
         // If video blob exists but wasn't posted/saved/discarded = UNFINISHED
         function checkForUnfinishedVideo() {
+            // First check in-memory blob
             if (recordingState.recordedBlob) {
+                showUnfinishedVideoPopup();
+                return;
+            }
+
+            // Then check localStorage
+            const storedBlob = loadUnfinishedVideoFromStorage();
+            if (storedBlob) {
+                recordingState.recordedBlob = storedBlob;
                 showUnfinishedVideoPopup();
             }
         }
@@ -25995,6 +26127,7 @@ For more help, visit: help.pose.app
         function confirmDiscardVideo() {
             recordingState.recordedBlob = null;
             recordingState.clips = [];
+            clearUnfinishedVideoStorage();  // Clear from localStorage too
             closeDiscardConfirmation();
             closeUnfinishedVideoPopup();
             console.log('🗑️ Unfinished video discarded');
@@ -26028,6 +26161,7 @@ For more help, visit: help.pose.app
                 recordingState.recordingTime = 0;
                 recordingState.isRecording = false;
                 recordingState.isCanvasRendering = false;
+                clearUnfinishedVideoStorage();  // Clear from localStorage too
                 console.log('✅ Screen1 reset: Recording state cleared');
             }
 
@@ -28837,7 +28971,47 @@ For more help, visit: help.pose.app
         // ============================================================================
 
         // Close camera when user navigates away
-        window.addEventListener('beforeunload', () => {
+        window.addEventListener('beforeunload', async (event) => {
+            // SAVE DRAFT if v2EditScreen is visible with video
+            const v2EditScreen = document.getElementById('v2EditScreen');
+            if (v2EditScreen && !v2EditScreen.classList.contains('hidden')) {
+                const v2EditVideo = document.getElementById('v2EditVideo');
+                if (v2EditVideo && v2EditVideo.src) {
+                    console.log('💾 Saving v2 edit draft before unload...');
+                    await saveDraftToDatabaseBeforeLeave(v2EditVideo.src);
+                }
+            }
+
+            // SAVE DRAFT if screen4 is visible with post data
+            const screen4 = document.getElementById('screen4');
+            if (screen4 && !screen4.classList.contains('hidden')) {
+                const postPreviewVideo = document.getElementById('postPreviewVideo');
+                const recCaption = document.getElementById('recCaption');
+                if (postPreviewVideo && postPreviewVideo.src) {
+                    console.log('💾 Saving screen4 post draft before unload...');
+                    await saveScreen4DraftBeforeLeave();
+                }
+            }
+
+            // SAVE DRAFT if screen6 is visible with captured photos
+            const screen6 = document.getElementById('screen6');
+            if (screen6 && !screen6.classList.contains('hidden')) {
+                if (photoState && photoState.capturedPhotos && photoState.capturedPhotos.length > 0) {
+                    console.log('💾 Saving screen6 photo draft before unload...');
+                    await saveScreen6PhotoDraftBeforeLeave();
+                }
+            }
+
+            // SAVE DRAFT if screen7 is visible with photo post data
+            const screen7 = document.getElementById('screen7');
+            if (screen7 && !screen7.classList.contains('hidden')) {
+                const photoPostPreviewImage = document.getElementById('photoPostPreviewImage');
+                if (photoPostPreviewImage && photoPostPreviewImage.src) {
+                    console.log('💾 Saving screen7 photo post draft before unload...');
+                    await saveScreen7PhotoPostDraftBeforeLeave();
+                }
+            }
+
             if (recordingState.stream) {
                 stopVideoCamera();
                 console.log('🚪 Page unloading - Video camera stopped');
@@ -32362,6 +32536,1584 @@ For more help, visit: help.pose.app
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 2000);
+        }
+
+        // ========== UNFINISHED VIDEO DETECTION ==========
+        // Check for draft videos when page loads
+        document.addEventListener('DOMContentLoaded', async function () {
+            // Wait for Firebase and auth to be ready
+            if (typeof onAuthStateChanged !== 'undefined') {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        checkForDraftVideo(user.uid);
+                    }
+                });
+            }
+        });
+
+        async function checkForDraftVideo(userId) {
+            try {
+                if (typeof db === 'undefined' || !db) {
+                    console.warn('Firebase DB not available yet');
+                    return;
+                }
+
+                // Query Firestore for draft videos
+                const draftQuery = query(
+                    collection(db, 'users', userId, 'posts'),
+                    where('status', '==', 'draft'),
+                    where('type', '==', 'video')
+                );
+
+                const draftSnapshot = await getDocs(draftQuery);
+
+                if (!draftSnapshot.empty) {
+                    // Found unfinished video(s)
+                    const draftVideo = draftSnapshot.docs[0].data();
+                    const docId = draftSnapshot.docs[0].id;
+
+                    showUnfinishedVideoPopup(draftVideo, docId);
+                } else {
+                    console.log('✅ No unfinished videos found');
+                }
+            } catch (error) {
+                console.error('Error checking for draft videos:', error);
+            }
+        }
+
+        function showUnfinishedVideoPopup(videoData, docId) {
+            // Create modal HTML
+            const modalHTML = `
+                <div id="unfinishedVideoModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeUnfinishedVideoModal()">&times;</button>
+                        <h2>📹 Unfinished Video</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have an unfinished video from before. What would you like to do?</p>
+                        
+                        <div id="unfinishedVideoPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            ${videoData.thumbnail ? `<img src="${videoData.thumbnail}" style="width: 100%; max-height: 200px; object-fit: cover;">` : '<div style="background: #2a2a2a; height: 150px;"></div>'}
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                ${videoData.uploadedAt ? `<strong>Saved:</strong> ${new Date(videoData.uploadedAt).toLocaleDateString()}<br>` : ''}
+                                <strong>Duration:</strong> ${videoData.duration ? Math.floor(videoData.duration) + 's' : 'Unknown'}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueEditingDraft('${docId}')" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewDraftVideo('${videoData.url}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-play"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardDraft('${docId}')" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Insert modal into DOM
+            const existingModal = document.getElementById('unfinishedVideoModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeUnfinishedVideoModal() {
+            const modal = document.getElementById('unfinishedVideoModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        function continueEditingDraft(docId) {
+            console.log('🔧 Continuing edit for draft:', docId);
+            closeUnfinishedVideoModal();
+
+            // Navigate to v2 edit screen with draft data
+            try {
+                // You can set global state with the draft ID
+                window.draftDocId = docId;
+                loadDraftForEditing(docId);
+                showScreen('v2EditScreen');
+            } catch (error) {
+                console.error('Error loading draft:', error);
+                alert('Failed to load draft video');
+            }
+        }
+
+        function previewDraftVideo(videoUrl) {
+            console.log('👀 Previewing draft video');
+
+            if (!videoUrl) {
+                alert('Video URL not available');
+                return;
+            }
+
+            // Create preview modal
+            const previewModalHTML = `
+                <div id="draftPreviewModal" class="modal-overlay active">
+                    <div class="modal" style="max-width: 500px;">
+                        <button class="modal-close" onclick="closeDraftPreviewModal()">&times;</button>
+                        <h2>Video Preview</h2>
+                        <video width="100%" controls style="border-radius: 8px; margin: 20px 0;">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="modal-btn" onclick="closeDraftPreviewModal()" style="flex: 1;">Close</button>
+                            <button class="modal-btn" onclick="closeDraftPreviewModal(); continueEditingDraft(window.draftDocId)" style="flex: 1; background: linear-gradient(45deg, #4C1D95, #6D28D9);">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', previewModalHTML);
+        }
+
+        function closeDraftPreviewModal() {
+            const modal = document.getElementById('draftPreviewModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        async function discardDraft(docId) {
+            if (!confirm('Are you sure you want to discard this video? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                if (currentUser && typeof deleteDoc !== 'undefined') {
+                    await deleteDoc(doc(db, 'users', currentUser.uid, 'posts', docId));
+                    console.log('🗑️ Draft deleted:', docId);
+                    closeUnfinishedVideoModal();
+                    showNotification('✅ Video discarded');
+                }
+            } catch (error) {
+                console.error('Error discarding draft:', error);
+                showNotification('❌ Failed to discard video');
+            }
+        }
+
+        async function loadDraftForEditing(docId) {
+            try {
+                if (currentUser && typeof getDoc !== 'undefined') {
+                    const draftDoc = await getDoc(doc(db, 'users', currentUser.uid, 'posts', docId));
+                    if (draftDoc.exists()) {
+                        const draftData = draftDoc.data();
+                        console.log('📥 Loading draft:', draftData);
+
+                        // Load video into v2EditScreen
+                        const v2EditVideo = document.getElementById('v2EditVideo');
+                        if (v2EditVideo && draftData.url) {
+                            v2EditVideo.src = draftData.url;
+                            v2EditVideo.load();
+
+                            // Restore any saved edits if available
+                            if (draftData.edits) {
+                                v2HandleTrimState.trimStart = draftData.edits.trimStart || 0;
+                                v2HandleTrimState.trimEnd = draftData.edits.trimEnd || v2EditVideo.duration;
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading draft for editing:', error);
+            }
+        }
+
+        // ========== SAVE DRAFT TO DATABASE ==========
+        async function saveDraftToDatabaseBeforeLeave(videoUrl) {
+            if (!currentUser) {
+                console.warn('⚠️ User not authenticated, cannot save draft');
+                return;
+            }
+
+            try {
+                const v2EditVideo = document.getElementById('v2EditVideo');
+                if (!v2EditVideo) {
+                    console.warn('⚠️ V2EditVideo element not found');
+                    return;
+                }
+
+                // Get current edits state
+                const edits = {
+                    trimStart: v2HandleTrimState?.trimStart || 0,
+                    trimEnd: v2HandleTrimState?.trimEnd || v2EditVideo.duration || 0,
+                    playbackSpeed: v2EditVideo.playbackRate || 1,
+                    filter: v2EditVideo.style.filter || 'none',
+                    volume: v2EditVideo.volume || 1.0,
+                    duration: (v2HandleTrimState?.trimEnd - v2HandleTrimState?.trimStart) || v2EditVideo.duration || 0
+                };
+
+                // Check if we have an existing draft to update
+                const draftId = window.draftDocId || `draft_${Date.now()}`;
+
+                const draftData = {
+                    status: 'draft',
+                    type: 'video',
+                    url: videoUrl,
+                    edits: edits,
+                    duration: edits.duration,
+                    uploadedAt: new Date(),
+                    lastModified: new Date(),
+                    thumbnail: null, // Can be set from video frame if needed
+                };
+
+                // Save to Firebase
+                await setDoc(
+                    doc(db, 'users', currentUser.uid, 'posts', draftId),
+                    draftData,
+                    { merge: true } // Merge to keep any existing fields
+                );
+
+                console.log('✅ Draft saved successfully:', draftId);
+                console.log('   - URL:', videoUrl);
+                console.log('   - Duration:', edits.duration + 's');
+                console.log('   - Edits:', edits);
+
+                // Store draft ID globally for future reference
+                window.draftDocId = draftId;
+
+                return draftId;
+            } catch (error) {
+                console.error('❌ Error saving draft to database:', error);
+                // Fallback to localStorage if Firebase fails
+                saveDraftToLocalStorage(videoUrl);
+            }
+        }
+
+        // ========== SAVE DRAFT TO LOCAL STORAGE (FALLBACK) ==========
+        async function saveDraftToLocalStorage(videoUrl) {
+            try {
+                const v2EditVideo = document.getElementById('v2EditVideo');
+                if (!v2EditVideo) return;
+
+                const draftData = {
+                    url: videoUrl,
+                    timestamp: Date.now(),
+                    edits: {
+                        trimStart: v2HandleTrimState?.trimStart || 0,
+                        trimEnd: v2HandleTrimState?.trimEnd || v2EditVideo.duration || 0,
+                        playbackSpeed: v2EditVideo.playbackRate || 1,
+                        filter: v2EditVideo.style.filter || 'none',
+                        volume: v2EditVideo.volume || 1.0,
+                    },
+                    duration: v2EditVideo.duration || 0
+                };
+
+                localStorage.setItem('v2DraftVideoData', JSON.stringify(draftData));
+                console.log('✅ Draft saved to localStorage (fallback)');
+            } catch (error) {
+                console.error('❌ Error saving draft to localStorage:', error);
+            }
+        }
+
+        // ========== CHECK LOCAL STORAGE FOR DRAFT ON PAGE LOAD ==========
+        function checkLocalStorageDraft() {
+            try {
+                const localDraft = localStorage.getItem('v2DraftVideoData');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+
+                    // Only show if less than 7 days old
+                    const ageInDays = (Date.now() - draftData.timestamp) / (1000 * 60 * 60 * 24);
+                    if (ageInDays < 7) {
+                        console.log('📱 Found draft in localStorage');
+                        showUnfinishedVideoPopupFromLocalStorage(draftData);
+                    } else {
+                        // Discard old drafts
+                        localStorage.removeItem('v2DraftVideoData');
+                        console.log('🗑️ Old draft removed (7+ days old)');
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking localStorage draft:', error);
+            }
+        }
+
+        function showUnfinishedVideoPopupFromLocalStorage(draftData) {
+            // Show modal for localStorage draft
+            const modalHTML = `
+                <div id="unfinishedVideoModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeUnfinishedVideoModal()">&times;</button>
+                        <h2>📹 Unfinished Video</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have an unfinished video saved locally.</p>
+                        
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Duration:</strong> ${Math.floor(draftData.duration)}s
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="loadLocalDraftForEditing()" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewDraftVideo('${draftData.url}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-play"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardLocalDraft()" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function loadLocalDraftForEditing() {
+            try {
+                const localDraft = localStorage.getItem('v2DraftVideoData');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+                    closeUnfinishedVideoModal();
+
+                    const v2EditVideo = document.getElementById('v2EditVideo');
+                    if (v2EditVideo && draftData.url) {
+                        v2EditVideo.src = draftData.url;
+                        v2EditVideo.load();
+
+                        if (draftData.edits) {
+                            v2HandleTrimState.trimStart = draftData.edits.trimStart || 0;
+                            v2HandleTrimState.trimEnd = draftData.edits.trimEnd || v2EditVideo.duration;
+                        }
+
+                        showScreen('v2EditScreen');
+                        showNotification('✅ Draft loaded');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading local draft:', error);
+                showNotification('❌ Failed to load draft');
+            }
+        }
+
+        function discardLocalDraft() {
+            if (!confirm('Are you sure you want to discard this video?')) {
+                return;
+            }
+
+            try {
+                localStorage.removeItem('v2DraftVideoData');
+                closeUnfinishedVideoModal();
+                showNotification('✅ Video discarded');
+                console.log('🗑️ Local draft deleted');
+            } catch (error) {
+                console.error('Error discarding local draft:', error);
+            }
+        }
+
+        // Call localStorage check on page load too (for all drafts)
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLocalStorageDraft(); // v2 edit video drafts
+            checkScreen6LocalStorageDraft(); // screen6 photo drafts
+            checkScreen7LocalStorageDraft(); // screen7 photo post drafts
+        });
+
+        // ========== SCREEN4 POST DRAFT SYSTEM ==========
+        // Auto-save Screen4 form data when user leaves
+        async function saveScreen4DraftBeforeLeave() {
+            if (!currentUser) {
+                console.warn('⚠️ User not authenticated, cannot save screen4 draft');
+                return;
+            }
+
+            try {
+                const postPreviewVideo = document.getElementById('postPreviewVideo');
+                const recCaption = document.getElementById('recCaption');
+
+                if (!postPreviewVideo || !postPreviewVideo.src) {
+                    console.warn('⚠️ No video in postPreviewVideo');
+                    return;
+                }
+
+                // Collect all form data
+                const formData = {
+                    videoUrl: postPreviewVideo.src,
+                    caption: recCaption?.value || '',
+                    hashtags: document.querySelector('input[placeholder="Add hashtags"]')?.value || '',
+                    tags: document.querySelector('input[placeholder="Tag people"]')?.value || '',
+                    privacy: document.querySelector('select')?.value || 'Everyone',
+                    allowComments: document.querySelector('input[type="checkbox"]:nth-of-type(1)')?.checked ?? true,
+                    allowDuet: document.querySelector('input[type="checkbox"]:nth-of-type(2)')?.checked ?? true,
+                    allowStitch: document.querySelector('input[type="checkbox"]:nth-of-type(3)')?.checked ?? true,
+                    allowSoundReuse: document.querySelector('input[type="checkbox"]:nth-of-type(4)')?.checked ?? true,
+                    allowDownload: document.querySelector('input[type="checkbox"]:nth-of-type(5)')?.checked ?? false,
+                };
+
+                // Generate or use existing draft ID
+                const draftId = window.screen4DraftDocId || `screen4_draft_${Date.now()}`;
+
+                const draftData = {
+                    status: 'draft',
+                    type: 'screen4_post',
+                    formData: formData,
+                    uploadedAt: new Date(),
+                    lastModified: new Date(),
+                };
+
+                // Save to Firebase
+                await setDoc(
+                    doc(db, 'users', currentUser.uid, 'posts', draftId),
+                    draftData,
+                    { merge: true }
+                );
+
+                console.log('✅ Screen4 draft saved successfully:', draftId);
+                console.log('   - Caption:', formData.caption);
+                console.log('   - Video URL:', formData.videoUrl);
+                console.log('   - Form data:', formData);
+
+                window.screen4DraftDocId = draftId;
+                return draftId;
+            } catch (error) {
+                console.error('❌ Error saving screen4 draft to database:', error);
+                // Fallback to localStorage
+                saveScreen4DraftToLocalStorage();
+            }
+        }
+
+        // Save Screen4 draft to localStorage (fallback)
+        function saveScreen4DraftToLocalStorage() {
+            try {
+                const postPreviewVideo = document.getElementById('postPreviewVideo');
+                const recCaption = document.getElementById('recCaption');
+
+                const formData = {
+                    videoUrl: postPreviewVideo?.src || '',
+                    caption: recCaption?.value || '',
+                    hashtags: document.querySelector('input[placeholder="Add hashtags"]')?.value || '',
+                    tags: document.querySelector('input[placeholder="Tag people"]')?.value || '',
+                    privacy: document.querySelector('select')?.value || 'Everyone',
+                    allowComments: document.querySelector('input[type="checkbox"]:nth-of-type(1)')?.checked ?? true,
+                    allowDuet: document.querySelector('input[type="checkbox"]:nth-of-type(2)')?.checked ?? true,
+                    allowStitch: document.querySelector('input[type="checkbox"]:nth-of-type(3)')?.checked ?? true,
+                    allowSoundReuse: document.querySelector('input[type="checkbox"]:nth-of-type(4)')?.checked ?? true,
+                    allowDownload: document.querySelector('input[type="checkbox"]:nth-of-type(5)')?.checked ?? false,
+                };
+
+                const draftData = {
+                    timestamp: Date.now(),
+                    formData: formData,
+                };
+
+                localStorage.setItem('screen4DraftData', JSON.stringify(draftData));
+                console.log('✅ Screen4 draft saved to localStorage (fallback)');
+            } catch (error) {
+                console.error('❌ Error saving screen4 draft to localStorage:', error);
+            }
+        }
+
+        // Check for Screen4 draft on page load (Firebase)
+        async function checkForScreen4Draft(userId) {
+            try {
+                if (typeof db === 'undefined' || !db) {
+                    console.warn('Firebase DB not available yet');
+                    return;
+                }
+
+                // Query Firestore for screen4 drafts
+                const draftQuery = query(
+                    collection(db, 'users', userId, 'posts'),
+                    where('status', '==', 'draft'),
+                    where('type', '==', 'screen4_post')
+                );
+
+                const draftSnapshot = await getDocs(draftQuery);
+
+                if (!draftSnapshot.empty) {
+                    const draftData = draftSnapshot.docs[0].data();
+                    const docId = draftSnapshot.docs[0].id;
+
+                    console.log('📤 Found screen4 draft:', docId);
+                    showScreen4UnfinishedPostPopup(draftData.formData, docId);
+                } else {
+                    console.log('✅ No screen4 draft found');
+                    // Check localStorage as fallback
+                    checkScreen4LocalStorageDraft();
+                }
+            } catch (error) {
+                console.error('Error checking for screen4 draft:', error);
+                // Check localStorage as fallback
+                checkScreen4LocalStorageDraft();
+            }
+        }
+
+        // Check for Screen4 draft in localStorage
+        function checkScreen4LocalStorageDraft() {
+            try {
+                const localDraft = localStorage.getItem('screen4DraftData');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+
+                    // Only show if less than 30 days old
+                    const ageInDays = (Date.now() - draftData.timestamp) / (1000 * 60 * 60 * 24);
+                    if (ageInDays < 30) {
+                        console.log('📱 Found screen4 draft in localStorage');
+                        showScreen4UnfinishedPostPopupFromLocalStorage(draftData.formData);
+                    } else {
+                        localStorage.removeItem('screen4DraftData');
+                        console.log('🗑️ Old screen4 draft removed (30+ days old)');
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking localStorage screen4 draft:', error);
+            }
+        }
+
+        // Show popup for unfinished Screen4 post
+        function showScreen4UnfinishedPostPopup(formData, docId) {
+            const caption = formData.caption || '(no caption)';
+            const captionPreview = caption.substring(0, 50) + (caption.length > 50 ? '...' : '');
+
+            const modalHTML = `
+                <div id="screen4DraftModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeScreen4DraftModal()">&times;</button>
+                        <h2>📝 Unfinished Post</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have an unfinished post ready to publish.</p>
+                        
+                        <div id="screen4DraftPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            <video width="100%" height="200" style="background: #2a2a2a; object-fit: cover;" controls>
+                                <source src="${formData.videoUrl}" type="video/mp4">
+                            </video>
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Caption:</strong> ${captionPreview}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueScreen4Draft('${docId}')" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewScreen4Post('${formData.videoUrl}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-play"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardScreen4Draft('${docId}')" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // Show popup for localStorage Screen4 draft
+        function showScreen4UnfinishedPostPopupFromLocalStorage(formData) {
+            const caption = formData.caption || '(no caption)';
+            const captionPreview = caption.substring(0, 50) + (caption.length > 50 ? '...' : '');
+
+            const modalHTML = `
+                <div id="screen4DraftModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeScreen4DraftModal()">&times;</button>
+                        <h2>📝 Unfinished Post</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have an unfinished post ready to publish.</p>
+                        
+                        <div id="screen4DraftPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            <video width="100%" height="200" style="background: #2a2a2a; object-fit: cover;" controls>
+                                <source src="${formData.videoUrl}" type="video/mp4">
+                            </video>
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Caption:</strong> ${captionPreview}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueScreen4LocalDraft()" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewScreen4Post('${formData.videoUrl}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-play"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardScreen4LocalDraft()" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeScreen4DraftModal() {
+            const modal = document.getElementById('screen4DraftModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        // Continue editing Screen4 post (Firebase)
+        async function continueScreen4Draft(docId) {
+            console.log('🔧 Continuing screen4 draft:', docId);
+            closeScreen4DraftModal();
+
+            try {
+                if (currentUser && typeof getDoc !== 'undefined') {
+                    const draftDoc = await getDoc(doc(db, 'users', currentUser.uid, 'posts', docId));
+                    if (draftDoc.exists()) {
+                        const draftData = draftDoc.data();
+                        loadScreen4FormData(draftData.formData);
+                        showScreen('screen4');
+                        window.screen4DraftDocId = docId;
+                        showNotification('✅ Post loaded');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading screen4 draft:', error);
+                showNotification('❌ Failed to load post');
+            }
+        }
+
+        // Continue editing Screen4 post (localStorage)
+        function continueScreen4LocalDraft() {
+            console.log('🔧 Continuing screen4 local draft');
+            closeScreen4DraftModal();
+
+            try {
+                const localDraft = localStorage.getItem('screen4DraftData');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+                    loadScreen4FormData(draftData.formData);
+                    showScreen('screen4');
+                    showNotification('✅ Post loaded');
+                }
+            } catch (error) {
+                console.error('Error loading screen4 local draft:', error);
+                showNotification('❌ Failed to load post');
+            }
+        }
+
+        // Load form data into Screen4
+        function loadScreen4FormData(formData) {
+            try {
+                const postPreviewVideo = document.getElementById('postPreviewVideo');
+                const recCaption = document.getElementById('recCaption');
+
+                // Load video
+                if (postPreviewVideo && formData.videoUrl) {
+                    postPreviewVideo.src = formData.videoUrl;
+                    postPreviewVideo.load();
+                    console.log('📹 Video loaded');
+                }
+
+                // Load caption
+                if (recCaption) {
+                    recCaption.value = formData.caption || '';
+                    updateCaptionCounter(); // Assuming this function exists
+                    console.log('📝 Caption loaded');
+                }
+
+                // Load hashtags
+                const hashtagsInput = document.querySelector('input[placeholder="Add hashtags"]');
+                if (hashtagsInput) {
+                    hashtagsInput.value = formData.hashtags || '';
+                }
+
+                // Load tags
+                const tagsInput = document.querySelector('input[placeholder="Tag people"]');
+                if (tagsInput) {
+                    tagsInput.value = formData.tags || '';
+                }
+
+                // Load privacy
+                const privacySelect = document.querySelector('select');
+                if (privacySelect) {
+                    privacySelect.value = formData.privacy || 'Everyone';
+                }
+
+                // Load checkboxes
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                if (checkboxes.length >= 5) {
+                    checkboxes[0].checked = formData.allowComments ?? true;
+                    checkboxes[1].checked = formData.allowDuet ?? true;
+                    checkboxes[2].checked = formData.allowStitch ?? true;
+                    checkboxes[3].checked = formData.allowSoundReuse ?? true;
+                    checkboxes[4].checked = formData.allowDownload ?? false;
+                }
+
+                console.log('✅ Screen4 form data loaded:', formData);
+            } catch (error) {
+                console.error('Error loading screen4 form data:', error);
+            }
+        }
+
+        // Preview Screen4 post video
+        function previewScreen4Post(videoUrl) {
+            console.log('👀 Previewing screen4 post');
+
+            if (!videoUrl) {
+                alert('Video URL not available');
+                return;
+            }
+
+            const previewModalHTML = `
+                <div id="screen4PreviewModal" class="modal-overlay active">
+                    <div class="modal" style="max-width: 500px;">
+                        <button class="modal-close" onclick="closeScreen4PreviewModal()">&times;</button>
+                        <h2>Post Preview</h2>
+                        <video width="100%" controls style="border-radius: 8px; margin: 20px 0;">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="modal-btn" onclick="closeScreen4PreviewModal()" style="flex: 1;">Close</button>
+                            <button class="modal-btn" onclick="closeScreen4PreviewModal(); continueScreen4Draft(window.screen4DraftDocId || 'local')" style="flex: 1; background: linear-gradient(45deg, #4C1D95, #6D28D9);">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', previewModalHTML);
+        }
+
+        function closeScreen4PreviewModal() {
+            const modal = document.getElementById('screen4PreviewModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        // Discard Screen4 draft (Firebase)
+        async function discardScreen4Draft(docId) {
+            if (!confirm('Are you sure you want to discard this post? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                if (currentUser && typeof deleteDoc !== 'undefined') {
+                    await deleteDoc(doc(db, 'users', currentUser.uid, 'posts', docId));
+                    console.log('🗑️ Screen4 draft deleted:', docId);
+                    closeScreen4DraftModal();
+                    showNotification('✅ Post discarded');
+                }
+            } catch (error) {
+                console.error('Error discarding screen4 draft:', error);
+                showNotification('❌ Failed to discard post');
+            }
+        }
+
+        // Discard Screen4 draft (localStorage)
+        function discardScreen4LocalDraft() {
+            if (!confirm('Are you sure you want to discard this post? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                localStorage.removeItem('screen4DraftData');
+                closeScreen4DraftModal();
+                showNotification('✅ Post discarded');
+                console.log('🗑️ Screen4 local draft deleted');
+            } catch (error) {
+                console.error('Error discarding screen4 local draft:', error);
+            }
+        }
+
+        // ========== SCREEN6 PHOTO DRAFT SYSTEM ==========
+        // Auto-save Screen6 photos when user leaves
+        async function saveScreen6PhotoDraftBeforeLeave() {
+            if (!currentUser || !photoState || !photoState.capturedPhotos.length) {
+                console.warn('⚠️ No photos to save');
+                return;
+            }
+
+            try {
+                const photos = photoState.capturedPhotos.map(photo => ({
+                    url: photo.url,
+                    editedUrl: photo.editedUrl,
+                    hasEdits: photo.hasEdits,
+                    effect: photo.effect,
+                    timestamp: Date.now()
+                }));
+
+                const draftId = window.screen6DraftDocId || `screen6_draft_${Date.now()}`;
+
+                const draftData = {
+                    status: 'draft',
+                    type: 'screen6_photos',
+                    photos: photos,
+                    currentPhotoIndex: photoState.currentPhotoIndex || 0,
+                    photoSettings: photoState.photoSettings || {},
+                    selectedSound: photoState.selectedSound || null,
+                    uploadedAt: new Date(),
+                    lastModified: new Date(),
+                };
+
+                // Save to Firebase
+                await setDoc(
+                    doc(db, 'users', currentUser.uid, 'drafts', draftId),
+                    draftData,
+                    { merge: true }
+                );
+
+                console.log('✅ Screen6 photo draft saved successfully:', draftId);
+                console.log('   - Photos count:', photos.length);
+                console.log('   - Settings:', photoState.photoSettings);
+
+                window.screen6DraftDocId = draftId;
+                return draftId;
+            } catch (error) {
+                console.error('❌ Error saving screen6 draft to database:', error);
+                saveScreen6PhotoDraftToLocalStorage();
+            }
+        }
+
+        // Save Screen6 draft to localStorage (fallback)
+        function saveScreen6PhotoDraftToLocalStorage() {
+            try {
+                if (!photoState || !photoState.capturedPhotos.length) return;
+
+                const photos = photoState.capturedPhotos.map(photo => ({
+                    url: photo.url,
+                    editedUrl: photo.editedUrl,
+                    hasEdits: photo.hasEdits,
+                    effect: photo.effect,
+                }));
+
+                const draftData = {
+                    timestamp: Date.now(),
+                    photos: photos,
+                    currentPhotoIndex: photoState.currentPhotoIndex || 0,
+                    photoSettings: photoState.photoSettings || {},
+                    selectedSound: photoState.selectedSound || null,
+                };
+
+                localStorage.setItem('screen6PhotoDraft', JSON.stringify(draftData));
+                console.log('✅ Screen6 photo draft saved to localStorage (fallback)');
+            } catch (error) {
+                console.error('❌ Error saving screen6 draft to localStorage:', error);
+            }
+        }
+
+        // Check for Screen6 draft on page load (Firebase)
+        async function checkForScreen6PhotoDraft(userId) {
+            try {
+                if (typeof db === 'undefined' || !db) {
+                    console.warn('Firebase DB not available yet');
+                    return;
+                }
+
+                // Query Firestore for screen6 drafts
+                const draftQuery = query(
+                    collection(db, 'users', userId, 'drafts'),
+                    where('status', '==', 'draft'),
+                    where('type', '==', 'screen6_photos')
+                );
+
+                const draftSnapshot = await getDocs(draftQuery);
+
+                if (!draftSnapshot.empty) {
+                    const draftData = draftSnapshot.docs[0].data();
+                    const docId = draftSnapshot.docs[0].id;
+
+                    console.log('📸 Found screen6 photo draft:', docId);
+                    showScreen6UnfinishedPhotoPopup(draftData, docId);
+                } else {
+                    console.log('✅ No screen6 photo draft found');
+                    checkScreen6LocalStorageDraft();
+                }
+            } catch (error) {
+                console.error('Error checking for screen6 draft:', error);
+                checkScreen6LocalStorageDraft();
+            }
+        }
+
+        // Check for Screen6 draft in localStorage
+        function checkScreen6LocalStorageDraft() {
+            try {
+                const localDraft = localStorage.getItem('screen6PhotoDraft');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+
+                    // Only show if less than 7 days old
+                    const ageInDays = (Date.now() - draftData.timestamp) / (1000 * 60 * 60 * 24);
+                    if (ageInDays < 7) {
+                        console.log('📱 Found screen6 photo draft in localStorage');
+                        console.log('   - Photos count:', draftData.photos?.length || 0);
+                        console.log('   - Age:', Math.round(ageInDays * 24) + ' hours old');
+                        showScreen6UnfinishedPhotoPopupFromLocalStorage(draftData);
+                    } else {
+                        localStorage.removeItem('screen6PhotoDraft');
+                        console.log('🗑️ Old screen6 photo draft removed (7+ days old)');
+                    }
+                } else {
+                    console.log('✅ No screen6 photo draft in localStorage');
+                }
+            } catch (error) {
+                console.error('Error checking localStorage screen6 draft:', error);
+            }
+        }
+
+        // Show popup for unfinished Screen6 photos
+        function showScreen6UnfinishedPhotoPopup(draftData, docId) {
+            const photoCount = draftData.photos?.length || 0;
+            const currentPhoto = draftData.photos?.[draftData.currentPhotoIndex || 0];
+            const photoUrl = currentPhoto?.editedUrl || currentPhoto?.url || '';
+
+            const modalHTML = `
+                <div id="screen6DraftModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeScreen6DraftModal()">&times;</button>
+                        <h2>📸 Unfinished Photos</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have ${photoCount} unfinished photo(s) being edited.</p>
+                        
+                        <div id="screen6DraftPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            ${photoUrl ? `<img src="${photoUrl}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px;">` : '<div style="background: #2a2a2a; height: 200px; border-radius: 8px;"></div>'}
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Photo ${(draftData.currentPhotoIndex || 0) + 1}</strong> of ${photoCount}
+                                ${currentPhoto?.hasEdits ? '<br><strong>Status:</strong> With edits' : ''}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueScreen6Draft('${docId}')" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewScreen6Photo('${photoUrl}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardScreen6Draft('${docId}')" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // Show popup for localStorage Screen6 photos
+        function showScreen6UnfinishedPhotoPopupFromLocalStorage(draftData) {
+            const photoCount = draftData.photos?.length || 0;
+            const currentPhoto = draftData.photos?.[draftData.currentPhotoIndex || 0];
+            const photoUrl = currentPhoto?.editedUrl || currentPhoto?.url || '';
+
+            const modalHTML = `
+                <div id="screen6DraftModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeScreen6DraftModal()">&times;</button>
+                        <h2>📸 Unfinished Photos</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have ${photoCount} unfinished photo(s) being edited.</p>
+                        
+                        <div id="screen6DraftPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            ${photoUrl ? `<img src="${photoUrl}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px;">` : '<div style="background: #2a2a2a; height: 200px; border-radius: 8px;"></div>'}
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Photo ${(draftData.currentPhotoIndex || 0) + 1}</strong> of ${photoCount}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueScreen6LocalDraft()" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewScreen6Photo('${photoUrl}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardScreen6LocalDraft()" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeScreen6DraftModal() {
+            const modal = document.getElementById('screen6DraftModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        // Continue editing Screen6 photos (Firebase)
+        async function continueScreen6Draft(docId) {
+            console.log('🔧 Continuing screen6 photo draft:', docId);
+            closeScreen6DraftModal();
+
+            try {
+                if (currentUser && typeof getDoc !== 'undefined') {
+                    const draftDoc = await getDoc(doc(db, 'users', currentUser.uid, 'drafts', docId));
+                    if (draftDoc.exists()) {
+                        const draftData = draftDoc.data();
+                        loadScreen6PhotoDraft(draftData);
+                        showScreen('screen6');
+                        window.screen6DraftDocId = docId;
+                        showNotification('✅ Photos loaded');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading screen6 draft:', error);
+                showNotification('❌ Failed to load photos');
+            }
+        }
+
+        // Continue editing Screen6 photos (localStorage)
+        function continueScreen6LocalDraft() {
+            console.log('🔧 Continuing screen6 local photo draft');
+            closeScreen6DraftModal();
+
+            try {
+                const localDraft = localStorage.getItem('screen6PhotoDraft');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+                    loadScreen6PhotoDraft(draftData);
+                    showScreen('screen6');
+                    showNotification('✅ Photos loaded');
+                }
+            } catch (error) {
+                console.error('Error loading screen6 local draft:', error);
+                showNotification('❌ Failed to load photos');
+            }
+        }
+
+        // Load Screen6 photo draft into photoState
+        function loadScreen6PhotoDraft(draftData) {
+            try {
+                if (!photoState) {
+                    console.warn('photoState not initialized');
+                    return;
+                }
+
+                // Restore photos
+                if (draftData.photos && draftData.photos.length > 0) {
+                    photoState.capturedPhotos = draftData.photos;
+                    photoState.currentPhotoIndex = draftData.currentPhotoIndex || 0;
+                    console.log('📸 Loaded ' + draftData.photos.length + ' photos');
+                }
+
+                // Restore settings
+                if (draftData.photoSettings) {
+                    photoState.photoSettings = draftData.photoSettings;
+                    console.log('⚙️ Settings restored');
+                }
+
+                // Restore sound
+                if (draftData.selectedSound) {
+                    photoState.selectedSound = draftData.selectedSound;
+                    console.log('🎵 Sound restored');
+                }
+
+                // Display the photos in screen6
+                displayCapturedPhoto();
+                console.log('✅ Screen6 photos loaded');
+            } catch (error) {
+                console.error('Error loading screen6 photo draft:', error);
+            }
+        }
+
+        // Preview Screen6 photo
+        function previewScreen6Photo(photoUrl) {
+            console.log('👀 Previewing screen6 photo');
+
+            if (!photoUrl) {
+                alert('Photo URL not available');
+                return;
+            }
+
+            const previewModalHTML = `
+                <div id="screen6PreviewModal" class="modal-overlay active">
+                    <div class="modal" style="max-width: 500px;">
+                        <button class="modal-close" onclick="closeScreen6PreviewModal()">&times;</button>
+                        <h2>Photo Preview</h2>
+                        <img src="${photoUrl}" style="width: 100%; border-radius: 8px; margin: 20px 0; max-height: 400px; object-fit: contain;">
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="modal-btn" onclick="closeScreen6PreviewModal()" style="flex: 1;">Close</button>
+                            <button class="modal-btn" onclick="closeScreen6PreviewModal(); continueScreen6Draft(window.screen6DraftDocId || 'local')" style="flex: 1; background: linear-gradient(45deg, #4C1D95, #6D28D9);">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', previewModalHTML);
+        }
+
+        function closeScreen6PreviewModal() {
+            const modal = document.getElementById('screen6PreviewModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        // Discard Screen6 photos (Firebase)
+        async function discardScreen6Draft(docId) {
+            if (!confirm('Are you sure you want to discard all unfinished photos? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                if (currentUser && typeof deleteDoc !== 'undefined') {
+                    await deleteDoc(doc(db, 'users', currentUser.uid, 'drafts', docId));
+                    console.log('🗑️ Screen6 draft deleted:', docId);
+                    closeScreen6DraftModal();
+                    showNotification('✅ Photos discarded');
+                }
+            } catch (error) {
+                console.error('Error discarding screen6 draft:', error);
+                showNotification('❌ Failed to discard photos');
+            }
+        }
+
+        // Discard Screen6 photos (localStorage)
+        function discardScreen6LocalDraft() {
+            if (!confirm('Are you sure you want to discard all unfinished photos? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                localStorage.removeItem('screen6PhotoDraft');
+                closeScreen6DraftModal();
+                showNotification('✅ Photos discarded');
+                console.log('🗑️ Screen6 local draft deleted');
+            } catch (error) {
+                console.error('Error discarding screen6 local draft:', error);
+            }
+        }
+
+        // ========== SCREEN7 PHOTO POST DRAFT SYSTEM ==========
+        // Auto-save Screen7 photo post form data when user leaves
+        async function saveScreen7PhotoPostDraftBeforeLeave() {
+            if (!currentUser || !photoState || !photoState.capturedPhotos.length) {
+                console.warn('⚠️ No photos to save');
+                return;
+            }
+
+            try {
+                const photoPostPreviewImage = document.getElementById('photoPostPreviewImage');
+                const photoCaption = document.getElementById('photoCaption');
+
+                if (!photoPostPreviewImage || !photoPostPreviewImage.src) {
+                    console.warn('⚠️ No photo preview');
+                    return;
+                }
+
+                // Collect form data
+                const formData = {
+                    photoUrl: photoPostPreviewImage.src,
+                    caption: photoCaption?.value || '',
+                    hashtags: document.querySelector('#screen7 input[placeholder="Add hashtags"]')?.value || '',
+                    tags: document.querySelector('#screen7 input[placeholder="Tag people"]')?.value || '',
+                    privacy: document.querySelector('#screen7 select')?.value || 'Everyone',
+                };
+
+                const draftId = window.screen7DraftDocId || `screen7_draft_${Date.now()}`;
+
+                const draftData = {
+                    status: 'draft',
+                    type: 'screen7_photo_post',
+                    formData: formData,
+                    photoSettings: photoState.photoSettings || {},
+                    selectedSound: photoState.selectedSound || null,
+                    currentPhotoIndex: photoState.currentPhotoIndex || 0,
+                    uploadedAt: new Date(),
+                    lastModified: new Date(),
+                };
+
+                // Save to Firebase
+                await setDoc(
+                    doc(db, 'users', currentUser.uid, 'drafts', draftId),
+                    draftData,
+                    { merge: true }
+                );
+
+                console.log('✅ Screen7 photo post draft saved successfully:', draftId);
+                console.log('   - Caption:', formData.caption);
+                console.log('   - Photo URL:', formData.photoUrl);
+
+                window.screen7DraftDocId = draftId;
+                return draftId;
+            } catch (error) {
+                console.error('❌ Error saving screen7 draft to database:', error);
+                saveScreen7PhotoPostDraftToLocalStorage();
+            }
+        }
+
+        // Save Screen7 draft to localStorage (fallback)
+        function saveScreen7PhotoPostDraftToLocalStorage() {
+            try {
+                const photoPostPreviewImage = document.getElementById('photoPostPreviewImage');
+                const photoCaption = document.getElementById('photoCaption');
+
+                const formData = {
+                    photoUrl: photoPostPreviewImage?.src || '',
+                    caption: photoCaption?.value || '',
+                    hashtags: document.querySelector('#screen7 input[placeholder="Add hashtags"]')?.value || '',
+                    tags: document.querySelector('#screen7 input[placeholder="Tag people"]')?.value || '',
+                    privacy: document.querySelector('#screen7 select')?.value || 'Everyone',
+                };
+
+                const draftData = {
+                    timestamp: Date.now(),
+                    formData: formData,
+                    photoSettings: photoState?.photoSettings || {},
+                    selectedSound: photoState?.selectedSound || null,
+                    currentPhotoIndex: photoState?.currentPhotoIndex || 0,
+                };
+
+                localStorage.setItem('screen7PhotoPostDraft', JSON.stringify(draftData));
+                console.log('✅ Screen7 photo post draft saved to localStorage (fallback)');
+            } catch (error) {
+                console.error('❌ Error saving screen7 draft to localStorage:', error);
+            }
+        }
+
+        // Check for Screen7 draft on page load (Firebase)
+        async function checkForScreen7PhotoPostDraft(userId) {
+            try {
+                if (typeof db === 'undefined' || !db) {
+                    console.warn('Firebase DB not available yet');
+                    return;
+                }
+
+                // Query Firestore for screen7 drafts
+                const draftQuery = query(
+                    collection(db, 'users', userId, 'drafts'),
+                    where('status', '==', 'draft'),
+                    where('type', '==', 'screen7_photo_post')
+                );
+
+                const draftSnapshot = await getDocs(draftQuery);
+
+                if (!draftSnapshot.empty) {
+                    const draftData = draftSnapshot.docs[0].data();
+                    const docId = draftSnapshot.docs[0].id;
+
+                    console.log('📤 Found screen7 photo post draft:', docId);
+                    showScreen7UnfinishedPhotoPostPopup(draftData, docId);
+                } else {
+                    console.log('✅ No screen7 photo post draft found');
+                    checkScreen7LocalStorageDraft();
+                }
+            } catch (error) {
+                console.error('Error checking for screen7 draft:', error);
+                checkScreen7LocalStorageDraft();
+            }
+        }
+
+        // Check for Screen7 draft in localStorage
+        function checkScreen7LocalStorageDraft() {
+            try {
+                const localDraft = localStorage.getItem('screen7PhotoPostDraft');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+
+                    // Only show if less than 30 days old
+                    const ageInDays = (Date.now() - draftData.timestamp) / (1000 * 60 * 60 * 24);
+                    if (ageInDays < 30) {
+                        console.log('📱 Found screen7 photo post draft in localStorage');
+                        console.log('   - Caption:', draftData.formData?.caption?.substring(0, 50) || '(no caption)');
+                        console.log('   - Age:', Math.round(ageInDays * 24) + ' hours old');
+                        showScreen7UnfinishedPhotoPostPopupFromLocalStorage(draftData);
+                    } else {
+                        localStorage.removeItem('screen7PhotoPostDraft');
+                        console.log('🗑️ Old screen7 photo post draft removed (30+ days old)');
+                    }
+                } else {
+                    console.log('✅ No screen7 photo post draft in localStorage');
+                }
+            } catch (error) {
+                console.error('Error checking localStorage screen7 draft:', error);
+            }
+        }
+
+        // Show popup for unfinished Screen7 photo post
+        function showScreen7UnfinishedPhotoPostPopup(draftData, docId) {
+            const caption = draftData.formData?.caption || '(no caption)';
+            const captionPreview = caption.substring(0, 50) + (caption.length > 50 ? '...' : '');
+
+            const modalHTML = `
+                <div id="screen7DraftModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeScreen7DraftModal()">&times;</button>
+                        <h2>📝 Unfinished Photo Post</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have an unfinished photo post ready to publish.</p>
+                        
+                        <div id="screen7DraftPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            ${draftData.formData?.photoUrl ? `<img src="${draftData.formData.photoUrl}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px;">` : '<div style="background: #2a2a2a; height: 200px; border-radius: 8px;"></div>'}
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Caption:</strong> ${captionPreview}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueScreen7Draft('${docId}')" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewScreen7Photo('${draftData.formData?.photoUrl || ''}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardScreen7Draft('${docId}')" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // Show popup for localStorage Screen7 photo post
+        function showScreen7UnfinishedPhotoPostPopupFromLocalStorage(draftData) {
+            const caption = draftData.formData?.caption || '(no caption)';
+            const captionPreview = caption.substring(0, 50) + (caption.length > 50 ? '...' : '');
+
+            const modalHTML = `
+                <div id="screen7DraftModal" class="modal-overlay active">
+                    <div class="modal unfinished-video-modal">
+                        <button class="modal-close" onclick="closeScreen7DraftModal()">&times;</button>
+                        <h2>📝 Unfinished Photo Post</h2>
+                        <p style="color: #aaa; margin-bottom: 20px;">You have an unfinished photo post ready to publish.</p>
+                        
+                        <div id="screen7DraftPreview" style="margin-bottom: 20px; border-radius: 8px; overflow: hidden;">
+                            ${draftData.formData?.photoUrl ? `<img src="${draftData.formData.photoUrl}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px;">` : '<div style="background: #2a2a2a; height: 200px; border-radius: 8px;"></div>'}
+                        </div>
+
+                        <div style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 12px; color: #aaa;">
+                                <strong>Caption:</strong> ${captionPreview}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="modal-btn" onclick="continueScreen7LocalDraft()" style="background: linear-gradient(45deg, #4C1D95, #6D28D9);">
+                                <i class="fas fa-edit"></i> Continue Editing
+                            </button>
+                            <button class="modal-btn" onclick="previewScreen7Photo('${draftData.formData?.photoUrl || ''}')" style="background: linear-gradient(45deg, #2a5f7f, #1e8bc3);">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="modal-btn" onclick="discardScreen7LocalDraft()" style="background: linear-gradient(45deg, #5f2a2a, #8f1e1e);">
+                                <i class="fas fa-trash"></i> Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeScreen7DraftModal() {
+            const modal = document.getElementById('screen7DraftModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        // Continue editing Screen7 photo post (Firebase)
+        async function continueScreen7Draft(docId) {
+            console.log('🔧 Continuing screen7 photo post draft:', docId);
+            closeScreen7DraftModal();
+
+            try {
+                if (currentUser && typeof getDoc !== 'undefined') {
+                    const draftDoc = await getDoc(doc(db, 'users', currentUser.uid, 'drafts', docId));
+                    if (draftDoc.exists()) {
+                        const draftData = draftDoc.data();
+                        loadScreen7FormData(draftData.formData);
+                        showScreen('screen7');
+                        window.screen7DraftDocId = docId;
+                        showNotification('✅ Post loaded');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading screen7 draft:', error);
+                showNotification('❌ Failed to load post');
+            }
+        }
+
+        // Continue editing Screen7 photo post (localStorage)
+        function continueScreen7LocalDraft() {
+            console.log('🔧 Continuing screen7 local photo post draft');
+            closeScreen7DraftModal();
+
+            try {
+                const localDraft = localStorage.getItem('screen7PhotoPostDraft');
+                if (localDraft) {
+                    const draftData = JSON.parse(localDraft);
+                    loadScreen7FormData(draftData.formData);
+                    showScreen('screen7');
+                    showNotification('✅ Post loaded');
+                }
+            } catch (error) {
+                console.error('Error loading screen7 local draft:', error);
+                showNotification('❌ Failed to load post');
+            }
+        }
+
+        // Load form data into Screen7
+        function loadScreen7FormData(formData) {
+            try {
+                const photoPostPreviewImage = document.getElementById('photoPostPreviewImage');
+                const photoCaption = document.getElementById('photoCaption');
+
+                // Load photo
+                if (photoPostPreviewImage && formData.photoUrl) {
+                    photoPostPreviewImage.src = formData.photoUrl;
+                    console.log('📸 Photo loaded');
+                }
+
+                // Load caption
+                if (photoCaption) {
+                    photoCaption.value = formData.caption || '';
+                    updatePhotoCaptionCounter(); // Assuming this function exists
+                    console.log('📝 Caption loaded');
+                }
+
+                // Load hashtags
+                const hashtagsInput = document.querySelector('#screen7 input[placeholder="Add hashtags"]');
+                if (hashtagsInput) {
+                    hashtagsInput.value = formData.hashtags || '';
+                }
+
+                // Load tags
+                const tagsInput = document.querySelector('#screen7 input[placeholder="Tag people"]');
+                if (tagsInput) {
+                    tagsInput.value = formData.tags || '';
+                }
+
+                // Load privacy
+                const privacySelect = document.querySelector('#screen7 select');
+                if (privacySelect) {
+                    privacySelect.value = formData.privacy || 'Everyone';
+                }
+
+                console.log('✅ Screen7 form data loaded:', formData);
+            } catch (error) {
+                console.error('Error loading screen7 form data:', error);
+            }
+        }
+
+        // Preview Screen7 photo
+        function previewScreen7Photo(photoUrl) {
+            console.log('👀 Previewing screen7 photo');
+
+            if (!photoUrl) {
+                alert('Photo URL not available');
+                return;
+            }
+
+            const previewModalHTML = `
+                <div id="screen7PreviewModal" class="modal-overlay active">
+                    <div class="modal" style="max-width: 500px;">
+                        <button class="modal-close" onclick="closeScreen7PreviewModal()">&times;</button>
+                        <h2>Photo Preview</h2>
+                        <img src="${photoUrl}" style="width: 100%; border-radius: 8px; margin: 20px 0; max-height: 400px; object-fit: contain;">
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="modal-btn" onclick="closeScreen7PreviewModal()" style="flex: 1;">Close</button>
+                            <button class="modal-btn" onclick="closeScreen7PreviewModal(); continueScreen7Draft(window.screen7DraftDocId || 'local')" style="flex: 1; background: linear-gradient(45deg, #4C1D95, #6D28D9);">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', previewModalHTML);
+        }
+
+        function closeScreen7PreviewModal() {
+            const modal = document.getElementById('screen7PreviewModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        // Discard Screen7 draft (Firebase)
+        async function discardScreen7Draft(docId) {
+            if (!confirm('Are you sure you want to discard this post? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                if (currentUser && typeof deleteDoc !== 'undefined') {
+                    await deleteDoc(doc(db, 'users', currentUser.uid, 'drafts', docId));
+                    console.log('🗑️ Screen7 draft deleted:', docId);
+                    closeScreen7DraftModal();
+                    showNotification('✅ Post discarded');
+                }
+            } catch (error) {
+                console.error('Error discarding screen7 draft:', error);
+                showNotification('❌ Failed to discard post');
+            }
+        }
+
+        // Discard Screen7 draft (localStorage)
+        function discardScreen7LocalDraft() {
+            if (!confirm('Are you sure you want to discard this post? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                localStorage.removeItem('screen7PhotoPostDraft');
+                closeScreen7DraftModal();
+                showNotification('✅ Post discarded');
+                console.log('🗑️ Screen7 local draft deleted');
+            } catch (error) {
+                console.error('Error discarding screen7 local draft:', error);
+            }
+        }
+
+        // Add Screen6 and Screen7 checks to DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof onAuthStateChanged !== 'undefined') {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        // Check for v2, screen4, screen6, and screen7 drafts
+                        checkForDraftVideo(user.uid);
+                        checkForScreen4Draft(user.uid);
+                        checkForScreen6PhotoDraft(user.uid);
+                        checkForScreen7PhotoPostDraft(user.uid);
+                    }
+                });
+            }
+        });
+
+        // Fallback notification function
+        function showNotification(message) {
+            if (typeof v2ShowNotification !== 'undefined') {
+                v2ShowNotification(message);
+            } else {
+                alert(message);
+            }
         }
 
         // Camera initialization removed - only initializes when recording screen is opened
