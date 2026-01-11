@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POSE</title>
+    <link rel="stylesheet" href="posecover.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .posecover-body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b3d 100%);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .posecover-splash-container {
+            position: relative;
+            text-align: center;
+        }
+
+        .posecover-app-name {
+            font-size: 60px;
+            font-weight: bold;
+            letter-spacing: 12px;
+            background: linear-gradient(
+                90deg,
+                #8b5cf6 0%,
+                #d946ef 20%,
+                #ef4444 40%,
+                #f97316 60%,
+                #8b4513 80%,
+                #8b5cf6 100%
+            );
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: posecover-flowColors 3s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+            margin: 0;
+            padding: 0;
+        }
+
+        .posecover-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+            animation: posecover-pulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .posecover-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .posecover-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            opacity: 0;
+            animation: posecover-float 6s ease-in-out infinite;
+        }
+
+        .posecover-particle:nth-child(1) { left: 10%; animation-delay: 0s; background: #8b5cf6; }
+        .posecover-particle:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #d946ef; }
+        .posecover-particle:nth-child(3) { left: 30%; animation-delay: 1s; background: #ef4444; }
+        .posecover-particle:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #f97316; }
+        .posecover-particle:nth-child(5) { left: 50%; animation-delay: 2s; background: #8b4513; }
+        .posecover-particle:nth-child(6) { left: 60%; animation-delay: 2.5s; background: #8b5cf6; }
+        .posecover-particle:nth-child(7) { left: 70%; animation-delay: 3s; background: #d946ef; }
+        .posecover-particle:nth-child(8) { left: 80%; animation-delay: 3.5s; background: #ef4444; }
+        .posecover-particle:nth-child(9) { left: 90%; animation-delay: 4s; background: #f97316; }
+
+        @keyframes posecover-flowColors {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes posecover-pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes posecover-float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .posecover-fade-out {
+            animation: posecover-fadeOut 1s ease-out forwards;
+        }
+
+        @keyframes posecover-fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="posecover-body">
+    <div class="posecover-particles">
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+        <div class="posecover-particle"></div>
+    </div>
+    
+    <div class="posecover-splash-container" id="posecover-splash">
+        <div class="posecover-glow"></div>
+        <h1 class="posecover-app-name">POSE</h1>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById('posecover-splash').classList.add('posecover-fade-out');
+            setTimeout(() => {
+                window.location.href = 'poseappdash.html';
+            }, 1000);
+        }, 6000);
+    </script>
+</body>
+</html>
