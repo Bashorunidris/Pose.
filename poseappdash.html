@@ -11816,7 +11816,7 @@
             <span class="tab">tweet</span>
             <span class="tab">Pose</span>
         </div>
-        <div class="search-icon">
+        <div class="search-icon" id="searchIconBtn" style="cursor: pointer;" onclick="openSearchInterface();">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="black">
                 <path
                     d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
@@ -34406,13 +34406,1517 @@ panel.classList.remove('open');
         };
 
         window.clearTestVideo = function() {
-            localStorage.removeItem('unfinishedVideoBlobData');
-            localStorage.removeItem('unfinishedVideoSaved');
-            console.log('🗑️ Cleared test video from localStorage');
+             localStorage.removeItem('unfinishedVideoBlobData');
+             localStorage.removeItem('unfinishedVideoSaved');
+             console.log('🗑️ Cleared test video from localStorage');
+             };
+
+        // Open Notifications
+        function openNotifications() {
+            const overlay = document.getElementById('notificationsOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Close Notifications
+        function closeNotifications() {
+            const overlay = document.getElementById('notificationsOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // ====== SEARCH INTERFACE FUNCTIONS ======
+        let searchState = {
+            activeTab: 'trends',
+            searchQuery: '',
+            selectedDateRange: 'today',
+            autoScrollInterval: null,
+            isFilterVisible: true,
+            cachedData: {}
         };
 
-    </script>
+        async function openSearchInterface() {
+            const overlay = document.getElementById('searchInterfaceOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                await loadTrendingTab();
+            }
+        }
 
-</body>
+        function closeSearchInterface() {
+            const overlay = document.getElementById('searchInterfaceOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            if (searchState.autoScrollInterval) {
+                clearInterval(searchState.autoScrollInterval);
+            }
+        }
+
+        async function updateSearchTab(tabName) {
+            searchState.activeTab = tabName;
+            
+            // Update tab button styling
+            document.querySelectorAll('.search-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (searchState.autoScrollInterval) {
+                clearInterval(searchState.autoScrollInterval);
+            }
+
+            // Load appropriate tab
+            if (tabName === 'trends') {
+                if (searchState.searchQuery) {
+                    await loadTrendsTab();
+                } else {
+                    await loadTrendingTab();
+                }
+            } else if (tabName === 'top') {
+                await loadTopTab();
+            } else if (tabName === 'users') {
+                await loadUsersTab();
+            } else if (tabName === 'videos') {
+                await loadVideosTab();
+            } else if (tabName === 'photos') {
+                await loadPhotosTab();
+            } else if (tabName === 'sounds') {
+                await loadSoundsTab();
+            } else if (tabName === 'hashtags') {
+                await loadHashtagsTab();
+            }
+        }
+
+        async function updateSearchQuery(query) {
+            searchState.searchQuery = query;
+            const clearBtn = document.getElementById('searchClearBtn');
+            if (clearBtn) {
+                clearBtn.style.display = query ? 'block' : 'none';
+            }
+            await renderSearchContent();
+            if (searchState.activeTab === 'trends') {
+                startAutoScroll();
+            }
+        }
+
+        function clearSearchQuery() {
+            searchState.searchQuery = '';
+            const searchInput = document.getElementById('searchInterfaceInput');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            renderSearchContent();
+        }
+
+        async function updateDateRange(range) {
+            searchState.selectedDateRange = range;
+            await renderSearchContent();
+        }
+
+        async function toggleFilters() {
+            searchState.isFilterVisible = !searchState.isFilterVisible;
+            await renderSearchContent();
+        }
+
+        async function selectTrendingItem(tag) {
+            searchState.searchQuery = tag;
+            const searchInput = document.getElementById('searchInterfaceInput');
+            if (searchInput) {
+                searchInput.value = tag;
+                searchInput.dispatchEvent(new Event('input'));
+            }
+            await renderSearchContent();
+        }
+
+        async function renderSearchContent() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            if (!contentArea) return;
+
+            contentArea.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">Loading...</p>';
+
+            try {
+                if (!searchState.searchQuery) {
+                    await loadTrendingTab();
+                } else if (searchState.activeTab === 'trends') {
+                    await loadTrendsTab();
+                } else if (searchState.activeTab === 'top') {
+                    await loadTopTab();
+                } else if (searchState.activeTab === 'users') {
+                    await loadUsersTab();
+                } else if (searchState.activeTab === 'videos') {
+                    await loadVideosTab();
+                } else if (searchState.activeTab === 'photos') {
+                    await loadPhotosTab();
+                } else if (searchState.activeTab === 'sounds') {
+                    await loadSoundsTab();
+                } else if (searchState.activeTab === 'hashtags') {
+                    await loadHashtagsTab();
+                }
+            } catch (error) {
+                console.error('Error loading content:', error);
+                contentArea.innerHTML = '<p style="color: #ef4444; text-align: center; padding: 40px;">Error loading content</p>';
+            }
+        }
+
+        function renderTrendingSection(data) {
+            const trends = data.trending || [];
+            let html = '<div class="search-trending-section">';
+            html += '<h3 class="search-section-header">🔥 Trending Now</h3>';
+            html += '<div class="search-trending-list">';
+            
+            if (trends.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px;">No trending content yet</p>';
+            } else {
+                trends.forEach(item => {
+                    const icon = item.type === 'star' ? '*' : '#';
+                    const color = item.type === 'star' ? '#8b5cf6' : '#999';
+                    html += `<div class="search-trending-item" onclick="selectTrendingItem('${item.tag}')">
+                        <span class="search-trending-icon" style="color: ${color}">${icon}</span>
+                        <div>
+                            <div class="search-trending-name">${item.tag}</div>
+                            <div class="search-trending-count">${item.posts} posts</div>
+                        </div>
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderTrendsSection(data) {
+            const dateRanges = ['today', 'week', 'month', 'year'];
+            let html = '<div class="search-trends-section">';
+            
+            html += '<div class="search-filter-bar">';
+            html += '<button class="search-filter-toggle" onclick="toggleFilters()">📅 Filters</button>';
+            
+            if (searchState.isFilterVisible) {
+                html += '<div class="search-filter-options">';
+                dateRanges.forEach(range => {
+                    const label = range.charAt(0).toUpperCase() + range.slice(1);
+                    const active = searchState.selectedDateRange === range ? 'active' : '';
+                    html += `<button class="search-filter-btn ${active}" onclick="updateDateRange('${range}')">${label}</button>`;
+                });
+                html += '</div>';
+            }
+            html += '</div>';
+
+            const trends = data.trendingByDate[searchState.selectedDateRange] || [];
+            html += '<div class="search-trends-cards">';
+            
+            if (trends.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px;">No trending content for this period</p>';
+            } else {
+                trends.forEach(trend => {
+                    const icon = trend.type === 'star' ? '*' : '#';
+                    const iconColor = trend.type === 'star' ? '#8b5cf6' : '#999';
+                    const arrowColor = trend.change === 'up' ? '#10b981' : '#ef4444';
+                    html += `<div class="search-trend-card" onclick="selectTrendingItem('${trend.tag}')">
+                        <div class="search-trend-badge">${trend.rank}</div>
+                        <div class="search-trend-icon" style="color: ${iconColor}">${icon}</div>
+                        <div class="search-trend-info">
+                            <div class="search-trend-name">${trend.tag}</div>
+                            <div class="search-trend-posts">${trend.posts} posts</div>
+                        </div>
+                        <div class="search-trend-change" style="background: ${arrowColor}">
+                            ${trend.change === 'up' ? '↑' : '↓'} ${trend.changePercent}
+                        </div>
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderUsersSection(data) {
+            const users = data.users || [];
+            let html = '<div class="search-section"><h3 class="search-section-header">👥 Users</h3><div class="search-users-list">';
+            
+            if (users.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px;">No users found</p>';
+            } else {
+                users.forEach(user => {
+                    html += `<div class="search-user-card">
+                        <div class="search-user-avatar">${user.avatar}</div>
+                        <div class="search-user-info">
+                            <div class="search-user-name">${user.name} ${user.verified ? '✓' : ''}</div>
+                            <div class="search-user-username">@${user.username}</div>
+                            <div class="search-user-bio">${user.followers} followers • ${user.bio}</div>
+                        </div>
+                        <button class="search-follow-btn">Follow</button>
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderVideosSection(data) {
+            const videos = data.videos || [];
+            let html = '<div class="search-section"><h3 class="search-section-header">🎬 Videos</h3><div class="search-grid-2">';
+            
+            if (videos.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1/-1;">No videos found</p>';
+            } else {
+                videos.forEach(video => {
+                    html += `<div class="search-video-card">
+                        <div class="search-video-thumbnail" style="background-image: url('${video.thumbnail}'); background-size: cover;">
+                            <div class="search-creator-badge">${video.creator}</div>
+                            <div class="search-overlay-info">
+                                <div class="search-username">${video.username}</div>
+                                <div class="search-title">${video.title}</div>
+                                <div class="search-stats">❤️ ${video.likes} | 💬 ${video.comments}</div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderPhotosSection(data) {
+            const photos = data.photos || [];
+            let html = '<div class="search-section"><h3 class="search-section-header">📸 Photos</h3><div class="search-grid-2">';
+            
+            if (photos.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1/-1;">No photos found</p>';
+            } else {
+                photos.forEach(photo => {
+                    html += `<div class="search-photo-card">
+                        <div class="search-photo-image" style="background-image: url('${photo.image}'); background-size: cover;">
+                            <div class="search-creator-badge">${photo.creator}</div>
+                            <div class="search-overlay-info">
+                                <div class="search-username">${photo.username}</div>
+                                <div class="search-title">${photo.caption}</div>
+                                <div class="search-stats">❤️ ${photo.likes}</div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderSoundsSection(data) {
+            const sounds = data.sounds || [];
+            let html = '<div class="search-section"><h3 class="search-section-header">🎵 Sounds</h3><div class="search-sounds-list">';
+            
+            if (sounds.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px;">No sounds found</p>';
+            } else {
+                sounds.forEach(sound => {
+                    html += `<div class="search-sound-item">
+                        <div class="search-sound-thumbnail" style="background-image: url('${sound.thumbnail}'); background-size: cover;">
+                            <div class="search-play-icon">▶</div>
+                        </div>
+                        <div class="search-sound-info">
+                            <div class="search-sound-title">${sound.title}</div>
+                            <div class="search-sound-artist">${sound.artist}</div>
+                            <div class="search-sound-meta">♪ Used in ${sound.usedIn} videos • ${sound.duration}</div>
+                        </div>
+                        <div class="search-sound-actions">
+                            <button class="search-use-btn">Use Sound</button>
+                        </div>
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderHashtagsSection(data) {
+            const hashtags = data.hashtags || [];
+            let html = '<div class="search-section"><h3 class="search-section-header">#️⃣ Hashtags</h3><div class="search-grid-4">';
+            
+            if (hashtags.length === 0) {
+                html += '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1/-1;">No hashtags found</p>';
+            } else {
+                hashtags.forEach(tag => {
+                    const icon = tag.icon === '*' ? '*' : '#';
+                    const bgGradient = tag.featured ? 'linear-gradient(135deg, #8b5cf6, #a78bfa)' : '#1a1a1a';
+                    const color = tag.featured ? '#fff' : '#8b5cf6';
+                    html += `<div class="search-hashtag-card">
+                        <div class="search-hashtag-icon" style="background: ${bgGradient}; color: ${color}">${icon}</div>
+                        <div class="search-hashtag-name">${tag.tag}</div>
+                        <div class="search-hashtag-posts">${tag.posts} posts</div>
+                        ${tag.featured ? '<div class="search-featured-badge">⭐ Featured</div>' : ''}
+                    </div>`;
+                });
+            }
+            
+            html += '</div></div>';
+            return html;
+        }
+
+        function startAutoScroll() {
+            if (searchState.activeTab !== 'trends' || searchState.autoScrollInterval) return;
+
+            const container = document.querySelector('.search-trends-cards');
+            if (!container) return;
+
+            let scrollLeft = 0;
+            let direction = 1;
+            let paused = false;
+
+            const scroll = () => {
+                if (paused) return;
+
+                scrollLeft += direction;
+                container.scrollLeft = scrollLeft;
+
+                if (scrollLeft >= container.scrollWidth - container.clientWidth) {
+                    direction = -1;
+                    paused = true;
+                    setTimeout(() => { paused = false; }, 2000);
+                } else if (scrollLeft <= 0) {
+                    direction = 1;
+                    paused = true;
+                    setTimeout(() => { paused = false; }, 2000);
+                }
+            };
+
+            container.addEventListener('mouseenter', () => {
+                if (searchState.autoScrollInterval) {
+                    clearInterval(searchState.autoScrollInterval);
+                    searchState.autoScrollInterval = null;
+                }
+            });
+
+            container.addEventListener('mouseleave', () => {
+                searchState.autoScrollInterval = setInterval(scroll, 30);
+            });
+
+            searchState.autoScrollInterval = setInterval(scroll, 30);
+        }
+
+        async function loadTrendingTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const allPosts = await queryAllPosts();
+            const data = buildTrendingData(allPosts);
+            contentArea.innerHTML = renderTrendingSection(data);
+        }
+
+        async function loadTrendsTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const allPosts = await queryAllPosts();
+            const data = buildTrendingData(allPosts);
+            contentArea.innerHTML = renderTrendsSection(data);
+            startAutoScroll();
+        }
+
+        async function loadTopTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const allPosts = await queryAllPosts();
+            const users = await queryUsers();
+            let html = '';
+            html += renderUsersSection({ users });
+            html += renderVideosSection({ videos: allPosts.filter(p => p.type === 'video') });
+            html += renderPhotosSection({ photos: allPosts.filter(p => p.type === 'photo') });
+            html += renderHashtagsSection(buildHashtagData(allPosts));
+            contentArea.innerHTML = html;
+        }
+
+        async function loadUsersTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const users = await queryUsers();
+            contentArea.innerHTML = renderUsersSection({ users });
+        }
+
+        async function loadVideosTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const videos = await queryPosts('video');
+            contentArea.innerHTML = renderVideosSection({ videos });
+        }
+
+        async function loadPhotosTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const photos = await queryPosts('photo');
+            contentArea.innerHTML = renderPhotosSection({ photos });
+        }
+
+        async function loadSoundsTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            contentArea.innerHTML = renderSoundsSection({ sounds: [] });
+        }
+
+        async function loadHashtagsTab() {
+            const contentArea = document.getElementById('searchInterfaceContent');
+            const allPosts = await queryAllPosts();
+            const data = buildHashtagData(allPosts);
+            contentArea.innerHTML = renderHashtagsSection(data);
+        }
+
+        async function queryAllPosts() {
+            try {
+                const postsSnap = await db.collection('posts').get();
+                const posts = [];
+                postsSnap.forEach(doc => {
+                    posts.push({ id: doc.id, ...doc.data() });
+                });
+                return posts;
+            } catch (error) {
+                console.error('Error querying posts:', error);
+                return [];
+            }
+        }
+
+        async function queryPosts(type) {
+            try {
+                const postsSnap = await db.collection('posts').where('type', '==', type).get();
+                const posts = [];
+                postsSnap.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    if (type === 'video') {
+                        posts.push({
+                            id: post.id,
+                            username: post.username || post.userName || 'Unknown',
+                            title: post.title || post.caption || 'Untitled',
+                            thumbnail: post.thumbnailUrl || post.videoUrl || 'https://via.placeholder.com/400x700',
+                            likes: formatCount(post.likes || 0),
+                            comments: formatCount(post.comments || 0),
+                            creator: '👤'
+                        });
+                    } else if (type === 'photo') {
+                        posts.push({
+                            id: post.id,
+                            username: post.username || post.userName || 'Unknown',
+                            caption: post.caption || post.title || 'Photo',
+                            image: post.thumbnailUrl || post.photoUrl || 'https://via.placeholder.com/600x600',
+                            likes: formatCount(post.likes || 0),
+                            creator: '👤'
+                        });
+                    }
+                });
+                return posts;
+            } catch (error) {
+                console.error('Error querying posts:', error);
+                return [];
+            }
+        }
+
+        async function queryUsers() {
+            try {
+                const usersSnap = await db.collection('users').limit(50).get();
+                const users = [];
+                usersSnap.forEach(doc => {
+                    const user = doc.data();
+                    users.push({
+                        username: user.username || '',
+                        name: user.name || '',
+                        avatar: '👤',
+                        verified: user.verified || false,
+                        followers: user.followersCount || '0',
+                        bio: user.bio || ''
+                    });
+                });
+                return users;
+            } catch (error) {
+                console.error('Error querying users:', error);
+                return [];
+            }
+        }
+
+        function buildTrendingData(posts) {
+            const hashtagMap = {};
+            const engagementMap = {};
+
+            posts.forEach(post => {
+                const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                hashtags.forEach(tag => {
+                    if (tag && tag.length > 0) {
+                        hashtagMap[tag] = (hashtagMap[tag] || 0) + 1;
+                        if (!engagementMap[tag]) {
+                            engagementMap[tag] = { count: 0, engagement: 0, createdAt: post.createdAt };
+                        }
+                        engagementMap[tag].count++;
+                        engagementMap[tag].engagement += (post.likes || 0) + (post.comments || 0) + (post.shares || 0);
+                    }
+                });
+            });
+
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+            const yearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+
+            const trendingByDate = { today: [], week: [], month: [], year: [] };
+            ['today', 'week', 'month', 'year'].forEach((period, idx) => {
+                const dateThreshold = [today, weekAgo, monthAgo, yearAgo][idx];
+                
+                const periodTrending = Object.entries(engagementMap)
+                    .filter(([_, stats]) => {
+                        const postDate = stats.createdAt?.toDate ? stats.createdAt.toDate() : new Date(stats.createdAt);
+                        return postDate >= dateThreshold;
+                    })
+                    .sort((a, b) => b[1].engagement - a[1].engagement)
+                    .slice(0, 3)
+                    .map(([tag, stats], rank) => ({
+                        rank: rank + 1,
+                        tag: tag,
+                        type: 'hash',
+                        posts: formatCount(stats.count),
+                        change: 'up',
+                        changePercent: `+${Math.floor(Math.random() * 30 + 5)}%`
+                    }));
+
+                trendingByDate[period] = periodTrending;
+            });
+
+            const trending = Object.entries(hashtagMap)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8)
+                .map(([tag, count]) => ({
+                    tag: tag,
+                    posts: formatCount(count),
+                    type: 'hash'
+                }));
+
+            return { trending, trendingByDate };
+        }
+
+        function buildHashtagData(posts) {
+            const hashtagMap = {};
+
+            posts.forEach(post => {
+                const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                hashtags.forEach(tag => {
+                    if (tag && tag.length > 0) {
+                        hashtagMap[tag] = (hashtagMap[tag] || 0) + 1;
+                    }
+                });
+            });
+
+            const hashtags = Object.entries(hashtagMap)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 6)
+                .map(([tag, count]) => ({
+                    tag: `#${tag}`,
+                    posts: formatCount(count),
+                    featured: count > 100,
+                    icon: '#'
+                }));
+
+            return { hashtags };
+        }
+
+        async function getSearchData() {
+            try {
+                const data = {
+                    trending: [],
+                    trendingByDate: { today: [], week: [], month: [], year: [] },
+                    users: [],
+                    videos: [],
+                    photos: [],
+                    sounds: [],
+                    hashtags: []
+                };
+
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+                const yearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+
+                // 1. Get all posts for analysis
+                const postsSnap = await db.collection('posts').get();
+                const allPosts = [];
+                const hashtagMap = {};
+
+                postsSnap.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    allPosts.push(post);
+
+                    // Extract and count hashtags
+                    const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                    hashtags.forEach(tag => {
+                        if (tag && tag.length > 0) {
+                            hashtagMap[tag] = (hashtagMap[tag] || 0) + 1;
+                        }
+                    });
+                });
+
+                // 2. Get users
+                const usersSnap = await db.collection('users').limit(50).get();
+                usersSnap.forEach(doc => {
+                    const user = doc.data();
+                    data.users.push({
+                        username: user.username || '',
+                        name: user.name || '',
+                        avatar: '👤',
+                        verified: user.verified || false,
+                        followers: user.followersCount || '0',
+                        bio: user.bio || ''
+                    });
+                });
+
+                // 3. Filter videos and photos
+                allPosts.forEach(post => {
+                    if (post.type === 'video') {
+                        data.videos.push({
+                            id: post.id,
+                            username: post.username || post.userName || 'Unknown',
+                            title: post.title || post.caption || 'Untitled',
+                            thumbnail: post.thumbnailUrl || post.videoUrl || 'https://via.placeholder.com/400x700',
+                            likes: formatCount(post.likes || 0),
+                            comments: formatCount(post.comments || 0),
+                            creator: '👤'
+                        });
+                    }
+                    if (post.type === 'photo') {
+                        data.photos.push({
+                            id: post.id,
+                            username: post.username || post.userName || 'Unknown',
+                            caption: post.caption || post.title || 'Photo',
+                            image: post.thumbnailUrl || post.photoUrl || 'https://via.placeholder.com/600x600',
+                            likes: formatCount(post.likes || 0),
+                            creator: '👤'
+                        });
+                    }
+                });
+
+                // 4. Build trending by engagement
+                const engagementMap = {};
+                allPosts.forEach(post => {
+                    const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                    hashtags.forEach(tag => {
+                        if (tag && tag.length > 0) {
+                            if (!engagementMap[tag]) {
+                                engagementMap[tag] = { count: 0, engagement: 0, createdAt: post.createdAt };
+                            }
+                            engagementMap[tag].count++;
+                            engagementMap[tag].engagement += (post.likes || 0) + (post.comments || 0) + (post.shares || 0);
+                        }
+                    });
+                });
+
+                // 5. Generate trending by date range
+                ['today', 'week', 'month', 'year'].forEach((period, idx) => {
+                    const dateThreshold = [today, weekAgo, monthAgo, yearAgo][idx];
+                    
+                    const periodTrending = Object.entries(engagementMap)
+                        .filter(([_, stats]) => {
+                            const postDate = stats.createdAt?.toDate ? stats.createdAt.toDate() : new Date(stats.createdAt);
+                            return postDate >= dateThreshold;
+                        })
+                        .sort((a, b) => b[1].engagement - a[1].engagement)
+                        .slice(0, 3)
+                        .map(([tag, stats], rank) => ({
+                            rank: rank + 1,
+                            tag: tag,
+                            type: 'hash',
+                            posts: formatCount(stats.count),
+                            change: 'up',
+                            changePercent: `+${Math.floor(Math.random() * 30 + 5)}%`
+                        }));
+
+                    data.trendingByDate[period] = periodTrending;
+                });
+
+                // 6. Build general trending
+                data.trending = Object.entries(hashtagMap)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 8)
+                    .map(([tag, count]) => ({
+                        tag: tag,
+                        posts: formatCount(count),
+                        type: 'hash'
+                    }));
+
+                // 7. Build hashtags grid
+                data.hashtags = Object.entries(hashtagMap)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 6)
+                    .map(([tag, count]) => ({
+                        tag: `#${tag}`,
+                        posts: formatCount(count),
+                        featured: count > 100,
+                        icon: '#'
+                    }));
+
+                return data;
+            } catch (error) {
+                console.error('Error fetching search data:', error);
+                return {
+                    trending: [],
+                    trendingByDate: { today: [], week: [], month: [], year: [] },
+                    users: [],
+                    videos: [],
+                    photos: [],
+                    sounds: [],
+                    hashtags: []
+                };
+            }
+        }
+
+        function formatCount(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+             </script>
+
+        <!-- SEARCH INTERFACE MODAL -->
+        <div class="search-interface-overlay" id="searchInterfaceOverlay">
+        <div class="search-interface-container">
+           <!-- Header -->
+           <div class="search-interface-header">
+               <button class="search-back-btn" onclick="closeSearchInterface()">←</button>
+               <div class="search-interface-input-wrapper">
+                   <input type="text" class="search-interface-input" id="searchInterfaceInput" 
+                       placeholder="Search videos, photos, *startags..."
+                       oninput="updateSearchQuery(this.value)">
+                   <span class="search-clear-btn" id="searchClearBtn" onclick="clearSearchQuery()" style="display: none;">✕</span>
+               </div>
+           </div>
+
+           <!-- Tabs -->
+           <div class="search-interface-tabs">
+               <button class="search-tab active" onclick="updateSearchTab('trends')">Trends</button>
+               <button class="search-tab" onclick="updateSearchTab('top')">Top</button>
+               <button class="search-tab" onclick="updateSearchTab('users')">Users</button>
+               <button class="search-tab" onclick="updateSearchTab('videos')">Videos</button>
+               <button class="search-tab" onclick="updateSearchTab('photos')">Photos</button>
+               <button class="search-tab" onclick="updateSearchTab('sounds')">Sounds</button>
+               <button class="search-tab" onclick="updateSearchTab('hashtags')">Hashtags</button>
+           </div>
+
+           <!-- Content -->
+           <div class="search-interface-content" id="searchInterfaceContent">
+               <!-- Content will be rendered here -->
+           </div>
+        </div>
+        </div>
+
+        <!-- SEARCH INTERFACE CSS -->
+        <style>
+        /* Search Interface Overlay */
+        .search-interface-overlay {
+           display: none;
+           position: fixed;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background: #000;
+           z-index: 3000;
+           overflow-y: auto;
+        }
+
+        .search-interface-overlay.active {
+           display: block;
+        }
+
+        .search-interface-container {
+           max-width: 680px;
+           margin: 0 auto;
+           min-height: 100vh;
+           display: flex;
+           flex-direction: column;
+        }
+
+        /* Header */
+        .search-interface-header {
+           position: sticky;
+           top: 0;
+           background: #000;
+           border-bottom: 1px solid #1a1a1a;
+           padding: 12px;
+           display: flex;
+           gap: 12px;
+           align-items: center;
+           z-index: 10;
+        }
+
+        .search-back-btn {
+           background: none;
+           border: none;
+           color: #8b5cf6;
+           font-size: 24px;
+           cursor: pointer;
+           width: 40px;
+           height: 40px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           transition: 0.2s;
+        }
+
+        .search-back-btn:hover {
+           background: #1a1a1a;
+           border-radius: 50%;
+        }
+
+        .search-interface-input-wrapper {
+           flex: 1;
+           position: relative;
+        }
+
+        .search-interface-input {
+           width: 100%;
+           padding: 10px 36px 10px 12px;
+           background: #1a1a1a;
+           border: 1px solid #333;
+           border-radius: 20px;
+           color: #fff;
+           font-size: 14px;
+           outline: none;
+           transition: 0.2s;
+        }
+
+        .search-interface-input:focus {
+           border-color: #8b5cf6;
+           box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+
+        .search-clear-btn {
+           position: absolute;
+           right: 12px;
+           top: 50%;
+           transform: translateY(-50%);
+           background: none;
+           border: none;
+           color: #666;
+           cursor: pointer;
+           font-size: 18px;
+           transition: 0.2s;
+        }
+
+        .search-clear-btn:hover {
+           color: #fff;
+        }
+
+        /* Tab Navigation */
+        .search-interface-tabs {
+           display: flex;
+           gap: 16px;
+           padding: 12px;
+           border-bottom: 1px solid #1a1a1a;
+           overflow-x: auto;
+           scrollbar-width: none;
+        }
+
+        .search-interface-tabs::-webkit-scrollbar {
+           display: none;
+        }
+
+        .search-tab {
+           background: none;
+           border: none;
+           color: #666;
+           font-size: 14px;
+           font-weight: 600;
+           cursor: pointer;
+           padding: 8px 0;
+           border-bottom: 2px solid transparent;
+           transition: 0.2s;
+           white-space: nowrap;
+        }
+
+        .search-tab:hover {
+           color: #fff;
+        }
+
+        .search-tab.active {
+           color: #fff;
+           border-bottom-color: #8b5cf6;
+        }
+
+        /* Content Area */
+        .search-interface-content {
+           flex: 1;
+           padding: 16px 12px 60px;
+           overflow-y: auto;
+        }
+
+        /* Trending Section */
+        .search-trending-section,
+        .search-section {
+           margin-bottom: 24px;
+        }
+
+        .search-section-header {
+           font-size: 14px;
+           font-weight: 700;
+           color: #999;
+           text-transform: uppercase;
+           letter-spacing: 0.5px;
+           margin: 0 0 16px 0;
+        }
+
+        .search-trending-list {
+           display: flex;
+           flex-direction: column;
+           gap: 8px;
+        }
+
+        .search-trending-item {
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           padding: 12px;
+           background: #0a0a0a;
+           border-radius: 8px;
+           cursor: pointer;
+           transition: 0.2s;
+           border: 1px solid transparent;
+        }
+
+        .search-trending-item:hover {
+           background: #1a1a1a;
+           border-color: #333;
+        }
+
+        .search-trending-icon {
+           font-size: 20px;
+           font-weight: bold;
+        }
+
+        .search-trending-name {
+           color: #fff;
+           font-weight: 600;
+           font-size: 14px;
+        }
+
+        .search-trending-count {
+           color: #666;
+           font-size: 12px;
+        }
+
+        /* Trends Section */
+        .search-filter-bar {
+           margin-bottom: 16px;
+        }
+
+        .search-filter-toggle {
+           background: #8b5cf6;
+           border: none;
+           color: #fff;
+           padding: 8px 16px;
+           border-radius: 20px;
+           cursor: pointer;
+           font-size: 12px;
+           font-weight: 600;
+           transition: 0.2s;
+        }
+
+        .search-filter-toggle:hover {
+           background: #a78bfa;
+        }
+
+        .search-filter-options {
+           display: flex;
+           gap: 8px;
+           margin-top: 12px;
+           flex-wrap: wrap;
+        }
+
+        .search-filter-btn {
+           background: #0a0a0a;
+           border: 1px solid #333;
+           color: #666;
+           padding: 8px 12px;
+           border-radius: 6px;
+           cursor: pointer;
+           font-size: 12px;
+           transition: 0.2s;
+        }
+
+        .search-filter-btn:hover {
+           border-color: #666;
+           color: #fff;
+        }
+
+        .search-filter-btn.active {
+           background: #8b5cf6;
+           border-color: #8b5cf6;
+           color: #fff;
+        }
+
+        .search-trends-cards {
+           display: flex;
+           gap: 12px;
+           overflow-x: auto;
+           scrollbar-width: none;
+           padding-bottom: 8px;
+        }
+
+        .search-trends-cards::-webkit-scrollbar {
+           display: none;
+        }
+
+        .search-trend-card {
+           min-width: 280px;
+           padding: 12px;
+           background: #0a0a0a;
+           border: 1px solid transparent;
+           border-radius: 12px;
+           cursor: pointer;
+           transition: 0.2s;
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           position: relative;
+        }
+
+        .search-trend-card:hover {
+           background: #1a1a1a;
+           border-color: #333;
+        }
+
+        .search-trend-badge {
+           width: 32px;
+           height: 32px;
+           background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-weight: bold;
+           color: #fff;
+           font-size: 12px;
+           flex-shrink: 0;
+        }
+
+        .search-trend-icon {
+           font-size: 18px;
+           font-weight: bold;
+           flex-shrink: 0;
+        }
+
+        .search-trend-info {
+           flex: 1;
+           min-width: 0;
+        }
+
+        .search-trend-name {
+           color: #fff;
+           font-weight: 600;
+           font-size: 15px;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
+        }
+
+        .search-trend-posts {
+           color: #666;
+           font-size: 12px;
+        }
+
+        .search-trend-change {
+           padding: 4px 8px;
+           border-radius: 4px;
+           color: #fff;
+           font-size: 12px;
+           font-weight: 600;
+           flex-shrink: 0;
+        }
+
+        /* Users */
+        .search-users-list {
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+        }
+
+        .search-user-card {
+           display: flex;
+           gap: 12px;
+           padding: 12px;
+           background: #0a0a0a;
+           border-radius: 8px;
+           border: 1px solid transparent;
+           transition: 0.2s;
+           align-items: center;
+        }
+
+        .search-user-card:hover {
+           background: #1a1a1a;
+           border-color: #333;
+        }
+
+        .search-user-avatar {
+           width: 56px;
+           height: 56px;
+           background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 24px;
+           flex-shrink: 0;
+        }
+
+        .search-user-info {
+           flex: 1;
+           min-width: 0;
+        }
+
+        .search-user-name {
+           color: #fff;
+           font-weight: 600;
+           font-size: 14px;
+        }
+
+        .search-user-username {
+           color: #666;
+           font-size: 12px;
+        }
+
+        .search-user-bio {
+           color: #888;
+           font-size: 12px;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
+        }
+
+        .search-follow-btn {
+           background: transparent;
+           border: 1px solid #8b5cf6;
+           color: #8b5cf6;
+           padding: 6px 16px;
+           border-radius: 20px;
+           cursor: pointer;
+           font-size: 12px;
+           font-weight: 600;
+           transition: 0.2s;
+           flex-shrink: 0;
+        }
+
+        .search-follow-btn:hover {
+           background: #8b5cf6;
+           color: #fff;
+        }
+
+        /* Grid Layouts */
+        .search-grid-2 {
+           display: grid;
+           grid-template-columns: repeat(2, 1fr);
+           gap: 2px;
+        }
+
+        .search-grid-4 {
+           display: grid;
+           grid-template-columns: repeat(2, 1fr);
+           gap: 12px;
+        }
+
+        .search-video-card,
+        .search-photo-card {
+           position: relative;
+           border-radius: 8px;
+           overflow: hidden;
+           cursor: pointer;
+           background: #0a0a0a;
+        }
+
+        .search-video-card {
+           aspect-ratio: 9 / 16;
+        }
+
+        .search-photo-card {
+           aspect-ratio: 1 / 1;
+        }
+
+        .search-video-thumbnail,
+        .search-photo-image {
+           width: 100%;
+           height: 100%;
+           position: relative;
+           display: flex;
+           flex-direction: column;
+           justify-content: space-between;
+        }
+
+        .search-creator-badge {
+           width: 32px;
+           height: 32px;
+           background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+           border: 2px solid #8b5cf6;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 16px;
+           position: absolute;
+           top: 8px;
+           right: 8px;
+           transition: 0.2s;
+        }
+
+        .search-video-card:hover .search-creator-badge,
+        .search-photo-card:hover .search-creator-badge {
+           transform: scale(1.1);
+        }
+
+        .search-overlay-info {
+           background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+           padding: 12px;
+           position: absolute;
+           bottom: 0;
+           left: 0;
+           right: 0;
+        }
+
+        .search-username {
+           font-size: 10px;
+           color: #8b5cf6;
+           font-weight: 600;
+        }
+
+        .search-title {
+           font-size: 11px;
+           color: #fff;
+           font-weight: 600;
+           margin: 4px 0;
+           display: -webkit-box;
+           -webkit-line-clamp: 2;
+           -webkit-box-orient: vertical;
+           overflow: hidden;
+        }
+
+        .search-stats {
+           font-size: 10px;
+           color: #999;
+           margin-top: 4px;
+        }
+
+        /* Sounds */
+        .search-sounds-list {
+           display: flex;
+           flex-direction: column;
+           gap: 0;
+        }
+
+        .search-sound-item {
+           display: flex;
+           gap: 12px;
+           padding: 12px;
+           border-bottom: 1px solid #1a1a1a;
+           align-items: center;
+           transition: 0.2s;
+        }
+
+        .search-sound-item:hover {
+           background: #0a0a0a;
+        }
+
+        .search-sound-thumbnail {
+           width: 56px;
+           height: 56px;
+           border-radius: 8px;
+           position: relative;
+           flex-shrink: 0;
+           background-size: cover;
+        }
+
+        .search-play-icon {
+           position: absolute;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           width: 24px;
+           height: 24px;
+           background: #8b5cf6;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: #fff;
+           font-size: 12px;
+           opacity: 0;
+           transition: 0.2s;
+        }
+
+        .search-sound-item:hover .search-play-icon {
+           opacity: 1;
+        }
+
+        .search-sound-info {
+           flex: 1;
+           min-width: 0;
+        }
+
+        .search-sound-title {
+           color: #fff;
+           font-weight: 600;
+           font-size: 14px;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
+        }
+
+        .search-sound-artist {
+           color: #999;
+           font-size: 12px;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
+        }
+
+        .search-sound-meta {
+           color: #666;
+           font-size: 11px;
+           margin-top: 4px;
+        }
+
+        .search-sound-actions {
+           display: flex;
+           gap: 8px;
+           flex-shrink: 0;
+        }
+
+        .search-use-btn {
+           background: #8b5cf6;
+           border: none;
+           color: #fff;
+           padding: 6px 12px;
+           border-radius: 20px;
+           cursor: pointer;
+           font-size: 12px;
+           font-weight: 600;
+           transition: 0.2s;
+        }
+
+        .search-use-btn:hover {
+           background: #a78bfa;
+        }
+
+        /* Hashtags */
+        .search-hashtag-card {
+           padding: 12px;
+           background: #0a0a0a;
+           border-radius: 12px;
+           border: 1px solid transparent;
+           cursor: pointer;
+           transition: 0.2s;
+           text-align: center;
+           position: relative;
+        }
+
+        .search-hashtag-card:hover {
+           background: #1a1a1a;
+           border-color: #333;
+        }
+
+        .search-hashtag-icon {
+           width: 56px;
+           height: 56px;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 28px;
+           margin: 0 auto 8px;
+           font-weight: bold;
+        }
+
+        .search-hashtag-name {
+           color: #fff;
+           font-weight: 700;
+           font-size: 16px;
+           margin-bottom: 4px;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
+        }
+
+        .search-hashtag-posts {
+           color: #666;
+           font-size: 12px;
+        }
+
+        .search-featured-badge {
+           background: #8b5cf6;
+           color: #fff;
+           padding: 4px 8px;
+           border-radius: 4px;
+           font-size: 10px;
+           font-weight: 600;
+           position: absolute;
+           top: 8px;
+           right: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 767px) {
+           .search-interface-header {
+               padding: 8px;
+               gap: 8px;
+           }
+
+           .search-interface-input {
+               padding: 8px 32px 8px 10px;
+               font-size: 13px;
+           }
+
+           .search-interface-tabs {
+               padding: 10px 8px;
+               gap: 12px;
+           }
+
+           .search-interface-content {
+               padding: 12px 8px 60px;
+           }
+
+           .search-trend-card {
+               min-width: 240px;
+           }
+
+           .search-grid-2 {
+               gap: 1px;
+           }
+
+           .search-grid-4 {
+               grid-template-columns: repeat(2, 1fr);
+               gap: 8px;
+           }
+
+           .search-hashtag-card {
+               padding: 10px;
+           }
+
+           .search-hashtag-icon {
+               width: 48px;
+               height: 48px;
+               font-size: 24px;
+           }
+
+           .search-featured-badge {
+               display: none;
+           }
+        }
+
+        @media (min-width: 640px) {
+           .search-grid-4 {
+               grid-template-columns: repeat(3, 1fr);
+           }
+        }
+
+        @media (min-width: 1024px) {
+           .search-grid-4 {
+               grid-template-columns: repeat(4, 1fr);
+           }
+        }
+        </style>
+
+                </body>
 
 </html>
