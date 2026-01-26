@@ -12468,16 +12468,15 @@
         </div>
         <div class="profile-info-section">
             <!-- Story Ring + Profile Pic -->
-            <div class="story-ring-wrapper" onclick="openStoryViewer()"
+            <div class="story-ring-wrapper" onclick="event.stopPropagation(); openStoryViewer();"
                 style="position: relative; width: 130px; height: 130px; margin: 0 auto 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                 <!-- Rotating Ring -->
                 <div
                     style="position: absolute; width: 130px; height: 130px; border-radius: 50%; border: 4px solid transparent; background: linear-gradient(135deg, #ff0050 0%, #ffd700 50%, #00ff88 100%) padding-box; border-image: linear-gradient(135deg, #ff0050 0%, #ffd700 50%, #00ff88 100%) 1; animation: rotate 3s linear infinite; top: 0; left: 0;">
                 </div>
-                <!-- Profile Pic - Clickable -->
+                <!-- Profile Pic - Not clickable -->
                 <div class="profile-pic-large" id="profilePicLarge"
-                    style="position: relative; z-index: 2; width: 120px; height: 120px; cursor: pointer; margin: 0;"
-                    onclick="openProfileSettings()" title="Click to edit profile">U
+                    style="position: relative; z-index: 2; width: 120px; height: 120px; margin: 0;">U
                 </div>
                 <!-- Badge -->
                 <div class="story-badge"
@@ -13575,15 +13574,13 @@
         </div>
     </div>
 
-    <!-- The rest remains the same (friendTab and poseTab) --><!-- Tab Content Containers -->
-    <div id="busTab" class="tab-content active">
-        <!-- Video Feed (TikTok style) - This is your existing video-feed -->
-        <!-- Scrollable feed -->
+     <div id="forYouTab" class="tab-content active">
+       
+        <!-- Video Feed (TikTok style) - Demo -->
         <div class="video-feed">
             <!-- Post 1 -->
             <div class="video-post">
-                <video src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" autoplay
-                    muted loop></video>
+                <video src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" autoplay muted loop></video>
                 <div class="play-pause-overlay">
                     <svg class="play-icon" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
@@ -13597,8 +13594,7 @@
                         <div>
                             <i>
                                 <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                 </svg>
                             </i>
                             <span>223k</span>
@@ -13606,8 +13602,7 @@
                         <div>
                             <i>
                                 <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
                                 </svg>
                             </i>
                             <span>223k</span>
@@ -13615,41 +13610,15 @@
                         <div>
                             <i>
                                 <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
+                                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
                                 </svg>
                             </i>
                             <span>223k</span>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-                                </svg>
-                            </i>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                </svg>
-                            </i>
-                        </div>
-                        <div class="speaker">
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                                </svg>
-                            </i>
                         </div>
                     </div>
                     <div class="profile-section">
                         <div class="profile-pic">
-                            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><rect width='50' height='50' fill='%23ff6b6b'/><text x='25' y='32' text-anchor='middle' fill='white' font-size='14' font-family='Arial'>CM</text></svg>"
-                                alt="profile">
-                            <div class="infinity-badge">∞</div>
+                            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><rect width='50' height='50' fill='%23ff6b6b'/><text x='25' y='32' text-anchor='middle' fill='white' font-size='14' font-family='Arial'>CM</text></svg>" alt="profile">
                         </div>
                         <div class="profile-info">
                             <div class="name">CRAVING THE MONSTER</div>
@@ -13657,120 +13626,12 @@
                         </div>
                         <button class="follow-btn">FOLLOW</button>
                     </div>
-                    <div class="ad-caption">
-                        <b>Discover the stories behind artists.</b> <span>See more >></span><br>
-                        #Pose #meesu #oml
-                    </div>
-                    <div class="banner-ad">
-                        <script type="text/javascript">
-                            atOptions = {
-                                'key': 'ba4c9c3efefaaf080ddd092b0757ca21',
-                                'format': 'iframe',
-                                'height': 300,
-                                'width': 200,
-                                'params': {}
-                            };
-                        </script>
-                        <script type="text/javascript"
-                            src="https://www.highperformanceformat.com/ba4c9c3efefaaf080ddd092b0757ca21/invoke.js"></script>
-                        <div class="close-btn">×</div>
-                    </div>
-                </div>
-                <script type="text/javascript"
-                    src="https://pl28295311.effectivegatecpm.com/ac/69/d9/ac69d9c0f8fc91fe0e2aa37859720286.js"></script>
-            </div>
-
-            <!-- Post 2 -->
-            <div class="video-post">
-                <video src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-                    autoplay muted loop></video>
-                <div class="play-pause-overlay">
-                    <svg class="play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                    <svg class="pause-icon" viewBox="0 0 24 24" style="display: none;">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                    </svg>
-                </div>
-                <div class="overlay">
-                    <div class="sidebar">
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                </svg>
-                            </i>
-                            <span>89k</span>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                                </svg>
-                            </i>
-                            <span>14k</span>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
-                                </svg>
-                            </i>
-                            <span>5k</span>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-                                </svg>
-                            </i>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                </svg>
-                            </i>
-                        </div>
-                        <div class="speaker">
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                                </svg>
-                            </i>
-                        </div>
-                    </div>
-                    <div class="profile-section">
-                        <div class="profile-pic">
-                            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><rect width='50' height='50' fill='%234ecdc4'/><text x='25' y='32' text-anchor='middle' fill='white' font-size='16' font-family='Arial'>DJ</text></svg>"
-                                alt="profile">
-                            <div class="infinity-badge">∞</div>
-                        </div>
-                        <div class="profile-info">
-                            <div class="name">DJ SMOKEY</div>
-                            <div class="followers">900K followers</div>
-                        </div>
-                        <button class="follow-btn">FOLLOW</button>
-                    </div>
-                    <div class="ad-caption">
-                        <b>Join the hottest party of 2025!</b> <span>Tap now >></span><br>
-                        #Party #Vibes #Live
-                    </div>
-                    <div class="banner-ad">
-                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='130'><rect width='250' height='130' fill='%23667eea'/><text x='125' y='70' text-anchor='middle' fill='white' font-size='18' font-family='Arial'>🎉 Club Night</text></svg>"
-                            alt="ad">
-                        <div class="close-btn">×</div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    
     <div id="friendTab" class="tab-content" style="display: none;">
         <div class="tweet-feed-page">
             <!-- Create Post Section -->
@@ -15502,7 +15363,7 @@
             }
         }
 
-        // Load profile feed videos (optimized - 1 read only)
+        // Load profile feed videos from posevideosposted where Screen4 saves
         async function loadProfileFeed() {
             if (!currentUser) {
                 console.log('❌ No current user, cannot load feed');
@@ -15523,8 +15384,8 @@
                         '<div class="skeleton-item"></div>'.repeat(6) +
                         '</div>';
 
-                    // ONE READ: Get user document with videos array
-                    console.log('📖 Reading user doc to get videos...');
+                    // Get user document with videos array (same way as story tab)
+                    console.log('📖 Loading feed videos from user doc...');
                     const userDoc = await db.collection('users').doc(currentUser.uid).get();
 
                     if (!userDoc.exists) {
@@ -15781,7 +15642,7 @@
                     <img 
                         class="grid-photo"
                         src="${imageUrl}" 
-                        style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block; cursor: pointer;"
+                        style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block; cursor: pointer; transform: scaleX(-1);"
                         alt="Photo"
                     />
                     <!-- Pin Button -->
@@ -16359,9 +16220,9 @@
                     <button class="pin-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s; z-index: 10;">
                         📌
                     </button>
-                    <!-- Price Badge -->
-                    <div style="position: absolute; top: 8px; left: 8px; background: rgba(255,0,80,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 10;">
-                        ₦${data.price || 0}
+                    <!-- Price Badge (in coins) -->
+                    <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,0,80,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 5;">
+                        🪙 ${Math.ceil((data.price || 0) / 25)} PC
                     </div>
                     <!-- Play Button -->
                     <div class="play-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); transition: all 0.3s; cursor: pointer;">
@@ -16626,22 +16487,30 @@
             console.log(`📖 Displayed ${storiesDisplayedCount} of ${storiesVideos.length} stories`);
         }
 
-        // Create stories video item
+        // Create stories video item (handles both video and photo stories)
         function createStoriesVideoItem(postId, data) {
             const item = document.createElement('div');
             item.className = 'stories-item';
 
-            const videoUrl = data.videoUrl || '';
-            console.log('📖 Creating stories item for video:', postId, 'URL:', videoUrl);
+            const isPhoto = data.imageUrl && !data.videoUrl;
+            const mediaUrl = data.videoUrl || data.imageUrl || '';
+            console.log('📖 Creating stories item:', postId, 'Type:', isPhoto ? 'Photo' : 'Video', 'URL:', mediaUrl);
 
             item.innerHTML = `
                 <div class="video-player-container" style="position: relative; background: #1a1a1a;">
-                    <video 
-                        class="grid-video"
-                        src="${videoUrl}" 
-                        style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block;"
-                        preload="metadata"
-                    ></video>
+                    ${isPhoto ? 
+                      `<img 
+                          class="grid-media"
+                          src="${mediaUrl}" 
+                          style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block; transform: scaleX(-1);"
+                      />` :
+                      `<video 
+                          class="grid-video"
+                          src="${mediaUrl}" 
+                          style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block;"
+                          preload="metadata"
+                      ></video>`
+                    }
                     <!-- Pin Button -->
                     <button class="pin-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s; z-index: 10;">
                         📌
@@ -16679,40 +16548,45 @@
                 console.log('📌 Story pinned:', isPinned);
             };
 
-            // Click play button
-            playOverlay.onclick = (e) => {
-                e.stopPropagation();
-                if (!isPlaying) {
-                    video.play();
-                    playOverlay.style.opacity = '0';
-                    playOverlay.style.pointerEvents = 'none';
-                    isPlaying = true;
-                } else {
-                    video.pause();
+            // Only add play/pause controls for videos, not photos
+            if (video) {
+                // Click play button
+                playOverlay.onclick = (e) => {
+                    e.stopPropagation();
+                    if (!isPlaying) {
+                        video.play();
+                        playOverlay.style.opacity = '0';
+                        playOverlay.style.pointerEvents = 'none';
+                        isPlaying = true;
+                    } else {
+                        video.pause();
+                        playOverlay.style.opacity = '1';
+                        playOverlay.style.pointerEvents = 'auto';
+                        isPlaying = false;
+                    }
+                };
+
+                // Show play button when video ends or pauses
+                video.onended = () => {
                     playOverlay.style.opacity = '1';
                     playOverlay.style.pointerEvents = 'auto';
                     isPlaying = false;
-                }
-            };
+                    video.currentTime = 0;
+                };
 
-            // Show play button when video ends or pauses
-            video.onended = () => {
-                playOverlay.style.opacity = '1';
-                playOverlay.style.pointerEvents = 'auto';
-                isPlaying = false;
-                video.currentTime = 0;
-            };
-
-            video.onpause = () => {
-                if (isPlaying === false) {
-                    playOverlay.style.opacity = '1';
-                    playOverlay.style.pointerEvents = 'auto';
-                }
-            };
-
+                video.onpause = () => {
+                    if (isPlaying === false) {
+                        playOverlay.style.opacity = '1';
+                        playOverlay.style.pointerEvents = 'auto';
+                    }
+                };
             video.onplay = () => {
                 isPlaying = true;
             };
+            } else {
+            // For photos, hide the play overlay
+            playOverlay.style.display = 'none';
+            }
 
             return item;
         }
@@ -16748,11 +16622,11 @@
         const viewedStoryIds = new Set(); // Track viewed stories (one count per story)
 
         async function openStoryViewer() {
-            console.log('📖 Opening story viewer...');
+            console.log('📖 Opening story viewer from ring...');
 
-            // Load stories first (wait for it to finish)
-            console.log('📖 Loading stories before opening viewer...');
-            await loadStoriesVideos();
+            // Load ONLY 24hr stories for ring viewer (not all stories)
+            console.log('📖 Loading 24hr stories for viewer...');
+            await loadStories24hrForViewer();
 
             // Check if stories loaded
             if (!storiesVideos || storiesVideos.length === 0) {
@@ -16761,7 +16635,7 @@
                 return;
             }
 
-            console.log('✅ Stories loaded:', storiesVideos.length);
+            console.log('✅ 24hr stories loaded:', storiesVideos.length);
 
             const viewer = document.getElementById('storyViewer');
             viewer.style.display = 'flex';
@@ -16769,7 +16643,56 @@
             updateStoryDisplay();
             incrementStoryViews(); // Increment views when story opens
             startStoryProgress();
-            console.log('✅ Story viewer opened with video content');
+            console.log('✅ Story viewer opened');
+        }
+        
+        // Load only 24hr stories for the ring viewer
+        async function loadStories24hrForViewer() {
+            if (!currentUser) {
+                console.log('❌ No current user');
+                return;
+            }
+
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+
+                if (!userDoc.exists) {
+                    console.log('⚠️ User doc not found');
+                    storiesVideos = [];
+                    return;
+                }
+
+                const userData = userDoc.data();
+                const allVideos = userData?.videos || [];
+
+                // ⚡ FOR RING VIEWER: Only stories within 24 hours
+                const now = Date.now();
+                const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+                storiesVideos = allVideos.filter(video => {
+                    // Must be story type
+                    if (video.type !== 'story') return false;
+
+                    // Get creation time
+                    const createdAt = new Date(video.createdAt).getTime();
+                    const ageInMs = now - createdAt;
+
+                    // Only include if less than 24 hours old
+                    const isWithin24h = ageInMs < TWENTY_FOUR_HOURS;
+
+                    if (isWithin24h) {
+                        console.log('✅ Story within 24h for viewer:', video.id);
+                    }
+
+                    return isWithin24h;
+                });
+
+                console.log('✅ Loaded 24h stories for viewer:', storiesVideos.length);
+
+            } catch (error) {
+                console.error('Error loading 24hr stories:', error);
+                storiesVideos = [];
+            }
         }
 
         // Increment story view count (only once per story per session)
@@ -16878,15 +16801,18 @@
             const story = storiesVideos[currentStoryViewerIndex];
 
             console.log('📖 Displaying story:', story);
-            console.log('🎥 Video URL:', story.videoUrl);
+            console.log('🎥 Media URL:', story.videoUrl || story.imageUrl);
 
-            // Show video or placeholder
+            // Show video or photo or placeholder
             const contentDiv = document.getElementById('storyContent');
             if (story && story.videoUrl) {
                 console.log('✅ Showing video');
                 contentDiv.innerHTML = `<video src="${story.videoUrl}" style="width: 100%; height: 100%; object-fit: cover; background: #000;" controls autoplay></video>`;
+            } else if (story && story.imageUrl) {
+                console.log('✅ Showing photo');
+                contentDiv.innerHTML = `<img src="${story.imageUrl}" style="width: 100%; height: 100%; object-fit: cover; background: #000; transform: scaleX(-1);" />`;
             } else {
-                console.log('⚠️ No video URL, showing placeholder');
+                console.log('⚠️ No media URL, showing placeholder');
                 contentDiv.innerHTML = `<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 60px; color: white;">${story?.caption || '📖'}</div>`;
             }
 
@@ -17024,6 +16950,8 @@
             const badge = document.getElementById('storyBadge');
             badge.style.display = 'none';
         }
+
+
 
 
 
@@ -26970,44 +26898,75 @@ For more help, visit: help.pose.app
 
                 // ===== PHOTO DATA STRUCTURE (Same as video) =====
                 const photoData = {
-                    id: docId,
-                    userId: currentUser.uid,
-                    userName: userData?.name || 'Anonymous',
-                    username: userData?.username || 'user',
-                    userProfilePic: userData?.profilePicUrl || null,
-                    imageUrl: cloudinaryUrl,
-                    caption: metadata.caption || '',
-                    hashtags: metadata.hashtags || '',
-                    tags: metadata.tags || '',
-                    privacy: metadata.privacy || 'Everyone',
-                    allowComments: metadata.allowComments ?? true,
-                    allowDuet: metadata.allowDuet ?? true,
-                    allowStitch: metadata.allowStitch ?? true,
-                    allowSoundReuse: metadata.allowSoundReuse ?? true,
-                    allowDownload: metadata.allowDownload ?? false,
-                    status: type === 'draft' ? 'draft' : 'published',
-                    createdAt: new Date().toISOString(),
-                    date: todayDate,
-                    views: 0,
-                    likes: 0,
-                    comments: 0,
-                    shares: 0,
-                    reposts: 0,
-                    saves: 0,
-                    type: 'photo',
-                    edits: metadata.edits || {}
-                };
+                     id: docId,
+                     userId: currentUser.uid,
+                     userName: userData?.name || 'Anonymous',
+                     username: userData?.username || 'user',
+                     userProfilePic: userData?.profilePicUrl || null,
+                     imageUrl: cloudinaryUrl,
+                     caption: metadata.caption || '',
+                     hashtags: metadata.hashtags || '',
+                     tags: metadata.tags || '',
+                     privacy: metadata.privacy || 'Everyone',
+                     allowComments: metadata.allowComments ?? true,
+                     allowDuet: metadata.allowDuet ?? true,
+                     allowStitch: metadata.allowStitch ?? true,
+                     allowSoundReuse: metadata.allowSoundReuse ?? true,
+                     allowDownload: metadata.allowDownload ?? false,
+                     status: type === 'draft' ? 'draft' : 'published',
+                     createdAt: new Date().toISOString(),
+                     date: todayDate,
+                     views: 0,
+                     likes: 0,
+                     comments: 0,
+                     shares: 0,
+                     reposts: 0,
+                     saves: 0,
+                     type: type === 'story' ? 'story' : 'photo',
+                     edits: metadata.edits || {}
+                 };
 
-                // ===== STORAGE 1: posephotosposted/{todayDate}/posts/{docId} =====
+                // ===== STORAGE: posephotosposted or posestoriesposted =====
+                const collectionName = type === 'story' ? 'posestoriesposted' : 'posephotosposted';
                 try {
-                    await db.collection('posephotosposted').doc(todayDate).collection('posts').doc(docId).set(photoData);
-                    console.log('✅ Photo saved to posephotosposted/' + todayDate + '/posts/' + docId);
+                    await db.collection(collectionName).doc(todayDate).collection('posts').doc(docId).set(photoData);
+                    console.log('✅ ' + (type === 'story' ? 'Story' : 'Photo') + ' saved to ' + collectionName + '/' + todayDate + '/posts/' + docId);
                 } catch (e) {
-                    console.error('❌ Error saving to posephotosposted:', e);
+                    console.error('❌ Error saving to ' + collectionName + ':', e);
                     throw e;
                 }
 
-                // No need to store in user array - query from posephotosposted by userId instead
+                // Add to user's array (stories go to videos array, photos go to photos array)
+                try {
+                    if (type === 'story') {
+                        // Add story to videos array (like screen4 stories) - minimal data only
+                        await db.collection('users').doc(currentUser.uid).update({
+                            videos: firebase.firestore.FieldValue.arrayUnion({
+                                id: docId,
+                                caption: metadata.caption || '',
+                                type: 'story',
+                                imageUrl: cloudinaryUrl,
+                                createdAt: new Date().toISOString()
+                            })
+                        });
+                        console.log('✅ Story added to user videos array');
+                    } else {
+                        // Add photo to photos array - minimal data only
+                        await db.collection('users').doc(currentUser.uid).update({
+                            photos: firebase.firestore.FieldValue.arrayUnion({
+                                id: docId,
+                                imageUrl: cloudinaryUrl,
+                                caption: metadata.caption || '',
+                                createdAt: new Date().toISOString(),
+                                type: 'photo'
+                            })
+                        });
+                        console.log('✅ Photo added to user photos array');
+                    }
+                } catch (e) {
+                    console.error('⚠️ Could not add to user array:', e);
+                    // Don't throw - was still saved to collection
+                }
                 // Reload photos to show new photo immediately
                 allUserPhotos = [];
                 photosDisplayedCount = 0;
@@ -27780,7 +27739,22 @@ For more help, visit: help.pose.app
                     throw e;
                 }
 
-                // No need to store in user array - query from posevideosposted by userId instead
+                // Also add to user's videos array (for profile feed loading like story tab) - minimal data only
+                try {
+                    await db.collection('users').doc(currentUser.uid).update({
+                        videos: firebase.firestore.FieldValue.arrayUnion({
+                            id: docId,
+                            videoUrl: postData.videoUrl,
+                            caption: postData.caption,
+                            createdAt: postData.createdAt,
+                            type: 'video'
+                        })
+                    });
+                    console.log('✅ Added to user videos array');
+                } catch (e) {
+                    console.error('⚠️ Could not add to user array:', e);
+                    // Don't throw - post was still saved to posevideosposted
+                }
                 // Reload feed to show new video immediately
                 allUserVideos = [];
                 feedDisplayedCount = 0;
@@ -27900,22 +27874,14 @@ For more help, visit: help.pose.app
                     throw e;
                 }
 
-                // Add lightweight reference to user's videos array
+                // Add minimal reference to user's videos array (just needed fields to load)
                 try {
                     const storyReference = {
                         id: docId,
-                        date: todayDate,
                         caption: storyData.caption,
                         type: 'story',
-                        views: 0,
-                        likes: 0,
-                        comments: 0,
                         videoUrl: cloudinaryResult.url,
-                        thumbnail: cloudinaryResult.url.replace(/\.[^.]+$/, '.jpg'),
-                        createdAt: new Date().toISOString(),
-                        userName: userData?.name || 'Anonymous',
-                        username: userData?.username || 'user',
-                        userProfilePic: userData?.profilePicUrl || null
+                        createdAt: new Date().toISOString()
                     };
 
                     await db.collection('users').doc(currentUser.uid).update({
@@ -37471,12 +37437,12 @@ For more help, visit: help.pose.app
             try {
                 const posts = [];
 
-                // Query posefeed collection - get all date documents
-                const datesSnapshot = await db.collection('posefeed').get();
+                // Query posevideosposted collection - get all date documents
+                const datesSnapshot = await db.collection('posevideosposted').get();
 
                 // Loop through each date and get posts of specific type
                 for (const dateDoc of datesSnapshot.docs) {
-                    const postsSnap = await db.collection('posefeed').doc(dateDoc.id).collection('posts').get();
+                    const postsSnap = await db.collection('posevideosposted').doc(dateDoc.id).collection('posts').get();
 
                     postsSnap.forEach(doc => {
                         const post = { id: doc.id, ...doc.data() };
@@ -37504,10 +37470,10 @@ For more help, visit: help.pose.app
                     });
                 }
 
-                console.log('🎬 Loaded ' + posts.length + ' ' + type + ' posts from posefeed (all dates)');
+                console.log('🎬 Loaded ' + posts.length + ' ' + type + ' posts from posevideosposted (all dates)');
                 return posts;
             } catch (error) {
-                console.error('Error querying ' + type + ' posts from posefeed:', error);
+                console.error('Error querying ' + type + ' posts from posevideosposted:', error);
                 return [];
             }
         }
