@@ -7266,6 +7266,8 @@
 
         .tab-content.active {
             display: block;
+             color: white;
+            background: #222;
         }
 
         /* Video Grid Page Scrollable */
@@ -13575,62 +13577,8 @@
     </div>
 
      <div id="forYouTab" class="tab-content active">
-       
-        <!-- Video Feed (TikTok style) - Demo -->
-        <div class="video-feed">
-            <!-- Post 1 -->
-            <div class="video-post">
-                <video src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" autoplay muted loop></video>
-                <div class="play-pause-overlay">
-                    <svg class="play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                    <svg class="pause-icon" viewBox="0 0 24 24" style="display: none;">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                    </svg>
-                </div>
-                <div class="overlay">
-                    <div class="sidebar">
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                </svg>
-                            </i>
-                            <span>223k</span>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                                </svg>
-                            </i>
-                            <span>223k</span>
-                        </div>
-                        <div>
-                            <i>
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
-                                </svg>
-                            </i>
-                            <span>223k</span>
-                        </div>
-                    </div>
-                    <div class="profile-section">
-                        <div class="profile-pic">
-                            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><rect width='50' height='50' fill='%23ff6b6b'/><text x='25' y='32' text-anchor='middle' fill='white' font-size='14' font-family='Arial'>CM</text></svg>" alt="profile">
-                        </div>
-                        <div class="profile-info">
-                            <div class="name">CRAVING THE MONSTER</div>
-                            <div class="followers">1.5M followers</div>
-                        </div>
-                        <button class="follow-btn">FOLLOW</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="video-feed" id="forYouFeed"></div>
     </div>
-
     
     <div id="friendTab" class="tab-content" style="display: none;">
         <div class="tweet-feed-page">
@@ -15095,6 +15043,7 @@
 
         // Handle Profile Icon Click
         function handleProfileClick() {
+            pauseAllFeedVideos();
             if (currentUser) {
                 openProfile();
             } else {
@@ -16319,6 +16268,386 @@
             }
         }
 
+        // ===== FOR YOU TAB - Load all videos from all creators =====
+        let forYouVideos = [];
+        let forYouLoaded = false;
+        let forYouScrollPosition = 0;
+        let currentTab = 'forYou';
+        const tabScrollPositions = { forYou: 0, tweet: 0, pose: 0 };
+
+        async function loadForYouFeed() {
+            if (forYouLoaded) {
+                console.log('✅ For You feed already loaded');
+                return;
+            }
+
+            const forYouFeed = document.getElementById('forYouFeed');
+            
+            try {
+                console.log('📖 Loading For You feed...');
+                // Show loading message
+                forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #aaa; font-size: 18px;">Loading videos...</div>';
+
+                // Get all users and their videos
+                console.log('📖 Fetching all users and their videos...');
+                const usersSnapshot = await db.collection('users').get();
+                forYouVideos = [];
+
+                for (const userDoc of usersSnapshot.docs) {
+                    const userData = userDoc.data();
+                    const userVideos = userData?.videos || [];
+                    
+                    // Add user's videos (exclude stories, only video type)
+                    userVideos.forEach(video => {
+                        if (!video.type || video.type !== 'story') {
+                            forYouVideos.push({
+                                ...video,
+                                userId: userDoc.id,
+                                userName: userData.name || 'Unknown',
+                                username: userData.username || 'user',
+                                userProfilePic: userData.profilePicUrl || null
+                            });
+                        }
+                    });
+                }
+                
+                // Sort by date (newest first)
+                forYouVideos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                console.log('✅ Loaded', forYouVideos.length, 'videos for For You feed from all users');
+
+                if (forYouVideos.length === 0) {
+                    forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #aaa;">No videos available yet</div>';
+                    return;
+                }
+
+                // Display all videos in TikTok-style vertical feed
+                forYouFeed.innerHTML = '';
+                forYouVideos.forEach((video, index) => {
+                    const videoPost = createForYouVideoPost(video, index);
+                    forYouFeed.appendChild(videoPost);
+                });
+
+                forYouLoaded = true;
+                
+                // Setup Intersection Observer to only play visible video
+                setupVideoAutoPlay();
+                
+                // Restore scroll position if exists
+                if (tabScrollPositions.forYou > 0) {
+                    setTimeout(() => {
+                        forYouFeed.scrollTop = tabScrollPositions.forYou;
+                        console.log('↩️ Restored scroll position:', tabScrollPositions.forYou);
+                    }, 100);
+                }
+
+            } catch (error) {
+                console.error('Error loading For You feed:', error);
+                forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #ff6b6b;">Error loading videos: ' + error.message + '</div>';
+            }
+        }
+
+        // Create video post for For You feed (TikTok-style vertical feed)
+        function createForYouVideoPost(data, index) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'video-post';
+
+            const videoUrl = data.videoUrl || '';
+            console.log('🎥 Creating For You post:', index, 'From:', data.userName);
+
+            postDiv.innerHTML = `
+                <video src="${videoUrl}" loop style="width: 100%; height: 100%; object-fit: cover;" playsinline webkit-playsinline></video>
+                <div class="play-pause-overlay">
+                    <svg class="play-icon" viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: white;">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                    <svg class="pause-icon" viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: white; display: none;">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                    </svg>
+                </div>
+                <div class="overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 20px; color: white;">
+                    <div class="sidebar" style="position: absolute; right: 15px; bottom: 60px; display: flex; flex-direction: column; gap: 20px; align-items: center;">
+                        <div style="text-align: center; cursor: pointer;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                            <span style="font-size: 12px; margin-top: 4px; display: block;">${data.likes || 0}</span>
+                        </div>
+                        <div style="text-align: center; cursor: pointer;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                            </svg>
+                            <span style="font-size: 12px; margin-top: 4px; display: block;">${data.comments || 0}</span>
+                        </div>
+                        <div style="text-align: center; cursor: pointer;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
+                            </svg>
+                            <span style="font-size: 12px; margin-top: 4px; display: block;">${data.shares || 0}</span>
+                        </div>
+                    </div>
+                    <div class="profile-section" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                            <div class="profile-pic" style="width: 40px; height: 40px; border-radius: 50%; background: #666; flex-shrink: 0; background-image: url('${data.userProfilePic || ''}'); background-size: cover;"></div>
+                            <div>
+                                <div class="name" style="font-weight: bold; font-size: 14px;">${data.userName || 'Creator'}</div>
+                                <div class="caption" style="font-size: 12px; opacity: 0.9; margin-top: 2px;">${data.caption || ''}</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn" style="background: #ff0050; border: none; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; flex-shrink: 0;">Follow</button>
+                    </div>
+                </div>
+            `;
+
+            // Get elements
+            const video = postDiv.querySelector('video');
+            const playIcon = postDiv.querySelector('.play-icon');
+            const pauseIcon = postDiv.querySelector('.pause-icon');
+            let isPlaying = true;
+
+            // Click to play/pause
+            postDiv.onclick = () => {
+                if (isPlaying) {
+                    video.pause();
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                    isPlaying = false;
+                } else {
+                    video.play();
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                    isPlaying = true;
+                }
+            };
+
+            video.onplay = () => {
+                isPlaying = true;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            };
+
+            video.onpause = () => {
+                isPlaying = false;
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            };
+
+            return postDiv;
+            }
+
+            // Setup video autoplay with Intersection Observer
+            function setupVideoAutoPlay() {
+                const forYouFeed = document.getElementById('forYouFeed');
+                if (!forYouFeed) return;
+
+                const videos = forYouFeed.querySelectorAll('video');
+                
+                // Create Intersection Observer to detect which video is visible
+                const observerOptions = {
+                    root: forYouFeed,
+                    threshold: 0.5 // Video must be 50% visible to play
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const video = entry.target;
+                        
+                        if (entry.isIntersecting) {
+                            // Video is in view - play it
+                            console.log('▶️ Playing video');
+                            video.play().catch(err => {
+                                console.log('Play failed (may need user interaction):', err.message);
+                            });
+                        } else {
+                            // Video is out of view - pause it
+                            console.log('⏸️ Pausing video');
+                            video.pause();
+                        }
+                    });
+                }, observerOptions);
+
+                // Observe all videos
+                videos.forEach(video => {
+                    observer.observe(video);
+                });
+
+                // Pause all videos when page/tab loses focus
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        // Page is hidden - pause all videos
+                        console.log('📱 Page hidden - pausing all videos');
+                        videos.forEach(video => video.pause());
+                    } else {
+                        // Page is visible again - replay the visible video
+                        console.log('📱 Page visible - replaying visible video');
+                        entries = observer.takeRecords();
+                        entries.forEach(entry => {
+                            const video = entry.target;
+                            if (entry.isIntersecting) {
+                                video.play().catch(err => {
+                                    console.log('Play failed:', err.message);
+                                });
+                            }
+                        });
+                    }
+                });
+
+                // Pause all videos when page is about to unload
+                window.addEventListener('beforeunload', () => {
+                    console.log('🔌 Page unloading - pausing all videos');
+                    videos.forEach(video => video.pause());
+                });
+
+                // Also handle pagehide for better mobile support
+                window.addEventListener('pagehide', () => {
+                    console.log('🔌 Page hidden - pausing all videos');
+                    videos.forEach(video => video.pause());
+                });
+            }
+
+            // Global function to pause all videos
+            function pauseAllFeedVideos() {
+            const forYouTab = document.getElementById('forYouTab');
+            const friendTab = document.getElementById('friendTab');
+            const poseTab = document.getElementById('poseTab');
+            
+            if (forYouTab) forYouTab.querySelectorAll('video').forEach(v => v.pause());
+            if (friendTab) friendTab.querySelectorAll('video').forEach(v => v.pause());
+            if (poseTab) poseTab.querySelectorAll('video').forEach(v => v.pause());
+            
+            console.log('🔇 All feed videos paused');
+            }
+
+            // Setup main tab navigation (For You, Tweet, Pose)
+        function setupMainTabs() {
+             const tabs = document.querySelectorAll('.tabs .tab');
+             
+             tabs.forEach((tab, index) => {
+                 tab.style.cursor = 'pointer';
+                 
+                 tab.addEventListener('click', () => {
+                     // Save scroll position of current tab
+                     const forYouFeed = document.getElementById('forYouFeed');
+                     if (forYouFeed && currentTab === 'forYou') {
+                         tabScrollPositions.forYou = forYouFeed.scrollTop;
+                         console.log('💾 Saved For You scroll position:', tabScrollPositions.forYou);
+                     }
+                     
+                     // Update active tab UI
+                     tabs.forEach(t => t.classList.remove('active'));
+                     tab.classList.add('active');
+                     
+                     // Determine which tab was clicked
+                     const tabName = tab.textContent.trim().toLowerCase();
+                     console.log('🔄 Switching to tab:', tabName);
+                     
+                     if (tabName === 'for you') {
+                         currentTab = 'forYou';
+                         const forYouTabEl = document.getElementById('forYouTab');
+                         const friendTabEl = document.getElementById('friendTab');
+                         const poseTabEl = document.getElementById('poseTab');
+                         
+                         // Pause videos on other tabs
+                         if (friendTabEl) {
+                             friendTabEl.querySelectorAll('video').forEach(v => v.pause());
+                         }
+                         if (poseTabEl) {
+                             poseTabEl.querySelectorAll('video').forEach(v => v.pause());
+                         }
+                         
+                         // Add active class to For You tab container
+                         forYouTabEl.classList.add('active');
+                         forYouTabEl.style.display = 'block';
+                         
+                         // Remove active class from Friend tab container
+                         friendTabEl.classList.remove('active');
+                         friendTabEl.style.display = 'none';
+                         if (poseTabEl) {
+                             poseTabEl.classList.remove('active');
+                             poseTabEl.style.display = 'none';
+                         }
+                         
+                         console.log('✅ Switched to For You tab');
+                         // Load For You feed if not loaded
+                         if (!forYouLoaded) {
+                             console.log('📖 Loading For You feed for first time...');
+                             loadForYouFeed();
+                         } else {
+                             // Restore scroll position
+                             const forYouFeed = document.getElementById('forYouFeed');
+                             if (forYouFeed) {
+                                 setTimeout(() => {
+                                     forYouFeed.scrollTop = tabScrollPositions.forYou;
+                                     console.log('↩️ Restored For You scroll position:', tabScrollPositions.forYou);
+                                 }, 100);
+                             }
+                         }
+                     } else if (tabName === 'tweet') {
+                         currentTab = 'tweet';
+                         const forYouTabEl = document.getElementById('forYouTab');
+                         const friendTabEl = document.getElementById('friendTab');
+                         const poseTabEl = document.getElementById('poseTab');
+                         
+                         // Pause all For You videos when leaving
+                         forYouTabEl.querySelectorAll('video').forEach(v => v.pause());
+                         if (poseTabEl) {
+                             poseTabEl.querySelectorAll('video').forEach(v => v.pause());
+                         }
+                         
+                         // Remove active class from For You tab
+                         forYouTabEl.classList.remove('active');
+                         forYouTabEl.style.display = 'none';
+                         if (poseTabEl) {
+                             poseTabEl.classList.remove('active');
+                             poseTabEl.style.display = 'none';
+                         }
+                         
+                         // Add active class to Friend tab
+                         friendTabEl.classList.add('active');
+                         friendTabEl.style.display = 'block';
+                         
+                         console.log('✅ Switched to Tweet tab');
+                     } else if (tabName === 'pose') {
+                         currentTab = 'pose';
+                         const forYouTabEl = document.getElementById('forYouTab');
+                         const friendTabEl = document.getElementById('friendTab');
+                         const poseTabEl = document.getElementById('poseTab');
+                         
+                         // Pause all For You and Tweet videos when leaving
+                         forYouTabEl.querySelectorAll('video').forEach(v => v.pause());
+                         friendTabEl.querySelectorAll('video').forEach(v => v.pause());
+                         
+                         // Remove active class from other tabs
+                         forYouTabEl.classList.remove('active');
+                         forYouTabEl.style.display = 'none';
+                         friendTabEl.classList.remove('active');
+                         friendTabEl.style.display = 'none';
+                         
+                         // Add active class to Pose tab container
+                         if (poseTabEl) {
+                             poseTabEl.classList.add('active');
+                             poseTabEl.style.display = 'block';
+                             console.log('✅ Switched to Pose tab');
+                         } else {
+                             console.warn('⚠️ Pose tab element not found');
+                         }
+                     }
+                 });
+             });
+         }
+
+        // Load For You feed automatically on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📖 Page loaded, initializing For You tab...');
+            setupMainTabs();
+            
+            const forYouTab = document.getElementById('forYouTab');
+            if (forYouTab && !forYouLoaded) {
+                console.log('📖 Auto-loading For You feed on page load...');
+                loadForYouFeed();
+            }
+        });
+
         // Load stories videos
         // ⚡ SEPARATE FUNCTIONS FOR TWO DIFFERENT USES:
         // 1. loadStoriesVideos() - For STORIES TAB (ALL stories, no 24h limit)
@@ -16961,14 +17290,7 @@
 
 
 
-        // Original Video Feed Scripts
-        const allTabs = document.querySelectorAll('.tabs span');
-        allTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                allTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-            });
-        });
+        // OLD TAB HANDLER REMOVED - Using setupMainTabs() instead
 
         function setupVideoControls() {
             const posts = document.querySelectorAll('.video-post');
@@ -17646,111 +17968,7 @@ For more help, visit: help.pose.app
 
         // Duplicate removed - using the one at bottom of file
         // Tab Switching Function
-        function switchMainTab(tabName) {
-            // Remove active class from all tabs
-            const allTabs = document.querySelectorAll('.tabs .tab');
-            allTabs.forEach(tab => tab.classList.remove('active'));
-
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-                content.style.display = 'none';
-            });
-
-            // Show selected tab content
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-                selectedTab.style.display = 'block';
-            }
-
-            // Pause all videos when switching tabs
-            document.querySelectorAll('video').forEach(video => {
-                video.pause();
-            });
-
-            // If switching to video feed, restart video playback logic
-            if (tabName === 'busTab') {
-                setTimeout(handleVideoPlay, 300);
-            }
-        }
-
-        // Initialize Tab Click Listeners
-        document.addEventListener('DOMContentLoaded', function () {
-            const tabs = document.querySelectorAll('.tabs .tab');
-            tabs.forEach((tab, index) => {
-                tab.addEventListener('click', function () {
-                    if (index === 0) switchMainTab('busTab');      // Bus = Video Feed
-                    if (index === 1) switchMainTab('friendTab');   // Friend = Tweet Feed
-                    if (index === 2) switchMainTab('poseTab');     // Pose = Video Grid
-                    if (index === 3) switchMainTab('busTab');      // fyp = Video Feed (for now)
-                });
-            });
-        });
-
-        // Updated Tab Switching Function with Scroll Reset
-        function switchMainTab(tabName) {
-            // Remove active class from all tabs
-            const allTabs = document.querySelectorAll('.tabs .tab');
-            allTabs.forEach(tab => tab.classList.remove('active'));
-
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-                content.style.display = 'none';
-            });
-
-            // Show selected tab content
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-                selectedTab.style.display = 'block';
-
-                // Scroll to top of the new tab
-                selectedTab.scrollTop = 0;
-            }
-
-            // Pause all videos when switching tabs
-            document.querySelectorAll('video').forEach(video => {
-                video.pause();
-            });
-
-            // If switching to video feed, restart video playback logic
-            if (tabName === 'busTab') {
-                setTimeout(handleVideoPlay, 300);
-            }
-        }
-
-        // Add smooth scroll behavior to load more buttons
-        document.addEventListener('DOMContentLoaded', function () {
-            // Tab switching
-            const tabs = document.querySelectorAll('.tabs .tab');
-            tabs.forEach((tab, index) => {
-                tab.addEventListener('click', function () {
-                    if (index === 0) switchMainTab('busTab');      // Bus = Video Feed
-                    if (index === 1) switchMainTab('friendTab');   // Friend = Tweet Feed
-                    if (index === 2) switchMainTab('poseTab');     // Pose = Video Grid
-                    if (index === 3) switchMainTab('busTab');      // fyp = Video Feed
-                });
-            });
-
-            // Load more button scroll effect
-            document.querySelectorAll('.load-more-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    // Add loading animation or fetch more content here
-                    this.textContent = 'Loading... ⏳';
-                    setTimeout(() => {
-                        this.textContent = this.closest('#poseTab') ? 'Load More Videos 🔽' : 'Show More Posts 🔽';
-                    }, 1000);
-                });
-            });
-        });
+        // OLD DUPLICATE TAB HANDLERS REMOVED - Using setupMainTabs() instead
 
 
 
@@ -17794,6 +18012,7 @@ For more help, visit: help.pose.app
 
         // Open Upload Page
         function openUploadPage() {
+            pauseAllFeedVideos();
             document.getElementById('uploadPage').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -26967,10 +27186,19 @@ For more help, visit: help.pose.app
                     console.error('⚠️ Could not add to user array:', e);
                     // Don't throw - was still saved to collection
                 }
-                // Reload photos to show new photo immediately
+                // Reload feeds to show new photo/story immediately
                 allUserPhotos = [];
                 photosDisplayedCount = 0;
-                console.log('✅ Photo saved - reloading photos');
+                console.log('✅ Photo/Story saved - reloading feeds');
+                
+                // Reload For You feed if visible and it's a story
+                if (type === 'story' && currentTab === 'forYou' && typeof loadForYouFeed === 'function') {
+                    console.log('📺 Reloading For You feed with new story...');
+                    forYouLoaded = false;
+                    await loadForYouFeed();
+                }
+                
+                // Reload profile photos
                 if (typeof displayProfilePhotos === 'function') {
                     displayProfilePhotos();
                 }
@@ -27755,13 +27983,23 @@ For more help, visit: help.pose.app
                     console.error('⚠️ Could not add to user array:', e);
                     // Don't throw - post was still saved to posevideosposted
                 }
-                // Reload feed to show new video immediately
+                // Reload all feeds to show new video immediately
                 allUserVideos = [];
                 feedDisplayedCount = 0;
-                console.log('✅ Video saved - reloading feed');
+                console.log('✅ Video saved - reloading feeds');
+                
+                // Reload For You feed if visible
+                if (currentTab === 'forYou' && typeof loadForYouFeed === 'function') {
+                    console.log('📺 Reloading For You feed...');
+                    forYouLoaded = false;
+                    await loadForYouFeed();
+                }
+                
+                // Reload other feeds
                 if (typeof displayFeedVideos === 'function') {
                     displayFeedVideos();
                 }
+                
                 // Also reload exclusive if price > 0
                 if (postData.price > 0) {
                     exclusiveVideos = [];
@@ -28212,6 +28450,7 @@ For more help, visit: help.pose.app
         });
 
         function openRecordingUI() {
+            pauseAllFeedVideos();
             const overlay = document.getElementById('recordingUIOverlay');
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -36846,6 +37085,7 @@ For more help, visit: help.pose.app
 
         // Open Notifications
         function openNotifications() {
+            pauseAllFeedVideos();
             const overlay = document.getElementById('notificationsOverlay');
             if (overlay) {
                 overlay.classList.add('active');
@@ -36873,6 +37113,7 @@ For more help, visit: help.pose.app
         };
 
         async function openSearchInterface() {
+            pauseAllFeedVideos();
             const overlay = document.getElementById('searchInterfaceOverlay');
             if (overlay) {
                 overlay.classList.add('active');
