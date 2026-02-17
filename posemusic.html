@@ -1658,280 +1658,794 @@
     </div>
 
     <audio id="audioPlayer"></audio>
+   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
-    <script>
-        const POSE_CREATORS = 'pose_creators';
-const POSE_SONGS = 'pose_songs';
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",
+        authDomain: "rewarderhub.firebaseapp.com",
+        projectId: "rewarderhub",
+        storageBucket: "rewarderhub.appspot.com",
+        messagingSenderId: "85965945106",
+        appId: "1:85965945106:web:fa0a57d8968926e1041bcb",
+        measurementId: "G-F2ERB5NGN0"
+    };
 
-let poseDB;
-let poseStorage;
-let poseAuth;
+    firebase.initializeApp(firebaseConfig);
 
-function initPoseFirebase() {
-    poseDB = firebase.firestore();
-    poseStorage = firebase.storage();
-    poseAuth = firebase.auth();
+    let poseDB;
+    let poseStorage;
+    let poseAuth;
 
-    poseAuth.onAuthStateChanged((user) => {
-        if (user) {
-            initPoseMusicFeature();
+    const POSE_CREATORS = 'pose_creators';
+    const POSE_SONGS = 'pose_songs';
+
+    const CURRENCY_MAP = {
+        'Nigeria': { code: 'NGN', symbol: '₦', rate: 1600 },
+        'USA': { code: 'USD', symbol: '$', rate: 1 },
+        'UK': { code: 'GBP', symbol: '£', rate: 0.79 },
+        'Ghana': { code: 'GHS', symbol: 'GH₵', rate: 12 },
+        'Canada': { code: 'CAD', symbol: 'C$', rate: 1.35 },
+        'South Africa': { code: 'ZAR', symbol: 'R', rate: 18 },
+        'Brazil': { code: 'BRL', symbol: 'R$', rate: 5 },
+        'Mexico': { code: 'MXN', symbol: 'MX$', rate: 17 },
+        'Australia': { code: 'AUD', symbol: 'A$', rate: 1.5 },
+        'France': { code: 'EUR', symbol: '€', rate: 0.92 },
+        'Germany': { code: 'EUR', symbol: '€', rate: 0.92 },
+        'Japan': { code: 'JPY', symbol: '¥', rate: 149 },
+        'South Korea': { code: 'KRW', symbol: '₩', rate: 1320 },
+        'India': { code: 'INR', symbol: '₹', rate: 83 },
+        'Egypt': { code: 'EGP', symbol: 'E£', rate: 31 }
+    };
+
+    function formatCurrency(amountUSD, country) {
+        const currency = CURRENCY_MAP[country] || CURRENCY_MAP['USA'];
+        const convertedAmount = amountUSD * currency.rate;
+        let formatted;
+        if (convertedAmount >= 1000) {
+            formatted = convertedAmount.toFixed(0);
+        } else if (convertedAmount >= 100) {
+            formatted = convertedAmount.toFixed(1);
         } else {
-            currentArtist = null;
-            showCreatorNavButtons(false);
+            formatted = convertedAmount.toFixed(2);
         }
-    });
-}
-
-async function initPoseMusicFeature() {
-    const user = poseAuth.currentUser;
-    if (!user) {
-        showCreatorNavButtons(false);
-        return;
-    }
-    try {
-        const doc = await poseDB.collection(POSE_CREATORS).doc(user.uid).get();
-        if (doc.exists) {
-            currentArtist = { id: user.uid, ...doc.data() };
-            showCreatorNavButtons(true);
-            await loadUserSongsFromFirestore();
-        } else {
-            showCreatorNavButtons(false);
-        }
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-async function createArtistAccount() {
-    const user = poseAuth.currentUser;
-    if (!user) {
-        showToast('Please log in to your account first', 'error');
-        return;
+        return `${currency.symbol}${formatted}`;
     }
 
-    const name = document.getElementById('artistName')?.value.trim();
-    const country = document.getElementById('artistCountry')?.value;
-    const creatorType = document.getElementById('creatorType')?.value || 'Musician';
-    const spotifyUrl = document.getElementById('spotifyUrl')?.value.trim() || '';
-    const appleMusicUrl = document.getElementById('appleMusicUrl')?.value.trim() || '';
-    const monthlyStr = document.getElementById('monthlyStreams')?.value || '0';
+    let allSongs = [
+        {id: 1, title: "Summer Vibes", artist: "DJ Sunset", artistId: 1, duration: 180, genre: "Electronic", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", streamCount: 15420, useCount: 892, coverUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop"},
+        {id: 2, title: "Midnight Dreams", artist: "Luna Wave", artistId: 2, duration: 195, genre: "Pop", country: "UK", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", streamCount: 28910, useCount: 1543, coverUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"},
+        {id: 3, title: "Electric Pulse", artist: "DJ Sunset", artistId: 1, duration: 210, genre: "Electronic", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", streamCount: 9234, useCount: 421, coverUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
+        {id: 4, title: "Lagos Rhythm", artist: "Ayo Beats", artistId: 3, duration: 175, genre: "Afrobeats", country: "Nigeria", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", streamCount: 45200, useCount: 2341, coverUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
+        {id: 5, title: "Country Roads", artist: "Jake Western", artistId: 4, duration: 200, genre: "Country", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", streamCount: 23400, useCount: 1205, coverUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop"},
+        {id: 6, title: "Tokyo Nights", artist: "Yuki Sound", artistId: 5, duration: 185, genre: "Pop", country: "Japan", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", streamCount: 31500, useCount: 1678, coverUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"},
+        {id: 7, title: "Samba Soul", artist: "Carlos Rio", artistId: 6, duration: 220, genre: "Latin", country: "Brazil", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", streamCount: 19800, useCount: 945, coverUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
+        {id: 8, title: "Urban Flow", artist: "MC Drake", artistId: 7, duration: 195, genre: "Hip Hop", country: "Canada", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", streamCount: 52300, useCount: 2890, coverUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop"},
+        {id: 9, title: "Reggae Sunset", artist: "Bob Junior", artistId: 8, duration: 205, genre: "R&B", country: "Ghana", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", streamCount: 17600, useCount: 823, coverUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
+        {id: 10, title: "Rock Anthem", artist: "The Rebels", artistId: 9, duration: 240, genre: "Rock", country: "UK", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", streamCount: 38900, useCount: 1956, coverUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
+        {id: 11, title: "Jazz Cafe", artist: "Miles Smooth", artistId: 10, duration: 190, genre: "Jazz", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", streamCount: 14200, useCount: 678, coverUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
+        {id: 12, title: "Desert Rose", artist: "Ahmed Khalil", artistId: 11, duration: 205, genre: "Pop", country: "Egypt", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", streamCount: 22100, useCount: 1134, coverUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"}
+    ];
 
-    if (!name) return showToast('Please enter your artist name', 'error');
-    if (!country) return showToast('Please select your country', 'error');
+    let displayedSongs = [];
+    let currentPage = 1;
+    const songsPerPage = 9;
+    let currentGenre = 'All';
+    let currentCountry = 'All';
+    let currentSearchQuery = '';
+    let currentArtist = null;
+    let playingId = null;
+    let currentTime = 0;
+    const audioPlayer = document.getElementById('audioPlayer');
+    let isLoading = false;
+    let collaboratorCount = 0;
+    let userSongs = [];
 
-    const btn = document.getElementById('becomeCreatorBtn');
-    _setBtnLoading(btn, true, 'Setting up your profile…');
-
-    try {
-        const profile = {
-            uid: user.uid,
-            name,
-            email: user.email,
-            country,
-            type: creatorType,
-            spotifyUrl,
-            appleMusicUrl,
-            monthlyStreams: parseInt(monthlyStr) || 0,
-            isCreator: true,
-            joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        };
-
-        await poseDB.collection(POSE_CREATORS).doc(user.uid).set(profile);
-        currentArtist = { id: user.uid, ...profile };
-
-        showCreatorNavButtons(true);
-        showToast(`You're a creator now, ${name}! Start uploading 🎶`, 'success');
-        showView('dashboard');
-    } catch (err) {
-        console.error(err);
-        showToast('Setup failed. Please try again.', 'error');
-        _setBtnLoading(btn, false, '<i class="fas fa-rocket"></i> Become a Creator');
-    }
-}
-
-async function uploadTrack() {
-    const user = poseAuth.currentUser;
-    if (!user || !currentArtist) {
-        showToast('Please set up your creator profile first', 'error');
-        return;
+    function formatNumber(num) {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num;
     }
 
-    const title = document.getElementById('trackTitle')?.value.trim();
-    const genre = document.getElementById('trackGenre')?.value;
-    const description = document.getElementById('trackDescription')?.value.trim() || '';
-    const audioFile = document.getElementById('audioFile')?.files[0];
-    const coverFile = document.getElementById('coverFile')?.files[0];
-
-    if (!title) return showToast('Please enter a track title', 'error');
-    if (!genre) return showToast('Please select a genre', 'error');
-    if (!audioFile) return showToast('Please upload an audio file', 'error');
-
-    const totalSplit = parseInt(document.getElementById('totalSplit')?.textContent || '0');
-    if (totalSplit !== 100) return showToast('Revenue split must total 100%', 'error');
-
-    const collaborators = [{
-        name: currentArtist.name,
-        split: parseInt(document.getElementById('ownerSplit')?.value || '100')
-    }];
-    document.querySelectorAll('.collaborator-item').forEach((item, i) => {
-        if (i === 0) return;
-        const cName = item.querySelector('.collab-name')?.value.trim();
-        const cSplit = parseInt(item.querySelector('.collab-split')?.value) || 0;
-        if (cName && cSplit > 0) collaborators.push({ name: cName, split: cSplit });
-    });
-
-    const uploadBtn = document.querySelector('[onclick="uploadTrack()"]');
-    _setBtnLoading(uploadBtn, true, 'Uploading…');
-
-    try {
-        const songDocRef = poseDB.collection(POSE_SONGS).doc();
-        const songId = songDocRef.id;
-        const storagePath = `pose_music/${user.uid}/${songId}`;
-
-        showToast('Uploading audio file…', 'success');
-        const audioRef = poseStorage.ref(`${storagePath}/audio_${audioFile.name}`);
-        const audioSnap = await audioRef.put(audioFile);
-        const audioUrl = await audioSnap.ref.getDownloadURL();
-
-        let coverUrl = 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop';
-        if (coverFile) {
-            showToast('Uploading cover art…', 'success');
-            const coverRef = poseStorage.ref(`${storagePath}/cover_${coverFile.name}`);
-            const coverSnap = await coverRef.put(coverFile);
-            coverUrl = await coverSnap.ref.getDownloadURL();
-        }
-
-        const songData = {
-            firestoreId: songId,
-            title,
-            genre,
-            description,
-            artist: currentArtist.name,
-            artistId: user.uid,
-            country: currentArtist.country,
-            audioUrl,
-            coverUrl,
-            collaborators,
-            duration: 0,
-            streamCount: 0,
-            useCount: 0,
-            pinned: false,
-            uploadDate: firebase.firestore.FieldValue.serverTimestamp(),
-        };
-
-        await songDocRef.set(songData);
-
-        const localSong = { ...songData, id: songId, uploadDate: new Date().toISOString() };
-        allSongs.push(localSong);
-        userSongs.push(localSong);
-
-        showToast(`"${title}" uploaded successfully! 🎵`, 'success');
-        _resetUploadForm();
-        setTimeout(() => showView('catalogue'), 1500);
-    } catch (err) {
-        console.error(err);
-        const msg = err.code === 'storage/unauthorized'
-            ? 'Upload permission denied. Check Firebase Storage rules.'
-            : 'Upload failed. Check your connection and try again.';
-        showToast(msg, 'error');
-    } finally {
-        _setBtnLoading(uploadBtn, false, '<i class="fas fa-upload"></i> Upload Track');
+    function formatDuration(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
-}
 
-async function loadUserSongsFromFirestore() {
-    const user = poseAuth.currentUser;
-    if (!user) return;
+    function showToast(message, type = 'success') {
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) existingToast.remove();
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'slideInRight 0.3s ease-out reverse';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
 
-    try {
-        const snapshot = await poseDB
-            .collection(POSE_SONGS)
-            .where('artistId', '==', user.uid)
-            .orderBy('uploadDate', 'desc')
-            .get();
+    function closeBanner() {
+        const banner = document.getElementById('topBanner');
+        banner.style.animation = 'slideDown 0.3s ease-out reverse';
+        setTimeout(() => banner.remove(), 300);
+    }
 
-        userSongs = [];
-        snapshot.forEach(doc => {
-            const data = { ...doc.data(), id: doc.id, firestoreId: doc.id };
-            const exists = allSongs.findIndex(s => s.id === doc.id);
-            if (exists === -1) {
-                allSongs.push(data);
-            } else {
-                allSongs[exists] = data;
+    function getFilteredSongs() {
+        return allSongs.filter(song => {
+            const matchesSearch = song.title.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
+                                  song.artist.toLowerCase().includes(currentSearchQuery.toLowerCase());
+            const matchesGenre = currentGenre === 'All' || song.genre === currentGenre;
+            const matchesCountry = currentCountry === 'All' || song.country === currentCountry;
+            return matchesSearch && matchesGenre && matchesCountry;
+        });
+    }
+
+    function filterByGenre(genre) {
+        currentGenre = genre;
+        document.querySelectorAll('.genre-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.textContent === genre) tab.classList.add('active');
+        });
+        resetAndLoadSongs();
+    }
+
+    function filterByCountry() {
+        currentCountry = document.getElementById('countryFilter').value;
+        resetAndLoadSongs();
+    }
+
+    function loadMoreSongs() {
+        if (isLoading) return;
+        const filtered = getFilteredSongs();
+        const startIndex = (currentPage - 1) * songsPerPage;
+        const endIndex = startIndex + songsPerPage;
+        const newSongs = filtered.slice(startIndex, endIndex);
+        if (newSongs.length === 0) return;
+        displayedSongs = [...displayedSongs, ...newSongs];
+        renderSongs();
+        currentPage++;
+    }
+
+    function resetAndLoadSongs() {
+        displayedSongs = [];
+        currentPage = 1;
+        document.getElementById('songsGrid').innerHTML = '';
+        loadMoreSongs();
+    }
+
+    function renderSongs() {
+        const grid = document.getElementById('songsGrid');
+        displayedSongs.forEach((song, index) => {
+            if (document.getElementById(`song-card-${song.id}`)) return;
+            const animationDelay = (index % songsPerPage) * 0.05;
+            if (index > 0 && index % 6 === 0 && !document.getElementById(`ad-${index}`)) {
+                const adDiv = document.createElement('div');
+                adDiv.className = 'banner-ad';
+                adDiv.id = `ad-${index}`;
+                adDiv.innerHTML = `
+                    <div class="banner-ad-content">
+                        <span class="sponsored-badge">POSE PLATFORM</span>
+                        <div>
+                            <h4>💎 Premium sound quality meets premium creator pay</h4>
+                            <p>Pose Music - where artists earn what they deserve. 3-5x higher royalties per use</p>
+                        </div>
+                    </div>
+                    <button onclick="showView('signup')">Upload Your Music</button>
+                `;
+                grid.appendChild(adDiv);
             }
-            userSongs.push(data);
+            const card = document.createElement('div');
+            card.className = 'song-card';
+            card.id = `song-card-${song.id}`;
+            card.style.animationDelay = `${animationDelay}s`;
+            card.innerHTML = `
+                <div class="song-header">
+                    <img src="${song.coverUrl}" alt="${song.title}" class="song-cover">
+                    <div class="song-info">
+                        <h3>${song.title}</h3>
+                        <p>${song.artist}</p>
+                        <div class="song-meta">
+                            <span class="meta-tag">${song.genre}</span>
+                            <span class="meta-tag">${song.country}</span>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 4px;">
+                            <i class="fas fa-clock"></i> ${formatDuration(song.duration)}
+                        </p>
+                    </div>
+                </div>
+                <div class="song-stats">
+                    <span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span>
+                    <span><i class="fas fa-video"></i> ${formatNumber(song.useCount)}</span>
+                </div>
+                <div class="song-actions">
+                    <button class="btn btn-play" onclick="togglePlay(${song.id}, '${song.audioUrl}')">
+                        <i class="fas fa-play"></i> Play (30s)
+                    </button>
+                    <button class="btn btn-use" onclick="useSong(${song.id})">
+                        <i class="fas fa-plus"></i> Use Full
+                    </button>
+                </div>
+                <div id="progress-${song.id}" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill-${song.id}"></div></div>
+                    <div class="progress-text" id="progressText-${song.id}"></div>
+                </div>
+            `;
+            grid.appendChild(card);
         });
-    } catch (err) {
-        console.error(err);
     }
-}
 
-async function togglePin(songId) {
-    const song = allSongs.find(s => s.id === songId);
-    if (!song) return;
+    function togglePlay(songId, audioUrl) {
+        if (playingId === songId) {
+            audioPlayer.pause();
+            playingId = null;
+            updatePlayButton(songId, false);
+        } else {
+            if (playingId !== null) updatePlayButton(playingId, false);
+            audioPlayer.src = audioUrl;
+            audioPlayer.currentTime = 0;
+            audioPlayer.play();
+            playingId = songId;
+            const song = allSongs.find(s => s.id === songId);
+            song.streamCount++;
+            updateSongStats(songId);
+            document.getElementById(`progress-${songId}`).classList.remove('hidden');
+            updatePlayButton(songId, true);
+        }
+    }
 
-    const newPinState = !song.pinned;
-    song.pinned = newPinState;
-    renderCatalogue();
-    showToast(newPinState ? 'Song pinned' : 'Song unpinned', 'success');
+    function updatePlayButton(songId, isPlaying) {
+        const btn = document.querySelector(`[onclick*="togglePlay(${songId}"]`);
+        if (btn) {
+            btn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i> Pause' : '<i class="fas fa-play"></i> Play (30s)';
+            btn.classList.toggle('playing', isPlaying);
+        }
+    }
 
-    try {
-        await poseDB.collection(POSE_SONGS).doc(songId).update({
-            pinned: newPinState,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    function updateSongStats(songId) {
+        const song = allSongs.find(s => s.id === songId);
+        const card = document.getElementById(`song-card-${songId}`);
+        if (card) {
+            card.querySelector('.song-stats').innerHTML = `
+                <span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span>
+                <span><i class="fas fa-video"></i> ${formatNumber(song.useCount)}</span>
+            `;
+        }
+    }
+
+    function useSong(songId) {
+        const song = allSongs.find(s => s.id === songId);
+        song.useCount++;
+        showToast(`"${song.title}" added to your video!`, 'success');
+        updateSongStats(songId);
+    }
+
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (playingId) {
+            currentTime = audioPlayer.currentTime;
+            const progressFill = document.getElementById(`progressFill-${playingId}`);
+            const progressText = document.getElementById(`progressText-${playingId}`);
+            if (progressFill && progressText) {
+                const percentage = Math.min((currentTime / 30) * 100, 100);
+                progressFill.style.width = `${percentage}%`;
+                progressText.textContent = `${Math.floor(currentTime)}s / 30s preview`;
+            }
+            if (currentTime >= 30) {
+                audioPlayer.pause();
+                const oldId = playingId;
+                playingId = null;
+                updatePlayButton(oldId, false);
+            }
+        }
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+        if (playingId) {
+            const oldId = playingId;
+            playingId = null;
+            updatePlayButton(oldId, false);
+        }
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        currentSearchQuery = e.target.value;
+        resetAndLoadSongs();
+    });
+
+    window.addEventListener('scroll', () => {
+        if (document.getElementById('searchView').classList.contains('hidden')) return;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        if (scrollTop + clientHeight >= scrollHeight - 500 && !isLoading) {
+            isLoading = true;
+            document.getElementById('loadingIndicator').classList.remove('hidden');
+            setTimeout(() => {
+                loadMoreSongs();
+                isLoading = false;
+                document.getElementById('loadingIndicator').classList.add('hidden');
+            }, 800);
+        }
+    });
+
+    function showView(view) {
+        ['searchView', 'signupView', 'dashboardView', 'uploadView', 'catalogueView'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
         });
-    } catch (err) {
-        song.pinned = !newPinState;
+        document.getElementById('filtersSection').classList.add('hidden');
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+        if (view === 'search') {
+            document.getElementById('searchView').classList.remove('hidden');
+            document.getElementById('filtersSection').classList.remove('hidden');
+            document.querySelectorAll('.nav-btn')[0].classList.add('active');
+        } else if (view === 'signup') {
+            document.getElementById('signupView').classList.remove('hidden');
+            document.querySelectorAll('.nav-btn')[1].classList.add('active');
+        } else if (view === 'dashboard') {
+            document.getElementById('dashboardView').classList.remove('hidden');
+            document.getElementById('dashboardBtn').classList.add('active');
+            renderDashboard();
+        } else if (view === 'upload') {
+            document.getElementById('uploadView').classList.remove('hidden');
+            document.getElementById('uploadBtn').classList.add('active');
+            initializeUploadForm();
+        } else if (view === 'catalogue') {
+            document.getElementById('catalogueView').classList.remove('hidden');
+            document.getElementById('catalogueBtn').classList.add('active');
+            renderCatalogue();
+        }
+
+        if (playingId !== null) {
+            audioPlayer.pause();
+            updatePlayButton(playingId, false);
+            playingId = null;
+        }
+    }
+
+    function initializeUploadForm() {
+        if (currentArtist) {
+            document.getElementById('ownerName').value = currentArtist.name;
+        }
+        const audioUploadArea = document.getElementById('audioUploadArea');
+        const audioFileInput = document.getElementById('audioFile');
+        const newAudioArea = audioUploadArea.cloneNode(true);
+        audioUploadArea.parentNode.replaceChild(newAudioArea, audioUploadArea);
+        document.getElementById('audioFile').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleAudioFile(e.target.files[0]);
+        });
+        newAudioArea.addEventListener('click', () => document.getElementById('audioFile').click());
+        newAudioArea.addEventListener('dragover', (e) => { e.preventDefault(); newAudioArea.classList.add('dragover'); });
+        newAudioArea.addEventListener('dragleave', () => newAudioArea.classList.remove('dragover'));
+        newAudioArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            newAudioArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleAudioFile(e.dataTransfer.files[0]);
+        });
+
+        const coverUploadArea = document.getElementById('coverUploadArea');
+        const newCoverArea = coverUploadArea.cloneNode(true);
+        coverUploadArea.parentNode.replaceChild(newCoverArea, coverUploadArea);
+        document.getElementById('coverFile').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleCoverFile(e.target.files[0]);
+        });
+        newCoverArea.addEventListener('click', () => document.getElementById('coverFile').click());
+        newCoverArea.addEventListener('dragover', (e) => { e.preventDefault(); newCoverArea.classList.add('dragover'); });
+        newCoverArea.addEventListener('dragleave', () => newCoverArea.classList.remove('dragover'));
+        newCoverArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            newCoverArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleCoverFile(e.dataTransfer.files[0]);
+        });
+    }
+
+    function handleAudioFile(file) {
+        document.getElementById('audioFileDisplay').innerHTML = `
+            <div class="uploaded-file">
+                <i class="fas fa-file-audio"></i>
+                <div style="flex: 1;">
+                    <p style="font-weight: bold;">${file.name}</p>
+                    <p style="font-size: 12px; color: var(--text-muted);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                </div>
+                <i class="fas fa-check-circle" style="color: var(--accent-green);"></i>
+            </div>
+        `;
+    }
+
+    function handleCoverFile(file) {
+        document.getElementById('coverFileDisplay').innerHTML = `
+            <div class="uploaded-file">
+                <i class="fas fa-image"></i>
+                <div style="flex: 1;">
+                    <p style="font-weight: bold;">${file.name}</p>
+                    <p style="font-size: 12px; color: var(--text-muted);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                </div>
+                <i class="fas fa-check-circle" style="color: var(--accent-green);"></i>
+            </div>
+        `;
+    }
+
+    function addCollaborator() {
+        collaboratorCount++;
+        const list = document.getElementById('collaboratorsList');
+        const div = document.createElement('div');
+        div.className = 'collaborator-item';
+        div.id = `collab-${collaboratorCount}`;
+        div.innerHTML = `
+            <input type="text" placeholder="Collaborator name" class="collab-name">
+            <input type="number" placeholder="%" class="collab-split" value="0" min="0" max="100" onchange="updateTotalSplit()">
+            <span style="color: var(--text-muted);">%</span>
+            <button class="btn-remove" onclick="removeCollaborator(${collaboratorCount})"><i class="fas fa-times"></i></button>
+        `;
+        list.appendChild(div);
+        updateTotalSplit();
+    }
+
+    function removeCollaborator(id) {
+        const elem = document.getElementById(`collab-${id}`);
+        if (elem) { elem.remove(); updateTotalSplit(); }
+    }
+
+    function updateTotalSplit() {
+        const ownerSplit = parseInt(document.getElementById('ownerSplit').value) || 0;
+        const collabSplits = Array.from(document.querySelectorAll('.collab-split')).map(i => parseInt(i.value) || 0);
+        const total = ownerSplit + collabSplits.reduce((sum, val) => sum + val, 0);
+        document.getElementById('totalSplit').textContent = total;
+        document.getElementById('totalSplit').style.color = total === 100 ? 'var(--accent-green)' : '#ef4444';
+    }
+
+    function renderCatalogue() {
+        if (!currentArtist) return;
+        const artistSongs = allSongs.filter(s => s.artistId === currentArtist.id);
+        const grid = document.getElementById('catalogueGrid');
+        const emptyState = document.getElementById('emptyState');
+        if (artistSongs.length === 0) {
+            grid.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
+        }
+        emptyState.classList.add('hidden');
+        document.getElementById('totalTracks').textContent = artistSongs.length;
+        document.getElementById('totalStreams').textContent = formatNumber(artistSongs.reduce((sum, s) => sum + s.streamCount, 0));
+        const totalUses = artistSongs.reduce((sum, s) => sum + s.useCount, 0);
+        document.getElementById('totalRevenue').textContent = formatCurrency(totalUses * 0.05, currentArtist.country);
+        const searchQuery = document.getElementById('catalogueSearch')?.value.toLowerCase() || '';
+        const filteredSongs = artistSongs
+            .filter(s => s.title.toLowerCase().includes(searchQuery) || s.genre.toLowerCase().includes(searchQuery))
+            .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+        grid.innerHTML = '';
+        filteredSongs.forEach(song => {
+            const card = document.createElement('div');
+            card.className = `catalogue-song-card ${song.pinned ? 'pinned' : ''}`;
+            const songRevenueUSD = song.useCount * 0.05;
+            card.innerHTML = `
+                ${song.pinned ? '<div class="pin-badge"><i class="fas fa-thumbtack"></i> PINNED</div>' : ''}
+                <div class="catalogue-song-header">
+                    <img src="${song.coverUrl}" alt="${song.title}" class="catalogue-song-cover">
+                    <div class="catalogue-song-info" style="flex: 1;">
+                        <h4>${song.title}</h4>
+                        <p>${song.genre}</p>
+                        <p style="font-size: 11px; margin-top: 4px;">
+                            ${song.collaborators && song.collaborators.length > 1 ?
+                                `<i class="fas fa-users"></i> ${song.collaborators.length} collaborators` : 'Solo track'}
+                        </p>
+                    </div>
+                </div>
+                <div class="catalogue-song-stats">
+                    <div><div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">STREAMS</div><div style="font-weight: bold;">${formatNumber(song.streamCount)}</div></div>
+                    <div><div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">USES</div><div style="font-weight: bold;">${formatNumber(song.useCount)}</div></div>
+                    <div><div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">REVENUE</div><div style="font-weight: bold; color: var(--accent-green);">${formatCurrency(songRevenueUSD, currentArtist.country)}</div></div>
+                </div>
+                <div class="catalogue-song-actions">
+                    <button class="btn-small btn-pin ${song.pinned ? 'active' : ''}" onclick="togglePin('${song.id}')">
+                        <i class="fas fa-thumbtack"></i> ${song.pinned ? 'Unpin' : 'Pin'}
+                    </button>
+                    <button class="btn-small btn-analytics" onclick="showAnalytics('${song.id}')">
+                        <i class="fas fa-chart-line"></i> Analytics
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function showAnalytics(songId) {
+        const song = allSongs.find(s => s.id == songId);
+        if (!song) return;
+        document.getElementById('analyticsModal').classList.add('active');
+        document.getElementById('modalSongTitle').textContent = song.title;
+        document.getElementById('modalStreams').textContent = formatNumber(song.streamCount);
+        document.getElementById('modalUses').textContent = formatNumber(song.useCount);
+        const revenueUSD = song.useCount * 0.05;
+        document.getElementById('modalRevenue').textContent = formatCurrency(revenueUSD, currentArtist.country);
+        document.getElementById('modalEngagement').textContent = song.streamCount > 0 ? ((song.useCount / song.streamCount) * 100).toFixed(1) + '%' : '0%';
+        document.getElementById('modalGenre').textContent = song.genre;
+        document.getElementById('modalDuration').textContent = formatDuration(song.duration);
+        document.getElementById('modalCountry').textContent = song.country;
+        document.getElementById('modalUploadDate').textContent = song.uploadDate ? new Date(song.uploadDate).toLocaleDateString() : '-';
+        const collabList = document.getElementById('modalCollaborators');
+        if (song.collaborators && song.collaborators.length > 0) {
+            collabList.innerHTML = '';
+            song.collaborators.forEach(collab => {
+                const collabRevenue = revenueUSD * (collab.split / 100);
+                const div = document.createElement('div');
+                div.className = 'collaborator-display';
+                div.innerHTML = `
+                    <div><p style="font-weight: bold;">${collab.name}</p><p style="font-size: 12px; color: var(--text-secondary);">${collab.split}% split</p></div>
+                    <div style="text-align: right;"><p style="font-weight: bold; color: var(--accent-green);">${formatCurrency(collabRevenue, currentArtist.country)}</p></div>
+                `;
+                collabList.appendChild(div);
+            });
+        } else {
+            collabList.innerHTML = '<p style="color: var(--text-secondary);">No collaborators on this track</p>';
+        }
+    }
+
+    function closeAnalytics() {
+        document.getElementById('analyticsModal').classList.remove('active');
+    }
+
+    document.getElementById('analyticsModal').addEventListener('click', (e) => {
+        if (e.target.id === 'analyticsModal') closeAnalytics();
+    });
+
+    document.getElementById('catalogueSearch').addEventListener('input', () => renderCatalogue());
+
+    function renderDashboard() {
+        if (!currentArtist) return;
+        document.getElementById('profileName').textContent = currentArtist.name;
+        document.getElementById('profileType').textContent = `${currentArtist.type} • ${currentArtist.country}`;
+        document.getElementById('statStreams').textContent = formatNumber(currentArtist.monthlyStreams || 0);
+        const artistSongs = allSongs.filter(s => s.artistId === currentArtist.id);
+        document.getElementById('statSongs').textContent = artistSongs.length;
+        const totalUses = artistSongs.reduce((sum, s) => sum + s.useCount, 0);
+        document.getElementById('statUses').textContent = formatNumber(totalUses);
+        document.getElementById('statRevenue').textContent = formatCurrency(totalUses * 0.05, currentArtist.country);
+        const linksDiv = document.getElementById('platformLinks');
+        linksDiv.innerHTML = '<h3><i class="fas fa-link"></i> Platform Links</h3>';
+        if (currentArtist.spotifyUrl) {
+            linksDiv.innerHTML += `<a href="${currentArtist.spotifyUrl}" target="_blank" class="platform-link"><i class="fab fa-spotify"></i> Spotify Profile</a>`;
+        }
+        if (currentArtist.appleMusicUrl) {
+            linksDiv.innerHTML += `<a href="${currentArtist.appleMusicUrl}" target="_blank" class="platform-link apple"><i class="fab fa-apple"></i> Apple Music Profile</a>`;
+        }
+        const songsList = document.getElementById('artistSongsList');
+        songsList.innerHTML = '';
+        if (artistSongs.length === 0) {
+            songsList.innerHTML = '<p style="color: rgba(255,255,255,0.6);">No songs uploaded yet. Start uploading to begin earning!</p>';
+        } else {
+            artistSongs.forEach(song => {
+                const item = document.createElement('div');
+                item.className = 'artist-song-item';
+                item.innerHTML = `
+                    <img src="${song.coverUrl}" alt="${song.title}">
+                    <div class="artist-song-info" style="flex: 1;">
+                        <h4>${song.title}</h4>
+                        <p>${formatNumber(song.streamCount)} streams · ${formatNumber(song.useCount)} uses</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="font-weight: bold; color: #10b981;">${formatCurrency(song.useCount * 0.05, currentArtist.country)}</p>
+                    </div>
+                `;
+                songsList.appendChild(item);
+            });
+        }
+    }
+
+    // ── Firebase Creator Feature ──────────────────────────────
+
+    function initPoseFirebase() {
+        poseDB = firebase.firestore();
+        poseStorage = firebase.storage();
+        poseAuth = firebase.auth();
+
+        poseAuth.onAuthStateChanged((user) => {
+            if (user) {
+                initPoseMusicFeature();
+            } else {
+                currentArtist = null;
+                showCreatorNavButtons(false);
+            }
+        });
+    }
+
+    async function initPoseMusicFeature() {
+        const user = poseAuth.currentUser;
+        if (!user) { showCreatorNavButtons(false); return; }
+        try {
+            const doc = await poseDB.collection(POSE_CREATORS).doc(user.uid).get();
+            if (doc.exists) {
+                currentArtist = { id: user.uid, ...doc.data() };
+                showCreatorNavButtons(true);
+                await loadUserSongsFromFirestore();
+            } else {
+                showCreatorNavButtons(false);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function createArtistAccount() {
+        const user = poseAuth.currentUser;
+        if (!user) {
+            showToast('Please log in to your account first', 'error');
+            return;
+        }
+        const name = document.getElementById('artistName')?.value.trim();
+        const country = document.getElementById('artistCountry')?.value;
+        const creatorType = document.getElementById('creatorType')?.value || 'Musician';
+        const spotifyUrl = document.getElementById('spotifyUrl')?.value.trim() || '';
+        const appleMusicUrl = document.getElementById('appleMusicUrl')?.value.trim() || '';
+        const monthlyStr = document.getElementById('monthlyStreams')?.value || '0';
+
+        if (!name) return showToast('Please enter your artist name', 'error');
+        if (!country) return showToast('Please select your country', 'error');
+
+        const btn = document.getElementById('becomeCreatorBtn');
+        _setBtnLoading(btn, true, 'Setting up your profile…');
+
+        try {
+            const profile = {
+                uid: user.uid,
+                name, email: user.email, country,
+                type: creatorType, spotifyUrl, appleMusicUrl,
+                monthlyStreams: parseInt(monthlyStr) || 0,
+                isCreator: true,
+                joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+            await poseDB.collection(POSE_CREATORS).doc(user.uid).set(profile);
+            currentArtist = { id: user.uid, ...profile };
+            showCreatorNavButtons(true);
+            showToast(`You're a creator now, ${name}! Start uploading 🎶`, 'success');
+            showView('dashboard');
+        } catch (err) {
+            console.error(err);
+            showToast('Setup failed. Please try again.', 'error');
+            _setBtnLoading(btn, false, '<i class="fas fa-rocket"></i> Become a Creator');
+        }
+    }
+
+    async function uploadTrack() {
+        const user = poseAuth.currentUser;
+        if (!user || !currentArtist) {
+            showToast('Please set up your creator profile first', 'error');
+            return;
+        }
+        const title = document.getElementById('trackTitle')?.value.trim();
+        const genre = document.getElementById('trackGenre')?.value;
+        const description = document.getElementById('trackDescription')?.value.trim() || '';
+        const audioFile = document.getElementById('audioFile')?.files[0];
+        const coverFile = document.getElementById('coverFile')?.files[0];
+
+        if (!title) return showToast('Please enter a track title', 'error');
+        if (!genre) return showToast('Please select a genre', 'error');
+        if (!audioFile) return showToast('Please upload an audio file', 'error');
+
+        const totalSplit = parseInt(document.getElementById('totalSplit')?.textContent || '0');
+        if (totalSplit !== 100) return showToast('Revenue split must total 100%', 'error');
+
+        const collaborators = [{ name: currentArtist.name, split: parseInt(document.getElementById('ownerSplit')?.value || '100') }];
+        document.querySelectorAll('.collaborator-item').forEach((item, i) => {
+            if (i === 0) return;
+            const cName = item.querySelector('.collab-name')?.value.trim();
+            const cSplit = parseInt(item.querySelector('.collab-split')?.value) || 0;
+            if (cName && cSplit > 0) collaborators.push({ name: cName, split: cSplit });
+        });
+
+        const uploadBtn = document.querySelector('[onclick="uploadTrack()"]');
+        _setBtnLoading(uploadBtn, true, 'Uploading…');
+
+        try {
+            const songDocRef = poseDB.collection(POSE_SONGS).doc();
+            const songId = songDocRef.id;
+            const storagePath = `pose_music/${user.uid}/${songId}`;
+
+            showToast('Uploading audio file…', 'success');
+            const audioSnap = await poseStorage.ref(`${storagePath}/audio_${audioFile.name}`).put(audioFile);
+            const audioUrl = await audioSnap.ref.getDownloadURL();
+
+            let coverUrl = 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop';
+            if (coverFile) {
+                showToast('Uploading cover art…', 'success');
+                const coverSnap = await poseStorage.ref(`${storagePath}/cover_${coverFile.name}`).put(coverFile);
+                coverUrl = await coverSnap.ref.getDownloadURL();
+            }
+
+            const songData = {
+                firestoreId: songId, title, genre, description,
+                artist: currentArtist.name, artistId: user.uid,
+                country: currentArtist.country, audioUrl, coverUrl, collaborators,
+                duration: 0, streamCount: 0, useCount: 0, pinned: false,
+                uploadDate: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+            await songDocRef.set(songData);
+
+            const localSong = { ...songData, id: songId, uploadDate: new Date().toISOString() };
+            allSongs.push(localSong);
+            userSongs.push(localSong);
+
+            showToast(`"${title}" uploaded successfully! 🎵`, 'success');
+            _resetUploadForm();
+            setTimeout(() => showView('catalogue'), 1500);
+        } catch (err) {
+            console.error(err);
+            showToast(err.code === 'storage/unauthorized' ? 'Upload permission denied.' : 'Upload failed. Try again.', 'error');
+        } finally {
+            _setBtnLoading(uploadBtn, false, '<i class="fas fa-check"></i> Upload Track');
+        }
+    }
+
+    async function loadUserSongsFromFirestore() {
+        const user = poseAuth.currentUser;
+        if (!user) return;
+        try {
+            const snapshot = await poseDB.collection(POSE_SONGS).where('artistId', '==', user.uid).orderBy('uploadDate', 'desc').get();
+            userSongs = [];
+            snapshot.forEach(doc => {
+                const data = { ...doc.data(), id: doc.id, firestoreId: doc.id };
+                const exists = allSongs.findIndex(s => s.id === doc.id);
+                if (exists === -1) { allSongs.push(data); } else { allSongs[exists] = data; }
+                userSongs.push(data);
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function togglePin(songId) {
+        const song = allSongs.find(s => s.id == songId);
+        if (!song) return;
+        const newPinState = !song.pinned;
+        song.pinned = newPinState;
         renderCatalogue();
-        showToast('Failed to save pin state', 'error');
-        console.error(err);
+        showToast(newPinState ? 'Song pinned' : 'Song unpinned', 'success');
+        try {
+            await poseDB.collection(POSE_SONGS).doc(String(songId)).update({
+                pinned: newPinState,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+        } catch (err) {
+            song.pinned = !newPinState;
+            renderCatalogue();
+            showToast('Failed to save pin state', 'error');
+        }
     }
-}
 
-async function updateCreatorProfile(updates) {
-    const user = poseAuth.currentUser;
-    if (!user || !currentArtist) return showToast('Not signed in', 'error');
-
-    try {
-        updates.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-        await poseDB.collection(POSE_CREATORS).doc(user.uid).update(updates);
-        currentArtist = { ...currentArtist, ...updates };
-        showToast('Profile updated', 'success');
-    } catch (err) {
-        showToast('Failed to update profile', 'error');
-        console.error(err);
+    function showCreatorNavButtons(show) {
+        ['dashboardBtn', 'catalogueBtn', 'uploadBtn'].forEach(id => {
+            document.getElementById(id)?.classList.toggle('hidden', !show);
+        });
     }
-}
 
-function showCreatorNavButtons(show) {
-    ['dashboardBtn', 'catalogueBtn', 'uploadBtn'].forEach(id => {
-        document.getElementById(id)?.classList.toggle('hidden', !show);
+    function _setBtnLoading(btn, loading, label) {
+        if (!btn) return;
+        btn.disabled = loading;
+        btn.innerHTML = loading ? '<i class="fas fa-spinner fa-spin"></i> ' + label : label;
+    }
+
+    function _resetUploadForm() {
+        ['trackTitle', 'trackGenre', 'trackDescription', 'audioFile', 'coverFile']
+            .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        ['audioFileDisplay', 'coverFileDisplay']
+            .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
+        const ownerSplit = document.getElementById('ownerSplit');
+        if (ownerSplit) ownerSplit.value = '100';
+        document.querySelectorAll('.collaborator-item').forEach((item, i) => { if (i > 0) item.remove(); });
+        updateTotalSplit();
+    }
+
+    window.addEventListener('load', () => {
+        initPoseFirebase();
+        resetAndLoadSongs();
     });
-}
-
-function _setBtnLoading(btn, loading, label) {
-    if (!btn) return;
-    btn.disabled = loading;
-    btn.innerHTML = loading ? '<i class="fas fa-spinner fa-spin"></i> ' + label : label;
-}
-
-function _resetUploadForm() {
-    ['trackTitle', 'trackGenre', 'trackDescription', 'audioFile', 'coverFile']
-        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-    ['audioFileDisplay', 'coverFileDisplay']
-        .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
-    const ownerSplit = document.getElementById('ownerSplit');
-    if (ownerSplit) ownerSplit.value = '100';
-    document.querySelectorAll('.collaborator-item').forEach((item, i) => {
-        if (i > 0) item.remove();
-    });
-    if (typeof updateTotalSplit === 'function') updateTotalSplit();
-}
-
-window.addEventListener('load', () => {
-    initPoseFirebase();
-});
-    </script>
+</script>
+        
+    
 </body>
 </html>
