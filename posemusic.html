@@ -1,2451 +1,1195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pose Music - Music for Your Videos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-purple: #7c3aed;
-            --accent-purple-dark: #6d28d9;
-            --accent-green: #10b981;
-            --accent-green-dark: #059669;
-            --text-primary: #ffffff;
-            --text-secondary: #d1d5db;
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --card-hover-bg: rgba(255, 255, 255, 0.15);
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary-gradient);
-            min-height: 100vh;
-            color: var(--text-primary);
-        }
-
-        /* Top Banner */
-        .top-banner-ad {
-            background: linear-gradient(90deg, #fbbf24, #f97316, #ef4444);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
-        .ad-badge {
-            background: white;
-            color: #f97316;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-right: 12px;
-        }
-
-        .top-banner-ad button {
-            background: white;
-            color: #f97316;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 14px;
-            transition: var(--transition-smooth);
-        }
-
-        .top-banner-ad button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Navigation */
-        nav {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .logo i {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 16px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            color: var(--text-secondary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: var(--transition-smooth);
-            position: relative;
-        }
-
-        .nav-btn:hover {
-            background: var(--accent-purple);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .nav-btn.active {
-            background: var(--accent-purple);
-            color: white;
-        }
-
-        .nav-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 2px;
-            background: var(--accent-purple);
-        }
-
-        /* Filters Section */
-        .filters-section {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .filters-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .filter-group {
-            margin-bottom: 16px;
-        }
-
-        .filter-label {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            color: var(--text-secondary);
-        }
-
-        .genre-tabs {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .genre-tab {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            font-size: 14px;
-        }
-
-        .genre-tab:hover {
-            background: var(--accent-purple);
-            border-color: var(--accent-purple);
-            transform: translateY(-2px);
-        }
-
-        .genre-tab.active {
-            background: var(--accent-purple);
-            border-color: var(--accent-purple);
-        }
-
-        .country-select {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            min-width: 200px;
-            transition: var(--transition-smooth);
-        }
-
-        .country-select:hover {
-            border-color: var(--accent-purple);
-        }
-
-        .country-select option {
-            background: #1f2937;
-            color: white;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px 20px;
-        }
-
-        /* Search Container */
-        .search-container {
-            max-width: 600px;
-            margin: 0 auto 40px;
-            position: relative;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 16px 16px 16px 48px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            color: white;
-            font-size: 16px;
-            transition: var(--transition-smooth);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
-        }
-
-        .search-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        /* Songs Grid */
-        .songs-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-
-        .song-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 24px;
-            transition: var(--transition-smooth);
-            animation: fadeInUp 0.5s ease-out backwards;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .song-card:hover {
-            background: var(--card-hover-bg);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .song-header {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .song-cover {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            transition: var(--transition-smooth);
-        }
-
-        .song-card:hover .song-cover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        .song-info h3 {
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .song-info p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .song-meta {
-            display: flex;
-            gap: 8px;
-            margin-top: 4px;
-            flex-wrap: wrap;
-        }
-
-        .meta-tag {
-            background: rgba(124, 58, 237, 0.3);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: #c4b5fd;
-        }
-
-        .song-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .song-stats span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .song-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: var(--transition-smooth);
-        }
-
-        .btn-play {
-            background: var(--accent-purple);
-            color: white;
-        }
-
-        .btn-play:hover {
-            background: var(--accent-purple-dark);
-            transform: scale(1.05);
-        }
-
-        .btn-play.playing {
-            background: #ef4444;
-        }
-
-        .btn-use {
-            background: var(--accent-green);
-            color: white;
-        }
-
-        .btn-use:hover {
-            background: var(--accent-green-dark);
-            transform: scale(1.05);
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            margin-top: 12px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--accent-purple);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 4px;
-        }
-
-        /* Banner Ads */
-        .banner-ad {
-            grid-column: 1 / -1;
-            background: linear-gradient(90deg, #3b82f6, #7c3aed);
-            border-radius: 16px;
-            padding: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .banner-ad.green {
-            background: linear-gradient(90deg, #10b981, #14b8a6);
-        }
-
-        .banner-ad-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .sponsored-badge {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .banner-ad h4 {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-
-        .banner-ad p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-        }
-
-        .banner-ad button {
-            background: white;
-            color: #3b82f6;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: var(--transition-smooth);
-        }
-
-        .banner-ad button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .banner-ad.green button {
-            color: #10b981;
-        }
-
-        /* Loading Indicator */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Signup Container */
-        .signup-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 40px;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .signup-container h2 {
-            font-size: 32px;
-            margin-bottom: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 16px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            transition: var(--transition-smooth);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: var(--transition-smooth);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Dashboard */
-        .dashboard-ad {
-            background: linear-gradient(135deg, #ec4899, #7c3aed);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .dashboard-ad button {
-            background: white;
-            color: #ec4899;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: var(--transition-smooth);
-        }
-
-        .dashboard-ad button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .dashboard-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 32px;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #7c3aed, #3b82f6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .profile-info h2 {
-            font-size: 32px;
-            margin-bottom: 4px;
-        }
-
-        .profile-info p {
-            color: var(--text-secondary);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 24px;
-            transition: var(--transition-smooth);
-        }
-
-        .stat-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-4px);
-        }
-
-        .stat-card h4 {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-card p {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .platform-links {
-            margin-bottom: 32px;
-        }
-
-        .platform-links h3 {
-            margin-bottom: 16px;
-        }
-
-        .platform-link {
-            display: block;
-            background: #10b981;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin-bottom: 12px;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .platform-link:hover {
-            transform: translateX(8px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .platform-link.apple {
-            background: #ef4444;
-        }
-
-        .artist-songs h3 {
-            margin-bottom: 16px;
-        }
-
-        .artist-song-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: var(--transition-smooth);
-        }
-
-        .artist-song-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(8px);
-        }
-
-        .artist-song-item img {
-            width: 48px;
-            height: 48px;
-            border-radius: 6px;
-        }
-
-        .artist-song-info h4 {
-            margin-bottom: 4px;
-        }
-
-        .artist-song-info p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* Utilities */
-        .hidden {
-            display: none;
-        }
-
-        /* Upload Form Styles */
-        .upload-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .upload-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 24px;
-        }
-
-        .upload-card h3 {
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .file-upload-area {
-            border: 2px dashed var(--glass-border);
-            border-radius: 12px;
-            padding: 48px 24px;
-            text-align: center;
-            transition: var(--transition-smooth);
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .file-upload-area:hover {
-            border-color: var(--accent-purple);
-            background: rgba(124, 58, 237, 0.1);
-        }
-
-        .file-upload-area.dragover {
-            border-color: var(--accent-green);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .file-upload-area i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: var(--accent-purple);
-        }
-
-        .uploaded-file {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            margin-top: 16px;
-        }
-
-        .uploaded-file i {
-            font-size: 24px;
-            color: var(--accent-green);
-        }
-
-        .collaborator-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .collaborator-item input[type="text"] {
-            flex: 1;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: white;
-        }
-
-        .collaborator-item input[type="number"] {
-            width: 80px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: white;
-        }
-
-        .btn-remove {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        .btn-remove:hover {
-            background: #dc2626;
-        }
-
-        .btn-add {
-            background: var(--accent-purple);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-add:hover {
-            background: var(--accent-purple-dark);
-        }
-
-        /* Catalogue Styles */
-        .catalogue-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .catalogue-search {
-            flex: 1;
-            min-width: 300px;
-            position: relative;
-        }
-
-        .catalogue-search input {
-            width: 100%;
-            padding: 12px 12px 12px 40px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: white;
-        }
-
-        .catalogue-search i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .catalogue-stats {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .catalogue-stat {
-            background: var(--glass-bg);
-            padding: 16px 24px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .catalogue-stat h4 {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-
-        .catalogue-stat p {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .catalogue-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .catalogue-song-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 16px;
-            transition: var(--transition-smooth);
-            position: relative;
-        }
-
-        .catalogue-song-card:hover {
-            background: var(--card-hover-bg);
-            transform: translateY(-2px);
-        }
-
-        .catalogue-song-card.pinned {
-            border-color: #fbbf24;
-            background: rgba(251, 191, 36, 0.1);
-        }
-
-        .pin-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: #fbbf24;
-            color: #1f2937;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
-        .catalogue-song-header {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .catalogue-song-cover {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .catalogue-song-info h4 {
-            margin-bottom: 4px;
-            font-size: 16px;
-        }
-
-        .catalogue-song-info p {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .catalogue-song-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-            font-size: 12px;
-        }
-
-        .catalogue-song-stats div {
-            text-align: center;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-        }
-
-        .catalogue-song-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-small {
-            flex: 1;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn-pin {
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-
-        .btn-pin:hover {
-            background: rgba(251, 191, 36, 0.3);
-        }
-
-        .btn-pin.active {
-            background: #fbbf24;
-            color: #1f2937;
-        }
-
-        .btn-analytics {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-analytics:hover {
-            background: rgba(59, 130, 246, 0.3);
-        }
-
-        /* Analytics Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 32px;
-            max-width: 900px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-close {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        .modal-close:hover {
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .analytics-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .analytics-card h5 {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .analytics-card p {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .analytics-section {
-            margin-bottom: 32px;
-        }
-
-        .analytics-section h4 {
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .chart-placeholder {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 48px;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-
-        .collaborators-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .collaborator-display {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-
-        .progress-ring {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: conic-gradient(var(--accent-purple) 0% var(--progress, 0%), rgba(255, 255, 255, 0.1) var(--progress, 0%) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1000;
-            animation: slideInRight 0.3s ease-out;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .toast.success {
-            border-left: 4px solid #10b981;
-        }
-
-        .toast.error {
-            border-left: 4px solid #ef4444;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .songs-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-content {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .songs-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .banner-ad {
-                flex-direction: column;
-                gap: 16px;
-                text-align: center;
-            }
-
-            .song-header {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .songs-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .genre-tabs {
-                justify-content: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pose Music — Sound for Creators</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg-base:#0a0a0a; --bg-elevated:#111; --bg-surface:#1a1a1a; --bg-card:#1e1e1e; --bg-hover:#2a2a2a;
+  --accent:#1db954; --accent-dim:#17a349; --accent-glow:rgba(29,185,84,.18);
+  --accent-red:#e8414b; --accent-blue:#3d8bff; --accent-amber:#f59e0b;
+  --text-primary:#fff; --text-secondary:#b3b3b3; --text-muted:#636363;
+  --border:rgba(255,255,255,.07); --border-bright:rgba(255,255,255,.14);
+  --font-display:'Syne',sans-serif; --font-body:'DM Sans',sans-serif;
+  --sidebar-w:240px; --player-h:90px; --radius:12px; --radius-sm:8px; --radius-lg:18px;
+  --tr:all .22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-primary);min-height:100vh;display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:1fr var(--player-h);grid-template-areas:"sidebar main" "player player";overflow:hidden;height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:#555}
+
+/* Sidebar */
+.sidebar{grid-area:sidebar;background:#000;display:flex;flex-direction:column;border-right:1px solid var(--border);z-index:10;overflow:hidden}
+.sidebar-logo{padding:26px 22px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;text-decoration:none;color:inherit}
+.sidebar-logo .logo-icon{width:34px;height:34px;background:var(--accent);border-radius:50%;display:grid;place-items:center;font-size:15px;color:#000;flex-shrink:0}
+.sidebar-logo span{font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:-.3px}
+.nav-section{padding:0 10px 6px}
+.nav-section-label{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);padding:10px 12px 5px;display:block}
+.nav-btn{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border-radius:var(--radius-sm);background:transparent;color:var(--text-secondary);border:none;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:500;transition:var(--tr);text-align:left}
+.nav-btn:hover{background:var(--bg-surface);color:var(--text-primary)}
+.nav-btn.active{background:var(--bg-surface);color:var(--text-primary)}
+.nav-btn.active .nav-icon{color:var(--accent)}
+.nav-icon{width:17px;text-align:center;font-size:14px;flex-shrink:0}
+.sidebar-promo{margin:10px;padding:14px;background:linear-gradient(135deg,#1a2e1e,#0d1f12);border:1px solid rgba(29,185,84,.2);border-radius:var(--radius);font-size:12px;color:var(--text-secondary)}
+.sidebar-promo strong{color:var(--accent);display:block;margin-bottom:3px;font-size:12.5px}
+.sidebar-promo .promo-btn{display:inline-block;margin-top:9px;padding:6px 13px;background:var(--accent);color:#000;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:var(--font-body);transition:var(--tr)}
+.sidebar-promo .promo-btn:hover{background:#22d160}
+.sidebar-bottom{margin-top:auto;padding:10px;border-top:1px solid var(--border)}
+.sidebar-user{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--tr)}
+.sidebar-user:hover{background:var(--bg-surface)}
+.user-avatar{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#0d9c3f);border-radius:50%;display:grid;place-items:center;font-size:13px;color:#000;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500}
+
+/* Main */
+.main-area{grid-area:main;overflow-y:auto;background:var(--bg-base);position:relative}
+.top-banner-ad{background:linear-gradient(90deg,#0d2a16,#1a4526);border-bottom:1px solid rgba(29,185,84,.18);padding:9px 28px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--text-secondary);gap:14px;flex-shrink:0}
+.top-banner-ad .ad-badge{background:var(--accent);color:#000;padding:2px 7px;border-radius:4px;font-size:9.5px;font-weight:800;letter-spacing:.5px;margin-right:9px}
+.top-banner-ad button{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 13px;border-radius:20px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:var(--tr);white-space:nowrap;flex-shrink:0}
+.top-banner-ad button:hover{background:var(--accent);color:#000}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(10,10,10,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:14px 28px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
+.search-container{flex:1;max-width:340px;position:relative}
+.search-input{width:100%;background:var(--bg-surface);border:1px solid var(--border-bright);border-radius:40px;padding:9px 14px 9px 38px;color:var(--text-primary);font-family:var(--font-body);font-size:13.5px;transition:var(--tr);outline:none}
+.search-input:focus{border-color:var(--accent);background:var(--bg-card);box-shadow:0 0 0 3px var(--accent-glow)}
+.search-input::placeholder{color:var(--text-muted)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none}
+
+.page-content{padding:22px 28px 40px}
+.page-content.hidden,.hidden{display:none!important}
+
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.section-title{font-family:var(--font-display);font-size:21px;font-weight:700}
+.section-link{font-size:11.5px;color:var(--text-muted);font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
+.section-link:hover{color:var(--text-primary)}
+
+/* Filters */
+.filters-section{padding:0 28px 18px}
+.filters-content{display:flex;flex-direction:column;gap:11px}
+.filter-label{font-size:10.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:5px}
+.genre-tabs{display:flex;gap:7px;flex-wrap:wrap}
+.genre-tab{padding:6px 15px;border-radius:20px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:var(--tr);font-family:var(--font-body)}
+.genre-tab:hover{border-color:var(--text-muted);color:var(--text-primary)}
+.genre-tab.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
+.country-select{background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);padding:7px 13px;border-radius:20px;font-size:12px;font-family:var(--font-body);cursor:pointer;outline:none;transition:var(--tr);min-width:170px}
+.country-select:hover{border-color:var(--text-muted);color:var(--text-primary)}
+.country-select option{background:#1a1a1a;color:white}
+
+/* Song Grid */
+.songs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px}
+.song-card{background:var(--bg-card);border-radius:var(--radius);padding:15px;cursor:pointer;transition:var(--tr);border:1px solid transparent;position:relative;overflow:hidden;animation:fadeInUp .35s ease-out backwards}
+.song-card:hover{background:var(--bg-hover);border-color:var(--border-bright);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.song-cover-wrap{position:relative;margin-bottom:13px}
+.song-cover{width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--radius-sm);display:block}
+.song-cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,.42);border-radius:var(--radius-sm);display:grid;place-items:center;opacity:0;transition:var(--tr)}
+.song-card:hover .song-cover-overlay{opacity:1}
+.play-btn-overlay{width:42px;height:42px;background:var(--accent);border-radius:50%;display:grid;place-items:center;color:#000;font-size:15px;border:none;cursor:pointer;transform:scale(.85) translateY(6px);transition:var(--tr);box-shadow:0 4px 18px rgba(29,185,84,.5)}
+.song-card:hover .play-btn-overlay{transform:scale(1) translateY(0)}
+.play-btn-overlay:hover{transform:scale(1.08)!important}
+.song-info h3{font-size:13px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-info p{font-size:11.5px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-meta{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.meta-tag{padding:2px 7px;background:rgba(255,255,255,.07);border-radius:3px;font-size:10px;color:var(--text-muted);font-weight:500}
+.song-stats{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--text-muted)}
+.song-stats span{display:flex;align-items:center;gap:3px}
+.song-actions{display:flex;gap:7px;margin-top:11px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:none;cursor:pointer;font-family:var(--font-body);font-weight:600;border-radius:40px;transition:var(--tr)}
+.btn-play{flex:1;padding:8px 10px;background:var(--bg-surface);color:var(--text-primary);font-size:11.5px;border:1px solid var(--border)}
+.btn-play:hover{background:var(--bg-hover);border-color:var(--border-bright)}
+.btn-play.playing{background:rgba(29,185,84,.15);border-color:var(--accent);color:var(--accent)}
+.btn-use{flex:1;padding:8px 10px;background:var(--accent);color:#000;font-size:11.5px}
+.btn-use:hover{background:#22d160;transform:scale(1.03)}
+.progress-bar{width:100%;height:3px;background:rgba(255,255,255,.09);border-radius:2px;margin-top:9px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);width:0%;transition:width .1s linear}
+.progress-text{text-align:center;font-size:10px;color:var(--text-muted);margin-top:3px}
+
+/* Banner Ad */
+.banner-ad{grid-column:1/-1;background:linear-gradient(135deg,#0d2219,#0a1a12);border:1px solid rgba(29,185,84,.18);border-radius:var(--radius-lg);padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.banner-ad.green{background:linear-gradient(135deg,#0d2219,#0a1a12)}
+.banner-ad-content{display:flex;align-items:center;gap:13px}
+.sponsored-badge{background:rgba(29,185,84,.13);border:1px solid rgba(29,185,84,.28);color:var(--accent);padding:2px 9px;border-radius:4px;font-size:9.5px;font-weight:700;letter-spacing:.8px;white-space:nowrap}
+.banner-ad h4{font-size:14.5px;font-weight:600;margin-bottom:2px}
+.banner-ad p{font-size:11.5px;color:var(--text-secondary)}
+.banner-ad button{background:var(--accent);color:#000;border:none;padding:8px 18px;border-radius:40px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--font-body);transition:var(--tr);white-space:nowrap}
+.banner-ad button:hover{background:#22d160;transform:scale(1.03)}
+
+/* Effects Panel */
+.effects-panel{position:fixed;right:0;top:0;bottom:var(--player-h);width:310px;background:#000;border-left:1px solid var(--border);z-index:50;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.effects-panel.open{transform:translateX(0)}
+.effects-header{padding:22px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.effects-header h3{font-family:var(--font-display);font-size:16px;font-weight:700}
+.effects-close{background:transparent;border:none;color:var(--text-muted);font-size:17px;cursor:pointer;transition:var(--tr);padding:4px}
+.effects-close:hover{color:var(--text-primary)}
+.effects-song-info{padding:12px 18px;display:flex;align-items:center;gap:11px;background:var(--bg-surface);border-bottom:1px solid var(--border)}
+.effects-song-info img{width:42px;height:42px;border-radius:6px;object-fit:cover}
+.esi-title{font-size:12.5px;font-weight:600}
+.esi-artist{font-size:11px;color:var(--text-secondary)}
+.effects-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.effect-group{}
+.effect-group-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+.speed-selector{display:flex;gap:5px;flex-wrap:wrap}
+.speed-btn{padding:5px 11px;border-radius:20px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:var(--tr)}
+.speed-btn:hover{border-color:var(--text-muted);color:var(--text-primary)}
+.speed-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.slider-row label{font-size:12px;color:var(--text-secondary);width:75px;flex-shrink:0}
+.slider-val{font-size:11.5px;font-weight:600;color:var(--accent);width:34px;text-align:right;flex-shrink:0}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--bg-hover);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 6px rgba(29,185,84,.5)}
+.effect-toggle-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--bg-surface);border-radius:var(--radius-sm);margin-bottom:5px}
+.etg-name{font-size:12.5px;font-weight:500}
+.etg-desc{font-size:10.5px;color:var(--text-muted)}
+.toggle-switch{position:relative;width:34px;height:19px}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg-hover);border-radius:20px;cursor:pointer;transition:var(--tr)}
+.toggle-slider::before{content:'';position:absolute;width:13px;height:13px;border-radius:50%;left:3px;top:3px;background:white;transition:var(--tr)}
+.toggle-switch input:checked+.toggle-slider{background:var(--accent)}
+.toggle-switch input:checked+.toggle-slider::before{transform:translateX(15px);background:#000}
+.eq-bars{display:flex;align-items:flex-end;gap:3px;height:38px;padding:7px 12px;background:var(--bg-surface);border-radius:var(--radius-sm)}
+.eq-bar{flex:1;background:var(--accent);border-radius:2px 2px 0 0;opacity:.55;min-height:3px;transition:height .1s ease}
+.effects-use-btn{margin:0 18px 18px;padding:12px;background:var(--accent);color:#000;border:none;border-radius:var(--radius);font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:7px;transition:var(--tr)}
+.effects-use-btn:hover{background:#22d160;transform:scale(1.02)}
+
+/* Player Bar */
+.player-bar{grid-area:player;background:var(--bg-elevated);border-top:1px solid var(--border);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 22px;gap:14px;z-index:10}
+.player-track{display:flex;align-items:center;gap:11px;min-width:0}
+.player-cover{width:50px;height:50px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg-surface)}
+.player-info{min-width:0}
+.player-title{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-artist{font-size:11px;color:var(--text-secondary)}
+.player-like{background:transparent;border:none;color:var(--text-muted);font-size:13.5px;cursor:pointer;padding:5px;transition:var(--tr);flex-shrink:0}
+.player-like:hover{color:var(--accent);transform:scale(1.15)}
+.player-like.liked{color:var(--accent)}
+.player-controls{display:flex;flex-direction:column;align-items:center;gap:7px}
+.player-btns{display:flex;align-items:center;gap:4px}
+.player-btn{background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:5px 9px;border-radius:50%;font-size:16px;transition:var(--tr)}
+.player-btn:hover{color:var(--text-primary);background:rgba(255,255,255,.07)}
+.player-btn.main{font-size:20px;color:var(--text-primary);padding:7px}
+.player-progress{display:flex;align-items:center;gap:7px;width:100%;max-width:380px}
+.player-time{font-size:10px;color:var(--text-muted);width:28px;text-align:center;flex-shrink:0}
+.player-seek{flex:1}
+.player-right{display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.effects-open-btn{display:flex;align-items:center;gap:5px;background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.22);color:var(--accent);padding:6px 13px;border-radius:20px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:var(--tr)}
+.effects-open-btn:hover{background:rgba(29,185,84,.2)}
+.player-vol-icon{color:var(--text-muted);font-size:13px}
+.player-volume{width:75px}
+
+/* Loading */
+.loading{text-align:center;padding:36px;font-size:13.5px;color:var(--text-muted)}
+.loading i{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* Forms */
+.signup-hero{text-align:center;margin-bottom:28px}
+.signup-hero h2{font-family:var(--font-display);font-size:32px;font-weight:800;margin-bottom:7px}
+.signup-hero p{color:var(--text-secondary);font-size:14px}
+.benefit-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:22px}
+.benefit-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center}
+.benefit-card .bc-val{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--accent)}
+.benefit-card .bc-label{font-size:10.5px;color:var(--text-muted);margin-top:2px}
+.signup-container{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:11.5px;font-weight:600;color:var(--text-secondary);letter-spacing:.4px}
+.form-group input,.form-group select{background:var(--bg-surface);border:1px solid var(--border-bright);color:var(--text-primary);padding:10px 13px;border-radius:var(--radius-sm);font-size:13.5px;font-family:var(--font-body);outline:none;transition:var(--tr)}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.form-group input::placeholder{color:var(--text-muted)}
+.form-group select option{background:#1a1a1a}
+#becomeCreatorBtn,.btn-submit{width:100%;padding:13px;background:var(--accent);color:#000;border:none;border-radius:var(--radius);font-size:14.5px;font-weight:700;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:7px;transition:var(--tr);margin-top:18px}
+#becomeCreatorBtn:hover,.btn-submit:hover{background:#22d160;transform:translateY(-1px);box-shadow:0 8px 22px rgba(29,185,84,.3)}
+
+/* Upload */
+.upload-container{max-width:680px;margin:0 auto}
+.upload-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;margin-bottom:14px}
+.upload-card h3{font-family:var(--font-display);font-size:15.5px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:9px;color:var(--text-primary)}
+.upload-card h3 i{color:var(--accent)}
+.file-upload-area{border:2px dashed var(--border-bright);border-radius:var(--radius);padding:36px 22px;text-align:center;cursor:pointer;transition:var(--tr);background:rgba(255,255,255,.01)}
+.file-upload-area:hover,.file-upload-area.dragover{border-color:var(--accent);background:rgba(29,185,84,.04)}
+.file-upload-area i{font-size:34px;color:var(--text-muted);margin-bottom:10px;display:block}
+.file-upload-area p{font-size:13px;color:var(--text-secondary)}
+.file-upload-area p:first-of-type{font-weight:600;color:var(--text-primary)}
+.uploaded-file{display:flex;align-items:center;gap:11px;padding:11px 14px;background:rgba(29,185,84,.07);border:1px solid rgba(29,185,84,.18);border-radius:var(--radius-sm);margin-top:10px;font-size:12.5px}
+.uploaded-file i{color:var(--accent);font-size:17px}
+.uploaded-file .check{margin-left:auto;color:var(--accent)}
+.collaborator-item{display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg-surface);border-radius:var(--radius-sm);margin-bottom:7px}
+.collaborator-item input[type="text"]{flex:1;background:var(--bg-card);border:1px solid var(--border);padding:7px 11px;border-radius:6px;color:white;font-family:var(--font-body);font-size:12.5px;outline:none}
+.collaborator-item input[type="text"]:focus{border-color:var(--accent)}
+.collaborator-item input[type="number"]{width:65px;background:var(--bg-card);border:1px solid var(--border);padding:7px 9px;border-radius:6px;color:white;font-family:var(--font-body);font-size:12.5px;outline:none;text-align:center}
+.collaborator-item span{font-size:12.5px;color:var(--text-muted)}
+.btn-remove{background:rgba(232,65,75,.1);color:#e8414b;border:1px solid rgba(232,65,75,.18);padding:6px 10px;border-radius:6px;cursor:pointer;transition:var(--tr)}
+.btn-remove:hover{background:rgba(232,65,75,.2)}
+.btn-add{background:rgba(29,185,84,.1);color:var(--accent);border:1px solid rgba(29,185,84,.22);padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body);font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;transition:var(--tr)}
+.btn-add:hover{background:rgba(29,185,84,.18)}
+.split-info{padding:11px 14px;background:rgba(61,139,255,.07);border:1px solid rgba(61,139,255,.14);border-radius:var(--radius-sm);font-size:12.5px;margin-top:11px}
+
+/* Catalogue */
+.catalogue-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:11px}
+.catalogue-search{position:relative;min-width:240px}
+.catalogue-search input{width:100%;padding:8px 11px 8px 34px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:white;font-family:var(--font-body);font-size:12.5px;outline:none;transition:var(--tr)}
+.catalogue-search input:focus{border-color:var(--accent)}
+.catalogue-search i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px}
+.catalogue-stats{display:flex;gap:11px;margin-bottom:22px;flex-wrap:wrap}
+.catalogue-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;flex:1;min-width:110px}
+.catalogue-stat h4{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);margin-bottom:5px}
+.catalogue-stat p{font-size:24px;font-weight:700;font-family:var(--font-display)}
+.catalogue-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:13px}
+.catalogue-song-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;transition:var(--tr);position:relative;overflow:hidden}
+.catalogue-song-card:hover{background:var(--bg-hover);border-color:var(--border-bright);transform:translateY(-1px)}
+.catalogue-song-card.pinned{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.04)}
+.pin-badge{position:absolute;top:10px;right:10px;background:var(--accent-amber);color:#000;padding:2px 7px;border-radius:4px;font-size:9.5px;font-weight:700}
+.catalogue-song-header{display:flex;gap:11px;margin-bottom:11px;align-items:center}
+.catalogue-song-cover{width:50px;height:50px;border-radius:6px;object-fit:cover}
+.catalogue-song-info h4{font-size:13.5px;font-weight:600;margin-bottom:2px}
+.catalogue-song-info p{font-size:11.5px;color:var(--text-secondary)}
+.catalogue-song-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px}
+.catalogue-song-stats div{text-align:center;padding:7px 4px;background:rgba(255,255,255,.03);border-radius:6px}
+.catalogue-song-stats div>div:first-child{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:3px}
+.catalogue-song-stats div>div:last-child{font-size:14px;font-weight:700}
+.catalogue-song-actions{display:flex;gap:6px}
+.btn-small{flex:1;padding:6px 9px;border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font-body);transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-pin{background:rgba(245,158,11,.1);color:var(--accent-amber);border:1px solid rgba(245,158,11,.18)}
+.btn-pin:hover{background:rgba(245,158,11,.2)}
+.btn-pin.active{background:var(--accent-amber);color:#000}
+.btn-analytics{background:rgba(61,139,255,.1);color:var(--accent-blue);border:1px solid rgba(61,139,255,.18)}
+.btn-analytics:hover{background:rgba(61,139,255,.2)}
+
+/* Dashboard */
+.dashboard-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;margin-bottom:14px}
+.dashboard-ad{background:linear-gradient(135deg,#0d1f2e,#0a1520);border:1px solid rgba(61,139,255,.18);border-radius:var(--radius-lg);padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.dashboard-ad button{background:var(--accent-blue);color:#fff;border:none;padding:8px 18px;border-radius:40px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--font-body);transition:var(--tr)}
+.dashboard-ad button:hover{background:#559bff}
+.profile-header{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.profile-avatar{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),#0d9c3f);border-radius:50%;display:grid;place-items:center;font-size:26px;color:#000;flex-shrink:0}
+.profile-info h2{font-family:var(--font-display);font-size:24px;font-weight:800;margin-bottom:2px}
+.profile-info p{font-size:12.5px;color:var(--text-secondary)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:26px}
+.stat-card{background:var(--bg-surface);border-radius:var(--radius);padding:16px;transition:var(--tr)}
+.stat-card:hover{background:var(--bg-hover);transform:translateY(-2px)}
+.stat-card h4{color:var(--text-muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
+.stat-card h4 i{color:var(--accent)}
+.stat-card p{font-size:26px;font-weight:700;font-family:var(--font-display)}
+.platform-links{margin-bottom:22px}
+.platform-links h3{font-size:14.5px;font-weight:600;margin-bottom:11px}
+.platform-link{display:flex;align-items:center;gap:9px;background:rgba(29,185,84,.09);color:white;padding:9px 13px;border-radius:var(--radius-sm);text-decoration:none;margin-bottom:7px;transition:var(--tr);border:1px solid rgba(29,185,84,.13);font-size:13px}
+.platform-link:hover{background:rgba(29,185,84,.16);transform:translateX(4px)}
+.platform-link.apple{background:rgba(232,65,75,.09);border-color:rgba(232,65,75,.13)}
+.platform-link.apple:hover{background:rgba(232,65,75,.16)}
+.artist-songs h3{font-size:14.5px;font-weight:600;margin-bottom:11px}
+.artist-song-item{background:rgba(255,255,255,.03);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:11px;transition:var(--tr)}
+.artist-song-item:hover{background:rgba(255,255,255,.06);transform:translateX(4px)}
+.artist-song-item img{width:42px;height:42px;border-radius:6px}
+.artist-song-info{flex:1;min-width:0}
+.artist-song-info h4{font-size:13px;font-weight:600}
+.artist-song-info p{font-size:11.5px;color:var(--text-secondary)}
+
+/* Analytics Modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal.active{display:flex}
+.modal-content{background:var(--bg-elevated);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:26px;max-width:840px;width:90%;max-height:88vh;overflow-y:auto;animation:modalIn .25s ease-out}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(18px)}to{opacity:1;transform:none}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-header h2{font-family:var(--font-display);font-size:19px;font-weight:700;display:flex;align-items:center;gap:9px}
+.modal-close{background:transparent;border:none;color:var(--text-muted);font-size:19px;cursor:pointer;transition:var(--tr);padding:3px}
+.modal-close:hover{color:var(--text-primary)}
+.analytics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:22px}
+.analytics-card{background:var(--bg-surface);padding:16px;border-radius:var(--radius);border:1px solid var(--border)}
+.analytics-card h5{font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:7px}
+.analytics-card p{font-size:24px;font-weight:700;font-family:var(--font-display)}
+.analytics-section{margin-bottom:22px}
+.analytics-section h4{font-size:13.5px;font-weight:600;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.chart-placeholder{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px;text-align:center;color:var(--text-muted);font-size:12.5px}
+.chart-placeholder i{font-size:34px;margin-bottom:11px;display:block}
+.collaborators-list{}
+.collaborator-display{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;background:var(--bg-surface);border-radius:var(--radius-sm);margin-bottom:5px}
+.progress-ring{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;background:conic-gradient(var(--accent) 0% var(--progress,0%),rgba(255,255,255,.07) var(--progress,0%) 100%)}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(var(--player-h) + 14px);right:22px;background:var(--bg-elevated);border:1px solid var(--border-bright);color:var(--text-primary);padding:11px 16px;border-radius:var(--radius);box-shadow:0 8px 28px rgba(0,0,0,.5);display:flex;align-items:center;gap:9px;z-index:200;font-size:13px;animation:toastIn .25s ease-out;max-width:310px}
+@keyframes toastIn{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.toast.success{border-left:3px solid var(--accent)}
+.toast.error{border-left:3px solid var(--accent-red)}
+.toast i{font-size:14px}
+.toast.success i{color:var(--accent)}
+.toast.error i{color:var(--accent-red)}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* Responsive */
+@media(max-width:900px){
+  :root{--sidebar-w:62px}
+  .sidebar-logo span,.nav-btn span,.sidebar-promo,.sidebar-bottom .user-name,.nav-section-label{display:none}
+  .nav-btn{justify-content:center;padding:11px}
+  .sidebar-logo{justify-content:center;padding:22px 10px 14px}
+  .sidebar-user{justify-content:center}
+  .page-content{padding:14px}
+  .filters-section{padding:0 14px 14px}
+  .topbar{padding:11px 14px}
+}
+@media(max-width:600px){
+  body{grid-template-columns:1fr;grid-template-areas:"main" "player"}
+  .sidebar{display:none}
+  .player-bar{grid-template-columns:1fr auto}
+  .player-right{display:none}
+  .effects-panel{width:100%}
+  .analytics-grid{grid-template-columns:1fr 1fr}
+  .songs-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
 </head>
 <body>
-    <div class="top-banner-ad" id="topBanner">
-        <div style="display: flex; align-items: center;">
-            <span class="ad-badge">POSE</span>
-            <p>💰 Artists earn 3-5x more on Pose Music! Join thousands of creators making real income</p>
-        </div>
-        <button onclick="closeBanner()">Learn How</button>
-    </div>
 
-    <nav>
-        <div class="nav-content">
-            <div class="logo" onclick="showView('search')">
-                <i class="fas fa-music"></i>
-                <span>Pose Music</span>
-            </div>
-            <div class="nav-buttons">
-                <button class="nav-btn active" onclick="showView('search')">
-                    <i class="fas fa-search"></i> Search
-                </button>
-                <button class="nav-btn" onclick="showView('signup')">
-                    <i class="fas fa-star"></i> Become a Creator
-                </button>
-                <button class="nav-btn hidden" id="dashboardBtn" onclick="showView('dashboard')">
-                    <i class="fas fa-chart-line"></i> Dashboard
-                </button>
-                <button class="nav-btn hidden" id="catalogueBtn" onclick="showView('catalogue')">
-                    <i class="fas fa-folder-open"></i> Catalogue
-                </button>
-                <button class="nav-btn hidden" id="uploadBtn" onclick="showView('upload')">
-                    <i class="fas fa-upload"></i> Upload Music
-                </button>
-            </div>
-        </div>
-    </nav>
+<!-- ── Sidebar ─────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo" onclick="showView('search')">
+    <div class="logo-icon"><i class="fas fa-wave-square"></i></div>
+    <span>Pose</span>
+  </div>
 
-    <div class="filters-section" id="filtersSection">
-        <div class="filters-content">
-            <div class="filter-group">
-                <span class="filter-label"><i class="fas fa-filter"></i> Genre</span>
-                <div class="genre-tabs">
-                    <button class="genre-tab active" onclick="filterByGenre('All')">All</button>
-                    <button class="genre-tab" onclick="filterByGenre('Pop')">Pop</button>
-                    <button class="genre-tab" onclick="filterByGenre('Hip Hop')">Hip Hop</button>
-                    <button class="genre-tab" onclick="filterByGenre('Rock')">Rock</button>
-                    <button class="genre-tab" onclick="filterByGenre('Electronic')">Electronic</button>
-                    <button class="genre-tab" onclick="filterByGenre('R&B')">R&B</button>
-                    <button class="genre-tab" onclick="filterByGenre('Jazz')">Jazz</button>
-                    <button class="genre-tab" onclick="filterByGenre('Country')">Country</button>
-                    <button class="genre-tab" onclick="filterByGenre('Latin')">Latin</button>
-                    <button class="genre-tab" onclick="filterByGenre('Afrobeats')">Afrobeats</button>
-                </div>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label"><i class="fas fa-globe"></i> Country</span>
-                <select class="country-select" id="countryFilter" onchange="filterByCountry()">
-                    <option value="All">All Countries</option>
-                    <option value="USA">United States</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="Nigeria">Nigeria</option>
-                    <option value="Ghana">Ghana</option>
-                    <option value="South Africa">South Africa</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="France">France</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Japan">Japan</option>
-                    <option value="South Korea">South Korea</option>
-                    <option value="India">India</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Search View -->
-        <div id="searchView">
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search for songs or artists..." id="searchInput">
-            </div>
-            <div class="songs-grid" id="songsGrid"></div>
-            <div class="loading hidden" id="loadingIndicator">
-                <i class="fas fa-spinner fa-spin"></i> Loading more songs...
-            </div>
-            <div class="banner-ad green" style="margin-top: 32px;">
-                <div class="banner-ad-content">
-                    <span class="sponsored-badge">POSE CREATORS</span>
-                    <div>
-                        <h4>🚀 Your music, your earnings - amplified on Pose</h4>
-                        <p>Every use pays creators directly. Earn 3-5x more than traditional streaming platforms</p>
-                    </div>
-                </div>
-                <button onclick="showView('signup')">Start Earning More</button>
-            </div>
-        </div>
-
-        
-               
-               <div id="signupView" class="hidden">
-  <div style="max-width:520px;margin:0 auto;padding:32px 16px;">
-    <h2>🎵 Become a Creator</h2>
-    <p style="color:rgba(255,255,255,.5);margin-bottom:24px;">
-      Set up your artist profile to start uploading and earning
-    </p>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <div class="form-group" style="grid-column:1/-1">
-        <label>Artist / Stage Name *</label>
-        <input type="text" id="artistName" placeholder="e.g. DJ Sunset">
-      </div>
-      <div class="form-group">
-        <label>Creator Type</label>
-        <select id="creatorType">
-          <option>Musician</option><option>Producer</option>
-          <option>DJ</option><option>Songwriter</option><option>Band</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Country *</label>
-        <select id="artistCountry">
-          <option value="">Select country…</option>
-          <option>USA</option><option>UK</option><option>Nigeria</option>
-          <option>Ghana</option><option>South Africa</option><option>Canada</option>
-          <option>Brazil</option><option>Australia</option><option>India</option>
-          <option>Japan</option><option>Egypt</option><option>Mexico</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Spotify URL</label>
-        <input type="url" id="spotifyUrl" placeholder="https://open.spotify.com/artist/…">
-      </div>
-      <div class="form-group">
-        <label>Apple Music URL</label>
-        <input type="url" id="appleMusicUrl" placeholder="https://music.apple.com/…">
-      </div>
-      <div class="form-group" style="grid-column:1/-1">
-        <label>Monthly Streams (approx.)</label>
-        <input type="number" id="monthlyStreams" placeholder="e.g. 50000" min="0">
-      </div>
-    </div>
-
-    <button id="becomeCreatorBtn" onclick="createArtistAccount()"
-      class="btn btn-primary" style="width:100%;margin-top:20px;">
-      <i class="fas fa-rocket"></i> Become a Creator
+  <nav class="nav-section">
+    <span class="nav-section-label">Discover</span>
+    <button class="nav-btn active" onclick="showView('search')">
+      <i class="nav-icon fas fa-home"></i><span>Browse</span>
     </button>
+  </nav>
+
+  <nav class="nav-section">
+    <span class="nav-section-label">Creator</span>
+    <button class="nav-btn" onclick="showView('signup')" id="nav-signup-btn">
+      <i class="nav-icon fas fa-star"></i><span>Become a Creator</span>
+    </button>
+    <button class="nav-btn hidden" id="dashboardBtn" onclick="showView('dashboard')">
+      <i class="nav-icon fas fa-chart-line"></i><span>Dashboard</span>
+    </button>
+    <button class="nav-btn hidden" id="catalogueBtn" onclick="showView('catalogue')">
+      <i class="nav-icon fas fa-folder-open"></i><span>Catalogue</span>
+    </button>
+    <button class="nav-btn hidden" id="uploadBtn" onclick="showView('upload')">
+      <i class="nav-icon fas fa-upload"></i><span>Upload</span>
+    </button>
+  </nav>
+
+  <div style="padding:0 10px;margin-top:6px;">
+    <div class="sidebar-promo">
+      <strong>🎙️ Earn More with Pose</strong>
+      Artists earn 3–5× more per use.
+      <button class="promo-btn" onclick="showView('signup')">Get Started</button>
+    </div>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user" id="sidebarUser" style="display:none">
+      <div class="user-avatar"><i class="fas fa-user"></i></div>
+      <span class="user-name" id="sidebarUserName">Artist</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ── Main ───────────────────────────────── -->
+<main class="main-area">
+
+  <div class="top-banner-ad" id="topBanner">
+    <div style="display:flex;align-items:center;min-width:0;">
+      <span class="ad-badge">NEW</span>
+      <span>💰 Artists earn 3–5× more on Pose Music — real income from every use</span>
+    </div>
+    <button onclick="closeBanner()">Learn How →</button>
+  </div>
+
+  <div class="topbar">
+    <button class="player-btn" style="font-size:14px;"><i class="fas fa-chevron-left"></i></button>
+    <button class="player-btn" style="font-size:14px;"><i class="fas fa-chevron-right"></i></button>
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="search-input" placeholder="Search sounds, artists…" id="searchInput">
+    </div>
+  </div>
+
+  <div class="filters-section" id="filtersSection">
+    <div class="filters-content">
+      <div>
+        <span class="filter-label"><i class="fas fa-music" style="margin-right:5px;"></i>Genre</span>
+        <div class="genre-tabs">
+          <button class="genre-tab active" onclick="filterByGenre('All')">All</button>
+          <button class="genre-tab" onclick="filterByGenre('Pop')">Pop</button>
+          <button class="genre-tab" onclick="filterByGenre('Hip Hop')">Hip Hop</button>
+          <button class="genre-tab" onclick="filterByGenre('Rock')">Rock</button>
+          <button class="genre-tab" onclick="filterByGenre('Electronic')">Electronic</button>
+          <button class="genre-tab" onclick="filterByGenre('R&B')">R&amp;B</button>
+          <button class="genre-tab" onclick="filterByGenre('Jazz')">Jazz</button>
+          <button class="genre-tab" onclick="filterByGenre('Country')">Country</button>
+          <button class="genre-tab" onclick="filterByGenre('Latin')">Latin</button>
+          <button class="genre-tab" onclick="filterByGenre('Afrobeats')">Afrobeats</button>
+        </div>
+      </div>
+      <div>
+        <span class="filter-label"><i class="fas fa-globe" style="margin-right:5px;"></i>Country</span>
+        <select class="country-select" id="countryFilter" onchange="filterByCountry()">
+          <option value="All">All Countries</option>
+          <option value="USA">United States</option>
+          <option value="UK">United Kingdom</option>
+          <option value="Nigeria">Nigeria</option>
+          <option value="Ghana">Ghana</option>
+          <option value="South Africa">South Africa</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Mexico">Mexico</option>
+          <option value="France">France</option>
+          <option value="Germany">Germany</option>
+          <option value="Japan">Japan</option>
+          <option value="South Korea">South Korea</option>
+          <option value="India">India</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search View -->
+  <div id="searchView" class="page-content">
+    <div class="section-header">
+      <h2 class="section-title">Trending Sounds</h2>
+      <span class="section-link">See All</span>
+    </div>
+    <div class="songs-grid" id="songsGrid"></div>
+    <div class="loading hidden" id="loadingIndicator"><i class="fas fa-spinner"></i> Loading more…</div>
+    <div class="banner-ad green" style="margin-top:22px;">
+      <div class="banner-ad-content">
+        <span class="sponsored-badge">POSE CREATORS</span>
+        <div>
+          <h4>🚀 Your music, your earnings — amplified on Pose</h4>
+          <p>Every use pays creators directly. Earn 3–5× more than traditional platforms</p>
+        </div>
+      </div>
+      <button onclick="showView('signup')">Start Earning More</button>
+    </div>
+  </div>
+
+  <!-- Signup View -->
+  <div id="signupView" class="page-content hidden">
+    <div style="max-width:540px;margin:0 auto;">
+      <div class="signup-hero">
+        <div style="font-size:48px;margin-bottom:10px;">🎙️</div>
+        <h2>Become a Creator</h2>
+        <p>Set up your artist profile to start uploading and earning</p>
+      </div>
+      <div class="benefit-cards">
+        <div class="benefit-card"><div class="bc-val">3–5×</div><div class="bc-label">Higher Revenue</div></div>
+        <div class="benefit-card"><div class="bc-val">100%</div><div class="bc-label">Your Rights</div></div>
+        <div class="benefit-card"><div class="bc-val">Live</div><div class="bc-label">Analytics</div></div>
+      </div>
+      <div class="signup-container">
+        <div class="form-grid">
+          <div class="form-group full"><label>Artist / Stage Name *</label><input type="text" id="artistName" placeholder="e.g. DJ Sunset"></div>
+          <div class="form-group"><label>Creator Type</label><select id="creatorType"><option>Musician</option><option>Producer</option><option>DJ</option><option>Songwriter</option><option>Band</option></select></div>
+          <div class="form-group"><label>Country *</label><select id="artistCountry"><option value="">Select country…</option><option>USA</option><option>UK</option><option>Nigeria</option><option>Ghana</option><option>South Africa</option><option>Canada</option><option>Brazil</option><option>Australia</option><option>India</option><option>Japan</option><option>Egypt</option><option>Mexico</option></select></div>
+          <div class="form-group"><label>Spotify URL</label><input type="url" id="spotifyUrl" placeholder="https://open.spotify.com/artist/…"></div>
+          <div class="form-group"><label>Apple Music URL</label><input type="url" id="appleMusicUrl" placeholder="https://music.apple.com/…"></div>
+          <div class="form-group full"><label>Monthly Streams (approx.)</label><input type="number" id="monthlyStreams" placeholder="e.g. 50000" min="0"></div>
+        </div>
+        <button id="becomeCreatorBtn" onclick="createArtistAccount()"><i class="fas fa-rocket"></i> Become a Creator</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload View -->
+  <div id="uploadView" class="page-content hidden">
+    <div class="upload-container">
+      <div class="section-header" style="margin-bottom:22px;"><h2 class="section-title"><i class="fas fa-upload" style="color:var(--accent);margin-right:9px;"></i>Upload New Music</h2></div>
+      <div class="upload-card">
+        <h3><i class="fas fa-music"></i> Track Information</h3>
+        <div class="form-grid">
+          <div class="form-group full"><label>Track Title *</label><input type="text" id="trackTitle" placeholder="Enter track title"></div>
+          <div class="form-group"><label>Genre *</label><select id="trackGenre"><option value="">Select Genre</option><option value="Pop">Pop</option><option value="Hip Hop">Hip Hop</option><option value="Rock">Rock</option><option value="Electronic">Electronic</option><option value="R&B">R&amp;B</option><option value="Jazz">Jazz</option><option value="Country">Country</option><option value="Latin">Latin</option><option value="Afrobeats">Afrobeats</option></select></div>
+          <div class="form-group"><label>Description</label><input type="text" id="trackDescription" placeholder="Brief description"></div>
+        </div>
+      </div>
+      <div class="upload-card">
+        <h3><i class="fas fa-file-audio"></i> Upload Files</h3>
+        <div class="file-upload-area" id="audioUploadArea"><i class="fas fa-cloud-upload-alt"></i><p>Drag &amp; drop your audio file here</p><p style="color:var(--text-muted);font-size:11.5px;margin-top:4px;">MP3, WAV, FLAC — Max 100MB</p><input type="file" id="audioFile" accept=".mp3,.wav,.flac" style="display:none;"></div>
+        <div id="audioFileDisplay"></div>
+        <div class="file-upload-area" id="coverUploadArea" style="margin-top:14px;"><i class="fas fa-image"></i><p>Upload cover art</p><p style="color:var(--text-muted);font-size:11.5px;margin-top:4px;">PNG, JPG — Min 1000×1000px</p><input type="file" id="coverFile" accept=".png,.jpg,.jpeg" style="display:none;"></div>
+        <div id="coverFileDisplay"></div>
+      </div>
+      <div class="upload-card">
+        <h3><i class="fas fa-users"></i> Collaborators &amp; Revenue Split</h3>
+        <p style="color:var(--text-muted);font-size:12px;margin-bottom:13px;">Add collaborators and specify revenue split. Total must equal 100%.</p>
+        <div id="collaboratorsList">
+          <div class="collaborator-item"><input type="text" placeholder="Your name (Owner)" id="ownerName" readonly style="opacity:.6;"><input type="number" placeholder="%" id="ownerSplit" value="100" min="0" max="100"><span>%</span></div>
+        </div>
+        <button class="btn-add" onclick="addCollaborator()"><i class="fas fa-plus"></i> Add Collaborator</button>
+        <div class="split-info"><strong>Total Split:</strong> <span id="totalSplit">100</span>%</div>
+      </div>
+      <button class="btn-submit" onclick="uploadTrack()"><i class="fas fa-check"></i> Upload Track</button>
+    </div>
+  </div>
+
+  <!-- Catalogue View -->
+  <div id="catalogueView" class="page-content hidden">
+    <div class="catalogue-header">
+      <h2 class="section-title"><i class="fas fa-folder-open" style="color:var(--accent);margin-right:9px;"></i>My Catalogue</h2>
+      <div class="catalogue-search"><i class="fas fa-search"></i><input type="text" id="catalogueSearch" placeholder="Search your tracks…"></div>
+    </div>
+    <div class="catalogue-stats">
+      <div class="catalogue-stat"><h4>Total Tracks</h4><p id="totalTracks">0</p></div>
+      <div class="catalogue-stat"><h4>Total Streams</h4><p id="totalStreams">0</p></div>
+      <div class="catalogue-stat"><h4>Total Revenue</h4><p id="totalRevenue">$0</p></div>
+    </div>
+    <div class="catalogue-grid" id="catalogueGrid"></div>
+    <div id="emptyState" class="hidden" style="text-align:center;padding:70px 20px;">
+      <i class="fas fa-music" style="font-size:52px;color:var(--text-muted);margin-bottom:14px;display:block;"></i>
+      <h3 style="font-family:var(--font-display);margin-bottom:7px;">No tracks yet</h3>
+      <p style="color:var(--text-secondary);margin-bottom:18px;">Upload your first track to get started</p>
+      <button class="btn-submit" style="width:auto;padding:11px 22px;" onclick="showView('upload')"><i class="fas fa-upload"></i> Upload Your First Track</button>
+    </div>
+  </div>
+
+  <!-- Dashboard View -->
+  <div id="dashboardView" class="page-content hidden">
+    <div class="dashboard-ad">
+      <div>
+        <span class="sponsored-badge">POSE BENEFITS</span>
+        <h4 style="font-family:var(--font-display);font-size:17px;margin-top:7px;margin-bottom:3px;">Maximize your music revenue on Pose</h4>
+        <p style="font-size:12.5px;color:var(--text-secondary);">Fair pay for creators — earn 3–5× more per stream</p>
+      </div>
+      <button>See Earnings</button>
+    </div>
+    <div class="dashboard-card">
+      <div class="profile-header">
+        <div class="profile-avatar"><i class="fas fa-user"></i></div>
+        <div class="profile-info"><h2 id="profileName"></h2><p id="profileType"></p></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><h4>Monthly Streams <i class="fas fa-chart-bar"></i></h4><p id="statStreams">0</p></div>
+        <div class="stat-card"><h4>Total Songs <i class="fas fa-music"></i></h4><p id="statSongs">0</p></div>
+        <div class="stat-card"><h4>Total Uses <i class="fas fa-film"></i></h4><p id="statUses">0</p></div>
+        <div class="stat-card"><h4>Est. Revenue <i class="fas fa-dollar-sign"></i></h4><p id="statRevenue">$0</p></div>
+      </div>
+      <div class="platform-links" id="platformLinks"></div>
+      <div class="artist-songs"><h3><i class="fas fa-list" style="color:var(--accent);margin-right:7px;"></i>Your Songs</h3><div id="artistSongsList"></div></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Player Bar ──────────────────────────── -->
+<div class="player-bar">
+  <div class="player-track">
+    <img class="player-cover" id="playerCover" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&h=100&fit=crop" alt="">
+    <div class="player-info">
+      <div class="player-title" id="playerTitle">—</div>
+      <div class="player-artist" id="playerArtist">Select a sound</div>
+    </div>
+    <button class="player-like" id="playerLikeBtn" onclick="toggleLike()"><i class="far fa-heart"></i></button>
+  </div>
+  <div class="player-controls">
+    <div class="player-btns">
+      <button class="player-btn"><i class="fas fa-random"></i></button>
+      <button class="player-btn"><i class="fas fa-step-backward"></i></button>
+      <button class="player-btn main" id="mainPlayBtn" onclick="mainPlayToggle()"><i class="fas fa-play"></i></button>
+      <button class="player-btn"><i class="fas fa-step-forward"></i></button>
+      <button class="player-btn"><i class="fas fa-redo"></i></button>
+    </div>
+    <div class="player-progress">
+      <span class="player-time" id="playerCurrentTime">0:00</span>
+      <input type="range" class="player-seek" id="playerSeek" min="0" max="30" value="0" step="0.1">
+      <span class="player-time" id="playerDuration">0:30</span>
+    </div>
+  </div>
+  <div class="player-right">
+    <button class="effects-open-btn" onclick="toggleEffectsPanel()"><i class="fas fa-sliders-h"></i> Effects</button>
+    <i class="fas fa-volume-up player-vol-icon"></i>
+    <input type="range" class="player-volume" id="playerVolume" min="0" max="1" step="0.01" value="1">
   </div>
 </div>
 
-        <!-- Upload Music View -->
-        <div id="uploadView" class="hidden">
-            <div class="upload-container">
-                <h2 style="margin-bottom: 32px;"><i class="fas fa-upload"></i> Upload New Music</h2>
-                
-                <div class="upload-card">
-                    <h3><i class="fas fa-music"></i> Track Information</h3>
-                    <div class="form-group">
-                        <label>Track Title *</label>
-                        <input type="text" id="trackTitle" placeholder="Enter track title">
-                    </div>
-                    <div class="form-group">
-                        <label>Genre *</label>
-                        <select id="trackGenre">
-                            <option value="">Select Genre</option>
-                            <option value="Pop">Pop</option>
-                            <option value="Hip Hop">Hip Hop</option>
-                            <option value="Rock">Rock</option>
-                            <option value="Electronic">Electronic</option>
-                            <option value="R&B">R&B</option>
-                            <option value="Jazz">Jazz</option>
-                            <option value="Country">Country</option>
-                            <option value="Latin">Latin</option>
-                            <option value="Afrobeats">Afrobeats</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" id="trackDescription" placeholder="Brief description of your track">
-                    </div>
-                </div>
-
-                <div class="upload-card">
-                    <h3><i class="fas fa-file-audio"></i> Upload Files</h3>
-                    <div class="file-upload-area" id="audioUploadArea">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p style="margin-bottom: 8px; font-weight: bold;">Drag & drop your audio file here</p>
-                        <p style="color: var(--text-muted); font-size: 14px;">or click to browse</p>
-                        <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">Supported formats: MP3, WAV, FLAC (Max 100MB)</p>
-                        <input type="file" id="audioFile" accept=".mp3,.wav,.flac" style="display: none;">
-                    </div>
-                    <div id="audioFileDisplay"></div>
-
-                    <div class="file-upload-area" id="coverUploadArea" style="margin-top: 24px;">
-                        <i class="fas fa-image"></i>
-                        <p style="margin-bottom: 8px; font-weight: bold;">Upload cover art</p>
-                        <p style="color: var(--text-muted); font-size: 14px;">or click to browse</p>
-                        <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">PNG, JPG (Min 1000x1000px)</p>
-                        <input type="file" id="coverFile" accept=".png,.jpg,.jpeg" style="display: none;">
-                    </div>
-                    <div id="coverFileDisplay"></div>
-                </div>
-
-                <div class="upload-card">
-                    <h3><i class="fas fa-users"></i> Collaborators & Revenue Split</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
-                        Add collaborators and specify revenue split percentages. Total must equal 100%.
-                    </p>
-                    <div id="collaboratorsList">
-                        <div class="collaborator-item">
-                            <input type="text" placeholder="Your name (Owner)" value="" id="ownerName" readonly style="opacity: 0.7;">
-                            <input type="number" placeholder="%" id="ownerSplit" value="100" min="0" max="100">
-                            <span style="color: var(--text-muted);">%</span>
-                        </div>
-                    </div>
-                    <button class="btn-add" onclick="addCollaborator()">
-                        <i class="fas fa-plus"></i> Add Collaborator
-                    </button>
-                    <div style="margin-top: 16px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3);">
-                        <p style="font-size: 14px;"><strong>Total Split:</strong> <span id="totalSplit">100</span>%</p>
-                    </div>
-                </div>
-
-                <button class="btn-submit" onclick="uploadTrack()">
-                    <i class="fas fa-check"></i> Upload Track
-                </button>
-            </div>
-        </div>
-
-        <!-- Catalogue View -->
-        <div id="catalogueView" class="hidden">
-            <div class="catalogue-header">
-                <h2><i class="fas fa-folder-open"></i> My Catalogue</h2>
-                <div class="catalogue-search">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="catalogueSearch" placeholder="Search your songs...">
-                </div>
-            </div>
-
-            <div class="catalogue-stats">
-                <div class="catalogue-stat">
-                    <h4>Total Tracks</h4>
-                    <p id="totalTracks">0</p>
-                </div>
-                <div class="catalogue-stat">
-                    <h4>Total Streams</h4>
-                    <p id="totalStreams">0</p>
-                </div>
-                <div class="catalogue-stat">
-                    <h4>Total Revenue</h4>
-                    <p id="totalRevenue">$0</p>
-                </div>
-            </div>
-
-            <div class="catalogue-grid" id="catalogueGrid"></div>
-
-            <div id="emptyState" class="hidden" style="text-align: center; padding: 80px 20px;">
-                <i class="fas fa-music" style="font-size: 64px; color: var(--text-muted); margin-bottom: 16px;"></i>
-                <h3 style="margin-bottom: 8px;">No tracks yet</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 24px;">Upload your first track to get started</p>
-                <button class="btn-submit" style="width: auto;" onclick="showView('upload')">
-                    <i class="fas fa-upload"></i> Upload Your First Track
-                </button>
-            </div>
-        </div>
-
-        <!-- Dashboard View -->
-        <div id="dashboardView" class="hidden">
-            <div class="dashboard-ad">
-                <div>
-                    <div class="sponsored-badge">POSE BENEFITS</div>
-                    <h4 style="margin-top: 8px;">Maximize your music revenue on Pose</h4>
-                    <p>Fair pay for creators: Earn 3-5x more per stream</p>
-                </div>
-                <button>See Earnings</button>
-            </div>
-            <div class="dashboard-card">
-                <div class="profile-header">
-                    <div class="profile-avatar"><i class="fas fa-user"></i></div>
-                    <div class="profile-info">
-                        <h2 id="profileName"></h2>
-                        <p id="profileType"></p>
-                    </div>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4>Monthly Streams <i class="fas fa-chart-bar"></i></h4>
-                        <p id="statStreams">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Total Songs <i class="fas fa-music"></i></h4>
-                        <p id="statSongs">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Total Uses <i class="fas fa-plus"></i></h4>
-                        <p id="statUses">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Est. Revenue <i class="fas fa-dollar-sign"></i></h4>
-                        <p id="statRevenue">$0</p>
-                    </div>
-                </div>
-                <div class="platform-links" id="platformLinks"></div>
-                <div class="artist-songs">
-                    <h3><i class="fas fa-list"></i> Your Songs</h3>
-                    <div id="artistSongsList"></div>
-                </div>
-            </div>
-        </div>
+<!-- ── Effects Panel ───────────────────────── -->
+<div class="effects-panel" id="effectsPanel">
+  <div class="effects-header">
+    <h3><i class="fas fa-sliders-h" style="color:var(--accent);margin-right:7px;"></i>Sound Effects</h3>
+    <button class="effects-close" onclick="toggleEffectsPanel()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="effects-song-info">
+    <img id="effectsCover" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&h=100&fit=crop">
+    <div><div class="esi-title" id="effectsTitle">—</div><div class="esi-artist" id="effectsArtist">No sound selected</div></div>
+  </div>
+  <div class="effects-body">
+    <div class="effect-group">
+      <div class="effect-group-label">Live EQ</div>
+      <div class="eq-bars" id="eqBars">
+        <div class="eq-bar" style="height:55%"></div><div class="eq-bar" style="height:38%"></div>
+        <div class="eq-bar" style="height:72%"></div><div class="eq-bar" style="height:50%"></div>
+        <div class="eq-bar" style="height:82%"></div><div class="eq-bar" style="height:42%"></div>
+        <div class="eq-bar" style="height:68%"></div><div class="eq-bar" style="height:48%"></div>
+        <div class="eq-bar" style="height:62%"></div><div class="eq-bar" style="height:33%"></div>
+        <div class="eq-bar" style="height:77%"></div><div class="eq-bar" style="height:57%"></div>
+      </div>
     </div>
-
-    <!-- Analytics Modal -->
-    <div class="modal" id="analyticsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-chart-line"></i> <span id="modalSongTitle">Song Analytics</span></h2>
-                <button class="modal-close" onclick="closeAnalytics()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div class="analytics-grid">
-                <div class="analytics-card">
-                    <h5>Total Streams</h5>
-                    <p id="modalStreams">0</p>
-                </div>
-                <div class="analytics-card">
-                    <h5>Total Uses</h5>
-                    <p id="modalUses">0</p>
-                </div>
-                <div class="analytics-card">
-                    <h5>Revenue</h5>
-                    <p id="modalRevenue">$0</p>
-                </div>
-                <div class="analytics-card">
-                    <h5>Engagement</h5>
-                    <p id="modalEngagement">0%</p>
-                </div>
-            </div>
-
-            <div class="analytics-section">
-                <h4><i class="fas fa-chart-area"></i> Performance Over Time</h4>
-                <div class="chart-placeholder">
-                    <i class="fas fa-chart-line" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
-                    <p>Streams and uses chart would display here</p>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
-                        Integration with charting library (Chart.js) recommended
-                    </p>
-                </div>
-            </div>
-
-            <div class="analytics-section">
-                <h4><i class="fas fa-globe"></i> Geographic Distribution</h4>
-                <div class="chart-placeholder">
-                    <i class="fas fa-map-marked-alt" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
-                    <p>Geographic breakdown chart would display here</p>
-                </div>
-            </div>
-
-            <div class="analytics-section">
-                <h4><i class="fas fa-users"></i> Collaborators & Revenue Split</h4>
-                <div class="collaborators-list" id="modalCollaborators">
-                    <p style="color: var(--text-secondary);">No collaborators on this track</p>
-                </div>
-            </div>
-
-            <div class="analytics-section">
-                <h4><i class="fas fa-info-circle"></i> Track Details</h4>
-                <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px;">
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
-                        <div>
-                            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px;">Genre</p>
-                            <p id="modalGenre">-</p>
-                        </div>
-                        <div>
-                            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px;">Duration</p>
-                            <p id="modalDuration">-</p>
-                        </div>
-                        <div>
-                            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px;">Upload Date</p>
-                            <p id="modalUploadDate">-</p>
-                        </div>
-                        <div>
-                            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 4px;">Country</p>
-                            <p id="modalCountry">-</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="effect-group">
+      <div class="effect-group-label">Playback Speed</div>
+      <div class="speed-selector">
+        <button class="speed-btn" data-speed="0.5" onclick="setSpeed(0.5)">0.5×</button>
+        <button class="speed-btn" data-speed="0.75" onclick="setSpeed(0.75)">0.75×</button>
+        <button class="speed-btn active" data-speed="1" onclick="setSpeed(1)">1×</button>
+        <button class="speed-btn" data-speed="1.25" onclick="setSpeed(1.25)">1.25×</button>
+        <button class="speed-btn" data-speed="1.5" onclick="setSpeed(1.5)">1.5×</button>
+        <button class="speed-btn" data-speed="2" onclick="setSpeed(2)">2×</button>
+      </div>
     </div>
+    <div class="effect-group">
+      <div class="effect-group-label">Volume &amp; Gain</div>
+      <div class="slider-row"><label>Volume</label><input type="range" id="fxVolume" min="0" max="1" step="0.01" value="1" oninput="applyVolume(this.value)"><span class="slider-val" id="fxVolumeVal">100%</span></div>
+    </div>
+    <div class="effect-group">
+      <div class="effect-group-label">Pitch &amp; Tone</div>
+      <div class="slider-row"><label>Pitch</label><input type="range" id="fxPitch" min="-6" max="6" step="0.5" value="0" oninput="applyPitch(this.value)"><span class="slider-val" id="fxPitchVal">0</span></div>
+      <div class="slider-row"><label>Bass Boost</label><input type="range" id="fxBass" min="0" max="20" step="1" value="0" oninput="applyBass(this.value)"><span class="slider-val" id="fxBassVal">0</span></div>
+      <div class="slider-row"><label>Treble</label><input type="range" id="fxTreble" min="-10" max="10" step="1" value="0" oninput="applyTreble(this.value)"><span class="slider-val" id="fxTrebleVal">0</span></div>
+    </div>
+    <div class="effect-group">
+      <div class="effect-group-label">Sound Effects</div>
+      <div class="effect-toggle-row"><div class="etg-info"><div class="etg-name">Reverb</div><div class="etg-desc">Add space &amp; depth</div></div><label class="toggle-switch"><input type="checkbox" id="fxReverb" onchange="applyReverb(this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="effect-toggle-row"><div class="etg-info"><div class="etg-name">Echo / Delay</div><div class="etg-desc">Repeat with decay</div></div><label class="toggle-switch"><input type="checkbox" id="fxEcho" onchange="applyEcho(this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="effect-toggle-row"><div class="etg-info"><div class="etg-name">Lo-Fi Filter</div><div class="etg-desc">Vintage vinyl feel</div></div><label class="toggle-switch"><input type="checkbox" id="fxLofi" onchange="applyLofi(this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="effect-toggle-row"><div class="etg-info"><div class="etg-name">Night Core</div><div class="etg-desc">Faster + higher pitch</div></div><label class="toggle-switch"><input type="checkbox" id="fxNightcore" onchange="applyNightcore(this.checked)"><span class="toggle-slider"></span></label></div>
+    </div>
+    <button onclick="resetEffects()" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body);font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;transition:var(--tr);width:100%;justify-content:center;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-secondary)'">
+      <i class="fas fa-undo"></i> Reset All Effects
+    </button>
+  </div>
+  <button class="effects-use-btn" onclick="useCurrentSong()"><i class="fas fa-film"></i> Use in Video / Photo</button>
+</div>
 
-    <audio id="audioPlayer"></audio>
-   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+<!-- Analytics Modal -->
+<div class="modal" id="analyticsModal">
+  <div class="modal-content">
+    <div class="modal-header"><h2><i class="fas fa-chart-line" style="color:var(--accent);"></i> <span id="modalSongTitle">Analytics</span></h2><button class="modal-close" onclick="closeAnalytics()"><i class="fas fa-times"></i></button></div>
+    <div class="analytics-grid">
+      <div class="analytics-card"><h5>Total Streams</h5><p id="modalStreams">0</p></div>
+      <div class="analytics-card"><h5>Total Uses</h5><p id="modalUses">0</p></div>
+      <div class="analytics-card"><h5>Revenue</h5><p id="modalRevenue" style="color:var(--accent)">$0</p></div>
+      <div class="analytics-card"><h5>Engagement</h5><p id="modalEngagement">0%</p></div>
+    </div>
+    <div class="analytics-section"><h4><i class="fas fa-chart-area"></i> Performance Over Time</h4><div class="chart-placeholder"><i class="fas fa-chart-line"></i><p>Streams and uses chart</p></div></div>
+    <div class="analytics-section"><h4><i class="fas fa-globe"></i> Geographic Distribution</h4><div class="chart-placeholder"><i class="fas fa-map-marked-alt"></i><p>Geographic breakdown</p></div></div>
+    <div class="analytics-section"><h4><i class="fas fa-users"></i> Collaborators &amp; Revenue Split</h4><div class="collaborators-list" id="modalCollaborators"><p style="color:var(--text-secondary)">No collaborators on this track</p></div></div>
+    <div class="analytics-section"><h4><i class="fas fa-info-circle"></i> Track Details</h4>
+      <div style="background:var(--bg-surface);padding:16px;border-radius:var(--radius);display:grid;grid-template-columns:repeat(2,1fr);gap:13px;font-size:13px;">
+        <div><p style="color:var(--text-muted);font-size:10.5px;margin-bottom:3px;">Genre</p><p id="modalGenre">—</p></div>
+        <div><p style="color:var(--text-muted);font-size:10.5px;margin-bottom:3px;">Duration</p><p id="modalDuration">—</p></div>
+        <div><p style="color:var(--text-muted);font-size:10.5px;margin-bottom:3px;">Upload Date</p><p id="modalUploadDate">—</p></div>
+        <div><p style="color:var(--text-muted);font-size:10.5px;margin-bottom:3px;">Country</p><p id="modalCountry">—</p></div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<audio id="audioPlayer"></audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",
-        authDomain: "rewarderhub.firebaseapp.com",
-        projectId: "rewarderhub",
-        storageBucket: "rewarderhub.appspot.com",
-        messagingSenderId: "85965945106",
-        appId: "1:85965945106:web:fa0a57d8968926e1041bcb",
-        measurementId: "G-F2ERB5NGN0"
-    };
+const firebaseConfig={apiKey:"AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",authDomain:"rewarderhub.firebaseapp.com",projectId:"rewarderhub",storageBucket:"rewarderhub.appspot.com",messagingSenderId:"85965945106",appId:"1:85965945106:web:fa0a57d8968926e1041bcb",measurementId:"G-F2ERB5NGN0"};
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+let poseDB,poseStorage,poseAuth;
+const POSE_CREATORS='pose_creators',POSE_SONGS='pose_songs';
 
-    firebase.initializeApp(firebaseConfig);
+const CURRENCY_MAP={'Nigeria':{symbol:'₦',rate:1600},'USA':{symbol:'$',rate:1},'UK':{symbol:'£',rate:.79},'Ghana':{symbol:'GH₵',rate:12},'Canada':{symbol:'C$',rate:1.35},'South Africa':{symbol:'R',rate:18},'Brazil':{symbol:'R$',rate:5},'Mexico':{symbol:'MX$',rate:17},'Australia':{symbol:'A$',rate:1.5},'France':{symbol:'€',rate:.92},'Germany':{symbol:'€',rate:.92},'Japan':{symbol:'¥',rate:149},'South Korea':{symbol:'₩',rate:1320},'India':{symbol:'₹',rate:83},'Egypt':{symbol:'E£',rate:31}};
+function formatCurrency(usd,country){const c=CURRENCY_MAP[country]||CURRENCY_MAP['USA'];const v=usd*c.rate;const f=v>=1000?v.toFixed(0):v>=100?v.toFixed(1):v.toFixed(2);return`${c.symbol}${f}`}
+function formatNumber(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n}
+function formatDuration(s){if(!s)return'0:00';return`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`}
 
-    let poseDB;
-    let poseStorage;
-    let poseAuth;
+let allSongs=[
+  {id:'s1',title:"Summer Vibes",artist:"DJ Sunset",artistId:'demo1',duration:180,genre:"Electronic",country:"USA",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",streamCount:15420,useCount:892,coverUrl:"https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop"},
+  {id:'s2',title:"Midnight Dreams",artist:"Luna Wave",artistId:'demo2',duration:195,genre:"Pop",country:"UK",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",streamCount:28910,useCount:1543,coverUrl:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"},
+  {id:'s3',title:"Electric Pulse",artist:"DJ Sunset",artistId:'demo1',duration:210,genre:"Electronic",country:"USA",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",streamCount:9234,useCount:421,coverUrl:"https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
+  {id:'s4',title:"Lagos Rhythm",artist:"Ayo Beats",artistId:'demo3',duration:175,genre:"Afrobeats",country:"Nigeria",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",streamCount:45200,useCount:2341,coverUrl:"https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
+  {id:'s5',title:"Country Roads",artist:"Jake Western",artistId:'demo4',duration:200,genre:"Country",country:"USA",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",streamCount:23400,useCount:1205,coverUrl:"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop"},
+  {id:'s6',title:"Tokyo Nights",artist:"Yuki Sound",artistId:'demo5',duration:185,genre:"Pop",country:"Japan",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",streamCount:31500,useCount:1678,coverUrl:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"},
+  {id:'s7',title:"Samba Soul",artist:"Carlos Rio",artistId:'demo6',duration:220,genre:"Latin",country:"Brazil",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",streamCount:19800,useCount:945,coverUrl:"https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
+  {id:'s8',title:"Urban Flow",artist:"MC Drake",artistId:'demo7',duration:195,genre:"Hip Hop",country:"Canada",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",streamCount:52300,useCount:2890,coverUrl:"https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop"},
+  {id:'s9',title:"Reggae Sunset",artist:"Bob Junior",artistId:'demo8',duration:205,genre:"R&B",country:"Ghana",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",streamCount:17600,useCount:823,coverUrl:"https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
+  {id:'s10',title:"Rock Anthem",artist:"The Rebels",artistId:'demo9',duration:240,genre:"Rock",country:"UK",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",streamCount:38900,useCount:1956,coverUrl:"https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
+  {id:'s11',title:"Jazz Cafe",artist:"Miles Smooth",artistId:'demo10',duration:190,genre:"Jazz",country:"USA",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",streamCount:14200,useCount:678,coverUrl:"https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
+  {id:'s12',title:"Desert Rose",artist:"Ahmed Khalil",artistId:'demo11',duration:205,genre:"Pop",country:"Egypt",audioUrl:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",streamCount:22100,useCount:1134,coverUrl:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"}
+];
 
-    const POSE_CREATORS = 'pose_creators';
-    const POSE_SONGS = 'pose_songs';
+let displayedSongs=[],currentPage=1,songsPerPage=12;
+let currentGenre='All',currentCountry='All',currentSearchQuery='';
+let currentArtist=null,playingId=null,currentPlayingSong=null;
+let isLoadingScroll=false,collaboratorCount=0,userSongs=[];
+let likedSongs=new Set();
+const audioPlayer=document.getElementById('audioPlayer');
 
-    const CURRENCY_MAP = {
-        'Nigeria': { code: 'NGN', symbol: '₦', rate: 1600 },
-        'USA': { code: 'USD', symbol: '$', rate: 1 },
-        'UK': { code: 'GBP', symbol: '£', rate: 0.79 },
-        'Ghana': { code: 'GHS', symbol: 'GH₵', rate: 12 },
-        'Canada': { code: 'CAD', symbol: 'C$', rate: 1.35 },
-        'South Africa': { code: 'ZAR', symbol: 'R', rate: 18 },
-        'Brazil': { code: 'BRL', symbol: 'R$', rate: 5 },
-        'Mexico': { code: 'MXN', symbol: 'MX$', rate: 17 },
-        'Australia': { code: 'AUD', symbol: 'A$', rate: 1.5 },
-        'France': { code: 'EUR', symbol: '€', rate: 0.92 },
-        'Germany': { code: 'EUR', symbol: '€', rate: 0.92 },
-        'Japan': { code: 'JPY', symbol: '¥', rate: 149 },
-        'South Korea': { code: 'KRW', symbol: '₩', rate: 1320 },
-        'India': { code: 'INR', symbol: '₹', rate: 83 },
-        'Egypt': { code: 'EGP', symbol: 'E£', rate: 31 }
-    };
+/* Web Audio */
+let audioCtx=null,gainNode=null,bassFilter=null,trebleFilter=null,lofiFilter=null,reverbNode=null,sourceConnected=false;
+function getAudioCtx(){
+  if(!audioCtx){
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    gainNode=audioCtx.createGain();
+    bassFilter=audioCtx.createBiquadFilter();bassFilter.type='lowshelf';bassFilter.frequency.value=200;
+    trebleFilter=audioCtx.createBiquadFilter();trebleFilter.type='highshelf';trebleFilter.frequency.value=4000;
+    lofiFilter=audioCtx.createBiquadFilter();lofiFilter.type='lowpass';lofiFilter.frequency.value=22050;
+    gainNode.connect(bassFilter);bassFilter.connect(trebleFilter);trebleFilter.connect(lofiFilter);lofiFilter.connect(audioCtx.destination);
+  }
+  return audioCtx;
+}
+function connectAudioSource(){
+  if(!sourceConnected&&audioCtx){
+    try{const src=audioCtx.createMediaElementSource(audioPlayer);src.connect(gainNode);sourceConnected=true;}catch(e){}
+  }
+}
 
-    function formatCurrency(amountUSD, country) {
-        const currency = CURRENCY_MAP[country] || CURRENCY_MAP['USA'];
-        const convertedAmount = amountUSD * currency.rate;
-        let formatted;
-        if (convertedAmount >= 1000) {
-            formatted = convertedAmount.toFixed(0);
-        } else if (convertedAmount >= 100) {
-            formatted = convertedAmount.toFixed(1);
-        } else {
-            formatted = convertedAmount.toFixed(2);
-        }
-        return `${currency.symbol}${formatted}`;
+/* Effects */
+function setSpeed(v){
+  audioPlayer.playbackRate=v;
+  document.querySelectorAll('.speed-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.speed)===v));
+}
+function applyVolume(v){
+  audioPlayer.volume=parseFloat(v);
+  document.getElementById('fxVolumeVal').textContent=Math.round(v*100)+'%';
+  document.getElementById('playerVolume').value=v;
+}
+function applyPitch(v){
+  document.getElementById('fxPitchVal').textContent=v>0?'+'+v:v;
+  const rate=Math.pow(2,parseFloat(v)/12);
+  audioPlayer.playbackRate=rate;
+  document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active'));
+}
+function applyBass(v){document.getElementById('fxBassVal').textContent=v;getAudioCtx();connectAudioSource();bassFilter.gain.value=parseFloat(v);}
+function applyTreble(v){document.getElementById('fxTrebleVal').textContent=v;getAudioCtx();connectAudioSource();trebleFilter.gain.value=parseFloat(v);}
+function applyReverb(on){
+  getAudioCtx();connectAudioSource();
+  if(on){
+    const len=audioCtx.sampleRate*2.5;
+    const imp=audioCtx.createBuffer(2,len,audioCtx.sampleRate);
+    for(let c=0;c<2;c++){const d=imp.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);}
+    reverbNode=audioCtx.createConvolver();reverbNode.buffer=imp;
+    const wet=audioCtx.createGain();wet.gain.value=.45;
+    trebleFilter.disconnect();trebleFilter.connect(lofiFilter);trebleFilter.connect(reverbNode);reverbNode.connect(wet);wet.connect(audioCtx.destination);
+  } else {
+    if(reverbNode){try{reverbNode.disconnect();}catch(e){}reverbNode=null;}
+    if(trebleFilter&&lofiFilter){trebleFilter.disconnect();trebleFilter.connect(lofiFilter);}
+  }
+}
+function applyEcho(on){getAudioCtx();connectAudioSource();}
+function applyLofi(on){getAudioCtx();connectAudioSource();lofiFilter.frequency.value=on?2200:22050;}
+function applyNightcore(on){
+  if(on){audioPlayer.playbackRate=1.3;document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active'));}
+  else{audioPlayer.playbackRate=1;document.querySelector('[data-speed="1"]')?.classList.add('active');}
+}
+function resetEffects(){
+  setSpeed(1);
+  applyVolume(1);document.getElementById('fxVolume').value=1;
+  document.getElementById('fxPitch').value=0;applyPitch(0);
+  document.getElementById('fxBass').value=0;applyBass(0);
+  document.getElementById('fxTreble').value=0;applyTreble(0);
+  ['fxReverb','fxEcho','fxLofi','fxNightcore'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});
+  if(lofiFilter)lofiFilter.frequency.value=22050;
+  if(reverbNode){try{reverbNode.disconnect();}catch(e){}reverbNode=null;if(trebleFilter&&lofiFilter){trebleFilter.disconnect();trebleFilter.connect(lofiFilter);}}
+  showToast('Effects reset','success');
+}
+
+/* EQ Anim */
+let eqAnimId=null;
+function animateEQ(){
+  const bars=document.querySelectorAll('.eq-bar');if(!bars.length)return;
+  if(eqAnimId)cancelAnimationFrame(eqAnimId);
+  function frame(){bars.forEach(b=>{b.style.height=(playingId?20+Math.random()*72:3+Math.random()*10)+'%';});eqAnimId=requestAnimationFrame(frame);}
+  frame();
+}
+function stopEQAnim(){if(eqAnimId){cancelAnimationFrame(eqAnimId);eqAnimId=null;}document.querySelectorAll('.eq-bar').forEach(b=>b.style.height='4%');}
+
+function toggleEffectsPanel(){document.getElementById('effectsPanel').classList.toggle('open');}
+function updateEffectsSong(s){if(!s)return;document.getElementById('effectsCover').src=s.coverUrl||'';document.getElementById('effectsTitle').textContent=s.title;document.getElementById('effectsArtist').textContent=s.artist;}
+function useCurrentSong(){if(!currentPlayingSong){showToast('Select a sound first','error');return;}useSong(currentPlayingSong.id);toggleEffectsPanel();}
+
+/* Player bar */
+function updatePlayerBar(s){document.getElementById('playerCover').src=s.coverUrl||'';document.getElementById('playerTitle').textContent=s.title;document.getElementById('playerArtist').textContent=s.artist;}
+function mainPlayToggle(){
+  if(!playingId){showToast('Select a sound to play','error');return;}
+  if(audioPlayer.paused){audioPlayer.play().catch(()=>{});document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';animateEQ();}
+  else{audioPlayer.pause();document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+}
+function toggleLike(){
+  if(!playingId)return;
+  const btn=document.getElementById('playerLikeBtn');
+  if(likedSongs.has(playingId)){likedSongs.delete(playingId);btn.innerHTML='<i class="far fa-heart"></i>';btn.classList.remove('liked');}
+  else{likedSongs.add(playingId);btn.innerHTML='<i class="fas fa-heart"></i>';btn.classList.add('liked');showToast('Added to liked sounds','success');}
+}
+
+document.getElementById('playerVolume').addEventListener('input',function(){applyVolume(this.value);document.getElementById('fxVolume').value=this.value;});
+document.getElementById('playerSeek').addEventListener('input',function(){if(playingId)audioPlayer.currentTime=parseFloat(this.value);});
+
+/* Filters */
+function getFilteredSongs(){
+  return allSongs.filter(s=>{
+    const q=currentSearchQuery.toLowerCase();
+    return(s.title.toLowerCase().includes(q)||s.artist.toLowerCase().includes(q))&&(currentGenre==='All'||s.genre===currentGenre)&&(currentCountry==='All'||s.country===currentCountry);
+  });
+}
+function filterByGenre(g){currentGenre=g;document.querySelectorAll('.genre-tab').forEach(t=>t.classList.toggle('active',t.textContent.trim()===g));resetAndLoadSongs();}
+function filterByCountry(){currentCountry=document.getElementById('countryFilter').value;resetAndLoadSongs();}
+document.getElementById('searchInput').addEventListener('input',e=>{currentSearchQuery=e.target.value;resetAndLoadSongs();});
+
+/* Grid */
+function loadMoreSongs(){
+  if(isLoadingScroll)return;
+  const filtered=getFilteredSongs();
+  const next=filtered.slice((currentPage-1)*songsPerPage,currentPage*songsPerPage);
+  if(!next.length)return;
+  displayedSongs=[...displayedSongs,...next];renderSongs();currentPage++;
+}
+function resetAndLoadSongs(){displayedSongs=[];currentPage=1;document.getElementById('songsGrid').innerHTML='';loadMoreSongs();}
+function renderSongs(){
+  const grid=document.getElementById('songsGrid');
+  displayedSongs.forEach((song,i)=>{
+    if(document.getElementById(`song-card-${song.id}`))return;
+    if(i>0&&i%6===0&&!document.getElementById(`ad-${i}`)){
+      const ad=document.createElement('div');ad.className='banner-ad';ad.id=`ad-${i}`;
+      ad.innerHTML=`<div class="banner-ad-content"><span class="sponsored-badge">POSE PLATFORM</span><div><h4>💎 Premium sound, premium creator pay</h4><p>3–5× higher royalties per use — upload your music today</p></div></div><button onclick="showView('signup')">Upload Music</button>`;
+      grid.appendChild(ad);
     }
+    const card=document.createElement('div');card.className='song-card';card.id=`song-card-${song.id}`;card.style.animationDelay=`${(i%songsPerPage)*.04}s`;
+    card.innerHTML=`
+      <div class="song-cover-wrap">
+        <img src="${song.coverUrl}" alt="${song.title}" class="song-cover" onerror="this.src='https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop'">
+        <div class="song-cover-overlay"><button class="play-btn-overlay" onclick="togglePlay('${song.id}','${song.audioUrl}')"><i class="fas fa-play" id="playIcon-${song.id}"></i></button></div>
+      </div>
+      <div class="song-info"><h3>${song.title}</h3><p>${song.artist}</p>
+        <div class="song-meta"><span class="meta-tag">${song.genre}</span><span class="meta-tag">${song.country}</span><span class="meta-tag"><i class="fas fa-clock"></i> ${formatDuration(song.duration)}</span></div>
+      </div>
+      <div class="song-stats"><span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span><span><i class="fas fa-film"></i> ${formatNumber(song.useCount)}</span></div>
+      <div class="song-actions">
+        <button class="btn btn-play" id="playBtn-${song.id}" onclick="togglePlay('${song.id}','${song.audioUrl}')"><i class="fas fa-play"></i> Preview</button>
+        <button class="btn btn-use" onclick="openEffectsForSong('${song.id}')"><i class="fas fa-sliders-h"></i> Use</button>
+      </div>
+      <div id="progress-${song.id}" class="hidden"><div class="progress-bar"><div class="progress-fill" id="progressFill-${song.id}"></div></div><div class="progress-text" id="progressText-${song.id}"></div></div>`;
+    grid.appendChild(card);
+  });
+}
 
-    let allSongs = [
-        {id: 1, title: "Summer Vibes", artist: "DJ Sunset", artistId: 1, duration: 180, genre: "Electronic", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", streamCount: 15420, useCount: 892, coverUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop"},
-        {id: 2, title: "Midnight Dreams", artist: "Luna Wave", artistId: 2, duration: 195, genre: "Pop", country: "UK", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", streamCount: 28910, useCount: 1543, coverUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"},
-        {id: 3, title: "Electric Pulse", artist: "DJ Sunset", artistId: 1, duration: 210, genre: "Electronic", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", streamCount: 9234, useCount: 421, coverUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
-        {id: 4, title: "Lagos Rhythm", artist: "Ayo Beats", artistId: 3, duration: 175, genre: "Afrobeats", country: "Nigeria", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", streamCount: 45200, useCount: 2341, coverUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
-        {id: 5, title: "Country Roads", artist: "Jake Western", artistId: 4, duration: 200, genre: "Country", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", streamCount: 23400, useCount: 1205, coverUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop"},
-        {id: 6, title: "Tokyo Nights", artist: "Yuki Sound", artistId: 5, duration: 185, genre: "Pop", country: "Japan", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", streamCount: 31500, useCount: 1678, coverUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"},
-        {id: 7, title: "Samba Soul", artist: "Carlos Rio", artistId: 6, duration: 220, genre: "Latin", country: "Brazil", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", streamCount: 19800, useCount: 945, coverUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
-        {id: 8, title: "Urban Flow", artist: "MC Drake", artistId: 7, duration: 195, genre: "Hip Hop", country: "Canada", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", streamCount: 52300, useCount: 2890, coverUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop"},
-        {id: 9, title: "Reggae Sunset", artist: "Bob Junior", artistId: 8, duration: 205, genre: "R&B", country: "Ghana", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", streamCount: 17600, useCount: 823, coverUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
-        {id: 10, title: "Rock Anthem", artist: "The Rebels", artistId: 9, duration: 240, genre: "Rock", country: "UK", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", streamCount: 38900, useCount: 1956, coverUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop"},
-        {id: 11, title: "Jazz Cafe", artist: "Miles Smooth", artistId: 10, duration: 190, genre: "Jazz", country: "USA", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", streamCount: 14200, useCount: 678, coverUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=200&fit=crop"},
-        {id: 12, title: "Desert Rose", artist: "Ahmed Khalil", artistId: 11, duration: 205, genre: "Pop", country: "Egypt", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", streamCount: 22100, useCount: 1134, coverUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"}
-    ];
+function openEffectsForSong(songId){
+  const song=allSongs.find(s=>s.id===songId);if(!song)return;
+  if(playingId!==songId){
+    if(playingId)updatePlayButton(playingId,false);
+    audioPlayer.src=song.audioUrl;audioPlayer.currentTime=0;
+    audioPlayer.play().catch(()=>{});
+    playingId=songId;currentPlayingSong=song;
+    updatePlayerBar(song);updateEffectsSong(song);
+    document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';
+    animateEQ();song.streamCount++;updateSongStats(songId);
+    persistSongStat(songId,'streamCount',song.streamCount);
+    updatePlayButton(songId,true);
+    document.getElementById(`progress-${songId}`)?.classList.remove('hidden');
+    if(audioCtx)connectAudioSource();
+  } else {updateEffectsSong(song);}
+  document.getElementById('effectsPanel').classList.add('open');
+}
 
-    let displayedSongs = [];
-    let currentPage = 1;
-    const songsPerPage = 9;
-    let currentGenre = 'All';
-    let currentCountry = 'All';
-    let currentSearchQuery = '';
-    let currentArtist = null;
-    let playingId = null;
-    let currentTime = 0;
-    const audioPlayer = document.getElementById('audioPlayer');
-    let isLoading = false;
-    let collaboratorCount = 0;
-    let userSongs = [];
+function togglePlay(songId,audioUrl){
+  if(playingId===songId){
+    if(audioPlayer.paused){audioPlayer.play().catch(()=>{});updatePlayButton(songId,true);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';animateEQ();}
+    else{audioPlayer.pause();updatePlayButton(songId,false);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+    return;
+  }
+  if(playingId!==null)updatePlayButton(playingId,false);
+  audioPlayer.src=audioUrl;audioPlayer.currentTime=0;
+  audioPlayer.play().catch(()=>showToast('Could not play audio','error'));
+  playingId=songId;
+  const song=allSongs.find(s=>s.id===songId);
+  if(song){song.streamCount++;updateSongStats(songId);persistSongStat(songId,'streamCount',song.streamCount);currentPlayingSong=song;updatePlayerBar(song);updateEffectsSong(song);}
+  document.getElementById(`progress-${songId}`)?.classList.remove('hidden');
+  updatePlayButton(songId,true);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';animateEQ();
+  if(audioCtx)connectAudioSource();
+}
 
-    function formatNumber(num) {
-        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-        return num;
-    }
+function updatePlayButton(songId,playing){
+  const btn=document.getElementById(`playBtn-${songId}`);
+  const icon=document.getElementById(`playIcon-${songId}`);
+  if(btn){btn.innerHTML=playing?'<i class="fas fa-pause"></i> Pause':'<i class="fas fa-play"></i> Preview';btn.classList.toggle('playing',playing);}
+  if(icon)icon.className=playing?'fas fa-pause':'fas fa-play';
+}
+function updateSongStats(songId){
+  const song=allSongs.find(s=>s.id===songId);
+  const card=document.getElementById(`song-card-${songId}`);
+  if(card&&song){const st=card.querySelector('.song-stats');if(st)st.innerHTML=`<span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span><span><i class="fas fa-film"></i> ${formatNumber(song.useCount)}</span>`;}
+}
+function useSong(songId){
+  const song=allSongs.find(s=>s.id===songId);if(!song)return;
+  song.useCount++;showToast(`"${song.title}" added to your video! 🎬`,'success');updateSongStats(songId);persistSongStat(songId,'useCount',song.useCount);
+}
+async function persistSongStat(songId,field,value){
+  if(!poseDB||String(songId).startsWith('s'))return;
+  try{await poseDB.collection(POSE_SONGS).doc(String(songId)).update({[field]:value,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}
+}
 
-    function formatDuration(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
+audioPlayer.addEventListener('timeupdate',()=>{
+  if(!playingId)return;
+  const t=audioPlayer.currentTime;
+  const fill=document.getElementById(`progressFill-${playingId}`);
+  const txt=document.getElementById(`progressText-${playingId}`);
+  if(fill)fill.style.width=`${Math.min((t/30)*100,100)}%`;
+  if(txt)txt.textContent=`${Math.floor(t)}s / 30s preview`;
+  document.getElementById('playerCurrentTime').textContent=formatDuration(Math.floor(t));
+  document.getElementById('playerSeek').value=t;
+  if(t>=30){audioPlayer.pause();const old=playingId;playingId=null;currentPlayingSong=null;updatePlayButton(old,false);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+});
+audioPlayer.addEventListener('ended',()=>{if(playingId){const old=playingId;playingId=null;currentPlayingSong=null;updatePlayButton(old,false);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}});
 
-    function showToast(message, type = 'success') {
-        const existingToast = document.querySelector('.toast');
-        if (existingToast) existingToast.remove();
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.animation = 'slideInRight 0.3s ease-out reverse';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
+/* Infinite scroll */
+document.querySelector('.main-area').addEventListener('scroll',function(){
+  if(document.getElementById('searchView').classList.contains('hidden'))return;
+  const{scrollTop,scrollHeight,clientHeight}=this;
+  if(scrollTop+clientHeight>=scrollHeight-400&&!isLoadingScroll){
+    isLoadingScroll=true;document.getElementById('loadingIndicator').classList.remove('hidden');
+    setTimeout(()=>{loadMoreSongs();isLoadingScroll=false;document.getElementById('loadingIndicator').classList.add('hidden');},700);
+  }
+});
 
-    function closeBanner() {
-        const banner = document.getElementById('topBanner');
-        banner.style.animation = 'slideDown 0.3s ease-out reverse';
-        setTimeout(() => banner.remove(), 300);
-    }
+/* Views */
+function showView(view){
+  ['searchView','signupView','dashboardView','uploadView','catalogueView'].forEach(id=>{document.getElementById(id)?.classList.add('hidden');});
+  document.getElementById('filtersSection')?.classList.add('hidden');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(playingId){audioPlayer.pause();updatePlayButton(playingId,false);playingId=null;currentPlayingSong=null;document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+  const map={
+    search:()=>{document.getElementById('searchView').classList.remove('hidden');document.getElementById('filtersSection').classList.remove('hidden');document.querySelectorAll('.nav-btn')[0].classList.add('active');},
+    signup:()=>{if(currentArtist){showView('dashboard');return;}document.getElementById('signupView').classList.remove('hidden');},
+    dashboard:()=>{if(!currentArtist){showView('signup');return;}document.getElementById('dashboardView').classList.remove('hidden');document.getElementById('dashboardBtn').classList.add('active');renderDashboard();},
+    upload:()=>{if(!currentArtist){showView('signup');return;}document.getElementById('uploadView').classList.remove('hidden');document.getElementById('uploadBtn').classList.add('active');initializeUploadForm();},
+    catalogue:()=>{if(!currentArtist){showView('signup');return;}document.getElementById('catalogueView').classList.remove('hidden');document.getElementById('catalogueBtn').classList.add('active');renderCatalogue();}
+  };
+  map[view]?.();
+}
 
-    function getFilteredSongs() {
-        return allSongs.filter(song => {
-            const matchesSearch = song.title.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
-                                  song.artist.toLowerCase().includes(currentSearchQuery.toLowerCase());
-            const matchesGenre = currentGenre === 'All' || song.genre === currentGenre;
-            const matchesCountry = currentCountry === 'All' || song.country === currentCountry;
-            return matchesSearch && matchesGenre && matchesCountry;
-        });
-    }
+/* Upload */
+function initializeUploadForm(){
+  if(currentArtist){const el=document.getElementById('ownerName');if(el)el.value=currentArtist.name;}
+  setupDropZone('audioUploadArea','audioFile',handleAudioFile);
+  setupDropZone('coverUploadArea','coverFile',handleCoverFile);
+}
+function setupDropZone(areaId,inputId,handler){
+  const area=document.getElementById(areaId);const input=document.getElementById(inputId);if(!area||!input)return;
+  const na=area.cloneNode(true);area.parentNode.replaceChild(na,area);
+  const ni=document.getElementById(inputId);
+  na.addEventListener('click',()=>ni.click());
+  na.addEventListener('dragover',e=>{e.preventDefault();na.classList.add('dragover');});
+  na.addEventListener('dragleave',()=>na.classList.remove('dragover'));
+  na.addEventListener('drop',e=>{e.preventDefault();na.classList.remove('dragover');if(e.dataTransfer.files[0])handler(e.dataTransfer.files[0]);});
+  ni.addEventListener('change',e=>{if(e.target.files[0])handler(e.target.files[0]);});
+}
+function handleAudioFile(file){
+  const ok=['audio/mpeg','audio/wav','audio/flac','audio/x-flac'];
+  if(!ok.includes(file.type)&&!file.name.match(/\.(mp3|wav|flac)$/i)){showToast('Please upload MP3, WAV or FLAC','error');return;}
+  if(file.size>100*1024*1024){showToast('Audio file must be under 100MB','error');return;}
+  document.getElementById('audioFileDisplay').innerHTML=`<div class="uploaded-file"><i class="fas fa-file-audio"></i><div style="flex:1"><p style="font-weight:600">${file.name}</p><p style="font-size:11.5px;color:var(--text-muted)">${(file.size/1024/1024).toFixed(2)} MB</p></div><i class="fas fa-check-circle check"></i></div>`;
+}
+function handleCoverFile(file){
+  if(!file.type.startsWith('image/')){showToast('Please upload an image file','error');return;}
+  document.getElementById('coverFileDisplay').innerHTML=`<div class="uploaded-file"><i class="fas fa-image"></i><div style="flex:1"><p style="font-weight:600">${file.name}</p><p style="font-size:11.5px;color:var(--text-muted)">${(file.size/1024/1024).toFixed(2)} MB</p></div><i class="fas fa-check-circle check"></i></div>`;
+}
+function addCollaborator(){
+  collaboratorCount++;
+  const list=document.getElementById('collaboratorsList');
+  const div=document.createElement('div');div.className='collaborator-item';div.id=`collab-${collaboratorCount}`;
+  div.innerHTML=`<input type="text" placeholder="Collaborator name" class="collab-name"><input type="number" placeholder="%" class="collab-split" value="0" min="0" max="100" oninput="updateTotalSplit()"><span>%</span><button class="btn-remove" onclick="removeCollaborator(${collaboratorCount})"><i class="fas fa-times"></i></button>`;
+  list.appendChild(div);updateTotalSplit();
+}
+function removeCollaborator(id){document.getElementById(`collab-${id}`)?.remove();updateTotalSplit();}
+function updateTotalSplit(){
+  const o=parseInt(document.getElementById('ownerSplit')?.value)||0;
+  const c=Array.from(document.querySelectorAll('.collab-split')).reduce((s,e)=>s+(parseInt(e.value)||0),0);
+  const t=o+c;const el=document.getElementById('totalSplit');
+  if(el){el.textContent=t;el.style.color=t===100?'var(--accent)':'var(--accent-red)';}
+}
 
-    function filterByGenre(genre) {
-        currentGenre = genre;
-        document.querySelectorAll('.genre-tab').forEach(tab => {
-            tab.classList.remove('active');
-            if (tab.textContent === genre) tab.classList.add('active');
-        });
-        resetAndLoadSongs();
-    }
+/* Catalogue */
+function renderCatalogue(){
+  if(!currentArtist)return;
+  const songs=allSongs.filter(s=>s.artistId===currentArtist.id);
+  const grid=document.getElementById('catalogueGrid');const empty=document.getElementById('emptyState');
+  const uses=songs.reduce((s,x)=>s+(x.useCount||0),0);const streams=songs.reduce((s,x)=>s+(x.streamCount||0),0);
+  document.getElementById('totalTracks').textContent=songs.length;
+  document.getElementById('totalStreams').textContent=formatNumber(streams);
+  document.getElementById('totalRevenue').textContent=formatCurrency(uses*0.05,currentArtist.country);
+  if(!songs.length){grid.innerHTML='';empty.classList.remove('hidden');return;}
+  empty.classList.add('hidden');
+  const q=(document.getElementById('catalogueSearch')?.value||'').toLowerCase();
+  const filtered=songs.filter(s=>s.title.toLowerCase().includes(q)||s.genre.toLowerCase().includes(q)).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  grid.innerHTML='';
+  filtered.forEach(song=>{
+    const rev=formatCurrency((song.useCount||0)*0.05,currentArtist.country);
+    const card=document.createElement('div');card.className=`catalogue-song-card${song.pinned?' pinned':''}`;
+    card.innerHTML=`${song.pinned?'<div class="pin-badge"><i class="fas fa-thumbtack"></i> PINNED</div>':''}
+      <div class="catalogue-song-header"><img src="${song.coverUrl}" class="catalogue-song-cover" onerror="this.src='https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop'"><div class="catalogue-song-info"><h4>${song.title}</h4><p>${song.genre}</p><p style="font-size:11px;margin-top:3px;color:var(--text-muted)">${song.collaborators?.length>1?`<i class="fas fa-users"></i> ${song.collaborators.length} collaborators`:'Solo track'}</p></div></div>
+      <div class="catalogue-song-stats"><div><div>Streams</div><div>${formatNumber(song.streamCount||0)}</div></div><div><div>Uses</div><div>${formatNumber(song.useCount||0)}</div></div><div><div>Revenue</div><div style="color:var(--accent)">${rev}</div></div></div>
+      <div class="catalogue-song-actions"><button class="btn-small btn-pin${song.pinned?' active':''}" onclick="togglePin('${song.id}')"><i class="fas fa-thumbtack"></i> ${song.pinned?'Unpin':'Pin'}</button><button class="btn-small btn-analytics" onclick="showAnalytics('${song.id}')"><i class="fas fa-chart-line"></i> Analytics</button></div>`;
+    grid.appendChild(card);
+  });
+}
+document.getElementById('catalogueSearch').addEventListener('input',renderCatalogue);
 
-    function filterByCountry() {
-        currentCountry = document.getElementById('countryFilter').value;
-        resetAndLoadSongs();
-    }
+/* Analytics */
+function showAnalytics(songId){
+  const song=allSongs.find(s=>s.id===songId);if(!song||!currentArtist)return;
+  document.getElementById('analyticsModal').classList.add('active');
+  document.getElementById('modalSongTitle').textContent=song.title;
+  document.getElementById('modalStreams').textContent=formatNumber(song.streamCount||0);
+  document.getElementById('modalUses').textContent=formatNumber(song.useCount||0);
+  const rev=(song.useCount||0)*0.05;
+  document.getElementById('modalRevenue').textContent=formatCurrency(rev,currentArtist.country);
+  document.getElementById('modalEngagement').textContent=song.streamCount>0?((song.useCount/song.streamCount)*100).toFixed(1)+'%':'0%';
+  document.getElementById('modalGenre').textContent=song.genre||'—';
+  document.getElementById('modalDuration').textContent=formatDuration(song.duration);
+  document.getElementById('modalCountry').textContent=song.country||'—';
+  document.getElementById('modalUploadDate').textContent=song.uploadDate?new Date(song.uploadDate).toLocaleDateString():'Demo track';
+  const cl=document.getElementById('modalCollaborators');
+  cl.innerHTML=song.collaborators?.length>0?song.collaborators.map(c=>{const cr=rev*(c.split/100);return`<div class="collaborator-display"><div><p style="font-weight:600">${c.name}</p><p style="font-size:12px;color:var(--text-secondary)">${c.split}% split</p></div><p style="font-weight:700;color:var(--accent)">${formatCurrency(cr,currentArtist.country)}</p></div>`}).join(''):'<p style="color:var(--text-secondary)">No collaborators</p>';
+}
+function closeAnalytics(){document.getElementById('analyticsModal').classList.remove('active');}
+document.getElementById('analyticsModal').addEventListener('click',e=>{if(e.target.id==='analyticsModal')closeAnalytics();});
 
-    function loadMoreSongs() {
-        if (isLoading) return;
-        const filtered = getFilteredSongs();
-        const startIndex = (currentPage - 1) * songsPerPage;
-        const endIndex = startIndex + songsPerPage;
-        const newSongs = filtered.slice(startIndex, endIndex);
-        if (newSongs.length === 0) return;
-        displayedSongs = [...displayedSongs, ...newSongs];
-        renderSongs();
-        currentPage++;
-    }
+/* Dashboard */
+function renderDashboard(){
+  if(!currentArtist)return;
+  document.getElementById('profileName').textContent=currentArtist.name;
+  document.getElementById('profileType').textContent=`${currentArtist.type||'Musician'} · ${currentArtist.country}`;
+  const songs=allSongs.filter(s=>s.artistId===currentArtist.id);
+  const uses=songs.reduce((s,x)=>s+(x.useCount||0),0);
+  document.getElementById('statStreams').textContent=formatNumber(currentArtist.monthlyStreams||0);
+  document.getElementById('statSongs').textContent=songs.length;
+  document.getElementById('statUses').textContent=formatNumber(uses);
+  document.getElementById('statRevenue').textContent=formatCurrency(uses*0.05,currentArtist.country);
+  const links=document.getElementById('platformLinks');
+  links.innerHTML='<h3><i class="fas fa-link" style="color:var(--accent);margin-right:7px;"></i>Platform Links</h3>';
+  if(currentArtist.spotifyUrl)links.innerHTML+=`<a href="${currentArtist.spotifyUrl}" target="_blank" class="platform-link"><i class="fab fa-spotify"></i> Spotify Profile</a>`;
+  if(currentArtist.appleMusicUrl)links.innerHTML+=`<a href="${currentArtist.appleMusicUrl}" target="_blank" class="platform-link apple"><i class="fab fa-apple"></i> Apple Music Profile</a>`;
+  const list=document.getElementById('artistSongsList');
+  list.innerHTML=!songs.length?'<p style="color:var(--text-muted);font-size:13px;">No songs uploaded yet.</p>':songs.map(s=>`<div class="artist-song-item"><img src="${s.coverUrl}" onerror="this.src='https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop'"><div class="artist-song-info"><h4>${s.title}</h4><p>${formatNumber(s.streamCount||0)} streams · ${formatNumber(s.useCount||0)} uses</p></div><p style="font-weight:700;color:var(--accent);font-size:13.5px;">${formatCurrency((s.useCount||0)*0.05,currentArtist.country)}</p></div>`).join('');
+}
 
-    function resetAndLoadSongs() {
-        displayedSongs = [];
-        currentPage = 1;
-        document.getElementById('songsGrid').innerHTML = '';
-        loadMoreSongs();
-    }
+/* Firebase */
+function initPoseFirebase(){
+  poseDB=firebase.firestore();poseStorage=firebase.storage();poseAuth=firebase.auth();
+  poseAuth.onAuthStateChanged(async user=>{
+    if(user)await initPoseMusicFeature(user);
+    else{currentArtist=null;showCreatorNavButtons(false);}
+  });
+}
+async function initPoseMusicFeature(user){
+  try{
+    const doc=await poseDB.collection(POSE_CREATORS).doc(user.uid).get();
+    if(doc.exists){currentArtist={id:user.uid,...doc.data()};showCreatorNavButtons(true);updateSidebarUser();await loadUserSongsFromFirestore(user.uid);}
+    else showCreatorNavButtons(false);
+  }catch(e){console.error('[Pose] Init:',e);showCreatorNavButtons(false);}
+}
+async function createArtistAccount(){
+  const user=poseAuth?.currentUser;if(!user){showToast('Please log in first','error');return;}
+  const name=document.getElementById('artistName')?.value.trim();
+  const country=document.getElementById('artistCountry')?.value;
+  const type=document.getElementById('creatorType')?.value||'Musician';
+  const spotifyUrl=document.getElementById('spotifyUrl')?.value.trim()||'';
+  const appleMusicUrl=document.getElementById('appleMusicUrl')?.value.trim()||'';
+  const monthlyStreams=parseInt(document.getElementById('monthlyStreams')?.value)||0;
+  if(!name)return showToast('Please enter your artist name','error');
+  if(!country)return showToast('Please select your country','error');
+  const btn=document.getElementById('becomeCreatorBtn');_setBtnLoading(btn,true,'Setting up…');
+  try{
+    const profile={uid:user.uid,name,email:user.email,country,type,spotifyUrl,appleMusicUrl,monthlyStreams,isCreator:true,joinedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+    await poseDB.collection(POSE_CREATORS).doc(user.uid).set(profile);
+    currentArtist={id:user.uid,...profile};showCreatorNavButtons(true);updateSidebarUser();
+    showToast(`Welcome, ${name}! 🎶`,'success');showView('dashboard');
+  }catch(e){console.error('[Pose] Creator:',e);showToast('Setup failed. Please try again.','error');_setBtnLoading(btn,false,'<i class="fas fa-rocket"></i> Become a Creator');}
+}
+async function uploadTrack(){
+  const user=poseAuth?.currentUser;if(!user||!currentArtist){showToast('Set up your creator profile first','error');return;}
+  const title=document.getElementById('trackTitle')?.value.trim();
+  const genre=document.getElementById('trackGenre')?.value;
+  const description=document.getElementById('trackDescription')?.value.trim()||'';
+  const audioFile=document.getElementById('audioFile')?.files[0];
+  const coverFile=document.getElementById('coverFile')?.files[0];
+  if(!title)return showToast('Please enter a track title','error');
+  if(!genre)return showToast('Please select a genre','error');
+  if(!audioFile)return showToast('Please upload an audio file','error');
+  const split=parseInt(document.getElementById('totalSplit')?.textContent||'0');
+  if(split!==100)return showToast('Revenue split must total 100%','error');
+  const collaborators=[{name:currentArtist.name,split:parseInt(document.getElementById('ownerSplit')?.value||'100')}];
+  document.querySelectorAll('.collaborator-item').forEach((item,i)=>{if(i===0)return;const n=item.querySelector('.collab-name')?.value.trim();const s=parseInt(item.querySelector('.collab-split')?.value)||0;if(n&&s>0)collaborators.push({name:n,split:s});});
+  const btn=document.querySelector('[onclick="uploadTrack()"]');_setBtnLoading(btn,true,'Uploading…');
+  try{
+    const ref=poseDB.collection(POSE_SONGS).doc();const songId=ref.id;const base=`pose_music/${user.uid}/${songId}`;
+    showToast('Uploading audio…','success');
+    const snap=await poseStorage.ref(`${base}/audio_${audioFile.name}`).put(audioFile);
+    const audioUrl=await snap.ref.getDownloadURL();
+    let coverUrl='https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop';
+    if(coverFile){showToast('Uploading cover art…','success');const cs=await poseStorage.ref(`${base}/cover_${coverFile.name}`).put(coverFile);coverUrl=await cs.ref.getDownloadURL();}
+    const data={title,genre,description,artist:currentArtist.name,artistId:user.uid,country:currentArtist.country,audioUrl,coverUrl,collaborators,duration:0,streamCount:0,useCount:0,pinned:false,uploadDate:firebase.firestore.FieldValue.serverTimestamp()};
+    await ref.set(data);
+    const local={...data,id:songId,uploadDate:new Date().toISOString()};
+    allSongs.push(local);userSongs.push(local);
+    showToast(`"${title}" uploaded! 🎵`,'success');_resetUploadForm();setTimeout(()=>showView('catalogue'),1500);
+  }catch(e){
+    console.error('[Pose] Upload:',e);
+    showToast(e.code==='storage/unauthorized'?'Permission denied — check Firebase Storage rules.':`Upload failed: ${e.message}`,'error');
+  }finally{_setBtnLoading(btn,false,'<i class="fas fa-check"></i> Upload Track');}
+}
+async function loadUserSongsFromFirestore(uid){
+  try{
+    const snap=await poseDB.collection(POSE_SONGS).where('artistId','==',uid).orderBy('uploadDate','desc').get();
+    userSongs=[];
+    snap.forEach(doc=>{const data={...doc.data(),id:doc.id};const i=allSongs.findIndex(s=>s.id===doc.id);if(i===-1)allSongs.push(data);else allSongs[i]=data;userSongs.push(data);});
+  }catch(e){console.error('[Pose] Load songs:',e);}
+}
+async function togglePin(songId){
+  const song=allSongs.find(s=>s.id===songId);if(!song)return;
+  const ns=!song.pinned;song.pinned=ns;renderCatalogue();showToast(ns?'Song pinned':'Song unpinned','success');
+  if(!String(songId).startsWith('s')&&poseDB){
+    try{await poseDB.collection(POSE_SONGS).doc(songId).update({pinned:ns,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});}
+    catch(e){song.pinned=!ns;renderCatalogue();showToast('Could not save pin state','error');}
+  }
+}
 
-    function renderSongs() {
-        const grid = document.getElementById('songsGrid');
-        displayedSongs.forEach((song, index) => {
-            if (document.getElementById(`song-card-${song.id}`)) return;
-            const animationDelay = (index % songsPerPage) * 0.05;
-            if (index > 0 && index % 6 === 0 && !document.getElementById(`ad-${index}`)) {
-                const adDiv = document.createElement('div');
-                adDiv.className = 'banner-ad';
-                adDiv.id = `ad-${index}`;
-                adDiv.innerHTML = `
-                    <div class="banner-ad-content">
-                        <span class="sponsored-badge">POSE PLATFORM</span>
-                        <div>
-                            <h4>💎 Premium sound quality meets premium creator pay</h4>
-                            <p>Pose Music - where artists earn what they deserve. 3-5x higher royalties per use</p>
-                        </div>
-                    </div>
-                    <button onclick="showView('signup')">Upload Your Music</button>
-                `;
-                grid.appendChild(adDiv);
-            }
-            const card = document.createElement('div');
-            card.className = 'song-card';
-            card.id = `song-card-${song.id}`;
-            card.style.animationDelay = `${animationDelay}s`;
-            card.innerHTML = `
-                <div class="song-header">
-                    <img src="${song.coverUrl}" alt="${song.title}" class="song-cover">
-                    <div class="song-info">
-                        <h3>${song.title}</h3>
-                        <p>${song.artist}</p>
-                        <div class="song-meta">
-                            <span class="meta-tag">${song.genre}</span>
-                            <span class="meta-tag">${song.country}</span>
-                        </div>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 4px;">
-                            <i class="fas fa-clock"></i> ${formatDuration(song.duration)}
-                        </p>
-                    </div>
-                </div>
-                <div class="song-stats">
-                    <span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span>
-                    <span><i class="fas fa-video"></i> ${formatNumber(song.useCount)}</span>
-                </div>
-                <div class="song-actions">
-                    <button class="btn btn-play" onclick="togglePlay(${song.id}, '${song.audioUrl}')">
-                        <i class="fas fa-play"></i> Play (30s)
-                    </button>
-                    <button class="btn btn-use" onclick="useSong(${song.id})">
-                        <i class="fas fa-plus"></i> Use Full
-                    </button>
-                </div>
-                <div id="progress-${song.id}" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" id="progressFill-${song.id}"></div></div>
-                    <div class="progress-text" id="progressText-${song.id}"></div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
+/* Helpers */
+function showCreatorNavButtons(show){
+  ['dashboardBtn','catalogueBtn','uploadBtn'].forEach(id=>document.getElementById(id)?.classList.toggle('hidden',!show));
+  const su=document.getElementById('nav-signup-btn');if(su)su.style.display=show?'none':'flex';
+}
+function updateSidebarUser(){
+  if(!currentArtist)return;
+  const el=document.getElementById('sidebarUser');if(el)el.style.display='flex';
+  const ne=document.getElementById('sidebarUserName');if(ne)ne.textContent=currentArtist.name;
+}
+function _setBtnLoading(btn,loading,label){if(!btn)return;btn.disabled=loading;btn.innerHTML=loading?`<i class="fas fa-spinner fa-spin"></i> ${label}`:label;}
+function _resetUploadForm(){
+  ['trackTitle','trackGenre','trackDescription','audioFile','coverFile'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['audioFileDisplay','coverFileDisplay'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+  const os=document.getElementById('ownerSplit');if(os)os.value='100';
+  document.querySelectorAll('.collaborator-item').forEach((item,i)=>{if(i>0)item.remove();});
+  updateTotalSplit();
+}
+function showToast(msg,type='success'){
+  document.querySelector('.toast')?.remove();
+  const t=document.createElement('div');t.className=`toast ${type}`;
+  t.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i><span>${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.animation='toastIn .25s ease-out reverse';setTimeout(()=>t.remove(),250);},3000);
+}
+function closeBanner(){
+  const b=document.getElementById('topBanner');if(!b)return;
+  b.style.transition='all .3s ease';b.style.opacity='0';b.style.height='0';b.style.padding='0';b.style.overflow='hidden';
+  setTimeout(()=>b.remove(),300);
+}
 
-    function togglePlay(songId, audioUrl) {
-        if (playingId === songId) {
-            audioPlayer.pause();
-            playingId = null;
-            updatePlayButton(songId, false);
-        } else {
-            if (playingId !== null) updatePlayButton(playingId, false);
-            audioPlayer.src = audioUrl;
-            audioPlayer.currentTime = 0;
-            audioPlayer.play();
-            playingId = songId;
-            const song = allSongs.find(s => s.id === songId);
-            song.streamCount++;
-            updateSongStats(songId);
-            document.getElementById(`progress-${songId}`).classList.remove('hidden');
-            updatePlayButton(songId, true);
-        }
-    }
+document.getElementById('ownerSplit')?.addEventListener('input',updateTotalSplit);
 
-    function updatePlayButton(songId, isPlaying) {
-        const btn = document.querySelector(`[onclick*="togglePlay(${songId}"]`);
-        if (btn) {
-            btn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i> Pause' : '<i class="fas fa-play"></i> Play (30s)';
-            btn.classList.toggle('playing', isPlaying);
-        }
-    }
-
-    function updateSongStats(songId) {
-        const song = allSongs.find(s => s.id === songId);
-        const card = document.getElementById(`song-card-${songId}`);
-        if (card) {
-            card.querySelector('.song-stats').innerHTML = `
-                <span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span>
-                <span><i class="fas fa-video"></i> ${formatNumber(song.useCount)}</span>
-            `;
-        }
-    }
-
-    function useSong(songId) {
-        const song = allSongs.find(s => s.id === songId);
-        song.useCount++;
-        showToast(`"${song.title}" added to your video!`, 'success');
-        updateSongStats(songId);
-    }
-
-    audioPlayer.addEventListener('timeupdate', () => {
-        if (playingId) {
-            currentTime = audioPlayer.currentTime;
-            const progressFill = document.getElementById(`progressFill-${playingId}`);
-            const progressText = document.getElementById(`progressText-${playingId}`);
-            if (progressFill && progressText) {
-                const percentage = Math.min((currentTime / 30) * 100, 100);
-                progressFill.style.width = `${percentage}%`;
-                progressText.textContent = `${Math.floor(currentTime)}s / 30s preview`;
-            }
-            if (currentTime >= 30) {
-                audioPlayer.pause();
-                const oldId = playingId;
-                playingId = null;
-                updatePlayButton(oldId, false);
-            }
-        }
-    });
-
-    audioPlayer.addEventListener('ended', () => {
-        if (playingId) {
-            const oldId = playingId;
-            playingId = null;
-            updatePlayButton(oldId, false);
-        }
-    });
-
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        currentSearchQuery = e.target.value;
-        resetAndLoadSongs();
-    });
-
-    window.addEventListener('scroll', () => {
-        if (document.getElementById('searchView').classList.contains('hidden')) return;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight;
-        const clientHeight = document.documentElement.clientHeight;
-        if (scrollTop + clientHeight >= scrollHeight - 500 && !isLoading) {
-            isLoading = true;
-            document.getElementById('loadingIndicator').classList.remove('hidden');
-            setTimeout(() => {
-                loadMoreSongs();
-                isLoading = false;
-                document.getElementById('loadingIndicator').classList.add('hidden');
-            }, 800);
-        }
-    });
-
-    function showView(view) {
-        ['searchView', 'signupView', 'dashboardView', 'uploadView', 'catalogueView'].forEach(id => {
-            document.getElementById(id).classList.add('hidden');
-        });
-        document.getElementById('filtersSection').classList.add('hidden');
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-
-        if (view === 'search') {
-            document.getElementById('searchView').classList.remove('hidden');
-            document.getElementById('filtersSection').classList.remove('hidden');
-            document.querySelectorAll('.nav-btn')[0].classList.add('active');
-        } else if (view === 'signup') {
-            document.getElementById('signupView').classList.remove('hidden');
-            document.querySelectorAll('.nav-btn')[1].classList.add('active');
-        } else if (view === 'dashboard') {
-            document.getElementById('dashboardView').classList.remove('hidden');
-            document.getElementById('dashboardBtn').classList.add('active');
-            renderDashboard();
-        } else if (view === 'upload') {
-            document.getElementById('uploadView').classList.remove('hidden');
-            document.getElementById('uploadBtn').classList.add('active');
-            initializeUploadForm();
-        } else if (view === 'catalogue') {
-            document.getElementById('catalogueView').classList.remove('hidden');
-            document.getElementById('catalogueBtn').classList.add('active');
-            renderCatalogue();
-        }
-
-        if (playingId !== null) {
-            audioPlayer.pause();
-            updatePlayButton(playingId, false);
-            playingId = null;
-        }
-    }
-
-    function initializeUploadForm() {
-        if (currentArtist) {
-            document.getElementById('ownerName').value = currentArtist.name;
-        }
-        const audioUploadArea = document.getElementById('audioUploadArea');
-        const audioFileInput = document.getElementById('audioFile');
-        const newAudioArea = audioUploadArea.cloneNode(true);
-        audioUploadArea.parentNode.replaceChild(newAudioArea, audioUploadArea);
-        document.getElementById('audioFile').addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleAudioFile(e.target.files[0]);
-        });
-        newAudioArea.addEventListener('click', () => document.getElementById('audioFile').click());
-        newAudioArea.addEventListener('dragover', (e) => { e.preventDefault(); newAudioArea.classList.add('dragover'); });
-        newAudioArea.addEventListener('dragleave', () => newAudioArea.classList.remove('dragover'));
-        newAudioArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            newAudioArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) handleAudioFile(e.dataTransfer.files[0]);
-        });
-
-        const coverUploadArea = document.getElementById('coverUploadArea');
-        const newCoverArea = coverUploadArea.cloneNode(true);
-        coverUploadArea.parentNode.replaceChild(newCoverArea, coverUploadArea);
-        document.getElementById('coverFile').addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleCoverFile(e.target.files[0]);
-        });
-        newCoverArea.addEventListener('click', () => document.getElementById('coverFile').click());
-        newCoverArea.addEventListener('dragover', (e) => { e.preventDefault(); newCoverArea.classList.add('dragover'); });
-        newCoverArea.addEventListener('dragleave', () => newCoverArea.classList.remove('dragover'));
-        newCoverArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            newCoverArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) handleCoverFile(e.dataTransfer.files[0]);
-        });
-    }
-
-    function handleAudioFile(file) {
-        document.getElementById('audioFileDisplay').innerHTML = `
-            <div class="uploaded-file">
-                <i class="fas fa-file-audio"></i>
-                <div style="flex: 1;">
-                    <p style="font-weight: bold;">${file.name}</p>
-                    <p style="font-size: 12px; color: var(--text-muted);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                </div>
-                <i class="fas fa-check-circle" style="color: var(--accent-green);"></i>
-            </div>
-        `;
-    }
-
-    function handleCoverFile(file) {
-        document.getElementById('coverFileDisplay').innerHTML = `
-            <div class="uploaded-file">
-                <i class="fas fa-image"></i>
-                <div style="flex: 1;">
-                    <p style="font-weight: bold;">${file.name}</p>
-                    <p style="font-size: 12px; color: var(--text-muted);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                </div>
-                <i class="fas fa-check-circle" style="color: var(--accent-green);"></i>
-            </div>
-        `;
-    }
-
-    function addCollaborator() {
-        collaboratorCount++;
-        const list = document.getElementById('collaboratorsList');
-        const div = document.createElement('div');
-        div.className = 'collaborator-item';
-        div.id = `collab-${collaboratorCount}`;
-        div.innerHTML = `
-            <input type="text" placeholder="Collaborator name" class="collab-name">
-            <input type="number" placeholder="%" class="collab-split" value="0" min="0" max="100" onchange="updateTotalSplit()">
-            <span style="color: var(--text-muted);">%</span>
-            <button class="btn-remove" onclick="removeCollaborator(${collaboratorCount})"><i class="fas fa-times"></i></button>
-        `;
-        list.appendChild(div);
-        updateTotalSplit();
-    }
-
-    function removeCollaborator(id) {
-        const elem = document.getElementById(`collab-${id}`);
-        if (elem) { elem.remove(); updateTotalSplit(); }
-    }
-
-    function updateTotalSplit() {
-        const ownerSplit = parseInt(document.getElementById('ownerSplit').value) || 0;
-        const collabSplits = Array.from(document.querySelectorAll('.collab-split')).map(i => parseInt(i.value) || 0);
-        const total = ownerSplit + collabSplits.reduce((sum, val) => sum + val, 0);
-        document.getElementById('totalSplit').textContent = total;
-        document.getElementById('totalSplit').style.color = total === 100 ? 'var(--accent-green)' : '#ef4444';
-    }
-
-    function renderCatalogue() {
-        if (!currentArtist) return;
-        const artistSongs = allSongs.filter(s => s.artistId === currentArtist.id);
-        const grid = document.getElementById('catalogueGrid');
-        const emptyState = document.getElementById('emptyState');
-        if (artistSongs.length === 0) {
-            grid.innerHTML = '';
-            emptyState.classList.remove('hidden');
-            return;
-        }
-        emptyState.classList.add('hidden');
-        document.getElementById('totalTracks').textContent = artistSongs.length;
-        document.getElementById('totalStreams').textContent = formatNumber(artistSongs.reduce((sum, s) => sum + s.streamCount, 0));
-        const totalUses = artistSongs.reduce((sum, s) => sum + s.useCount, 0);
-        document.getElementById('totalRevenue').textContent = formatCurrency(totalUses * 0.05, currentArtist.country);
-        const searchQuery = document.getElementById('catalogueSearch')?.value.toLowerCase() || '';
-        const filteredSongs = artistSongs
-            .filter(s => s.title.toLowerCase().includes(searchQuery) || s.genre.toLowerCase().includes(searchQuery))
-            .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-        grid.innerHTML = '';
-        filteredSongs.forEach(song => {
-            const card = document.createElement('div');
-            card.className = `catalogue-song-card ${song.pinned ? 'pinned' : ''}`;
-            const songRevenueUSD = song.useCount * 0.05;
-            card.innerHTML = `
-                ${song.pinned ? '<div class="pin-badge"><i class="fas fa-thumbtack"></i> PINNED</div>' : ''}
-                <div class="catalogue-song-header">
-                    <img src="${song.coverUrl}" alt="${song.title}" class="catalogue-song-cover">
-                    <div class="catalogue-song-info" style="flex: 1;">
-                        <h4>${song.title}</h4>
-                        <p>${song.genre}</p>
-                        <p style="font-size: 11px; margin-top: 4px;">
-                            ${song.collaborators && song.collaborators.length > 1 ?
-                                `<i class="fas fa-users"></i> ${song.collaborators.length} collaborators` : 'Solo track'}
-                        </p>
-                    </div>
-                </div>
-                <div class="catalogue-song-stats">
-                    <div><div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">STREAMS</div><div style="font-weight: bold;">${formatNumber(song.streamCount)}</div></div>
-                    <div><div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">USES</div><div style="font-weight: bold;">${formatNumber(song.useCount)}</div></div>
-                    <div><div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">REVENUE</div><div style="font-weight: bold; color: var(--accent-green);">${formatCurrency(songRevenueUSD, currentArtist.country)}</div></div>
-                </div>
-                <div class="catalogue-song-actions">
-                    <button class="btn-small btn-pin ${song.pinned ? 'active' : ''}" onclick="togglePin('${song.id}')">
-                        <i class="fas fa-thumbtack"></i> ${song.pinned ? 'Unpin' : 'Pin'}
-                    </button>
-                    <button class="btn-small btn-analytics" onclick="showAnalytics('${song.id}')">
-                        <i class="fas fa-chart-line"></i> Analytics
-                    </button>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function showAnalytics(songId) {
-        const song = allSongs.find(s => s.id == songId);
-        if (!song) return;
-        document.getElementById('analyticsModal').classList.add('active');
-        document.getElementById('modalSongTitle').textContent = song.title;
-        document.getElementById('modalStreams').textContent = formatNumber(song.streamCount);
-        document.getElementById('modalUses').textContent = formatNumber(song.useCount);
-        const revenueUSD = song.useCount * 0.05;
-        document.getElementById('modalRevenue').textContent = formatCurrency(revenueUSD, currentArtist.country);
-        document.getElementById('modalEngagement').textContent = song.streamCount > 0 ? ((song.useCount / song.streamCount) * 100).toFixed(1) + '%' : '0%';
-        document.getElementById('modalGenre').textContent = song.genre;
-        document.getElementById('modalDuration').textContent = formatDuration(song.duration);
-        document.getElementById('modalCountry').textContent = song.country;
-        document.getElementById('modalUploadDate').textContent = song.uploadDate ? new Date(song.uploadDate).toLocaleDateString() : '-';
-        const collabList = document.getElementById('modalCollaborators');
-        if (song.collaborators && song.collaborators.length > 0) {
-            collabList.innerHTML = '';
-            song.collaborators.forEach(collab => {
-                const collabRevenue = revenueUSD * (collab.split / 100);
-                const div = document.createElement('div');
-                div.className = 'collaborator-display';
-                div.innerHTML = `
-                    <div><p style="font-weight: bold;">${collab.name}</p><p style="font-size: 12px; color: var(--text-secondary);">${collab.split}% split</p></div>
-                    <div style="text-align: right;"><p style="font-weight: bold; color: var(--accent-green);">${formatCurrency(collabRevenue, currentArtist.country)}</p></div>
-                `;
-                collabList.appendChild(div);
-            });
-        } else {
-            collabList.innerHTML = '<p style="color: var(--text-secondary);">No collaborators on this track</p>';
-        }
-    }
-
-    function closeAnalytics() {
-        document.getElementById('analyticsModal').classList.remove('active');
-    }
-
-    document.getElementById('analyticsModal').addEventListener('click', (e) => {
-        if (e.target.id === 'analyticsModal') closeAnalytics();
-    });
-
-    document.getElementById('catalogueSearch').addEventListener('input', () => renderCatalogue());
-
-    function renderDashboard() {
-        if (!currentArtist) return;
-        document.getElementById('profileName').textContent = currentArtist.name;
-        document.getElementById('profileType').textContent = `${currentArtist.type} • ${currentArtist.country}`;
-        document.getElementById('statStreams').textContent = formatNumber(currentArtist.monthlyStreams || 0);
-        const artistSongs = allSongs.filter(s => s.artistId === currentArtist.id);
-        document.getElementById('statSongs').textContent = artistSongs.length;
-        const totalUses = artistSongs.reduce((sum, s) => sum + s.useCount, 0);
-        document.getElementById('statUses').textContent = formatNumber(totalUses);
-        document.getElementById('statRevenue').textContent = formatCurrency(totalUses * 0.05, currentArtist.country);
-        const linksDiv = document.getElementById('platformLinks');
-        linksDiv.innerHTML = '<h3><i class="fas fa-link"></i> Platform Links</h3>';
-        if (currentArtist.spotifyUrl) {
-            linksDiv.innerHTML += `<a href="${currentArtist.spotifyUrl}" target="_blank" class="platform-link"><i class="fab fa-spotify"></i> Spotify Profile</a>`;
-        }
-        if (currentArtist.appleMusicUrl) {
-            linksDiv.innerHTML += `<a href="${currentArtist.appleMusicUrl}" target="_blank" class="platform-link apple"><i class="fab fa-apple"></i> Apple Music Profile</a>`;
-        }
-        const songsList = document.getElementById('artistSongsList');
-        songsList.innerHTML = '';
-        if (artistSongs.length === 0) {
-            songsList.innerHTML = '<p style="color: rgba(255,255,255,0.6);">No songs uploaded yet. Start uploading to begin earning!</p>';
-        } else {
-            artistSongs.forEach(song => {
-                const item = document.createElement('div');
-                item.className = 'artist-song-item';
-                item.innerHTML = `
-                    <img src="${song.coverUrl}" alt="${song.title}">
-                    <div class="artist-song-info" style="flex: 1;">
-                        <h4>${song.title}</h4>
-                        <p>${formatNumber(song.streamCount)} streams · ${formatNumber(song.useCount)} uses</p>
-                    </div>
-                    <div style="text-align: right;">
-                        <p style="font-weight: bold; color: #10b981;">${formatCurrency(song.useCount * 0.05, currentArtist.country)}</p>
-                    </div>
-                `;
-                songsList.appendChild(item);
-            });
-        }
-    }
-
-    // ── Firebase Creator Feature ──────────────────────────────
-
-    function initPoseFirebase() {
-        poseDB = firebase.firestore();
-        poseStorage = firebase.storage();
-        poseAuth = firebase.auth();
-
-        poseAuth.onAuthStateChanged((user) => {
-            if (user) {
-                initPoseMusicFeature();
-            } else {
-                currentArtist = null;
-                showCreatorNavButtons(false);
-            }
-        });
-    }
-
-    async function initPoseMusicFeature() {
-        const user = poseAuth.currentUser;
-        if (!user) { showCreatorNavButtons(false); return; }
-        try {
-            const doc = await poseDB.collection(POSE_CREATORS).doc(user.uid).get();
-            if (doc.exists) {
-                currentArtist = { id: user.uid, ...doc.data() };
-                showCreatorNavButtons(true);
-                await loadUserSongsFromFirestore();
-            } else {
-                showCreatorNavButtons(false);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async function createArtistAccount() {
-        const user = poseAuth.currentUser;
-        if (!user) {
-            showToast('Please log in to your account first', 'error');
-            return;
-        }
-        const name = document.getElementById('artistName')?.value.trim();
-        const country = document.getElementById('artistCountry')?.value;
-        const creatorType = document.getElementById('creatorType')?.value || 'Musician';
-        const spotifyUrl = document.getElementById('spotifyUrl')?.value.trim() || '';
-        const appleMusicUrl = document.getElementById('appleMusicUrl')?.value.trim() || '';
-        const monthlyStr = document.getElementById('monthlyStreams')?.value || '0';
-
-        if (!name) return showToast('Please enter your artist name', 'error');
-        if (!country) return showToast('Please select your country', 'error');
-
-        const btn = document.getElementById('becomeCreatorBtn');
-        _setBtnLoading(btn, true, 'Setting up your profile…');
-
-        try {
-            const profile = {
-                uid: user.uid,
-                name, email: user.email, country,
-                type: creatorType, spotifyUrl, appleMusicUrl,
-                monthlyStreams: parseInt(monthlyStr) || 0,
-                isCreator: true,
-                joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            };
-            await poseDB.collection(POSE_CREATORS).doc(user.uid).set(profile);
-            currentArtist = { id: user.uid, ...profile };
-            showCreatorNavButtons(true);
-            showToast(`You're a creator now, ${name}! Start uploading 🎶`, 'success');
-            showView('dashboard');
-        } catch (err) {
-            console.error(err);
-            showToast('Setup failed. Please try again.', 'error');
-            _setBtnLoading(btn, false, '<i class="fas fa-rocket"></i> Become a Creator');
-        }
-    }
-
-    async function uploadTrack() {
-        const user = poseAuth.currentUser;
-        if (!user || !currentArtist) {
-            showToast('Please set up your creator profile first', 'error');
-            return;
-        }
-        const title = document.getElementById('trackTitle')?.value.trim();
-        const genre = document.getElementById('trackGenre')?.value;
-        const description = document.getElementById('trackDescription')?.value.trim() || '';
-        const audioFile = document.getElementById('audioFile')?.files[0];
-        const coverFile = document.getElementById('coverFile')?.files[0];
-
-        if (!title) return showToast('Please enter a track title', 'error');
-        if (!genre) return showToast('Please select a genre', 'error');
-        if (!audioFile) return showToast('Please upload an audio file', 'error');
-
-        const totalSplit = parseInt(document.getElementById('totalSplit')?.textContent || '0');
-        if (totalSplit !== 100) return showToast('Revenue split must total 100%', 'error');
-
-        const collaborators = [{ name: currentArtist.name, split: parseInt(document.getElementById('ownerSplit')?.value || '100') }];
-        document.querySelectorAll('.collaborator-item').forEach((item, i) => {
-            if (i === 0) return;
-            const cName = item.querySelector('.collab-name')?.value.trim();
-            const cSplit = parseInt(item.querySelector('.collab-split')?.value) || 0;
-            if (cName && cSplit > 0) collaborators.push({ name: cName, split: cSplit });
-        });
-
-        const uploadBtn = document.querySelector('[onclick="uploadTrack()"]');
-        _setBtnLoading(uploadBtn, true, 'Uploading…');
-
-        try {
-            const songDocRef = poseDB.collection(POSE_SONGS).doc();
-            const songId = songDocRef.id;
-            const storagePath = `pose_music/${user.uid}/${songId}`;
-
-            showToast('Uploading audio file…', 'success');
-            const audioSnap = await poseStorage.ref(`${storagePath}/audio_${audioFile.name}`).put(audioFile);
-            const audioUrl = await audioSnap.ref.getDownloadURL();
-
-            let coverUrl = 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop';
-            if (coverFile) {
-                showToast('Uploading cover art…', 'success');
-                const coverSnap = await poseStorage.ref(`${storagePath}/cover_${coverFile.name}`).put(coverFile);
-                coverUrl = await coverSnap.ref.getDownloadURL();
-            }
-
-            const songData = {
-                firestoreId: songId, title, genre, description,
-                artist: currentArtist.name, artistId: user.uid,
-                country: currentArtist.country, audioUrl, coverUrl, collaborators,
-                duration: 0, streamCount: 0, useCount: 0, pinned: false,
-                uploadDate: firebase.firestore.FieldValue.serverTimestamp(),
-            };
-            await songDocRef.set(songData);
-
-            const localSong = { ...songData, id: songId, uploadDate: new Date().toISOString() };
-            allSongs.push(localSong);
-            userSongs.push(localSong);
-
-            showToast(`"${title}" uploaded successfully! 🎵`, 'success');
-            _resetUploadForm();
-            setTimeout(() => showView('catalogue'), 1500);
-        } catch (err) {
-            console.error(err);
-            showToast(err.code === 'storage/unauthorized' ? 'Upload permission denied.' : 'Upload failed. Try again.', 'error');
-        } finally {
-            _setBtnLoading(uploadBtn, false, '<i class="fas fa-check"></i> Upload Track');
-        }
-    }
-
-    async function loadUserSongsFromFirestore() {
-        const user = poseAuth.currentUser;
-        if (!user) return;
-        try {
-            const snapshot = await poseDB.collection(POSE_SONGS).where('artistId', '==', user.uid).orderBy('uploadDate', 'desc').get();
-            userSongs = [];
-            snapshot.forEach(doc => {
-                const data = { ...doc.data(), id: doc.id, firestoreId: doc.id };
-                const exists = allSongs.findIndex(s => s.id === doc.id);
-                if (exists === -1) { allSongs.push(data); } else { allSongs[exists] = data; }
-                userSongs.push(data);
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async function togglePin(songId) {
-        const song = allSongs.find(s => s.id == songId);
-        if (!song) return;
-        const newPinState = !song.pinned;
-        song.pinned = newPinState;
-        renderCatalogue();
-        showToast(newPinState ? 'Song pinned' : 'Song unpinned', 'success');
-        try {
-            await poseDB.collection(POSE_SONGS).doc(String(songId)).update({
-                pinned: newPinState,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-        } catch (err) {
-            song.pinned = !newPinState;
-            renderCatalogue();
-            showToast('Failed to save pin state', 'error');
-        }
-    }
-
-    function showCreatorNavButtons(show) {
-        ['dashboardBtn', 'catalogueBtn', 'uploadBtn'].forEach(id => {
-            document.getElementById(id)?.classList.toggle('hidden', !show);
-        });
-    }
-
-    function _setBtnLoading(btn, loading, label) {
-        if (!btn) return;
-        btn.disabled = loading;
-        btn.innerHTML = loading ? '<i class="fas fa-spinner fa-spin"></i> ' + label : label;
-    }
-
-    function _resetUploadForm() {
-        ['trackTitle', 'trackGenre', 'trackDescription', 'audioFile', 'coverFile']
-            .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-        ['audioFileDisplay', 'coverFileDisplay']
-            .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
-        const ownerSplit = document.getElementById('ownerSplit');
-        if (ownerSplit) ownerSplit.value = '100';
-        document.querySelectorAll('.collaborator-item').forEach((item, i) => { if (i > 0) item.remove(); });
-        updateTotalSplit();
-    }
-
-    window.addEventListener('load', () => {
-        initPoseFirebase();
-        resetAndLoadSongs();
-    });
+window.addEventListener('load',()=>{initPoseFirebase();resetAndLoadSongs();});
 </script>
-        
-    
 </body>
-</html>
+    </html>
