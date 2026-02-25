@@ -7266,7 +7266,7 @@
 
         .tab-content.active {
             display: block;
-             color: white;
+            color: white;
             background: #222;
         }
 
@@ -10179,338 +10179,924 @@
             border-left: 4px solid #4C1D95;
         }
 
-        /* ====== PROFILE SETTINGS MODAL STYLES ====== */
-        .profile-settings-modal {
-            display: none;
+        /* Settings Container */
+        .settings-container {
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .settings-container.active {
+            transform: translateX(0);
+        }
+
+        /* Settings Navigation */
+        .settings-nav {
+            background-color: #121212;
+            padding: 15px;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-header i {
+            font-size: 1.2rem;
+            color: #9c27b0;
+            /* Deep purple */
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .nav-header i:hover {
+            background-color: rgba(156, 39, 176, 0.2);
+            /* Light purple background */
+        }
+
+        .nav-header h1 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            flex: 1;
+            padding: 20px;
+            background-color: #121212;
+            overflow-y: auto;
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            margin-bottom: 20px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-section h2 {
+            color: #bb86fc;
+            /* Light purple for section headers */
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a2a;
+            font-weight: 500;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 5px 0;
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            color: white;
+            font-size: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .setting-item:hover {
+            background-color: #333;
+        }
+
+        .setting-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-info i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            color: #8a2be2;
+            /* Purple color for icons */
+        }
+
+        .setting-item .fa-chevron-right {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .settings-section h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item i.fa-chevron-right {
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: #000000;
-            z-index: 1600;
+            background-color: #333333;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #9c27b0;
+            /* Deep purple */
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #9c27b0;
+            /* Deep purple */
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* Select Dropdown */
+        .setting-select {
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 30px;
+        }
+
+        .setting-select:focus {
+            box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.3);
+        }
+
+        .setting-select option {
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+        }
+
+        /* Danger Zone */
+        .danger-zone .setting-info i {
+            color: #f44336;
+            /* Red for danger */
+        }
+
+        .delete-account .setting-info i,
+        .delete-account .setting-info span {
+            color: #f44336;
+            /* Red for delete */
+        }
+
+        /* Policy Modal */
+        .policy-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .policy-content {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
             overflow-y: auto;
-            animation: slideInRight 0.3s ease-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
-        .profile-settings-modal.active {
-            display: block;
+        .policy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            background-color: #1a1a1a;
+            z-index: 1;
         }
 
-        @keyframes slideInRight {
+        .policy-header h2 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #999999;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .policy-body {
+            padding: 20px;
+            color: #dddddd;
+            line-height: 1.6;
+        }
+
+        .policy-body h3 {
+            color: #9c27b0;
+            /* Deep purple */
+            margin-top: 0;
+        }
+
+        .policy-body h4 {
+            color: #bb86fc;
+            /* Light purple */
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .policy-body p {
+            margin-bottom: 15px;
+        }
+
+        /* Account Settings Modal Container */
+        .account-settings-modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            padding: 20px;
+        }
+
+        .account-settings-modal-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .account-settings-modal {
+            background-color: #121212;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            animation: account-settings-modal-in 0.3s forwards;
+        }
+
+        @keyframes account-settings-modal-in {
             from {
+                transform: translateY(20px);
                 opacity: 0;
-                transform: translateX(100%);
             }
 
             to {
+                transform: translateY(0);
                 opacity: 1;
-                transform: translateX(0);
             }
         }
 
-        .profile-settings-content {
-            background: #000000;
-            min-height: 100vh;
-            padding: 0;
-            border-radius: 0;
-            border: none;
-            max-width: 100%;
-            width: 100%;
-            animation: none;
-        }
-
-        .settings-header {
+        .account-settings-modal-content {
             position: relative;
-            height: 80px;
-            background: linear-gradient(135deg, #4C1D95 0%, #3B0764 100%);
+        }
+
+        .account-settings-modal-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 15px;
-            border-bottom: 1px solid #4C1D95;
-        }
-
-        .settings-back-btn {
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            transition: all 0.3s;
-            display: flex;
             align-items: center;
-            justify-content: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            background-color: #121212;
+            z-index: 10;
         }
 
-        .settings-back-btn:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-
-        .settings-title {
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            flex: 1;
-        }
-
-        .settings-body {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-bottom: 40px;
-        }
-
-        .settings-section {
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #333;
-        }
-
-        .settings-section:last-child {
-            border-bottom: none;
-        }
-
-        .settings-section.danger-zone {
-            border-top: 2px solid #EF4444;
-            padding-top: 2rem;
-        }
-
-        .settings-section-title {
-            color: #FFFFFF;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .settings-section-title.danger {
-            color: #EF4444;
-        }
-
-        .settings-item {
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: #1a1a1a;
-            border-radius: 8px;
-            border-left: 4px solid #4C1D95;
-        }
-
-        .settings-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .settings-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            color: #FFFFFF;
+        .account-settings-modal-header h2 {
+            color: #bb86fc;
+            margin: 0;
+            font-size: 1.3rem;
             font-weight: 500;
         }
 
-        .settings-checkbox {
-            width: 20px;
-            height: 20px;
+        .account-settings-close-modal-btn {
+            background: none;
+            border: none;
+            color: #999999;
+            font-size: 1.2rem;
             cursor: pointer;
-            accent-color: #4C1D95;
-        }
-
-        .checkbox-text {
-            user-select: none;
-        }
-
-        .settings-item-description {
-            color: #999;
-            font-size: 0.85rem;
-            margin-top: 0.75rem;
-            margin-left: 32px;
-            line-height: 1.5;
-        }
-
-        .settings-action-btn {
-            width: 100%;
-            padding: 1rem;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 8px;
-            color: #FFFFFF;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 0.75rem;
+            padding: 8px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            transition: background-color 0.2s, color 0.2s;
         }
 
-        .settings-action-btn:last-child {
-            margin-bottom: 0;
+        .account-settings-close-modal-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
 
-        .settings-action-btn:hover {
-            background: #2a2a2a;
-            border-color: #4C1D95;
+        .account-settings-modal-body {
+            padding: 20px;
+        }
+
+        .account-settings-form-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .account-settings-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .account-settings-form-group label {
+            color: #bbbbbb;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .account-settings-form-group input,
+        .account-settings-form-group textarea {
+            background-color: #1e1e1e;
+            border: 1px solid #333333;
+            border-radius: 6px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .account-settings-form-group input:focus,
+        .account-settings-form-group textarea:focus {
+            border-color: #bb86fc;
+            outline: none;
+        }
+
+        .account-settings-form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .account-settings-password-input-container {
+            position: relative;
+        }
+
+        .account-settings-password-input-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .account-settings-toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777777;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .account-settings-toggle-password:hover {
+            color: #bb86fc;
+        }
+
+        .account-settings-password-strength {
+            margin-top: 5px;
+        }
+
+        .account-settings-strength-meter {
+            height: 4px;
+            background-color: #333333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .account-settings-strength-bar {
+            height: 100%;
+            width: 0;
+            background-color: #ff4d4d;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .account-settings-strength-text {
+            font-size: 0.8rem;
+            color: #999999;
+        }
+
+        .account-settings-save-profile-btn,
+        .account-settings-change-password-btn,
+        .account-settings-verify-otp-btn,
+        .account-settings-connect-btn,
+        .account-settings-done-btn {
+            background-color: #9c27b0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        .account-settings-save-profile-btn:hover,
+        .account-settings-change-password-btn:hover,
+        .account-settings-verify-otp-btn:hover,
+        .account-settings-connect-btn:hover,
+        .account-settings-done-btn:hover {
+            background-color: #7b1fa2;
+        }
+
+        .account-settings-resend-otp-btn {
+            background-color: transparent;
+            color: #bb86fc;
+            border: 1px solid #bb86fc;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s, color 0.2s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .account-settings-resend-otp-btn:hover {
+            background-color: rgba(187, 134, 252, 0.1);
+        }
+
+        /* Help & Support Modal */
+        .help-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .help-popup.active {
+            display: flex;
+        }
+
+        .help-popup-content {
+            background-color: #222;
+            color: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .help-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .help-popup-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .help-popup-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .help-popup-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .help-popup-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            max-height: calc(80vh - 120px);
+        }
+
+        .help-search {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .help-search::placeholder {
+            color: #999;
+        }
+
+        .help-category {
+            margin-bottom: 20px;
+        }
+
+        .help-category h4 {
+            color: #8a2be2;
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .help-item {
+            background-color: #333;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            transition: background-color 0.2s;
+        }
+
+        .help-item:hover {
+            background-color: #3a3a3a;
+        }
+
+        .help-item-title {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .help-item-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #ccc;
+            padding: 0 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .help-item.active .help-item-content {
+            max-height: 300px;
+            padding: 0 12px 12px 12px;
+        }
+
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .contact-option {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-option:hover {
+            background-color: #3a3a3a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 29, 149, 0.2);
         }
 
-        .settings-action-btn.danger-btn {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: #EF4444;
-            color: #EF4444;
+        .contact-option i {
+            font-size: 24px;
+            color: #8a2be2;
+            margin-bottom: 8px;
         }
 
-        .settings-action-btn.danger-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: #EF4444;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        .contact-option h5 {
+            margin: 0 0 5px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
         }
 
-        /* Responsive Settings Modal */
-        @media (max-width: 1024px) {
-            .settings-header {
-                height: 70px;
+        .contact-option p {
+            margin: 0 0 10px 0;
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .report-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .form-control {
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: #8a2be2;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background-color: #444;
+            color: white;
+        }
+
+        .appeal-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .appeal-step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            background-color: #8a2be2;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .step-content {
+            color: #ccc;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        /* Account Management Modals */
+        .confirm-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2100;
+            padding: 20px;
+        }
+
+        .confirm-modal-overlay.active {
+            display: flex;
+        }
+
+        .confirm-modal {
+            background-color: #121212;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
             }
 
-            .settings-title {
-                font-size: 18px;
-            }
-
-            .settings-body {
-                padding: 16px;
-                padding-bottom: 32px;
-            }
-
-            .settings-section {
-                margin-bottom: 1.5rem;
-                padding-bottom: 1.5rem;
-            }
-
-            .settings-item {
-                padding: 0.9rem;
+            to {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
-        @media (max-width: 768px) {
-            .settings-header {
-                height: 65px;
-                padding: 0 12px;
-            }
-
-            .settings-back-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
-
-            .settings-title {
-                font-size: 16px;
-            }
-
-            .settings-body {
-                padding: 12px;
-                padding-bottom: 24px;
-            }
-
-            .settings-section {
-                margin-bottom: 1.2rem;
-                padding-bottom: 1.2rem;
-            }
-
-            .settings-section-title {
-                font-size: 14px;
-                margin-bottom: 1rem;
-            }
-
-            .settings-item {
-                padding: 0.8rem;
-                border-radius: 6px;
-            }
-
-            .settings-action-btn {
-                padding: 0.9rem;
-                font-size: 14px;
-                margin-bottom: 0.5rem;
-            }
-
-            .checkbox-text {
-                font-size: 14px;
-            }
-
-            .settings-item-description {
-                font-size: 0.8rem;
-                margin-left: 30px;
-            }
+        .confirm-modal-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
         }
 
-        @media (max-width: 480px) {
-            .settings-header {
-                height: 60px;
-                padding: 0 10px;
-            }
+        .confirm-modal-icon.warning {
+            color: #ff9800;
+        }
 
-            .settings-back-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 16px;
-            }
+        .confirm-modal-icon.danger {
+            color: #f44336;
+        }
 
-            .settings-title {
-                font-size: 14px;
-            }
+        .confirm-modal h2 {
+            color: white;
+            text-align: center;
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+        }
 
-            .settings-body {
-                padding: 10px;
-                padding-bottom: 20px;
-            }
+        .confirm-modal p {
+            color: #ccc;
+            text-align: center;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
 
-            .settings-section {
-                margin-bottom: 1rem;
-                padding-bottom: 1rem;
-            }
+        .confirm-modal-actions {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
 
-            .settings-section-title {
-                font-size: 13px;
-                margin-bottom: 0.75rem;
-            }
+        .confirm-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+            width: 100%;
+        }
 
-            .settings-item {
-                padding: 0.7rem;
-                margin-bottom: 1rem;
-            }
+        .confirm-btn-primary {
+            background-color: #9c27b0;
+            color: white;
+        }
 
-            .settings-checkbox-label {
-                gap: 10px;
-            }
+        .confirm-btn-primary:hover {
+            background-color: #7b1fa2;
+        }
 
-            .settings-checkbox {
-                width: 18px;
-                height: 18px;
-            }
+        .confirm-btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
 
-            .settings-action-btn {
-                padding: 0.8rem;
-                font-size: 13px;
-                margin-bottom: 0.4rem;
-            }
+        .confirm-btn-danger:hover {
+            background-color: #d32f2f;
+        }
 
-            .checkbox-text {
-                font-size: 13px;
-            }
+        .confirm-btn-secondary {
+            background-color: #333;
+            color: white;
+        }
 
-            .settings-item-description {
-                font-size: 0.75rem;
-                margin-left: 28px;
-            }
+        .confirm-btn-secondary:hover {
+            background-color: #444;
         }
 
         /* ====== PIN MODAL STYLES ====== */
@@ -12558,85 +13144,363 @@
         </div>
 
         <!-- Profile Settings Full-Page Modal -->
-        <div class="profile-settings-modal" id="profileSettingsModal">
-            <div class="profile-settings-content">
-                <!-- Header -->
-                <div class="settings-header">
-                    <button class="settings-back-btn" onclick="closeProfileSettings()">←</button>
-                    <div class="settings-title">⚙️ Settings</div>
-                    <div style="width: 40px;"></div>
+        <div class="settings-container" id="profileSettingsModal">
+            <nav class="settings-nav">
+                <div class="nav-header">
+                    <i class="fas fa-arrow-left" onclick="closeProfileSettings()"></i>
+                    <h1>Settings</h1>
+                </div>
+            </nav>
+
+            <main class="settings-content">
+                <!-- Account Settings -->
+                <div class="settings-section">
+                    <h2>Account Settings</h2>
+                    <button class="setting-item" onclick="openAccountSettingsModal('editProfileModalContainer')">
+                        <div class="setting-info">
+                            <i class="fas fa-user"></i>
+                            <span>Edit Profile</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="setting-item" onclick="openAccountSettingsModal('passwordSecurityModalContainer')">
+                        <div class="setting-info">
+                            <i class="fas fa-lock"></i>
+                            <span>Password & Security</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="setting-item" onclick="openAccountSettingsModal('connectedAccountsModalContainer')">
+                        <div class="setting-info">
+                            <i class="fas fa-link"></i>
+                            <span>Connected Accounts</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
 
-                <!-- Settings Body -->
-                <div class="settings-body">
-                    <!-- Privacy Settings -->
-                    <div class="settings-section">
-                        <div class="settings-section-title">🔒 Privacy & Safety</div>
-                        <div class="settings-item">
-                            <label class="settings-checkbox-label">
-                                <input type="checkbox" id="privateAccountToggle" class="settings-checkbox">
-                                <span class="checkbox-text">Private Account</span>
-                            </label>
-                            <p class="settings-item-description">Only approved followers can see your content</p>
+                <!-- Privacy & Security -->
+                <div class="settings-section">
+                    <h2>Privacy & Security</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-eye"></i>
+                            <span>Profile Visibility</span>
                         </div>
+                        <select class="setting-select">
+                            <option>Public</option>
+                            <option>Followers Only</option>
+                            <option>Private</option>
+                        </select>
+                    </div>
+                    <button class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-user-slash"></i>
+                            <span>Blocked Accounts</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Monetization -->
+                <div class="settings-section">
+                    <h2>Monetization & Ads</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-money-bill"></i>
+                            <span>Monetization Dashboard</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-ad"></i>
+                            <span>Ad Preferences</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="settings-section">
+                    <h2>Notifications</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-bell"></i>
+                            <span>Push Notifications</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email Notifications</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Help & Support -->
+                <div class="settings-section">
+                    <h2>Help & Support</h2>
+
+                    <button class="setting-item" onclick="showHelpCenter()">
+                        <div class="setting-info">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help Center</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <button class="setting-item" onclick="showReportProblem()">
+                        <div class="setting-info">
+                            <i class="fas fa-bug"></i>
+                            <span>Report a Problem</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <button class="setting-item" onclick="showReportAccount()">
+                        <div class="setting-info">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Report an account</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <button class="setting-item" onclick="showAppealAccount()">
+                        <div class="setting-info">
+                            <i class="fas fa-redo"></i>
+                            <span>Appeal for an account</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="settings-section privacy-legal">
+                    <h2>Privacy & Legal</h2>
+
+                    <div class="setting-item" onclick="showPolicy('privacy')">
+                        <div class="setting-info">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Privacy Policy</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
 
-                    <!-- Notification Settings -->
-                    <div class="settings-section">
-                        <div class="settings-section-title">🔔 Notifications</div>
-                        <div class="settings-item">
-                            <label class="settings-checkbox-label">
-                                <input type="checkbox" id="likeNotificationsToggle" checked class="settings-checkbox">
-                                <span class="checkbox-text">Like Notifications</span>
-                            </label>
+                    <div class="setting-item" onclick="showPolicy('terms')">
+                        <div class="setting-info">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Terms & Conditions</span>
                         </div>
-                        <div class="settings-item">
-                            <label class="settings-checkbox-label">
-                                <input type="checkbox" id="commentNotificationsToggle" checked
-                                    class="settings-checkbox">
-                                <span class="checkbox-text">Comment Notifications</span>
-                            </label>
-                        </div>
-                        <div class="settings-item">
-                            <label class="settings-checkbox-label">
-                                <input type="checkbox" id="followNotificationsToggle" checked class="settings-checkbox">
-                                <span class="checkbox-text">Follow Notifications</span>
-                            </label>
-                        </div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
 
-                    <!-- Account Settings -->
-                    <div class="settings-section">
-                        <div class="settings-section-title">👤 Account</div>
-                        <button class="settings-action-btn" onclick="openChangePasswordModal()">
-                            🔐 Change Password
-                        </button>
-                        <button class="settings-action-btn" onclick="openBlockedUsersModal()">
-                            🚫 Blocked Users
-                        </button>
+                    <div class="setting-item" onclick="showPolicy('data')">
+                        <div class="setting-info">
+                            <i class="fas fa-database"></i>
+                            <span>Data & Permissions</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
+                </div>
 
-                    <!-- Help & Support -->
-                    <div class="settings-section">
-                        <div class="settings-section-title">❓ Help & Support</div>
-                        <button class="settings-action-btn" onclick="openHelpModal()">
-                            💬 Help Center
-                        </button>
-                        <button class="settings-action-btn" onclick="reportIssue()">
-                            📢 Report Issue
-                        </button>
+                <!-- Policy Modals -->
+                <div id="policyModal" class="policy-modal">
+                    <div class="policy-content">
+                        <div class="policy-header">
+                            <h2 id="policyTitle"></h2>
+                            <button class="close-btn" onclick="closePolicy()">&times;</button>
+                        </div>
+                        <div class="policy-body" id="policyContent">
+                            <!-- Content will be dynamically inserted -->
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Danger Zone -->
-                    <div class="settings-section danger-zone">
-                        <div class="settings-section-title danger">⚠️ Danger Zone</div>
-                        <button class="settings-action-btn danger-btn" onclick="openDeleteAccountModal()">
-                            🗑️ Delete Account
-                        </button>
-                        <button class="settings-action-btn" onclick="handleLogout()">
-                            🚪 Logout
-                        </button>
+                <!-- Account Management -->
+                <div class="settings-section danger-zone">
+                    <h2>Account Management</h2>
+                    <button class="setting-item" onclick="showDeactivateConfirm()">
+                        <div class="setting-info">
+                            <i class="fas fa-power-off"></i>
+                            <span>Deactivate Account</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="setting-item delete-account" onclick="showDeleteConfirm()">
+                        <div class="setting-info">
+                            <i class="fas fa-trash"></i>
+                            <span>Delete Account</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div class="account-settings-modal-container" id="editProfileModalContainer">
+            <div class="account-settings-modal">
+                <div class="account-settings-modal-content">
+                    <div class="account-settings-modal-header">
+                        <h2>Edit Profile</h2>
+                        <button class="account-settings-close-modal-btn"
+                            onclick="closeAccountSettingsModal('editProfileModalContainer')">&times;</button>
                     </div>
+                    <div class="account-settings-modal-body">
+                        <div class="account-settings-form-content">
+                            <div class="account-settings-form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="editProfileName" placeholder="Enter your full name">
+                            </div>
+                            <div class="account-settings-form-group">
+                                <label>Username</label>
+                                <input type="text" id="editProfileUsername" placeholder="@username">
+                            </div>
+                            <div class="account-settings-form-group">
+                                <label>Bio</label>
+                                <textarea id="editProfileBio" placeholder="Tell us about yourself..."></textarea>
+                            </div>
+                            <div class="account-settings-form-group">
+                                <label>Email</label>
+                                <input type="email" id="editProfileEmail" placeholder="your@email.com" readonly>
+                            </div>
+                            <button class="account-settings-save-profile-btn" onclick="saveProfileChanges()">Save
+                                Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password & Security Modal -->
+        <div class="account-settings-modal-container" id="passwordSecurityModalContainer">
+            <div class="account-settings-modal">
+                <div class="account-settings-modal-content">
+                    <div class="account-settings-modal-header">
+                        <h2>Change Password</h2>
+                        <button class="account-settings-close-modal-btn"
+                            onclick="closeAccountSettingsModal('passwordSecurityModalContainer')">&times;</button>
+                    </div>
+                    <div class="account-settings-modal-body">
+                        <div class="account-settings-form-content">
+                            <div class="account-settings-form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            <div class="account-settings-form-group">
+                                <label>New Password</label>
+                                <div class="account-settings-password-input-container">
+                                    <input type="password" id="newPassword" placeholder="Enter new password"
+                                        onkeyup="checkPasswordStrength()">
+                                    <i class="fas fa-eye account-settings-toggle-password"
+                                        onclick="togglePasswordVisibility('newPassword')"></i>
+                                </div>
+                                <div class="account-settings-password-strength">
+                                    <div class="account-settings-strength-meter">
+                                        <div class="account-settings-strength-bar" id="strengthBar"></div>
+                                    </div>
+                                    <div class="account-settings-strength-text" id="strengthText">Password strength:
+                                        Weak</div>
+                                </div>
+                            </div>
+                            <div class="account-settings-form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                            <button class="account-settings-change-password-btn" onclick="changePassword()">Update
+                                Password</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connected Accounts Modal -->
+        <div class="account-settings-modal-container" id="connectedAccountsModalContainer">
+            <div class="account-settings-modal">
+                <div class="account-settings-modal-content">
+                    <div class="account-settings-modal-header">
+                        <h2>Connected Accounts</h2>
+                        <button class="account-settings-close-modal-btn"
+                            onclick="closeAccountSettingsModal('connectedAccountsModalContainer')">&times;</button>
+                    </div>
+                    <div class="account-settings-modal-body">
+                        <div class="account-settings-form-content">
+                            <p style="color: #bbbbbb; margin-bottom: 15px;">Connect your social media accounts to link
+                                with Pose</p>
+                            <button class="account-settings-connect-btn" onclick="connectSocialAccount('google')"
+                                style="background-color: #db4437;">
+                                <i class="fab fa-google"></i> Connect Google
+                            </button>
+                            <button class="account-settings-connect-btn" onclick="connectSocialAccount('facebook')"
+                                style="background-color: #1877f2;">
+                                <i class="fab fa-facebook"></i> Connect Facebook
+                            </button>
+                            <button class="account-settings-connect-btn" onclick="connectSocialAccount('twitter')"
+                                style="background-color: #1da1f2;">
+                                <i class="fab fa-twitter"></i> Connect Twitter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help & Support Popup -->
+        <div class="help-popup" id="helpPopup">
+            <div class="help-popup-content">
+                <div class="help-popup-header">
+                    <h3 id="helpPopupTitle">Help Center</h3>
+                    <button class="help-popup-close" onclick="closeHelpPopup()">&times;</button>
+                </div>
+                <div class="help-popup-body" id="helpPopupBody">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Deactivate Account Confirmation Modal -->
+        <div class="confirm-modal-overlay" id="deactivateConfirmModal">
+            <div class="confirm-modal">
+                <div class="confirm-modal-icon warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2>Deactivate Account?</h2>
+                <p>Your account will be temporarily disabled. You can reactivate it anytime by logging back in.</p>
+                <div class="confirm-modal-actions">
+                    <button class="confirm-btn confirm-btn-primary" onclick="confirmDeactivateAccount()">Yes,
+                        Deactivate</button>
+                    <button class="confirm-btn confirm-btn-secondary"
+                        onclick="closeConfirmModal('deactivateConfirmModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Account Confirmation Modal -->
+        <div class="confirm-modal-overlay" id="deleteConfirmModal">
+            <div class="confirm-modal">
+                <div class="confirm-modal-icon danger">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h2>Delete Account?</h2>
+                <p><strong>WARNING:</strong> This action cannot be undone. All your data, posts, and followers will be
+                    permanently deleted.</p>
+                <div class="confirm-modal-actions">
+                    <button class="confirm-btn confirm-btn-danger" onclick="confirmDeleteAccount()">Yes, Delete
+                        Permanently</button>
+                    <button class="confirm-btn confirm-btn-secondary"
+                        onclick="closeConfirmModal('deleteConfirmModal')">Cancel</button>
                 </div>
             </div>
         </div>
@@ -12757,20 +13621,21 @@
                 </svg></i>
         </div>
         <div id="liveBtn">
-    <i>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/>
-        </svg>
-    </i>
-    <span>Live</span>
-</div>
+            <i>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path
+                        d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z" />
+                </svg>
+            </i>
+            <span>Live</span>
+        </div>
 
-       <div class="music-link" onclick="window.location.href='posemusic.html'" style="cursor: pointer;">
-    <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-        </svg></i>
-    <span>Music</span>
-</div>
+        <div class="music-link" onclick="window.location.href='posemusic.html'" style="cursor: pointer;">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                </svg></i>
+            <span>Music</span>
+        </div>
     </div>
 
     <!-- RECORDING TOAST -->
@@ -13578,10 +14443,10 @@
         </div>
     </div>
 
-     <div id="forYouTab" class="tab-content active">
+    <div id="forYouTab" class="tab-content active">
         <div class="video-feed" id="forYouFeed"></div>
     </div>
-    
+
     <div id="friendTab" class="tab-content" style="display: none;">
         <div class="tweet-feed-page">
             <!-- Create Post Section -->
@@ -16284,7 +17149,7 @@
             }
 
             const forYouFeed = document.getElementById('forYouFeed');
-            
+
             try {
                 console.log('📖 Loading For You feed...');
                 // Show loading message
@@ -16298,7 +17163,7 @@
                 for (const userDoc of usersSnapshot.docs) {
                     const userData = userDoc.data();
                     const userVideos = userData?.videos || [];
-                    
+
                     // Add user's videos (exclude stories, only video type)
                     userVideos.forEach(video => {
                         if (!video.type || video.type !== 'story') {
@@ -16312,7 +17177,7 @@
                         }
                     });
                 }
-                
+
                 // Sort by date (newest first)
                 forYouVideos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
@@ -16331,10 +17196,10 @@
                 });
 
                 forYouLoaded = true;
-                
+
                 // Setup Intersection Observer to only play visible video
                 setupVideoAutoPlay();
-                
+
                 // Restore scroll position if exists
                 if (tabScrollPositions.forYou > 0) {
                     setTimeout(() => {
@@ -16435,214 +17300,214 @@
             };
 
             return postDiv;
-            }
+        }
 
-            // Setup video autoplay with Intersection Observer
-            function setupVideoAutoPlay() {
-                const forYouFeed = document.getElementById('forYouFeed');
-                if (!forYouFeed) return;
+        // Setup video autoplay with Intersection Observer
+        function setupVideoAutoPlay() {
+            const forYouFeed = document.getElementById('forYouFeed');
+            if (!forYouFeed) return;
 
-                const videos = forYouFeed.querySelectorAll('video');
-                
-                // Create Intersection Observer to detect which video is visible
-                const observerOptions = {
-                    root: forYouFeed,
-                    threshold: 0.5 // Video must be 50% visible to play
-                };
+            const videos = forYouFeed.querySelectorAll('video');
 
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        const video = entry.target;
-                        
-                        if (entry.isIntersecting) {
-                            // Video is in view - play it
-                            console.log('▶️ Playing video');
-                            video.play().catch(err => {
-                                console.log('Play failed (may need user interaction):', err.message);
-                            });
-                        } else {
-                            // Video is out of view - pause it
-                            console.log('⏸️ Pausing video');
-                            video.pause();
-                        }
-                    });
-                }, observerOptions);
+            // Create Intersection Observer to detect which video is visible
+            const observerOptions = {
+                root: forYouFeed,
+                threshold: 0.5 // Video must be 50% visible to play
+            };
 
-                // Observe all videos
-                videos.forEach(video => {
-                    observer.observe(video);
-                });
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
 
-                // Pause all videos when page/tab loses focus
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden) {
-                        // Page is hidden - pause all videos
-                        console.log('📱 Page hidden - pausing all videos');
-                        videos.forEach(video => video.pause());
-                    } else {
-                        // Page is visible again - replay the visible video
-                        console.log('📱 Page visible - replaying visible video');
-                        entries = observer.takeRecords();
-                        entries.forEach(entry => {
-                            const video = entry.target;
-                            if (entry.isIntersecting) {
-                                video.play().catch(err => {
-                                    console.log('Play failed:', err.message);
-                                });
-                            }
+                    if (entry.isIntersecting) {
+                        // Video is in view - play it
+                        console.log('▶️ Playing video');
+                        video.play().catch(err => {
+                            console.log('Play failed (may need user interaction):', err.message);
                         });
+                    } else {
+                        // Video is out of view - pause it
+                        console.log('⏸️ Pausing video');
+                        video.pause();
                     }
                 });
+            }, observerOptions);
 
-                // Pause all videos when page is about to unload
-                window.addEventListener('beforeunload', () => {
-                    console.log('🔌 Page unloading - pausing all videos');
+            // Observe all videos
+            videos.forEach(video => {
+                observer.observe(video);
+            });
+
+            // Pause all videos when page/tab loses focus
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    // Page is hidden - pause all videos
+                    console.log('📱 Page hidden - pausing all videos');
                     videos.forEach(video => video.pause());
-                });
+                } else {
+                    // Page is visible again - replay the visible video
+                    console.log('📱 Page visible - replaying visible video');
+                    entries = observer.takeRecords();
+                    entries.forEach(entry => {
+                        const video = entry.target;
+                        if (entry.isIntersecting) {
+                            video.play().catch(err => {
+                                console.log('Play failed:', err.message);
+                            });
+                        }
+                    });
+                }
+            });
 
-                // Also handle pagehide for better mobile support
-                window.addEventListener('pagehide', () => {
-                    console.log('🔌 Page hidden - pausing all videos');
-                    videos.forEach(video => video.pause());
-                });
-            }
+            // Pause all videos when page is about to unload
+            window.addEventListener('beforeunload', () => {
+                console.log('🔌 Page unloading - pausing all videos');
+                videos.forEach(video => video.pause());
+            });
 
-            // Global function to pause all videos
-            function pauseAllFeedVideos() {
+            // Also handle pagehide for better mobile support
+            window.addEventListener('pagehide', () => {
+                console.log('🔌 Page hidden - pausing all videos');
+                videos.forEach(video => video.pause());
+            });
+        }
+
+        // Global function to pause all videos
+        function pauseAllFeedVideos() {
             const forYouTab = document.getElementById('forYouTab');
             const friendTab = document.getElementById('friendTab');
             const poseTab = document.getElementById('poseTab');
-            
+
             if (forYouTab) forYouTab.querySelectorAll('video').forEach(v => v.pause());
             if (friendTab) friendTab.querySelectorAll('video').forEach(v => v.pause());
             if (poseTab) poseTab.querySelectorAll('video').forEach(v => v.pause());
-            
-            console.log('🔇 All feed videos paused');
-            }
 
-            // Setup main tab navigation (For You, Tweet, Pose)
+            console.log('🔇 All feed videos paused');
+        }
+
+        // Setup main tab navigation (For You, Tweet, Pose)
         function setupMainTabs() {
-             const tabs = document.querySelectorAll('.tabs .tab');
-             
-             tabs.forEach((tab, index) => {
-                 tab.style.cursor = 'pointer';
-                 
-                 tab.addEventListener('click', () => {
-                     // Save scroll position of current tab
-                     const forYouFeed = document.getElementById('forYouFeed');
-                     if (forYouFeed && currentTab === 'forYou') {
-                         tabScrollPositions.forYou = forYouFeed.scrollTop;
-                         console.log('💾 Saved For You scroll position:', tabScrollPositions.forYou);
-                     }
-                     
-                     // Update active tab UI
-                     tabs.forEach(t => t.classList.remove('active'));
-                     tab.classList.add('active');
-                     
-                     // Determine which tab was clicked
-                     const tabName = tab.textContent.trim().toLowerCase();
-                     console.log('🔄 Switching to tab:', tabName);
-                     
-                     if (tabName === 'for you') {
-                         currentTab = 'forYou';
-                         const forYouTabEl = document.getElementById('forYouTab');
-                         const friendTabEl = document.getElementById('friendTab');
-                         const poseTabEl = document.getElementById('poseTab');
-                         
-                         // Pause videos on other tabs
-                         if (friendTabEl) {
-                             friendTabEl.querySelectorAll('video').forEach(v => v.pause());
-                         }
-                         if (poseTabEl) {
-                             poseTabEl.querySelectorAll('video').forEach(v => v.pause());
-                         }
-                         
-                         // Add active class to For You tab container
-                         forYouTabEl.classList.add('active');
-                         forYouTabEl.style.display = 'block';
-                         
-                         // Remove active class from Friend tab container
-                         friendTabEl.classList.remove('active');
-                         friendTabEl.style.display = 'none';
-                         if (poseTabEl) {
-                             poseTabEl.classList.remove('active');
-                             poseTabEl.style.display = 'none';
-                         }
-                         
-                         console.log('✅ Switched to For You tab');
-                         // Load For You feed if not loaded
-                         if (!forYouLoaded) {
-                             console.log('📖 Loading For You feed for first time...');
-                             loadForYouFeed();
-                         } else {
-                             // Restore scroll position
-                             const forYouFeed = document.getElementById('forYouFeed');
-                             if (forYouFeed) {
-                                 setTimeout(() => {
-                                     forYouFeed.scrollTop = tabScrollPositions.forYou;
-                                     console.log('↩️ Restored For You scroll position:', tabScrollPositions.forYou);
-                                 }, 100);
-                             }
-                         }
-                     } else if (tabName === 'tweet') {
-                         currentTab = 'tweet';
-                         const forYouTabEl = document.getElementById('forYouTab');
-                         const friendTabEl = document.getElementById('friendTab');
-                         const poseTabEl = document.getElementById('poseTab');
-                         
-                         // Pause all For You videos when leaving
-                         forYouTabEl.querySelectorAll('video').forEach(v => v.pause());
-                         if (poseTabEl) {
-                             poseTabEl.querySelectorAll('video').forEach(v => v.pause());
-                         }
-                         
-                         // Remove active class from For You tab
-                         forYouTabEl.classList.remove('active');
-                         forYouTabEl.style.display = 'none';
-                         if (poseTabEl) {
-                             poseTabEl.classList.remove('active');
-                             poseTabEl.style.display = 'none';
-                         }
-                         
-                         // Add active class to Friend tab
-                         friendTabEl.classList.add('active');
-                         friendTabEl.style.display = 'block';
-                         
-                         console.log('✅ Switched to Tweet tab');
-                     } else if (tabName === 'pose') {
-                         currentTab = 'pose';
-                         const forYouTabEl = document.getElementById('forYouTab');
-                         const friendTabEl = document.getElementById('friendTab');
-                         const poseTabEl = document.getElementById('poseTab');
-                         
-                         // Pause all For You and Tweet videos when leaving
-                         forYouTabEl.querySelectorAll('video').forEach(v => v.pause());
-                         friendTabEl.querySelectorAll('video').forEach(v => v.pause());
-                         
-                         // Remove active class from other tabs
-                         forYouTabEl.classList.remove('active');
-                         forYouTabEl.style.display = 'none';
-                         friendTabEl.classList.remove('active');
-                         friendTabEl.style.display = 'none';
-                         
-                         // Add active class to Pose tab container
-                         if (poseTabEl) {
-                             poseTabEl.classList.add('active');
-                             poseTabEl.style.display = 'block';
-                             console.log('✅ Switched to Pose tab');
-                         } else {
-                             console.warn('⚠️ Pose tab element not found');
-                         }
-                     }
-                 });
-             });
-         }
+            const tabs = document.querySelectorAll('.tabs .tab');
+
+            tabs.forEach((tab, index) => {
+                tab.style.cursor = 'pointer';
+
+                tab.addEventListener('click', () => {
+                    // Save scroll position of current tab
+                    const forYouFeed = document.getElementById('forYouFeed');
+                    if (forYouFeed && currentTab === 'forYou') {
+                        tabScrollPositions.forYou = forYouFeed.scrollTop;
+                        console.log('💾 Saved For You scroll position:', tabScrollPositions.forYou);
+                    }
+
+                    // Update active tab UI
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Determine which tab was clicked
+                    const tabName = tab.textContent.trim().toLowerCase();
+                    console.log('🔄 Switching to tab:', tabName);
+
+                    if (tabName === 'for you') {
+                        currentTab = 'forYou';
+                        const forYouTabEl = document.getElementById('forYouTab');
+                        const friendTabEl = document.getElementById('friendTab');
+                        const poseTabEl = document.getElementById('poseTab');
+
+                        // Pause videos on other tabs
+                        if (friendTabEl) {
+                            friendTabEl.querySelectorAll('video').forEach(v => v.pause());
+                        }
+                        if (poseTabEl) {
+                            poseTabEl.querySelectorAll('video').forEach(v => v.pause());
+                        }
+
+                        // Add active class to For You tab container
+                        forYouTabEl.classList.add('active');
+                        forYouTabEl.style.display = 'block';
+
+                        // Remove active class from Friend tab container
+                        friendTabEl.classList.remove('active');
+                        friendTabEl.style.display = 'none';
+                        if (poseTabEl) {
+                            poseTabEl.classList.remove('active');
+                            poseTabEl.style.display = 'none';
+                        }
+
+                        console.log('✅ Switched to For You tab');
+                        // Load For You feed if not loaded
+                        if (!forYouLoaded) {
+                            console.log('📖 Loading For You feed for first time...');
+                            loadForYouFeed();
+                        } else {
+                            // Restore scroll position
+                            const forYouFeed = document.getElementById('forYouFeed');
+                            if (forYouFeed) {
+                                setTimeout(() => {
+                                    forYouFeed.scrollTop = tabScrollPositions.forYou;
+                                    console.log('↩️ Restored For You scroll position:', tabScrollPositions.forYou);
+                                }, 100);
+                            }
+                        }
+                    } else if (tabName === 'tweet') {
+                        currentTab = 'tweet';
+                        const forYouTabEl = document.getElementById('forYouTab');
+                        const friendTabEl = document.getElementById('friendTab');
+                        const poseTabEl = document.getElementById('poseTab');
+
+                        // Pause all For You videos when leaving
+                        forYouTabEl.querySelectorAll('video').forEach(v => v.pause());
+                        if (poseTabEl) {
+                            poseTabEl.querySelectorAll('video').forEach(v => v.pause());
+                        }
+
+                        // Remove active class from For You tab
+                        forYouTabEl.classList.remove('active');
+                        forYouTabEl.style.display = 'none';
+                        if (poseTabEl) {
+                            poseTabEl.classList.remove('active');
+                            poseTabEl.style.display = 'none';
+                        }
+
+                        // Add active class to Friend tab
+                        friendTabEl.classList.add('active');
+                        friendTabEl.style.display = 'block';
+
+                        console.log('✅ Switched to Tweet tab');
+                    } else if (tabName === 'pose') {
+                        currentTab = 'pose';
+                        const forYouTabEl = document.getElementById('forYouTab');
+                        const friendTabEl = document.getElementById('friendTab');
+                        const poseTabEl = document.getElementById('poseTab');
+
+                        // Pause all For You and Tweet videos when leaving
+                        forYouTabEl.querySelectorAll('video').forEach(v => v.pause());
+                        friendTabEl.querySelectorAll('video').forEach(v => v.pause());
+
+                        // Remove active class from other tabs
+                        forYouTabEl.classList.remove('active');
+                        forYouTabEl.style.display = 'none';
+                        friendTabEl.classList.remove('active');
+                        friendTabEl.style.display = 'none';
+
+                        // Add active class to Pose tab container
+                        if (poseTabEl) {
+                            poseTabEl.classList.add('active');
+                            poseTabEl.style.display = 'block';
+                            console.log('✅ Switched to Pose tab');
+                        } else {
+                            console.warn('⚠️ Pose tab element not found');
+                        }
+                    }
+                });
+            });
+        }
 
         // Load For You feed automatically on page load
         document.addEventListener('DOMContentLoaded', () => {
             console.log('📖 Page loaded, initializing For You tab...');
             setupMainTabs();
-            
+
             const forYouTab = document.getElementById('forYouTab');
             if (forYouTab && !forYouLoaded) {
                 console.log('📖 Auto-loading For You feed on page load...');
@@ -16829,19 +17694,19 @@
 
             item.innerHTML = `
                 <div class="video-player-container" style="position: relative; background: #1a1a1a;">
-                    ${isPhoto ? 
-                      `<img 
+                    ${isPhoto ?
+                    `<img 
                           class="grid-media"
                           src="${mediaUrl}" 
                           style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block; transform: scaleX(-1);"
                       />` :
-                      `<video 
+                    `<video 
                           class="grid-video"
                           src="${mediaUrl}" 
                           style="width: 100%; height: 100%; object-fit: cover; background: #000; display: block;"
                           preload="metadata"
                       ></video>`
-                    }
+                }
                     <!-- Pin Button -->
                     <button class="pin-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s; z-index: 10;">
                         📌
@@ -16911,12 +17776,12 @@
                         playOverlay.style.pointerEvents = 'auto';
                     }
                 };
-            video.onplay = () => {
-                isPlaying = true;
-            };
+                video.onplay = () => {
+                    isPlaying = true;
+                };
             } else {
-            // For photos, hide the play overlay
-            playOverlay.style.display = 'none';
+                // For photos, hide the play overlay
+                playOverlay.style.display = 'none';
             }
 
             return item;
@@ -16976,7 +17841,7 @@
             startStoryProgress();
             console.log('✅ Story viewer opened');
         }
-        
+
         // Load only 24hr stories for the ring viewer
         async function loadStories24hrForViewer() {
             if (!currentUser) {
@@ -17263,7 +18128,7 @@
         // ⚡ NEW: Update story badge (only for 24h stories in RING, not Stories Tab)
         function updateStoryBadgeForRing(count24h) {
             const badge = document.getElementById('storyBadge');
-            
+
             if (count24h > 0) {
                 badge.textContent = count24h;
                 badge.style.display = 'flex';
@@ -17597,10 +18462,6 @@
             const modal = document.getElementById('profileSettingsModal');
             if (modal) {
                 modal.classList.add('active');
-                // Load saved settings
-                loadProfileSettings();
-                // Add event listeners for auto-save
-                addSettingsEventListeners();
             }
         }
 
@@ -17612,86 +18473,740 @@
             }
         }
 
-        // Add event listeners for auto-save
-        function addSettingsEventListeners() {
-            const privateToggle = document.getElementById('privateAccountToggle');
-            const likeNotif = document.getElementById('likeNotificationsToggle');
-            const commentNotif = document.getElementById('commentNotificationsToggle');
-            const followNotif = document.getElementById('followNotificationsToggle');
+        // Show Policy Content
+        function showPolicy(policyType) {
+            const modal = document.getElementById('policyModal');
+            const titleEl = document.getElementById('policyTitle');
+            const contentEl = document.getElementById('policyContent');
 
-            if (privateToggle) {
-                privateToggle.addEventListener('change', () => {
-                    saveProfileSettings();
-                });
-            }
+            if (!modal) return;
 
-            if (likeNotif) {
-                likeNotif.addEventListener('change', () => {
-                    saveProfileSettings();
-                });
-            }
-
-            if (commentNotif) {
-                commentNotif.addEventListener('change', () => {
-                    saveProfileSettings();
-                });
-            }
-
-            if (followNotif) {
-                followNotif.addEventListener('change', () => {
-                    saveProfileSettings();
-                });
-            }
-        }
-
-        // Load Profile Settings from Firebase
-        async function loadProfileSettings() {
-            try {
-                if (!currentUser || !db) return;
-
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                const userData = userDoc.data() || {};
-
-                // Load privacy settings
-                document.getElementById('privateAccountToggle').checked = userData.privateAccount || false;
-
-                // Load notification settings
-                document.getElementById('likeNotificationsToggle').checked =
-                    userData.notifications?.likes !== false;
-                document.getElementById('commentNotificationsToggle').checked =
-                    userData.notifications?.comments !== false;
-                document.getElementById('followNotificationsToggle').checked =
-                    userData.notifications?.follows !== false;
-
-            } catch (error) {
-                console.error('Error loading profile settings:', error);
-            }
-        }
-
-        // Save Profile Settings
-        function saveProfileSettings() {
-            const settings = {
-                privateAccount: document.getElementById('privateAccountToggle').checked,
-                notifications: {
-                    likes: document.getElementById('likeNotificationsToggle').checked,
-                    comments: document.getElementById('commentNotificationsToggle').checked,
-                    follows: document.getElementById('followNotificationsToggle').checked
+            const policies = {
+                privacy: {
+                    title: 'Privacy Policy',
+                    content: `
+                    <h3>Privacy Policy</h3>
+                    <p>At Pose, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.</p>
+                    <h4>Information We Collect</h4>
+                    <p>We may collect information about you in a variety of ways. The information we may collect on our app includes:</p>
+                    <p>
+                    • Personal Data: Personally identifiable information, such as your name, shipping address, email address, and telephone number, and demographic information, such as your age, gender, hometown, and interests, that you voluntarily give to us when you register with our app.
+                    </p>
+                    <h4>Use of Your Information</h4>
+                    <p>Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via our app to:</p>
+                    <p>• Generate a personal profile about you so that we can better understand you and provide you with improved service</p>
+                    `
                 },
-                updatedAt: new Date().toISOString()
+                terms: {
+                    title: 'Terms & Conditions',
+                    content: `
+                    <h3>Terms & Conditions</h3>
+                    <p>Please read these terms and conditions carefully before using Pose.</p>
+                    <h4>1. Acceptance of Terms</h4>
+                    <p>By accessing and using this app, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                    <h4>2. Use License</h4>
+                    <p>Permission is granted to temporarily download one copy of the materials (information or software) on Pose's app for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title.</p>
+                    <h4>3. Disclaimer</h4>
+                    <p>The materials on Pose's app are provided on an 'as is' basis. Pose makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+                    `
+                },
+                data: {
+                    title: 'Data & Permissions',
+                    content: `
+                    <h3>Data & Permissions</h3>
+                    <p>Pose requires certain permissions to function properly on your device.</p>
+                    <h4>Permissions We Request</h4>
+                    <p>• Camera: To record and share videos</p>
+                    <p>• Microphone: To capture audio with your videos</p>
+                    <p>• Gallery/Photos: To upload images and videos from your device</p>
+                    <p>• Location: To tag your content location (optional)</p>
+                    <h4>Data Collection</h4>
+                    <p>We collect usage data to improve the app experience. This includes:</p>
+                    <p>• Your interactions with content</p>
+                    <p>• Features you use most</p>
+                    <p>• Crash reports and error logs</p>
+                    <h4>Your Rights</h4>
+                    <p>You can revoke permissions at any time in your device settings. You can also request to download your data or have your account deleted permanently.</p>
+                    `
+                }
             };
 
-            if (!currentUser || !db) {
-                alert('❌ Please sign in first');
+            if (policies[policyType]) {
+                titleEl.textContent = policies[policyType].title;
+                contentEl.innerHTML = policies[policyType].content;
+                modal.style.display = 'flex';
+            }
+        }
+
+        // Close Policy Modal
+        function closePolicy() {
+            const modal = document.getElementById('policyModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Account Settings Modals
+        function openAccountSettingsModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                // Load profile data if it's the edit profile modal
+                if (modalId === 'editProfileModalContainer') {
+                    loadProfileDataForEdit();
+                }
+            }
+        }
+
+        function closeAccountSettingsModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // Load Profile Data for Edit
+        function loadProfileDataForEdit() {
+            if (!currentUser || !db) return;
+
+            db.collection('users').doc(currentUser.uid).get()
+                .then(doc => {
+                    const data = doc.data() || {};
+                    document.getElementById('editProfileName').value = data.displayName || '';
+                    document.getElementById('editProfileUsername').value = data.username || '';
+                    document.getElementById('editProfileBio').value = data.bio || '';
+                    document.getElementById('editProfileEmail').value = currentUser.email || '';
+                })
+                .catch(error => console.error('Error loading profile:', error));
+        }
+
+        // Save Profile Changes
+        function saveProfileChanges() {
+            const name = document.getElementById('editProfileName').value;
+            const username = document.getElementById('editProfileUsername').value;
+            const bio = document.getElementById('editProfileBio').value;
+
+            if (!name || !username) {
+                showToast('Please fill in all fields', 'error');
                 return;
             }
 
-            db.collection('users').doc(currentUser.uid).update(settings)
+            if (!currentUser || !db) {
+                showToast('Please sign in first', 'error');
+                return;
+            }
+
+            db.collection('users').doc(currentUser.uid).update({
+                displayName: name,
+                username: username,
+                bio: bio,
+                updatedAt: new Date().toISOString()
+            })
                 .then(() => {
-                    showToast('✅ Settings saved successfully', 'success');
+                    showToast('Profile updated successfully', 'success');
+                    closeAccountSettingsModal('editProfileModalContainer');
+                    // Update profile display
+                    loadUserProfile();
                 })
                 .catch(error => {
-                    console.error('Error saving settings:', error);
-                    showToast('❌ Error saving settings', 'error');
+                    console.error('Error updating profile:', error);
+                    showToast('Error updating profile', 'error');
+                });
+        }
+
+        // Password Functions
+        function togglePasswordVisibility(fieldId) {
+            const input = document.getElementById(fieldId);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+
+            let strength = 0;
+            let text = 'Weak';
+
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]/)) strength += 25;
+            if (password.match(/[A-Z]/)) strength += 25;
+            if (password.match(/[0-9]/)) strength += 15;
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 10;
+
+            strengthBar.style.width = strength + '%';
+
+            if (strength < 25) {
+                text = 'Weak';
+                strengthBar.style.backgroundColor = '#ff4d4d';
+            } else if (strength < 50) {
+                text = 'Fair';
+                strengthBar.style.backgroundColor = '#ffa726';
+            } else if (strength < 75) {
+                text = 'Good';
+                strengthBar.style.backgroundColor = '#fdd835';
+            } else {
+                text = 'Strong';
+                strengthBar.style.backgroundColor = '#4caf50';
+            }
+
+            strengthText.textContent = 'Password strength: ' + text;
+        }
+
+        function changePassword() {
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+
+            if (!currentPass || !newPass || !confirmPass) {
+                showToast('Please fill in all password fields', 'error');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showToast('New passwords do not match', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showToast('Please sign in first', 'error');
+                return;
+            }
+
+            // Re-authenticate and update password
+            const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, currentPass);
+
+            currentUser.reauthenticateWithCredential(credential)
+                .then(() => {
+                    return currentUser.updatePassword(newPass);
+                })
+                .then(() => {
+                    showToast('Password updated successfully', 'success');
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    closeAccountSettingsModal('passwordSecurityModalContainer');
+                })
+                .catch(error => {
+                    console.error('Error updating password:', error);
+                    showToast('Error: ' + error.message, 'error');
+                });
+        }
+
+        // Connected Accounts
+        function connectSocialAccount(provider) {
+            if (!currentUser) {
+                showToast('Please sign in first', 'error');
+                return;
+            }
+
+            let providerInstance;
+
+            switch (provider) {
+                case 'google':
+                    providerInstance = new firebase.auth.GoogleAuthProvider();
+                    break;
+                case 'facebook':
+                    providerInstance = new firebase.auth.FacebookAuthProvider();
+                    break;
+                case 'twitter':
+                    providerInstance = new firebase.auth.TwitterAuthProvider();
+                    break;
+                default:
+                    return;
+            }
+
+            currentUser.linkWithPopup(providerInstance)
+                .then(result => {
+                    showToast(provider.charAt(0).toUpperCase() + provider.slice(1) + ' account connected!', 'success');
+                })
+                .catch(error => {
+                    if (error.code === 'auth/credential-already-in-use') {
+                        showToast('This account is already linked', 'warning');
+                    } else {
+                        console.error('Error connecting account:', error);
+                        showToast('Error connecting account', 'error');
+                    }
+                });
+        }
+
+        // Help & Support Functions
+        function closeHelpPopup() {
+            const popup = document.getElementById('helpPopup');
+            if (popup) {
+                popup.classList.remove('active');
+            }
+        }
+
+        function showHelpCenter() {
+            const popup = document.getElementById('helpPopup');
+            const body = document.getElementById('helpPopupBody');
+            const title = document.getElementById('helpPopupTitle');
+
+            title.textContent = 'Help Center';
+
+            body.innerHTML = `
+                <input type="text" class="help-search" placeholder="Search for help..." id="helpSearch">
+                
+                <div class="help-category">
+                    <h4>Getting Started</h4>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>How to create an account</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            To create an account, click on the "Sign Up" button on the login page. Fill in your details including your email address and create a password. Verify your email by clicking the link sent to your inbox, and you're all set!
+                        </div>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Setting up your profile</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            After creating your account, go to your profile by clicking on your avatar. Click "Edit Profile" to add a profile picture, bio, and other personal information. Remember to save your changes when you're done.
+                        </div>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Uploading your first content</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            To upload content, tap the upload button in the bottom navigation. Select your video or image, add a title and description, and choose your privacy settings. Tap "Post" to share with your followers.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="help-category">
+                    <h4>Account & Privacy</h4>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Changing your password</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            Go to Settings > Account > Password & Security. Enter your current password, then create and confirm your new password. For security, use a strong password with a mix of letters, numbers, and symbols.
+                        </div>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Privacy settings</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            Manage who can see your content by going to Settings > Privacy. You can set your account to private, control who can message you, and manage blocked accounts. Review these settings regularly to maintain your desired privacy level.
+                        </div>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Managing notifications</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            Control which notifications you receive by going to Settings > Notifications. You can customize notifications for likes, comments, messages, and more. Toggle off any notifications you don't want to receive.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="help-category">
+                    <h4>Troubleshooting</h4>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>App crashing or freezing</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            If the app crashes or freezes, try these steps: 1) Close and reopen the app, 2) Restart your device, 3) Check for app updates, 4) Clear the app cache in your device settings, 5) If problems persist, reinstall the app.
+                        </div>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Can't upload content</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            If you're having trouble uploading content, check your internet connection, ensure you have sufficient storage space, and verify the file type and size are supported. If issues persist, try uploading from a different device.
+                        </div>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-item-title">
+                            <span>Login issues</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="help-item-content">
+                            If you can't log in, try resetting your password using the "Forgot Password" option. Make sure you're using the correct email address and check for typos. If you still can't access your account, contact our support team for assistance.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="help-category">
+                    <h4>Contact Us</h4>
+                    <div class="contact-options">
+                        <div class="contact-option">
+                            <i class="fas fa-envelope"></i>
+                            <h5>Email</h5>
+                            <p>support@pose.app</p>
+                            <button class="btn btn-primary" onclick="handleContact('email')">Email Us</button>
+                        </div>
+                        <div class="contact-option">
+                            <i class="fas fa-comments"></i>
+                            <h5>Live Chat</h5>
+                            <p>9am-5pm EST</p>
+                            <button class="btn btn-primary" onclick="handleContact('chat')">Start Chat</button>
+                        </div>
+                        <div class="contact-option">
+                            <i class="fab fa-twitter"></i>
+                            <h5>Twitter</h5>
+                            <p>@PoseApp</p>
+                            <button class="btn btn-primary" onclick="handleContact('twitter')">Tweet Us</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners
+            setupHelpEventListeners();
+            popup.classList.add('active');
+        }
+
+        function showReportProblem() {
+            const popup = document.getElementById('helpPopup');
+            const body = document.getElementById('helpPopupBody');
+            const title = document.getElementById('helpPopupTitle');
+
+            title.textContent = 'Report a Problem';
+
+            body.innerHTML = `
+                <form class="report-form">
+                    <div class="form-group">
+                        <label>Problem Type</label>
+                        <select class="form-control">
+                            <option>Bug or Technical Issue</option>
+                            <option>Performance Issue</option>
+                            <option>Feature Request</option>
+                            <option>Payment Issue</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" placeholder="Brief title of the issue">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" placeholder="Describe the problem in detail..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>How to Reproduce (if applicable)</label>
+                        <textarea class="form-control" placeholder="Steps to reproduce the issue..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Device & OS</label>
+                        <input type="text" class="form-control" placeholder="e.g., iPhone 13 Pro, iOS 15">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitReport('problem')">Submit Report</button>
+                </form>
+            `;
+
+            popup.classList.add('active');
+        }
+
+        function showReportAccount() {
+            const popup = document.getElementById('helpPopup');
+            const body = document.getElementById('helpPopupBody');
+            const title = document.getElementById('helpPopupTitle');
+
+            title.textContent = 'Report an Account';
+
+            body.innerHTML = `
+                <form class="report-form">
+                    <p style="color: #ccc; margin-bottom: 15px;">Help us keep Pose safe by reporting accounts that violate our community guidelines.</p>
+                    <div class="form-group">
+                        <label>Account Username</label>
+                        <input type="text" class="form-control" placeholder="@username">
+                    </div>
+                    <div class="form-group">
+                        <label>Violation Type</label>
+                        <select class="form-control">
+                            <option>Harassment or bullying</option>
+                            <option>Inappropriate content</option>
+                            <option>Hate speech</option>
+                            <option>Spam</option>
+                            <option>Impersonation</option>
+                            <option>Copyright infringement</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Details</label>
+                        <textarea class="form-control" placeholder="Provide details about why you're reporting this account..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitReport('account')">Submit Report</button>
+                </form>
+            `;
+
+            popup.classList.add('active');
+        }
+
+        function showAppealAccount() {
+            const popup = document.getElementById('helpPopup');
+            const body = document.getElementById('helpPopupBody');
+            const title = document.getElementById('helpPopupTitle');
+
+            title.textContent = 'Appeal Account Decision';
+
+            body.innerHTML = `
+                <div style="color: #ccc; margin-bottom: 20px;">
+                    <p>If you believe your account has been suspended or restricted in error, you can appeal the decision.</p>
+                    <div class="appeal-steps">
+                        <div class="appeal-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">Review the violation notice sent to your email</div>
+                        </div>
+                        <div class="appeal-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">Gather any supporting documentation or evidence</div>
+                        </div>
+                        <div class="appeal-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">Fill out the appeal form below with details</div>
+                        </div>
+                        <div class="appeal-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">Submit your appeal and wait for our response</div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="report-form">
+                    <div class="form-group">
+                        <label>Email Associated with Account</label>
+                        <input type="email" class="form-control" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Username</label>
+                        <input type="text" class="form-control" placeholder="@username">
+                    </div>
+                    <div class="form-group">
+                        <label>Violation Reason</label>
+                        <input type="text" class="form-control" placeholder="What was the stated reason for suspension?">
+                    </div>
+                    <div class="form-group">
+                        <label>Appeal Statement</label>
+                        <textarea class="form-control" placeholder="Explain why you believe this decision was made in error..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitReport('appeal')">Submit Appeal</button>
+                </form>
+            `;
+
+            popup.classList.add('active');
+        }
+
+        function setupHelpEventListeners() {
+            const helpItems = document.querySelectorAll('.help-item');
+            helpItems.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+
+                    const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
+                    if (this.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+
+            const searchInput = document.getElementById('helpSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function (e) {
+                    const searchTerm = this.value.toLowerCase();
+                    const categories = document.querySelectorAll('.help-category');
+
+                    categories.forEach(category => {
+                        const items = category.querySelectorAll('.help-item');
+                        let visibleCount = 0;
+
+                        items.forEach(item => {
+                            const title = item.querySelector('.help-item-title span').textContent.toLowerCase();
+                            const content = item.querySelector('.help-item-content').textContent.toLowerCase();
+
+                            if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                                item.style.display = 'block';
+                                visibleCount++;
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+
+                        category.style.display = visibleCount > 0 ? 'block' : 'none';
+                    });
+                });
+            }
+        }
+
+        function handleContact(type) {
+            showToast('Thank you! We will contact you shortly.', 'success');
+            closeHelpPopup();
+        }
+
+        function submitReport(type) {
+            showToast('Report submitted successfully. Our team will review it shortly.', 'success');
+            closeHelpPopup();
+        }
+
+        // Account Management Functions
+        function showDeactivateConfirm() {
+            const modal = document.getElementById('deactivateConfirmModal');
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function showDeleteConfirm() {
+            const modal = document.getElementById('deleteConfirmModal');
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function closeConfirmModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function confirmDeactivateAccount() {
+            if (!currentUser || !db) {
+                showToast('Please sign in first', 'error');
+                return;
+            }
+
+            closeConfirmModal('deactivateConfirmModal');
+            closeProfileSettings();
+
+            // Update user status in Firebase using set with merge to create if not exists
+            db.collection('users').doc(currentUser.uid).set({
+                accountStatus: 'deactivated',
+                isActive: false,
+                deactivatedAt: new Date().toISOString()
+            }, { merge: true })
+                .then(() => {
+                    showToast('Account deactivated. Logging you out...', 'success');
+
+                    // Sign out user
+                    setTimeout(() => {
+                        firebase.auth().signOut()
+                            .then(() => {
+                                currentUser = null;
+                                localStorage.removeItem('userLoggedIn');
+                                localStorage.removeItem('currentUserId');
+                                window.location.href = 'index.html';
+                            })
+                            .catch(error => {
+                                console.error('Error signing out:', error);
+                                window.location.href = 'index.html';
+                            });
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('Error deactivating account:', error);
+                    showToast('Error: ' + error.message, 'error');
+                });
+        }
+
+        function confirmDeleteAccount() {
+            if (!currentUser || !db) {
+                showToast('Please sign in first', 'error');
+                return;
+            }
+
+            const userId = currentUser.uid;
+            closeConfirmModal('deleteConfirmModal');
+            closeProfileSettings();
+
+            showToast('Deleting account... Please wait.', 'info');
+
+            // First, delete all user data from Firestore
+            db.collection('users').doc(userId).delete()
+                .then(() => {
+                    console.log('User document deleted from Firestore');
+
+                    // Delete user posts if they exist
+                    return db.collection('posts').where('userId', '==', userId).get();
+                })
+                .then(querySnapshot => {
+                    const batch = db.batch();
+                    querySnapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    return batch.commit();
+                })
+                .then(() => {
+                    console.log('User posts deleted');
+
+                    // Delete user comments if they exist
+                    return db.collection('comments').where('userId', '==', userId).get();
+                })
+                .then(querySnapshot => {
+                    const batch = db.batch();
+                    querySnapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    return batch.commit();
+                })
+                .then(() => {
+                    console.log('User comments deleted');
+
+                    // Delete Firebase auth account
+                    return currentUser.delete();
+                })
+                .then(() => {
+                    showToast('Account permanently deleted.', 'success');
+
+                    // Clear all local data
+                    setTimeout(() => {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        currentUser = null;
+
+                        // Sign out (in case we're still authenticated)
+                        firebase.auth().signOut()
+                            .then(() => {
+                                window.location.href = 'index.html';
+                            })
+                            .catch(() => {
+                                window.location.href = 'index.html';
+                            });
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('Error deleting account:', error);
+
+                    // Try to at least delete the user from Firestore if auth deletion fails
+                    if (error.code === 'auth/requires-recent-login') {
+                        showToast('Your session expired. Please log in again and try deleting your account.', 'error');
+                        firebase.auth().signOut().then(() => {
+                            window.location.href = 'index.html';
+                        });
+                    } else {
+                        showToast('Error deleting account: ' + error.message, 'error');
+                    }
                 });
         }
 
@@ -27119,33 +28634,33 @@ For more help, visit: help.pose.app
 
                 // ===== PHOTO DATA STRUCTURE (Same as video) =====
                 const photoData = {
-                     id: docId,
-                     userId: currentUser.uid,
-                     userName: userData?.name || 'Anonymous',
-                     username: userData?.username || 'user',
-                     userProfilePic: userData?.profilePicUrl || null,
-                     imageUrl: cloudinaryUrl,
-                     caption: metadata.caption || '',
-                     hashtags: metadata.hashtags || '',
-                     tags: metadata.tags || '',
-                     privacy: metadata.privacy || 'Everyone',
-                     allowComments: metadata.allowComments ?? true,
-                     allowDuet: metadata.allowDuet ?? true,
-                     allowStitch: metadata.allowStitch ?? true,
-                     allowSoundReuse: metadata.allowSoundReuse ?? true,
-                     allowDownload: metadata.allowDownload ?? false,
-                     status: type === 'draft' ? 'draft' : 'published',
-                     createdAt: new Date().toISOString(),
-                     date: todayDate,
-                     views: 0,
-                     likes: 0,
-                     comments: 0,
-                     shares: 0,
-                     reposts: 0,
-                     saves: 0,
-                     type: type === 'story' ? 'story' : 'photo',
-                     edits: metadata.edits || {}
-                 };
+                    id: docId,
+                    userId: currentUser.uid,
+                    userName: userData?.name || 'Anonymous',
+                    username: userData?.username || 'user',
+                    userProfilePic: userData?.profilePicUrl || null,
+                    imageUrl: cloudinaryUrl,
+                    caption: metadata.caption || '',
+                    hashtags: metadata.hashtags || '',
+                    tags: metadata.tags || '',
+                    privacy: metadata.privacy || 'Everyone',
+                    allowComments: metadata.allowComments ?? true,
+                    allowDuet: metadata.allowDuet ?? true,
+                    allowStitch: metadata.allowStitch ?? true,
+                    allowSoundReuse: metadata.allowSoundReuse ?? true,
+                    allowDownload: metadata.allowDownload ?? false,
+                    status: type === 'draft' ? 'draft' : 'published',
+                    createdAt: new Date().toISOString(),
+                    date: todayDate,
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    shares: 0,
+                    reposts: 0,
+                    saves: 0,
+                    type: type === 'story' ? 'story' : 'photo',
+                    edits: metadata.edits || {}
+                };
 
                 // ===== STORAGE: posephotosposted or posestoriesposted =====
                 const collectionName = type === 'story' ? 'posestoriesposted' : 'posephotosposted';
@@ -27192,14 +28707,14 @@ For more help, visit: help.pose.app
                 allUserPhotos = [];
                 photosDisplayedCount = 0;
                 console.log('✅ Photo/Story saved - reloading feeds');
-                
+
                 // Reload For You feed if visible and it's a story
                 if (type === 'story' && currentTab === 'forYou' && typeof loadForYouFeed === 'function') {
                     console.log('📺 Reloading For You feed with new story...');
                     forYouLoaded = false;
                     await loadForYouFeed();
                 }
-                
+
                 // Reload profile photos
                 if (typeof displayProfilePhotos === 'function') {
                     displayProfilePhotos();
@@ -27989,19 +29504,19 @@ For more help, visit: help.pose.app
                 allUserVideos = [];
                 feedDisplayedCount = 0;
                 console.log('✅ Video saved - reloading feeds');
-                
+
                 // Reload For You feed if visible
                 if (currentTab === 'forYou' && typeof loadForYouFeed === 'function') {
                     console.log('📺 Reloading For You feed...');
                     forYouLoaded = false;
                     await loadForYouFeed();
                 }
-                
+
                 // Reload other feeds
                 if (typeof displayFeedVideos === 'function') {
                     displayFeedVideos();
                 }
-                
+
                 // Also reload exclusive if price > 0
                 if (postData.price > 0) {
                     exclusiveVideos = [];
@@ -37981,9 +39496,9 @@ For more help, visit: help.pose.app
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
         }
-document.getElementById("liveBtn").addEventListener("click", function () {
-    window.location.href = "poselive.html";
-});
+        document.getElementById("liveBtn").addEventListener("click", function () {
+            window.location.href = "poselive.html";
+        });
 
     </script>
 
@@ -38730,7 +40245,6 @@ document.getElementById("liveBtn").addEventListener("click", function () {
                 grid-template-columns: repeat(4, 1fr);
             }
         }
-                
     </style>
 
 </body>
