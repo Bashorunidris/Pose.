@@ -35763,13 +35763,7 @@ For more help, visit: help.pose.app
             if (priceTooltip) {
                 priceTooltip.textContent = `1 PC = ₦${rate}`;
             }
-
-            // Update pCoin rate info in purchase summary
-            const pcoinRateInfo = document.getElementById('pcoinRateInfo');
-            if (pcoinRateInfo) {
-                pcoinRateInfo.textContent = `@ ₦${rate} per pCoin`;
             }
-        }
 
         // Close buy pCoin modal
         function closeBuyPCoinModal() {
