@@ -102,7 +102,7 @@
             }
         }
 
-        /* Modal Styles - RESPONSIVE */
+        /* Modal Styles - FULL PAGE */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -110,59 +110,91 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: #000000;
             z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            animation: slideInRight 0.3s ease-out;
         }
 
         .modal-overlay.active {
-            display: flex;
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .modal-overlay.closing {
+            animation: slideOutRight 0.3s ease-out;
         }
 
         .modal {
-            background: #1a1a1a;
-            border-radius: var(--radius-md);
-            padding: 30px;
-            width: 90%;
-            max-width: 400px;
+            background: #000000;
+            border-radius: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             color: white;
             position: relative;
-            box-shadow: var(--shadow-lg);
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-close {
-            position: absolute;
+            position: fixed;
             top: 15px;
             right: 15px;
-            background: none;
+            background: rgba(0, 0, 0, 0.6);
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             transition: all 0.2s;
+            z-index: 2001;
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
         }
 
         .modal h2 {
-            margin: 0 0 20px 0;
-            font-size: 24px;
+            margin: 20px 0;
+            font-size: 20px;
+            padding: 0 20px;
         }
 
         .modal input {
-            width: 100%;
+            width: calc(100% - 40px);
             padding: 12px;
-            margin-bottom: 15px;
+            margin: 0 20px 15px 20px;
             background: #2a2a2a;
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
@@ -177,8 +209,9 @@
         }
 
         .modal-btn {
-            width: 100%;
+            width: calc(100% - 40px);
             padding: 12px;
+            margin: 10px 20px;
             background: linear-gradient(45deg, var(--primary), var(--primary-light));
             border: none;
             border-radius: var(--radius-sm);
@@ -186,7 +219,6 @@
             font-weight: bold;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 10px;
             transition: var(--transition);
         }
 
@@ -199,6 +231,7 @@
             margin-top: 15px;
             font-size: 14px;
             color: #aaa;
+            padding: 0 20px;
         }
 
         .modal-switch a {
@@ -211,7 +244,7 @@
             background: var(--primary);
             padding: 10px;
             border-radius: var(--radius-sm);
-            margin-bottom: 15px;
+            margin: 0 20px 15px 20px;
             font-size: 14px;
             box-shadow: var(--shadow-sm);
         }
@@ -10005,7 +10038,7 @@
             font-weight: 700;
         }
 
-        /* Deposit Modal Styles */
+        /* Deposit Modal Styles - Full Page */
         .deposit-modal-overlay {
             display: none;
             position: fixed;
@@ -10013,8 +10046,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: #000000;
             z-index: 2000;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            animation: slideInRight 0.3s ease-out;
             align-items: center;
             justify-content: center;
         }
@@ -10227,27 +10264,30 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: #000000;
             z-index: 2000;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            animation: slideInRight 0.3s ease-out;
         }
 
         .withdrawal-modal-overlay.active {
-            display: flex;
+            display: block;
         }
 
         .withdrawal-modal-content {
-            background: #1a1a1a;
-            border: 2px solid #4C1D95;
-            border-radius: 20px;
-            padding: 2.5rem;
-            max-width: 500px;
-            width: 90%;
+            background: #000000;
+            border: none;
+            border-radius: 0;
+            padding: 60px 20px 20px 20px;
+            max-width: 100%;
+            width: 100%;
             position: relative;
-            animation: slideUp 0.3s ease-out;
-            max-height: 90vh;
-            overflow-y: auto;
+            animation: none;
+            max-height: none;
+            overflow-y: visible;
+            margin: 0;
         }
 
         .withdrawal-modal-content::-webkit-scrollbar {
@@ -11368,50 +11408,90 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: #000000;
             z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            animation: slideInRight 0.3s ease-out;
         }
 
         .pin-modal-overlay.active {
-            display: flex;
+            display: block;
         }
 
         .pin-modal {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 420px;
+            background: #000000;
+            border-radius: 0;
+            padding: 80px 20px 20px 20px;
+            width: 100%;
+            max-width: 100%;
             color: white;
             position: relative;
-            box-shadow: 0 20px 60px rgba(76, 29, 149, 0.3);
-            border: 1px solid #4C1D95;
+            box-shadow: none;
+            border: none;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .pin-modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
             border: none;
-            color: #4C1D95;
-            font-size: 1.5rem;
+            color: #FFFFFF;
+            font-size: 28px;
             cursor: pointer;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             transition: all 0.3s;
+            z-index: 3001;
         }
 
         .pin-modal-close:hover {
-            background: rgba(76, 29, 149, 0.2);
-            color: #FFFFFF;
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        /* Full Page Modal Responsive */
+        @media (max-width: 768px) {
+            .modal-overlay,
+            .deposit-modal-overlay,
+            .withdrawal-modal-overlay,
+            .pin-modal-overlay {
+                padding: 0;
+            }
+
+            .modal {
+                padding: 50px 15px 20px 15px;
+            }
+
+            .withdrawal-modal-content {
+                padding: 50px 15px 20px 15px;
+            }
+
+            .pin-modal {
+                padding: 60px 15px 20px 15px;
+            }
+
+            .modal-close,
+            .pin-modal-close {
+                top: 10px;
+                right: 10px;
+                width: 36px;
+                height: 36px;
+                font-size: 24px;
+            }
+
+            .modal h2 {
+                font-size: 18px;
+                padding: 0 15px;
+            }
         }
 
         .pin-modal-header {
@@ -35386,9 +35466,9 @@ For more help, visit: help.pose.app
         }
 
         // Close withdrawal modal
-        function closeWithdrawalModal() {
-            document.getElementById('withdrawalModalOverlay').classList.remove('active');
-        }
+         function closeWithdrawalModal() {
+             closeModalWithAnimation('withdrawalModalOverlay');
+         }
 
         // Select withdrawal processing type
         function selectWithdrawalType(type) {
@@ -35714,6 +35794,18 @@ For more help, visit: help.pose.app
         }
 
         // Open Deposit Modal
+        // Helper function to close modal with animation
+        function closeModalWithAnimation(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('closing');
+                setTimeout(() => {
+                    modal.classList.remove('active');
+                    modal.classList.remove('closing');
+                }, 300);
+            }
+        }
+
         function openDepositModal() {
             document.getElementById('depositModalOverlay').classList.add('active');
             document.getElementById('depositAmount').value = '';
@@ -35723,7 +35815,7 @@ For more help, visit: help.pose.app
 
         // Close deposit modal
         function closeDepositModal() {
-            document.getElementById('depositModalOverlay').classList.remove('active');
+            closeModalWithAnimation('depositModalOverlay');
         }
 
         // Process deposit payment with Flutterwave
@@ -35909,7 +36001,7 @@ For more help, visit: help.pose.app
 
         // Close buy pCoin modal
         function closeBuyPCoinModal() {
-            document.getElementById('buyPCoinModalOverlay').classList.remove('active');
+            closeModalWithAnimation('buyPCoinModalOverlay');
         }
 
         // Calculate pCoin purchase
@@ -36223,8 +36315,7 @@ For more help, visit: help.pose.app
 
         // Close PIN modal
         function closePinModal() {
-            const overlay = document.getElementById('pinModalOverlay');
-            overlay.classList.remove('active');
+            closeModalWithAnimation('pinModalOverlay');
             clearPinInputs();
             document.getElementById('pinStatus').className = 'pin-status';
             document.getElementById('pinStatus').textContent = '';
