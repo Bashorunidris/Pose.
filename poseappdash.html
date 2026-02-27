@@ -17286,14 +17286,20 @@
             }
         }
 
-        // Open Auth Modal
+        // Open Auth Modal (uses new premium auth screen)
         function openAuthModal() {
-            document.getElementById('authModal').classList.add('active');
+            const authScreen = document.getElementById('auth-screen');
+            if (authScreen) {
+                authScreen.style.display = 'flex';
+            }
         }
 
         // Close Auth Modal
         function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
+            const authScreen = document.getElementById('auth-screen');
+            if (authScreen) {
+                authScreen.style.display = 'none';
+            }
             document.getElementById('authError').style.display = 'none';
             document.getElementById('loginError').style.display = 'none';
         }
@@ -17301,6 +17307,21 @@
         // ====== NEW AUTH SCREEN HANDLERS ======
         // Auth Tab Switching
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize auth screen defaults
+            const authScreen = document.getElementById('auth-screen');
+            if (authScreen) {
+                // Ensure personal forms are active by default
+                const personalForms = document.getElementById('personal-forms');
+                if (personalForms && !personalForms.classList.contains('active')) {
+                    personalForms.classList.add('active');
+                }
+                // Ensure personal signup is visible by default
+                const personalSignupForm = document.getElementById('personal-signup-form');
+                if (personalSignupForm && !personalSignupForm.classList.contains('active')) {
+                    personalSignupForm.classList.add('active');
+                }
+            }
+
             // Tab button event listeners
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
@@ -21433,9 +21454,15 @@ For more help, visit: help.pose.app
 
 
         // Auth State Listener - MASTER (removed duplicates above)
+        let authStateInitialized = false;
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
+                // Hide auth screen when user logs in
+                const authScreen = document.getElementById('auth-screen');
+                if (authScreen) {
+                    authScreen.style.display = 'none';
+                }
                 loadUserProfile(user.uid);
                 // Auto-load feed when user is authenticated
                 setTimeout(() => {
@@ -21452,7 +21479,17 @@ For more help, visit: help.pose.app
         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
         `;
+                // Show auth screen on initial load if not authenticated
+                if (!authStateInitialized) {
+                    setTimeout(() => {
+                        const authScreen = document.getElementById('auth-screen');
+                        if (authScreen) {
+                            authScreen.style.display = 'flex';
+                        }
+                    }, 500);
+                }
             }
+            authStateInitialized = true;
         });
 
         // Call this when page loads (add to your DOMContentLoaded)
