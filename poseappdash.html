@@ -6176,6 +6176,184 @@
             align-items: flex-start;
         }
 
+        /* ====== RESPONSIVE DESIGN ====== */
+        /* LAPTOPS & DESKTOPS (1200px+) */
+        @media (min-width: 1200px) {
+            .profile-info-section {
+                padding: 40px 30px;
+                gap: 40px;
+            }
+            
+            .story-ring-wrapper {
+                width: 150px;
+                height: 150px;
+                margin: 0;
+            }
+            
+            .profile-pic-large {
+                width: 140px;
+                height: 140px;
+                font-size: 52px;
+            }
+            
+            .profile-name {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+            
+            .profile-username {
+                font-size: 16px;
+                margin-bottom: 25px;
+            }
+            
+            .profile-bio {
+                font-size: 15px;
+                max-width: 100%;
+            }
+        }
+
+        /* TABLETS (768px - 1199px) */
+        @media (max-width: 1199px) and (min-width: 768px) {
+            .profile-info-section {
+                padding: 25px 20px;
+                gap: 25px;
+            }
+            
+            .story-ring-wrapper {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .profile-pic-large {
+                width: 120px;
+                height: 120px;
+                font-size: 44px;
+            }
+            
+            .profile-name {
+                font-size: 26px;
+                margin-bottom: 8px;
+            }
+            
+            .profile-username {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            
+            .profile-bio {
+                font-size: 13px;
+            }
+        }
+
+        /* LARGE PHONES (480px - 767px) */
+        @media (max-width: 767px) and (min-width: 480px) {
+            .profile-info-section {
+                flex-direction: column;
+                padding: 20px 15px;
+                gap: 15px;
+            }
+            
+            .story-ring-wrapper {
+                width: 120px;
+                height: 120px;
+                margin: 0 auto;
+            }
+            
+            .profile-pic-large {
+                width: 110px;
+                height: 110px;
+                font-size: 40px;
+            }
+            
+            .profile-name {
+                font-size: 22px;
+                text-align: center;
+                margin-bottom: 6px;
+            }
+            
+            .profile-username {
+                font-size: 13px;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .profile-bio {
+                font-size: 12px;
+                text-align: center;
+                max-width: 100%;
+                margin: 0 auto 15px;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 10px !important;
+            }
+            
+            .stat-value {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+            
+            .stat-label {
+                font-size: 11px;
+            }
+        }
+
+        /* SMALL PHONES (up to 479px) */
+        @media (max-width: 479px) {
+            .profile-info-section {
+                flex-direction: column;
+                padding: 15px 12px;
+                gap: 12px;
+            }
+            
+            .story-ring-wrapper {
+                width: 100px;
+                height: 100px;
+                margin: 0 auto;
+            }
+            
+            .profile-pic-large {
+                width: 90px;
+                height: 90px;
+                font-size: 36px;
+            }
+            
+            .profile-name {
+                font-size: 18px;
+                text-align: center;
+                margin-bottom: 4px;
+            }
+            
+            .profile-username {
+                font-size: 12px;
+                text-align: center;
+                margin-bottom: 12px;
+            }
+            
+            .profile-bio {
+                font-size: 11px;
+                text-align: center;
+                max-width: 100%;
+                margin: 0 auto 12px;
+                line-height: 1.4;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+            }
+            
+            .stat-value {
+                font-size: 16px;
+                margin-bottom: 3px;
+            }
+            
+            .stat-label {
+                font-size: 10px;
+            }
+        }
+
         .story-ring-wrapper {
             position: relative;
             width: 140px;
