@@ -14174,7 +14174,7 @@
                     </form>
 
                     <!-- Personal Login Form -->
-                    <form id="personal-login-form" class="auth-form" style="display: none;">
+                    <form id="personal-login-form" class="auth-form">
                         <div id="personal-login-error" class="error-msg" style="display:none;"></div>
                         <input type="email" placeholder="Email" id="personal-login-email" required>
                         <div class="password-container">
@@ -17350,21 +17350,30 @@
                 btn.addEventListener('click', function () {
                     const formType = this.getAttribute('data-form');
                     const container = this.closest('.form-container');
-
+                    
                     // Remove active from all toggles in this container
                     container.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-
+                    
                     // Hide all forms in this container
-                    container.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-
+                    container.querySelectorAll('.auth-form').forEach(f => {
+                        f.style.display = 'none';
+                        f.classList.remove('active');
+                    });
+                    
                     // Show selected form
                     if (formType === 'signup') {
                         const signupForm = container.querySelector('[id$="-signup-form"]');
-                        if (signupForm) signupForm.classList.add('active');
+                        if (signupForm) {
+                            signupForm.style.display = 'block';
+                            signupForm.classList.add('active');
+                        }
                     } else if (formType === 'login') {
                         const loginForm = container.querySelector('[id$="-login-form"]');
-                        if (loginForm) loginForm.classList.add('active');
+                        if (loginForm) {
+                            loginForm.style.display = 'block';
+                            loginForm.classList.add('active');
+                        }
                     }
                 });
             });
@@ -17391,6 +17400,11 @@
             // Form submission handlers
             document.getElementById('personal-signup-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const submitBtn = e.target.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Signing up...';
+                submitBtn.disabled = true;
+
                 const name = document.getElementById('personal-name').value.trim();
                 const username = document.getElementById('personal-username').value.trim();
                 const email = document.getElementById('personal-email').value.trim();
@@ -17398,11 +17412,15 @@
 
                 if (!name || !username || !email || !password) {
                     showAuthError('Please fill in all fields');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                     return;
                 }
 
                 if (password.length < 6) {
                     showAuthError('Password must be at least 6 characters');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                     return;
                 }
 
@@ -17427,16 +17445,25 @@
                     location.reload();
                 } catch (error) {
                     showAuthError(error.message);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             });
 
             document.getElementById('personal-login-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const submitBtn = e.target.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Logging in...';
+                submitBtn.disabled = true;
+
                 const email = document.getElementById('personal-login-email').value.trim();
                 const password = document.getElementById('personal-login-password').value;
 
                 if (!email || !password) {
                     showAuthError('Please fill in all fields');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                     return;
                 }
 
@@ -17446,22 +17473,33 @@
                     location.reload();
                 } catch (error) {
                     showAuthError(error.message);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             });
 
             document.getElementById('business-signup-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const submitBtn = e.target.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Signing up...';
+                submitBtn.disabled = true;
+
                 const name = document.getElementById('business-name').value.trim();
                 const email = document.getElementById('business-email').value.trim();
                 const password = document.getElementById('business-password').value;
 
                 if (!name || !email || !password) {
                     showAuthError('Please fill in all fields');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                     return;
                 }
 
                 if (password.length < 6) {
                     showAuthError('Password must be at least 6 characters');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                     return;
                 }
 
@@ -17484,16 +17522,25 @@
                     location.reload();
                 } catch (error) {
                     showAuthError(error.message);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             });
 
             document.getElementById('business-login-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const submitBtn = e.target.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Logging in...';
+                submitBtn.disabled = true;
+
                 const email = document.getElementById('business-login-email').value.trim();
                 const password = document.getElementById('business-login-password').value;
 
                 if (!email || !password) {
                     showAuthError('Please fill in all fields');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                     return;
                 }
 
@@ -17503,6 +17550,8 @@
                     location.reload();
                 } catch (error) {
                     showAuthError(error.message);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             });
 
@@ -17542,29 +17591,40 @@
         }
 
         function showAuthError(message) {
-            // Show error in all auth forms
-            const errorElements = document.querySelectorAll('.auth-form .error-msg');
-            if (errorElements.length > 0) {
-                errorElements.forEach(el => {
-                    el.textContent = message;
-                    el.style.display = 'block';
-                });
-            } else {
-                // Create error message if doesn't exist
-                const activeForm = document.querySelector('.auth-form.active');
-                if (activeForm) {
+            // Find active form
+            const activeForm = document.querySelector('.auth-form.active');
+            if (activeForm) {
+                // Find error msg in active form
+                let errorEl = activeForm.querySelector('.error-msg');
+                if (errorEl) {
+                    errorEl.textContent = message;
+                    errorEl.style.display = 'block';
+                } else {
+                    // Create error message if doesn't exist
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-msg';
                     errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
                     activeForm.insertBefore(errorDiv, activeForm.firstChild);
                 }
             }
         }
 
         function handleGuestMode() {
-            // Set guest flag in session storage
+            // Set guest mode flag in session storage (no Firebase storage)
             sessionStorage.setItem('guestMode', 'true');
+            
+            // Create a simple guest object (not stored in Firebase)
+            currentUser = {
+                uid: 'guest_' + Date.now(),
+                isGuest: true,
+                displayName: 'Guest User'
+            };
+            
+            // Close auth screen
             hideAuthScreen();
+            
+            // Reload page
             location.reload();
         }
 
@@ -21454,15 +21514,28 @@ For more help, visit: help.pose.app
 
 
         // Auth State Listener - MASTER (removed duplicates above)
-        let authStateInitialized = false;
         auth.onAuthStateChanged((user) => {
-            if (user) {
+            // Check if guest mode is active
+            const isGuestMode = sessionStorage.getItem('guestMode') === 'true';
+            
+            if (isGuestMode) {
+                // Guest mode - just watching
+                console.log('👤 Guest mode - viewing only');
+                const authScreen = document.getElementById('auth-screen');
+                if (authScreen) {
+                    authScreen.style.display = 'none';
+                }
+                // Don't load profile for guests
+            } else if (user) {
+                // Regular authenticated user
                 currentUser = user;
                 // Hide auth screen when user logs in
                 const authScreen = document.getElementById('auth-screen');
                 if (authScreen) {
                     authScreen.style.display = 'none';
                 }
+                
+                console.log('✅ Regular user logged in:', user.uid);
                 loadUserProfile(user.uid);
                 // Auto-load feed when user is authenticated
                 setTimeout(() => {
@@ -21471,25 +21544,18 @@ For more help, visit: help.pose.app
                     }
                 }, 500);
             } else {
+                // Not authenticated and not guest
                 currentUser = null;
                 // Reset profile icon to default when logged out
                 const profileIcon = document.querySelector('.profile-icon');
-                profileIcon.innerHTML = `
+                if (profileIcon) {
+                    profileIcon.innerHTML = `
         <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
         `;
-                // Show auth screen on initial load if not authenticated
-                if (!authStateInitialized) {
-                    setTimeout(() => {
-                        const authScreen = document.getElementById('auth-screen');
-                        if (authScreen) {
-                            authScreen.style.display = 'flex';
-                        }
-                    }, 500);
                 }
             }
-            authStateInitialized = true;
         });
 
         // Call this when page loads (add to your DOMContentLoaded)
