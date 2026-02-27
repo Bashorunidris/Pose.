@@ -1180,142 +1180,7 @@
         }
 
         /* ====== UPLOAD PROGRESS MODAL ====== */
-        .upload-progress-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            animation: fadeIn 0.3s ease;
-        }
 
-        .upload-progress-modal.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .upload-progress-content {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-            border-radius: 16px;
-            padding: 40px;
-            width: 90%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(76, 29, 149, 0.3), 0 0 40px rgba(76, 29, 149, 0.1);
-            border: 1px solid #333;
-            position: relative;
-        }
-
-        .upload-progress-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4C1D95, #6D28D9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 20px;
-            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .upload-progress-icon.uploading {
-            animation: pulse 2s infinite;
-        }
-
-        .upload-progress-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .upload-progress-subtitle {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 25px;
-        }
-
-        .upload-progress-bar-container {
-            width: 100%;
-            height: 8px;
-            background: #222;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .upload-progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4C1D95, #6D28D9, #22c55e);
-            width: 0%;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(76, 29, 149, 0.5);
-        }
-
-        .upload-progress-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .upload-stat {
-            background: rgba(76, 29, 149, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(76, 29, 149, 0.2);
-        }
-
-        .upload-stat-label {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .upload-stat-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .upload-progress-text {
-            font-size: 12px;
-            color: #666;
-            margin-top: 15px;
-            font-style: italic;
-        }
-
-        .upload-progress-success {
-            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.5);
-            }
-
-            to {
-                transform: scale(1);
-            }
-        }
 
         .notifications-header {
             display: flex;
@@ -1486,10 +1351,13 @@
             overflow: hidden;
             -webkit-user-select: none;
             user-select: none;
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .recording-screen.active {
             display: flex;
+            opacity: 1;
         }
 
         /* Screen 6 - Center on desktop */
@@ -5463,20 +5331,44 @@
             border: none;
             display: block;
             box-shadow: none;
-            /* Mirror video to correct the front-facing camera flip from recording */
-            transform: scaleX(-1);
-            -webkit-transform: scaleX(-1);
-            -moz-transform: scaleX(-1);
+            /* No transform - uploaded videos should not be mirrored */
+            /* Only live recording preview has scaleX(-1) */
         }
 
         .rec-post-section {
             margin-bottom: 20px;
             padding: 15px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
         }
 
         .rec-post-section:first-of-type {
             padding-top: 20px;
+            animation-delay: 0s;
+        }
+
+        .rec-post-section:nth-of-type(2) {
+            animation-delay: 0.1s;
+        }
+
+        .rec-post-section:nth-of-type(3) {
+            animation-delay: 0.2s;
+        }
+
+        .rec-post-section:nth-of-type(n+4) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .rec-section-header {
@@ -5500,6 +5392,14 @@
             font-size: 15px;
             font-family: inherit;
             resize: vertical;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .rec-caption-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(76, 29, 149, 0.5);
+            box-shadow: 0 0 12px rgba(76, 29, 149, 0.2);
+            outline: none;
         }
 
         .rec-caption-input::placeholder {
@@ -5512,6 +5412,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: #fff;
             font-size: 14px;
         }
@@ -14119,38 +14020,7 @@
     </div>
 
     <!-- Upload Progress Modal (Professional) -->
-    <div class="upload-progress-modal" id="uploadProgressModal">
-        <div class="upload-progress-content">
-            <div class="upload-progress-icon uploading" id="uploadProgressIcon">📤</div>
-            <div class="upload-progress-title" id="uploadProgressTitle">Uploading Video</div>
-            <div class="upload-progress-subtitle" id="uploadProgressSubtitle">Processing with effects...</div>
 
-            <div class="upload-progress-bar-container">
-                <div class="upload-progress-bar-fill" id="uploadProgressBarFill" style="width: 0%;"></div>
-            </div>
-
-            <div class="upload-progress-stats">
-                <div class="upload-stat">
-                    <div class="upload-stat-label">Progress</div>
-                    <div class="upload-stat-value" id="uploadProgressPercent">0%</div>
-                </div>
-                <div class="upload-stat">
-                    <div class="upload-stat-label">Speed</div>
-                    <div class="upload-stat-value" id="uploadProgressSpeed">0 MB/s</div>
-                </div>
-                <div class="upload-stat">
-                    <div class="upload-stat-label">Size</div>
-                    <div class="upload-stat-value" id="uploadProgressSize">0 MB</div>
-                </div>
-                <div class="upload-stat">
-                    <div class="upload-stat-label">ETA</div>
-                    <div class="upload-stat-value" id="uploadProgressETA">--</div>
-                </div>
-            </div>
-
-            <div class="upload-progress-text" id="uploadProgressText">Uploading to Cloudinary...</div>
-        </div>
-    </div>
 
     <!-- Auth Screen (NEW PREMIUM UI) -->
     <div id="auth-screen" style="display: none;">
@@ -16753,10 +16623,8 @@
         }
 
         // ====== UPLOAD PROCESS (WITH PROGRESS TRACKING) ======
-        async function startUploadProcess(file, uploadType) {
-            try {
-                // Show progress container
-                showUploadProgress();
+         async function startUploadProcess(file, uploadType) {
+             try {
 
                 let statusElement = null;
                 if (uploadType === 'post') {
@@ -17138,94 +17006,6 @@
             if (countdownTimer) clearInterval(countdownTimer);
         }
 
-        // ===== PROFESSIONAL UPLOAD PROGRESS MODAL =====
-        function showUploadProgressModal() {
-            const modal = document.getElementById('uploadProgressModal');
-            if (modal) {
-                modal.classList.add('active');
-                // Reset progress
-                updateUploadProgressModal(0, 'Uploading Video', '📤', 'Starting upload...');
-            }
-        }
-
-        function closeUploadProgressModal() {
-            const modal = document.getElementById('uploadProgressModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
-
-        function updateUploadProgressModal(percent, title, icon, subtitle, speed, eta) {
-            const modal = document.getElementById('uploadProgressModal');
-            if (!modal) return;
-
-            // Update progress bar
-            const progressBar = document.getElementById('uploadProgressBarFill');
-            if (progressBar) {
-                progressBar.style.width = percent + '%';
-            }
-
-            // Update title
-            const titleEl = document.getElementById('uploadProgressTitle');
-            if (titleEl) {
-                titleEl.textContent = title;
-            }
-
-            // Update icon
-            const iconEl = document.getElementById('uploadProgressIcon');
-            if (iconEl) {
-                iconEl.textContent = icon;
-                if (percent >= 100) {
-                    iconEl.classList.remove('uploading');
-                    iconEl.classList.add('upload-progress-success');
-                } else {
-                    iconEl.classList.add('uploading');
-                    iconEl.classList.remove('upload-progress-success');
-                }
-            }
-
-            // Update subtitle
-            const subtitleEl = document.getElementById('uploadProgressSubtitle');
-            if (subtitleEl) {
-                subtitleEl.textContent = subtitle;
-            }
-
-            // Update percentage
-            const percentEl = document.getElementById('uploadProgressPercent');
-            if (percentEl) {
-                percentEl.textContent = Math.round(percent) + '%';
-            }
-
-            // Update speed if provided
-            if (speed !== undefined) {
-                const speedEl = document.getElementById('uploadProgressSpeed');
-                if (speedEl) {
-                    speedEl.textContent = speed + ' MB/s';
-                }
-            }
-
-            // Update size if provided
-            if (subtitle && subtitle.includes('MB')) {
-                const sizeEl = document.getElementById('uploadProgressSize');
-                if (sizeEl) {
-                    sizeEl.textContent = subtitle;
-                }
-            }
-
-            // Update ETA if provided
-            if (eta !== undefined) {
-                const etaEl = document.getElementById('uploadProgressETA');
-                if (etaEl) {
-                    if (eta === 0 || percent >= 100) {
-                        etaEl.textContent = 'Done!';
-                    } else if (eta > 60) {
-                        etaEl.textContent = Math.ceil(eta / 60) + 'm';
-                    } else {
-                        etaEl.textContent = eta + 's';
-                    }
-                }
-            }
-        }
 
         function resetUploadProgress() {
             uploadProgress.startTime = Date.now();
@@ -23513,9 +23293,6 @@ For more help, visit: help.pose.app
                 editLoadingOverlay.style.display = 'none';
             }
 
-            // Show professional upload progress modal (non-blocking)
-            showUploadProgressModal();
-
             try {
                 console.log('📤 Uploading blob with effects...');
 
@@ -23536,32 +23313,20 @@ For more help, visit: help.pose.app
                     console.log('✅ Effects applied:', recordingState.selectedEffects.length);
                     console.log('✅ Speed setting:', recordingState.currentSpeed);
 
-                    // Show success state
-                    updateUploadProgressModal(100, 'Upload Complete!', '✅', 'Ready to edit...');
                     console.log('✅ Video upload complete');
 
                     // Save to Firebase in background (fire and forget - doesn't block)
                     saveRecordingToFirebase(latestClip);
 
-                    // Transition to edit screen quickly (500ms instead of 1000ms)
-                    setTimeout(() => {
-                        closeUploadProgressModal();
-                        transitionToEditScreen();
-                    }, 500);
+                    // Transition to edit screen immediately
+                    transitionToEditScreen();
                 } else {
                     throw new Error('Upload failed - no URL returned');
                 }
 
             } catch (error) {
                 console.error('❌ Video upload error:', error);
-                // Show error state
-                updateUploadProgressModal(0, 'Upload Failed', '❌', error.message.substring(0, 50));
-
-                // Transition to edit screen after 1.5 seconds (quicker on error)
-                setTimeout(() => {
-                    closeUploadProgressModal();
-                    transitionToEditScreen();
-                }, 1500);
+                showToastRecording('❌ Upload failed: ' + error.message, 'error', '🚫');
             }
         }
 
@@ -23618,30 +23383,18 @@ For more help, visit: help.pose.app
                 }, 120000);
 
                 // Track upload progress
-                const uploadStartTime = Date.now();
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percentComplete = (e.loaded / e.total) * 100;
-                        const uploadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
-                        const totalMB = (e.total / (1024 * 1024)).toFixed(1);
-                        const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
-                        const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
-                        const remainingBytes = e.total - e.loaded;
-                        const etaSeconds = remainingBytes / (e.loaded / elapsedSeconds);
+                 const uploadStartTime = Date.now();
+                 xhr.upload.addEventListener('progress', (e) => {
+                     if (e.lengthComputable) {
+                         const percentComplete = (e.loaded / e.total) * 100;
+                         const uploadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
+                         const totalMB = (e.total / (1024 * 1024)).toFixed(1);
+                         const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
+                         const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
 
-                        // Update professional progress modal
-                        updateUploadProgressModal(
-                            percentComplete,
-                            `Uploading... ${Math.round(percentComplete)}%`,
-                            '📤',
-                            `${uploadedMB} MB of ${totalMB} MB`,
-                            uploadSpeed,
-                            Math.max(0, Math.ceil(etaSeconds))
-                        );
-
-                        console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
-                    }
-                });
+                         console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
+                     }
+                 });
 
                 xhr.addEventListener('load', () => {
                     clearTimeout(timeoutId);
@@ -23768,8 +23521,6 @@ For more help, visit: help.pose.app
                     return;
                 }
 
-                // Show upload progress
-                showUploadProgressModal();
                 console.log('📹 Selected video file:', file.name, `(${(file.size / (1024 * 1024)).toFixed(2)} MB)`);
 
                 try {
@@ -23797,29 +23548,20 @@ For more help, visit: help.pose.app
                         // Add to clips
                         recordingState.clips.push(videoClip);
 
-                        // Update success state
-                        updateUploadProgressModal(100, 'Upload Complete!', '✅', 'Ready to edit...');
                         console.log('✅ Video ready for editing');
 
                         // Save to Firebase in background
                         saveUploadedVideoToFirebase(videoClip);
 
-                        // Transition to edit screen
-                        setTimeout(() => {
-                            closeUploadProgressModal();
-                            transitionToEditScreen();
-                        }, 500);
+                        // Transition to edit screen immediately
+                        transitionToEditScreen();
                     } else {
                         throw new Error('Upload failed - no URL returned');
                     }
 
                 } catch (error) {
                     console.error('❌ Video upload error:', error);
-                    updateUploadProgressModal(0, 'Upload Failed', '❌', error.message.substring(0, 50));
-
-                    setTimeout(() => {
-                        closeUploadProgressModal();
-                    }, 1500);
+                    showToastRecording('❌ Upload failed: ' + error.message, 'error', '🚫');
                 }
             };
 
@@ -23860,19 +23602,6 @@ For more help, visit: help.pose.app
                         const totalMB = (e.total / (1024 * 1024)).toFixed(1);
                         const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
                         const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
-                        const remainingBytes = e.total - e.loaded;
-                        const etaSeconds = remainingBytes / (e.loaded / elapsedSeconds);
-
-                        // Update progress modal
-                        updateUploadProgressModal(
-                            percentComplete,
-                            `Uploading... ${Math.round(percentComplete)}%`,
-                            '📤',
-                            `${uploadedMB} MB of ${totalMB} MB`,
-                            uploadSpeed,
-                            Math.max(0, Math.ceil(etaSeconds))
-                        );
-
                         console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
                     }
                 });
@@ -31391,8 +31120,11 @@ For more help, visit: help.pose.app
                 const videoPreview = document.getElementById('postPreviewVideo');
                 if (!videoPreview) return;
 
-                // Get the recorded video blob
-                const recordedBlob = recordingState.recordedBlob || (recordingState.clips?.[0]?.blob);
+                // Get the recorded video blob or uploaded video
+                const recordingBlob = recordingState.recordedBlob;
+                const uploadedClip = recordingState.clips?.[0];
+                const recordedBlob = recordingBlob || uploadedClip?.blob;
+                const isUploadedVideo = uploadedClip?.isUploadedFile;
 
                 if (recordedBlob) {
                     const videoUrl = URL.createObjectURL(recordedBlob);
@@ -31410,9 +31142,17 @@ For more help, visit: help.pose.app
                     videoPreview.muted = false;
                     videoPreview.volume = 1.0;
 
+                    // Remove mirror effect for uploaded videos
+                    if (isUploadedVideo) {
+                        videoPreview.style.transform = 'none';
+                    } else {
+                        videoPreview.style.transform = 'scaleX(-1)';
+                    }
+
                     videoPreview.load();
                     console.log('✅ Post preview loaded successfully');
                     console.log('🔊 Audio enabled - volume:', videoPreview.volume, 'muted:', videoPreview.muted);
+                    console.log('📹 Video type:', isUploadedVideo ? 'Uploaded' : 'Recorded');
 
                     // Test audio availability after a brief delay
                     setTimeout(() => {
@@ -39638,7 +39378,6 @@ For more help, visit: help.pose.app
                 return;
             }
 
-            showUploadProgressModal();
             try {
                 console.log('📤 Starting video upload to Cloudinary...');
                 v2ShowNotification('📤 Uploading video...');
@@ -39681,22 +39420,18 @@ For more help, visit: help.pose.app
                         // Continue anyway - video is on Cloudinary
                     }
                 } else {
-                    console.log('⚠️ No user logged in for Firebase save, but upload succeeded');
-                }
+                     console.log('⚠️ No user logged in for Firebase save, but upload succeeded');
+                 }
 
-                closeUploadProgressModal();
-                v2ShowNotification('✅ Upload complete!');
+                 v2ShowNotification('✅ Upload complete!');
 
-                // Clear old recording chunks to prevent loading old video
-                v2RecordedChunks = [];
+                 // Clear old recording chunks to prevent loading old video
+                 v2RecordedChunks = [];
 
-                setTimeout(() => {
-                    v2StartEditing();
-                }, 500);
+                 v2StartEditing();
 
-            } catch (error) {
-                closeUploadProgressModal();
-                console.error('❌ Upload error:', error.message);
+                } catch (error) {
+                 console.error('❌ Upload error:', error.message);
 
                 // Provide helpful error messages
                 if (error.message.includes('Network error') || error.message.includes('offline')) {
