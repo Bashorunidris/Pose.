@@ -22017,9 +22017,9 @@ For more help, visit: help.pose.app
             console.log('📊 Recording setup complete - Ready to record');
 
             const options = {
-                mimeType: 'video/webm;codecs=vp8,opus',
-                videoBitsPerSecond: 500000,   // 500 kbps for 720p 30fps (smooth, optimized)
-                audioBitsPerSecond: 64000     // 64 kbps audio (sufficient, less overhead)
+                mimeType: 'video/webm;codecs=vp9,opus',
+                videoBitsPerSecond: 4000000,   // 4 Mbps for HIGH QUALITY (TikTok standard)
+                audioBitsPerSecond: 128000     // 128 kbps audio (excellent quality)
             };
 
             try {
@@ -23511,7 +23511,7 @@ For more help, visit: help.pose.app
             fileInput.accept = 'video/*';
             fileInput.style.display = 'none';
 
-            fileInput.onchange = async (e) => {
+            fileInput.onchange = (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
 
@@ -23523,46 +23523,27 @@ For more help, visit: help.pose.app
 
                 console.log('📹 Selected video file:', file.name, `(${(file.size / (1024 * 1024)).toFixed(2)} MB)`);
 
-                try {
-                    // Upload to Cloudinary
-                    const uploadResult = await uploadVideoFileToCloudinary(file);
+                // Create clip object with LOCAL blob URL (NO upload yet)
+                 const videoClip = {
+                     url: URL.createObjectURL(file),
+                     blob: file,
+                     cloudinaryUrl: null, // Will upload when user publishes
+                     publicId: null,
+                     duration: 0,
+                     speed: 1,
+                     hasEffects: false,
+                     hasBackgroundSound: false,
+                     selectedSound: null,
+                     filter: 'none',
+                     isUploadedFile: true
+                 };
 
-                    if (uploadResult && uploadResult.url) {
-                        console.log('✅ Video upload successful:', uploadResult.url);
+                 // Add to clips
+                 recordingState.clips.push(videoClip);
+                 console.log('✅ Video ready for editing (local copy)');
 
-                        // Create clip object (similar to recorded videos)
-                        const videoClip = {
-                            url: uploadResult.url,
-                            blob: file,
-                            cloudinaryUrl: uploadResult.url,
-                            publicId: uploadResult.publicId,
-                            duration: 0, // Will be determined when video loads
-                            speed: 1,
-                            hasEffects: false,
-                            hasBackgroundSound: false,
-                            selectedSound: null,
-                            filter: 'none',
-                            isUploadedFile: true // Mark as uploaded file (not recorded)
-                        };
-
-                        // Add to clips
-                        recordingState.clips.push(videoClip);
-
-                        console.log('✅ Video ready for editing');
-
-                        // Save to Firebase in background
-                        saveUploadedVideoToFirebase(videoClip);
-
-                        // Transition to edit screen immediately
-                        transitionToEditScreen();
-                    } else {
-                        throw new Error('Upload failed - no URL returned');
-                    }
-
-                } catch (error) {
-                    console.error('❌ Video upload error:', error);
-                    showToastRecording('❌ Upload failed: ' + error.message, 'error', '🚫');
-                }
+                 // GO TO EDIT SCREEN IMMEDIATELY - no upload waiting!
+                 transitionToEditScreen();
             };
 
             // Trigger file selection dialog
@@ -28845,7 +28826,7 @@ For more help, visit: help.pose.app
 
                             const mediaRecorder = new MediaRecorder(combinedStream, {
                                 mimeType: mimeType,
-                                videoBitsPerSecond: 2500000
+                                videoBitsPerSecond: 4000000 // HIGH QUALITY like TikTok/Instagram
                             });
 
                             const chunks = [];
@@ -38618,14 +38599,21 @@ For more help, visit: help.pose.app
             const video = document.getElementById('v2RecordVideo');
             const ctx = canvas.getContext('2d');
 
-            // Use actual video dimensions for proper recording
-            const recordingWidth = video.videoWidth || 1280;
-            const recordingHeight = video.videoHeight || 720;
+            // Use HIGH QUALITY recording dimensions (match TikTok/Instagram)
+            // Get device pixel ratio for better quality on retina displays
+            const dpr = window.devicePixelRatio || 1;
+            let recordingWidth = video.videoWidth || 1920;
+            let recordingHeight = video.videoHeight || 1080;
+            
+            // Support up to Full HD for better quality
+            if (recordingWidth > 1920) recordingWidth = 1920;
+            if (recordingHeight > 1080) recordingHeight = 1080;
+            
             canvas.width = recordingWidth;
             canvas.height = recordingHeight;
 
-            // Create stream from canvas
-            const canvasStream = canvas.captureStream(30); // 30 fps
+            // Create stream from canvas with HIGH FRAME RATE (60 fps)
+            const canvasStream = canvas.captureStream(60); // 60 fps for smooth recording
 
             // Create new stream with canvas video
             const recordingStream = new MediaStream();
@@ -38790,11 +38778,11 @@ For more help, visit: help.pose.app
                     }
                 }
 
-                // 3. Create MediaRecorder with minimal options (fast)
+                // 3. Create MediaRecorder with HIGH QUALITY options (like TikTok)
                 let options = {
-                    mimeType: 'video/webm;codecs=vp8,opus',
-                    videoBitsPerSecond: 500000,
-                    audioBitsPerSecond: 64000
+                    mimeType: 'video/webm;codecs=vp9,opus',
+                    videoBitsPerSecond: 4000000, // 4 Mbps for excellent quality (TikTok uses 3-5 Mbps)
+                    audioBitsPerSecond: 128000 // Better audio quality (128 kbps)
                 };
 
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
@@ -38832,10 +38820,10 @@ For more help, visit: help.pose.app
                     }
 
                     v2RecordedBlob = new Blob(v2RecordedChunks, { type: 'video/webm' });
-                    // Turn off camera after recording stops
-                    v2TurnOffCamera();
-                    // UPLOAD ON STOP
-                    v2UploadAndShare();
+                     // Turn off camera after recording stops
+                     v2TurnOffCamera();
+                     // GO TO EDIT SCREEN IMMEDIATELY (no upload yet - like TikTok)
+                     v2StartEditing();
                 };
 
                 const maxDuration = recordingState.selectedDuration || 30;
