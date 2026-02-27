@@ -14362,11 +14362,15 @@
 
                     <!-- Username (Read-only) -->
                     <div class="profile-username" id="profileUsernameDisplay" style="text-align: center; margin-bottom: 0;">@username</div>
+                <!-- Bio (Editable) -->
+                <div style="position: relative; margin-bottom: 10px;">
+                    <div id="profileBioDisplay" style="font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.background='rgba(138,43,226,0.1)'" onmouseout="this.style.background='transparent'" onclick="editProfileBio()">African Creator | Skits | Exclusive Content 🔥</div>
+                </div>
                 </div>
             </div>
 
             <!-- STATS SECTION (COMPACT & RESPONSIVE) -->
-            <div style="width: 100%; padding: 8px 0; margin: 8px 0;">
+            <div style="width: 100%; padding: 8px 0; margin: -50px 0;">
                 <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 8px;">
                     <div class="stat" style="text-align: center;">
                         <div class="stat-value" id="followersCount" style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">12.5K</div>
@@ -14383,22 +14387,6 @@
                     <div class="stat" style="text-align: center;">
                         <div class="stat-value" id="viewsCount" style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">550K</div>
                         <div class="stat-label" style="font-size: 11px; color: #999; font-weight: 500;">Views</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BIO & LOCATION SECTION (EDITABLE) -->
-            <div style="width: 100%; padding: 15px 0; text-align: center;">
-                <!-- Bio (Editable) -->
-                <div style="position: relative; margin-bottom: 10px;">
-                    <div id="profileBioDisplay" style="font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.background='rgba(138,43,226,0.1)'" onmouseout="this.style.background='transparent'" onclick="editProfileBio()">African Creator | Skits | Exclusive Content 🔥</div>
-                </div>
-                
-                <!-- Location (Editable) -->
-                <div style="position: relative;">
-                    <div id="profileLocationDisplay" style="color: #999; font-size: 13px; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.background='rgba(138,43,226,0.1)'" onmouseout="this.style.background='transparent'" onclick="editProfileLocation()">
-                        <i class="fas fa-map-marker-alt" style="color: #8a2be2; margin-right: 6px;"></i>
-                        <span id="profileLocation">Lagos, Nigeria</span>
                     </div>
                 </div>
             </div>
