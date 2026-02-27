@@ -22018,7 +22018,7 @@ For more help, visit: help.pose.app
 
             const options = {
                 mimeType: 'video/webm;codecs=vp9,opus',
-                videoBitsPerSecond: 2500000,   // 2.5 Mbps HIGH QUALITY + smooth playback
+                videoBitsPerSecond: 1500000,   // 1.5 Mbps - good quality + smooth playback (NO LAG)
                 audioBitsPerSecond: 128000     // 128 kbps audio (excellent quality)
             };
 
@@ -28826,7 +28826,7 @@ For more help, visit: help.pose.app
 
                             const mediaRecorder = new MediaRecorder(combinedStream, {
                                 mimeType: mimeType,
-                                videoBitsPerSecond: 2500000 // 2.5 Mbps - excellent quality + smooth playback
+                                videoBitsPerSecond: 1500000 // 1.5 Mbps - good quality + smooth playback (NO LAG)
                             });
 
                             const chunks = [];
@@ -38599,21 +38599,19 @@ For more help, visit: help.pose.app
             const video = document.getElementById('v2RecordVideo');
             const ctx = canvas.getContext('2d');
 
-            // Use HIGH QUALITY recording dimensions (match TikTok/Instagram)
-            // Get device pixel ratio for better quality on retina displays
-            const dpr = window.devicePixelRatio || 1;
-            let recordingWidth = video.videoWidth || 1920;
-            let recordingHeight = video.videoHeight || 1080;
+            // OPTIMIZED QUALITY: Balance between quality and performance
+            let recordingWidth = video.videoWidth || 1280;
+            let recordingHeight = video.videoHeight || 720;
             
-            // Support up to Full HD for better quality
-            if (recordingWidth > 1920) recordingWidth = 1920;
-            if (recordingHeight > 1080) recordingHeight = 1080;
+            // Limit to 720p for smooth recording + playback
+            if (recordingWidth > 1280) recordingWidth = 1280;
+            if (recordingHeight > 720) recordingHeight = 720;
             
             canvas.width = recordingWidth;
             canvas.height = recordingHeight;
 
-            // Create stream from canvas with HIGH FRAME RATE (60 fps)
-            const canvasStream = canvas.captureStream(60); // 60 fps for smooth recording
+            // Create stream from canvas at 30 fps (smoother than 60)
+            const canvasStream = canvas.captureStream(30); // 30 fps - smooth without lag
 
             // Create new stream with canvas video
             const recordingStream = new MediaStream();
@@ -38626,41 +38624,16 @@ For more help, visit: help.pose.app
             const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
 
             function renderFilteredFrame() {
-                // Draw video frame to canvas
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                 // OPTIMIZED: Only draw without heavy per-frame effects
+                 // Draw video frame to canvas (fast operation)
+                 try {
+                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                 } catch (e) {
+                     // Video not ready yet, skip frame
+                 }
 
-                // Determine which filter to apply
-                let filterToApply = recordingState.currentFilter;
-
-                // If paused and a filter was selected during pause, use that instead
-                if (v2IsPaused && recordingState.pausedSessionFilter && recordingState.pausedSessionFilter !== 'none') {
-                    filterToApply = recordingState.pausedSessionFilter;
-                } else if (v2IsPaused) {
-                    // Clear filter if 'none' was selected during pause
-                    filterToApply = 'none';
-                }
-
-                // Apply filter (pixel-based) - only if NO effects
-                const shouldApplyFilter = filterToApply && filterToApply !== 'none';
-                if (shouldApplyFilter && !hasEffects) {
-                    const filterCSS = getCanvasFilterString(filterToApply);
-                    if (filterCSS && filterCSS !== 'none') {
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        applyCanvasFilterEffect(imageData, filterToApply);
-                        ctx.putImageData(imageData, 0, 0);
-                    }
-                }
-
-                // Composite effects canvas on top (if effects active)
-                if (hasEffects && !hasFilter) {
-                    const effectsCanvas = effectsState.canvas || document.getElementById('v2EffectsCanvas');
-                    if (effectsCanvas && effectsCanvas.width > 0 && effectsCanvas.height > 0) {
-                        ctx.drawImage(effectsCanvas, 0, 0);
-                    }
-                }
-
-                recordingState.filterAnimationId = requestAnimationFrame(renderFilteredFrame);
-            }
+                 recordingState.filterAnimationId = requestAnimationFrame(renderFilteredFrame);
+             }
 
             renderFilteredFrame();
             return recordingStream;
@@ -38778,10 +38751,10 @@ For more help, visit: help.pose.app
                     }
                 }
 
-                // 3. Create MediaRecorder with HIGH QUALITY options (optimized for playback)
+                // 3. Create MediaRecorder with OPTIMIZED options (smooth playback priority)
                 let options = {
                     mimeType: 'video/webm;codecs=vp9,opus',
-                    videoBitsPerSecond: 2500000, // 2.5 Mbps - excellent quality + smooth playback
+                    videoBitsPerSecond: 1500000, // 1.5 Mbps - good quality + zero lag playback
                     audioBitsPerSecond: 128000 // Better audio quality (128 kbps)
                 };
 
@@ -38841,14 +38814,15 @@ For more help, visit: help.pose.app
                 document.getElementById('v2PauseBtn').style.display = 'flex';
                 v2IsPaused = false;
 
-                // 6. Start audio (1 second delayed to prevent lag)
+                // 6. Start audio IMMEDIATELY (no delay for sync)
                 if (recordingState.audioStartPending && recordingState.audioSource) {
-                    setTimeout(() => {
-                        if (recordingState.audioSource && v2IsRecording) {
-                            recordingState.audioSource.start(0);
-                            recordingState.audioStartPending = false;
-                        }
-                    }, 1000);
+                    try {
+                        recordingState.audioSource.start(0);
+                        recordingState.audioStartPending = false;
+                        console.log('🔊 Audio started immediately');
+                    } catch (e) {
+                        console.warn('⚠️ Audio start error:', e);
+                    }
                 }
 
                 // Log only startup time, not per-frame details
