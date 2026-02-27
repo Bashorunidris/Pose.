@@ -127,6 +127,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -138,6 +139,7 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+
             to {
                 transform: translateX(100%);
                 opacity: 0;
@@ -247,6 +249,272 @@
             margin: 0 20px 15px 20px;
             font-size: 14px;
             box-shadow: var(--shadow-sm);
+        }
+
+        /* ====== AUTH SCREEN STYLES ====== */
+        #auth-screen {
+            background: linear-gradient(135deg, hsla(285, 24%, 75%, 0.658), hsla(286, 92%, 14%, 0.458));
+            min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(15px, 3vw, 20px);
+            animation: fadeIn 0.5s ease-out;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: y mandatory;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2000;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: clamp(15px, 4vw, 20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            width: min(90%, 400px);
+            padding: clamp(20px, 5vw, 30px);
+            animation: slideUp 0.5s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: clamp(20px, 5vw, 30px);
+            background: #333333;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: clamp(12px, 3vw, 15px);
+            border: none;
+            background: none;
+            font-size: clamp(14px, 4vw, 16px);
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #ffffff;
+            background: hsla(286, 92%, 14%, 1);
+            border-radius: 8px;
+        }
+
+        .auth-forms {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .auth-toggle {
+            display: flex;
+            margin-bottom: clamp(15px, 4vw, 20px);
+            background: #333333;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: clamp(10px, 3vw, 12px);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: hsla(286, 92%, 14%, 0.858);
+            color: white;
+            border-radius: 6px;
+            transform: scale(1.02);
+        }
+
+        .auth-form {
+            transition: all 0.3s ease-in-out;
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: clamp(12px, 3vw, 15px);
+            margin-bottom: clamp(12px, 3vw, 15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: clamp(14px, 4vw, 16px);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: hsla(286, 92%, 14%, 1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .auth-form input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: clamp(12px, 3vw, 15px);
+            background: hsla(286, 92%, 14%, 0.858);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(14px, 4vw, 16px);
+            cursor: pointer;
+            margin-bottom: clamp(12px, 3vw, 15px);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.03);
+            background: hsla(286, 92%, 14%, 1);
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: clamp(12px, 3vw, 15px);
+            background: white;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .google-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .google-btn img {
+            width: clamp(16px, 4vw, 20px);
+            height: clamp(16px, 4vw, 20px);
+            transition: transform 0.3s ease;
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: clamp(12px, 3vw, 15px);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: clamp(8px, 2vw, 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: clamp(4px, 1vw, 5px);
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .toggle-password:hover {
+            color: hsla(286, 92%, 14%, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .forgot-password {
+            width: 100%;
+            padding: clamp(10px, 2.5vw, 12px) clamp(15px, 4vw, 20px);
+            margin-top: clamp(12px, 3vw, 15px);
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(12px, 3.5vw, 14px);
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .guest-btn {
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            color: #666;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding: clamp(12px, 3vw, 15px);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(14px, 4vw, 16px);
+            cursor: pointer;
+            margin-top: clamp(12px, 3vw, 15px);
+            transition: all 0.3s ease;
+        }
+
+        .guest-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .guest-mode-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: clamp(10px, 2.5vw, 12px);
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        /* Auth animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(clamp(15px, 4vw, 20px));
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* RESPONSIVE MODAL */
@@ -9415,61 +9683,63 @@
         }
 
         .wallet-page-header {
-             position: relative;
-             height: auto;
-             min-height: 120px;
-             background: linear-gradient(135deg, #4C1D95 0%, #3B0764 100%);
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             padding: 15px;
-         }
+            position: relative;
+            height: auto;
+            min-height: 120px;
+            background: linear-gradient(135deg, #4C1D95 0%, #3B0764 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
 
-         .wallet-back-btn {
-             position: absolute;
-             top: 12px;
-             left: 12px;
-             background: rgba(0, 0, 0, 0.5);
-             border: none;
-             color: white;
-             width: 36px;
-             height: 36px;
-             border-radius: 50%;
-             cursor: pointer;
-             font-size: 18px;
-             transition: all 0.3s;
-         }
+        .wallet-back-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
 
-         .wallet-back-btn:hover {
-             background: rgba(0, 0, 0, 0.8);
-             transform: scale(1.1);
-         }
+        .wallet-back-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
 
-         .wallet-page-title {
-             color: white;
-             font-size: 22px;
-             font-weight: bold;
-             text-align: center;
-         }
+        .wallet-page-title {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+        }
 
-         .wallet-page-body {
-             padding: 15px;
-             max-width: 1200px;
-             margin: 0 auto;
-         }
+        .wallet-page-body {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-         @media (max-width: 768px) {
-             .wallet-page-header {
-                 min-height: 100px;
-                 padding: 12px;
-             }
-             .wallet-page-title {
-                 font-size: 18px;
-             }
-             .wallet-page-body {
-                 padding: 12px;
-             }
-         }
+        @media (max-width: 768px) {
+            .wallet-page-header {
+                min-height: 100px;
+                padding: 12px;
+            }
+
+            .wallet-page-title {
+                font-size: 18px;
+            }
+
+            .wallet-page-body {
+                padding: 12px;
+            }
+        }
 
         .wallet-close {
             display: none;
@@ -9560,13 +9830,16 @@
                 padding: 1rem;
                 margin-bottom: 1rem;
             }
+
             .wallet-balance-amount {
                 font-size: 1.5rem;
             }
+
             .wallet-action-btns {
                 gap: 0.6rem;
                 margin-bottom: 1rem;
             }
+
             .wallet-action-btn {
                 padding: 0.6rem 0.4rem;
                 font-size: 0.75rem;
@@ -9578,9 +9851,11 @@
                 padding: 0.8rem;
                 margin-bottom: 0.8rem;
             }
+
             .wallet-balance-amount {
                 font-size: 1.3rem;
             }
+
             .wallet-action-btns {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
@@ -9633,10 +9908,12 @@
                 margin-top: 1rem;
                 margin-bottom: 1rem;
             }
+
             .wallet-tab-btn {
                 padding: 0.6rem 0.8rem;
                 font-size: 0.8rem;
             }
+
             .wallet-tab-content {
                 padding: 0.8rem 0;
             }
@@ -9656,7 +9933,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-text {
@@ -9676,8 +9955,13 @@
         }
 
         @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         .form-group {
@@ -10392,6 +10676,7 @@
                 gap: 0.3rem;
                 margin-bottom: 0.8rem;
             }
+
             .withdrawal-amount-input {
                 padding: 0.6rem 0.7rem 0.6rem 2rem;
                 font-size: 0.9rem;
@@ -10474,6 +10759,7 @@
                 padding: 0.7rem;
                 font-size: 0.85rem;
             }
+
             .withdrawal-info-box {
                 padding: 0.7rem;
                 font-size: 0.75rem;
@@ -11460,6 +11746,7 @@
 
         /* Full Page Modal Responsive */
         @media (max-width: 768px) {
+
             .modal-overlay,
             .deposit-modal-overlay,
             .withdrawal-modal-overlay,
@@ -13848,30 +14135,105 @@
         </div>
     </div>
 
-    <!-- Auth Modals -->
-    <div class="modal-overlay" id="authModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeAuthModal()">×</button>
-            <div id="signupForm">
-                <h2>Join Pose</h2>
-                <div id="authError" class="error-msg" style="display:none;"></div>
-                <input type="text" id="signupName" placeholder="Full Name" required>
-                <input type="text" id="signupUsername" placeholder="Username" required>
-                <input type="email" id="signupEmail" placeholder="Email" required>
-                <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" required>
-                <button class="modal-btn" onclick="handleSignup()">Sign Up</button>
-                <div class="modal-switch">
-                    Already have an account? <a onclick="switchToLogin()">Log In</a>
-                </div>
+    <!-- Auth Screen (NEW PREMIUM UI) -->
+    <div id="auth-screen" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="personal">Personal</button>
+                <button class="tab-btn" data-tab="business">Business</button>
+                <button class="tab-btn guest-btn" data-tab="guest">
+                    <i class="fas fa-user-secret"></i> Guest
+                </button>
             </div>
-            <div id="loginForm" style="display:none;">
-                <h2>Welcome Back</h2>
-                <div id="loginError" class="error-msg" style="display:none;"></div>
-                <input type="email" id="loginEmail" placeholder="Email" required>
-                <input type="password" id="loginPassword" placeholder="Password" required>
-                <button class="modal-btn" onclick="handleLogin()">Log In</button>
-                <div class="modal-switch">
-                    Don't have an account? <a onclick="switchToSignup()">Sign Up</a>
+
+            <div class="auth-forms">
+                <!-- Personal Account Forms -->
+                <div class="form-container active" id="personal-forms">
+                    <div class="auth-toggle">
+                        <button class="toggle-btn active" data-form="signup">Sign Up</button>
+                        <button class="toggle-btn" data-form="login">Login</button>
+                    </div>
+
+                    <!-- Personal Signup Form -->
+                    <form id="personal-signup-form" class="auth-form active">
+                        <div id="personal-signup-error" class="error-msg" style="display:none;"></div>
+                        <input type="text" placeholder="Full Name" id="personal-name" required>
+                        <input type="text" placeholder="Username" id="personal-username" required>
+                        <input type="email" placeholder="Email" id="personal-email" required>
+                        <div class="password-container">
+                            <input type="password" placeholder="Password" id="personal-password" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="submit-btn">Sign Up</button>
+                        <button type="button" class="google-btn" onclick="handleGoogleSignup()">
+                            <img src="https://i.ibb.co/tDVLym4/download.png" alt="Google">
+                            Continue with Google
+                        </button>
+                    </form>
+
+                    <!-- Personal Login Form -->
+                    <form id="personal-login-form" class="auth-form" style="display: none;">
+                        <div id="personal-login-error" class="error-msg" style="display:none;"></div>
+                        <input type="email" placeholder="Email" id="personal-login-email" required>
+                        <div class="password-container">
+                            <input type="password" placeholder="Password" id="personal-login-password" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="submit-btn">Login</button>
+                        <button type="button" class="google-btn" onclick="handleGoogleLogin()">
+                            <img src="https://i.ibb.co/tDVLym4/download.png" alt="Google">
+                            Continue with Google
+                        </button>
+                        <button type="button" class="forgot-password">Forgot Password?</button>
+                    </form>
+                </div>
+
+                <!-- Business Account Forms -->
+                <div class="form-container" id="business-forms">
+                    <div class="auth-toggle">
+                        <button class="toggle-btn active" data-form="signup">Sign Up</button>
+                        <button class="toggle-btn" data-form="login">Login</button>
+                    </div>
+
+                    <!-- Business Signup Form -->
+                    <form id="business-signup-form" class="auth-form active">
+                        <div id="business-signup-error" class="error-msg" style="display:none;"></div>
+                        <input type="text" placeholder="Business Name" id="business-name" required>
+                        <input type="email" placeholder="Business Email" id="business-email" required>
+                        <div class="password-container">
+                            <input type="password" placeholder="Password" id="business-password" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="submit-btn">Sign Up</button>
+                        <button type="button" class="google-btn" onclick="handleGoogleSignup()">
+                            <img src="https://i.ibb.co/tDVLym4/download.png" alt="Google">
+                            Continue with Google
+                        </button>
+                    </form>
+
+                    <!-- Business Login Form -->
+                    <form id="business-login-form" class="auth-form">
+                        <div id="business-login-error" class="error-msg" style="display:none;"></div>
+                        <input type="email" placeholder="Business Email" id="business-login-email" required>
+                        <div class="password-container">
+                            <input type="password" placeholder="Password" id="business-login-password" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="submit-btn">Login</button>
+                        <button type="button" class="google-btn" onclick="handleGoogleLogin()">
+                            <img src="https://i.ibb.co/tDVLym4/download.png" alt="Google">
+                            Continue with Google
+                        </button>
+                        <button type="button" class="forgot-password">Forgot Password?</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -16193,6 +16555,20 @@
     <!-- Flutterwave Payment Gateway -->
     <script src="https://checkout.flutterwave.com/v3.js"></script>
 
+    <!-- Early Initialization Script - Declare globals BEFORE main script -->
+    <script>
+        // Declare wallet data early to avoid ReferenceError
+        let walletData = {
+            bankDetails: null,
+            balance: 0,
+            pCoinBalance: 0,
+            transactions: [],
+            accountID: ''
+        };
+
+        let currentUser = null;
+    </script>
+
     <script>
         console.log('Script loaded!');
 
@@ -16213,7 +16589,81 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        let currentUser = null;
+        // currentUser already declared in early initialization script above
+
+        // ====== Bank List by Country (Initialize Early) ======
+        const BANKS_BY_COUNTRY = {
+            // MOST POPULAR - Easy money transfer corridors from Nigeria
+            NG: { // Nigeria (Home Country)
+                name: '🇳🇬 Nigeria',
+                banks: [
+                    { name: 'GTBank', code: 'GT', icon: '🏦' },
+                    { name: 'First Bank', code: 'FB', icon: '🏦' },
+                    { name: 'Access Bank', code: 'AB', icon: '🏦' },
+                    { name: 'Zenith Bank', code: 'ZB', icon: '🏦' },
+                    { name: 'FCMB', code: 'FCMB', icon: '🏦' },
+                    { name: 'UBA', code: 'UBA', icon: '🏦' },
+                    { name: 'Sterling Bank', code: 'SB', icon: '🏦' },
+                    { name: 'Moniepoint', code: 'MP', icon: '📱' },
+                    { name: 'Opay', code: 'OP', icon: '📱' },
+                    { name: 'Palmpay', code: 'PP', icon: '📱' },
+                    { name: 'Kuda Bank', code: 'KUDA', icon: '📱' },
+                ]
+            },
+            // POPULAR DESTINATIONS
+            US: {
+                name: '🇺🇸 United States',
+                banks: [
+                    { name: 'Chase Bank', code: 'CHB', icon: '🏦' },
+                    { name: 'Bank of America', code: 'BOA', icon: '🏦' },
+                    { name: 'Wells Fargo', code: 'WF', icon: '🏦' },
+                    { name: 'Citibank', code: 'CITI', icon: '🏦' },
+                ]
+            },
+            UK: {
+                name: '🇬🇧 United Kingdom',
+                banks: [
+                    { name: 'HSBC', code: 'HSBC', icon: '🏦' },
+                    { name: 'Barclays', code: 'BARC', icon: '🏦' },
+                    { name: 'Lloyds', code: 'LLOY', icon: '🏦' },
+                ]
+            },
+            CA: {
+                name: '🇨🇦 Canada',
+                banks: [
+                    { name: 'TD Bank', code: 'TD', icon: '🏦' },
+                    { name: 'RBC', code: 'RBC', icon: '🏦' },
+                ]
+            },
+            AU: {
+                name: '🇦🇺 Australia',
+                banks: [
+                    { name: 'Commonwealth Bank', code: 'CBA', icon: '🏦' },
+                    { name: 'Westpac', code: 'WBC', icon: '🏦' },
+                ]
+            },
+            GH: {
+                name: '🇬🇭 Ghana',
+                banks: [
+                    { name: 'Ecobank', code: 'ECO', icon: '🏦' },
+                    { name: 'MTN Mobile Money', code: 'MOMO', icon: '📱' },
+                ]
+            },
+            KE: {
+                name: '🇰🇪 Kenya',
+                banks: [
+                    { name: 'Equity Bank', code: 'EQB', icon: '🏦' },
+                    { name: 'M-Pesa', code: 'MPESA', icon: '📱' },
+                ]
+            },
+            UG: {
+                name: '🇺🇬 Uganda',
+                banks: [
+                    { name: 'Stanbic Bank', code: 'SBU', icon: '🏦' },
+                    { name: 'MTN Mobile Money', code: 'MOMO', icon: '📱' },
+                ]
+            },
+        };
 
         // ====== Cloudinary Config ======
         const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
@@ -16846,6 +17296,292 @@
             document.getElementById('authModal').classList.remove('active');
             document.getElementById('authError').style.display = 'none';
             document.getElementById('loginError').style.display = 'none';
+        }
+
+        // ====== NEW AUTH SCREEN HANDLERS ======
+        // Auth Tab Switching
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab button event listeners
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const tabType = this.getAttribute('data-tab');
+
+                    // Remove active from all tabs
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Hide all form containers
+                    document.querySelectorAll('.form-container').forEach(fc => fc.classList.remove('active'));
+
+                    // Show selected form container
+                    if (tabType === 'personal') {
+                        document.getElementById('personal-forms').classList.add('active');
+                    } else if (tabType === 'business') {
+                        document.getElementById('business-forms').classList.add('active');
+                    } else if (tabType === 'guest') {
+                        handleGuestMode();
+                    }
+                });
+            });
+
+            // Toggle form (signup/login) within each tab
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const formType = this.getAttribute('data-form');
+                    const container = this.closest('.form-container');
+
+                    // Remove active from all toggles in this container
+                    container.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Hide all forms in this container
+                    container.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+
+                    // Show selected form
+                    if (formType === 'signup') {
+                        const signupForm = container.querySelector('[id$="-signup-form"]');
+                        if (signupForm) signupForm.classList.add('active');
+                    } else if (formType === 'login') {
+                        const loginForm = container.querySelector('[id$="-login-form"]');
+                        if (loginForm) loginForm.classList.add('active');
+                    }
+                });
+            });
+
+            // Password visibility toggle
+            document.querySelectorAll('.toggle-password').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const input = this.closest('.password-container').querySelector('input');
+                    const icon = this.querySelector('i');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.add('fa-eye');
+                        icon.classList.remove('fa-eye-slash');
+                    }
+                });
+            });
+
+            // Form submission handlers
+            document.getElementById('personal-signup-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('personal-name').value.trim();
+                const username = document.getElementById('personal-username').value.trim();
+                const email = document.getElementById('personal-email').value.trim();
+                const password = document.getElementById('personal-password').value;
+
+                if (!name || !username || !email || !password) {
+                    showAuthError('Please fill in all fields');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showAuthError('Password must be at least 6 characters');
+                    return;
+                }
+
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+
+                    await db.collection('users').doc(user.uid).set({
+                        name: name,
+                        username: username,
+                        email: email,
+                        accountType: 'personal',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        followers: 0,
+                        following: 0,
+                        likes: 0,
+                        views: 0,
+                        earnings: 0
+                    });
+
+                    hideAuthScreen();
+                    location.reload();
+                } catch (error) {
+                    showAuthError(error.message);
+                }
+            });
+
+            document.getElementById('personal-login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('personal-login-email').value.trim();
+                const password = document.getElementById('personal-login-password').value;
+
+                if (!email || !password) {
+                    showAuthError('Please fill in all fields');
+                    return;
+                }
+
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    hideAuthScreen();
+                    location.reload();
+                } catch (error) {
+                    showAuthError(error.message);
+                }
+            });
+
+            document.getElementById('business-signup-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('business-name').value.trim();
+                const email = document.getElementById('business-email').value.trim();
+                const password = document.getElementById('business-password').value;
+
+                if (!name || !email || !password) {
+                    showAuthError('Please fill in all fields');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showAuthError('Password must be at least 6 characters');
+                    return;
+                }
+
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+
+                    await db.collection('users').doc(user.uid).set({
+                        name: name,
+                        email: email,
+                        accountType: 'business',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        followers: 0,
+                        following: 0,
+                        revenue: 0,
+                        products: 0
+                    });
+
+                    hideAuthScreen();
+                    location.reload();
+                } catch (error) {
+                    showAuthError(error.message);
+                }
+            });
+
+            document.getElementById('business-login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('business-login-email').value.trim();
+                const password = document.getElementById('business-login-password').value;
+
+                if (!email || !password) {
+                    showAuthError('Please fill in all fields');
+                    return;
+                }
+
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    hideAuthScreen();
+                    location.reload();
+                } catch (error) {
+                    showAuthError(error.message);
+                }
+            });
+
+            // Forgot password
+            document.querySelectorAll('.forgot-password').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const email = btn.closest('form').querySelector('input[type="email"]').value;
+
+                    if (!email) {
+                        showAuthError('Please enter your email first');
+                        return;
+                    }
+
+                    try {
+                        await auth.sendPasswordResetEmail(email);
+                        showAuthError('Password reset email sent. Check your inbox.');
+                    } catch (error) {
+                        showAuthError(error.message);
+                    }
+                });
+            });
+        });
+
+        function showAuthScreen() {
+            const authScreen = document.getElementById('auth-screen');
+            if (authScreen) {
+                authScreen.style.display = 'flex';
+            }
+        }
+
+        function hideAuthScreen() {
+            const authScreen = document.getElementById('auth-screen');
+            if (authScreen) {
+                authScreen.style.display = 'none';
+            }
+        }
+
+        function showAuthError(message) {
+            // Show error in all auth forms
+            const errorElements = document.querySelectorAll('.auth-form .error-msg');
+            if (errorElements.length > 0) {
+                errorElements.forEach(el => {
+                    el.textContent = message;
+                    el.style.display = 'block';
+                });
+            } else {
+                // Create error message if doesn't exist
+                const activeForm = document.querySelector('.auth-form.active');
+                if (activeForm) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-msg';
+                    errorDiv.textContent = message;
+                    activeForm.insertBefore(errorDiv, activeForm.firstChild);
+                }
+            }
+        }
+
+        function handleGuestMode() {
+            // Set guest flag in session storage
+            sessionStorage.setItem('guestMode', 'true');
+            hideAuthScreen();
+            location.reload();
+        }
+
+        function handleGoogleSignup() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    const accountType = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+
+                    db.collection('users').doc(user.uid).set({
+                        name: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL,
+                        accountType: accountType,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        followers: 0,
+                        following: 0
+                    }, { merge: true });
+
+                    hideAuthScreen();
+                    location.reload();
+                })
+                .catch((error) => {
+                    showAuthError(error.message);
+                });
+        }
+
+        function handleGoogleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(() => {
+                    hideAuthScreen();
+                    location.reload();
+                })
+                .catch((error) => {
+                    showAuthError(error.message);
+                });
         }
 
         // Switch to Login
@@ -34269,13 +35005,13 @@ For more help, visit: help.pose.app
             const walletModal = document.getElementById('walletModal');
             if (walletModal) {
                 walletModal.classList.add('active');
-                
+
                 // Show loading state
                 const container = document.getElementById('walletHistoryContainer');
                 if (container) {
                     container.innerHTML = '<div style="text-align: center; padding: 2rem;"><span class="loading-spinner"></span> Loading...</div>';
                 }
-                
+
                 loadWalletData();
                 initializeBankList(); // Initialize bank dropdown
             }
@@ -34322,7 +35058,7 @@ For more help, visit: help.pose.app
                     document.getElementById('displayAccountNumber').textContent = '**** ' + bankDetails.accountNumber.slice(-4);
                     document.getElementById('displayAccountName').textContent = bankDetails.accountName;
                     document.getElementById('savedBankInfo').style.display = 'block';
-                    
+
                     // Load saved bank details into the walletData object
                     walletData.bankDetails = bankDetails;
                 } else {
@@ -34336,64 +35072,75 @@ For more help, visit: help.pose.app
                 loadWalletHistory();
 
                 console.log('✅ Wallet data loaded:', { walletBalance, pCoinBalance, bankDetails });
-                } catch (error) {
+            } catch (error) {
                 console.error('❌ Error loading wallet data:', error);
-                }
-                }
+            }
+        }
 
-                // Load wallet history from Firebase
-                async function loadWalletHistory() {
-                try {
+        // Load wallet history from Firebase (Optimized with parallel loading)
+        async function loadWalletHistory() {
+            try {
                 if (!currentUser) return;
 
                 const historyData = [];
 
-                // Load user data
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                // Load user data and other queries in parallel
+                const userDocPromise = db.collection('users').doc(currentUser.uid).get();
+                const withdrawalPromise = db.collection('posewithdrawalrequests')
+                    .where('userId', '==', currentUser.uid)
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .get()
+                    .catch(error => {
+                        console.log('No withdrawals or error:', error.message);
+                        return { size: 0, forEach: () => { } };
+                    });
+
+                const transactionPromise = db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('walletTransactions')
+                    .orderBy('date', 'desc')
+                    .limit(100)
+                    .get()
+                    .catch(error => {
+                        console.log('No transactions or error:', error.message);
+                        return { size: 0, forEach: () => { } };
+                    });
+
+                // Wait for all queries in parallel
+                const [userDoc, withdrawalSnapshot, transactionSnapshot] = await Promise.all([
+                    userDocPromise,
+                    withdrawalPromise,
+                    transactionPromise
+                ]);
+
                 const userData = userDoc.data() || {};
-                
                 console.log('User data for history:', userData);
 
-                // Load withdrawal requests
-                try {
-                    const withdrawalSnapshot = await db.collection('posewithdrawalrequests')
-                        .where('userId', '==', currentUser.uid)
-                        .orderBy('createdAt', 'desc')
-                        .limit(50)
-                        .get();
-
-                    withdrawalSnapshot.forEach(doc => {
-                        const data = doc.data();
-                        historyData.push({
-                            type: 'withdrawal',
-                            id: doc.id,
-                            amount: data.amount,
-                            fee: data.fee,
-                            youReceive: data.youReceive,
-                            processingType: data.processingType,
-                            status: data.status,
-                            date: data.createdAt,
-                            bankName: data.bankDetails?.bankName,
-                            accountNumber: data.bankDetails?.accountNumberMasked
-                        });
+                // Process withdrawal requests
+                withdrawalSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    historyData.push({
+                        type: 'withdrawal',
+                        id: doc.id,
+                        amount: data.amount,
+                        fee: data.fee,
+                        youReceive: data.youReceive,
+                        processingType: data.processingType,
+                        status: data.status,
+                        date: data.createdAt,
+                        bankName: data.bankDetails?.bankName,
+                        accountNumber: data.bankDetails?.accountNumberMasked
                     });
-                    console.log('Loaded ' + withdrawalSnapshot.size + ' withdrawals');
-                } catch (error) {
-                    console.log('No withdrawals found or error:', error.message);
-                }
-                
-                // Load deposit and pCoin transactions from walletTransactions subcollection
+                });
+                console.log('Loaded ' + withdrawalSnapshot.size + ' withdrawals');
+
+                // Process deposit and pCoin transactions
                 try {
-                    const transactionSnapshot = await db.collection('users')
-                        .doc(currentUser.uid)
-                        .collection('walletTransactions')
-                        .orderBy('date', 'desc')
-                        .limit(100)
-                        .get();
 
                     transactionSnapshot.forEach(doc => {
                         const data = doc.data();
-                        
+
                         if (data.type === 'Deposit') {
                             historyData.push({
                                 type: 'deposit',
@@ -34463,7 +35210,7 @@ For more help, visit: help.pose.app
 
                 // Display history
                 displayWalletHistory(historyData);
-                } catch (error) {
+            } catch (error) {
                 console.error('Error loading wallet history:', error);
                 // Show empty state
                 const container = document.getElementById('walletHistoryContainer');
@@ -34476,15 +35223,20 @@ For more help, visit: help.pose.app
                         </div>
                     `;
                 }
-                }
-                }
+            }
+        }
 
-                // Display wallet history with filters
-                function displayWalletHistory(historyData) {
-                const container = document.getElementById('walletHistoryContainer');
-                if (!container) return;
+        // Store history data globally for filtering
+        window.walletHistoryData = historyData;
+        window.currentHistoryFilter = 'all';
+        window.currentDateFilter = 'all';
 
-                if (historyData.length === 0) {
+        // Display wallet history with filters
+        function displayWalletHistory(historyData) {
+            const container = document.getElementById('walletHistoryContainer');
+            if (!container) return;
+
+            if (historyData.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; color: #999; padding: 2rem;">
                         <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
@@ -34492,31 +35244,58 @@ For more help, visit: help.pose.app
                     </div>
                 `;
                 return;
-                }
+            }
 
-                let filterHTML = `
-                <div style="display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                    <button class="history-filter-btn active" onclick="filterWalletHistory('all')" style="padding: 8px 16px; background: #4C1D95; color: white; border: none; border-radius: 6px; cursor: pointer;">All</button>
-                    <button class="history-filter-btn" onclick="filterWalletHistory('withdrawal')" style="padding: 8px 16px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer;">Withdrawals</button>
-                    <button class="history-filter-btn" onclick="filterWalletHistory('deposit')" style="padding: 8px 16px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer;">Deposits</button>
-                    <button class="history-filter-btn" onclick="filterWalletHistory('pcoin')" style="padding: 8px 16px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer;">pCoin Purchases</button>
-                    <button class="history-filter-btn" onclick="filterWalletHistory('bank_details')" style="padding: 8px 16px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer;">Bank Details</button>
-                    <button class="history-filter-btn" onclick="filterWalletHistory('pin')" style="padding: 8px 16px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer;">PIN Events</button>
+            // Store for global access (limit to 200 items for performance)
+            window.walletHistoryData = historyData.slice(0, 200);
+
+            let filterHTML = `
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                    <!-- Search Bar -->
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <div style="flex: 1; position: relative;">
+                            <input type="text" id="historySearchInput" placeholder="Search transactions..." oninput="searchWalletHistory()" 
+                                style="width: 100%; padding: 10px 15px 10px 35px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: #FFFFFF; font-size: 0.9rem;">
+                            <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #4C1D95;"></i>
+                        </div>
+                    </div>
+
+                    <!-- Type Filters -->
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="history-filter-btn active" onclick="filterWalletHistory('all')" style="padding: 8px 14px; background: #4C1D95; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">All</button>
+                        <button class="history-filter-btn" onclick="filterWalletHistory('withdrawal')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">Withdrawals</button>
+                        <button class="history-filter-btn" onclick="filterWalletHistory('deposit')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">Deposits</button>
+                        <button class="history-filter-btn" onclick="filterWalletHistory('pcoin')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">pCoin</button>
+                        <button class="history-filter-btn" onclick="filterWalletHistory('bank_details')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">Bank</button>
+                        <button class="history-filter-btn" onclick="filterWalletHistory('pin')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">PIN</button>
+                    </div>
+
+                    <!-- Date Filters -->
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="history-date-btn active" onclick="filterByDate('all')" style="padding: 8px 14px; background: #4C1D95; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">All Time</button>
+                        <button class="history-date-btn" onclick="filterByDate('today')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">Today</button>
+                        <button class="history-date-btn" onclick="filterByDate('week')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">This Week</button>
+                        <button class="history-date-btn" onclick="filterByDate('month')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">This Month</button>
+                        <button class="history-date-btn" onclick="filterByDate('year')" style="padding: 8px 14px; background: #333; color: #999; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">This Year</button>
+                    </div>
                 </div>
                 `;
 
-                let historyHTML = filterHTML + '<div id="historyList">';
+            let historyHTML = filterHTML + '<div id="historyList">';
 
-                historyData.forEach(item => {
+            // Limit display to first 100 items for performance
+            const displayItems = historyData.slice(0, 100);
+
+            displayItems.forEach(item => {
                 let itemHTML = '';
 
                 if (item.type === 'withdrawal') {
-                    const statusColor = item.status === 'pending_normal' || item.status === 'pending_speedy' ? '#FFB74D' : 
-                                       item.status === 'completed' ? '#22c55e' : '#EF4444';
+                    const statusColor = item.status === 'pending_normal' || item.status === 'pending_speedy' ? '#FFB74D' :
+                        item.status === 'completed' ? '#22c55e' : '#EF4444';
                     const statusText = item.status === 'pending_normal' ? 'Pending (Normal)' :
-                                      item.status === 'pending_speedy' ? 'Pending (Speedy)' :
-                                      item.status === 'completed' ? 'Completed' : 'Failed';
-                    
+                        item.status === 'pending_speedy' ? 'Pending (Speedy)' :
+                            item.status === 'completed' ? 'Completed' : 'Failed';
+
                     itemHTML = `
                         <div class="wallet-history-entry" style="background: rgba(76, 29, 149, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid ${statusColor};">
                             <div style="display: flex; justify-content: space-between; align-items: start;">
@@ -34545,11 +35324,11 @@ For more help, visit: help.pose.app
                         </div>
                     `;
                 } else if (item.type === 'deposit') {
-                    const statusColor = item.status === 'pending' ? '#FFB74D' : 
-                                       item.status === 'completed' ? '#22c55e' : '#EF4444';
+                    const statusColor = item.status === 'pending' ? '#FFB74D' :
+                        item.status === 'completed' ? '#22c55e' : '#EF4444';
                     const statusText = item.status === 'pending' ? 'Pending' :
-                                      item.status === 'completed' ? 'Completed' : 'Failed';
-                    
+                        item.status === 'completed' ? 'Completed' : 'Failed';
+
                     itemHTML = `
                         <div class="wallet-history-entry" style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid ${statusColor};">
                             <div style="display: flex; justify-content: space-between; align-items: start;">
@@ -34601,12 +35380,12 @@ For more help, visit: help.pose.app
                         </div>
                     `;
                 } else if (item.type === 'pcoin_purchase') {
-                     const statusColor = item.status === 'pending' ? '#FFB74D' : 
-                                        item.status === 'completed' ? '#22c55e' : '#EF4444';
-                     const statusText = item.status === 'pending' ? 'Pending' :
-                                       item.status === 'completed' ? 'Completed' : 'Failed';
-                     
-                     itemHTML = `
+                    const statusColor = item.status === 'pending' ? '#FFB74D' :
+                        item.status === 'completed' ? '#22c55e' : '#EF4444';
+                    const statusText = item.status === 'pending' ? 'Pending' :
+                        item.status === 'completed' ? 'Completed' : 'Failed';
+
+                    itemHTML = `
                          <div class="wallet-history-entry" style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid ${statusColor};">
                              <div style="display: flex; justify-content: space-between; align-items: start;">
                                  <div style="flex: 1;">
@@ -34634,8 +35413,8 @@ For more help, visit: help.pose.app
                          </div>
                      `;
                 } else if (item.type === 'pin_event') {
-                     const actionIcon = item.action === 'created' ? 'fa-plus' : 'fa-refresh';
-                     itemHTML = `
+                    const actionIcon = item.action === 'created' ? 'fa-plus' : 'fa-refresh';
+                    itemHTML = `
                          <div class="wallet-history-entry" style="background: rgba(100, 200, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid #64C8FF;">
                              <div style="display: flex; justify-content: space-between; align-items: start;">
                                  <div style="flex: 1;">
@@ -34655,29 +35434,29 @@ For more help, visit: help.pose.app
                              </div>
                          </div>
                      `;
-                 }
-
-                historyHTML += itemHTML;
-                });
-
-                historyHTML += '</div>';
-                container.innerHTML = historyHTML;
                 }
 
-                // Filter wallet history
-                function filterWalletHistory(filter) {
-                const historyList = document.getElementById('historyList');
-                const entries = historyList.querySelectorAll('.wallet-history-entry');
+                historyHTML += itemHTML;
+            });
 
-                // Update button styles
-                document.querySelectorAll('.history-filter-btn').forEach(btn => {
+            historyHTML += '</div>';
+            container.innerHTML = historyHTML;
+        }
+
+        // Filter wallet history
+        function filterWalletHistory(filter) {
+            const historyList = document.getElementById('historyList');
+            const entries = historyList.querySelectorAll('.wallet-history-entry');
+
+            // Update button styles
+            document.querySelectorAll('.history-filter-btn').forEach(btn => {
                 btn.style.background = '#333';
                 btn.style.color = '#999';
-                });
-                event.target.style.background = '#4C1D95';
-                event.target.style.color = 'white';
+            });
+            event.target.style.background = '#4C1D95';
+            event.target.style.color = 'white';
 
-                entries.forEach(entry => {
+            entries.forEach(entry => {
                 if (filter === 'all') {
                     entry.style.display = 'block';
                 } else if (filter === 'withdrawal' && entry.textContent.includes('Withdrawal')) {
@@ -34693,17 +35472,81 @@ For more help, visit: help.pose.app
                 } else {
                     entry.style.display = 'none';
                 }
+            });
+        }
+
+        // Search wallet history
+        function searchWalletHistory() {
+            const searchInput = document.getElementById('historySearchInput');
+            if (!searchInput) return;
+            const searchTerm = searchInput.value.toLowerCase();
+            const historyList = document.getElementById('historyList');
+            const entries = historyList.querySelectorAll('.wallet-history-entry');
+
+            entries.forEach(entry => {
+                const entryText = entry.textContent.toLowerCase();
+                if (searchTerm === '' || entryText.includes(searchTerm)) {
+                    entry.style.display = 'block';
+                } else {
+                    entry.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter by date
+        function filterByDate(dateFilter) {
+            const historyList = document.getElementById('historyList');
+            const entries = historyList.querySelectorAll('.wallet-history-entry');
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
+            const yearAgo = new Date(now.getFullYear(), 0, 1);
+
+            // Update button styles
+            document.querySelectorAll('.history-date-btn').forEach(btn => {
+                btn.style.background = '#333';
+                btn.style.color = '#999';
+            });
+            event.target.style.background = '#4C1D95';
+            event.target.style.color = 'white';
+
+            entries.forEach(entry => {
+                const dateText = Array.from(entry.querySelectorAll('div')).find(div => {
+                    const text = div.textContent;
+                    return text.match(/\d{1,2}\/\d{1,2}\/\d{4}/);
                 });
+
+                if (!dateText) {
+                    entry.style.display = dateFilter === 'all' ? 'block' : 'none';
+                    return;
                 }
 
-        // Wallet data storage
-        let walletData = {
-            bankDetails: null,
-            balance: 0,
-            pCoinBalance: 0,
-            transactions: [],
-            accountID: ''
-        };
+                const dateString = dateText.textContent.split('\n')[0];
+                const transactionDate = new Date(dateString);
+
+                let shouldShow = false;
+                switch (dateFilter) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'today':
+                        shouldShow = transactionDate >= today;
+                        break;
+                    case 'week':
+                        shouldShow = transactionDate >= weekAgo;
+                        break;
+                    case 'month':
+                        shouldShow = transactionDate >= monthAgo;
+                        break;
+                    case 'year':
+                        shouldShow = transactionDate >= yearAgo;
+                        break;
+                }
+
+                entry.style.display = shouldShow ? 'block' : 'none';
+            });
+        }
 
         // Switch wallet tabs
         function switchWalletTab(tabName) {
@@ -34719,77 +35562,9 @@ For more help, visit: help.pose.app
             event.target.classList.add('active');
         }
 
-        // Save Bank Details
-        // Comprehensive bank list with 200+ banks organized by country (Nigeria first, then countries with easy transfers)
-        const BANKS_BY_COUNTRY = {
-            // MOST POPULAR - Easy money transfer corridors from Nigeria
-            NG: { // Nigeria (Home Country)
-                name: '🇳🇬 Nigeria',
-                banks: [
-                    { name: 'GTBank', code: 'GT', icon: '🏦' },
-                    { name: 'First Bank', code: 'FB', icon: '🏦' },
-                    { name: 'Access Bank', code: 'AB', icon: '🏦' },
-                    { name: 'Zenith Bank', code: 'ZB', icon: '🏦' },
-                    { name: 'FCMB', code: 'FCMB', icon: '🏦' },
-                    { name: 'UBA', code: 'UBA', icon: '🏦' },
-                    { name: 'Sterling Bank', code: 'SB', icon: '🏦' },
-                    { name: 'Moniepoint', code: 'MP', icon: '📱' },
-                    { name: 'Opay', code: 'OP', icon: '📱' },
-                    { name: 'Palmpay', code: 'PP', icon: '📱' },
-                    { name: 'Kuda Bank', code: 'KUDA', icon: '📱' },
-                ]
-            },
-            // POPULAR DESTINATIONS - West Africa
-            GH: { // Ghana
-                name: '🇬🇭 Ghana',
-                banks: [
-                    { name: 'GCB Bank', code: 'GCB', icon: '🏦' },
-                    { name: 'Ecobank Ghana', code: 'ECO-GH', icon: '🏦' },
-                    { name: 'Standard Chartered Ghana', code: 'SC-GH', icon: '🏦' },
-                    { name: 'Zenith Bank Ghana', code: 'ZB-GH', icon: '🏦' },
-                    { name: 'Fidelity Bank Ghana', code: 'FBN-GH', icon: '🏦' },
-                    { name: 'Stanbic Bank Ghana', code: 'STANBIC-GH', icon: '🏦' },
-                ]
-            },
-            KE: { // Kenya
-                name: '🇰🇪 Kenya',
-                banks: [
-                    { name: 'KCB Group', code: 'KCB', icon: '🏦' },
-                    { name: 'Equity Bank', code: 'EQUITY', icon: '🏦' },
-                    { name: 'Standard Chartered Kenya', code: 'SC-KE', icon: '🏦' },
-                    { name: 'Barclays Bank Kenya', code: 'BARC-KE', icon: '🏦' },
-                    { name: 'Safaricom', code: 'SAFARICOM', icon: '📱' },
-                    { name: 'I&M Bank', code: 'IMB', icon: '🏦' },
-                ]
-            },
-            ZA: { // South Africa
-                name: '🇿🇦 South Africa',
-                banks: [
-                    { name: 'Nedbank', code: 'NED', icon: '🏦' },
-                    { name: 'FNB', code: 'FNB', icon: '🏦' },
-                    { name: 'Standard Bank', code: 'STDB', icon: '🏦' },
-                    { name: 'ABSA', code: 'ABSA', icon: '🏦' },
-                    { name: 'Capitec', code: 'CAP', icon: '📱' },
-                    { name: 'Investec', code: 'INV', icon: '🏦' },
-                ]
-            },
-            // DIASPORA HUBS - Europe & North America
-            GB: { // United Kingdom
-                name: '🇬🇧 United Kingdom',
-                banks: [
-                    { name: 'HSBC', code: 'HSBC', icon: '🏦' },
-                    { name: 'Barclays', code: 'BARC', icon: '🏦' },
-                    { name: 'Lloyd Bank', code: 'LLOYD', icon: '🏦' },
-                    { name: 'NatWest', code: 'NW', icon: '🏦' },
-                    { name: 'Standard Chartered', code: 'SC', icon: '🏦' },
-                    { name: 'Santander UK', code: 'SANT', icon: '🏦' },
-                    { name: 'Revolut', code: 'REV', icon: '📱' },
-                    { name: 'Wise', code: 'WISE', icon: '📱' },
-                    { name: 'Metro Bank', code: 'METRO', icon: '🏦' },
-                    { name: 'Virgin Money', code: 'VM', icon: '🏦' },
-                ]
-            },
-            US: { // United States
+        // Wallet feature functions
+        const banksByCountry = {
+            USA: { // United States
                 name: '🇺🇸 United States',
                 banks: [
                     { name: 'Bank of America', code: 'BOA', icon: '🏦' },
@@ -34885,21 +35660,6 @@ For more help, visit: help.pose.app
                     { name: 'Banque de France', code: 'BDF', icon: '🏦' },
                     { name: 'LCL', code: 'LCL', icon: '🏦' },
                     { name: 'Revolut France', code: 'REV-FR', icon: '📱' },
-                ]
-            },
-            IN: { // India
-                name: '🇮🇳 India',
-                banks: [
-                    { name: 'HDFC Bank', code: 'HDFC', icon: '🏦' },
-                    { name: 'ICICI Bank', code: 'ICICI', icon: '🏦' },
-                    { name: 'Axis Bank', code: 'AXIS', icon: '🏦' },
-                    { name: 'State Bank of India', code: 'SBI', icon: '🏦' },
-                    { name: 'Kotak Bank', code: 'KOTAK', icon: '🏦' },
-                    { name: 'IndusInd Bank', code: 'INDUS', icon: '🏦' },
-                    { name: 'Canara Bank', code: 'CANARA', icon: '🏦' },
-                    { name: 'IDBI Bank', code: 'IDBI', icon: '🏦' },
-                    { name: 'Yes Bank', code: 'YES', icon: '🏦' },
-                    { name: 'Bank of Baroda', code: 'BOB', icon: '🏦' },
                 ]
             },
             JP: { // Japan
@@ -35150,102 +35910,102 @@ For more help, visit: help.pose.app
         }
 
         async function saveBankDetails() {
-             if (!selectedBank) {
-                 alert('❌ Please select a bank');
-                 return;
-             }
+            if (!selectedBank) {
+                alert('❌ Please select a bank');
+                return;
+            }
 
-             if (!selectedCountry) {
-                 alert('❌ Please select a country');
-                 return;
-             }
+            if (!selectedCountry) {
+                alert('❌ Please select a country');
+                return;
+            }
 
-             const accountNumber = document.getElementById('accountNumber').value.trim();
-             const accountName = document.getElementById('accountName').value.trim();
+            const accountNumber = document.getElementById('accountNumber').value.trim();
+            const accountName = document.getElementById('accountName').value.trim();
 
-             if (!accountNumber || !accountName) {
-                 alert('❌ Please fill all bank details');
-                 return;
-             }
+            if (!accountNumber || !accountName) {
+                alert('❌ Please fill all bank details');
+                return;
+            }
 
-             if (accountNumber.length !== 10 || !/^\d+$/.test(accountNumber)) {
-                 alert('❌ Account number must be exactly 10 digits');
-                 return;
-             }
+            if (accountNumber.length !== 10 || !/^\d+$/.test(accountNumber)) {
+                alert('❌ Account number must be exactly 10 digits');
+                return;
+            }
 
-             const currentUser = firebase.auth().currentUser;
-             if (!currentUser) {
-                 alert('❌ Please sign in first');
-                 return;
-             }
+            const currentUser = firebase.auth().currentUser;
+            if (!currentUser) {
+                alert('❌ Please sign in first');
+                return;
+            }
 
-             try {
-                 // Check if bank details were recently saved
-                 const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                 const userData = userDoc.data() || {};
-                 const lastBankSavedTime = userData.lastBankDetailsSave;
+            try {
+                // Check if bank details were recently saved
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data() || {};
+                const lastBankSavedTime = userData.lastBankDetailsSave;
 
-                 if (lastBankSavedTime) {
-                     const lastSavedDate = new Date(lastBankSavedTime);
-                     const now = new Date();
-                     const hoursSinceSaved = (now - lastSavedDate) / (1000 * 60 * 60);
+                if (lastBankSavedTime) {
+                    const lastSavedDate = new Date(lastBankSavedTime);
+                    const now = new Date();
+                    const hoursSinceSaved = (now - lastSavedDate) / (1000 * 60 * 60);
 
-                     if (hoursSinceSaved < 168) { // 7 days = 168 hours
-                         showBankLockPopup(lastBankSavedTime);
-                         return;
-                     }
-                 }
+                    if (hoursSinceSaved < 168) { // 7 days = 168 hours
+                        showBankLockPopup(lastBankSavedTime);
+                        return;
+                    }
+                }
 
-                 // Disable button and start timer
-                 const saveBtn = document.getElementById('saveBankBtn');
-                 saveBtn.disabled = true;
-                 saveBtn.style.opacity = '0.5';
-                 saveBtn.style.cursor = 'not-allowed';
-                 saveBtn.innerHTML = '<i class="fas fa-lock" style="margin-right: 8px;"></i>Locked for 7 Days';
+                // Disable button and start timer
+                const saveBtn = document.getElementById('saveBankBtn');
+                saveBtn.disabled = true;
+                saveBtn.style.opacity = '0.5';
+                saveBtn.style.cursor = 'not-allowed';
+                saveBtn.innerHTML = '<i class="fas fa-lock" style="margin-right: 8px;"></i>Locked for 7 Days';
 
-                 // Save to Firebase
-                 const countryData = BANKS_BY_COUNTRY[selectedCountry];
-                 const bankDetails = {
-                     countryCode: selectedCountry,
-                     countryName: countryData.name,
-                     bankName: selectedBank.name,
-                     bankCode: selectedBank.code,
-                     accountNumber: accountNumber,
-                     accountName: accountName,
-                     savedAt: new Date().toISOString()
-                 };
+                // Save to Firebase
+                const countryData = BANKS_BY_COUNTRY[selectedCountry];
+                const bankDetails = {
+                    countryCode: selectedCountry,
+                    countryName: countryData.name,
+                    bankName: selectedBank.name,
+                    bankCode: selectedBank.code,
+                    accountNumber: accountNumber,
+                    accountName: accountName,
+                    savedAt: new Date().toISOString()
+                };
 
-                 await db.collection('users').doc(currentUser.uid).update({
-                     'bankDetails': bankDetails,
-                     'lastBankDetailsSave': new Date().toISOString()
-                 });
+                await db.collection('users').doc(currentUser.uid).update({
+                    'bankDetails': bankDetails,
+                    'lastBankDetailsSave': new Date().toISOString()
+                });
 
-                 // Show success popup
-                 showBankSaveSuccessPopup(selectedBank.name, accountNumber, accountName, countryData.name);
+                // Show success popup
+                showBankSaveSuccessPopup(selectedBank.name, accountNumber, accountName, countryData.name);
 
-                 // Update display
-                 document.getElementById('displayBankName').textContent = selectedBank.name;
-                 document.getElementById('displayAccountNumber').textContent = '**** ' + accountNumber.slice(-4);
-                 document.getElementById('displayAccountName').textContent = accountName;
-                 document.getElementById('savedBankInfo').style.display = 'block';
-                 document.getElementById('savedBankInfo').style.animation = 'slideInUp 0.5s ease';
+                // Update display
+                document.getElementById('displayBankName').textContent = selectedBank.name;
+                document.getElementById('displayAccountNumber').textContent = '**** ' + accountNumber.slice(-4);
+                document.getElementById('displayAccountName').textContent = accountName;
+                document.getElementById('savedBankInfo').style.display = 'block';
+                document.getElementById('savedBankInfo').style.animation = 'slideInUp 0.5s ease';
 
-                 // Start 7-day countdown
-                 startBankEditCountdown(currentUser.uid);
+                // Start 7-day countdown
+                startBankEditCountdown(currentUser.uid);
 
-                 // Clear form
-                 document.getElementById('bankSearchInput').value = '';
-                 document.getElementById('accountNumber').value = '';
-                 document.getElementById('accountName').value = '';
-                 document.getElementById('selectedBankDisplay').style.display = 'none';
-                 document.getElementById('countrySelect').value = '';
-                 selectedBank = null;
-                 selectedCountry = null;
-             } catch (error) {
-                 console.error('Error saving bank details:', error);
-                 alert('❌ Error saving bank details. Please try again.');
-             }
-         }
+                // Clear form
+                document.getElementById('bankSearchInput').value = '';
+                document.getElementById('accountNumber').value = '';
+                document.getElementById('accountName').value = '';
+                document.getElementById('selectedBankDisplay').style.display = 'none';
+                document.getElementById('countrySelect').value = '';
+                selectedBank = null;
+                selectedCountry = null;
+            } catch (error) {
+                console.error('Error saving bank details:', error);
+                alert('❌ Error saving bank details. Please try again.');
+            }
+        }
 
         function showBankSaveSuccessPopup(bankName, accountNumber, accountName, countryName) {
             const popup = document.createElement('div');
@@ -35440,17 +36200,7 @@ For more help, visit: help.pose.app
                 return;
             }
 
-            // Load the latest wallet balance from Firebase
-            if (currentUser) {
-                try {
-                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                    const userData = userDoc.data() || {};
-                    walletData.balance = userData.walletBalance || 0;
-                } catch (error) {
-                    console.error('Error loading wallet balance:', error);
-                }
-            }
-
+            // Show modal immediately
             document.getElementById('withdrawalModalOverlay').classList.add('active');
             document.getElementById('withdrawalAmount').value = '';
             document.getElementById('withdrawalStatus').innerHTML = '';
@@ -35458,17 +36208,32 @@ For more help, visit: help.pose.app
 
             selectWithdrawalType('normal');
 
+            // Show current balance immediately
             document.getElementById('withdrawalAvailableBalance').textContent = walletData.balance.toLocaleString();
 
             document.getElementById('withdrawalBankName').textContent = `Bank: ${walletData.bankDetails.bankName}`;
             document.getElementById('withdrawalAccountNumber').textContent = `Account: **** ${walletData.bankDetails.accountNumber.slice(-4)}`;
             document.getElementById('withdrawalAccountName').textContent = `Name: ${walletData.bankDetails.accountName}`;
+
+            // Load the latest wallet balance from Firebase in the background (non-blocking)
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).get()
+                    .then(userDoc => {
+                        const userData = userDoc.data() || {};
+                        walletData.balance = userData.walletBalance || 0;
+                        // Update display with fresh balance
+                        document.getElementById('withdrawalAvailableBalance').textContent = walletData.balance.toLocaleString();
+                    })
+                    .catch(error => {
+                        console.error('Error loading wallet balance:', error);
+                    });
+            }
         }
 
         // Close withdrawal modal
-         function closeWithdrawalModal() {
-             closeModalWithAnimation('withdrawalModalOverlay');
-         }
+        function closeWithdrawalModal() {
+            closeModalWithAnimation('withdrawalModalOverlay');
+        }
 
         // Select withdrawal processing type
         function selectWithdrawalType(type) {
@@ -35559,7 +36324,7 @@ For more help, visit: help.pose.app
 
             // Use the current balance display value
             const currentBalance = parseInt(document.getElementById('withdrawalAvailableBalance').textContent.replace(/,/g, ''));
-            
+
             // Check if withdrawal amount is available (compare with amount, not total deduction)
             if (amount > currentBalance) {
                 statusDiv.className = 'withdrawal-status error';
@@ -35585,12 +36350,12 @@ For more help, visit: help.pose.app
                 // Show confirmation popup
                 showWithdrawalConfirmationPopup(amount, fee, withdrawalType, currentBalance);
             }, 300);
-            }
+        }
 
         // Show withdrawal confirmation popup
-         function showWithdrawalConfirmationPopup(amount, fee, withdrawalType, currentBalance) {
-             const popup = document.createElement('div');
-             popup.style.cssText = `
+        function showWithdrawalConfirmationPopup(amount, fee, withdrawalType, currentBalance) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
                  position: fixed;
                  top: 50%;
                  left: 50%;
@@ -35605,13 +36370,13 @@ For more help, visit: help.pose.app
                  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
                  animation: slideInUp 0.5s ease;
              `;
-             
-             const youReceive = amount - fee;
-             const processingTime = withdrawalType === 'normal' ? '1-24 hours' : '5-30 minutes';
-             const feePercentage = getWithdrawalFeePercentage(amount, withdrawalType);
-             const feePercent = (feePercentage * 100).toFixed(1);
-             
-             popup.innerHTML = `
+
+            const youReceive = amount - fee;
+            const processingTime = withdrawalType === 'normal' ? '1-24 hours' : '5-30 minutes';
+            const feePercentage = getWithdrawalFeePercentage(amount, withdrawalType);
+            const feePercent = (feePercentage * 100).toFixed(1);
+
+            popup.innerHTML = `
                  <div style="text-align: center;">
                      <i class="fas fa-question-circle" style="font-size: 2.5rem; color: #4C1D95; margin-bottom: 15px; display: block;"></i>
                      <h3 style="color: #FFFFFF; margin: 15px 0; font-size: 1.3rem;">Confirm Withdrawal</h3>
@@ -35673,46 +36438,46 @@ For more help, visit: help.pose.app
         }
 
         // Confirm and process withdrawal
-         async function confirmWithdrawal(withdrawalType, amount, fee, currentBalance) {
-             try {
-                 if (!currentUser) throw new Error('User not authenticated');
+        async function confirmWithdrawal(withdrawalType, amount, fee, currentBalance) {
+            try {
+                if (!currentUser) throw new Error('User not authenticated');
 
-                 const statusDiv = document.getElementById('withdrawalStatus');
-                 const payBtn = document.getElementById('withdrawalPayBtn');
+                const statusDiv = document.getElementById('withdrawalStatus');
+                const payBtn = document.getElementById('withdrawalPayBtn');
 
-                 payBtn.disabled = true;
-                 payBtn.innerHTML = '⏳ Processing...';
+                payBtn.disabled = true;
+                payBtn.innerHTML = '⏳ Processing...';
 
-                 const txRef = 'WITHDRAWAL_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                 const newBalance = currentBalance - amount;
-                 const feePercentage = getWithdrawalFeePercentage(amount, withdrawalType);
+                const txRef = 'WITHDRAWAL_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                const newBalance = currentBalance - amount;
+                const feePercentage = getWithdrawalFeePercentage(amount, withdrawalType);
 
-                 const withdrawalRequest = {
-                     userId: currentUser.uid,
-                     transactionId: txRef,
-                     amount: amount,
-                     fee: fee,
-                     feePercentage: feePercentage,
-                     youReceive: amount - fee,
-                     status: withdrawalType === 'normal' ? 'pending_normal' : 'pending_speedy',
-                     processingType: withdrawalType,
-                     processingTime: withdrawalType === 'normal' ? '1-24 hours' : '5-30 minutes',
-                     bankDetails: {
-                         bankName: walletData.bankDetails.bankName,
-                         bankCode: walletData.bankDetails.bankCode,
-                         countryCode: walletData.bankDetails.countryCode,
-                         countryName: walletData.bankDetails.countryName,
-                         accountNumber: walletData.bankDetails.accountNumber,
-                         accountNumberMasked: '**** ' + walletData.bankDetails.accountNumber.slice(-4),
-                         accountName: walletData.bankDetails.accountName
-                     },
-                     balanceSnapshot: {
-                         before: currentBalance,
-                         after: newBalance
-                     },
-                     createdAt: new Date().toISOString(),
-                     updatedAt: new Date().toISOString()
-                 };
+                const withdrawalRequest = {
+                    userId: currentUser.uid,
+                    transactionId: txRef,
+                    amount: amount,
+                    fee: fee,
+                    feePercentage: feePercentage,
+                    youReceive: amount - fee,
+                    status: withdrawalType === 'normal' ? 'pending_normal' : 'pending_speedy',
+                    processingType: withdrawalType,
+                    processingTime: withdrawalType === 'normal' ? '1-24 hours' : '5-30 minutes',
+                    bankDetails: {
+                        bankName: walletData.bankDetails.bankName,
+                        bankCode: walletData.bankDetails.bankCode,
+                        countryCode: walletData.bankDetails.countryCode,
+                        countryName: walletData.bankDetails.countryName,
+                        accountNumber: walletData.bankDetails.accountNumber,
+                        accountNumberMasked: '**** ' + walletData.bankDetails.accountNumber.slice(-4),
+                        accountName: walletData.bankDetails.accountName
+                    },
+                    balanceSnapshot: {
+                        before: currentBalance,
+                        after: newBalance
+                    },
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
 
                 // Save to Firebase under posewithdrawalrequests collection
                 await db.collection('posewithdrawalrequests').doc(txRef).set(withdrawalRequest);
@@ -35869,12 +36634,12 @@ For more help, visit: help.pose.app
                         processWalletDeposit(amount, response.transaction_id || response.flw_ref)
                             .then(() => {
                                 statusDiv.className = 'deposit-status success';
-                                        statusDiv.textContent = `✅ Deposit of ₦${amount.toLocaleString()} successful!`;
-                                        setTimeout(() => {
-                                            closeDepositModal();
-                                            loadWalletData();
-                                            loadWalletHistory();
-                                        }, 1500);
+                                statusDiv.textContent = `✅ Deposit of ₦${amount.toLocaleString()} successful!`;
+                                setTimeout(() => {
+                                    closeDepositModal();
+                                    loadWalletData();
+                                    loadWalletHistory();
+                                }, 1500);
                             })
                             .catch(error => {
                                 console.error('Error processing deposit:', error);
@@ -35997,7 +36762,7 @@ For more help, visit: help.pose.app
             if (priceTooltip) {
                 priceTooltip.textContent = `1 PC = ₦${rate}`;
             }
-            }
+        }
 
         // Close buy pCoin modal
         function closeBuyPCoinModal() {
@@ -36049,55 +36814,55 @@ For more help, visit: help.pose.app
             }
 
             try {
-                 // Get current wallet balance from Firebase
-                 const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                 const currentBalance = userDoc.data()?.walletBalance || 0;
+                // Get current wallet balance from Firebase
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const currentBalance = userDoc.data()?.walletBalance || 0;
 
-                 // Calculate naira cost
-                 const nairarCost = pCoinAmount * rate;
+                // Calculate naira cost
+                const nairarCost = pCoinAmount * rate;
 
-                 if (nairarCost > currentBalance) {
-                     statusDiv.className = 'withdrawal-status error';
-                     statusDiv.textContent = `❌ Insufficient balance. You have ₦${currentBalance.toLocaleString()}, but this purchase costs ₦${nairarCost.toLocaleString()}`;
-                     return;
-                 }
+                if (nairarCost > currentBalance) {
+                    statusDiv.className = 'withdrawal-status error';
+                    statusDiv.textContent = `❌ Insufficient balance. You have ₦${currentBalance.toLocaleString()}, but this purchase costs ₦${nairarCost.toLocaleString()}`;
+                    return;
+                }
 
-                 const userDocRef = db.collection('users').doc(currentUser.uid);
+                const userDocRef = db.collection('users').doc(currentUser.uid);
 
-                 // Update Firebase with new balances
-                 await userDocRef.update({
-                     'walletBalance': firebase.firestore.FieldValue.increment(-nairarCost),
-                     'pCoinBalance': firebase.firestore.FieldValue.increment(pCoinAmount),
-                     'lastPCoinUpdate': new Date().toISOString()
-                 });
+                // Update Firebase with new balances
+                await userDocRef.update({
+                    'walletBalance': firebase.firestore.FieldValue.increment(-nairarCost),
+                    'pCoinBalance': firebase.firestore.FieldValue.increment(pCoinAmount),
+                    'lastPCoinUpdate': new Date().toISOString()
+                });
 
-                 // Record transaction
-                 const transaction = {
-                     id: 'PCOIN_BUY_' + Date.now(),
-                     type: 'pCoin Purchase',
-                     amount: nairarCost,
-                     pCoins: pCoinAmount,
-                     status: 'completed',
-                     date: new Date().toISOString(),
-                     description: `Purchased ${pCoinAmount} pCoin for ₦${nairarCost.toLocaleString()}`,
-                     deviceType: isIPhone() ? 'iPhone' : 'Android'
-                 };
+                // Record transaction
+                const transaction = {
+                    id: 'PCOIN_BUY_' + Date.now(),
+                    type: 'pCoin Purchase',
+                    amount: nairarCost,
+                    pCoins: pCoinAmount,
+                    status: 'completed',
+                    date: new Date().toISOString(),
+                    description: `Purchased ${pCoinAmount} pCoin for ₦${nairarCost.toLocaleString()}`,
+                    deviceType: isIPhone() ? 'iPhone' : 'Android'
+                };
 
-                 await userDocRef.collection('walletTransactions').add(transaction);
+                await userDocRef.collection('walletTransactions').add(transaction);
 
-                 statusDiv.className = 'withdrawal-status success';
-                 statusDiv.textContent = `✅ Successfully purchased ${pCoinAmount} pCoin for ₦${nairarCost.toLocaleString()}!`;
+                statusDiv.className = 'withdrawal-status success';
+                statusDiv.textContent = `✅ Successfully purchased ${pCoinAmount} pCoin for ₦${nairarCost.toLocaleString()}!`;
 
-                 setTimeout(() => {
-                     closeBuyPCoinModal();
-                     loadWalletData();
-                     loadWalletHistory();
-                 }, 1500);
-             } catch (error) {
-                 console.error('Error buying pCoin:', error);
-                 statusDiv.className = 'withdrawal-status error';
-                 statusDiv.textContent = '❌ Error processing purchase. Please try again.';
-             }
+                setTimeout(() => {
+                    closeBuyPCoinModal();
+                    loadWalletData();
+                    loadWalletHistory();
+                }, 1500);
+            } catch (error) {
+                console.error('Error buying pCoin:', error);
+                statusDiv.className = 'withdrawal-status error';
+                statusDiv.textContent = '❌ Error processing purchase. Please try again.';
+            }
         }
 
         // Store purchase data for confirmation
