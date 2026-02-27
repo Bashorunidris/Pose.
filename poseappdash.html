@@ -6269,22 +6269,22 @@
         }
 
         .profile-bio {
-            text-align: center;
+            text-align: left;
             color: #ccc;
             font-size: 14px;
             margin-top: 15px;
             line-height: 1.5;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 100%;
+            margin-left: 0;
+            margin-right: 0;
         }
 
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-top: 30px;
-            padding: 25px 0;
+            margin-top: 10px;
+            padding: 15px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -14323,39 +14323,39 @@
             </div>
         </div>
 
-        <div class="profile-info-section">
-            <!-- LEFT SIDE: Profile Picture -->
-            <div style="flex-shrink: 0; text-align: center;">
-                <div class="story-ring-wrapper" onclick="event.stopPropagation(); openStoryViewer();">
-                    <!-- Rotating Ring -->
-                    <div></div>
-                    <!-- Profile Pic -->
-                    <div class="profile-pic-large" id="profilePicLarge">U</div>
-                    <!-- Badge -->
-                    <div class="story-badge" id="storyBadge" style="display: none;">0</div>
+        <div class="profile-info-section" style="flex-direction: column; gap: 20px;">
+            <!-- TOP SECTION: Profile Picture + Info -->
+            <div style="display: flex; gap: 30px; align-items: flex-start;">
+                <!-- LEFT SIDE: Profile Picture -->
+                <div style="flex-shrink: 0; text-align: center;">
+                    <div class="story-ring-wrapper" onclick="event.stopPropagation(); openStoryViewer();">
+                        <!-- Rotating Ring -->
+                        <div></div>
+                        <!-- Profile Pic -->
+                        <div class="profile-pic-large" id="profilePicLarge">U</div>
+                        <!-- Badge -->
+                        <div class="story-badge" id="storyBadge" style="display: none;">0</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE: Name, Username, Bio, and Info -->
+                <div style="flex: 1;">
+                    <!-- Name Display -->
+                    <div class="profile-name" id="profileDisplayName" style="text-align: left; margin-bottom: 8px;">User
+                        Name</div>
+
+                    <!-- Username (Read-only) -->
+                    <div class="profile-username" id="profileUsernameDisplay" style="margin-bottom: 20px;">@username</div>
+
+                    <!-- Bio (Read-only) -->
+                    <div class="profile-bio" id="profileBioDisplay"
+                        style="text-align: left; margin: 0; margin-bottom: 0;">African
+                        Creator | Skits | Exclusive Content 🔥<br>📍 Lagos, Nigeria</div>
                 </div>
             </div>
 
-            <!-- RIGHT SIDE: Name, Username, Bio, and Info -->
-            <div style="flex: 1;">
-                <!-- Name Display -->
-                <div class="profile-name" id="profileDisplayName" style="text-align: left; margin-bottom: 8px;">User
-                    Name</div>
-
-                <!-- Username (Read-only) -->
-                <div class="profile-username" id="profileUsernameDisplay" style="margin-bottom: 20px;">@username</div>
-
-                <!-- Bio (Read-only) -->
-                <div class="profile-bio" id="profileBioDisplay"
-                    style="text-align: left; margin: 0; margin-bottom: 30px;">African
-                    Creator | Skits | Exclusive Content 🔥<br>📍 Lagos, Nigeria</div>
-            </div>
-        </div>
-
-        <!-- STATS SECTION (Full Width) -->
-        <div
-            style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);">
-            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+            <!-- BOTTOM SECTION: Stats (Left to Right) -->
+            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 10px; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="stat">
                     <div class="stat-value" id="followersCount">12.5K</div>
                     <div class="stat-label">Followers</div>
@@ -17425,14 +17425,15 @@
                 }
 
                 try {
+                    // Create user
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const user = userCredential.user;
 
+                    // Save user profile to Firestore
                     await db.collection('users').doc(user.uid).set({
                         name: name,
                         username: username,
                         email: email,
-                        accountType: 'personal',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         followers: 0,
                         following: 0,
@@ -17441,8 +17442,8 @@
                         earnings: 0
                     });
 
-                    hideAuthScreen();
-                    location.reload();
+                    closeAuthModal();
+                    openProfile();
                 } catch (error) {
                     showAuthError(error.message);
                     submitBtn.textContent = originalText;
@@ -17469,8 +17470,8 @@
 
                 try {
                     await auth.signInWithEmailAndPassword(email, password);
-                    hideAuthScreen();
-                    location.reload();
+                    closeAuthModal();
+                    openProfile();
                 } catch (error) {
                     showAuthError(error.message);
                     submitBtn.textContent = originalText;
@@ -17510,16 +17511,16 @@
                     await db.collection('users').doc(user.uid).set({
                         name: name,
                         email: email,
-                        accountType: 'business',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         followers: 0,
                         following: 0,
-                        revenue: 0,
-                        products: 0
+                        likes: 0,
+                        views: 0,
+                        earnings: 0
                     });
 
-                    hideAuthScreen();
-                    location.reload();
+                    closeAuthModal();
+                    openProfile();
                 } catch (error) {
                     showAuthError(error.message);
                     submitBtn.textContent = originalText;
@@ -17546,8 +17547,8 @@
 
                 try {
                     await auth.signInWithEmailAndPassword(email, password);
-                    hideAuthScreen();
-                    location.reload();
+                    closeAuthModal();
+                    openProfile();
                 } catch (error) {
                     showAuthError(error.message);
                     submitBtn.textContent = originalText;
