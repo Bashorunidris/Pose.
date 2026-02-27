@@ -6174,6 +6174,23 @@
             display: flex;
             gap: 30px;
             align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* Responsive Profile Info Section */
+        @media (max-width: 768px) {
+            .profile-info-section {
+                padding: 20px 15px;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-info-section {
+                padding: 15px 10px;
+                gap: 10px;
+            }
         }
 
         .story-ring-wrapper {
@@ -14323,54 +14340,66 @@
             </div>
         </div>
 
-        <div class="profile-info-section">
-            <!-- LEFT SIDE: Profile Picture -->
-            <div style="flex-shrink: 0; text-align: center;">
-                <div class="story-ring-wrapper" onclick="event.stopPropagation(); openStoryViewer();">
-                    <!-- Rotating Ring -->
-                    <div></div>
-                    <!-- Profile Pic -->
-                    <div class="profile-pic-large" id="profilePicLarge">U</div>
-                    <!-- Badge -->
-                    <div class="story-badge" id="storyBadge" style="display: none;">0</div>
+        <div class="profile-info-section" style="flex-direction: column; gap: 15px;">
+            <!-- TOP: Profile Picture, Name, Username -->
+            <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; justify-content: center;">
+                <!-- LEFT SIDE: Profile Picture -->
+                <div style="flex-shrink: 0; text-align: center;">
+                    <div class="story-ring-wrapper" onclick="event.stopPropagation(); openStoryViewer();">
+                        <!-- Rotating Ring -->
+                        <div></div>
+                        <!-- Profile Pic -->
+                        <div class="profile-pic-large" id="profilePicLarge">U</div>
+                        <!-- Badge -->
+                        <div class="story-badge" id="storyBadge" style="display: none;">0</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE: Name and Username -->
+                <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; justify-content: center;">
+                    <!-- Name Display -->
+                    <div class="profile-name" id="profileDisplayName" style="text-align: center; margin-bottom: 8px;">User Name</div>
+
+                    <!-- Username (Read-only) -->
+                    <div class="profile-username" id="profileUsernameDisplay" style="text-align: center; margin-bottom: 0;">@username</div>
                 </div>
             </div>
 
-            <!-- CENTER: Name, Username, Bio, and Info -->
-            <div style="flex: 1; text-align: center;">
-                <!-- Name Display -->
-                <div class="profile-name" id="profileDisplayName" style="text-align: center; margin-bottom: 8px;">User
-                    Name</div>
-
-                <!-- Username (Read-only) -->
-                <div class="profile-username" id="profileUsernameDisplay" style="margin-bottom: 20px;">@username</div>
-
-                <!-- Bio (Read-only) -->
-                <div class="profile-bio" id="profileBioDisplay"
-                    style="text-align: center; margin: 0; margin-bottom: 30px;">African
-                    Creator | Skits | Exclusive Content 🔥<br>📍 Lagos, Nigeria</div>
+            <!-- STATS SECTION -->
+            <div style="width: 100%; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 15px;">
+                    <div class="stat">
+                        <div class="stat-value" id="followersCount">12.5K</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="followingCount">804</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="likesCount">108K</div>
+                        <div class="stat-label">Likes</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="viewsCount">550K</div>
+                        <div class="stat-label">Total Views</div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- STATS SECTION (Full Width) -->
-        <div
-            style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);">
-            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-                <div class="stat">
-                    <div class="stat-value" id="followersCount">12.5K</div>
-                    <div class="stat-label">Followers</div>
+            <!-- BIO & LOCATION SECTION (EDITABLE) -->
+            <div style="width: 100%; padding: 15px 0; text-align: center;">
+                <!-- Bio (Editable) -->
+                <div style="position: relative; margin-bottom: 10px;">
+                    <div id="profileBioDisplay" style="font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.background='rgba(138,43,226,0.1)'" onmouseout="this.style.background='transparent'" onclick="editProfileBio()">African Creator | Skits | Exclusive Content 🔥</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="followingCount">804</div>
-                    <div class="stat-label">Following</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="likesCount">108K</div>
-                    <div class="stat-label">Likes</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="viewsCount">550K</div>
-                    <div class="stat-label">Total Views</div>
+                
+                <!-- Location (Editable) -->
+                <div style="position: relative;">
+                    <div id="profileLocationDisplay" style="color: #999; font-size: 13px; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.background='rgba(138,43,226,0.1)'" onmouseout="this.style.background='transparent'" onclick="editProfileLocation()">
+                        <i class="fas fa-map-marker-alt" style="color: #8a2be2; margin-right: 6px;"></i>
+                        <span id="profileLocation">Lagos, Nigeria</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -20991,6 +21020,92 @@
             openAccountSettingsModal('editProfileModalContainer');
         }
 
+        function editProfileBio() {
+            const bioDisplay = document.getElementById('profileBioDisplay');
+            const currentBio = bioDisplay.textContent;
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentBio;
+            input.style.cssText = 'width: 100%; padding: 10px; border: 2px solid #8a2be2; border-radius: 6px; background: rgba(0,0,0,0.5); color: #ccc; font-size: 14px;';
+            
+            bioDisplay.replaceWith(input);
+            input.focus();
+            
+            function saveBio() {
+                const newBio = input.value.trim() || 'African Creator | Exclusive Content 🔥';
+                updateProfileBio(newBio);
+            }
+            
+            input.onblur = saveBio;
+            input.onkeypress = (e) => e.key === 'Enter' && saveBio();
+        }
+
+        function editProfileLocation() {
+            const locationDisplay = document.getElementById('profileLocationDisplay');
+            const locationSpan = document.getElementById('profileLocation');
+            const currentLocation = locationSpan.textContent;
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentLocation;
+            input.placeholder = 'Enter location';
+            input.style.cssText = 'width: 100%; padding: 10px; border: 2px solid #8a2be2; border-radius: 6px; background: rgba(0,0,0,0.5); color: #ccc; font-size: 13px;';
+            
+            locationDisplay.replaceWith(input);
+            input.focus();
+            
+            function saveLocation() {
+                const newLocation = input.value.trim() || 'Lagos, Nigeria';
+                updateProfileLocation(newLocation);
+            }
+            
+            input.onblur = saveLocation;
+            input.onkeypress = (e) => e.key === 'Enter' && saveLocation();
+        }
+
+        async function updateProfileBio(newBio) {
+            try {
+                await db.collection('users').doc(currentUser.uid).update({
+                    bio: newBio
+                });
+                // Reload the display
+                const bioDiv = document.createElement('div');
+                bioDiv.id = 'profileBioDisplay';
+                bioDiv.textContent = newBio;
+                bioDiv.style.cssText = 'font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;';
+                bioDiv.onmouseover = function() { this.style.background = 'rgba(138,43,226,0.1)'; };
+                bioDiv.onmouseout = function() { this.style.background = 'transparent'; };
+                bioDiv.onclick = editProfileBio;
+                
+                const input = document.querySelector('input[value="' + newBio + '"]');
+                if (input) input.replaceWith(bioDiv);
+            } catch (error) {
+                console.error('Error updating bio:', error);
+            }
+        }
+
+        async function updateProfileLocation(newLocation) {
+            try {
+                await db.collection('users').doc(currentUser.uid).update({
+                    location: newLocation
+                });
+                // Reload the display
+                const locationDisplay = document.createElement('div');
+                locationDisplay.id = 'profileLocationDisplay';
+                locationDisplay.innerHTML = `<i class="fas fa-map-marker-alt" style="color: #8a2be2; margin-right: 6px;"></i><span id="profileLocation">${newLocation}</span>`;
+                locationDisplay.style.cssText = 'color: #999; font-size: 13px; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;';
+                locationDisplay.onmouseover = function() { this.style.background = 'rgba(138,43,226,0.1)'; };
+                locationDisplay.onmouseout = function() { this.style.background = 'transparent'; };
+                locationDisplay.onclick = editProfileLocation;
+                
+                const input = document.querySelector('input[value="' + newLocation + '"]');
+                if (input) input.replaceWith(locationDisplay);
+            } catch (error) {
+                console.error('Error updating location:', error);
+            }
+        }
+
         function editBio() {
             openAccountSettingsModal('editProfileModalContainer');
         }
@@ -21497,9 +21612,14 @@ For more help, visit: help.pose.app
                     }
 
                     // Load bio and location
-                    const bioDiv = document.querySelector('.profile-bio');
+                    const bioDiv = document.getElementById('profileBioDisplay');
+                    const locationDiv = document.getElementById('profileLocation');
+                    
                     if (bioDiv) {
-                        bioDiv.innerHTML = `${userData.bio || 'African Creator | Exclusive Content 🔥'}<br>📍 ${userData.location || 'Lagos, Nigeria'}`;
+                        bioDiv.textContent = userData.bio || 'African Creator | Exclusive Content 🔥';
+                    }
+                    if (locationDiv) {
+                        locationDiv.textContent = userData.location || 'Lagos, Nigeria';
                     }
                 }
             } catch (error) {
