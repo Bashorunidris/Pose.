@@ -12596,7 +12596,7 @@
         .v2-edit-video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 100%; /* Allow full width for better display */
             aspect-ratio: 9/16;
             background: #000;
             display: flex;
@@ -22018,7 +22018,7 @@ For more help, visit: help.pose.app
 
             const options = {
                 mimeType: 'video/webm;codecs=vp9,opus',
-                videoBitsPerSecond: 4000000,   // 4 Mbps for HIGH QUALITY (TikTok standard)
+                videoBitsPerSecond: 2500000,   // 2.5 Mbps HIGH QUALITY + smooth playback
                 audioBitsPerSecond: 128000     // 128 kbps audio (excellent quality)
             };
 
@@ -28826,7 +28826,7 @@ For more help, visit: help.pose.app
 
                             const mediaRecorder = new MediaRecorder(combinedStream, {
                                 mimeType: mimeType,
-                                videoBitsPerSecond: 4000000 // HIGH QUALITY like TikTok/Instagram
+                                videoBitsPerSecond: 2500000 // 2.5 Mbps - excellent quality + smooth playback
                             });
 
                             const chunks = [];
@@ -38778,10 +38778,10 @@ For more help, visit: help.pose.app
                     }
                 }
 
-                // 3. Create MediaRecorder with HIGH QUALITY options (like TikTok)
+                // 3. Create MediaRecorder with HIGH QUALITY options (optimized for playback)
                 let options = {
                     mimeType: 'video/webm;codecs=vp9,opus',
-                    videoBitsPerSecond: 4000000, // 4 Mbps for excellent quality (TikTok uses 3-5 Mbps)
+                    videoBitsPerSecond: 2500000, // 2.5 Mbps - excellent quality + smooth playback
                     audioBitsPerSecond: 128000 // Better audio quality (128 kbps)
                 };
 
@@ -39549,15 +39549,19 @@ For more help, visit: help.pose.app
                 console.log('  - Audio should play when you hit play button');
 
                 const videoURL = URL.createObjectURL(v2RecordedBlob);
-                editVideo.src = videoURL;
-                editVideo.muted = false;
-                editVideo.volume = 1.0;
+                 editVideo.src = videoURL;
+                 editVideo.muted = false;
+                 editVideo.volume = 1.0;
+                 
+                 // Optimize playback performance
+                 editVideo.preload = 'auto';
+                 editVideo.load(); // Force load for smooth playback
 
-                // Apply speed to edit video
-                const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
-                editVideo.playbackRate = speed;
-                console.log('⚡ Speed applied to edit video:', speed);
-                console.log('✅ Loaded FRESH BLOB (just recorded)');
+                 // Apply speed to edit video
+                 const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
+                 editVideo.playbackRate = speed;
+                 console.log('⚡ Speed applied to edit video:', speed);
+                 console.log('✅ Loaded FRESH BLOB (just recorded) - optimized for playback');
             } else {
                 // Blob not available - load from Firebase as fallback
                 const user = firebase.auth().currentUser;
