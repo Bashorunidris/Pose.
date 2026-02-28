@@ -5365,6 +5365,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -8740,13 +8741,13 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 3500;
+            z-index: 999999 !important;
             animation: fadeIn 0.3s ease;
             flex-direction: column;
         }
 
         .sound-library-modal.active {
-            display: flex;
+            display: flex !important;
         }
 
         .sound-library-header {
@@ -14248,34 +14249,45 @@
                 <!-- RIGHT SIDE: Name and Username -->
                 <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; justify-content: center;">
                     <!-- Name Display -->
-                    <div class="profile-name" id="profileDisplayName" style="text-align: center; margin-bottom: 8px;">User Name</div>
+                    <div class="profile-name" id="profileDisplayName" style="text-align: center; margin-bottom: 8px;">
+                        User Name</div>
 
                     <!-- Username (Read-only) -->
-                    <div class="profile-username" id="profileUsernameDisplay" style="text-align: center; margin-bottom: 0;">@username</div>
-                <!-- Bio (Editable) -->
-                <div style="position: relative; margin-bottom: 10px;">
-                    <div id="profileBioDisplay" style="font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.background='rgba(138,43,226,0.1)'" onmouseout="this.style.background='transparent'" onclick="editProfileBio()">African Creator | Skits | Exclusive Content 🔥</div>
-                </div>
+                    <div class="profile-username" id="profileUsernameDisplay"
+                        style="text-align: center; margin-bottom: 0;">@username</div>
+                    <!-- Bio (Editable) -->
+                    <div style="position: relative; margin-bottom: 10px;">
+                        <div id="profileBioDisplay"
+                            style="font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;"
+                            onmouseover="this.style.background='rgba(138,43,226,0.1)'"
+                            onmouseout="this.style.background='transparent'" onclick="editProfileBio()">African Creator
+                            | Skits | Exclusive Content 🔥</div>
+                    </div>
                 </div>
             </div>
 
             <!-- STATS SECTION (COMPACT & RESPONSIVE) -->
             <div style="width: 100%; padding: 8px 0; margin: -40px 0;">
-                <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px;">
+                <div class="profile-stats"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px;">
                     <div class="stat" style="text-align: center;">
-                        <div class="stat-value" id="followersCount" style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">12.5K</div>
+                        <div class="stat-value" id="followersCount"
+                            style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">12.5K</div>
                         <div class="stat-label" style="font-size: 11px; color: #999; font-weight: 500;">Followers</div>
                     </div>
                     <div class="stat" style="text-align: center;">
-                        <div class="stat-value" id="followingCount" style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">804</div>
+                        <div class="stat-value" id="followingCount"
+                            style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">804</div>
                         <div class="stat-label" style="font-size: 11px; color: #999; font-weight: 500;">Following</div>
                     </div>
                     <div class="stat" style="text-align: center;">
-                        <div class="stat-value" id="likesCount" style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">108K</div>
+                        <div class="stat-value" id="likesCount"
+                            style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">108K</div>
                         <div class="stat-label" style="font-size: 11px; color: #999; font-weight: 500;">Likes</div>
                     </div>
                     <div class="stat" style="text-align: center;">
-                        <div class="stat-value" id="viewsCount" style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">550K</div>
+                        <div class="stat-value" id="viewsCount"
+                            style="font-size: 16px; font-weight: 700; color: #bb86fc; margin-bottom: 2px;">550K</div>
                         <div class="stat-label" style="font-size: 11px; color: #999; font-weight: 500;">Views</div>
                     </div>
                 </div>
@@ -16650,8 +16662,8 @@
         }
 
         // ====== UPLOAD PROCESS (WITH PROGRESS TRACKING) ======
-         async function startUploadProcess(file, uploadType) {
-             try {
+        async function startUploadProcess(file, uploadType) {
+            try {
 
                 let statusElement = null;
                 if (uploadType === 'post') {
@@ -17174,17 +17186,17 @@
                 btn.addEventListener('click', function () {
                     const formType = this.getAttribute('data-form');
                     const container = this.closest('.form-container');
-                    
+
                     // Remove active from all toggles in this container
                     container.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
+
                     // Hide all forms in this container
                     container.querySelectorAll('.auth-form').forEach(f => {
                         f.style.display = 'none';
                         f.classList.remove('active');
                     });
-                    
+
                     // Show selected form
                     if (formType === 'signup') {
                         const signupForm = container.querySelector('[id$="-signup-form"]');
@@ -17438,17 +17450,17 @@
         function handleGuestMode() {
             // Set guest mode flag in session storage (no Firebase storage)
             sessionStorage.setItem('guestMode', 'true');
-            
+
             // Create a simple guest object (not stored in Firebase)
             currentUser = {
                 uid: 'guest_' + Date.now(),
                 isGuest: true,
                 displayName: 'Guest User'
             };
-            
+
             // Close auth screen
             hideAuthScreen();
-            
+
             // Reload page
             location.reload();
         }
@@ -20818,20 +20830,20 @@
         function editProfileBio() {
             const bioDisplay = document.getElementById('profileBioDisplay');
             const currentBio = bioDisplay.textContent;
-            
+
             const input = document.createElement('input');
             input.type = 'text';
             input.value = currentBio;
             input.style.cssText = 'width: 100%; padding: 10px; border: 2px solid #8a2be2; border-radius: 6px; background: rgba(0,0,0,0.5); color: #ccc; font-size: 14px;';
-            
+
             bioDisplay.replaceWith(input);
             input.focus();
-            
+
             function saveBio() {
                 const newBio = input.value.trim() || 'African Creator | Exclusive Content 🔥';
                 updateProfileBio(newBio);
             }
-            
+
             input.onblur = saveBio;
             input.onkeypress = (e) => e.key === 'Enter' && saveBio();
         }
@@ -20840,21 +20852,21 @@
             const locationDisplay = document.getElementById('profileLocationDisplay');
             const locationSpan = document.getElementById('profileLocation');
             const currentLocation = locationSpan.textContent;
-            
+
             const input = document.createElement('input');
             input.type = 'text';
             input.value = currentLocation;
             input.placeholder = 'Enter location';
             input.style.cssText = 'width: 100%; padding: 10px; border: 2px solid #8a2be2; border-radius: 6px; background: rgba(0,0,0,0.5); color: #ccc; font-size: 13px;';
-            
+
             locationDisplay.replaceWith(input);
             input.focus();
-            
+
             function saveLocation() {
                 const newLocation = input.value.trim() || 'Lagos, Nigeria';
                 updateProfileLocation(newLocation);
             }
-            
+
             input.onblur = saveLocation;
             input.onkeypress = (e) => e.key === 'Enter' && saveLocation();
         }
@@ -20869,10 +20881,10 @@
                 bioDiv.id = 'profileBioDisplay';
                 bioDiv.textContent = newBio;
                 bioDiv.style.cssText = 'font-size: 14px; line-height: 1.6; color: #ccc; margin: 0; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;';
-                bioDiv.onmouseover = function() { this.style.background = 'rgba(138,43,226,0.1)'; };
-                bioDiv.onmouseout = function() { this.style.background = 'transparent'; };
+                bioDiv.onmouseover = function () { this.style.background = 'rgba(138,43,226,0.1)'; };
+                bioDiv.onmouseout = function () { this.style.background = 'transparent'; };
                 bioDiv.onclick = editProfileBio;
-                
+
                 const input = document.querySelector('input[value="' + newBio + '"]');
                 if (input) input.replaceWith(bioDiv);
             } catch (error) {
@@ -20890,10 +20902,10 @@
                 locationDisplay.id = 'profileLocationDisplay';
                 locationDisplay.innerHTML = `<i class="fas fa-map-marker-alt" style="color: #8a2be2; margin-right: 6px;"></i><span id="profileLocation">${newLocation}</span>`;
                 locationDisplay.style.cssText = 'color: #999; font-size: 13px; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.3s;';
-                locationDisplay.onmouseover = function() { this.style.background = 'rgba(138,43,226,0.1)'; };
-                locationDisplay.onmouseout = function() { this.style.background = 'transparent'; };
+                locationDisplay.onmouseover = function () { this.style.background = 'rgba(138,43,226,0.1)'; };
+                locationDisplay.onmouseout = function () { this.style.background = 'transparent'; };
                 locationDisplay.onclick = editProfileLocation;
-                
+
                 const input = document.querySelector('input[value="' + newLocation + '"]');
                 if (input) input.replaceWith(locationDisplay);
             } catch (error) {
@@ -21409,7 +21421,7 @@ For more help, visit: help.pose.app
                     // Load bio and location
                     const bioDiv = document.getElementById('profileBioDisplay');
                     const locationDiv = document.getElementById('profileLocation');
-                    
+
                     if (bioDiv) {
                         bioDiv.textContent = userData.bio || 'African Creator | Exclusive Content 🔥';
                     }
@@ -21433,7 +21445,7 @@ For more help, visit: help.pose.app
         auth.onAuthStateChanged((user) => {
             // Check if guest mode is active
             const isGuestMode = sessionStorage.getItem('guestMode') === 'true';
-            
+
             if (isGuestMode) {
                 // Guest mode - just watching
                 console.log('👤 Guest mode - viewing only');
@@ -21450,7 +21462,7 @@ For more help, visit: help.pose.app
                 if (authScreen) {
                     authScreen.style.display = 'none';
                 }
-                
+
                 console.log('✅ Regular user logged in:', user.uid);
                 loadUserProfile(user.uid);
                 // Auto-load feed when user is authenticated
@@ -21916,19 +21928,19 @@ For more help, visit: help.pose.app
             }
 
             // ===== INITIALIZE RECORDING CANVAS =====
-             // Create hidden canvas for recording (with filters and effects)
-             if (!recordingState.recordingCanvas) {
-                 recordingState.recordingCanvas = document.createElement('canvas');
-                 recordingState.recordingCanvas.width = 1280;
-                 recordingState.recordingCanvas.height = 720;
-                 recordingState.recordingCanvas.style.display = 'none';
-                 document.body.appendChild(recordingState.recordingCanvas);
-                 // Enable high-quality rendering context
-                 recordingState.canvasContext = recordingState.recordingCanvas.getContext('2d', { willReadFrequently: true });
-                 recordingState.canvasContext.imageSmoothingEnabled = true;
-                 recordingState.canvasContext.imageSmoothingQuality = 'high';
-                 console.log('📊 Recording canvas created (1280x720, high-quality rendering)');
-             }
+            // Create hidden canvas for recording (with filters and effects)
+            if (!recordingState.recordingCanvas) {
+                recordingState.recordingCanvas = document.createElement('canvas');
+                recordingState.recordingCanvas.width = 1280;
+                recordingState.recordingCanvas.height = 720;
+                recordingState.recordingCanvas.style.display = 'none';
+                document.body.appendChild(recordingState.recordingCanvas);
+                // Enable high-quality rendering context
+                recordingState.canvasContext = recordingState.recordingCanvas.getContext('2d', { willReadFrequently: true });
+                recordingState.canvasContext.imageSmoothingEnabled = true;
+                recordingState.canvasContext.imageSmoothingQuality = 'high';
+                console.log('📊 Recording canvas created (1280x720, high-quality rendering)');
+            }
 
             // Start canvas rendering loop
             recordingState.isCanvasRendering = true;
@@ -21956,15 +21968,15 @@ For more help, visit: help.pose.app
             console.log(`📹 Recording from canvas with filters & effects`);
 
             // Get canvas stream WITH filters and effects applied (use 60fps for better capture)
-             const canvasStream = recordingState.recordingCanvas.captureStream(60); // 60 FPS capture (MediaRecorder will downsample)
-             const recordingStream = new MediaStream();
+            const canvasStream = recordingState.recordingCanvas.captureStream(60); // 60 FPS capture (MediaRecorder will downsample)
+            const recordingStream = new MediaStream();
 
-             // ===== ADD VIDEO TRACKS FROM CANVAS =====
-             // Add video track from canvas (contains filters + effects)
-             canvasStream.getVideoTracks().forEach(track => {
-                 recordingStream.addTrack(track);
-             });
-             console.log('✅ Video tracks added from canvas (with filters & effects, 60fps capture)');
+            // ===== ADD VIDEO TRACKS FROM CANVAS =====
+            // Add video track from canvas (contains filters + effects)
+            canvasStream.getVideoTracks().forEach(track => {
+                recordingStream.addTrack(track);
+            });
+            console.log('✅ Video tracks added from canvas (with filters & effects, 60fps capture)');
 
             // ===== AUDIO SETUP: Use background music OR microphone (not both) =====
             let finalStream = recordingStream;
@@ -23424,18 +23436,18 @@ For more help, visit: help.pose.app
                 }, 120000);
 
                 // Track upload progress
-                 const uploadStartTime = Date.now();
-                 xhr.upload.addEventListener('progress', (e) => {
-                     if (e.lengthComputable) {
-                         const percentComplete = (e.loaded / e.total) * 100;
-                         const uploadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
-                         const totalMB = (e.total / (1024 * 1024)).toFixed(1);
-                         const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
-                         const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
+                const uploadStartTime = Date.now();
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = (e.loaded / e.total) * 100;
+                        const uploadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
+                        const totalMB = (e.total / (1024 * 1024)).toFixed(1);
+                        const elapsedSeconds = (Date.now() - uploadStartTime) / 1000;
+                        const uploadSpeed = (e.loaded / elapsedSeconds / (1024 * 1024)).toFixed(1);
 
-                         console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
-                     }
-                 });
+                        console.log(`📤 Upload: ${Math.round(percentComplete)}% (${uploadSpeed} MB/s)`);
+                    }
+                });
 
                 xhr.addEventListener('load', () => {
                     clearTimeout(timeoutId);
@@ -23565,26 +23577,26 @@ For more help, visit: help.pose.app
                 console.log('📹 Selected video file:', file.name, `(${(file.size / (1024 * 1024)).toFixed(2)} MB)`);
 
                 // Create clip object with LOCAL blob URL (NO upload yet)
-                 const videoClip = {
-                     url: URL.createObjectURL(file),
-                     blob: file,
-                     cloudinaryUrl: null, // Will upload when user publishes
-                     publicId: null,
-                     duration: 0,
-                     speed: 1,
-                     hasEffects: false,
-                     hasBackgroundSound: false,
-                     selectedSound: null,
-                     filter: 'none',
-                     isUploadedFile: true
-                 };
+                const videoClip = {
+                    url: URL.createObjectURL(file),
+                    blob: file,
+                    cloudinaryUrl: null, // Will upload when user publishes
+                    publicId: null,
+                    duration: 0,
+                    speed: 1,
+                    hasEffects: false,
+                    hasBackgroundSound: false,
+                    selectedSound: null,
+                    filter: 'none',
+                    isUploadedFile: true
+                };
 
-                 // Add to clips
-                 recordingState.clips.push(videoClip);
-                 console.log('✅ Video ready for editing (local copy)');
+                // Add to clips
+                recordingState.clips.push(videoClip);
+                console.log('✅ Video ready for editing (local copy)');
 
-                 // GO TO EDIT SCREEN IMMEDIATELY - no upload waiting!
-                 transitionToEditScreen();
+                // GO TO EDIT SCREEN IMMEDIATELY - no upload waiting!
+                transitionToEditScreen();
             };
 
             // Trigger file selection dialog
@@ -23729,49 +23741,59 @@ For more help, visit: help.pose.app
         }
 
         function loadVideoToEditScreen() {
-             try {
-                 const v2EditVideo = document.getElementById('v2EditVideo');
-                 const uploadedClip = recordingState.clips?.[0];
-                 
-                 if (!v2EditVideo || !uploadedClip) {
-                     console.warn('⚠️ No video or edit screen found');
-                     return;
-                 }
+            try {
+                const v2EditVideo = document.getElementById('v2EditVideo');
+                const uploadedClip = recordingState.clips?.[0];
 
-                 // Set video source
-                 v2EditVideo.src = uploadedClip.url;
-                 
-                 // Mark as uploaded file to handle mirroring correctly
-                 recordingState.currentEditClip = uploadedClip;
+                if (!v2EditVideo || !uploadedClip) {
+                    console.warn('⚠️ No video or edit screen found');
+                    return;
+                }
 
-                 // Load video metadata
-                 v2EditVideo.load();
-                 
-                 console.log('✅ Video loaded to edit screen - ready for editing');
-             } catch (error) {
-                 console.error('❌ Error loading video to edit screen:', error);
-             }
-         }
+                // Set video source
+                v2EditVideo.src = uploadedClip.url;
 
-         function showV2EditScreen() {
-             // Hide all recording screens and V2 screens
-             document.querySelectorAll('.recording-screen').forEach(screen => {
-                 screen.classList.remove('active');
-             });
-             document.querySelectorAll('.v2-screen').forEach(screen => {
-                 screen.classList.add('hidden');
-             });
+                // Mark as uploaded file to handle mirroring correctly
+                recordingState.currentEditClip = uploadedClip;
 
-             // Show V2 edit screen
-             const v2EditScreen = document.getElementById('v2EditScreen');
-             if (v2EditScreen) {
-                 v2EditScreen.classList.remove('hidden');
-                 console.log('✅ V2 Edit Screen displayed');
-             }
+                // Load video metadata
+                v2EditVideo.load();
 
-             // Turn off camera
-             v2TurnOffCamera();
-         }
+                // Initialize trimmer when metadata is loaded
+                v2EditVideo.onloadedmetadata = () => {
+                    const duration = Math.floor(v2EditVideo.duration);
+                    console.log('✅ Video metadata loaded - duration:', duration, 'seconds');
+                    console.log('✅ Audio should be present and ready to play');
+
+                    // Initialize trimmer after metadata is loaded
+                    v2InitializeVideoTrimmer();
+                };
+
+                console.log('✅ Video loaded to edit screen - ready for editing');
+            } catch (error) {
+                console.error('❌ Error loading video to edit screen:', error);
+            }
+        }
+
+        function showV2EditScreen() {
+            // Hide all recording screens and V2 screens
+            document.querySelectorAll('.recording-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.querySelectorAll('.v2-screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+
+            // Show V2 edit screen
+            const v2EditScreen = document.getElementById('v2EditScreen');
+            if (v2EditScreen) {
+                v2EditScreen.classList.remove('hidden');
+                console.log('✅ V2 Edit Screen displayed');
+            }
+
+            // Turn off camera
+            v2TurnOffCamera();
+        }
 
         function startRecordingTimer() {
             if (recordingState.timerInterval) {
@@ -27623,21 +27645,30 @@ For more help, visit: help.pose.app
         }
 
         function openV2EditSoundLibrary() {
-            alert('Button clicked!');
             console.log('🎵 Opening sound library for V2 Edit Screen');
             const modal = document.getElementById('soundLibraryModal');
             if (!modal) {
                 console.error('❌ Sound library modal not found!');
-                alert('Sound library not initialized');
                 return;
             }
             console.log('✅ Modal found, opening...');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            loadPoseMusicLibrary();
-            loadFavouriteSounds();
+            try {
+                loadPoseMusicLibrary();
+            } catch (e) {
+                console.error('Error loading music library:', e);
+            }
+            try {
+                loadFavouriteSounds();
+            } catch (e) {
+                console.error('Error loading favourite sounds:', e);
+            }
             console.log('🎵 Sound library opened');
         }
+
+        // Make globally accessible
+        window.openV2EditSoundLibrary = openV2EditSoundLibrary;
 
         // Remove selected sound from Screen 1
         function removeRecordingSound() {
@@ -31213,7 +31244,7 @@ For more help, visit: help.pose.app
                 const uploadedClip = recordingState.clips?.[recordingState.clips.length - 1];  // Get latest clip, not first
                 const recordedBlob = recordingBlob || uploadedClip?.blob;
                 const isUploadedVideo = uploadedClip?.isUploadedFile;
-                
+
                 console.log('📹 loadPostPreview - clip info:', { hasRecordingBlob: !!recordingBlob, hasUploadedClip: !!uploadedClip, isUploadedFile: isUploadedVideo });
 
                 if (recordedBlob) {
@@ -33300,8 +33331,8 @@ For more help, visit: help.pose.app
             preloadAudioForRecording(sound);
         }
 
-            // Display Selected Sound on Screen 6 or Screen 7
-            function displaySelectedSoundOnScreen6(sound) {
+        // Display Selected Sound on Screen 6 or Screen 7
+        function displaySelectedSoundOnScreen6(sound) {
             // Store sound in photoState for download detection
             photoState.selectedSound = {
                 ...sound,
@@ -33641,48 +33672,39 @@ For more help, visit: help.pose.app
 
             // Create display if doesn't exist
             if (!soundDisplay) {
-                const v2EditBottomSheet = document.getElementById('v2EditBottomSheet');
-                if (!v2EditBottomSheet) return;
+                const v2EditVideoWrapper = document.querySelector('.v2-edit-video-wrapper');
+                if (!v2EditVideoWrapper) return;
 
                 soundDisplay = document.createElement('div');
                 soundDisplay.id = 'v2EditSoundDisplay';
                 soundDisplay.style.cssText = `
-                     background: rgba(255, 0, 80, 0.15);
-                     border-left: 3px solid #ff0050;
-                     padding: 12px;
-                     border-radius: 8px;
-                     margin-bottom: 15px;
+                     position: absolute;
+                     top: 70px;
+                     left: 50%;
+                     transform: translateX(-50%);
+                     background: rgba(255, 0, 80, 0.25);
+                     border: 2px solid #ff0050;
+                     padding: 12px 16px;
+                     border-radius: 12px;
                      display: flex;
                      align-items: center;
-                     gap: 10px;
+                     gap: 12px;
+                     z-index: 100;
+                     max-width: 85%;
+                     backdrop-filter: blur(10px);
+                     animation: slideDown 0.3s ease-out;
                  `;
 
                 soundDisplay.innerHTML = `
-                     <div style="flex-shrink: 0; width: 50px; height: 50px; background: rgba(255, 0, 80, 0.3); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🎵</div>
+                     <div style="flex-shrink: 0; font-size: 24px; color: #fff;">🎵</div>
                      <div style="flex: 1; min-width: 0;">
                          <div style="color: #fff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px;" id="v2EditSoundTitle"></div>
-                         <div style="color: #aaa; font-size: 12px; margin-top: 2px;" id="v2EditSoundArtist"></div>
+                         <div style="color: #ccc; font-size: 11px; margin-top: 2px;" id="v2EditSoundArtist"></div>
                      </div>
                      <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                         <button onclick="toggleV2EditSoundPlayback()" style="
-                             width: 36px;
-                             height: 36px;
-                             border: none;
-                             border-radius: 50%;
-                             background: rgba(255, 0, 80, 0.4);
-                             color: #fff;
-                             cursor: pointer;
-                             display: flex;
-                             align-items: center;
-                             justify-content: center;
-                             transition: all 0.2s ease;
-                             font-size: 14px;
-                         " onmouseover="this.style.background='rgba(255, 0, 80, 0.6)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.4)'">
-                             <i class="fas fa-play"></i>
-                         </button>
                          <button onclick="removeV2EditSound()" style="
                              padding: 6px 12px;
-                             background: rgba(255, 0, 80, 0.3);
+                             background: rgba(255, 0, 80, 0.5);
                              border: none;
                              border-radius: 6px;
                              color: #fff;
@@ -33690,18 +33712,69 @@ For more help, visit: help.pose.app
                              font-size: 12px;
                              font-weight: 600;
                              transition: all 0.2s ease;
-                         " onmouseover="this.style.background='rgba(255, 0, 80, 0.5)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.3)'">
-                             ✕ Remove
+                         " onmouseover="this.style.background='rgba(255, 0, 80, 0.7)'" onmouseout="this.style.background='rgba(255, 0, 80, 0.5)'">
+                             ✕
                          </button>
                      </div>
                  `;
 
-                v2EditBottomSheet.insertBefore(soundDisplay, v2EditBottomSheet.firstChild);
+                v2EditVideoWrapper.appendChild(soundDisplay);
             }
 
             // Update display content
             document.getElementById('v2EditSoundTitle').textContent = sound.title || 'Unknown';
             document.getElementById('v2EditSoundArtist').textContent = sound.artist ? `by ${sound.artist}` : '';
+
+            // Replace video audio with selected sound
+            replaceV2EditVideoAudio(sound);
+        }
+
+        function replaceV2EditVideoAudio(sound) {
+            const videoElement = document.getElementById('v2EditVideo');
+            if (!videoElement) return;
+
+            const audioUrl = sound.url || sound.audioUrl || sound.preview_url;
+            if (!audioUrl) {
+                console.warn('No audio URL found for sound:', sound);
+                return;
+            }
+
+            console.log('🎵 Replacing video audio with:', sound.title);
+
+            // Mute original video sound
+            videoElement.muted = true;
+
+            // Create or reuse audio element for the selected sound
+            let audioElement = document.getElementById('v2EditAudioTrack');
+            if (!audioElement) {
+                audioElement = document.createElement('audio');
+                audioElement.id = 'v2EditAudioTrack';
+                audioElement.style.display = 'none';
+                document.body.appendChild(audioElement);
+            }
+
+            audioElement.src = audioUrl;
+            audioElement.crossOrigin = 'anonymous';
+
+            // Sync audio with video playback
+            videoElement.addEventListener('play', () => {
+                if (audioElement.paused) {
+                    audioElement.currentTime = videoElement.currentTime;
+                    audioElement.play();
+                }
+            });
+
+            videoElement.addEventListener('pause', () => {
+                audioElement.pause();
+            });
+
+            videoElement.addEventListener('timeupdate', () => {
+                if (Math.abs(audioElement.currentTime - videoElement.currentTime) > 0.1) {
+                    audioElement.currentTime = videoElement.currentTime;
+                }
+            });
+
+            console.log('✅ Video audio replaced successfully');
         }
 
         function toggleV2EditSoundPlayback() {
@@ -33740,6 +33813,19 @@ For more help, visit: help.pose.app
             // Stop playback
             if (window.v2EditSoundAudio) {
                 window.v2EditSoundAudio.pause();
+            }
+
+            // Stop and remove custom audio track
+            const audioElement = document.getElementById('v2EditAudioTrack');
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.src = '';
+            }
+
+            // Restore original video audio
+            const videoElement = document.getElementById('v2EditVideo');
+            if (videoElement) {
+                videoElement.muted = false;
             }
 
             // Clear reference
@@ -38339,6 +38425,10 @@ For more help, visit: help.pose.app
                             style="flex: 1; background: rgba(100, 150, 255, 0.3); border: 1px solid #6496ff; color: #96b8ff;">
                             <i class="fas fa-redo"></i> Reset
                         </button>
+                        <button onclick="v2CancelTrim()" class="v2-action-btn"
+                            style="flex: 1; background: rgba(255, 100, 100, 0.3); border: 1px solid #ff6464; color: #ff9696;">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
                     </div>
                 </div>
             </div>
@@ -38354,6 +38444,12 @@ For more help, visit: help.pose.app
                     <button class="v2-speed-btn active" onclick="v2SetSpeed(1, this)">1x</button>
                     <button class="v2-speed-btn" onclick="v2SetSpeed(1.5, this)">1.5x</button>
                     <button class="v2-speed-btn" onclick="v2SetSpeed(2, this)">2x</button>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button onclick="v2CancelSpeed()" class="v2-action-btn"
+                        style="flex: 1; background: rgba(255, 100, 100, 0.3); border: 1px solid #ff6464; color: #ff9696;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
                 </div>
             </div>
 
@@ -38388,6 +38484,12 @@ For more help, visit: help.pose.app
                         <span>Retro</span>
                     </button>
                 </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button onclick="v2CancelEffects()" class="v2-action-btn"
+                        style="flex: 1; background: rgba(255, 100, 100, 0.3); border: 1px solid #ff6464; color: #ff9696;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
             </div>
 
             <!-- Volume Tool -->
@@ -38401,19 +38503,17 @@ For more help, visit: help.pose.app
 
                 <!-- Select from Library -->
                 <button class="v2-action-btn v2-action-btn-save" onclick="openRecordingSoundLibrary()"
-                    style="width: 100%;">
+                    style="width: 100%; margin-bottom: 10px;">
                     <i class="fas fa-music"></i> Choose from Library
+                </button>
+                <button onclick="v2CancelSound()" class="v2-action-btn"
+                    style="width: 100%; background: rgba(255, 100, 100, 0.3); border: 1px solid #ff6464; color: #ff9696;">
+                    <i class="fas fa-times"></i> Cancel
                 </button>
             </div>
 
             <!-- Action Buttons -->
             <div class="v2-edit-action-buttons">
-                <button class="v2-action-btn v2-action-btn-cancel" onclick="v2ResetEdits()">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-                <button class="v2-action-btn v2-action-btn-save" onclick="v2SaveEdits()">
-                    <i class="fas fa-check"></i> Save
-                </button>
             </div>
         </div>
     </div>
@@ -38479,28 +38579,28 @@ For more help, visit: help.pose.app
             }
 
             const v2EditVideo = document.getElementById('v2EditVideo');
-             if (v2EditVideo) {
-                 v2EditVideo.addEventListener('pause', function () {
-                     document.getElementById('v2EditVideoOverlay').classList.add('visible');
-                     document.getElementById('v2EditPauseBtn').classList.remove('visible');
-                 });
-                 v2EditVideo.addEventListener('play', function () {
-                     document.getElementById('v2EditVideoOverlay').classList.remove('visible');
-                     document.getElementById('v2EditPauseBtn').classList.add('visible');
-                 });
-                 v2EditVideo.addEventListener('ended', function () {
-                     document.getElementById('v2EditVideoOverlay').classList.add('visible');
-                     document.getElementById('v2EditPauseBtn').classList.remove('visible');
-                 });
-                 v2EditVideo.addEventListener('timeupdate', function () {
-                     const timeIndicator = document.getElementById('v2TimeIndicator');
-                     if (timeIndicator) {
-                         const mins = Math.floor(v2EditVideo.currentTime / 60);
-                         const secs = Math.floor(v2EditVideo.currentTime % 60);
-                         timeIndicator.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                     }
-                 });
-             }
+            if (v2EditVideo) {
+                v2EditVideo.addEventListener('pause', function () {
+                    document.getElementById('v2EditVideoOverlay').classList.add('visible');
+                    document.getElementById('v2EditPauseBtn').classList.remove('visible');
+                });
+                v2EditVideo.addEventListener('play', function () {
+                    document.getElementById('v2EditVideoOverlay').classList.remove('visible');
+                    document.getElementById('v2EditPauseBtn').classList.add('visible');
+                });
+                v2EditVideo.addEventListener('ended', function () {
+                    document.getElementById('v2EditVideoOverlay').classList.add('visible');
+                    document.getElementById('v2EditPauseBtn').classList.remove('visible');
+                });
+                v2EditVideo.addEventListener('timeupdate', function () {
+                    const timeIndicator = document.getElementById('v2TimeIndicator');
+                    if (timeIndicator) {
+                        const mins = Math.floor(v2EditVideo.currentTime / 60);
+                        const secs = Math.floor(v2EditVideo.currentTime % 60);
+                        timeIndicator.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                    }
+                });
+            }
         });
 
         // ===== V2 RECORD & EDIT FEATURE =====
@@ -38825,70 +38925,70 @@ For more help, visit: help.pose.app
         }
 
         // Helper function to apply filter effects to canvas pixels
-         function applyCanvasFilterEffect(imageData, filterName) {
-             const data = imageData.data;
+        function applyCanvasFilterEffect(imageData, filterName) {
+            const data = imageData.data;
 
-             switch (filterName) {
-                 case 'sepia':
-                     for (let i = 0; i < data.length; i += 4) {
-                         const r = data[i], g = data[i + 1], b = data[i + 2];
-                         data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
-                         data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
-                         data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
-                     }
-                     break;
-                 case 'grayscale':
-                     for (let i = 0; i < data.length; i += 4) {
-                         const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
-                         data[i] = data[i + 1] = data[i + 2] = gray;
-                     }
-                     break;
-                 case 'invert':
-                     for (let i = 0; i < data.length; i += 4) {
-                         data[i] = 255 - data[i];
-                         data[i + 1] = 255 - data[i + 1];
-                         data[i + 2] = 255 - data[i + 2];
-                     }
-                     break;
-                 case 'cold':
-                     for (let i = 0; i < data.length; i += 4) {
-                         data[i] = Math.max(0, data[i] - 20);
-                         data[i + 2] = Math.min(255, data[i + 2] + 30);
-                     }
-                     break;
-                 case 'warm':
-                     for (let i = 0; i < data.length; i += 4) {
-                         data[i] = Math.min(255, data[i] + 30);
-                         data[i + 2] = Math.max(0, data[i + 2] - 20);
-                     }
-                     break;
-                 case 'vivid':
-                     for (let i = 0; i < data.length; i += 4) {
-                         data[i] = Math.min(255, data[i] * 1.2);
-                         data[i + 1] = Math.min(255, data[i + 1] * 1.2);
-                         data[i + 2] = Math.min(255, data[i + 2] * 1.2);
-                     }
-                     break;
-             }
-         }
+            switch (filterName) {
+                case 'sepia':
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i], g = data[i + 1], b = data[i + 2];
+                        data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
+                        data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
+                        data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
+                    }
+                    break;
+                case 'grayscale':
+                    for (let i = 0; i < data.length; i += 4) {
+                        const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                        data[i] = data[i + 1] = data[i + 2] = gray;
+                    }
+                    break;
+                case 'invert':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = 255 - data[i];
+                        data[i + 1] = 255 - data[i + 1];
+                        data[i + 2] = 255 - data[i + 2];
+                    }
+                    break;
+                case 'cold':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.max(0, data[i] - 20);
+                        data[i + 2] = Math.min(255, data[i + 2] + 30);
+                    }
+                    break;
+                case 'warm':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.min(255, data[i] + 30);
+                        data[i + 2] = Math.max(0, data[i + 2] - 20);
+                    }
+                    break;
+                case 'vivid':
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.min(255, data[i] * 1.2);
+                        data[i + 1] = Math.min(255, data[i + 1] * 1.2);
+                        data[i + 2] = Math.min(255, data[i + 2] * 1.2);
+                    }
+                    break;
+            }
+        }
 
-         // Fast filter using canvas filter property (optimized for recording)
-         function applyCanvasFilterEffectFast(ctx, width, height, filterName) {
-             // Save current state
-             const savedCompositeOperation = ctx.globalCompositeOperation;
+        // Fast filter using canvas filter property (optimized for recording)
+        function applyCanvasFilterEffectFast(ctx, width, height, filterName) {
+            // Save current state
+            const savedCompositeOperation = ctx.globalCompositeOperation;
 
-             // Apply CSS filter string directly to canvas rendering
-             switch (filterName) {
-                 case 'bw':
-                 case 'grayscale':
-                     ctx.filter = 'grayscale(100%)';
-                     break;
-             }
+            // Apply CSS filter string directly to canvas rendering
+            switch (filterName) {
+                case 'bw':
+                case 'grayscale':
+                    ctx.filter = 'grayscale(100%)';
+                    break;
+            }
 
-             // The filter is now applied to subsequent drawing operations
-             // Reset for next frame
-             ctx.filter = 'none';
-         }
+            // The filter is now applied to subsequent drawing operations
+            // Reset for next frame
+            ctx.filter = 'none';
+        }
 
         // Toggle recording
         function v2ToggleRecord() {
@@ -38955,37 +39055,37 @@ For more help, visit: help.pose.app
                 }
 
                 // 3. Create MediaRecorder with high-quality bitrate settings
-                 // For 1280x720 30fps, use 3500-4000kbps for excellent quality
-                 let options = {
-                     mimeType: 'video/webm;codecs=vp8,opus',
-                     videoBitsPerSecond: 3500000,  // 3500 kbps for excellent 720p quality
-                     audioBitsPerSecond: 128000    // 128 kbps for clear audio
-                 };
+                // For 1280x720 30fps, use 3500-4000kbps for excellent quality
+                let options = {
+                    mimeType: 'video/webm;codecs=vp8,opus',
+                    videoBitsPerSecond: 3500000,  // 3500 kbps for excellent 720p quality
+                    audioBitsPerSecond: 128000    // 128 kbps for clear audio
+                };
 
-                 // Fallback options (decrease bitrate slightly if vp8+opus not supported)
-                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                     options = { 
-                         mimeType: 'video/webm;codecs=vp8',
-                         videoBitsPerSecond: 3500000,
-                         audioBitsPerSecond: 128000
-                     };
-                 }
-                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                     options = { 
-                         mimeType: 'video/webm',
-                         videoBitsPerSecond: 3500000,
-                         audioBitsPerSecond: 128000
-                     };
-                 }
-                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                     // Last resort - let browser choose, but specify bitrate
-                     options = {
-                         videoBitsPerSecond: 3500000,
-                         audioBitsPerSecond: 128000
-                     };
-                 }
+                // Fallback options (decrease bitrate slightly if vp8+opus not supported)
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options = {
+                        mimeType: 'video/webm;codecs=vp8',
+                        videoBitsPerSecond: 3500000,
+                        audioBitsPerSecond: 128000
+                    };
+                }
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options = {
+                        mimeType: 'video/webm',
+                        videoBitsPerSecond: 3500000,
+                        audioBitsPerSecond: 128000
+                    };
+                }
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    // Last resort - let browser choose, but specify bitrate
+                    options = {
+                        videoBitsPerSecond: 3500000,
+                        audioBitsPerSecond: 128000
+                    };
+                }
 
-                 console.log(`📊 Recording with bitrate: ${options.videoBitsPerSecond / 1000000}Mbps video, ${options.audioBitsPerSecond / 1000}kbps audio`);
+                console.log(`📊 Recording with bitrate: ${options.videoBitsPerSecond / 1000000}Mbps video, ${options.audioBitsPerSecond / 1000}kbps audio`);
 
                 v2MediaRecorder = new MediaRecorder(recordingStream, options);
 
@@ -39012,10 +39112,10 @@ For more help, visit: help.pose.app
                     }
 
                     v2RecordedBlob = new Blob(v2RecordedChunks, { type: 'video/webm' });
-                     // Turn off camera after recording stops
-                     v2TurnOffCamera();
-                     // GO TO EDIT SCREEN (no upload yet)
-                     setTimeout(() => v2StartEditing(), 500);
+                    // Turn off camera after recording stops
+                    v2TurnOffCamera();
+                    // GO TO EDIT SCREEN (no upload yet)
+                    setTimeout(() => v2StartEditing(), 500);
                 };
 
                 const maxDuration = recordingState.selectedDuration || 30;
@@ -39600,18 +39700,18 @@ For more help, visit: help.pose.app
                         // Continue anyway - video is on Cloudinary
                     }
                 } else {
-                     console.log('⚠️ No user logged in for Firebase save, but upload succeeded');
-                 }
+                    console.log('⚠️ No user logged in for Firebase save, but upload succeeded');
+                }
 
-                 v2ShowNotification('✅ Upload complete!');
+                v2ShowNotification('✅ Upload complete!');
 
-                 // Clear old recording chunks to prevent loading old video
-                 v2RecordedChunks = [];
+                // Clear old recording chunks to prevent loading old video
+                v2RecordedChunks = [];
 
-                 v2StartEditing();
+                v2StartEditing();
 
-                } catch (error) {
-                 console.error('❌ Upload error:', error.message);
+            } catch (error) {
+                console.error('❌ Upload error:', error.message);
 
                 // Provide helpful error messages
                 if (error.message.includes('Network error') || error.message.includes('offline')) {
@@ -39731,7 +39831,26 @@ For more help, visit: help.pose.app
                 }
             }
 
+            // Apply mirror only for recorded videos
+            // Gallery videos display normally without mirror
+            const latestClip = recordingState.clips?.[recordingState.clips.length - 1];
+            const isGalleryVideo = latestClip?.isUploadedFile;
 
+            if (isGalleryVideo) {
+                // Gallery videos: no mirror (already correctly oriented)
+                editVideo.style.transform = 'none';
+                editVideo.style.webkitTransform = 'none';
+                editVideo.style.MozTransform = 'none';
+                editVideo.style.objectFit = 'contain';
+                console.log('📹 Gallery video - no mirror');
+            } else {
+                // Recorded videos: apply mirror (was mirrored during recording)
+                editVideo.style.transform = 'scaleX(-1)';
+                editVideo.style.webkitTransform = 'scaleX(-1)';
+                editVideo.style.MozTransform = 'scaleX(-1)';
+                editVideo.style.objectFit = 'cover';
+                console.log('📹 Recorded video - mirror applied');
+            }
 
             // Load video: PRIORITY = Fresh Blob > Firebase Upload > Most Recent
             // Always load the just-recorded blob first (it's the current recording)
@@ -40153,14 +40272,133 @@ For more help, visit: help.pose.app
             v2HandleTrimState.trimEnd = v2HandleTrimState.videoDuration;
             v2UpdateHandleDisplay();
 
-            // Clear trim constraint on main video
+            // Clear trim constraint on main video and audio
             const mainVideo = document.getElementById('v2EditVideo');
+            const audioTrack = document.getElementById('v2EditAudioTrack');
+
             if (mainVideo) {
                 mainVideo.ontimeupdate = null;
                 mainVideo.currentTime = 0;
             }
 
+            if (audioTrack) {
+                audioTrack.currentTime = 0;
+            }
+
             v2ShowNotification('🔄 Trim reset');
+        }
+
+        function v2CancelTrim() {
+            // Close trim tool
+            const trimTool = document.getElementById('v2TrimTool');
+            if (trimTool) {
+                trimTool.style.display = 'none';
+            }
+
+            // Reset trim state
+            v2HandleTrimState.trimStart = 0;
+            v2HandleTrimState.trimEnd = v2HandleTrimState.videoDuration;
+
+            // Reset main video
+            const mainVideo = document.getElementById('v2EditVideo');
+            const audioTrack = document.getElementById('v2EditAudioTrack');
+
+            if (mainVideo) {
+                mainVideo.ontimeupdate = null;
+                mainVideo.currentTime = 0;
+            }
+
+            if (audioTrack) {
+                audioTrack.currentTime = 0;
+            }
+
+            // Deactivate trim button
+            document.querySelectorAll('.v2-edit-side-btn').forEach(btn => {
+                if (btn.getAttribute('onclick').includes('trim')) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            v2ShowNotification('❌ Trim cancelled');
+        }
+
+        function v2CancelSpeed() {
+            // Close speed tool
+            const speedTool = document.getElementById('v2SpeedTool');
+            if (speedTool) {
+                speedTool.style.display = 'none';
+            }
+
+            // Reset speed to 1x
+            const video = document.getElementById('v2EditVideo');
+            const audioTrack = document.getElementById('v2EditAudioTrack');
+
+            if (video) {
+                video.playbackRate = 1;
+            }
+
+            if (audioTrack) {
+                audioTrack.playbackRate = 1;
+            }
+
+            // Reset speed button selection
+            document.querySelectorAll('.v2-speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes('1x')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Deactivate speed button
+            document.querySelectorAll('.v2-edit-side-btn').forEach(btn => {
+                if (btn.getAttribute('onclick').includes('speed')) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            v2ShowNotification('❌ Speed cancelled');
+        }
+
+        function v2CancelEffects() {
+            // Close effects tool
+            const effectsTool = document.getElementById('v2EffectsTool');
+            if (effectsTool) {
+                effectsTool.style.display = 'none';
+            }
+
+            // Reset to normal effect
+            document.querySelectorAll('.v2-effect-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes('Normal')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Deactivate effects button
+            document.querySelectorAll('.v2-edit-side-btn').forEach(btn => {
+                if (btn.getAttribute('onclick').includes('effects')) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            v2ShowNotification('❌ Effects cancelled');
+        }
+
+        function v2CancelSound() {
+            // Close sound tool
+            const soundTool = document.getElementById('v2SoundTool');
+            if (soundTool) {
+                soundTool.style.display = 'none';
+            }
+
+            // Deactivate sound button
+            document.querySelectorAll('.v2-edit-side-btn').forEach(btn => {
+                if (btn.getAttribute('onclick').includes('Add Sound')) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            v2ShowNotification('❌ Sound cancelled');
         }
 
         function v2ApplyHandleTrim() {
@@ -40184,6 +40422,8 @@ For more help, visit: help.pose.app
 
             // Enforce trim boundaries on main video
             const mainVideo = document.getElementById('v2EditVideo');
+            const audioTrack = document.getElementById('v2EditAudioTrack');
+
             if (mainVideo) {
                 // Constrain playback to trim range
                 if (mainVideo.currentTime < v2HandleTrimState.trimStart) {
@@ -40198,8 +40438,18 @@ For more help, visit: help.pose.app
                     if (mainVideo.currentTime > v2HandleTrimState.trimEnd + 0.1) {
                         mainVideo.pause();
                         mainVideo.currentTime = v2HandleTrimState.trimStart;
+                        if (audioTrack) audioTrack.pause();
                     } else if (mainVideo.currentTime < v2HandleTrimState.trimStart) {
                         mainVideo.currentTime = v2HandleTrimState.trimStart;
+                    }
+
+                    // Sync audio track with trim boundaries
+                    if (audioTrack) {
+                        if (audioTrack.currentTime > v2HandleTrimState.trimEnd + 0.1) {
+                            audioTrack.currentTime = v2HandleTrimState.trimStart;
+                        } else if (audioTrack.currentTime < v2HandleTrimState.trimStart) {
+                            audioTrack.currentTime = v2HandleTrimState.trimStart;
+                        }
                     }
                 };
             }
@@ -40216,10 +40466,16 @@ For more help, visit: help.pose.app
             document.querySelectorAll('.v2-speed-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // Apply speed to video
+            // Apply speed to video and audio
             const video = document.getElementById('v2EditVideo');
+            const audioTrack = document.getElementById('v2EditAudioTrack');
+
             if (video) {
                 video.playbackRate = speed;
+            }
+
+            if (audioTrack) {
+                audioTrack.playbackRate = speed;
             }
 
             v2ShowNotification(`Speed: ${speed}x`);
