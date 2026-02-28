@@ -38813,10 +38813,10 @@ For more help, visit: help.pose.app
                     }
 
                     v2RecordedBlob = new Blob(v2RecordedChunks, { type: 'video/webm' });
-                    // Turn off camera after recording stops
-                    v2TurnOffCamera();
-                    // UPLOAD ON STOP
-                    v2UploadAndShare();
+                     // Turn off camera after recording stops
+                     v2TurnOffCamera();
+                     // GO TO EDIT SCREEN (no upload yet)
+                     setTimeout(() => v2StartEditing(), 500);
                 };
 
                 const maxDuration = recordingState.selectedDuration || 30;
