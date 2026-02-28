@@ -12596,21 +12596,20 @@
         .v2-edit-video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 500px; /* Constrain to phone-like width */
+            max-width: 500px;
             aspect-ratio: 9/16;
             background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            margin: 0 auto; /* Center the video */
+            overflow: visible;
             flex: 1;
         }
 
         #v2EditVideo {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background: #000;
             display: block !important;
             /* Mirror front-facing camera to show correct orientation */
@@ -22018,9 +22017,9 @@ For more help, visit: help.pose.app
             console.log('📊 Recording setup complete - Ready to record');
 
             const options = {
-                mimeType: 'video/webm;codecs=vp9,opus',
-                videoBitsPerSecond: 1500000,   // 1.5 Mbps - good quality + smooth playback (NO LAG)
-                audioBitsPerSecond: 128000     // 128 kbps audio (excellent quality)
+                mimeType: 'video/webm;codecs=vp8,opus',
+                videoBitsPerSecond: 500000,   // 500 kbps for 720p 30fps (smooth, optimized)
+                audioBitsPerSecond: 64000     // 64 kbps audio (sufficient, less overhead)
             };
 
             try {
@@ -28827,7 +28826,7 @@ For more help, visit: help.pose.app
 
                             const mediaRecorder = new MediaRecorder(combinedStream, {
                                 mimeType: mimeType,
-                                videoBitsPerSecond: 1500000 // 1.5 Mbps - good quality + smooth playback (NO LAG)
+                                videoBitsPerSecond: 2500000
                             });
 
                             const chunks = [];
@@ -38600,19 +38599,14 @@ For more help, visit: help.pose.app
             const video = document.getElementById('v2RecordVideo');
             const ctx = canvas.getContext('2d');
 
-            // OPTIMIZED QUALITY: Balance between quality and performance
-            let recordingWidth = video.videoWidth || 1280;
-            let recordingHeight = video.videoHeight || 720;
-            
-            // Limit to 720p for smooth recording + playback
-            if (recordingWidth > 1280) recordingWidth = 1280;
-            if (recordingHeight > 720) recordingHeight = 720;
-            
+            // Use actual video dimensions for proper recording
+            const recordingWidth = video.videoWidth || 1280;
+            const recordingHeight = video.videoHeight || 720;
             canvas.width = recordingWidth;
             canvas.height = recordingHeight;
 
-            // Create stream from canvas at 30 fps (smoother than 60)
-            const canvasStream = canvas.captureStream(30); // 30 fps - smooth without lag
+            // Create stream from canvas
+            const canvasStream = canvas.captureStream(30); // 30 fps
 
             // Create new stream with canvas video
             const recordingStream = new MediaStream();
@@ -38625,16 +38619,41 @@ For more help, visit: help.pose.app
             const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
 
             function renderFilteredFrame() {
-                 // OPTIMIZED: Only draw without heavy per-frame effects
-                 // Draw video frame to canvas (fast operation)
-                 try {
-                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                 } catch (e) {
-                     // Video not ready yet, skip frame
-                 }
+                // Draw video frame to canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                 recordingState.filterAnimationId = requestAnimationFrame(renderFilteredFrame);
-             }
+                // Determine which filter to apply
+                let filterToApply = recordingState.currentFilter;
+
+                // If paused and a filter was selected during pause, use that instead
+                if (v2IsPaused && recordingState.pausedSessionFilter && recordingState.pausedSessionFilter !== 'none') {
+                    filterToApply = recordingState.pausedSessionFilter;
+                } else if (v2IsPaused) {
+                    // Clear filter if 'none' was selected during pause
+                    filterToApply = 'none';
+                }
+
+                // Apply filter (pixel-based) - only if NO effects
+                const shouldApplyFilter = filterToApply && filterToApply !== 'none';
+                if (shouldApplyFilter && !hasEffects) {
+                    const filterCSS = getCanvasFilterString(filterToApply);
+                    if (filterCSS && filterCSS !== 'none') {
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        applyCanvasFilterEffect(imageData, filterToApply);
+                        ctx.putImageData(imageData, 0, 0);
+                    }
+                }
+
+                // Composite effects canvas on top (if effects active)
+                if (hasEffects && !hasFilter) {
+                    const effectsCanvas = effectsState.canvas || document.getElementById('v2EffectsCanvas');
+                    if (effectsCanvas && effectsCanvas.width > 0 && effectsCanvas.height > 0) {
+                        ctx.drawImage(effectsCanvas, 0, 0);
+                    }
+                }
+
+                recordingState.filterAnimationId = requestAnimationFrame(renderFilteredFrame);
+            }
 
             renderFilteredFrame();
             return recordingStream;
@@ -38752,11 +38771,11 @@ For more help, visit: help.pose.app
                     }
                 }
 
-                // 3. Create MediaRecorder with OPTIMIZED options (smooth playback priority)
+                // 3. Create MediaRecorder with minimal options (fast)
                 let options = {
-                    mimeType: 'video/webm;codecs=vp9,opus',
-                    videoBitsPerSecond: 1500000, // 1.5 Mbps - good quality + zero lag playback
-                    audioBitsPerSecond: 128000 // Better audio quality (128 kbps)
+                    mimeType: 'video/webm;codecs=vp8,opus',
+                    videoBitsPerSecond: 500000,
+                    audioBitsPerSecond: 64000
                 };
 
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
@@ -38794,10 +38813,10 @@ For more help, visit: help.pose.app
                     }
 
                     v2RecordedBlob = new Blob(v2RecordedChunks, { type: 'video/webm' });
-                     // Turn off camera after recording stops
-                     v2TurnOffCamera();
-                     // GO TO EDIT SCREEN IMMEDIATELY (no upload yet - like TikTok)
-                     v2StartEditing();
+                    // Turn off camera after recording stops
+                    v2TurnOffCamera();
+                    // UPLOAD ON STOP
+                    v2UploadAndShare();
                 };
 
                 const maxDuration = recordingState.selectedDuration || 30;
@@ -38815,15 +38834,14 @@ For more help, visit: help.pose.app
                 document.getElementById('v2PauseBtn').style.display = 'flex';
                 v2IsPaused = false;
 
-                // 6. Start audio IMMEDIATELY (no delay for sync)
+                // 6. Start audio (1 second delayed to prevent lag)
                 if (recordingState.audioStartPending && recordingState.audioSource) {
-                    try {
-                        recordingState.audioSource.start(0);
-                        recordingState.audioStartPending = false;
-                        console.log('🔊 Audio started immediately');
-                    } catch (e) {
-                        console.warn('⚠️ Audio start error:', e);
-                    }
+                    setTimeout(() => {
+                        if (recordingState.audioSource && v2IsRecording) {
+                            recordingState.audioSource.start(0);
+                            recordingState.audioStartPending = false;
+                        }
+                    }, 1000);
                 }
 
                 // Log only startup time, not per-frame details
@@ -39524,19 +39542,15 @@ For more help, visit: help.pose.app
                 console.log('  - Audio should play when you hit play button');
 
                 const videoURL = URL.createObjectURL(v2RecordedBlob);
-                 editVideo.src = videoURL;
-                 editVideo.muted = false;
-                 editVideo.volume = 1.0;
-                 
-                 // Optimize playback performance
-                 editVideo.preload = 'auto';
-                 editVideo.load(); // Force load for smooth playback
+                editVideo.src = videoURL;
+                editVideo.muted = false;
+                editVideo.volume = 1.0;
 
-                 // Apply speed to edit video
-                 const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
-                 editVideo.playbackRate = speed;
-                 console.log('⚡ Speed applied to edit video:', speed);
-                 console.log('✅ Loaded FRESH BLOB (just recorded) - optimized for playback');
+                // Apply speed to edit video
+                const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
+                editVideo.playbackRate = speed;
+                console.log('⚡ Speed applied to edit video:', speed);
+                console.log('✅ Loaded FRESH BLOB (just recorded)');
             } else {
                 // Blob not available - load from Firebase as fallback
                 const user = firebase.auth().currentUser;
