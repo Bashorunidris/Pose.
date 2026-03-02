@@ -6972,6 +6972,266 @@
             margin-bottom: 5px;
         }
 
+        /* ===== FORYOU FEED STYLES ===== */
+        .forYou-overlay {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            color: white !important;
+        }
+
+        /* ForYou Feed Sidebar - Right side icons */
+        .forYou-sidebar {
+            position: absolute !important;
+            right: 10px !important;
+            top: 50% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 20px !important;
+            font-size: 14px !important;
+            z-index: 10 !important;
+        }
+
+        .forYou-sidebar>div {
+            text-align: center !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .forYou-sidebar>div:hover {
+            transform: scale(1.1) !important;
+        }
+
+        .forYou-sidebar svg {
+            display: block !important;
+            margin-bottom: 5px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .forYou-sidebar span {
+            font-size: 13px !important;
+            display: block !important;
+            color: white !important;
+        }
+
+        /* ForYou Profile Section - Bottom left */
+        .forYou-profile-section {
+            position: absolute !important;
+            bottom: 280px !important;
+            left: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            right: 80px !important;
+            transition: bottom 0.3s ease !important;
+            z-index: 10 !important;
+        }
+
+        .forYou-profile-section.ad-closed {
+            bottom: 150px !important;
+        }
+
+        .forYou-profile-container {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            flex: 1 !important;
+        }
+
+        .forYou-profile-pic {
+            position: relative !important;
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 50% !important;
+            background: #666 !important;
+            flex-shrink: 0 !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        .forYou-profile-pic img {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+        }
+
+        .forYou-infinity-badge {
+            position: absolute !important;
+            bottom: -5px !important;
+            right: -5px !important;
+            background: black !important;
+            border: 2px solid white !important;
+            border-radius: 50% !important;
+            width: 20px !important;
+            height: 20px !important;
+            font-size: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .forYou-profile-close {
+            position: absolute !important;
+            bottom: -8px !important;
+            right: -8px !important;
+            background: #0099ff !important;
+            border: 2px solid white !important;
+            border-radius: 50% !important;
+            width: 24px !important;
+            height: 24px !important;
+            font-size: 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .forYou-profile-close:hover {
+            background: #0080cc !important;
+            transform: scale(1.1) !important;
+        }
+
+        .forYou-profile-info {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+
+        .forYou-profile-name {
+            font-weight: bold !important;
+            font-size: 16px !important;
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+            margin-bottom: 2px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        .forYou-profile-caption {
+            font-size: 14px !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .forYou-follow-btn {
+            background: linear-gradient(45deg, #ff0050, #ff4081) !important;
+            padding: 8px 16px !important;
+            border-radius: 20px !important;
+            font-size: 13px !important;
+            font-weight: bold !important;
+            color: white !important;
+            cursor: pointer !important;
+            border: none !important;
+            outline: none !important;
+            transition: all 0.2s ease !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.3) !important;
+            flex-shrink: 0 !important;
+        }
+
+        .forYou-follow-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 4px 12px rgba(255, 0, 80, 0.4) !important;
+        }
+
+        .forYou-follow-btn:active {
+            transform: scale(0.95) !important;
+        }
+
+        /* Video Caption - Above banner */
+        .forYou-caption {
+            position: absolute !important;
+            bottom: 245px !important;
+            left: 10px !important;
+            font-size: 13px !important;
+            max-width: 280px !important;
+            line-height: 1.4em !important;
+            transition: bottom 0.3s ease !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+            z-index: 10 !important;
+        }
+
+        .forYou-caption.ad-closed {
+            bottom: 115px !important;
+        }
+
+        .forYou-caption b {
+            font-size: 14px !important;
+            color: white !important;
+        }
+
+        .forYou-caption span {
+            color: #aaa !important;
+        }
+
+        /* Banner Ad */
+        .forYou-banner-ad {
+            position: absolute !important;
+            bottom: 100px !important;
+            left: 10px !important;
+            width: 250px !important;
+            height: 130px !important;
+            border-radius: 8px !important;
+            overflow: hidden !important;
+            background: #fff !important;
+            transition: all 0.3s ease !important;
+            z-index: 9 !important;
+        }
+
+        .forYou-banner-ad.hidden {
+            opacity: 0 !important;
+            transform: translateX(-100%) !important;
+            pointer-events: none !important;
+        }
+
+        .forYou-banner-ad img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
+
+        .forYou-close-btn {
+            position: absolute !important;
+            top: 8px !important;
+            right: 8px !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            color: white !important;
+            border: none !important;
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 50% !important;
+            font-size: 20px !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s ease !important;
+            z-index: 11 !important;
+        }
+
+        .forYou-close-btn:hover {
+            background: rgba(0, 0, 0, 0.7) !important;
+        }
+
+        .forYou-speaker {
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .forYou-speaker:hover {
+            transform: scale(1.1) !important;
+        }
+
         .profile-section {
             position: absolute;
             bottom: 280px;
@@ -18733,36 +18993,59 @@
                         <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                     </svg>
                 </div>
-                <div class="overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 20px; color: white;">
-                    <div class="sidebar" style="position: absolute; right: 15px; bottom: 60px; display: flex; flex-direction: column; gap: 20px; align-items: center;">
-                        <div style="text-align: center; cursor: pointer;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <div class="forYou-overlay">
+                    <div class="forYou-sidebar">
+                        <div>
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                             </svg>
-                            <span style="font-size: 12px; margin-top: 4px; display: block;">${data.likes || 0}</span>
+                            <span>${data.likes || 0}</span>
                         </div>
-                        <div style="text-align: center; cursor: pointer;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                        <div>
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
                                 <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
                             </svg>
-                            <span style="font-size: 12px; margin-top: 4px; display: block;">${data.comments || 0}</span>
+                            <span>${data.comments || 0}</span>
                         </div>
-                        <div style="text-align: center; cursor: pointer;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                        <div>
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
                                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
                             </svg>
-                            <span style="font-size: 12px; margin-top: 4px; display: block;">${data.shares || 0}</span>
+                            <span>${data.shares || 0}</span>
+                        </div>
+                        <div>
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+                                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                        </div>
+                        <div class="forYou-speaker">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                            </svg>
                         </div>
                     </div>
-                    <div class="profile-section" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
-                            <div class="profile-pic" style="width: 40px; height: 40px; border-radius: 50%; background: #666; flex-shrink: 0; background-image: url('${data.userProfilePic || ''}'); background-size: cover;"></div>
-                            <div>
-                                <div class="name" style="font-weight: bold; font-size: 14px;">${data.userName || 'Creator'}</div>
-                                <div class="caption" style="font-size: 12px; opacity: 0.9; margin-top: 2px;">${data.caption || ''}</div>
+                    <div class="forYou-caption">
+                        <b>${data.caption || 'Discover great content'}</b> <span>See more >></span>
+                    </div>
+                    <div class="forYou-banner-ad">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='130'><rect width='250' height='130' fill='%234ecdc4'/><text x='125' y='70' text-anchor='middle' fill='white' font-size='18' font-family='Arial'>✨ Discover</text></svg>" alt="banner">
+                        <button class="forYou-close-btn">×</button>
+                    </div>
+                    <div class="forYou-profile-section">
+                        <div class="forYou-profile-container">
+                            <div class="forYou-profile-pic" style="background-image: url('${data.userProfilePic || ''}');">
+                                <div class="forYou-profile-close">∞</div>
+                            </div>
+                            <div class="forYou-profile-info">
+                                <div class="forYou-profile-name">${data.userName || 'Creator'}</div>
+                                <div class="forYou-profile-caption">${Math.floor(Math.random() * 999) + 100}K followers</div>
                             </div>
                         </div>
-                        <button class="follow-btn" style="background: #ff0050; border: none; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; flex-shrink: 0;">Follow</button>
                     </div>
                 </div>
             `;
@@ -38713,9 +38996,6 @@ For more help, visit: help.pose.app
                 <button class="v2-edit-side-btn" onclick="v2ToggleEditTool('trim')" title="Trim">
                     <i class="fas fa-cut"></i>
                 </button>
-                <button class="v2-edit-side-btn" onclick="v2ToggleEditTool('speed')" title="Speed">
-                    <i class="fas fa-tachometer-alt"></i>
-                </button>
                 <button class="v2-edit-side-btn active" onclick="v2ToggleEditTool('effects')" title="Effects">
                     <i class="fas fa-palette"></i>
                 </button>
@@ -38825,32 +39105,7 @@ For more help, visit: help.pose.app
                 </div>
             </div>
 
-            <!-- Speed Tool -->
-            <div class="v2-edit-tool-section" id="v2SpeedTool" style="display: none;">
-                <div class="v2-tool-section-title">
-                    <i class="fas fa-tachometer-alt"></i> Speed
-                </div>
-                <div class="v2-speed-group">
-                    <button class="v2-speed-btn" onclick="v2SetSpeed(0.5, this)">0.5x</button>
-                    <button class="v2-speed-btn" onclick="v2SetSpeed(0.75, this)">0.75x</button>
-                    <button class="v2-speed-btn active" onclick="v2SetSpeed(1, this)">1x</button>
-                    <button class="v2-speed-btn" onclick="v2SetSpeed(1.5, this)">1.5x</button>
-                    <button class="v2-speed-btn" onclick="v2SetSpeed(2, this)">2x</button>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button onclick="v2ApplySpeed()" class="v2-action-btn v2-action-btn-save" style="flex: 1;">
-                        <i class="fas fa-check"></i> Apply Speed
-                    </button>
-                    <button onclick="v2ResetSpeed()" class="v2-action-btn"
-                        style="flex: 1; background: rgba(100, 150, 255, 0.3); border: 1px solid #6496ff; color: #96b8ff;">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                    <button onclick="v2CancelSpeed()" class="v2-action-btn"
-                        style="flex: 1; background: rgba(255, 100, 100, 0.3); border: 1px solid #ff6464; color: #ff9696;">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </div>
+
 
             <!-- Effects Tool -->
             <div class="v2-edit-tool-section" id="v2EffectsTool">
@@ -40668,7 +40923,6 @@ For more help, visit: help.pose.app
         function v2ToggleEditTool(tool) {
             // Hide all tools
             document.getElementById('v2TrimTool').style.display = 'none';
-            document.getElementById('v2SpeedTool').style.display = 'none';
             document.getElementById('v2EffectsTool').style.display = 'none';
             document.getElementById('v2SoundTool').style.display = 'none';
 
@@ -40931,107 +41185,7 @@ For more help, visit: help.pose.app
             v2ShowNotification('❌ Trim cancelled');
         }
 
-        function v2ApplySpeed() {
-            // Get current speed
-            const currentSpeedBtn = document.querySelector('.v2-speed-btn.active');
-            const speed = currentSpeedBtn ? parseFloat(currentSpeedBtn.textContent) : 1;
 
-            // Apply speed to video and audio
-            const video = document.getElementById('v2EditVideo');
-            const audioTrack = document.getElementById('v2EditAudioTrack');
-
-            if (video) {
-                video.playbackRate = speed;
-            }
-
-            if (audioTrack) {
-                audioTrack.playbackRate = speed;
-            }
-
-            // Close speed tool
-            document.getElementById('v2SpeedTool').style.display = 'none';
-
-            // Close bottom sheet
-            const bottomSheet = document.getElementById('v2EditBottomSheet');
-            if (bottomSheet) {
-                bottomSheet.classList.remove('show');
-            }
-
-            // Deactivate speed button
-            document.querySelectorAll('.v2-edit-side-btn').forEach(btn => {
-                if (btn.getAttribute('onclick').includes('speed')) {
-                    btn.classList.remove('active');
-                }
-            });
-
-            v2ShowNotification(`✅ Speed: ${speed}x applied`);
-            console.log('✅ Speed applied:', speed);
-        }
-
-        function v2ResetSpeed() {
-            // Reset speed to 1x
-            const video = document.getElementById('v2EditVideo');
-            const audioTrack = document.getElementById('v2EditAudioTrack');
-
-            if (video) {
-                video.playbackRate = 1;
-            }
-
-            if (audioTrack) {
-                audioTrack.playbackRate = 1;
-            }
-
-            // Reset speed button selection
-            document.querySelectorAll('.v2-speed-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.includes('1x')) {
-                    btn.classList.add('active');
-                }
-            });
-
-            v2ShowNotification('🔄 Speed reset to 1x');
-            console.log('🔄 Speed reset');
-        }
-
-        function v2CancelSpeed() {
-            // Close speed tool
-            const speedTool = document.getElementById('v2SpeedTool');
-            if (speedTool) {
-                speedTool.style.display = 'none';
-            }
-
-            // Close bottom sheet completely
-            closeV2BottomSheet();
-
-            // Reset speed to 1x
-            const video = document.getElementById('v2EditVideo');
-            const audioTrack = document.getElementById('v2EditAudioTrack');
-
-            if (video) {
-                video.playbackRate = 1;
-            }
-
-            if (audioTrack) {
-                audioTrack.playbackRate = 1;
-            }
-
-            // Reset speed button selection
-            document.querySelectorAll('.v2-speed-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.includes('1x')) {
-                    btn.classList.add('active');
-                }
-            });
-
-            // Deactivate speed button
-            document.querySelectorAll('.v2-edit-side-btn').forEach(btn => {
-                if (btn.getAttribute('onclick').includes('speed')) {
-                    btn.classList.remove('active');
-                }
-            });
-
-            v2ShowNotification('❌ Speed cancelled');
-        }
 
         function v2ApplyEffects() {
             // Keep the selected effect applied
@@ -41320,31 +41474,7 @@ For more help, visit: help.pose.app
             }
         }
 
-        function v2SetSpeed(speed, btn) {
-            document.querySelectorAll('.v2-speed-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
 
-            // Apply speed to video and audio
-            const video = document.getElementById('v2EditVideo');
-            const audioTrack = document.getElementById('v2EditAudioTrack');
-
-            if (video) {
-                video.playbackRate = speed;
-            }
-
-            if (audioTrack) {
-                // Pause audio, set speed, then sync when video plays
-                audioTrack.playbackRate = speed;
-                audioTrack.pause();
-            }
-
-            v2ShowNotification(`Speed: ${speed}x`);
-
-            // Restart video from beginning to see edit with proper audio sync
-            setTimeout(() => {
-                restartV2EditVideoWithEdits();
-            }, 100);
-        }
 
         // Effect state tracking
         let v2SelectedEffect = {
