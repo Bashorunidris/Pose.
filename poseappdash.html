@@ -6984,9 +6984,9 @@
 
         /* ForYou Feed Sidebar - Right side icons */
         .forYou-sidebar {
-            position: absolute !important;
+            position: fixed !important;
             right: 10px !important;
-            top: 50% !important;
+            bottom: 95px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
@@ -7535,6 +7535,9 @@
             font-size: 14px;
             z-index: 1000;
             color: white;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9));
+            padding: 15px 0;
+            border-radius: 20px 20px 0 0;
         }
 
         .bottom-nav div {
@@ -7542,11 +7545,20 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
+            gap: 0px;
         }
 
         .bottom-nav i {
             font-size: 24px;
-            margin-bottom: 3px;
+            margin-bottom: 0;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .bottom-nav span {
+            font-size: 11px;
+            line-height: 1;
+            margin-top: 1px;
         }
 
         /* Edit Profile Styles */
@@ -15150,6 +15162,7 @@
                     <path
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
                 </svg></i>
+                <span>Upload</span>
         </div>
         <div id="liveBtn">
             <i>
