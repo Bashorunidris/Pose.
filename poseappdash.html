@@ -7017,7 +7017,7 @@
             color: white !important;
         }
 
-        /* ForYou Profile Section - Bottom left */
+        /* ForYou Profile Section - Top (highest) */
         .forYou-profile-section {
             position: absolute !important;
             bottom: 280px !important;
@@ -7031,7 +7031,7 @@
         }
 
         .forYou-profile-section.ad-closed {
-            bottom: 150px !important;
+            bottom: 280px !important;
         }
 
         .forYou-profile-container {
@@ -7148,10 +7148,10 @@
             transform: scale(0.95) !important;
         }
 
-        /* Video Caption - Above banner */
+        /* Video Caption - Middle (below profile, above banner) */
         .forYou-caption {
             position: absolute !important;
-            bottom: 245px !important;
+            bottom: 220px !important;
             left: 10px !important;
             font-size: 13px !important;
             max-width: 280px !important;
@@ -7162,7 +7162,7 @@
         }
 
         .forYou-caption.ad-closed {
-            bottom: 115px !important;
+            bottom: 220px !important;
         }
 
         .forYou-caption b {
@@ -7174,10 +7174,10 @@
             color: #aaa !important;
         }
 
-        /* Banner Ad */
+        /* Banner Ad - Lowest (closest to bottom nav) */
         .forYou-banner-ad {
             position: absolute !important;
-            bottom: 100px !important;
+            bottom: 75px !important;
             left: 10px !important;
             width: 250px !important;
             height: 130px !important;
@@ -7234,32 +7234,48 @@
 
         /* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
         @media (max-width: 768px) {
-            .forYou-sidebar {
-                right: 8px !important;
-                gap: 16px !important;
-            }
-
-            .forYou-sidebar>div {
-                transition: all 0.2s ease !important;
-            }
-
-            .forYou-sidebar svg {
-                width: 24px !important;
-                height: 24px !important;
-            }
-
-            .forYou-sidebar span {
-                font-size: 12px !important;
-            }
-
             .forYou-profile-section {
-                bottom: 60px !important;
-                left: 8px !important;
-                right: auto !important;
+                bottom: 280px !important;
+                left: 10px !important;
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 60px !important;
+                bottom: 280px !important;
+            }
+
+            .forYou-caption {
+                bottom: 220px !important;
+                left: 10px !important;
+            }
+
+            .forYou-caption.ad-closed {
+                bottom: 220px !important;
+            }
+
+            .forYou-banner-ad {
+                bottom: 75px !important;
+                left: 10px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .forYou-sidebar {
+                right: 10px !important;
+                top: 30% !important;
+            }
+
+            .forYou-sidebar svg {
+                width: 22px !important;
+                height: 22px !important;
+            }
+
+            .forYou-profile-section {
+                bottom: 270px !important;
+                left: 10px !important;
+            }
+
+            .forYou-profile-section.ad-closed {
+                bottom: 270px !important;
             }
 
             .forYou-profile-pic {
@@ -7276,114 +7292,34 @@
             }
 
             .forYou-caption {
-                bottom: 110px !important;
-                left: 8px !important;
-                max-width: 260px !important;
-                font-size: 12px !important;
+                bottom: 215px !important;
+                left: 10px !important;
+                max-width: 280px !important;
+                font-size: 13px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 110px !important;
+                bottom: 215px !important;
             }
 
             .forYou-banner-ad {
-                bottom: 65px !important;
-                left: 8px !important;
-                width: 220px !important;
-                height: 115px !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .forYou-sidebar {
-                right: 6px !important;
-                gap: 14px !important;
-                top: 40% !important;
-            }
-
-            .forYou-sidebar svg {
-                width: 22px !important;
-                height: 22px !important;
-            }
-
-            .forYou-sidebar span {
-                font-size: 11px !important;
-            }
-
-            .forYou-profile-section {
-                bottom: 50px !important;
-                left: 6px !important;
-            }
-
-            .forYou-profile-section.ad-closed {
-                bottom: 50px !important;
-            }
-
-            .forYou-profile-container {
-                gap: 10px !important;
-            }
-
-            .forYou-profile-pic {
-                width: 42px !important;
-                height: 42px !important;
-            }
-
-            .forYou-profile-pic img {
-                width: 100% !important;
-                height: 100% !important;
-            }
-
-            .forYou-profile-name {
-                font-size: 14px !important;
-            }
-
-            .forYou-profile-caption {
-                font-size: 12px !important;
-            }
-
-            .forYou-caption {
-                bottom: 100px !important;
-                left: 6px !important;
-                max-width: 240px !important;
-                font-size: 11px !important;
-                line-height: 1.3em !important;
-            }
-
-            .forYou-caption b {
-                font-size: 12px !important;
-            }
-
-            .forYou-caption.ad-closed {
-                bottom: 100px !important;
-            }
-
-            .forYou-banner-ad {
-                bottom: 55px !important;
-                left: 6px !important;
-                width: 200px !important;
-                height: 100px !important;
+                bottom: 70px !important;
+                left: 10px !important;
+                width: 250px !important;
+                height: 130px !important;
             }
 
             .forYou-close-btn {
-                width: 26px !important;
-                height: 26px !important;
-                font-size: 18px !important;
-                top: 6px !important;
-                right: 6px !important;
-            }
-
-            .forYou-profile-close {
-                width: 22px !important;
-                height: 22px !important;
-                font-size: 14px !important;
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 20px !important;
             }
         }
 
         @media (max-width: 360px) {
             .forYou-sidebar {
-                right: 4px !important;
-                gap: 12px !important;
-                top: 38% !important;
+                right: 8px !important;
+                top: 30% !important;
             }
 
             .forYou-sidebar svg {
@@ -7392,49 +7328,53 @@
             }
 
             .forYou-sidebar span {
-                font-size: 10px !important;
-            }
-
-            .forYou-profile-section {
-                bottom: 45px !important;
-                left: 4px !important;
-            }
-
-            .forYou-profile-section.ad-closed {
-                bottom: 45px !important;
-            }
-
-            .forYou-profile-pic {
-                width: 40px !important;
-                height: 40px !important;
-            }
-
-            .forYou-profile-name {
-                font-size: 13px !important;
-            }
-
-            .forYou-profile-caption {
                 font-size: 11px !important;
             }
 
+            .forYou-profile-section {
+                bottom: 260px !important;
+                left: 8px !important;
+            }
+
+            .forYou-profile-section.ad-closed {
+                bottom: 260px !important;
+            }
+
+            .forYou-profile-pic {
+                width: 42px !important;
+                height: 42px !important;
+            }
+
+            .forYou-profile-name {
+                font-size: 14px !important;
+            }
+
+            .forYou-profile-caption {
+                font-size: 12px !important;
+            }
+
             .forYou-caption {
-                bottom: 95px !important;
-                left: 4px !important;
-                max-width: 220px !important;
-                font-size: 10px !important;
+                bottom: 200px !important;
+                left: 8px !important;
+                max-width: 260px !important;
+                font-size: 12px !important;
+            }
+
+            .forYou-caption.ad-closed {
+                bottom: 200px !important;
             }
 
             .forYou-banner-ad {
-                bottom: 50px !important;
-                left: 4px !important;
-                width: 180px !important;
-                height: 90px !important;
+                bottom: 65px !important;
+                left: 8px !important;
+                width: 240px !important;
+                height: 120px !important;
             }
 
             .forYou-close-btn {
-                width: 24px !important;
-                height: 24px !important;
-                font-size: 16px !important;
+                width: 26px !important;
+                height: 26px !important;
+                font-size: 18px !important;
             }
 
             .forYou-profile-close {
