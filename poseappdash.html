@@ -7143,7 +7143,7 @@
         /* Banner Ad - Above Bottom Nav */
         .forYou-banner-ad {
             position: absolute !important;
-            bottom: 95px !important;
+            bottom: 215px !important;
             left: 10px !important;
             width: 180px !important;
             height: 100px !important;
@@ -7345,56 +7345,10 @@
         }
 
         /* ===== FOR YOU AUDIO INTERFACE (Right Bottom) ===== */
-        .forYou-audio-interface {
-            position: absolute;
-            bottom: 95px;
-            right: 15px;
-            z-index: 10;
-            cursor: pointer;
-            display: none;
-        }
+      
+       
 
-        .forYou-audio-interface.active {
-            display: block;
-        }
-
-        .forYou-audio-player {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(76, 29, 149, 0.3));
-            border-radius: 30px;
-            padding: 8px 12px;
-            max-width: 220px;
-            width: fit-content;
-            backdrop-filter: blur(15px);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .forYou-audio-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .forYou-audio-username {
-            display: none !important;
-        }
-
-        .forYou-audio-icon-container {
-            position: relative;
-        }
-
-        .forYou-audio-icon {
-            min-width: 32px;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-            position: relative;
-            flex-shrink: 0;
-        }
+      
 
         .forYou-spinning-disk-vinyl {
             width: 50px;
@@ -7408,6 +7362,11 @@
             justify-content: center;
             animation: spin-disk 4s linear infinite;
             flex-shrink: 0;
+             position: absolute;
+            bottom: 110px;
+            right: 10px;
+            z-index: 10;
+            cursor: pointer;
         }
 
 
@@ -7422,89 +7381,8 @@
             }
         }
 
-        .forYou-audio-details {
-            flex: 1;
-            overflow: hidden;
-            min-width: 0;
-        }
-
-        .forYou-audio-text {
-            display: flex;
-            flex-direction: column;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            gap: 2px;
-        }
-
-        .forYou-song-name,
-        .forYou-artist-name {
-            color: white;
-            font-size: 11px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .forYou-song-name {
-            font-weight: 600;
-            font-size: 11px;
-        }
-
-        .forYou-artist-name {
-            opacity: 0.7;
-            font-size: 10px;
-        }
-
-        .forYou-audio-visualizer {
-            display: flex;
-            align-items: center;
-            height: 8px;
-            margin-top: 2px;
-            gap: 1px;
-        }
-
-        .forYou-bar {
-            width: 1.5px;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 1px;
-            animation: forYou-sound-wave 1.5s infinite ease-in-out;
-        }
-
-        .forYou-bar:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .forYou-bar:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .forYou-bar:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        .forYou-bar:nth-child(4) {
-            animation-delay: 0.6s;
-        }
-
-        .forYou-bar:nth-child(5) {
-            animation-delay: 0.8s;
-        }
-
-        @keyframes forYou-sound-wave {
-
-            0%,
-            100% {
-                height: 2px;
-            }
-
-            50% {
-                height: 6px;
-            }
-        }
-
+       
+       
         /* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
         @media (max-width: 768px) {
             .forYou-profile-section {
@@ -7526,14 +7404,10 @@
             }
 
             .forYou-banner-ad {
-                bottom: 115px !important;
+                bottom: 140px !important;
                 left: 10px !important;
                 width: 170px !important;
                 height: 90px !important;
-            }
-
-            .forYou-audio-interface {
-                bottom: 115px !important;
             }
         }
 
@@ -7573,14 +7447,10 @@
             }
 
             .forYou-banner-ad {
-                bottom: 120px !important;
+                bottom: 240px !important;
                 left: 10px !important;
                 width: 160px !important;
                 height: 85px !important;
-            }
-
-            .forYou-audio-interface {
-                bottom: 120px !important;
             }
 
             .forYou-close-btn {
@@ -7630,14 +7500,10 @@
             }
 
             .forYou-banner-ad {
-                bottom: 120px !important;
+                bottom: 240px !important;
                 left: 8px !important;
                 width: 150px !important;
                 height: 80px !important;
-            }
-
-            .forYou-audio-interface {
-                bottom: 120px !important;
             }
 
             .forYou-close-btn {
