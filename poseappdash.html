@@ -7206,7 +7206,7 @@
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
-            gap: 15px !important;
+            gap: 8px !important;
             z-index: 10 !important;
         }
 
@@ -7267,7 +7267,7 @@
             .interaction-buttons {
                 right: 12px !important;
                 bottom: 210px !important;
-                gap: 12px !important;
+                gap: 7px !important;
             }
 
             .btn-icon {
@@ -7286,7 +7286,7 @@
             .interaction-buttons {
                 right: 8px !important;
                 bottom: 200px !important;
-                gap: 13px !important;
+                gap: 6px !important;
             }
 
             .btn-icon {
@@ -7307,7 +7307,7 @@
             .interaction-buttons {
                 right: 8px !important;
                 bottom: 215px !important;
-                gap: 15px !important;
+                gap: 6px !important;
             }
 
             .btn-icon {
@@ -7328,7 +7328,7 @@
             .interaction-buttons {
                 right: 7px !important;
                 bottom: 210px !important;
-                gap: 12px !important;
+                gap: 5px !important;
             }
 
             .btn-icon {
@@ -7362,11 +7362,39 @@
             justify-content: center;
             animation: spin-disk 4s linear infinite;
             flex-shrink: 0;
-             position: absolute;
-            bottom: 110px;
-            right: 10px;
-            z-index: 10;
-            cursor: pointer;
+        }
+
+        /* ===== RESPONSIVE SPINNING DISK SIZES ===== */
+        /* Tablets (768px and below) */
+        @media (max-width: 768px) {
+            .forYou-spinning-disk-vinyl {
+                width: 46px;
+                height: 46px;
+            }
+        }
+
+        /* Large Phones (480px - 767px) */
+        @media (max-width: 767px) {
+            .forYou-spinning-disk-vinyl {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        /* Mobile Phones (480px and below) */
+        @media (max-width: 480px) {
+            .forYou-spinning-disk-vinyl {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Extra Small Phones (360px and below) */
+        @media (max-width: 360px) {
+            .forYou-spinning-disk-vinyl {
+                width: 36px;
+                height: 36px;
+            }
         }
 
 
