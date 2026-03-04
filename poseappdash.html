@@ -19346,18 +19346,18 @@
                              <span class="interaction-count">0</span>
                          </button>
                          
-                         <button class="interaction-btn subscribe-btn" data-user-id="${data.userId || 'user987'}">
-                             <div class="btn-icon">
-                                 <i class="fas fa-hand"></i>
-                             </div>
-                             <span class="subscribe">Subscribe</span>
-                         </button>
-                         
                          <button class="interaction-btn comment-btn" data-post-id="foryou_${index}">
                              <div class="btn-icon">
                                  <i class="fas fa-comment"></i>
                              </div>
                              <span class="interaction-count">0</span>
+                         </button>
+                         
+                         <button class="interaction-btn subscribe-btn" data-user-id="${data.userId || 'user987'}">
+                             <div class="btn-icon">
+                                 <i class="fas fa-hand"></i>
+                             </div>
+                             <span class="subscribe">Subscribe</span>
                          </button>
                          
                          <button class="interaction-btn share-btn" data-post-id="foryou_${index}">
@@ -19367,22 +19367,9 @@
                              <span class="interaction-count">0</span>
                          </button>
                          
-                         <button class="interaction-btn save-btn" data-post-id="foryou_${index}">
+                         <button class="interaction-btn more-btn" data-post-id="foryou_${index}">
                              <div class="btn-icon">
-                                 <i class="fas fa-download"></i>
-                             </div>
-                         </button>
-                         
-                         <button class="interaction-btn repost-btn" onclick="toggleForYouRepost(event)" data-post-id="foryou_${index}">
-                             <div class="btn-icon">
-                                 <i class="fas fa-retweet"></i>
-                             </div>
-                             <span class="interaction-count">0</span>
-                         </button>
-                         
-                         <button class="interaction-btn gift-btn" data-post-id="foryou_${index}" data-user-id="${data.userId || 'user987'}">
-                             <div class="btn-icon">
-                                 <i class="fas fa-gift"></i>
+                                 <i class="fas fa-ellipsis-v"></i>
                              </div>
                          </button>
                      </div>
