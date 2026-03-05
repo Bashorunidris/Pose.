@@ -7443,27 +7443,12 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             max-height: 80vh;
             overflow-y: auto;
-            pointer-events: none;
-            visibility: hidden;
-            display: flex;
-            flex-direction: column;
+            display: none;
         }
 
         .share-menu.active {
             transform: translateY(0);
-            pointer-events: auto;
-            visibility: visible;
-        }
-
-        .share-menu.active::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 999;
+            display: block;
         }
 
         .share-header {
@@ -15199,7 +15184,7 @@
                 <!-- Profile Picture Upload -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div class="profile-pic-large" id="previewPic" style="margin: 0 auto 15px;">U</div>
-                    <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+                    <input type="file" id="profilePicInput" accept="image" style="display: none;">
                     <button class="modal-btn" onclick="document.getElementById('profilePicInput').click()"
                         style="background: #333;">
                         📷 Change Photo
@@ -17379,6 +17364,9 @@
 
     <script>
         console.log('Script loaded!');
+        
+        // Global variables
+        let currentVideoToShare = null;
 
         // Firebase config
         const firebaseConfig = {
@@ -19746,7 +19734,7 @@
                              <span class="subscribe">Subscribe</span>
                          </button>
                          
-                         <button class="interaction-btn share-btn" onclick="event.stopPropagation(); openShareMenu('${data.id || 'foryou_' + index}')" data-post-id="${data.id || 'foryou_' + index}">
+                         <button class="interaction-btn share-btn" onclick="openShareMenu(event, '${data.id || 'foryou_' + index}')" data-post-id="${data.id || 'foryou_' + index}">
                              <div class="btn-icon">
                                  <i class="fas fa-share"></i>
                              </div>
@@ -19759,7 +19747,7 @@
                              </div>
                          </button>
                          <div class="more-menu" id="more-menu-${index}">
-                             <button class="more-menu-btn save-btn" data-post-id="foryou_${index}">
+                             <button class="more-menu-btn save-btn" onclick="downloadVideoFromMenu(event, '${data.id || 'foryou_' + index}')" data-post-id="${data.id || 'foryou_' + index}">
                                  <div class="btn-icon">
                                      <i class="fas fa-download"></i>
                                  </div>
@@ -39624,115 +39612,403 @@ For more help, visit: help.pose.app
         `;
         document.head.appendChild(style);
 
-        // Initialize interaction buttons when page loads
+        // Handle shared video link on page load
+        function handleSharedVideoLink() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('caption');
+            
+            if (slug) {
+                // Extract video ID from slug (last part after underscore)
+                const parts = slug.split('_');
+                let videoId = null;
+                
+                // Find the video ID (it's the longest segment that starts with 'post_')
+                for (let i = parts.length - 1; i >= 0; i--) {
+                    if (parts[i].includes('post') || parts[i].match(/^[a-z0-9]{8,}$/)) {
+                        videoId = parts.slice(i).join('_');
+                        break;
+                    }
+                }
+                
+                // If not found by pattern, try the last 2 parts
+                if (!videoId && parts.length >= 2) {
+                    videoId = parts.slice(-2).join('_');
+                }
+                
+                if (videoId) {
+                    console.log('📹 Video shared link detected:', slug, '- Video ID:', videoId);
+                    
+                    // Check if user is logged in
+                    if (!currentUser) {
+                        // Show login modal with message
+                        console.log('⚠️ User not logged in, prompting to create account');
+                        showLoginPromptForVideo(videoId);
+                    } else {
+                        // User is logged in, navigate to video
+                        navigateToVideo(videoId);
+                    }
+                }
+            }
+        }
+
+        // Show login prompt for shared video
+        function showLoginPromptForVideo(videoId) {
+            const loginPrompt = document.createElement('div');
+            loginPrompt.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 3000;
+            `;
+            
+            loginPrompt.innerHTML = `
+                <div style="background: #000; padding: 30px; border-radius: 12px; text-align: center; max-width: 300px; border: 1px solid #8A2BE2;">
+                    <h3 style="color: #fff; margin-bottom: 15px;">Join Pose</h3>
+                    <p style="color: #aaa; margin-bottom: 20px;">Create an account to watch this video and more amazing content</p>
+                    <button onclick="this.parentElement.parentElement.remove(); switchTab('forYou'); showAuthModal('signup'); window.sharedVideoId = '${videoId}';" style="width: 100%; padding: 12px; background: #8A2BE2; border: none; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Create Account</button>
+                    <button onclick="this.parentElement.parentElement.remove(); switchTab('forYou'); showAuthModal('login'); window.sharedVideoId = '${videoId}';" style="width: 100%; padding: 12px; background: transparent; border: 1px solid #8A2BE2; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600;">Login</button>
+                </div>
+            `;
+            
+            document.body.appendChild(loginPrompt);
+        }
+
+        // Navigate to specific video in ForYou feed
+        function navigateToVideo(videoId) {
+            console.log('📺 Navigating to video:', videoId);
+            
+            // Switch to ForYou tab
+            switchTab('forYou');
+            
+            // Wait for feed to load
+            setTimeout(() => {
+                // Find the video in forYouVideos
+                const videoIndex = forYouVideos.findIndex(v => v.id === videoId);
+                
+                if (videoIndex !== -1) {
+                    // Scroll to the video
+                    const forYouFeed = document.getElementById('forYouFeed');
+                    const videoPost = forYouFeed.children[videoIndex];
+                    
+                    if (videoPost) {
+                        videoPost.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        console.log('✅ Scrolled to video');
+                        
+                        // Highlight the video briefly
+                        videoPost.style.animation = 'pulse 0.5s ease-in-out';
+                    }
+                } else {
+                    showGenericToast('Video not found', 'error');
+                }
+            }, 500);
+        }
+
+        // Call handler when page loads (but only after auth is ready)
         window.addEventListener('load', () => {
+            // Check auth status and handle shared video
+            const checkAuthAndNavigate = setInterval(() => {
+                if (currentUser !== undefined) {
+                    clearInterval(checkAuthAndNavigate);
+                    handleSharedVideoLink();
+                }
+            }, 100);
+            
             setTimeout(() => {
                 setupForYouInteractionButtons();
             }, 1000);
         });
 
         // ===== SHARE MENU FUNCTIONS =====
-        let currentVideoToShare = null;
-
         // Open Share Menu
-        function openShareMenu(videoId) {
-            console.log('📤 Opening share menu for video:', videoId);
+        function openShareMenu(event, videoId) {
+            // Prevent video pause and stop propagation
+            event.preventDefault();
+            event.stopPropagation();
+            
             currentVideoToShare = videoId;
             const shareMenu = document.getElementById('shareMenu');
-            console.log('📤 Share menu element:', shareMenu);
             if (shareMenu) {
                 shareMenu.classList.add('active');
-                console.log('✅ Share menu opened');
-            } else {
-                console.error('❌ Share menu element not found');
             }
         }
 
         // Close Share Menu
-        function closeShareMenu() {
+        function closeShareMenu(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
             const shareMenu = document.getElementById('shareMenu');
             if (shareMenu) {
                 shareMenu.classList.remove('active');
-                console.log('✅ Share menu closed');
             }
         }
 
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const shareMenu = document.getElementById('shareMenu');
-            if (shareMenu && shareMenu.classList.contains('active')) {
-                if (!shareMenu.contains(e.target)) {
-                    closeShareMenu();
-                }
-            }
-        });
-
         // Share to WhatsApp
-        function shareToWhatsApp() {
+        function shareToWhatsApp(event) {
+            if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
+            
+            const video = forYouVideos.find(v => v.id === currentVideoToShare);
+            const caption = video ? video.caption : 'Amazing video';
+            const baseUrl = window.location.origin + window.location.pathname;
+            const slug = generateShareSlug(caption, currentVideoToShare);
+            const videoLink = `${baseUrl}?caption=${slug}`;
             const message = `Check out this amazing video on Pose! 🎬`;
-            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + window.location.href)}`;
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + videoLink)}`;
             window.open(url, '_blank');
             closeShareMenu();
         }
 
         // Share to Telegram
-        function shareToTelegram() {
+        function shareToTelegram(event) {
+            if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
+            
+            const video = forYouVideos.find(v => v.id === currentVideoToShare);
+            const caption = video ? video.caption : 'Amazing video';
+            const baseUrl = window.location.origin + window.location.pathname;
+            const slug = generateShareSlug(caption, currentVideoToShare);
+            const videoLink = `${baseUrl}?caption=${slug}`;
             const message = `Check out this amazing video on Pose! 🎬`;
-            const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(message)}`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(videoLink)}&text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
             closeShareMenu();
         }
 
         // Share to Twitter
-        function shareToTwitter() {
+        function shareToTwitter(event) {
+            if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
+            
+            const video = forYouVideos.find(v => v.id === currentVideoToShare);
+            const caption = video ? video.caption : 'Amazing video';
+            const baseUrl = window.location.origin + window.location.pathname;
+            const slug = generateShareSlug(caption, currentVideoToShare);
+            const videoLink = `${baseUrl}?caption=${slug}`;
             const text = `Check out this amazing video on Pose! 🎬`;
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(videoLink)}`;
             window.open(url, '_blank');
             closeShareMenu();
         }
 
         // Share to Facebook
-        function shareToFacebook() {
+        function shareToFacebook(event) {
+            if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
-            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+            
+            const video = forYouVideos.find(v => v.id === currentVideoToShare);
+            const caption = video ? video.caption : 'Amazing video';
+            const baseUrl = window.location.origin + window.location.pathname;
+            const slug = generateShareSlug(caption, currentVideoToShare);
+            const videoLink = `${baseUrl}?caption=${slug}`;
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoLink)}`;
             window.open(url, '_blank');
             closeShareMenu();
         }
 
+        // Generate URL slug from caption and video ID
+        function generateShareSlug(caption, videoId) {
+            if (!caption) caption = 'Amazing video';
+            
+            // Take first 3-5 words and lowercase
+            const words = caption.split(' ').slice(0, 4);
+            const slug = words.join('_').toLowerCase().replace(/[^a-z0-9_]/g, '');
+            
+            // Combine with video ID
+            return `${slug}_${videoId}`;
+        }
+
         // Copy Share Link
-        function copyShareLink() {
-            const link = window.location.href;
+        function copyShareLink(event) {
+            if (event) event.stopPropagation();
+            if (!currentVideoToShare) {
+                showGenericToast('No video selected', 'error');
+                return;
+            }
+            
+            // Get video data
+            const video = forYouVideos.find(v => v.id === currentVideoToShare);
+            const caption = video ? video.caption : 'Amazing video';
+            
+            // Create shareable link with caption slug
+            const baseUrl = window.location.origin + window.location.pathname;
+            const slug = generateShareSlug(caption, currentVideoToShare);
+            const link = `${baseUrl}?caption=${slug}`;
+            
             navigator.clipboard.writeText(link).then(() => {
-                showGenericToast('Link copied to clipboard!', 'success');
+                showGenericToast('Video link copied to clipboard!', 'success');
                 closeShareMenu();
             }).catch(() => {
                 showGenericToast('Failed to copy link', 'error');
             });
         }
 
-        // Save Video
-        function saveVideo() {
+        // Download from more menu
+        function downloadVideoFromMenu(event, videoId) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
             if (!currentUser) {
                 showGenericToast('Please login to save videos', 'error');
                 return;
             }
             
-            showGenericToast('Video saved!', 'success');
+            // Find video
+            const video = forYouVideos.find(v => v.id === videoId);
+            if (!video || !video.videoUrl) {
+                showGenericToast('Video not found', 'error');
+                return;
+            }
+            
+            showGenericToast('Preparing download...', 'info');
+            
+            // Close more menu
+            const moreMenus = document.querySelectorAll('.more-menu');
+            moreMenus.forEach(menu => menu.classList.remove('active'));
+            
+            // Download video with watermark
+            downloadVideoWithWatermark(video);
+        }
+
+        // Save Video with Watermark (from share menu)
+        function saveVideo(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            if (!currentUser) {
+                showGenericToast('Please login to save videos', 'error');
+                return;
+            }
+            
+            if (!currentVideoToShare) {
+                showGenericToast('No video selected', 'error');
+                return;
+            }
+            
+            // Find video
+            const video = forYouVideos.find(v => v.id === currentVideoToShare);
+            if (!video || !video.videoUrl) {
+                showGenericToast('Video not found', 'error');
+                return;
+            }
+            
+            showGenericToast('Preparing download...', 'info');
             closeShareMenu();
+            
+            // Download video with watermark
+            downloadVideoWithWatermark(video);
+        }
+
+        // Download video with watermark
+        async function downloadVideoWithWatermark(video) {
+            try {
+                // Fetch the video
+                const response = await fetch(video.videoUrl);
+                const blob = await response.blob();
+                
+                // Create a video element to get dimensions
+                const videoElement = document.createElement('video');
+                videoElement.src = URL.createObjectURL(blob);
+                
+                videoElement.onloadedmetadata = async () => {
+                    try {
+                        // Get video dimensions
+                        const width = videoElement.videoWidth;
+                        const height = videoElement.videoHeight;
+                        
+                        // Create canvas for watermark
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Draw watermark on canvas
+                        const watermarkText = 'Pose';
+                        const fontSize = Math.max(width / 20, 30); // Dynamic font size
+                        ctx.font = `bold ${fontSize}px Arial`;
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; // White with transparency
+                        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+                        ctx.lineWidth = 2;
+                        
+                        // Measure text to center it
+                        const textMetrics = ctx.measureText(watermarkText);
+                        const x = width - textMetrics.width - (width / 30); // Top right corner
+                        const y = fontSize + (height / 50); // Top margin
+                        
+                        // Draw watermark (stroke then fill for better visibility)
+                        ctx.strokeText(watermarkText, x, y);
+                        ctx.fillText(watermarkText, x, y);
+                        
+                        // Create download link
+                        const videoName = `Pose_${video.id}.webm`;
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = videoName;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        showGenericToast('Video downloaded! 🎬', 'success');
+                        console.log('✅ Video downloaded with watermark:', videoName);
+                        
+                    } catch (error) {
+                        console.error('❌ Error processing watermark:', error);
+                        // Fallback: download without watermark
+                        downloadVideoWithoutWatermark(video);
+                    }
+                };
+                
+                videoElement.onerror = () => {
+                    console.log('Could not load video metadata, downloading without watermark');
+                    downloadVideoWithoutWatermark(video);
+                };
+                
+            } catch (error) {
+                console.error('❌ Error downloading video:', error);
+                showGenericToast('Failed to download video', 'error');
+            }
+        }
+
+        // Fallback: Download video without watermark
+        function downloadVideoWithoutWatermark(video) {
+            try {
+                const link = document.createElement('a');
+                link.href = video.videoUrl;
+                link.download = `Pose_${video.id}.webm`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showGenericToast('Video downloaded! 🎬', 'success');
+                console.log('✅ Video downloaded:', `Pose_${video.id}.webm`);
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showGenericToast('Failed to download video', 'error');
+            }
         }
 
         // Report Video
-        function reportVideo() {
+        function reportVideo(event) {
+            if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
             showGenericToast('Thank you for your feedback. We will review this content.', 'info');
             closeShareMenu();
         }
 
         // Share with Friends
-        function shareWithFriends() {
+        function shareWithFriends(event) {
+            if (event) event.stopPropagation();
             showGenericToast('Friends feature coming soon!', 'info');
             closeShareMenu();
         }
