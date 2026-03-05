@@ -7359,7 +7359,7 @@
         }
 
         .interaction-btn.active .interaction-count {
-            color: #ff2d55 !important;
+            color: white !important;
         }
 
         .interaction-btn:hover .btn-icon {
@@ -19481,6 +19481,11 @@
 
                 // Setup Intersection Observer to only play visible video
                 setupVideoAutoPlay();
+                
+                // Restore like states from Firebase after feed loads
+                setTimeout(() => {
+                    restoreLikeStates();
+                }, 300);
 
                 // Restore scroll position if exists
                 if (tabScrollPositions.forYou > 0) {
@@ -31774,7 +31779,9 @@ For more help, visit: help.pose.app
                                 caption: metadata.caption || '',
                                 type: 'story',
                                 imageUrl: cloudinaryUrl,
-                                createdAt: new Date().toISOString()
+                                createdAt: new Date().toISOString(),
+                                likes: {},
+                                likeCount: 0
                             })
                         });
                         console.log('✅ Story added to user videos array');
@@ -32742,7 +32749,9 @@ For more help, visit: help.pose.app
                             createdAt: postData.createdAt,
                             type: 'video',
                             customAudio: postData.customAudio || null,  // Include custom audio if present
-                            isUploadedFile: postData.isUploadedFile || false
+                            isUploadedFile: postData.isUploadedFile || false,
+                            likes: {},
+                            likeCount: 0
                         })
                     });
                     console.log('✅ Added to user videos array with custom audio:', customAudioData ? customAudioData.title : 'none');
@@ -39137,18 +39146,105 @@ For more help, visit: help.pose.app
         function toggleForYouLike(event) {
             event.stopPropagation();
             const btn = event.currentTarget || event.target.closest('.like-btn');
+            const postId = btn.getAttribute('data-post-id');
             const icon = btn.querySelector('.btn-icon');
-            const count = btn.querySelector('.interaction-count');
-
-            if (btn.classList.contains('active')) {
+            const count = btn.querySelector('span.interaction-count');
+            
+            // Get video data from forYouVideos array
+            const videoIndex = parseInt(postId.split('_')[1]);
+            const video = forYouVideos[videoIndex];
+            
+            if (!video || !currentUser) {
+                console.log('Video or user not found');
+                return;
+            }
+            
+            const creatorUserId = video.userId;
+            const currentLikeCount = parseInt(count.textContent) || 0;
+            const isLiked = btn.classList.contains('active');
+            
+            // Update UI instantly
+            if (isLiked) {
                 btn.classList.remove('active');
-                icon.style.color = 'white';
-                count.textContent = Math.max(0, parseInt(count.textContent) - 1);
+                icon.querySelector('i').style.color = 'white';
+                count.textContent = Math.max(0, currentLikeCount - 1);
+                
+                // Save to Firebase
+                updateVideoLikesInFirebase(creatorUserId, videoIndex, false, currentLikeCount - 1);
             } else {
                 btn.classList.add('active');
-                icon.style.color = '#ff2d55';
-                count.textContent = parseInt(count.textContent) + 1;
+                icon.querySelector('i').style.color = '#ff2d55';
+                count.textContent = currentLikeCount + 1;
+                
+                // Save to Firebase
+                updateVideoLikesInFirebase(creatorUserId, videoIndex, true, currentLikeCount + 1);
             }
+        }
+        
+        // Update likes in Firebase
+        async function updateVideoLikesInFirebase(userId, videoIndex, isLiking, newLikeCount) {
+            try {
+                const userRef = db.collection('users').doc(userId);
+                const userDoc = await userRef.get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    const videos = userData.videos || [];
+                    
+                    if (videos[videoIndex]) {
+                        // Initialize likes object if not exists
+                        if (!videos[videoIndex].likes) {
+                            videos[videoIndex].likes = {};
+                        }
+                        
+                        if (isLiking) {
+                            // Add like
+                            videos[videoIndex].likes[currentUser.uid] = true;
+                        } else {
+                            // Remove like
+                            delete videos[videoIndex].likes[currentUser.uid];
+                        }
+                        
+                        // Update likeCount
+                        videos[videoIndex].likeCount = newLikeCount;
+                        
+                        // Save to Firebase
+                        await userRef.update({ videos });
+                        console.log('✅ Like updated in Firebase:', userId, videoIndex, newLikeCount);
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error updating like in Firebase:', error);
+            }
+        }
+
+        // Restore like state from Firebase
+        function restoreLikeStates() {
+            if (!currentUser) return;
+            
+            const likeButtons = document.querySelectorAll('.interaction-btn.like-btn');
+            
+            likeButtons.forEach((btn, index) => {
+                const postId = btn.getAttribute('data-post-id');
+                const videoIndex = parseInt(postId.split('_')[1]);
+                const video = forYouVideos[videoIndex];
+                
+                if (video && video.likes && video.likes[currentUser.uid]) {
+                    // User has liked this video
+                    btn.classList.add('active');
+                    const icon = btn.querySelector('.btn-icon i');
+                    if (icon) {
+                        icon.style.color = '#ff2d55';
+                    }
+                }
+                
+                // Update like count from Firebase
+                const likeCount = video?.likeCount || 0;
+                const countEl = btn.querySelector('.interaction-count');
+                if (countEl) {
+                    countEl.textContent = likeCount;
+                }
+            });
         }
 
         // Toggle repost for forYou videos
@@ -39176,8 +39272,8 @@ For more help, visit: help.pose.app
             forYouOverlays.forEach((overlay, index) => {
                 // Check if buttons already exist
                 if (!overlay.querySelector('.interaction-buttons')) {
-                    // Create a postId based on index
-                    const postId = `foryou_${index}_${Date.now()}`;
+                    // Create a postId based on index (consistent across reloads)
+                    const postId = `foryou_${index}`;
 
                     // Insert buttons into the overlay
                     const buttonsHTML = createForYouInteractionButtons(postId);
@@ -39204,6 +39300,9 @@ For more help, visit: help.pose.app
         function setupForYouInteractionButtons() {
             // Initial injection
             injectForYouInteractionButtons();
+            
+            // Restore like states from localStorage
+            restoreLikeStates();
 
             // Re-inject on scroll (in case new videos load dynamically)
             const videoFeed = document.querySelector('.video-feed');
@@ -39212,7 +39311,8 @@ For more help, visit: help.pose.app
                     clearTimeout(window.forYouButtonsTimeout);
                     window.forYouButtonsTimeout = setTimeout(() => {
                         injectForYouInteractionButtons();
-                    }, 500);
+                        restoreLikeStates();
+                     }, 500);
                 }, { passive: true });
             }
         }
