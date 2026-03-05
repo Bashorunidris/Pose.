@@ -7246,7 +7246,7 @@
             color: #fff !important;
         }
 
-         /* Banner Ad - Above Bottom Nav */
+        /* Banner Ad - Above Bottom Nav */
         .forYou-banner-ad {
             position: absolute !important;
             bottom: 215px !important;
@@ -7429,6 +7429,176 @@
             font-size: 9px !important;
         }
 
+        /* ===== SHARE MENU STYLES ===== */
+        .share-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 80vh;
+            overflow-y: auto;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .share-menu.active {
+            transform: translateY(0);
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        .share-menu.active::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background: #000;
+            z-index: 10;
+        }
+
+        .share-header h4 {
+            color: #fff;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-share {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-share:hover {
+            opacity: 0.7;
+        }
+
+        .share-options {
+            padding: 20px;
+        }
+
+        .share-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .share-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .share-item:hover {
+            opacity: 0.8;
+        }
+
+        .share-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .share-item:hover .share-icon {
+            transform: scale(1.15);
+            background: rgba(138, 43, 226, 0.3);
+            border-color: #8A2BE2;
+        }
+
+        .share-icon.whatsapp {
+            background: rgba(37, 211, 102, 0.2);
+            border-color: rgba(37, 211, 102, 0.3);
+            color: #25D366;
+        }
+
+        .share-icon.telegram {
+            background: rgba(0, 136, 204, 0.2);
+            border-color: rgba(0, 136, 204, 0.3);
+            color: #0088cc;
+        }
+
+        .share-icon.twitter {
+            background: rgba(29, 161, 242, 0.2);
+            border-color: rgba(29, 161, 242, 0.3);
+            color: #1DA1F2;
+        }
+
+        .share-icon.facebook {
+            background: rgba(59, 89, 152, 0.2);
+            border-color: rgba(59, 89, 152, 0.3);
+            color: #3b5998;
+        }
+
+        .share-icon.copy {
+            background: rgba(100, 181, 246, 0.2);
+            border-color: rgba(100, 181, 246, 0.3);
+            color: #64b5f6;
+        }
+
+        .share-icon.save {
+            background: rgba(255, 193, 7, 0.2);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #FFC107;
+        }
+
+        .share-icon.report {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+
+        .share-icon.friends {
+            background: rgba(156, 39, 176, 0.2);
+            border-color: rgba(156, 39, 176, 0.3);
+            color: #9c27b0;
+        }
+
+        .share-item span {
+            font-size: 12px;
+            text-align: center;
+            color: #fff;
+        }
+
         /* ===== RESPONSIVE INTERACTION BUTTONS ===== */
         /* Tablets (768px and below) */
         @media (max-width: 768px) {
@@ -7513,10 +7683,10 @@
         }
 
         /* ===== FOR YOU AUDIO INTERFACE (Right Bottom) ===== */
-      
-       
 
-      
+
+
+
 
         .forYou-spinning-disk-vinyl {
             width: 50px;
@@ -7590,8 +7760,8 @@
             }
         }
 
-       
-       
+
+
         /* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
         @media (max-width: 768px) {
             .forYou-profile-section {
@@ -19437,31 +19607,28 @@
                 // Show loading message
                 forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #aaa; font-size: 18px;">Loading videos...</div>';
 
-                // Get all users and their videos
-                console.log('📖 Fetching all users and their videos...');
-                const usersSnapshot = await db.collection('users').get();
+                // Get all videos from videos collection (simple, clean query)
+                console.log('📖 Fetching all videos...');
+                let videosSnapshot;
+                try {
+                    videosSnapshot = await db.collection('videos').orderBy('createdAt', 'desc').get();
+                } catch (indexError) {
+                    console.warn('⚠️ orderBy requires index, falling back to unordered query:', indexError.message);
+                    videosSnapshot = await db.collection('videos').get();
+                }
+                
                 forYouVideos = [];
 
-                for (const userDoc of usersSnapshot.docs) {
-                    const userData = userDoc.data();
-                    const userVideos = userData?.videos || [];
-
-                    // Add user's videos (exclude stories, only video type)
-                    userVideos.forEach(video => {
-                        if (!video.type || video.type !== 'story') {
-                            forYouVideos.push({
-                                ...video,
-                                userId: userDoc.id,
-                                userName: userData.name || 'Unknown',
-                                username: userData.username || 'user',
-                                userProfilePic: userData.profilePicUrl || null
-                            });
-                        }
+                videosSnapshot.forEach(doc => {
+                    const videoData = doc.data();
+                    forYouVideos.push({
+                        ...videoData,
+                        id: doc.id
                     });
-                }
+                });
 
-                // Sort by date (newest first)
-                forYouVideos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                // Sort by createdAt if not ordered by database
+                forYouVideos.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
                 console.log('✅ Loaded', forYouVideos.length, 'videos for For You feed from all users');
 
@@ -19481,7 +19648,7 @@
 
                 // Setup Intersection Observer to only play visible video
                 setupVideoAutoPlay();
-                
+
                 // Restore like states from Firebase after feed loads
                 setTimeout(() => {
                     restoreLikeStates();
@@ -19556,18 +19723,18 @@
                          </div>
                      </div>
                      <div class="interaction-buttons">
-                         <button class="interaction-btn like-btn" onclick="toggleForYouLike(event)" data-post-id="foryou_${index}">
+                         <button class="interaction-btn like-btn" onclick="toggleForYouLike(event)" data-post-id="${data.id || 'foryou_' + index}">
                              <div class="btn-icon">
                                  <i class="fas fa-heart"></i>
                              </div>
-                             <span class="interaction-count">0</span>
+                             <span class="interaction-count">${data.likeCount || 0}</span>
                          </button>
                          
-                         <button class="interaction-btn comment-btn" data-post-id="foryou_${index}">
+                         <button class="interaction-btn comment-btn" data-post-id="${data.id || 'foryou_' + index}">
                              <div class="btn-icon">
                                  <i class="fas fa-comment"></i>
                              </div>
-                             <span class="interaction-count">0</span>
+                             <span class="interaction-count">${data.comments || 0}</span>
                          </button>
                          
                          <button class="interaction-btn subscribe-btn" data-user-id="${data.userId || 'user987'}">
@@ -19577,7 +19744,7 @@
                              <span class="subscribe">Subscribe</span>
                          </button>
                          
-                         <button class="interaction-btn share-btn" data-post-id="foryou_${index}">
+                         <button class="interaction-btn share-btn" onclick="event.stopPropagation(); openShareMenu('${data.id || 'foryou_' + index}')" data-post-id="${data.id || 'foryou_' + index}">
                              <div class="btn-icon">
                                  <i class="fas fa-share"></i>
                              </div>
@@ -19623,7 +19790,7 @@
             const captionElement = postDiv.querySelector('.forYou-caption');
             const profileSection = postDiv.querySelector('.forYou-profile-section');
             const captionText = (data.caption || '').trim();
-            
+
             if (!captionText) {
                 // Hide caption if empty
                 if (captionElement) {
@@ -19654,27 +19821,27 @@
                 postDiv.appendChild(customAudio);
 
                 // Show audio interface
-                 const audioInterface = postDiv.querySelector(`#audioInterface-${index}`);
+                const audioInterface = postDiv.querySelector(`#audioInterface-${index}`);
 
-                 if (audioInterface) {
-                     audioInterface.classList.add('active');
-                     
-                     // Store audio reference for modal
-                     audioInterface.dataset.soundData = JSON.stringify({
-                         title: data.customAudio.title,
-                         artist: data.customAudio.artist,
-                         url: data.customAudio.url,
-                         videoIndex: index,
-                         isCustom: true
-                     });
-                 }
+                if (audioInterface) {
+                    audioInterface.classList.add('active');
+
+                    // Store audio reference for modal
+                    audioInterface.dataset.soundData = JSON.stringify({
+                        title: data.customAudio.title,
+                        artist: data.customAudio.artist,
+                        url: data.customAudio.url,
+                        videoIndex: index,
+                        isCustom: true
+                    });
+                }
 
                 console.log('✅ Custom audio created:', data.customAudio.title, 'by', data.customAudio.artist);
             } else {
                 // Show original audio if no custom audio
                 audioType = 'original';
                 video.muted = false; // Keep original audio unmuted
-                
+
                 const audioInterface = postDiv.querySelector(`#audioInterface-${index}`);
 
                 if (audioInterface) {
@@ -32720,9 +32887,9 @@ For more help, visit: help.pose.app
                     allowDownload: document.querySelector('input[type="checkbox"]:nth-of-type(5)')?.checked ?? false,
                     status: 'published',
                     createdAt: new Date().toISOString(),
-                    date: todayDate,
                     views: 0,
-                    likes: 0,
+                    likes: {},
+                    likeCount: 0,
                     comments: 0,
                     shares: 0,
                     reposts: 0,
@@ -32730,34 +32897,13 @@ For more help, visit: help.pose.app
                     type: 'video'
                 };
 
-                // Save to posevideosposted collection by date
+                // Save to videos collection (simple, easy to query)
                 try {
-                    await db.collection('posevideosposted').doc(todayDate).collection('posts').doc(docId).set(postData);
-                    console.log('✅ Post saved to posevideosposted/' + todayDate + '/posts/' + docId);
+                    await db.collection('videos').doc(docId).set(postData);
+                    console.log('✅ Video saved to videos/' + docId);
                 } catch (e) {
-                    console.error('❌ Error saving to posevideosposted:', e);
+                    console.error('❌ Error saving video:', e);
                     throw e;
-                }
-
-                // Also add to user's videos array (for profile feed loading like story tab) - includes custom audio
-                try {
-                    await db.collection('users').doc(currentUser.uid).update({
-                        videos: firebase.firestore.FieldValue.arrayUnion({
-                            id: docId,
-                            videoUrl: postData.videoUrl,
-                            caption: postData.caption,
-                            createdAt: postData.createdAt,
-                            type: 'video',
-                            customAudio: postData.customAudio || null,  // Include custom audio if present
-                            isUploadedFile: postData.isUploadedFile || false,
-                            likes: {},
-                            likeCount: 0
-                        })
-                    });
-                    console.log('✅ Added to user videos array with custom audio:', customAudioData ? customAudioData.title : 'none');
-                } catch (e) {
-                    console.error('⚠️ Could not add to user array:', e);
-                    // Don't throw - post was still saved to posevideosposted
                 }
                 // Reload all feeds to show new video immediately
                 allUserVideos = [];
@@ -39146,20 +39292,15 @@ For more help, visit: help.pose.app
         function toggleForYouLike(event) {
             event.stopPropagation();
             const btn = event.currentTarget || event.target.closest('.like-btn');
-            const postId = btn.getAttribute('data-post-id');
+            const videoId = btn.getAttribute('data-post-id');
             const icon = btn.querySelector('.btn-icon');
             const count = btn.querySelector('span.interaction-count');
             
-            // Get video data from forYouVideos array
-            const videoIndex = parseInt(postId.split('_')[1]);
-            const video = forYouVideos[videoIndex];
-            
-            if (!video || !currentUser) {
-                console.log('Video or user not found');
+            if (!videoId || !currentUser) {
+                console.log('Video ID or user not found');
                 return;
             }
             
-            const creatorUserId = video.userId;
             const currentLikeCount = parseInt(count.textContent) || 0;
             const isLiked = btn.classList.contains('active');
             
@@ -39170,49 +39311,38 @@ For more help, visit: help.pose.app
                 count.textContent = Math.max(0, currentLikeCount - 1);
                 
                 // Save to Firebase
-                updateVideoLikesInFirebase(creatorUserId, videoIndex, false, currentLikeCount - 1);
+                updateVideoLikesInFirebase(videoId, false, currentLikeCount - 1);
             } else {
                 btn.classList.add('active');
                 icon.querySelector('i').style.color = '#ff2d55';
                 count.textContent = currentLikeCount + 1;
                 
                 // Save to Firebase
-                updateVideoLikesInFirebase(creatorUserId, videoIndex, true, currentLikeCount + 1);
+                updateVideoLikesInFirebase(videoId, true, currentLikeCount + 1);
             }
         }
-        
+
         // Update likes in Firebase
-        async function updateVideoLikesInFirebase(userId, videoIndex, isLiking, newLikeCount) {
+        async function updateVideoLikesInFirebase(videoId, isLiking, newLikeCount) {
             try {
-                const userRef = db.collection('users').doc(userId);
-                const userDoc = await userRef.get();
-                
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    const videos = userData.videos || [];
-                    
-                    if (videos[videoIndex]) {
-                        // Initialize likes object if not exists
-                        if (!videos[videoIndex].likes) {
-                            videos[videoIndex].likes = {};
-                        }
-                        
-                        if (isLiking) {
-                            // Add like
-                            videos[videoIndex].likes[currentUser.uid] = true;
-                        } else {
-                            // Remove like
-                            delete videos[videoIndex].likes[currentUser.uid];
-                        }
-                        
-                        // Update likeCount
-                        videos[videoIndex].likeCount = newLikeCount;
-                        
-                        // Save to Firebase
-                        await userRef.update({ videos });
-                        console.log('✅ Like updated in Firebase:', userId, videoIndex, newLikeCount);
-                    }
+                const videoRef = db.collection('videos').doc(videoId);
+
+                // Initialize likes object if not exists
+                let updateData = {
+                    likeCount: newLikeCount
+                };
+
+                if (isLiking) {
+                    // Add like
+                    updateData[`likes.${currentUser.uid}`] = true;
+                } else {
+                    // Remove like
+                    updateData[`likes.${currentUser.uid}`] = firebase.firestore.FieldValue.delete();
                 }
+
+                // Save to Firebase
+                await videoRef.update(updateData);
+                console.log('✅ Like updated in Firebase:', videoId, newLikeCount);
             } catch (error) {
                 console.error('❌ Error updating like in Firebase:', error);
             }
@@ -39224,25 +39354,34 @@ For more help, visit: help.pose.app
             
             const likeButtons = document.querySelectorAll('.interaction-btn.like-btn');
             
-            likeButtons.forEach((btn, index) => {
-                const postId = btn.getAttribute('data-post-id');
-                const videoIndex = parseInt(postId.split('_')[1]);
-                const video = forYouVideos[videoIndex];
+            likeButtons.forEach(btn => {
+                const videoId = btn.getAttribute('data-post-id');
                 
-                if (video && video.likes && video.likes[currentUser.uid]) {
-                    // User has liked this video
-                    btn.classList.add('active');
-                    const icon = btn.querySelector('.btn-icon i');
-                    if (icon) {
-                        icon.style.color = '#ff2d55';
+                // Find video in forYouVideos
+                const video = forYouVideos.find(v => v.id === videoId);
+                
+                if (video) {
+                    // Update like count from video data
+                    const countEl = btn.querySelector('.interaction-count');
+                    if (countEl) {
+                        countEl.textContent = video.likeCount || 0;
                     }
-                }
-                
-                // Update like count from Firebase
-                const likeCount = video?.likeCount || 0;
-                const countEl = btn.querySelector('.interaction-count');
-                if (countEl) {
-                    countEl.textContent = likeCount;
+                    
+                    // Check if current user has liked
+                    if (video.likes && video.likes[currentUser.uid]) {
+                        // User has liked this video
+                        btn.classList.add('active');
+                        const icon = btn.querySelector('.btn-icon i');
+                        if (icon) {
+                            icon.style.color = '#ff2d55';
+                        }
+                    } else {
+                        btn.classList.remove('active');
+                        const icon = btn.querySelector('.btn-icon i');
+                        if (icon) {
+                            icon.style.color = 'white';
+                        }
+                    }
                 }
             });
         }
@@ -39300,7 +39439,7 @@ For more help, visit: help.pose.app
         function setupForYouInteractionButtons() {
             // Initial injection
             injectForYouInteractionButtons();
-            
+
             // Restore like states from localStorage
             restoreLikeStates();
 
@@ -39312,7 +39451,7 @@ For more help, visit: help.pose.app
                     window.forYouButtonsTimeout = setTimeout(() => {
                         injectForYouInteractionButtons();
                         restoreLikeStates();
-                     }, 500);
+                    }, 500);
                 }, { passive: true });
             }
         }
@@ -39321,14 +39460,14 @@ For more help, visit: help.pose.app
         function toggleMoreMenu(event, menuId) {
             event.stopPropagation();
             const menu = document.getElementById(menuId);
-            
+
             // Close all other menus
             document.querySelectorAll('.more-menu.active').forEach(m => {
                 if (m.id !== menuId) {
                     m.classList.remove('active');
                 }
             });
-            
+
             // Toggle current menu
             menu.classList.toggle('active');
         }
@@ -39352,7 +39491,7 @@ For more help, visit: help.pose.app
                 modal.className = 'caption-modal-overlay';
                 document.body.appendChild(modal);
             }
-            
+
             // Set caption content
             const modalContent = document.querySelector('.caption-modal-content');
             if (modalContent) {
@@ -39360,7 +39499,7 @@ For more help, visit: help.pose.app
                     .replace(/\n/g, '<br>')
                     .replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
             }
-            
+
             // Show modal
             modal.classList.add('active');
         }
@@ -39389,14 +39528,14 @@ For more help, visit: help.pose.app
                 `;
                 document.body.appendChild(modal);
             }
-            
+
             const fullText = document.querySelector('.caption-full-text');
             if (fullText) {
                 fullText.innerHTML = caption
                     .replace(/\n/g, '<br>')
                     .replace(/#(\w+)/g, '<span class="hashtag-tag">#$1</span>');
             }
-            
+
             modal.classList.add('active');
         }
 
@@ -39414,14 +39553,14 @@ For more help, visit: help.pose.app
             const bannerAd = event.target.closest('.forYou-banner-ad');
             if (bannerAd) {
                 bannerAd.style.animation = 'slideOutLeft 0.3s ease-out forwards';
-                
+
                 // Find the parent overlay
                 const overlay = bannerAd.closest('.forYou-overlay');
                 if (overlay) {
                     // Add ad-closed class to profile section and caption
                     const profileSection = overlay.querySelector('.forYou-profile-section');
                     const caption = overlay.querySelector('.forYou-caption');
-                    
+
                     if (profileSection) {
                         profileSection.classList.add('ad-closed');
                     }
@@ -39429,21 +39568,21 @@ For more help, visit: help.pose.app
                         caption.classList.add('ad-closed');
                     }
                 }
-                
+
                 setTimeout(() => {
                     bannerAd.style.display = 'none';
                 }, 300);
-                
+
                 // Show banner again after 30 seconds
                 setTimeout(() => {
                     bannerAd.style.display = 'block';
                     bannerAd.style.animation = 'slideInLeft 0.3s ease-out forwards';
-                    
+
                     // Remove ad-closed class to move profile and caption back
                     if (overlay) {
                         const profileSection = overlay.querySelector('.forYou-profile-section');
                         const caption = overlay.querySelector('.forYou-caption');
-                        
+
                         if (profileSection) {
                             profileSection.classList.remove('ad-closed');
                         }
@@ -39451,7 +39590,7 @@ For more help, visit: help.pose.app
                             caption.classList.remove('ad-closed');
                         }
                     }
-                    
+
                     console.log('📢 Banner ad re-appeared after 30 seconds');
                 }, 30000);
             }
@@ -39490,8 +39629,212 @@ For more help, visit: help.pose.app
             }, 1000);
         });
 
+        // ===== SHARE MENU FUNCTIONS =====
+        let currentVideoToShare = null;
+
+        // Open Share Menu
+        function openShareMenu(videoId) {
+            console.log('📤 Opening share menu for video:', videoId);
+            currentVideoToShare = videoId;
+            const shareMenu = document.getElementById('shareMenu');
+            console.log('📤 Share menu element:', shareMenu);
+            if (shareMenu) {
+                shareMenu.classList.add('active');
+                console.log('✅ Share menu opened');
+            } else {
+                console.error('❌ Share menu element not found');
+            }
+        }
+
+        // Close Share Menu
+        function closeShareMenu() {
+            const shareMenu = document.getElementById('shareMenu');
+            if (shareMenu) {
+                shareMenu.classList.remove('active');
+                console.log('✅ Share menu closed');
+            }
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const shareMenu = document.getElementById('shareMenu');
+            if (shareMenu && shareMenu.classList.contains('active')) {
+                if (!shareMenu.contains(e.target)) {
+                    closeShareMenu();
+                }
+            }
+        });
+
+        // Share to WhatsApp
+        function shareToWhatsApp() {
+            if (!currentVideoToShare) return;
+            const message = `Check out this amazing video on Pose! 🎬`;
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + window.location.href)}`;
+            window.open(url, '_blank');
+            closeShareMenu();
+        }
+
+        // Share to Telegram
+        function shareToTelegram() {
+            if (!currentVideoToShare) return;
+            const message = `Check out this amazing video on Pose! 🎬`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+            closeShareMenu();
+        }
+
+        // Share to Twitter
+        function shareToTwitter() {
+            if (!currentVideoToShare) return;
+            const text = `Check out this amazing video on Pose! 🎬`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
+            window.open(url, '_blank');
+            closeShareMenu();
+        }
+
+        // Share to Facebook
+        function shareToFacebook() {
+            if (!currentVideoToShare) return;
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+            window.open(url, '_blank');
+            closeShareMenu();
+        }
+
+        // Copy Share Link
+        function copyShareLink() {
+            const link = window.location.href;
+            navigator.clipboard.writeText(link).then(() => {
+                showGenericToast('Link copied to clipboard!', 'success');
+                closeShareMenu();
+            }).catch(() => {
+                showGenericToast('Failed to copy link', 'error');
+            });
+        }
+
+        // Save Video
+        function saveVideo() {
+            if (!currentUser) {
+                showGenericToast('Please login to save videos', 'error');
+                return;
+            }
+            
+            showGenericToast('Video saved!', 'success');
+            closeShareMenu();
+        }
+
+        // Report Video
+        function reportVideo() {
+            if (!currentVideoToShare) return;
+            showGenericToast('Thank you for your feedback. We will review this content.', 'info');
+            closeShareMenu();
+        }
+
+        // Share with Friends
+        function shareWithFriends() {
+            showGenericToast('Friends feature coming soon!', 'info');
+            closeShareMenu();
+        }
+
+        // Helper toast function
+        function showGenericToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 2000;
+                font-size: 14px;
+                animation: slideUp 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideDown 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
 
     </script>
+
+    <!-- Share Menu Modal -->
+    <div class="share-menu" id="shareMenu">
+        <div class="share-header">
+            <h4>Share to</h4>
+            <button class="close-share" onclick="closeShareMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    
+        <div class="share-options">
+            <!-- Social Platforms -->
+            <div class="share-section">
+                <div class="share-item" onclick="shareToWhatsApp()">
+                    <div class="share-icon whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <span>WhatsApp</span>
+                </div>
+    
+                <div class="share-item" onclick="shareToTelegram()">
+                    <div class="share-icon telegram">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <span>Telegram</span>
+                </div>
+    
+                <div class="share-item" onclick="shareToTwitter()">
+                    <div class="share-icon twitter">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                    <span>Twitter</span>
+                </div>
+    
+                <div class="share-item" onclick="shareToFacebook()">
+                    <div class="share-icon facebook">
+                        <i class="fab fa-facebook"></i>
+                    </div>
+                    <span>Facebook</span>
+                </div>
+            </div>
+    
+            <!-- Additional Options -->
+            <div class="share-section">
+                <div class="share-item" onclick="copyShareLink()">
+                    <div class="share-icon copy">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <span>Copy Link</span>
+                </div>
+    
+                <div class="share-item" onclick="saveVideo()">
+                    <div class="share-icon save">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <span>Save</span>
+                </div>
+    
+                <div class="share-item" onclick="reportVideo()">
+                    <div class="share-icon report">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <span>Report</span>
+                </div>
+                
+                <div class="share-item" onclick="shareWithFriends()">
+                    <div class="share-icon friends">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span>Friends</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Wallet Page (Full Screen) -->
     <div class="wallet-modal" id="walletModal">
