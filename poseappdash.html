@@ -6997,7 +6997,7 @@
         }
 
         .forYou-profile-section.ad-closed {
-            bottom: 280px !important;
+            bottom: 110px !important;
         }
 
         .forYou-profile-container {
@@ -7128,7 +7128,7 @@
         }
 
         .forYou-caption.ad-closed {
-            bottom: 250px !important;
+            bottom: 160px !important;
         }
 
         .forYou-caption b {
@@ -7259,6 +7259,68 @@
         .interaction-btn:hover .btn-icon {
             background-color: rgba(0, 0, 0, 0.7) !important;
             transform: scale(1.1) !important;
+        }
+
+        /* ===== MORE MENU DROPDOWN ===== */
+        .more-menu {
+            display: none !important;
+            position: absolute !important;
+            right: 50px !important;
+            bottom: 0 !important;
+            transform: scaleX(0) !important;
+            transform-origin: right center !important;
+            background: rgba(0, 0, 0, 0.85) !important;
+            border-radius: 12px !important;
+            padding: 8px !important;
+            gap: 8px !important;
+            flex-direction: row !important;
+            z-index: 15 !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            transition: transform 0.2s ease !important;
+            white-space: nowrap !important;
+        }
+
+        .more-menu.active {
+            display: flex !important;
+            transform: scaleX(1) !important;
+        }
+
+        .more-menu-btn {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            transition: all 0.2s ease !important;
+            font-size: 10px !important;
+            gap: 4px !important;
+        }
+
+        .more-menu-btn .btn-icon {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 14px !important;
+            margin-bottom: 0 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .more-menu-btn:hover .btn-icon {
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            transform: scale(1.1) !important;
+        }
+
+        .more-menu-btn span {
+            font-weight: 500 !important;
+            font-size: 9px !important;
         }
 
         /* ===== RESPONSIVE INTERACTION BUTTONS ===== */
@@ -7432,7 +7494,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 280px !important;
+                bottom: 110px !important;
             }
 
             .forYou-caption {
@@ -7441,7 +7503,7 @@
             }
 
             .forYou-caption.ad-closed {
-                bottom: 250px !important;
+                bottom: 160px !important;
             }
 
             .forYou-banner-ad {
@@ -7460,7 +7522,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 325px !important;
+                bottom: 120px !important;
             }
 
             .forYou-profile-pic {
@@ -7484,7 +7546,7 @@
             }
 
             .forYou-caption.ad-closed {
-                bottom: 280px !important;
+                bottom: 170px !important;
             }
 
             .forYou-banner-ad {
@@ -7513,7 +7575,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 315px !important;
+                bottom: 115px !important;
             }
 
             .forYou-profile-pic {
@@ -7537,7 +7599,7 @@
             }
 
             .forYou-caption.ad-closed {
-                bottom: 280px !important;
+                bottom: 160px !important;
             }
 
             .forYou-banner-ad {
@@ -19365,9 +19427,9 @@
                         <b>${data.caption || 'Discover great content'}</b> <span>See more >></span>
                     </div>
                     <div class="forYou-banner-ad">
-                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='130'><rect width='250' height='130' fill='%234ecdc4'/><text x='125' y='70' text-anchor='middle' fill='white' font-size='18' font-family='Arial'>✨ Discover</text></svg>" alt="banner">
-                        <button class="forYou-close-btn">×</button>
-                    </div>
+                         <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='130'><rect width='250' height='130' fill='%234ecdc4'/><text x='125' y='70' text-anchor='middle' fill='white' font-size='18' font-family='Arial'>✨ Discover</text></svg>" alt="banner">
+                         <button class="forYou-close-btn" onclick="closeBannerAd(event)">×</button>
+                     </div>
                     <div class="forYou-profile-section">
                          <div class="forYou-profile-container">
                              <div class="forYou-profile-pic" style="background-image: url('${data.userProfilePic || ''}');">
@@ -19408,12 +19470,32 @@
                              <span class="interaction-count">0</span>
                          </button>
                          
-                         <button class="interaction-btn more-btn" data-post-id="foryou_${index}">
+                         <button class="interaction-btn more-btn" onclick="toggleMoreMenu(event, 'more-menu-${index}')" data-post-id="foryou_${index}">
                              <div class="btn-icon">
-                                 <i class="fas fa-ellipsis-v"></i>
+                                 <i class="fas fa-ellipsis-h"></i>
                              </div>
                          </button>
-                     </div>
+                         <div class="more-menu" id="more-menu-${index}">
+                             <button class="more-menu-btn save-btn" data-post-id="foryou_${index}">
+                                 <div class="btn-icon">
+                                     <i class="fas fa-download"></i>
+                                 </div>
+                                 <span>Save</span>
+                             </button>
+                             <button class="more-menu-btn repost-btn" onclick="toggleForYouRepost(event)" data-post-id="foryou_${index}">
+                                 <div class="btn-icon">
+                                     <i class="fas fa-retweet"></i>
+                                 </div>
+                                 <span>Repost</span>
+                             </button>
+                             <button class="more-menu-btn gift-btn" data-post-id="foryou_${index}" data-user-id="${data.userId || 'user987'}">
+                                 <div class="btn-icon">
+                                     <i class="fas fa-gift"></i>
+                                 </div>
+                                 <span>Gift</span>
+                             </button>
+                         </div>
+                         </div>
                     </div>
                     `;
 
@@ -39009,6 +39091,75 @@ For more help, visit: help.pose.app
                 }, { passive: true });
             }
         }
+
+        // Toggle More Menu
+        function toggleMoreMenu(event, menuId) {
+            event.stopPropagation();
+            const menu = document.getElementById(menuId);
+            
+            // Close all other menus
+            document.querySelectorAll('.more-menu.active').forEach(m => {
+                if (m.id !== menuId) {
+                    m.classList.remove('active');
+                }
+            });
+            
+            // Toggle current menu
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.more-menu') && !e.target.closest('.more-btn')) {
+                document.querySelectorAll('.more-menu.active').forEach(m => {
+                    m.classList.remove('active');
+                });
+            }
+        });
+
+        // Close banner ads
+        function closeBannerAd(event) {
+            event.stopPropagation();
+            const bannerAd = event.target.closest('.forYou-banner-ad');
+            if (bannerAd) {
+                bannerAd.style.animation = 'slideOutLeft 0.3s ease-out forwards';
+                
+                // Find the parent overlay
+                const overlay = bannerAd.closest('.forYou-overlay');
+                if (overlay) {
+                    // Add ad-closed class to profile section and caption
+                    const profileSection = overlay.querySelector('.forYou-profile-section');
+                    const caption = overlay.querySelector('.forYou-caption');
+                    
+                    if (profileSection) {
+                        profileSection.classList.add('ad-closed');
+                    }
+                    if (caption) {
+                        caption.classList.add('ad-closed');
+                    }
+                }
+                
+                setTimeout(() => {
+                    bannerAd.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        // Add animation for banner close
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOutLeft {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(-100%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
 
         // Initialize interaction buttons when page loads
         window.addEventListener('load', () => {
