@@ -7445,6 +7445,8 @@
             overflow-y: auto;
             pointer-events: none;
             visibility: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .share-menu.active {
@@ -7460,8 +7462,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
         }
 
         .share-header {
