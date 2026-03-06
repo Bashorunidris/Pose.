@@ -7586,6 +7586,241 @@
             color: #fff;
         }
 
+        /* ===== COMMENT SECTION (TIKTOK STYLE) ===== */
+        .comment-modal-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: none !important;
+            animation: fadeIn 0.3s ease;
+            opacity: 0;
+        }
+
+        .comment-modal-overlay.active {
+            display: block !important;
+            opacity: 1;
+        }
+
+        .comment-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            border-radius: 20px 20px 0 0;
+            z-index: 1000;
+            max-height: 80vh;
+            display: none;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .comment-modal.active {
+            transform: translateY(0);
+            display: flex !important;
+        }
+
+        .comment-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .comment-header h3 {
+            color: #fff;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .comment-close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comment-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(138, 43, 226, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .comment-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .comment-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .comment-username {
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .comment-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .comment-text {
+            color: #e4e6eb;
+            font-size: 13px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .comment-like-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+
+        .comment-like-btn:hover {
+            color: #ff2d55;
+        }
+
+        .comment-like-btn.liked {
+            color: #ff2d55;
+        }
+
+        .comment-input-section {
+            padding: 12px 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .comment-input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 8px 15px;
+            align-items: center;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .comment-input::placeholder {
+            color: #999;
+        }
+
+        .comment-emoji-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+
+        .comment-emoji-btn:hover {
+            color: #fff;
+        }
+
+        .comment-send-btn {
+            background: none;
+            border: none;
+            color: #8A2BE2;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 15px;
+            transition: all 0.2s ease;
+        }
+
+        .comment-send-btn:hover {
+            color: #a855f7;
+        }
+
+        .comment-send-btn:disabled {
+            color: #555;
+            cursor: not-allowed;
+        }
+
+        .empty-comments {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: #999;
+            text-align: center;
+        }
+
+        .empty-comments-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .empty-comments-text {
+            font-size: 14px;
+        }
+
         /* ===== RESPONSIVE INTERACTION BUTTONS ===== */
         /* Tablets (768px and below) */
         @media (max-width: 768px) {
@@ -17367,6 +17602,11 @@
         
         // Global variables
         let currentVideoToShare = null;
+        let currentCommentVideoId = null;
+        let videoComments = {};
+        let currentReplyIndex = null; // Track if replying to a comment
+        let replyingToCommentId = null;
+        let userProfileData = null;
 
         // Firebase config
         const firebaseConfig = {
@@ -18458,6 +18698,11 @@
                 const doc = await db.collection('users').doc(uid).get();
                 if (doc.exists) {
                     const userData = doc.data();
+                    
+                    // Store user profile globally for comments
+                    userProfileData = userData;
+                    console.log('✅ User profile stored:', userData.username);
+                    
                     document.getElementById('profileDisplayName').textContent = userData.name;
                     document.getElementById('profileUsernameDisplay').textContent = '@' + userData.username;
 
@@ -19720,7 +19965,7 @@
                              <span class="interaction-count">${data.likeCount || 0}</span>
                          </button>
                          
-                         <button class="interaction-btn comment-btn" data-post-id="${data.id || 'foryou_' + index}">
+                         <button class="interaction-btn comment-btn" onclick="openCommentModal(event, '${data.id || 'foryou_' + index}')" data-post-id="${data.id || 'foryou_' + index}">
                              <div class="btn-icon">
                                  <i class="fas fa-comment"></i>
                              </div>
@@ -40013,6 +40258,881 @@ For more help, visit: help.pose.app
             closeShareMenu();
         }
 
+        // ===== COMMENT SYSTEM (TIKTOK STYLE) =====
+        // Open comment modal
+        async function openCommentModal(event, videoId) {
+            console.log('📝 Opening comment modal for video:', videoId);
+            
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            currentCommentVideoId = videoId;
+            
+            try {
+                // Ensure user profile is loaded
+                if (!userProfileData && currentUser) {
+                    console.log('⏳ Loading user profile...');
+                    await loadUserProfile(currentUser.uid);
+                }
+                
+                // Show modal
+                const overlay = document.getElementById('commentOverlay');
+                const modal = document.getElementById('commentModal');
+                
+                console.log('Overlay:', overlay, 'Modal:', modal);
+                console.log('User profile data:', userProfileData);
+                
+                if (overlay) {
+                    overlay.style.display = 'block';
+                    setTimeout(() => {
+                        overlay.classList.add('active');
+                    }, 10);
+                }
+                
+                if (modal) {
+                    modal.style.display = 'flex';
+                    setTimeout(() => {
+                        modal.classList.add('active');
+                    }, 10);
+                }
+                
+                // Load comments
+                loadComments(videoId);
+                
+                // Focus input
+                setTimeout(() => {
+                    const input = document.getElementById('commentInput');
+                    if (input) input.focus();
+                }, 300);
+                
+                console.log('✅ Comment modal opened');
+            } catch (error) {
+                console.error('❌ Error opening comment modal:', error);
+            }
+        }
+
+        // Close comment modal
+        function closeCommentModal() {
+            const overlay = document.getElementById('commentOverlay');
+            const modal = document.getElementById('commentModal');
+            
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+            
+            if (overlay) {
+                overlay.classList.remove('active');
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 300);
+            }
+            
+            // Clear input
+            const input = document.getElementById('commentInput');
+            if (input) {
+                input.value = '';
+                input.placeholder = 'Add a comment...';
+            }
+            
+            // Reset header
+            const header = document.querySelector('.comment-header h3');
+            if (header) {
+                header.textContent = 'Comments';
+                header.style.color = '#fff';
+            }
+            
+            currentCommentVideoId = null;
+            replyingToCommentId = null;
+        }
+
+        // Load comments for video
+        async function loadComments(videoId) {
+            console.log('📖 Loading comments for:', videoId);
+            
+            const commentList = document.getElementById('commentList');
+            if (!commentList) {
+                console.error('❌ Comment list element not found');
+                return;
+            }
+            
+            let comments = videoComments[videoId] || [];
+            
+            // If no comments in memory, try to load from Firebase
+            if (comments.length === 0) {
+                console.log('📥 Fetching comments from Firebase...');
+                try {
+                    const videoDoc = await db.collection('videos').doc(videoId).get();
+                    if (videoDoc.exists) {
+                        const videoData = videoDoc.data();
+                        let fbComments = [];
+                        
+                        // Try new format first (commentsArray)
+                        if (videoData.commentsArray && videoData.commentsArray.length > 0) {
+                            fbComments = videoData.commentsArray;
+                            console.log('✅ Loaded', fbComments.length, 'comments from commentsArray');
+                        } 
+                        // Fall back to old format (comments_data.*)
+                        else {
+                            console.log('🔄 Checking for old comment format...');
+                            fbComments = [];
+                            for (const key in videoData) {
+                                if (key.startsWith('comments_data.')) {
+                                    fbComments.push(videoData[key]);
+                                }
+                            }
+                            if (fbComments.length > 0) {
+                                console.log('✅ Loaded', fbComments.length, 'comments from old format');
+                            }
+                        }
+                        
+                        if (fbComments.length > 0) {
+                            // Store in memory for future use
+                            videoComments[videoId] = fbComments;
+                            comments = fbComments;
+                        }
+                    }
+                } catch (error) {
+                    console.error('⚠️ Error loading comments from Firebase:', error.message);
+                }
+            }
+            
+            console.log('📊 Comments found:', comments.length);
+            console.log('Comments data:', comments);
+            
+            if (!commentList.parentElement) {
+                console.error('❌ Comment list has no parent');
+                return;
+            }
+            
+            if (comments.length === 0) {
+                console.log('No comments, showing empty state');
+                commentList.innerHTML = `
+                    <div class="empty-comments">
+                        <div class="empty-comments-icon">💬</div>
+                        <div class="empty-comments-text">No comments yet. Be the first!</div>
+                    </div>
+                `;
+            } else {
+                console.log('Rendering', comments.length, 'comments...');
+                
+                // Filter out replies - only show top-level comments
+                const topLevelComments = comments.filter(comment => !comment.isReply);
+                console.log('Top-level comments:', topLevelComments.length);
+                
+                commentList.innerHTML = topLevelComments.map((comment, index) => `
+                    <div class="comment-item">
+                        <div class="comment-avatar" ${comment.profilePic ? `style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!comment.profilePic ? comment.userInitial || '👤' : ''}</div>
+                        <div class="comment-content">
+                            <div class="comment-user">
+                                <span class="comment-username">${comment.username}</span>
+                                <span class="comment-time">${getTimeAgo(comment.timestamp)}</span>
+                            </div>
+                            <div class="comment-text">${comment.text}</div>
+                            ${comment.media && comment.media.length > 0 ? `
+                                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
+                                    ${comment.media.map(media => `
+                                        ${media.type === 'image' ? `
+                                            <img src="${media.url}" style="max-width: 100%; max-height: 300px; border-radius: 8px; cursor: pointer;" onclick="window.open('${media.url}', '_blank')" alt="Image">
+                                        ` : `
+                                            <img src="${media.url}" style="max-width: 100%; max-height: 300px; border-radius: 8px; cursor: pointer;" alt="GIF">
+                                        `}
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            <div class="comment-actions">
+                                <button class="comment-like-btn ${comment.likedBy && currentUser && comment.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleCommentLike(${index}, '${videoId}')">
+                                    <i class="fas fa-heart"></i> ${comment.likes || 0}
+                                </button>
+                                <button class="comment-like-btn" onclick="replyComment(${index}, '${videoId}')">
+                                    Reply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    ${comment.replies && comment.replies.length > 0 ? `
+                        <div style="margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3);">
+                            ${comment.replies.map((reply) => `
+                                <div class="comment-item" style="padding-left: 12px;">
+                                    <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
+                                    <div class="comment-content">
+                                        <div class="comment-user">
+                                            <span class="comment-username" style="color: #a855f7;">${reply.username}</span>
+                                            <span class="comment-time">${getTimeAgo(reply.timestamp)}</span>
+                                        </div>
+                                        <div class="comment-text">${reply.text}</div>
+                                        <div class="comment-actions">
+                                            <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${comment.id}', '${reply.id}', '${videoId}')">
+                                                <i class="fas fa-heart"></i> ${reply.likes || 0}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                `).join('');
+            }
+        }
+
+        // Post comment
+        async function postComment() {
+            try {
+                console.log('📤 Post comment clicked');
+                
+                const input = document.getElementById('commentInput');
+                if (!input) {
+                    console.error('❌ Comment input not found');
+                    showGenericToast('Error: Input field not found', 'error');
+                    return;
+                }
+                
+                let text = input.value.trim();
+                console.log('Text:', text);
+                
+                if (!text) {
+                    console.log('⚠️ Empty comment');
+                    showGenericToast('Comment cannot be empty', 'error');
+                    return;
+                }
+                
+                console.log('currentUser:', currentUser);
+                console.log('currentCommentVideoId:', currentCommentVideoId);
+                
+                if (!currentUser || !currentCommentVideoId) {
+                    showGenericToast('Please login to comment', 'error');
+                    return;
+                }
+                
+                // Fetch user profile directly from Firebase
+                console.log('🔄 Fetching user profile from Firebase...');
+                let fullName = 'User';
+                let profilePic = null;
+                
+                try {
+                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        fullName = userData.name || currentUser.displayName || 'User';
+                        profilePic = userData.profilePicUrl || null;
+                        console.log('✅ User data fetched:', fullName, 'pic:', !!profilePic);
+                    }
+                } catch (dbError) {
+                    console.error('⚠️ Could not fetch from Firebase, using fallback:', dbError.message);
+                    fullName = currentUser.displayName || 'User';
+                }
+                
+                let userInitial = fullName[0].toUpperCase();
+                
+                console.log('Full name from profile:', fullName, 'Profile pic:', profilePic);
+                
+                // Remove @mention if replying
+                if (text.startsWith('@')) {
+                    text = text.replace(/^@[\w]+\s/, '').trim();
+                }
+                
+                // Collect media attachments from comment text
+                const mediaRegex = /\[(IMG|GIF):media_\d+\]/g;
+                const mediaMatches = text.match(mediaRegex) || [];
+                let mediaAttachments = [];
+                
+                // Extract media data
+                if (window.commentMediaAttachments && window.commentMediaAttachments.length > 0) {
+                    mediaAttachments = window.commentMediaAttachments.filter(m => 
+                        mediaMatches.some(match => match.includes(m.id))
+                    );
+                    
+                    // Remove media references from text
+                    text = text.replace(mediaRegex, '').trim();
+                }
+                
+                // Create comment/reply object
+                const newItem = {
+                    id: `comment_${Date.now()}`,
+                    text: text,
+                    username: fullName,
+                    userInitial: userInitial,
+                    profilePic: profilePic,
+                    timestamp: new Date().toISOString(),
+                    likes: 0,
+                    userLiked: false,
+                    userId: currentUser.uid,
+                    replies: [],
+                    isReply: !!replyingToCommentId, // Mark if this is a reply
+                    media: mediaAttachments // Store media attachments
+                };
+                
+                console.log('New item created:', newItem);
+                
+                // Add to memory
+                if (!videoComments[currentCommentVideoId]) {
+                    videoComments[currentCommentVideoId] = [];
+                }
+                
+                // If replying to a comment, add as reply; otherwise add as top-level
+                if (replyingToCommentId) {
+                    const parentComment = videoComments[currentCommentVideoId].find(c => c.id === replyingToCommentId);
+                    if (parentComment) {
+                        if (!parentComment.replies) {
+                            parentComment.replies = [];
+                        }
+                        // Remove the @mention from the reply text before saving
+                        newItem.text = newItem.text.replace(/^@[\w]+\s/, '').trim();
+                        parentComment.replies.unshift(newItem); // Add to beginning of replies
+                        console.log('✅ Reply added to comment:', replyingToCommentId);
+                        // Save entire parent comment with replies - DO NOT increment comment count
+                        saveCommentToFirebase(currentCommentVideoId, parentComment, true);
+                    }
+                    replyingToCommentId = null;
+                } else {
+                    videoComments[currentCommentVideoId].unshift(newItem);
+                    console.log('✅ Comment added to list');
+                    // Save new top-level comment
+                    saveCommentToFirebase(currentCommentVideoId, newItem, false);
+                }
+                
+                // Clear input
+                input.value = '';
+                
+                // Reload comments
+                console.log('Reloading comments...');
+                loadComments(currentCommentVideoId);
+                
+                // Update comment count in the button
+                updateCommentCountInUI(currentCommentVideoId, newItem);
+                
+                // Clear media attachments after posting
+                window.commentMediaAttachments = [];
+                
+                showGenericToast('Comment posted! ✨', 'success');
+                console.log('✅ Comment posted successfully');
+            } catch (error) {
+                console.error('❌ Error posting comment:', error);
+                showGenericToast('Error posting comment: ' + error.message, 'error');
+            }
+        }
+
+        // Update comment count displayed in the button
+        function updateCommentCountInUI(videoId, newComment) {
+            try {
+                // Find the comment button for this video
+                const buttons = document.querySelectorAll(`.comment-btn[data-post-id="${videoId}"]`);
+                
+                buttons.forEach(btn => {
+                    const countSpan = btn.querySelector('.interaction-count');
+                    if (countSpan) {
+                        const currentCount = parseInt(countSpan.textContent) || 0;
+                        countSpan.textContent = currentCount + 1;
+                        console.log('✅ Updated UI comment count to:', currentCount + 1);
+                    }
+                });
+            } catch (error) {
+                console.error('Error updating UI count:', error);
+            }
+        }
+
+        // Save comment to Firebase
+        function saveCommentToFirebase(videoId, comment, isParentWithReply = false) {
+            try {
+                const video = forYouVideos.find(v => v.id === videoId);
+                if (video) {
+                    // Create comment data structure
+                    const commentToSave = {
+                        id: comment.id,
+                        text: comment.text,
+                        username: comment.username,
+                        userInitial: comment.userInitial,
+                        profilePic: comment.profilePic,
+                        timestamp: comment.timestamp,
+                        likes: comment.likes || 0,
+                        userId: comment.userId,
+                        replies: comment.replies || []
+                    };
+                    
+                    if (isParentWithReply) {
+                        // Update existing parent comment with new replies
+                        console.log('💾 Updating parent comment with reply:', comment.id);
+                        
+                        // Find and update the comment in commentsArray
+                        db.collection('videos').doc(videoId).get().then(doc => {
+                            if (doc.exists) {
+                                const videoData = doc.data();
+                                const commentsArray = videoData.commentsArray || [];
+                                
+                                // Find the parent comment index
+                                const parentIndex = commentsArray.findIndex(c => c.id === comment.id);
+                                
+                                if (parentIndex !== -1) {
+                                    // Update the parent comment in place
+                                    commentsArray[parentIndex] = commentToSave;
+                                    
+                                    db.collection('videos').doc(videoId).update({
+                                        commentsArray: commentsArray
+                                    }).then(() => {
+                                        console.log('✅ Parent comment updated with reply');
+                                    }).catch(err => {
+                                        console.error('❌ Error updating parent comment:', err.message);
+                                    });
+                                }
+                            }
+                        }).catch(err => {
+                            console.error('⚠️ Error fetching video:', err.message);
+                        });
+                    } else {
+                        // New top-level comment
+                        console.log('💾 Saving new comment to Firebase:', videoId);
+                        video.comments = (video.comments || 0) + 1;
+                        
+                        // Get current commentsArray and add new comment
+                        db.collection('videos').doc(videoId).get().then(doc => {
+                            if (doc.exists) {
+                                const videoData = doc.data();
+                                const commentsArray = videoData.commentsArray || [];
+                                // Add new comment to beginning
+                                commentsArray.unshift(commentToSave);
+                                
+                                db.collection('videos').doc(videoId).update({
+                                    comments: video.comments,
+                                    commentsArray: commentsArray
+                                }).then(() => {
+                                    console.log('✅ Comment saved to Firebase');
+                                }).catch(err => {
+                                    console.error('❌ Error saving comment:', err.message);
+                                    showGenericToast('Error saving comment', 'error');
+                                });
+                            }
+                        }).catch(err => {
+                            console.error('⚠️ Error fetching video:', err.message);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error saving comment:', error);
+            }
+        }
+
+        // Toggle comment like
+        function toggleCommentLike(commentIndex, videoId) {
+            if (!currentUser) {
+                showGenericToast('Please login to like comments', 'error');
+                return;
+            }
+            
+            const comments = videoComments[videoId];
+            if (comments && comments[commentIndex]) {
+                const comment = comments[commentIndex];
+                
+                // Initialize likedBy if not exists
+                if (!comment.likedBy) {
+                    comment.likedBy = {};
+                }
+                
+                // Check if user already liked
+                const isCurrentlyLiked = comment.likedBy[currentUser.uid];
+                
+                if (isCurrentlyLiked) {
+                    delete comment.likedBy[currentUser.uid];
+                    comment.likes = Math.max(0, comment.likes - 1);
+                } else {
+                    comment.likedBy[currentUser.uid] = true;
+                    comment.likes = (comment.likes || 0) + 1;
+                }
+                
+                // Save to Firebase
+                saveCommentLikeToFirebase(videoId, comment.id, !isCurrentlyLiked, comment.likes);
+                
+                loadComments(videoId);
+            }
+        }
+
+        // Toggle reply like
+        function toggleReplyLike(commentId, replyId, videoId) {
+            if (!currentUser) {
+                showGenericToast('Please login to like replies', 'error');
+                return;
+            }
+            
+            const comments = videoComments[videoId];
+            if (comments) {
+                const comment = comments.find(c => c.id === commentId);
+                if (comment && comment.replies) {
+                    const reply = comment.replies.find(r => r.id === replyId);
+                    if (reply) {
+                        // Initialize likedBy if not exists
+                        if (!reply.likedBy) {
+                            reply.likedBy = {};
+                        }
+                        
+                        // Check if user already liked
+                        const isCurrentlyLiked = reply.likedBy[currentUser.uid];
+                        
+                        if (isCurrentlyLiked) {
+                            delete reply.likedBy[currentUser.uid];
+                            reply.likes = Math.max(0, reply.likes - 1);
+                        } else {
+                            reply.likedBy[currentUser.uid] = true;
+                            reply.likes = (reply.likes || 0) + 1;
+                        }
+                        
+                        // Save to Firebase
+                        saveReplyLikeToFirebase(videoId, commentId, replyId, !isCurrentlyLiked, reply.likes);
+                        
+                        loadComments(videoId);
+                    }
+                }
+            }
+        }
+
+        // Save comment like to Firebase
+        function saveCommentLikeToFirebase(videoId, commentId, isLiked, likeCount) {
+            try {
+                db.collection('videos').doc(videoId).get().then(doc => {
+                    if (doc.exists) {
+                        const videoData = doc.data();
+                        const commentsArray = videoData.commentsArray || [];
+                        
+                        // Find and update comment
+                        const commentIndex = commentsArray.findIndex(c => c.id === commentId);
+                        if (commentIndex !== -1) {
+                            const comment = commentsArray[commentIndex];
+                            
+                            // Initialize likedBy array if not exists
+                            if (!comment.likedBy) {
+                                comment.likedBy = {};
+                            }
+                            
+                            if (isLiked) {
+                                // User liked
+                                comment.likedBy[currentUser.uid] = true;
+                            } else {
+                                // User unliked
+                                delete comment.likedBy[currentUser.uid];
+                            }
+                            
+                            // Update comment with likeCount
+                            comment.likes = likeCount;
+                            
+                            // Update comment in array
+                            commentsArray[commentIndex] = comment;
+                            
+                            // Save to Firebase
+                            db.collection('videos').doc(videoId).update({
+                                commentsArray: commentsArray
+                            }).then(() => {
+                                console.log('✅ Comment like saved:', commentId, 'Likes:', likeCount);
+                            }).catch(err => {
+                                console.error('❌ Error saving comment like:', err.message);
+                            });
+                        }
+                    }
+                }).catch(err => {
+                    console.error('⚠️ Error fetching video:', err.message);
+                });
+            } catch (error) {
+                console.error('Error saving comment like:', error);
+            }
+        }
+
+        // Save reply like to Firebase
+        function saveReplyLikeToFirebase(videoId, commentId, replyId, isLiked, likeCount) {
+            try {
+                db.collection('videos').doc(videoId).get().then(doc => {
+                    if (doc.exists) {
+                        const videoData = doc.data();
+                        const commentsArray = videoData.commentsArray || [];
+                        
+                        // Find parent comment
+                        const commentIndex = commentsArray.findIndex(c => c.id === commentId);
+                        if (commentIndex !== -1) {
+                            const comment = commentsArray[commentIndex];
+                            
+                            if (comment.replies) {
+                                // Find reply
+                                const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                                if (replyIndex !== -1) {
+                                    const reply = comment.replies[replyIndex];
+                                    
+                                    // Initialize likedBy array if not exists
+                                    if (!reply.likedBy) {
+                                        reply.likedBy = {};
+                                    }
+                                    
+                                    if (isLiked) {
+                                        // User liked
+                                        reply.likedBy[currentUser.uid] = true;
+                                    } else {
+                                        // User unliked
+                                        delete reply.likedBy[currentUser.uid];
+                                    }
+                                    
+                                    // Update reply with likeCount
+                                    reply.likes = likeCount;
+                                    
+                                    // Update reply in array
+                                    comment.replies[replyIndex] = reply;
+                                    
+                                    // Update parent comment
+                                    commentsArray[commentIndex] = comment;
+                                    
+                                    // Save to Firebase
+                                    db.collection('videos').doc(videoId).update({
+                                        commentsArray: commentsArray
+                                    }).then(() => {
+                                        console.log('✅ Reply like saved:', replyId, 'Likes:', likeCount);
+                                    }).catch(err => {
+                                        console.error('❌ Error saving reply like:', err.message);
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }).catch(err => {
+                    console.error('⚠️ Error fetching video:', err.message);
+                });
+            } catch (error) {
+                console.error('Error saving reply like:', error);
+            }
+        }
+
+        // Reply to comment
+        function replyComment(commentIndex, videoId) {
+            const comments = videoComments[videoId];
+            if (comments && comments[commentIndex]) {
+                const comment = comments[commentIndex];
+                replyingToCommentId = comment.id;
+                const input = document.getElementById('commentInput');
+                const header = document.querySelector('.comment-header h3');
+                
+                // Update header to show replying to
+                if (header) {
+                    header.textContent = `Replying to @${comment.username}`;
+                    header.style.color = '#a855f7';
+                }
+                
+                input.value = '';
+                input.placeholder = `Reply to ${comment.username}...`;
+                input.focus();
+                console.log('💬 Replying to comment:', comment.id, 'by', comment.username);
+            }
+        }
+
+        // Insert emoji
+        function insertEmoji() {
+            const input = document.getElementById('commentInput');
+            input.value += '😊';
+            input.focus();
+        }
+
+        // Open sticker picker
+        function openStickerPicker() {
+            const modal = document.getElementById('stickerModal');
+            const gifModal = document.getElementById('gifModal');
+            gifModal.style.display = 'none';
+            modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Insert sticker
+        function insertSticker(sticker) {
+            const input = document.getElementById('commentInput');
+            input.value += ' ' + sticker + ' ';
+            input.focus();
+            document.getElementById('stickerModal').style.display = 'none';
+        }
+
+        // Open GIF picker
+        function openGifPicker() {
+            const modal = document.getElementById('gifModal');
+            const stickerModal = document.getElementById('stickerModal');
+            stickerModal.style.display = 'none';
+            modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+            
+            // Focus on search
+            setTimeout(() => {
+                const search = document.getElementById('gifSearch');
+                if (search) search.focus();
+            }, 100);
+        }
+
+        // Search GIFs from Giphy API
+        let gifSearchTimeout;
+        async function searchGifs(query) {
+            console.log('🔎 searchGifs called with:', query);
+            
+            if (!query.trim()) {
+                document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>';
+                return;
+            }
+            
+            // Clear previous timeout
+            clearTimeout(gifSearchTimeout);
+            
+            // Show loading state
+            document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">⏳ Loading GIFs...</div>';
+            
+            // Debounce search (wait 500ms before searching)
+            gifSearchTimeout = setTimeout(async () => {
+                try {
+                    // Using Giphy's free public API
+                    const GIPHY_API_KEY = 'giphy_key_dc6zaTOxFJmzC'; // Public key
+                    const url = `https://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(query)}&limit=15&api_key=${GIPHY_API_KEY}&rating=g`;
+                    console.log('🌐 Fetching from Giphy...');
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    console.log('📡 Response status:', response.status);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('📦 Giphy response:', data);
+                    
+                    const results = document.getElementById('gifResults');
+                    if (data.data && data.data.length > 0) {
+                        results.innerHTML = data.data.map((gif) => {
+                            const gifUrl = gif.images.downsized.url || gif.images.fixed_height.url;
+                            return `
+                                <div style="position:relative; overflow:hidden; border-radius:8px; aspect-ratio:1; background:#333; cursor:pointer;" 
+                                     title="${gif.title}" 
+                                     onmouseover="this.style.opacity='0.8'" 
+                                     onmouseout="this.style.opacity='1'">
+                                    <img src="${gifUrl}" 
+                                         alt="${gif.title}" 
+                                         style="width:100%; height:100%; object-fit:cover;" 
+                                         onclick="insertGif('${gifUrl}')">
+                                </div>
+                            `;
+                        }).join('');
+                        console.log('✅ Loaded', data.data.length, 'GIFs from Giphy');
+                    } else {
+                        results.innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">No GIFs found for "' + query + '"</div>';
+                    }
+                } catch (error) {
+                    console.error('❌ Error searching GIFs:', error);
+                    document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#ff6b6b; padding:20px; grid-column:1/-1;">⚠️ Error loading GIFs. Try a different search or check your internet.</div>';
+                }
+            }, 500);
+        }
+
+        // Close GIF modal
+        function closeGifModal() {
+            document.getElementById('gifModal').style.display = 'none';
+            document.getElementById('gifSearch').value = '';
+            document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>';
+        }
+
+        // Add GIF search listener - attach directly to input
+        function initGifSearch() {
+            const gifSearch = document.getElementById('gifSearch');
+            if (gifSearch) {
+                gifSearch.addEventListener('keyup', (e) => {
+                    console.log('🔍 Searching GIF:', e.target.value);
+                    searchGifs(e.target.value);
+                });
+            } else {
+                console.error('❌ GIF search input not found');
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGifSearch);
+        } else {
+            initGifSearch();
+        }
+
+        // Insert GIF
+        function insertGif(gifUrl) {
+            const input = document.getElementById('commentInput');
+            const commentList = document.getElementById('commentList');
+            
+            // Create media object to store GIF separately
+            if (!window.commentMediaAttachments) {
+                window.commentMediaAttachments = [];
+            }
+            
+            const mediaId = `media_${Date.now()}`;
+            window.commentMediaAttachments.push({
+                id: mediaId,
+                type: 'gif',
+                url: gifUrl
+            });
+            
+            // Store reference in input (not the full URL)
+            input.value += `[GIF:${mediaId}]`;
+            input.focus();
+            document.getElementById('gifModal').style.display = 'none';
+            showGenericToast('GIF added to comment', 'success');
+        }
+
+        // Open gallery picker
+        function openGalleryPicker() {
+            document.getElementById('commentGalleryInput').click();
+        }
+
+        // Handle image upload
+        function handleCommentImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showGenericToast('Image too large (max 5MB)', 'error');
+                return;
+            }
+            
+            // Read and insert image
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const input = document.getElementById('commentInput');
+                const base64 = e.target.result;
+                
+                // Create media object to store image separately
+                if (!window.commentMediaAttachments) {
+                    window.commentMediaAttachments = [];
+                }
+                
+                const mediaId = `media_${Date.now()}`;
+                window.commentMediaAttachments.push({
+                    id: mediaId,
+                    type: 'image',
+                    url: base64,
+                    filename: file.name
+                });
+                
+                // Store reference in input (not the full base64)
+                input.value += `[IMG:${mediaId}]`;
+                input.focus();
+                showGenericToast('Image added to comment ✨', 'success');
+            };
+            reader.readAsDataURL(file);
+            
+            // Reset input
+            event.target.value = '';
+        }
+
+        // Get time ago string
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const date = new Date(timestamp);
+            const seconds = Math.floor((now - date) / 1000);
+            
+            if (seconds < 60) return 'now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
+            if (seconds < 604800) return Math.floor(seconds / 86400) + 'd';
+            return date.toLocaleDateString();
+        }
+
         // Helper toast function
         function showGenericToast(message, type = 'info') {
             const toast = document.createElement('div');
@@ -40039,6 +41159,61 @@ For more help, visit: help.pose.app
         }
 
     </script>
+
+    <!-- Comment Modal (TikTok Style) -->
+    <div class="comment-modal-overlay" id="commentOverlay" onclick="closeCommentModal()"></div>
+    <div class="comment-modal" id="commentModal">
+        <div class="comment-header">
+            <h3>Comments</h3>
+            <button class="comment-close-btn" onclick="closeCommentModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="comment-list" id="commentList">
+            <div class="empty-comments">
+                <div class="empty-comments-icon">💬</div>
+                <div class="empty-comments-text">No comments yet. Be the first!</div>
+            </div>
+        </div>
+        <div class="comment-input-section">
+            <div class="comment-input-wrapper">
+                <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment...">
+                <button class="comment-emoji-btn" onclick="openStickerPicker()" title="Add sticker">🎨</button>
+                <button class="comment-emoji-btn" onclick="openGifPicker()" title="Add GIF">🎬</button>
+                <button class="comment-emoji-btn" onclick="openGalleryPicker()" title="Add image">🖼️</button>
+                <button class="comment-emoji-btn" onclick="insertEmoji()" title="Add emoji">😊</button>
+            </div>
+            <button class="comment-send-btn" onclick="postComment()" id="commentSendBtn">Post</button>
+        </div>
+        <input type="file" id="commentGalleryInput" accept="image/*" style="display:none;" onchange="handleCommentImageUpload(event)">
+        
+        <!-- Sticker Picker Modal -->
+        <div id="stickerModal" style="display:none; position:fixed; bottom:350px; left:0; right:0; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px; max-height:200px; overflow-y:auto;">
+            <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
+                <button onclick="insertSticker('😎')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">😎</button>
+                <button onclick="insertSticker('🔥')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">🔥</button>
+                <button onclick="insertSticker('💯')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">💯</button>
+                <button onclick="insertSticker('👍')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">👍</button>
+                <button onclick="insertSticker('🎉')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">🎉</button>
+                <button onclick="insertSticker('❤️')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">❤️</button>
+                <button onclick="insertSticker('😂')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">😂</button>
+                <button onclick="insertSticker('🚀')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">🚀</button>
+                <button onclick="insertSticker('⭐')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">⭐</button>
+                <button onclick="insertSticker('💪')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">💪</button>
+            </div>
+        </div>
+        
+        <!-- GIF Picker Modal -->
+        <div id="gifModal" style="display:none; position:fixed; bottom:350px; left:0; right:0; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <input type="text" id="gifSearch" placeholder="Search GIFs from Giphy..." style="flex:1; padding:10px; border:1px solid #333; border-radius:8px; background:#2a2a2a; color:#fff; margin-right:10px;">
+                <button onclick="closeGifModal()" style="background:none; border:1px solid #666; color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+            </div>
+            <div id="gifResults" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-height:200px; overflow-y:auto;">
+                <div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>
+            </div>
+        </div>
+    </div>
 
     <!-- Share Menu Modal -->
     <div class="share-menu" id="shareMenu">
