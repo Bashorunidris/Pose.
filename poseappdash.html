@@ -7722,6 +7722,14 @@
             }
         }
 
+        .comment-left-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
         .comment-avatar {
             width: 32px;
             height: 32px;
@@ -7747,9 +7755,102 @@
             }
         }
 
+        .comment-media-container {
+            width: 100px;
+            max-width: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .comment-media-container video,
+        .comment-media-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 360px) {
+            .comment-media-container {
+                width: 80px;
+                max-width: 80px;
+            }
+        }
+
         .comment-content {
             flex: 1;
             min-width: 0;
+        }
+
+        .comment-media-viewer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1500;
+            display: none;
+        }
+
+        .comment-media-viewer-overlay.active {
+            display: block;
+        }
+
+        .comment-media-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1501;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .comment-media-viewer.active {
+            display: flex;
+        }
+
+        .comment-media-viewer-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 1502;
+        }
+
+        .comment-media-viewer-close:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .comment-media-viewer-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .comment-media-viewer-container video,
+        .comment-media-viewer-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 12px;
         }
 
         .comment-user {
@@ -7819,6 +7920,21 @@
         .comment-like-btn.liked {
             color: #ff2d55;
         }
+        
+        /* Reply button styling */
+        .comment-like-btn:last-child {
+            color: #8A2BE2;
+        }
+        
+        .comment-like-btn:last-child:hover {
+            color: #a855f7;
+        }
+        
+        @media (max-width: 360px) {
+            .comment-like-btn {
+                font-size: 11px;
+            }
+        }
 
         .comment-input-section {
             padding: 10px 12px;
@@ -7887,23 +8003,50 @@
         }
 
         .comment-send-btn {
-            background: none;
+            background: linear-gradient(135deg, #8A2BE2, #a855f7);
             border: none;
-            color: #8A2BE2;
-            font-size: 14px;
+            color: #fff;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            padding: 8px 15px;
+            padding: 10px 16px;
+            border-radius: 20px;
             transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 60px;
+        }
+        
+        @media (max-width: 480px) {
+            .comment-send-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+                min-width: 55px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .comment-send-btn {
+                padding: 7px 12px;
+                font-size: 11px;
+                min-width: 50px;
+            }
         }
 
         .comment-send-btn:hover {
-            color: #a855f7;
+            background: linear-gradient(135deg, #9c27b0, #b85af0);
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
+        }
+
+        .comment-send-btn:active {
+            transform: scale(0.95);
         }
 
         .comment-send-btn:disabled {
-            color: #555;
+            background: linear-gradient(135deg, #444, #555);
+            color: #888;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .empty-comments {
@@ -40454,6 +40597,60 @@ For more help, visit: help.pose.app
             replyingToCommentId = null;
         }
 
+        // Open comment media viewer
+        function openCommentMediaViewer(type, url) {
+            const overlay = document.getElementById('commentMediaViewerOverlay');
+            const viewer = document.getElementById('commentMediaViewer');
+            const content = document.getElementById('commentMediaViewerContent');
+            
+            if (!overlay || !viewer || !content) {
+                console.error('Media viewer elements not found');
+                return;
+            }
+            
+            // Clear previous content
+            content.innerHTML = '';
+            
+            // Create media element
+            if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = url;
+                video.controls = true;
+                video.autoplay = true;
+                video.style.maxWidth = '100%';
+                video.style.maxHeight = '100%';
+                video.playsinline = true;
+                content.appendChild(video);
+            } else if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '100%';
+                img.style.objectFit = 'contain';
+                content.appendChild(img);
+            }
+            
+            // Show modal
+            overlay.classList.add('active');
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close comment media viewer
+        function closeCommentMediaViewer() {
+            const overlay = document.getElementById('commentMediaViewerOverlay');
+            const viewer = document.getElementById('commentMediaViewer');
+            
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+            if (viewer) {
+                viewer.classList.remove('active');
+                document.getElementById('commentMediaViewerContent').innerHTML = '';
+            }
+            document.body.style.overflow = 'auto';
+        }
+
         // Load comments for video
         async function loadComments(videoId) {
             console.log('📖 Loading comments for:', videoId);
@@ -40466,42 +40663,25 @@ For more help, visit: help.pose.app
             
             let comments = videoComments[videoId] || [];
             
-            // If no comments in memory, try to load from Firebase
+            // Load from subcollection: videos/{videoId}/comments
             if (comments.length === 0) {
-                console.log('📥 Fetching comments from Firebase...');
+                console.log('📥 Fetching comments from subcollection...');
                 try {
-                    const videoDoc = await db.collection('videos').doc(videoId).get();
-                    if (videoDoc.exists) {
-                        const videoData = videoDoc.data();
-                        let fbComments = [];
-                        
-                        // Try new format first (commentsArray)
-                        if (videoData.commentsArray && videoData.commentsArray.length > 0) {
-                            fbComments = videoData.commentsArray;
-                            console.log('✅ Loaded', fbComments.length, 'comments from commentsArray');
-                        } 
-                        // Fall back to old format (comments_data.*)
-                        else {
-                            console.log('🔄 Checking for old comment format...');
-                            fbComments = [];
-                            for (const key in videoData) {
-                                if (key.startsWith('comments_data.')) {
-                                    fbComments.push(videoData[key]);
-                                }
-                            }
-                            if (fbComments.length > 0) {
-                                console.log('✅ Loaded', fbComments.length, 'comments from old format');
-                            }
-                        }
-                        
-                        if (fbComments.length > 0) {
-                            // Store in memory for future use
-                            videoComments[videoId] = fbComments;
-                            comments = fbComments;
-                        }
+                    const commentsSnapshot = await db.collection('videos').doc(videoId).collection('comments').orderBy('timestamp', 'desc').get();
+                    let fbComments = [];
+                    
+                    commentsSnapshot.forEach(doc => {
+                        fbComments.push(doc.data());
+                    });
+                    
+                    if (fbComments.length > 0) {
+                        // Store in memory for future use
+                        videoComments[videoId] = fbComments;
+                        comments = fbComments;
+                        console.log('✅ Loaded', fbComments.length, 'comments from subcollection');
                     }
                 } catch (error) {
-                    console.error('⚠️ Error loading comments from Firebase:', error.message);
+                    console.error('⚠️ Error loading comments from subcollection:', error.message);
                 }
             }
             
@@ -40530,64 +40710,310 @@ For more help, visit: help.pose.app
                 
                 commentList.innerHTML = topLevelComments.map((comment, index) => `
                     <div class="comment-item">
-                        <div class="comment-avatar" ${comment.profilePic ? `style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!comment.profilePic ? comment.userInitial || '👤' : ''}</div>
-                        <div class="comment-content">
-                            <div class="comment-user">
-                                <span class="comment-username">${comment.username}</span>
-                                <span class="comment-time">${getTimeAgo(comment.timestamp)}</span>
-                            </div>
-                            <div class="comment-text">${comment.text}</div>
-                            ${comment.media && comment.media.length > 0 ? `
-                                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
-                                    ${comment.media.map(media => `
-                                        ${media.type === 'image' ? `
-                                            <img src="${media.url}" style="max-width: 100%; max-height: 300px; border-radius: 8px; cursor: pointer;" onclick="window.open('${media.url}', '_blank')" alt="Image">
-                                        ` : `
-                                            <img src="${media.url}" style="max-width: 100%; max-height: 300px; border-radius: 8px; cursor: pointer;" alt="GIF">
-                                        `}
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                            <div class="comment-actions">
-                                <button class="comment-like-btn ${comment.likedBy && currentUser && comment.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleCommentLike(${index}, '${videoId}')">
-                                    <i class="fas fa-heart"></i> ${comment.likes || 0}
-                                </button>
-                                <button class="comment-like-btn" onclick="replyComment(${index}, '${videoId}')">
-                                    Reply
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                         <div class="comment-left-container">
+                             <div class="comment-avatar" ${comment.profilePic ? `style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!comment.profilePic ? comment.userInitial || '👤' : ''}</div>
+                             ${comment.media && comment.media.length > 0 ? `
+                                 <div class="comment-media-container">
+                                     ${comment.media.map(media => `
+                                         ${media.type === 'image' ? `
+                                             <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" onclick="openCommentMediaViewer('image', '${media.url}')" alt="Image">
+                                         ` : media.type === 'video' ? `
+                                             <video src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; background: #000; cursor: pointer;" onclick="openCommentMediaViewer('video', '${media.url}')" playsinline></video>
+                                         ` : `
+                                             <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" alt="Media" onclick="openCommentMediaViewer('image', '${media.url}')">
+                                         `}
+                                     `).join('')}
+                                 </div>
+                             ` : ''}
+                         </div>
+                         <div class="comment-content">
+                             <div class="comment-user">
+                                 <span class="comment-username">${comment.username}</span>
+                                 <span class="comment-time">${getTimeAgo(comment.timestamp)}</span>
+                             </div>
+                             <div class="comment-text">${comment.text}</div>
+                             <div class="comment-actions">
+                                 <button class="comment-like-btn ${comment.likedBy && currentUser && comment.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleCommentLike(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                     <i class="fas fa-heart"></i> ${comment.likes || 0}
+                                 </button>
+                                 <button class="comment-like-btn" onclick="replyComment(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                     Reply
+                                 </button>
+                             </div>
+                         </div>
+                     </div>
                     ${comment.replies && comment.replies.length > 0 ? `
                         <div style="margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3);">
                             ${comment.replies.map((reply) => `
                                 <div class="comment-item" style="padding-left: 12px;">
-                                    <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
-                                    <div class="comment-content">
-                                        <div class="comment-user">
-                                            <span class="comment-username" style="color: #a855f7;">${reply.username}</span>
-                                            <span class="comment-time">${getTimeAgo(reply.timestamp)}</span>
-                                        </div>
-                                        <div class="comment-text">${reply.text}</div>
-                                        ${reply.media && reply.media.length > 0 ? `
-                                            <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
-                                                ${reply.media.map(media => `
-                                                    <img src="${media.url}" style="max-width: 100%; max-height: 250px; border-radius: 8px; cursor: pointer;" alt="Media">
-                                                `).join('')}
-                                            </div>
-                                        ` : ''}
-                                        <div class="comment-actions">
-                                            <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${comment.id}', '${reply.id}', '${videoId}')">
-                                                <i class="fas fa-heart"></i> ${reply.likes || 0}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                     <div class="comment-left-container">
+                                         <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
+                                         ${reply.media && reply.media.length > 0 ? `
+                                             <div class="comment-media-container">
+                                                 ${reply.media.map(media => `
+                                                     ${media.type === 'video' ? `
+                                                         <video src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; background: #000; cursor: pointer;" onclick="openCommentMediaViewer('video', '${media.url}')" playsinline></video>
+                                                     ` : `
+                                                         <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" alt="Media" onclick="openCommentMediaViewer('image', '${media.url}')">
+                                                     `}
+                                                 `).join('')}
+                                             </div>
+                                         ` : ''}
+                                     </div>
+                                     <div class="comment-content">
+                                         <div class="comment-user">
+                                             <span class="comment-username" style="color: #a855f7;">${reply.username}</span>
+                                             <span class="comment-time">${getTimeAgo(reply.timestamp)}</span>
+                                         </div>
+                                         <div class="comment-text">${reply.text}</div>
+                                         <div class="comment-actions">
+                                             <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${comment.id}', '${reply.id}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                                 <i class="fas fa-heart"></i> ${reply.likes || 0}
+                                             </button>
+                                             <button class="comment-like-btn" onclick="replyToReply('${comment.id}', '${reply.id}', '${reply.username}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                                 Reply
+                                             </button>
+                                         </div>
+                                     </div>
+                                 </div>
                             `).join('')}
                         </div>
                     ` : ''}
                 `).join('');
             }
+        }
+
+        // Reply to a reply (nested replies)
+        function replyToReply(parentCommentId, replyId, replyUsername, videoId) {
+            console.log('📱 Replying to reply:', replyId, 'of comment:', parentCommentId);
+            
+            // Store the parent comment and reply being responded to
+            window.replyingToReplyId = replyId;
+            window.replyingToCommentId = parentCommentId;
+            
+            const input = document.getElementById('commentInput');
+            if (input) {
+                // Pre-fill with mention
+                input.value = `@${replyUsername} `;
+                input.focus();
+                
+                // Scroll to input
+                const inputSection = document.querySelector('.comment-input-section');
+                if (inputSection) {
+                    inputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                
+                console.log('✅ Ready to reply to:', replyUsername);
+            }
+        }
+
+        // Open video comment picker
+        function openVideoCommentPicker() {
+            const videoInput = document.getElementById('commentVideoInput');
+            if (videoInput) {
+                videoInput.click();
+            }
+        }
+
+        // Handle video upload for comments (max 10 seconds)
+        function handleCommentVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            console.log('📹 Video selected:', file.name);
+
+            // Create video element to check duration
+            const video = document.createElement('video');
+            video.onloadedmetadata = () => {
+                const duration = video.duration;
+                console.log('⏱️ Video duration:', duration, 'seconds');
+
+                // Check if video is longer than 10 seconds
+                if (duration > 10) {
+                    showGenericToast(`Video too long! Maximum 10 seconds (${duration.toFixed(1)}s)`, 'error');
+                    event.target.value = ''; // Reset input
+                    return;
+                }
+
+                // Validate file size (max 50MB for comment video)
+                const maxSize = 50 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    showGenericToast('Video too large! Maximum 50MB', 'error');
+                    event.target.value = '';
+                    return;
+                }
+
+                console.log('✅ Video validation passed');
+                
+                // Read as blob URL and store locally (like images)
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (!window.commentMediaAttachments) {
+                        window.commentMediaAttachments = [];
+                    }
+                    
+                    const mediaId = `media_${Date.now()}`;
+                    const mediaObject = {
+                        id: mediaId,
+                        type: 'video',
+                        blobUrl: e.target.result,
+                        duration: duration,
+                        filename: file.name,
+                        file: file
+                    };
+                    window.commentMediaAttachments.push(mediaObject);
+                    
+                    // Add preview to preview section
+                    const previewSection = document.getElementById('commentPreviewSection');
+                    const previewContainer = document.getElementById('commentMediaPreview');
+                    
+                    previewSection.style.display = 'block';
+                    
+                    // Create preview card with remove button
+                    const previewCard = document.createElement('div');
+                    previewCard.id = `preview_${mediaId}`;
+                    previewCard.style.cssText = `
+                        position: relative;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        background: rgba(138, 43, 226, 0.1);
+                        border: 1px solid rgba(138, 43, 226, 0.3);
+                    `;
+                    
+                    previewCard.innerHTML = `
+                        <video src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;"></video>
+                        <div style="position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
+                            ${duration.toFixed(1)}s
+                        </div>
+                        <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
+                            position: absolute;
+                            top: 2px;
+                            left: 2px;
+                            background: rgba(255, 0, 80, 0.9);
+                            border: none;
+                            color: white;
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 50%;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                            padding: 0;
+                        ">×</button>
+                    `;
+                    
+                    previewContainer.appendChild(previewCard);
+                    showGenericToast('Video added! 📹', 'success');
+                };
+                reader.readAsDataURL(file);
+            };
+
+            video.onerror = () => {
+                showGenericToast('Could not load video. Please try another file', 'error');
+                event.target.value = '';
+            };
+
+            video.src = URL.createObjectURL(file);
+        }
+
+        // Silent image upload for comments (no UI notifications)
+        async function uploadCommentImageSilent(file) {
+            const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
+            const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
+            const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+            
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+                
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('tags', 'comment-image');
+                formData.append('folder', 'comment-images');
+                
+                const timeoutId = setTimeout(() => {
+                    xhr.abort();
+                    reject(new Error('Upload timeout'));
+                }, 60000);
+                
+                xhr.addEventListener('load', () => {
+                    clearTimeout(timeoutId);
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            resolve({
+                                url: data.secure_url,
+                                fileName: file.name,
+                                publicId: data.public_id
+                            });
+                        } catch (error) {
+                            reject(new Error('Invalid response'));
+                        }
+                    } else {
+                        reject(new Error('Upload failed'));
+                    }
+                });
+                
+                xhr.addEventListener('error', () => {
+                    clearTimeout(timeoutId);
+                    reject(new Error('Network error'));
+                });
+                
+                xhr.open('POST', CLOUDINARY_API_URL, true);
+                xhr.send(formData);
+            });
+        }
+
+        // Silent video upload for comments (no UI notifications)
+        async function uploadCommentVideoSilent(file) {
+            const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
+            const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
+            const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+            
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+                
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('tags', 'comment-video');
+                formData.append('folder', 'comment-videos');
+                formData.append('resource_type', 'video');
+                
+                const timeoutId = setTimeout(() => {
+                    xhr.abort();
+                    reject(new Error('Upload timeout'));
+                }, 120000);
+                
+                xhr.addEventListener('load', () => {
+                    clearTimeout(timeoutId);
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            resolve({
+                                url: data.secure_url,
+                                fileName: file.name,
+                                publicId: data.public_id,
+                                duration: data.duration
+                            });
+                        } catch (error) {
+                            reject(new Error('Invalid response'));
+                        }
+                    } else {
+                        reject(new Error('Upload failed'));
+                    }
+                });
+                
+                xhr.addEventListener('error', () => {
+                    clearTimeout(timeoutId);
+                    reject(new Error('Network error'));
+                });
+                
+                xhr.open('POST', CLOUDINARY_API_URL, true);
+                xhr.send(formData);
+            });
         }
 
         // Post comment
@@ -40598,16 +41024,19 @@ For more help, visit: help.pose.app
                 const input = document.getElementById('commentInput');
                 if (!input) {
                     console.error('❌ Comment input not found');
-                    showGenericToast('Error: Input field not found', 'error');
                     return;
                 }
                 
                 let text = input.value.trim();
                 console.log('Text:', text);
                 
-                if (!text) {
-                    console.log('⚠️ Empty comment');
-                    showGenericToast('Comment cannot be empty', 'error');
+                // Get media attachments
+                const mediaAttachments = window.commentMediaAttachments || [];
+                console.log('Media attachments:', mediaAttachments.length);
+                
+                // Allow posting if either text exists OR images exist
+                if (!text && mediaAttachments.length === 0) {
+                    console.log('⚠️ Empty comment - no text or images');
                     return;
                 }
                 
@@ -40615,8 +41044,13 @@ For more help, visit: help.pose.app
                 console.log('currentCommentVideoId:', currentCommentVideoId);
                 
                 if (!currentUser || !currentCommentVideoId) {
-                    showGenericToast('Please login to comment', 'error');
                     return;
+                }
+                
+                // Disable send button while posting
+                const sendBtn = document.getElementById('commentSendBtn');
+                if (sendBtn) {
+                    sendBtn.disabled = true;
                 }
                 
                 // Fetch user profile directly from Firebase
@@ -40637,7 +41071,7 @@ For more help, visit: help.pose.app
                     fullName = currentUser.displayName || 'User';
                 }
                 
-                let userInitial = fullName[0].toUpperCase();
+                let userInitial = (fullName && fullName.length > 0) ? fullName[0].toUpperCase() : 'U';
                 
                 console.log('Full name from profile:', fullName, 'Profile pic:', profilePic);
                 
@@ -40646,19 +41080,51 @@ For more help, visit: help.pose.app
                     text = text.replace(/^@[\w]+\s/, '').trim();
                 }
                 
-                // Collect media attachments from comment text
-                const mediaRegex = /\[(IMG|GIF):media_\d+\]/g;
-                const mediaMatches = text.match(mediaRegex) || [];
-                let mediaAttachments = [];
-                
-                // Extract media data
-                if (window.commentMediaAttachments && window.commentMediaAttachments.length > 0) {
-                    mediaAttachments = window.commentMediaAttachments.filter(m => 
-                        mediaMatches.some(match => match.includes(m.id))
-                    );
+                // Upload media (images and videos) to Cloudinary silently (no notifications)
+                let uploadedMediaAttachments = [];
+                if (mediaAttachments && mediaAttachments.length > 0) {
+                    console.log('📤 Uploading', mediaAttachments.length, 'media item(s) to Cloudinary...');
                     
-                    // Remove media references from text
-                    text = text.replace(mediaRegex, '').trim();
+                    for (const media of mediaAttachments) {
+                        try {
+                            if (media.file) {
+                                let uploadResult;
+                                
+                                // Handle videos separately
+                                if (media.type === 'video') {
+                                    uploadResult = await uploadCommentVideoSilent(media.file);
+                                    if (uploadResult && uploadResult.url) {
+                                        uploadedMediaAttachments.push({
+                                            type: 'video',
+                                            url: uploadResult.url,
+                                            filename: media.filename,
+                                            cloudinaryUrl: uploadResult.url,
+                                            publicId: uploadResult.publicId,
+                                            duration: media.duration
+                                        });
+                                        console.log('✅ Video uploaded:', uploadResult.url);
+                                    }
+                                } else {
+                                    // Handle images
+                                    uploadResult = await uploadCommentImageSilent(media.file);
+                                    if (uploadResult && uploadResult.url) {
+                                        uploadedMediaAttachments.push({
+                                            type: 'image',
+                                            url: uploadResult.url,
+                                            filename: media.filename,
+                                            cloudinaryUrl: uploadResult.url,
+                                            publicId: uploadResult.publicId
+                                        });
+                                        console.log('✅ Image uploaded:', uploadResult.url);
+                                    }
+                                }
+                            }
+                        } catch (uploadError) {
+                            console.error('❌ Error uploading media:', uploadError);
+                        }
+                    }
+                    
+                    console.log('✅ All media uploaded. Total:', uploadedMediaAttachments.length);
                 }
                 
                 // Create comment/reply object
@@ -40674,7 +41140,7 @@ For more help, visit: help.pose.app
                     userId: currentUser.uid,
                     replies: [],
                     isReply: !!replyingToCommentId, // Mark if this is a reply
-                    media: mediaAttachments // Store media attachments
+                    media: uploadedMediaAttachments // Store uploaded media with Cloudinary URLs
                 };
                 
                 console.log('New item created:', newItem);
@@ -40684,47 +41150,110 @@ For more help, visit: help.pose.app
                     videoComments[currentCommentVideoId] = [];
                 }
                 
+                // Mark comment as pending (not fully saved yet)
+                newItem.isPending = true;
+                
                 // If replying to a comment, add as reply; otherwise add as top-level
                 if (replyingToCommentId) {
-                    const parentComment = videoComments[currentCommentVideoId].find(c => c.id === replyingToCommentId);
+                    const commentsArray = videoComments[currentCommentVideoId] || [];
+                    const parentComment = commentsArray.find(c => c.id === replyingToCommentId);
                     if (parentComment) {
                         if (!parentComment.replies) {
                             parentComment.replies = [];
                         }
                         // Remove the @mention from the reply text before saving
                         newItem.text = newItem.text.replace(/^@[\w]+\s/, '').trim();
-                        parentComment.replies.unshift(newItem); // Add to beginning of replies
-                        console.log('✅ Reply added to comment:', replyingToCommentId);
-                        // Save entire parent comment with replies - DO NOT increment comment count
-                        saveCommentToFirebase(currentCommentVideoId, parentComment, true);
+                        parentComment.replies.unshift(newItem);
+                        console.log('✅ Reply added to comment (pending):', replyingToCommentId);
                     }
                     replyingToCommentId = null;
                 } else {
-                    videoComments[currentCommentVideoId].unshift(newItem);
-                    console.log('✅ Comment added to list');
-                    // Save new top-level comment
-                    saveCommentToFirebase(currentCommentVideoId, newItem, false);
+                    const commentsArray = videoComments[currentCommentVideoId] || [];
+                    commentsArray.unshift(newItem);
+                    videoComments[currentCommentVideoId] = commentsArray;
+                    console.log('✅ Comment added to list (pending)');
                 }
                 
                 // Clear input
                 input.value = '';
                 
-                // Reload comments
-                console.log('Reloading comments...');
+                // Clear preview section
+                const previewSection = document.getElementById('commentPreviewSection');
+                const previewContainer = document.getElementById('commentMediaPreview');
+                if (previewSection && previewContainer) {
+                    previewSection.style.display = 'none';
+                    previewContainer.innerHTML = '';
+                }
+                
+                // Clear media attachments
+                if (window.commentMediaAttachments && window.commentMediaAttachments.length > 0) {
+                    console.log('🧹 Clearing media attachments, had:', window.commentMediaAttachments.length);
+                }
+                window.commentMediaAttachments = [];
+                
+                // Reload comments immediately (show optimistic UI)
+                console.log('📋 Reloading comments with optimistic update...');
                 loadComments(currentCommentVideoId);
                 
                 // Update comment count in the button
                 updateCommentCountInUI(currentCommentVideoId, newItem);
                 
-                // Clear media attachments after posting
-                console.log('🧹 Clearing media attachments, had:', window.commentMediaAttachments.length);
-                window.commentMediaAttachments = [];
+                // Save to Firebase in background (non-blocking)
+                console.log('💾 Saving to Firebase in background...');
+                if (replyingToCommentId || newItem.isReply) {
+                    const parentComment = videoComments[currentCommentVideoId].find(c => c.id === replyingToCommentId);
+                    if (parentComment) {
+                        saveCommentToFirebase(currentCommentVideoId, parentComment, true).then(() => {
+                            newItem.isPending = false;
+                            loadComments(currentCommentVideoId);
+                            
+                            // Re-enable send button
+                            const sendBtn = document.getElementById('commentSendBtn');
+                            if (sendBtn) {
+                                sendBtn.disabled = false;
+                            }
+                        }).catch(error => {
+                            console.error('❌ Error saving reply:', error);
+                            newItem.isPending = false;
+                            
+                            // Re-enable button on error
+                            const sendBtn = document.getElementById('commentSendBtn');
+                            if (sendBtn) {
+                                sendBtn.disabled = false;
+                            }
+                        });
+                    }
+                } else {
+                    saveCommentToFirebase(currentCommentVideoId, newItem, false).then(() => {
+                        newItem.isPending = false;
+                        loadComments(currentCommentVideoId);
+                        
+                        // Re-enable send button
+                        const sendBtn = document.getElementById('commentSendBtn');
+                        if (sendBtn) {
+                            sendBtn.disabled = false;
+                        }
+                    }).catch(error => {
+                        console.error('❌ Error saving comment:', error);
+                        newItem.isPending = false;
+                        
+                        // Re-enable button on error
+                        const sendBtn = document.getElementById('commentSendBtn');
+                        if (sendBtn) {
+                            sendBtn.disabled = false;
+                        }
+                    });
+                }
                 
-                showGenericToast('Comment posted! ✨', 'success');
-                console.log('✅ Comment posted successfully with', newItem.media ? newItem.media.length : 0, 'media items');
+                console.log('✅ Comment submitted with', newItem.media ? newItem.media.length : 0, 'media items');
             } catch (error) {
                 console.error('❌ Error posting comment:', error);
-                showGenericToast('Error posting comment: ' + error.message, 'error');
+                
+                // Re-enable button on error
+                const sendBtn = document.getElementById('commentSendBtn');
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                }
             }
         }
 
@@ -40748,83 +41277,50 @@ For more help, visit: help.pose.app
         }
 
         // Save comment to Firebase
-        function saveCommentToFirebase(videoId, comment, isParentWithReply = false) {
+        async function saveCommentToFirebase(videoId, comment, isParentWithReply = false) {
             try {
                 const video = forYouVideos.find(v => v.id === videoId);
-                if (video) {
-                    // Create comment data structure with media
-                    const commentToSave = {
-                        id: comment.id,
-                        text: comment.text,
-                        username: comment.username,
-                        userInitial: comment.userInitial,
-                        profilePic: comment.profilePic,
-                        timestamp: comment.timestamp,
-                        likes: comment.likes || 0,
-                        userId: comment.userId,
-                        replies: comment.replies || [],
-                        media: comment.media || [] // Include media attachments
-                    };
-                    
-                    if (isParentWithReply) {
-                        // Update existing parent comment with new replies
-                        console.log('💾 Updating parent comment with reply:', comment.id);
-                        
-                        // Find and update the comment in commentsArray
-                        db.collection('videos').doc(videoId).get().then(doc => {
-                            if (doc.exists) {
-                                const videoData = doc.data();
-                                const commentsArray = videoData.commentsArray || [];
-                                
-                                // Find the parent comment index
-                                const parentIndex = commentsArray.findIndex(c => c.id === comment.id);
-                                
-                                if (parentIndex !== -1) {
-                                    // Update the parent comment in place
-                                    commentsArray[parentIndex] = commentToSave;
-                                    
-                                    db.collection('videos').doc(videoId).update({
-                                        commentsArray: commentsArray
-                                    }).then(() => {
-                                        console.log('✅ Parent comment updated with reply');
-                                    }).catch(err => {
-                                        console.error('❌ Error updating parent comment:', err.message);
-                                    });
-                                }
-                            }
-                        }).catch(err => {
-                            console.error('⚠️ Error fetching video:', err.message);
-                        });
-                    } else {
-                        // New top-level comment
-                        console.log('💾 Saving new comment to Firebase:', videoId);
-                        video.comments = (video.comments || 0) + 1;
-                        
-                        // Get current commentsArray and add new comment
-                        db.collection('videos').doc(videoId).get().then(doc => {
-                            if (doc.exists) {
-                                const videoData = doc.data();
-                                const commentsArray = videoData.commentsArray || [];
-                                // Add new comment to beginning
-                                commentsArray.unshift(commentToSave);
-                                
-                                db.collection('videos').doc(videoId).update({
-                                    comments: video.comments,
-                                    commentsArray: commentsArray
-                                }).then(() => {
-                                    console.log('✅ Comment saved to Firebase');
-                                }).catch(err => {
-                                    console.error('❌ Error saving comment:', err.message);
-                                    showGenericToast('Error saving comment', 'error');
-                                });
-                            }
-                        }).catch(err => {
-                            console.error('⚠️ Error fetching video:', err.message);
-                        });
-                    }
+                if (!video) {
+                    console.error('❌ Video not found:', videoId);
+                    return;
                 }
+                
+                // Create comment data structure with media
+                const commentToSave = {
+                    id: comment.id,
+                    text: comment.text || '',
+                    username: comment.username,
+                    userInitial: comment.userInitial,
+                    profilePic: comment.profilePic,
+                    timestamp: comment.timestamp,
+                    likes: comment.likes || 0,
+                    likedBy: {},
+                    userId: comment.userId,
+                    replies: comment.replies || [],
+                    media: comment.media || []
+                };
+                
+                console.log('💾 Saving comment to subcollection:', {
+                    videoId,
+                    commentId: comment.id,
+                    hasText: !!comment.text,
+                    hasMedia: (comment.media || []).length > 0
+                });
+                
+                // Save to subcollection: videos/{videoId}/comments/{commentId}
+                await db.collection('videos').doc(videoId).collection('comments').doc(comment.id).set(commentToSave);
+                
+                // Increment comment counter on main video doc
+                if (!isParentWithReply) {
+                    await db.collection('videos').doc(videoId).update({
+                        comments: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+                
+                console.log('✅ Comment saved to subcollection successfully');
+                
             } catch (error) {
-                console.error('Error saving comment:', error);
+                console.error('❌ Error in saveCommentToFirebase:', error);
             }
         }
 
@@ -41208,40 +41704,97 @@ For more help, visit: help.pose.app
             const file = event.target.files[0];
             if (!file) return;
             
-            // Check file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showGenericToast('Image too large (max 5MB)', 'error');
+            // Check file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showGenericToast('Image too large (max 10MB)', 'error');
                 return;
             }
             
-            // Read and insert image
+            // Read as base64 and store locally (will upload to Cloudinary on post)
             const reader = new FileReader();
             reader.onload = (e) => {
-                const input = document.getElementById('commentInput');
-                const base64 = e.target.result;
-                
-                // Create media object to store image separately
                 if (!window.commentMediaAttachments) {
                     window.commentMediaAttachments = [];
                 }
                 
                 const mediaId = `media_${Date.now()}`;
-                window.commentMediaAttachments.push({
+                const mediaObject = {
                     id: mediaId,
                     type: 'image',
-                    url: base64,
-                    filename: file.name
-                });
+                    base64: e.target.result,
+                    filename: file.name,
+                    file: file
+                };
+                window.commentMediaAttachments.push(mediaObject);
                 
-                // Store reference in input (not the full base64)
-                input.value += `[IMG:${mediaId}]`;
+                // Add preview to preview section
+                const previewSection = document.getElementById('commentPreviewSection');
+                const previewContainer = document.getElementById('commentMediaPreview');
+                
+                previewSection.style.display = 'block';
+                
+                // Create preview card with remove button
+                const previewCard = document.createElement('div');
+                previewCard.id = `preview_${mediaId}`;
+                previewCard.style.cssText = `
+                    position: relative;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    background: rgba(138, 43, 226, 0.1);
+                    border: 1px solid rgba(138, 43, 226, 0.3);
+                `;
+                
+                previewCard.innerHTML = `
+                    <img src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;">
+                    <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
+                        position: absolute;
+                        top: 2px;
+                        right: 2px;
+                        background: rgba(255, 0, 80, 0.9);
+                        border: none;
+                        color: white;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 16px;
+                        padding: 0;
+                    ">×</button>
+                `;
+                
+                previewContainer.appendChild(previewCard);
+                
+                const input = document.getElementById('commentInput');
                 input.focus();
-                showGenericToast('Image added to comment ✨', 'success');
             };
             reader.readAsDataURL(file);
             
             // Reset input
             event.target.value = '';
+        }
+
+        // Remove media from comment preview
+        function removeCommentMedia(mediaId) {
+            // Remove from attachments
+            if (window.commentMediaAttachments) {
+                window.commentMediaAttachments = window.commentMediaAttachments.filter(m => m.id !== mediaId);
+            }
+            
+            // Remove preview card
+            const previewCard = document.getElementById(`preview_${mediaId}`);
+            if (previewCard) {
+                previewCard.style.animation = 'slideDown 0.2s ease';
+                setTimeout(() => previewCard.remove(), 200);
+            }
+            
+            // Hide preview section if no more attachments
+            if (!window.commentMediaAttachments || window.commentMediaAttachments.length === 0) {
+                const previewSection = document.getElementById('commentPreviewSection');
+                previewSection.style.display = 'none';
+            }
         }
 
         // Get time ago string
@@ -41316,17 +41869,25 @@ For more help, visit: help.pose.app
                 <div class="empty-comments-text">No comments yet. Be the first!</div>
             </div>
         </div>
+        
+        <!-- Media Preview Section -->
+        <div class="comment-preview-section" id="commentPreviewSection" style="display: none; padding: 12px 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <div id="commentMediaPreview" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px;">
+            </div>
+        </div>
+        
         <div class="comment-input-section">
             <div class="comment-input-wrapper">
                 <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment...">
+                <button class="comment-emoji-btn" onclick="openVideoCommentPicker()" title="Add video (max 10s)">📹</button>
                 <button class="comment-emoji-btn" onclick="openStickerPicker()" title="Add sticker">🎨</button>
-                <button class="comment-emoji-btn" onclick="openGifPicker()" title="Add GIF">🎬</button>
                 <button class="comment-emoji-btn" onclick="openGalleryPicker()" title="Add image">🖼️</button>
                 <button class="comment-emoji-btn" onclick="insertEmoji()" title="Add emoji">😊</button>
             </div>
             <button class="comment-send-btn" onclick="postComment()" id="commentSendBtn">Post</button>
         </div>
         <input type="file" id="commentGalleryInput" accept="image/*" style="display:none;" onchange="handleCommentImageUpload(event)">
+        <input type="file" id="commentVideoInput" accept="video/*" style="display:none;" onchange="handleCommentVideoUpload(event)">
         
         <!-- Sticker Picker Modal -->
         <div id="stickerModal" style="display:none; position:fixed; bottom:350px; left:0; right:0; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px; max-height:200px; overflow-y:auto;">
@@ -41353,6 +41914,17 @@ For more help, visit: help.pose.app
             <div id="gifResults" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-height:200px; overflow-y:auto;">
                 <div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>
             </div>
+        </div>
+    </div>
+
+    <!-- Comment Media Viewer Modal -->
+    <div class="comment-media-viewer-overlay" id="commentMediaViewerOverlay" onclick="if(event.target === this) closeCommentMediaViewer()"></div>
+    <div class="comment-media-viewer" id="commentMediaViewer">
+        <button class="comment-media-viewer-close" onclick="closeCommentMediaViewer()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="comment-media-viewer-container">
+            <div id="commentMediaViewerContent"></div>
         </div>
     </div>
 
