@@ -7354,8 +7354,8 @@
         }
 
         .interaction-btn.active .btn-icon {
-            color: #ff2d55 !important;
-            background-color: rgba(255, 45, 85, 0.2) !important;
+            color: #22c55e !important;
+            background-color: rgba(34, 197, 94, 0.2) !important;
         }
 
         .interaction-btn.active .interaction-count {
@@ -7620,7 +7620,7 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
         }
-        
+
         /* Mobile responsive - Extra small phones */
         @media (max-width: 360px) {
             .comment-modal {
@@ -7628,14 +7628,14 @@
                 border-radius: 16px 16px 0 0;
             }
         }
-        
+
         /* Mobile responsive - Small phones */
         @media (max-width: 480px) {
             .comment-modal {
                 max-height: 88vh;
             }
         }
-        
+
         /* Tablet */
         @media (min-width: 768px) {
             .comment-modal {
@@ -7647,7 +7647,7 @@
                 bottom: 20px;
                 max-height: 80vh;
             }
-            
+
             .comment-modal.active {
                 transform: translateX(-50%) translateY(0);
             }
@@ -7666,7 +7666,7 @@
             align-items: center;
             flex-shrink: 0;
         }
-        
+
         @media (max-width: 360px) {
             .comment-header {
                 padding: 10px 12px;
@@ -7679,7 +7679,7 @@
             font-size: 16px;
             font-weight: 600;
         }
-        
+
         @media (max-width: 360px) {
             .comment-header h3 {
                 font-size: 14px;
@@ -7714,7 +7714,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             align-items: flex-start;
         }
-        
+
         @media (max-width: 360px) {
             .comment-item {
                 gap: 8px;
@@ -7745,7 +7745,7 @@
             background-size: cover;
             background-position: center;
         }
-        
+
         @media (max-width: 360px) {
             .comment-avatar {
                 width: 28px;
@@ -7769,7 +7769,7 @@
             height: auto;
             border-radius: 8px;
         }
-        
+
         @media (max-width: 360px) {
             .comment-media-container {
                 width: 80px;
@@ -7865,7 +7865,7 @@
             font-weight: 600;
             font-size: 13px;
         }
-        
+
         @media (max-width: 360px) {
             .comment-username {
                 font-size: 12px;
@@ -7876,7 +7876,7 @@
             color: #999;
             font-size: 11px;
         }
-        
+
         @media (max-width: 360px) {
             .comment-time {
                 font-size: 10px;
@@ -7889,7 +7889,7 @@
             line-height: 1.4;
             word-break: break-word;
         }
-        
+
         @media (max-width: 360px) {
             .comment-text {
                 font-size: 12px;
@@ -7920,16 +7920,16 @@
         .comment-like-btn.liked {
             color: #ff2d55;
         }
-        
+
         /* Reply button styling */
         .comment-like-btn:last-child {
             color: #8A2BE2;
         }
-        
+
         .comment-like-btn:last-child:hover {
             color: #a855f7;
         }
-        
+
         @media (max-width: 360px) {
             .comment-like-btn {
                 font-size: 11px;
@@ -7944,7 +7944,7 @@
             align-items: flex-end;
             flex-shrink: 0;
         }
-        
+
         @media (max-width: 360px) {
             .comment-input-section {
                 padding: 8px 10px;
@@ -7961,7 +7961,7 @@
             padding: 8px 12px;
             align-items: center;
         }
-        
+
         @media (max-width: 360px) {
             .comment-input-wrapper {
                 padding: 6px 10px;
@@ -7977,7 +7977,7 @@
             font-size: 14px;
             outline: none;
         }
-        
+
         @media (max-width: 360px) {
             .comment-input {
                 font-size: 13px;
@@ -8016,7 +8016,7 @@
             flex-shrink: 0;
             min-width: 60px;
         }
-        
+
         @media (max-width: 480px) {
             .comment-send-btn {
                 padding: 8px 14px;
@@ -8024,7 +8024,7 @@
                 min-width: 55px;
             }
         }
-        
+
         @media (max-width: 360px) {
             .comment-send-btn {
                 padding: 7px 12px;
@@ -14263,6 +14263,395 @@
             box-shadow: 0 0 15px rgba(255, 0, 80, 0.5);
         }
 
+        /* Voice Player for Comments - WhatsApp Style */
+        .comment-voice-wrapper {
+            width: 240px;
+            margin-top: 12px;
+            transition: width 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comment-voice-wrapper.expanded {
+            width: 320px;
+        }
+
+        .comment-voice-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .comment-voice-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            background-color: rgba(138, 43, 226, 0.5);
+            flex-shrink: 0;
+        }
+
+        .comment-voice-profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+
+        .comment-voice-profile-name {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .comment-voice-profile-time {
+            color: #999;
+            font-size: 10px;
+        }
+
+        .comment-voice-container {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(138, 43, 226, 0.08));
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(138, 43, 226, 0.35);
+            width: 100%;
+            height: 56px;
+            transition: all 0.3s ease;
+        }
+
+        .comment-voice-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .comment-voice-header i {
+            color: #8A2BE2;
+            font-size: 16px;
+        }
+
+        .comment-voice-label {
+            display: none;
+        }
+
+        .comment-voice-play-btn {
+            background: linear-gradient(135deg, #ff0050, #ff4478);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(255, 0, 80, 0.3);
+        }
+
+        .comment-voice-play-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(255, 0, 80, 0.4);
+        }
+
+        .comment-voice-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .comment-voice-player {
+            width: 200px;
+            height: 36px;
+            border-radius: 6px;
+            accent-color: #ff0050;
+            flex: 1;
+            display: none;
+        }
+
+        .comment-voice-time {
+            display: flex;
+            gap: 3px;
+            font-size: 11px;
+            color: #aaa;
+            min-width: 54px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .comment-voice-current-time {
+            color: #fff;
+        }
+
+        .comment-voice-current-time::after {
+            content: '/';
+            margin: 0 2px;
+            color: #666;
+        }
+
+        .comment-voice-menu-btn {
+            background: rgba(138, 43, 226, 0.25);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            color: #aaa;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: auto;
+            text-align: center;
+            margin-left: auto;
+            position: relative;
+        }
+
+        .comment-voice-menu-btn:hover {
+            background: rgba(138, 43, 226, 0.35);
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+
+        .comment-voice-controls {
+            display: none !important;
+            flex-direction: row;
+            gap: 6px;
+            width: 240px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: width 0.3s ease;
+        }
+
+        .comment-voice-wrapper.expanded .comment-voice-controls {
+            width: 320px;
+        }
+
+        .comment-voice-controls.active {
+            display: flex !important;
+        }
+
+        .comment-voice-speed-btn {
+            background: rgba(138, 43, 226, 0.25);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            color: #aaa;
+            padding: 4px 9px;
+            border-radius: 5px;
+            font-size: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: 50px;
+            text-align: center;
+        }
+
+        .comment-voice-speed-btn:hover {
+            background: rgba(138, 43, 226, 0.35);
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+
+        .comment-voice-speed-btn:active {
+            transform: scale(0.95);
+        }
+
+        .comment-voice-speed-btn.active {
+            background: rgba(138, 43, 226, 0.5);
+            border-color: rgba(138, 43, 226, 0.8);
+            color: #fff;
+        }
+
+        /* Responsive - Mobile (768px and below) */
+        @media (max-width: 768px) {
+            .comment-voice-wrapper {
+                width: 220px;
+            }
+
+            .comment-voice-wrapper.expanded {
+                width: 300px;
+            }
+
+            .comment-voice-controls {
+                width: 220px;
+            }
+
+            .comment-voice-wrapper.expanded .comment-voice-controls {
+                width: 300px;
+            }
+
+            .comment-voice-player {
+                width: 160px;
+            }
+
+            .comment-voice-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+
+            .comment-voice-profile-name {
+                font-size: 12px;
+            }
+
+            .comment-voice-time {
+                font-size: 10px;
+                min-width: 48px;
+            }
+        }
+
+        /* Responsive - Small Phones (480px and below) */
+        @media (max-width: 480px) {
+            .comment-voice-wrapper {
+                width: 200px;
+                margin-top: 10px;
+            }
+
+            .comment-voice-wrapper.expanded {
+                width: 280px;
+            }
+
+            .comment-voice-profile {
+                margin-bottom: 6px;
+            }
+
+            .comment-voice-container {
+                height: 52px;
+                padding: 8px 10px;
+            }
+
+            .comment-voice-controls {
+                width: 200px;
+                margin-top: 6px;
+            }
+
+            .comment-voice-wrapper.expanded .comment-voice-controls {
+                width: 280px;
+            }
+
+            .comment-voice-player {
+                width: 130px;
+                height: 32px;
+            }
+
+            .comment-voice-play-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+
+            .comment-voice-speed-btn {
+                width: 48px;
+                padding: 3px 6px;
+                font-size: 9px;
+            }
+
+            .comment-voice-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 11px;
+            }
+
+            .comment-voice-profile-name {
+                font-size: 11px;
+            }
+
+            .comment-voice-profile-time {
+                font-size: 9px;
+            }
+
+            .comment-voice-time {
+                font-size: 9px;
+                min-width: 44px;
+            }
+        }
+
+        /* Responsive - Extra Small Phones (360px and below) */
+        @media (max-width: 360px) {
+            .comment-voice-wrapper {
+                width: 180px;
+                margin-top: 8px;
+            }
+
+            .comment-voice-wrapper.expanded {
+                width: 260px;
+            }
+
+            .comment-voice-profile {
+                margin-bottom: 6px;
+            }
+
+            .comment-voice-container {
+                height: 50px;
+                padding: 6px 8px;
+            }
+
+            .comment-voice-controls {
+                width: 180px;
+                margin-top: 6px;
+                gap: 4px;
+            }
+
+            .comment-voice-wrapper.expanded .comment-voice-controls {
+                width: 260px;
+            }
+
+            .comment-voice-player {
+                width: 110px;
+                height: 30px;
+            }
+
+            .comment-voice-play-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .comment-voice-speed-btn {
+                width: 44px;
+                padding: 2px 4px;
+                font-size: 8px;
+            }
+
+            .comment-voice-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 10px;
+            }
+
+            .comment-voice-profile-name {
+                font-size: 10px;
+            }
+
+            .comment-voice-profile-time {
+                font-size: 8px;
+            }
+
+            .comment-voice-time {
+                font-size: 8px;
+                min-width: 40px;
+            }
+        }
+
         /* Trim section */
         .v2-trim-section {
             display: flex;
@@ -17842,11 +18231,28 @@
         };
 
         let currentUser = null;
+
+        // SVG Stickers Library - define early to avoid initialization issues
+        var stickerLibrary = [
+            { name: 'Laughing', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="100" cy="100" r="95" fill="%23FFD93D" stroke="%23333" stroke-width="2"/%3E%3Ccircle cx="70" cy="80" r="12" fill="%23333"/%3E%3Ccircle cx="130" cy="80" r="12" fill="%23333"/%3E%3Cpath d="M 60 130 Q 100 160 140 130" stroke="%23333" stroke-width="4" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' },
+            { name: 'Fire', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 100 30 Q 80 70 80 100 Q 80 150 100 170 Q 120 150 120 100 Q 120 70 100 30" fill="%23FF6B35"/%3E%3Cpath d="M 100 50 Q 90 75 90 100 Q 90 140 100 155 Q 110 140 110 100 Q 110 75 100 50" fill="%23FF9F5A"/%3E%3C/svg%3E' },
+            { name: 'Love', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 100 170 C 20 120 10 80 10 60 C 10 35 30 20 50 20 C 70 20 85 35 100 50 C 115 35 130 20 150 20 C 170 20 190 35 190 60 C 190 80 180 120 100 170" fill="%23FF1744" stroke="%23333" stroke-width="2"/%3E%3C/svg%3E' },
+            { name: 'Cool', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="100" cy="100" r="95" fill="%23FFD93D" stroke="%23333" stroke-width="2"/%3E%3Crect x="50" y="70" width="30" height="20" rx="5" fill="%23333"/%3E%3Crect x="120" y="70" width="30" height="20" rx="5" fill="%23333"/%3E%3Cpath d="M 70 130 Q 100 145 130 130" stroke="%23333" stroke-width="4" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' },
+            { name: 'Sad', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="100" cy="100" r="95" fill="%23FFD93D" stroke="%23333" stroke-width="2"/%3E%3Ccircle cx="70" cy="80" r="12" fill="%23333"/%3E%3Ccircle cx="130" cy="80" r="12" fill="%23333"/%3E%3Cpath d="M 60 140 Q 100 120 140 140" stroke="%23333" stroke-width="4" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' },
+            { name: 'Angry', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="100" cy="100" r="95" fill="%23FF6B6B" stroke="%23333" stroke-width="2"/%3E%3Cpath d="M 60 75 L 75 85" stroke="%23333" stroke-width="5" stroke-linecap="round"/%3E%3Cpath d="M 140 75 L 125 85" stroke="%23333" stroke-width="5" stroke-linecap="round"/%3E%3Cpath d="M 70 140 Q 100 120 130 140" stroke="%23333" stroke-width="4" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' },
+            { name: 'Thumbs Up', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 60 180 L 60 100 Q 60 80 80 80 L 120 80 Q 140 80 140 100 L 140 140 Q 140 160 120 160 L 100 160 L 100 180" fill="%23FFD93D" stroke="%23333" stroke-width="2"/%3E%3Crect x="40" y="160" width="100" height="30" rx="5" fill="%23333"/%3E%3C/svg%3E' },
+            { name: 'Party', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="100" cy="100" r="95" fill="%23FF69B4" stroke="%23333" stroke-width="2"/%3E%3Cpath d="M 40 60 L 50 40 L 60 60 Z" fill="%23FFD700"/%3E%3Cpath d="M 100 40 L 110 20 L 120 40 Z" fill="%23FF6B35"/%3E%3Cpath d="M 160 60 L 170 40 L 180 60 Z" fill="%2300D9FF"/%3E%3Ccircle cx="70" cy="90" r="10" fill="%23333"/%3E%3Ccircle cx="130" cy="90" r="10" fill="%23333"/%3E%3Cpath d="M 70 140 Q 100 160 130 140" stroke="%23333" stroke-width="3" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' },
+            { name: 'Shocked', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="100" cy="100" r="95" fill="%23FFD93D" stroke="%23333" stroke-width="2"/%3E%3Ccircle cx="70" cy="80" r="15" fill="%23333"/%3E%3Ccircle cx="130" cy="80" r="15" fill="%23333"/%3E%3Ccircle cx="100" cy="140" r="18" fill="%23333"/%3E%3C/svg%3E' },
+            { name: 'Clap', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 50 80 Q 40 60 30 70 Q 35 100 60 120" fill="%23FFD4A3" stroke="%23333" stroke-width="2"/%3E%3Cpath d="M 150 80 Q 160 60 170 70 Q 165 100 140 120" fill="%23FFD4A3" stroke="%23333" stroke-width="2"/%3E%3C/svg%3E' },
+            { name: 'Rocket', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 100 20 L 80 80 L 100 70 L 120 80 Z" fill="%23FF6B6B"/%3E%3Crect x="85" y="80" width="30" height="70" rx="5" fill="%23666"/%3E%3Cpath d="M 70 140 L 60 180 L 70 160" fill="%23FF9F5A"/%3E%3Cpath d="M 130 140 L 140 180 L 130 160" fill="%23FF9F5A"/%3E%3C/svg%3E' },
+            { name: 'Star', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 100 20 L 125 80 L 185 80 L 140 120 L 165 180 L 100 140 L 35 180 L 60 120 L 15 80 L 75 80 Z" fill="%23FFD700" stroke="%23333" stroke-width="2"/%3E%3C/svg%3E' },
+            { name: 'Celebration', svg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Cpath d="M 50 80 Q 40 40 60 30 Q 80 20 100 30 Q 120 20 140 30 Q 160 40 150 80" fill="%23FF69B4" stroke="%23333" stroke-width="2"/%3E%3Ccircle cx="70" cy="120" r="8" fill="%23FFD700"/%3E%3Ccircle cx="100" cy="140" r="8" fill="%23FF6B35"/%3E%3Ccircle cx="130" cy="120" r="8" fill="%2300D9FF"/%3E%3C/svg%3E' },
+        ];
     </script>
 
     <script>
         console.log('Script loaded!');
-        
+
         // Global variables
         let currentVideoToShare = null;
         let currentCommentVideoId = null;
@@ -17854,6 +18260,13 @@
         let currentReplyIndex = null; // Track if replying to a comment
         let replyingToCommentId = null;
         let userProfileData = null;
+
+        // Voice recording variables
+        let voiceRecorder = null;
+        let voiceRecordingStartTime = null;
+        let voiceRecordingInterval = null;
+        let voiceRecordingPausedTime = 0;
+        let voiceRecordingStream = null;
 
         // Firebase config
         const firebaseConfig = {
@@ -18945,11 +19358,11 @@
                 const doc = await db.collection('users').doc(uid).get();
                 if (doc.exists) {
                     const userData = doc.data();
-                    
+
                     // Store user profile globally for comments
                     userProfileData = userData;
                     console.log('✅ User profile stored:', userData.username);
-                    
+
                     document.getElementById('profileDisplayName').textContent = userData.name;
                     document.getElementById('profileUsernameDisplay').textContent = '@' + userData.username;
 
@@ -20098,7 +20511,7 @@
                     console.warn('⚠️ orderBy requires index, falling back to unordered query:', indexError.message);
                     videosSnapshot = await db.collection('videos').get();
                 }
-                
+
                 forYouVideos = [];
 
                 videosSnapshot.forEach(doc => {
@@ -39754,7 +40167,7 @@ For more help, visit: help.pose.app
                         </div>
                     </button>
                     
-                    <button class="interaction-btn repost-btn" onclick="toggleForYouRepost(this)" data-post-id="${postId}">
+                    <button class="interaction-btn repost-btn" onclick="toggleForYouRepost(event)" data-post-id="${postId}">
                         <div class="btn-icon">
                             <i class="fas fa-retweet"></i>
                         </div>
@@ -39777,28 +40190,28 @@ For more help, visit: help.pose.app
             const videoId = btn.getAttribute('data-post-id');
             const icon = btn.querySelector('.btn-icon');
             const count = btn.querySelector('span.interaction-count');
-            
+
             if (!videoId || !currentUser) {
                 console.log('Video ID or user not found');
                 return;
             }
-            
+
             const currentLikeCount = parseInt(count.textContent) || 0;
             const isLiked = btn.classList.contains('active');
-            
+
             // Update UI instantly
             if (isLiked) {
                 btn.classList.remove('active');
                 icon.querySelector('i').style.color = 'white';
                 count.textContent = Math.max(0, currentLikeCount - 1);
-                
+
                 // Save to Firebase
                 updateVideoLikesInFirebase(videoId, false, currentLikeCount - 1);
             } else {
                 btn.classList.add('active');
                 icon.querySelector('i').style.color = '#ff2d55';
                 count.textContent = currentLikeCount + 1;
-                
+
                 // Save to Firebase
                 updateVideoLikesInFirebase(videoId, true, currentLikeCount + 1);
             }
@@ -39833,22 +40246,22 @@ For more help, visit: help.pose.app
         // Restore like state from Firebase
         function restoreLikeStates() {
             if (!currentUser) return;
-            
+
             const likeButtons = document.querySelectorAll('.interaction-btn.like-btn');
-            
+
             likeButtons.forEach(btn => {
                 const videoId = btn.getAttribute('data-post-id');
-                
+
                 // Find video in forYouVideos
                 const video = forYouVideos.find(v => v.id === videoId);
-                
+
                 if (video) {
                     // Update like count from video data
                     const countEl = btn.querySelector('.interaction-count');
                     if (countEl) {
                         countEl.textContent = video.likeCount || 0;
                     }
-                    
+
                     // Check if current user has liked
                     if (video.likes && video.likes[currentUser.uid]) {
                         // User has liked this video
@@ -39872,17 +40285,99 @@ For more help, visit: help.pose.app
         function toggleForYouRepost(event) {
             event.stopPropagation();
             const btn = event.currentTarget || event.target.closest('.repost-btn');
+            if (!btn) return;
+            
             const icon = btn.querySelector('.btn-icon');
             const count = btn.querySelector('.interaction-count');
+            const videoId = btn.getAttribute('data-post-id');
 
-            if (btn.classList.contains('active')) {
+            if (!videoId || !currentUser) {
+                console.log('Video ID or user not found');
+                return;
+            }
+
+            const currentRepostCount = parseInt(count.textContent) || 0;
+            const isReposted = btn.classList.contains('active');
+
+            // Update UI instantly
+            if (isReposted) {
                 btn.classList.remove('active');
-                icon.style.color = 'white';
-                count.textContent = Math.max(0, parseInt(count.textContent) - 1);
+                if (icon && icon.querySelector('i')) {
+                    icon.querySelector('i').style.color = 'white';
+                }
+                count.textContent = Math.max(0, currentRepostCount - 1);
+                console.log('❌ Repost removed:', count.textContent);
+                
+                // Save to Firebase
+                updateVideoRepostsInFirebase(videoId, false, Math.max(0, currentRepostCount - 1));
             } else {
                 btn.classList.add('active');
-                icon.style.color = '#22c55e';
-                count.textContent = parseInt(count.textContent) + 1;
+                if (icon && icon.querySelector('i')) {
+                    icon.querySelector('i').style.color = '#22c55e';
+                }
+                count.textContent = currentRepostCount + 1;
+                console.log('✅ Repost added:', count.textContent);
+                
+                // Save to Firebase
+                updateVideoRepostsInFirebase(videoId, true, currentRepostCount + 1);
+            }
+        }
+
+        // Update reposts in Firebase
+        async function updateVideoRepostsInFirebase(videoId, isReposting, newRepostCount) {
+            try {
+                const videoRef = db.collection('videos').doc(videoId);
+
+                // Initialize reposts object if not exists
+                let updateData = {
+                    repostCount: newRepostCount
+                };
+
+                if (isReposting) {
+                    updateData[`reposts.${currentUser.uid}`] = true;
+                } else {
+                    updateData[`reposts.${currentUser.uid}`] = false;
+                }
+
+                await videoRef.update(updateData);
+                console.log('✅ Repost count updated in Firebase:', newRepostCount);
+            } catch (error) {
+                console.error('Error updating repost count:', error);
+                // Revert UI on error
+                location.reload();
+            }
+        }
+
+        // Load repost data from Firebase
+        async function loadRepostData(videoId, repostBtn) {
+            try {
+                const videoRef = db.collection('videos').doc(videoId);
+                const doc = await videoRef.get();
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    const repostCount = data.repostCount || 0;
+                    const repostedBy = data.reposts || {};
+                    
+                    // Update count
+                    const countElement = repostBtn.querySelector('.interaction-count');
+                    if (countElement) {
+                        countElement.textContent = repostCount;
+                    }
+                    
+                    // Check if current user has reposted
+                    if (currentUser && repostedBy[currentUser.uid]) {
+                        repostBtn.classList.add('active');
+                        const icon = repostBtn.querySelector('.btn-icon i');
+                        if (icon) {
+                            icon.style.color = '#22c55e';
+                        }
+                    }
+                    
+                    console.log('✅ Repost data loaded:', repostCount);
+                }
+            } catch (error) {
+                console.error('Error loading repost data:', error);
             }
         }
 
@@ -39912,6 +40407,12 @@ For more help, visit: help.pose.app
                             // Last resort: append to overlay
                             overlay.insertAdjacentHTML('beforeend', buttonsHTML);
                         }
+                    }
+                    
+                    // Load repost data from Firebase
+                    const repostBtn = overlay.querySelector('.repost-btn');
+                    if (repostBtn) {
+                        loadRepostData(postId, repostBtn);
                     }
                 }
             });
@@ -40108,12 +40609,12 @@ For more help, visit: help.pose.app
         function handleSharedVideoLink() {
             const urlParams = new URLSearchParams(window.location.search);
             const slug = urlParams.get('caption');
-            
+
             if (slug) {
                 // Extract video ID from slug (last part after underscore)
                 const parts = slug.split('_');
                 let videoId = null;
-                
+
                 // Find the video ID (it's the longest segment that starts with 'post_')
                 for (let i = parts.length - 1; i >= 0; i--) {
                     if (parts[i].includes('post') || parts[i].match(/^[a-z0-9]{8,}$/)) {
@@ -40121,15 +40622,15 @@ For more help, visit: help.pose.app
                         break;
                     }
                 }
-                
+
                 // If not found by pattern, try the last 2 parts
                 if (!videoId && parts.length >= 2) {
                     videoId = parts.slice(-2).join('_');
                 }
-                
+
                 if (videoId) {
                     console.log('📹 Video shared link detected:', slug, '- Video ID:', videoId);
-                    
+
                     // Check if user is logged in
                     if (!currentUser) {
                         // Show login modal with message
@@ -40158,7 +40659,7 @@ For more help, visit: help.pose.app
                 justify-content: center;
                 z-index: 3000;
             `;
-            
+
             loginPrompt.innerHTML = `
                 <div style="background: #000; padding: 30px; border-radius: 12px; text-align: center; max-width: 300px; border: 1px solid #8A2BE2;">
                     <h3 style="color: #fff; margin-bottom: 15px;">Join Pose</h3>
@@ -40167,31 +40668,31 @@ For more help, visit: help.pose.app
                     <button onclick="this.parentElement.parentElement.remove(); switchTab('forYou'); showAuthModal('login'); window.sharedVideoId = '${videoId}';" style="width: 100%; padding: 12px; background: transparent; border: 1px solid #8A2BE2; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600;">Login</button>
                 </div>
             `;
-            
+
             document.body.appendChild(loginPrompt);
         }
 
         // Navigate to specific video in ForYou feed
         function navigateToVideo(videoId) {
             console.log('📺 Navigating to video:', videoId);
-            
+
             // Switch to ForYou tab
             switchTab('forYou');
-            
+
             // Wait for feed to load
             setTimeout(() => {
                 // Find the video in forYouVideos
                 const videoIndex = forYouVideos.findIndex(v => v.id === videoId);
-                
+
                 if (videoIndex !== -1) {
                     // Scroll to the video
                     const forYouFeed = document.getElementById('forYouFeed');
                     const videoPost = forYouFeed.children[videoIndex];
-                    
+
                     if (videoPost) {
                         videoPost.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         console.log('✅ Scrolled to video');
-                        
+
                         // Highlight the video briefly
                         videoPost.style.animation = 'pulse 0.5s ease-in-out';
                     }
@@ -40210,7 +40711,7 @@ For more help, visit: help.pose.app
                     handleSharedVideoLink();
                 }
             }, 100);
-            
+
             setTimeout(() => {
                 setupForYouInteractionButtons();
             }, 1000);
@@ -40222,7 +40723,7 @@ For more help, visit: help.pose.app
             // Prevent video pause and stop propagation
             event.preventDefault();
             event.stopPropagation();
-            
+
             currentVideoToShare = videoId;
             const shareMenu = document.getElementById('shareMenu');
             if (shareMenu) {
@@ -40246,7 +40747,7 @@ For more help, visit: help.pose.app
         function shareToWhatsApp(event) {
             if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
-            
+
             const video = forYouVideos.find(v => v.id === currentVideoToShare);
             const caption = video ? video.caption : 'Amazing video';
             const baseUrl = window.location.origin + window.location.pathname;
@@ -40262,7 +40763,7 @@ For more help, visit: help.pose.app
         function shareToTelegram(event) {
             if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
-            
+
             const video = forYouVideos.find(v => v.id === currentVideoToShare);
             const caption = video ? video.caption : 'Amazing video';
             const baseUrl = window.location.origin + window.location.pathname;
@@ -40278,7 +40779,7 @@ For more help, visit: help.pose.app
         function shareToTwitter(event) {
             if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
-            
+
             const video = forYouVideos.find(v => v.id === currentVideoToShare);
             const caption = video ? video.caption : 'Amazing video';
             const baseUrl = window.location.origin + window.location.pathname;
@@ -40294,7 +40795,7 @@ For more help, visit: help.pose.app
         function shareToFacebook(event) {
             if (event) event.stopPropagation();
             if (!currentVideoToShare) return;
-            
+
             const video = forYouVideos.find(v => v.id === currentVideoToShare);
             const caption = video ? video.caption : 'Amazing video';
             const baseUrl = window.location.origin + window.location.pathname;
@@ -40308,11 +40809,11 @@ For more help, visit: help.pose.app
         // Generate URL slug from caption and video ID
         function generateShareSlug(caption, videoId) {
             if (!caption) caption = 'Amazing video';
-            
+
             // Take first 3-5 words and lowercase
             const words = caption.split(' ').slice(0, 4);
             const slug = words.join('_').toLowerCase().replace(/[^a-z0-9_]/g, '');
-            
+
             // Combine with video ID
             return `${slug}_${videoId}`;
         }
@@ -40324,16 +40825,16 @@ For more help, visit: help.pose.app
                 showGenericToast('No video selected', 'error');
                 return;
             }
-            
+
             // Get video data
             const video = forYouVideos.find(v => v.id === currentVideoToShare);
             const caption = video ? video.caption : 'Amazing video';
-            
+
             // Create shareable link with caption slug
             const baseUrl = window.location.origin + window.location.pathname;
             const slug = generateShareSlug(caption, currentVideoToShare);
             const link = `${baseUrl}?caption=${slug}`;
-            
+
             navigator.clipboard.writeText(link).then(() => {
                 showGenericToast('Video link copied to clipboard!', 'success');
                 closeShareMenu();
@@ -40348,25 +40849,25 @@ For more help, visit: help.pose.app
                 event.preventDefault();
                 event.stopPropagation();
             }
-            
+
             if (!currentUser) {
                 showGenericToast('Please login to save videos', 'error');
                 return;
             }
-            
+
             // Find video
             const video = forYouVideos.find(v => v.id === videoId);
             if (!video || !video.videoUrl) {
                 showGenericToast('Video not found', 'error');
                 return;
             }
-            
+
             showGenericToast('Preparing download...', 'info');
-            
+
             // Close more menu
             const moreMenus = document.querySelectorAll('.more-menu');
             moreMenus.forEach(menu => menu.classList.remove('active'));
-            
+
             // Download video with watermark
             downloadVideoWithWatermark(video);
         }
@@ -40377,27 +40878,27 @@ For more help, visit: help.pose.app
                 event.preventDefault();
                 event.stopPropagation();
             }
-            
+
             if (!currentUser) {
                 showGenericToast('Please login to save videos', 'error');
                 return;
             }
-            
+
             if (!currentVideoToShare) {
                 showGenericToast('No video selected', 'error');
                 return;
             }
-            
+
             // Find video
             const video = forYouVideos.find(v => v.id === currentVideoToShare);
             if (!video || !video.videoUrl) {
                 showGenericToast('Video not found', 'error');
                 return;
             }
-            
+
             showGenericToast('Preparing download...', 'info');
             closeShareMenu();
-            
+
             // Download video with watermark
             downloadVideoWithWatermark(video);
         }
@@ -40408,23 +40909,23 @@ For more help, visit: help.pose.app
                 // Fetch the video
                 const response = await fetch(video.videoUrl);
                 const blob = await response.blob();
-                
+
                 // Create a video element to get dimensions
                 const videoElement = document.createElement('video');
                 videoElement.src = URL.createObjectURL(blob);
-                
+
                 videoElement.onloadedmetadata = async () => {
                     try {
                         // Get video dimensions
                         const width = videoElement.videoWidth;
                         const height = videoElement.videoHeight;
-                        
+
                         // Create canvas for watermark
                         const canvas = document.createElement('canvas');
                         canvas.width = width;
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
-                        
+
                         // Draw watermark on canvas
                         const watermarkText = 'Pose';
                         const fontSize = Math.max(width / 20, 30); // Dynamic font size
@@ -40432,16 +40933,16 @@ For more help, visit: help.pose.app
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; // White with transparency
                         ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
                         ctx.lineWidth = 2;
-                        
+
                         // Measure text to center it
                         const textMetrics = ctx.measureText(watermarkText);
                         const x = width - textMetrics.width - (width / 30); // Top right corner
                         const y = fontSize + (height / 50); // Top margin
-                        
+
                         // Draw watermark (stroke then fill for better visibility)
                         ctx.strokeText(watermarkText, x, y);
                         ctx.fillText(watermarkText, x, y);
-                        
+
                         // Create download link
                         const videoName = `Pose_${video.id}.webm`;
                         const link = document.createElement('a');
@@ -40450,22 +40951,22 @@ For more help, visit: help.pose.app
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                        
+
                         showGenericToast('Video downloaded! 🎬', 'success');
                         console.log('✅ Video downloaded with watermark:', videoName);
-                        
+
                     } catch (error) {
                         console.error('❌ Error processing watermark:', error);
                         // Fallback: download without watermark
                         downloadVideoWithoutWatermark(video);
                     }
                 };
-                
+
                 videoElement.onerror = () => {
                     console.log('Could not load video metadata, downloading without watermark');
                     downloadVideoWithoutWatermark(video);
                 };
-                
+
             } catch (error) {
                 console.error('❌ Error downloading video:', error);
                 showGenericToast('Failed to download video', 'error');
@@ -40481,7 +40982,7 @@ For more help, visit: help.pose.app
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                
+
                 showGenericToast('Video downloaded! 🎬', 'success');
                 console.log('✅ Video downloaded:', `Pose_${video.id}.webm`);
             } catch (error) {
@@ -40509,51 +41010,51 @@ For more help, visit: help.pose.app
         // Open comment modal
         async function openCommentModal(event, videoId) {
             console.log('📝 Opening comment modal for video:', videoId);
-            
+
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
             }
 
             currentCommentVideoId = videoId;
-            
+
             try {
                 // Ensure user profile is loaded
                 if (!userProfileData && currentUser) {
                     console.log('⏳ Loading user profile...');
                     await loadUserProfile(currentUser.uid);
                 }
-                
+
                 // Show modal
                 const overlay = document.getElementById('commentOverlay');
                 const modal = document.getElementById('commentModal');
-                
+
                 console.log('Overlay:', overlay, 'Modal:', modal);
                 console.log('User profile data:', userProfileData);
-                
+
                 if (overlay) {
                     overlay.style.display = 'block';
                     setTimeout(() => {
                         overlay.classList.add('active');
                     }, 10);
                 }
-                
+
                 if (modal) {
                     modal.style.display = 'flex';
                     setTimeout(() => {
                         modal.classList.add('active');
                     }, 10);
                 }
-                
+
                 // Load comments
                 loadComments(videoId);
-                
+
                 // Focus input
                 setTimeout(() => {
                     const input = document.getElementById('commentInput');
                     if (input) input.focus();
                 }, 300);
-                
+
                 console.log('✅ Comment modal opened');
             } catch (error) {
                 console.error('❌ Error opening comment modal:', error);
@@ -40564,35 +41065,35 @@ For more help, visit: help.pose.app
         function closeCommentModal() {
             const overlay = document.getElementById('commentOverlay');
             const modal = document.getElementById('commentModal');
-            
+
             if (modal) {
                 modal.classList.remove('active');
                 setTimeout(() => {
                     modal.style.display = 'none';
                 }, 300);
             }
-            
+
             if (overlay) {
                 overlay.classList.remove('active');
                 setTimeout(() => {
                     overlay.style.display = 'none';
                 }, 300);
             }
-            
+
             // Clear input
             const input = document.getElementById('commentInput');
             if (input) {
                 input.value = '';
                 input.placeholder = 'Add a comment...';
             }
-            
+
             // Reset header
             const header = document.querySelector('.comment-header h3');
             if (header) {
                 header.textContent = 'Comments';
                 header.style.color = '#fff';
             }
-            
+
             currentCommentVideoId = null;
             replyingToCommentId = null;
         }
@@ -40602,15 +41103,15 @@ For more help, visit: help.pose.app
             const overlay = document.getElementById('commentMediaViewerOverlay');
             const viewer = document.getElementById('commentMediaViewer');
             const content = document.getElementById('commentMediaViewerContent');
-            
+
             if (!overlay || !viewer || !content) {
                 console.error('Media viewer elements not found');
                 return;
             }
-            
+
             // Clear previous content
             content.innerHTML = '';
-            
+
             // Create media element
             if (type === 'video') {
                 const video = document.createElement('video');
@@ -40629,7 +41130,7 @@ For more help, visit: help.pose.app
                 img.style.objectFit = 'contain';
                 content.appendChild(img);
             }
-            
+
             // Show modal
             overlay.classList.add('active');
             viewer.classList.add('active');
@@ -40640,7 +41141,7 @@ For more help, visit: help.pose.app
         function closeCommentMediaViewer() {
             const overlay = document.getElementById('commentMediaViewerOverlay');
             const viewer = document.getElementById('commentMediaViewer');
-            
+
             if (overlay) {
                 overlay.classList.remove('active');
             }
@@ -40652,47 +41153,83 @@ For more help, visit: help.pose.app
         }
 
         // Load comments for video
-        async function loadComments(videoId) {
-            console.log('📖 Loading comments for:', videoId);
-            
-            const commentList = document.getElementById('commentList');
-            if (!commentList) {
-                console.error('❌ Comment list element not found');
-                return;
-            }
-            
-            let comments = videoComments[videoId] || [];
-            
-            // Load from subcollection: videos/{videoId}/comments
-            if (comments.length === 0) {
-                console.log('📥 Fetching comments from subcollection...');
-                try {
-                    const commentsSnapshot = await db.collection('videos').doc(videoId).collection('comments').orderBy('timestamp', 'desc').get();
-                    let fbComments = [];
-                    
-                    commentsSnapshot.forEach(doc => {
-                        fbComments.push(doc.data());
-                    });
-                    
-                    if (fbComments.length > 0) {
-                        // Store in memory for future use
-                        videoComments[videoId] = fbComments;
-                        comments = fbComments;
-                        console.log('✅ Loaded', fbComments.length, 'comments from subcollection');
-                    }
-                } catch (error) {
-                    console.error('⚠️ Error loading comments from subcollection:', error.message);
+        async function loadComments(videoId, forceRefresh = false) {
+            return new Promise((resolve) => {
+                console.log('📖 Loading comments for:', videoId, 'forceRefresh:', forceRefresh);
+
+                const commentList = document.getElementById('commentList');
+                if (!commentList) {
+                    console.error('❌ Comment list element not found');
+                    resolve();
+                    return;
                 }
-            }
-            
+
+                // Clear cache if force refresh is requested (for replies to load correctly)
+                if (forceRefresh) {
+                    videoComments[videoId] = [];
+                }
+
+                let comments = videoComments[videoId] || [];
+
+                // Load from subcollection: videos/{videoId}/comments
+                if (comments.length === 0) {
+                    console.log('📥 Fetching comments from subcollection...');
+                    try {
+                        db.collection('videos').doc(videoId).collection('comments').orderBy('timestamp', 'desc').get().then(commentsSnapshot => {
+                            let fbComments = [];
+
+                            commentsSnapshot.forEach(doc => {
+                                fbComments.push(doc.data());
+                            });
+
+                            if (fbComments.length > 0) {
+                                // Store in memory for future use
+                                videoComments[videoId] = fbComments;
+                                comments = fbComments;
+                                console.log('✅ Loaded', fbComments.length, 'comments from subcollection');
+                                console.log('Comments with replies:', comments.map(c => ({ id: c.id, replyCount: (c.replies || []).length })));
+                            }
+
+                            // Ensure likedBy is initialized for all comments and replies
+                            fbComments = fbComments.map(c => {
+                                if (!c.likedBy) c.likedBy = {};
+                                if (c.replies && c.replies.length > 0) {
+                                    c.replies = c.replies.map(r => {
+                                        if (!r.likedBy) r.likedBy = {};
+                                        return r;
+                                    });
+                                }
+                                return c;
+                            });
+
+                            renderCommentsList(commentList, fbComments, videoId);
+                            resolve();
+                        }).catch(error => {
+                            console.error('⚠️ Error loading comments from subcollection:', error.message);
+                            renderCommentsList(commentList, comments, videoId);
+                            resolve();
+                        });
+                    } catch (error) {
+                        console.error('⚠️ Error loading comments:', error.message);
+                        renderCommentsList(commentList, comments, videoId);
+                        resolve();
+                    }
+                } else {
+                    renderCommentsList(commentList, comments, videoId);
+                    resolve();
+                }
+            });
+        }
+
+        function renderCommentsList(commentList, comments, videoId) {
             console.log('📊 Comments found:', comments.length);
             console.log('Comments data:', comments);
-            
+
             if (!commentList.parentElement) {
                 console.error('❌ Comment list has no parent');
                 return;
             }
-            
+
             if (comments.length === 0) {
                 console.log('No comments, showing empty state');
                 commentList.innerHTML = `
@@ -40703,11 +41240,11 @@ For more help, visit: help.pose.app
                 `;
             } else {
                 console.log('Rendering', comments.length, 'comments...');
-                
+
                 // Filter out replies - only show top-level comments
                 const topLevelComments = comments.filter(comment => !comment.isReply);
                 console.log('Top-level comments:', topLevelComments.length);
-                
+
                 commentList.innerHTML = topLevelComments.map((comment, index) => `
                     <div class="comment-item">
                          <div class="comment-left-container">
@@ -40715,16 +41252,41 @@ For more help, visit: help.pose.app
                              ${comment.media && comment.media.length > 0 ? `
                                  <div class="comment-media-container">
                                      ${comment.media.map(media => `
-                                         ${media.type === 'image' ? `
+                                         ${media.type === 'sticker' ? `
+                                             <img src="${media.url}" style="width: 80px; height: 80px; object-fit: contain;" alt="Sticker">
+                                         ` : media.type === 'image' ? `
                                              <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" onclick="openCommentMediaViewer('image', '${media.url}')" alt="Image">
                                          ` : media.type === 'video' ? `
                                              <video src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; background: #000; cursor: pointer;" onclick="openCommentMediaViewer('video', '${media.url}')" playsinline></video>
+                                         ` : media.type === 'audio' ? `
+                                             <div class="comment-voice-wrapper">
+                                                 <div class="comment-voice-container">
+                                                     <div class="comment-voice-header">
+                                                         <i class="fas fa-microphone"></i>
+                                                         <button onclick="toggleAudioPlay(this)" class="comment-voice-play-btn"><i class="fas fa-play"></i></button>
+                                                     </div>
+                                                     <audio id="audio_${comment.id}" class="comment-voice-player" onloadedmetadata="updateAudioDuration(this)" ontimeupdate="updateAudioProgress(this)">
+                                                         <source src="${media.url}" type="audio/webm">
+                                                     </audio>
+                                                     <div class="comment-voice-time">
+                                                         <span class="comment-voice-current-time">0:00</span>
+                                                         <span class="comment-voice-duration">0:00</span>
+                                                     </div>
+                                                     <button onclick="toggleVoiceMenu(this)" class="comment-voice-menu-btn" title="Speed">⋮</button>
+                                                     </div>
+                                                     <div class="comment-voice-controls">
+                                                     <button onclick="setCommentAudioSpeed('audio_${comment.id}', 0.5)" class="comment-voice-speed-btn">0.5x</button>
+                                                     <button onclick="setCommentAudioSpeed('audio_${comment.id}', 1)" class="comment-voice-speed-btn active">1x</button>
+                                                     <button onclick="setCommentAudioSpeed('audio_${comment.id}', 1.5)" class="comment-voice-speed-btn">1.5x</button>
+                                                     <button onclick="setCommentAudioSpeed('audio_${comment.id}', 2)" class="comment-voice-speed-btn">2x</button>
+                                                 </div>
+                                             </div>
                                          ` : `
                                              <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" alt="Media" onclick="openCommentMediaViewer('image', '${media.url}')">
                                          `}
                                      `).join('')}
-                                 </div>
-                             ` : ''}
+                                     </div>
+                                     ` : ''}
                          </div>
                          <div class="comment-content">
                              <div class="comment-user">
@@ -40743,16 +41305,41 @@ For more help, visit: help.pose.app
                          </div>
                      </div>
                     ${comment.replies && comment.replies.length > 0 ? `
-                        <div style="margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3);">
-                            ${comment.replies.map((reply) => `
-                                <div class="comment-item" style="padding-left: 12px;">
-                                     <div class="comment-left-container">
-                                         <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
+                         <div style="margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3);" class="replies-container" id="replies-${comment.id}">
+                             ${comment.replies.map((reply, replyIndex) => `
+                                 <div class="comment-item" style="padding-left: 12px; margin-top: 8px;" id="reply-${comment.id}-${replyIndex}">
+                                      <div class="comment-left-container">
+                                          <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
                                          ${reply.media && reply.media.length > 0 ? `
                                              <div class="comment-media-container">
                                                  ${reply.media.map(media => `
-                                                     ${media.type === 'video' ? `
+                                                     ${media.type === 'sticker' ? `
+                                                         <img src="${media.url}" style="width: 80px; height: 80px; object-fit: contain;" alt="Sticker">
+                                                     ` : media.type === 'video' ? `
                                                          <video src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; background: #000; cursor: pointer;" onclick="openCommentMediaViewer('video', '${media.url}')" playsinline></video>
+                                                     ` : media.type === 'audio' ? `
+                                                         <div class="comment-voice-wrapper">
+                                                             <div class="comment-voice-container">
+                                                                 <div class="comment-voice-header">
+                                                                     <i class="fas fa-microphone"></i>
+                                                                     <button onclick="toggleAudioPlay(this)" class="comment-voice-play-btn"><i class="fas fa-play"></i></button>
+                                                                 </div>
+                                                                 <audio id="audio_${reply.id}" class="comment-voice-player" onloadedmetadata="updateAudioDuration(this)" ontimeupdate="updateAudioProgress(this)">
+                                                                     <source src="${media.url}" type="audio/webm">
+                                                                 </audio>
+                                                                 <div class="comment-voice-time">
+                                                                     <span class="comment-voice-current-time">0:00</span>
+                                                                     <span class="comment-voice-duration">0:00</span>
+                                                                 </div>
+                                                                 <button onclick="toggleVoiceMenu(this)" class="comment-voice-menu-btn" title="Speed">⋮</button>
+                                                                 </div>
+                                                                 <div class="comment-voice-controls">
+                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 0.5)" class="comment-voice-speed-btn">0.5x</button>
+                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 1)" class="comment-voice-speed-btn active">1x</button>
+                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 1.5)" class="comment-voice-speed-btn">1.5x</button>
+                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 2)" class="comment-voice-speed-btn">2x</button>
+                                                             </div>
+                                                         </div>
                                                      ` : `
                                                          <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" alt="Media" onclick="openCommentMediaViewer('image', '${media.url}')">
                                                      `}
@@ -40774,35 +41361,34 @@ For more help, visit: help.pose.app
                                                  Reply
                                              </button>
                                          </div>
-                                     </div>
-                                 </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                `).join('');
+                                         </div>
+                                         </div>
+                                         `).join('')}
+                                         </div>
+                                         ` : ''}
+                                         `).join('');
             }
         }
 
-        // Reply to a reply (nested replies)
+        // Reply to a reply - just reply to the parent comment with mention
         function replyToReply(parentCommentId, replyId, replyUsername, videoId) {
-            console.log('📱 Replying to reply:', replyId, 'of comment:', parentCommentId);
-            
-            // Store the parent comment and reply being responded to
-            window.replyingToReplyId = replyId;
-            window.replyingToCommentId = parentCommentId;
-            
+            console.log('📱 Replying to:', replyUsername, 'in comment:', parentCommentId);
+
+            // Just reply to the parent comment, mention will be added by the user
+            replyingToCommentId = parentCommentId;
+
             const input = document.getElementById('commentInput');
             if (input) {
                 // Pre-fill with mention
                 input.value = `@${replyUsername} `;
                 input.focus();
-                
+
                 // Scroll to input
                 const inputSection = document.querySelector('.comment-input-section');
                 if (inputSection) {
                     inputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
-                
+
                 console.log('✅ Ready to reply to:', replyUsername);
             }
         }
@@ -40844,14 +41430,14 @@ For more help, visit: help.pose.app
                 }
 
                 console.log('✅ Video validation passed');
-                
+
                 // Read as blob URL and store locally (like images)
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     if (!window.commentMediaAttachments) {
                         window.commentMediaAttachments = [];
                     }
-                    
+
                     const mediaId = `media_${Date.now()}`;
                     const mediaObject = {
                         id: mediaId,
@@ -40862,13 +41448,13 @@ For more help, visit: help.pose.app
                         file: file
                     };
                     window.commentMediaAttachments.push(mediaObject);
-                    
+
                     // Add preview to preview section
                     const previewSection = document.getElementById('commentPreviewSection');
                     const previewContainer = document.getElementById('commentMediaPreview');
-                    
+
                     previewSection.style.display = 'block';
-                    
+
                     // Create preview card with remove button
                     const previewCard = document.createElement('div');
                     previewCard.id = `preview_${mediaId}`;
@@ -40879,7 +41465,7 @@ For more help, visit: help.pose.app
                         background: rgba(138, 43, 226, 0.1);
                         border: 1px solid rgba(138, 43, 226, 0.3);
                     `;
-                    
+
                     previewCard.innerHTML = `
                         <video src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;"></video>
                         <div style="position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
@@ -40903,7 +41489,7 @@ For more help, visit: help.pose.app
                             padding: 0;
                         ">×</button>
                     `;
-                    
+
                     previewContainer.appendChild(previewCard);
                     showGenericToast('Video added! 📹', 'success');
                 };
@@ -40923,21 +41509,21 @@ For more help, visit: help.pose.app
             const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
             const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
             const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
-            
+
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 const formData = new FormData();
-                
+
                 formData.append('file', file);
                 formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
                 formData.append('tags', 'comment-image');
                 formData.append('folder', 'comment-images');
-                
+
                 const timeoutId = setTimeout(() => {
                     xhr.abort();
                     reject(new Error('Upload timeout'));
                 }, 60000);
-                
+
                 xhr.addEventListener('load', () => {
                     clearTimeout(timeoutId);
                     if (xhr.status === 200) {
@@ -40955,12 +41541,12 @@ For more help, visit: help.pose.app
                         reject(new Error('Upload failed'));
                     }
                 });
-                
+
                 xhr.addEventListener('error', () => {
                     clearTimeout(timeoutId);
                     reject(new Error('Network error'));
                 });
-                
+
                 xhr.open('POST', CLOUDINARY_API_URL, true);
                 xhr.send(formData);
             });
@@ -40971,22 +41557,22 @@ For more help, visit: help.pose.app
             const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
             const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
             const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
-            
+
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 const formData = new FormData();
-                
+
                 formData.append('file', file);
                 formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
                 formData.append('tags', 'comment-video');
                 formData.append('folder', 'comment-videos');
                 formData.append('resource_type', 'video');
-                
+
                 const timeoutId = setTimeout(() => {
                     xhr.abort();
                     reject(new Error('Upload timeout'));
                 }, 120000);
-                
+
                 xhr.addEventListener('load', () => {
                     clearTimeout(timeoutId);
                     if (xhr.status === 200) {
@@ -41005,12 +41591,134 @@ For more help, visit: help.pose.app
                         reject(new Error('Upload failed'));
                     }
                 });
-                
+
                 xhr.addEventListener('error', () => {
                     clearTimeout(timeoutId);
                     reject(new Error('Network error'));
                 });
-                
+
+                xhr.open('POST', CLOUDINARY_API_URL, true);
+                xhr.send(formData);
+            });
+        }
+
+        // Background upload of local media to Cloudinary
+        async function uploadLocalMediaToCloudinary(videoId, commentId, mediaArray) {
+            try {
+                console.log('🔄 Background uploading local media for comment:', commentId);
+
+                for (const media of mediaArray) {
+                    if (!media.isLocal) continue;
+
+                    try {
+                        let uploadResult;
+                        let uploadFile = media.localFile || media.blob;
+
+                        if (!uploadFile) {
+                            console.warn('⚠️ No file/blob available for upload:', media.filename);
+                            continue;
+                        }
+
+                        // Convert blob to File if needed
+                        if (media.blob && media.blob instanceof Blob && !(media.blob instanceof File)) {
+                            uploadFile = new File([media.blob], media.filename, { type: media.blob.type });
+                        }
+
+                        if (media.type === 'audio') {
+                            console.log('🎤 Uploading audio:', media.filename);
+                            uploadResult = await uploadCommentAudioSilent(uploadFile);
+                        } else if (media.type === 'video') {
+                            console.log('📹 Uploading video:', media.filename);
+                            uploadResult = await uploadCommentVideoSilent(uploadFile);
+                        } else {
+                            console.log('🖼️ Uploading image:', media.filename);
+                            uploadResult = await uploadCommentImageSilent(uploadFile);
+                        }
+
+                        if (uploadResult && uploadResult.url) {
+                            console.log('✅ ' + media.type + ' uploaded to Cloudinary:', uploadResult.url);
+
+                            // Get the current comment to update media array
+                            const commentDoc = await db.collection('videos').doc(videoId).collection('comments').doc(commentId).get();
+                            if (commentDoc.exists) {
+                                const currentData = commentDoc.data();
+                                const updatedMediaArray = (currentData.media || []).map(m => {
+                                    if (m.publicId === media.publicId) {
+                                        return {
+                                            type: media.type,
+                                            url: uploadResult.url,
+                                            filename: media.filename,
+                                            cloudinaryUrl: uploadResult.url,
+                                            publicId: uploadResult.publicId || media.publicId,
+                                            duration: uploadResult.duration || m.duration
+                                        };
+                                    }
+                                    return m;
+                                });
+
+                                await db.collection('videos').doc(videoId).collection('comments').doc(commentId).update({
+                                    media: updatedMediaArray
+                                });
+
+                                console.log('✅ Firebase updated with cloud URL');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('❌ Error uploading ' + media.type + ':', error);
+                    }
+                }
+
+                console.log('✅ Background upload completed');
+            } catch (error) {
+                console.error('❌ Background upload error:', error);
+            }
+        }
+
+        // Silent audio upload for voice comments (no UI notifications)
+        async function uploadCommentAudioSilent(file) {
+            const CLOUDINARY_CLOUD_NAME = 'dzhdgxjhl';
+            const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
+            const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('tags', 'comment-audio');
+                formData.append('folder', 'comment-audio');
+                formData.append('resource_type', 'auto');
+
+                const timeoutId = setTimeout(() => {
+                    xhr.abort();
+                    reject(new Error('Upload timeout'));
+                }, 120000);
+
+                xhr.addEventListener('load', () => {
+                    clearTimeout(timeoutId);
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            resolve({
+                                url: data.secure_url,
+                                fileName: file.name,
+                                publicId: data.public_id,
+                                duration: data.duration
+                            });
+                        } catch (error) {
+                            reject(new Error('Invalid response'));
+                        }
+                    } else {
+                        reject(new Error('Upload failed'));
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    clearTimeout(timeoutId);
+                    reject(new Error('Network error'));
+                });
+
                 xhr.open('POST', CLOUDINARY_API_URL, true);
                 xhr.send(formData);
             });
@@ -41020,44 +41728,44 @@ For more help, visit: help.pose.app
         async function postComment() {
             try {
                 console.log('📤 Post comment clicked');
-                
+
                 const input = document.getElementById('commentInput');
                 if (!input) {
                     console.error('❌ Comment input not found');
                     return;
                 }
-                
+
                 let text = input.value.trim();
                 console.log('Text:', text);
-                
+
                 // Get media attachments
                 const mediaAttachments = window.commentMediaAttachments || [];
                 console.log('Media attachments:', mediaAttachments.length);
-                
+
                 // Allow posting if either text exists OR images exist
                 if (!text && mediaAttachments.length === 0) {
                     console.log('⚠️ Empty comment - no text or images');
                     return;
                 }
-                
+
                 console.log('currentUser:', currentUser);
                 console.log('currentCommentVideoId:', currentCommentVideoId);
-                
+
                 if (!currentUser || !currentCommentVideoId) {
                     return;
                 }
-                
+
                 // Disable send button while posting
                 const sendBtn = document.getElementById('commentSendBtn');
                 if (sendBtn) {
                     sendBtn.disabled = true;
                 }
-                
+
                 // Fetch user profile directly from Firebase
                 console.log('🔄 Fetching user profile from Firebase...');
                 let fullName = 'User';
                 let profilePic = null;
-                
+
                 try {
                     const userDoc = await db.collection('users').doc(currentUser.uid).get();
                     if (userDoc.exists) {
@@ -41070,63 +41778,72 @@ For more help, visit: help.pose.app
                     console.error('⚠️ Could not fetch from Firebase, using fallback:', dbError.message);
                     fullName = currentUser.displayName || 'User';
                 }
-                
+
                 let userInitial = (fullName && fullName.length > 0) ? fullName[0].toUpperCase() : 'U';
-                
+
                 console.log('Full name from profile:', fullName, 'Profile pic:', profilePic);
-                
+
                 // Remove @mention if replying
                 if (text.startsWith('@')) {
                     text = text.replace(/^@[\w]+\s/, '').trim();
                 }
-                
-                // Upload media (images and videos) to Cloudinary silently (no notifications)
+
+                // Upload media immediately (like images)
                 let uploadedMediaAttachments = [];
                 if (mediaAttachments && mediaAttachments.length > 0) {
-                    console.log('📤 Uploading', mediaAttachments.length, 'media item(s) to Cloudinary...');
-                    
+                    console.log('📦 Processing', mediaAttachments.length, 'media item(s)...');
+
                     for (const media of mediaAttachments) {
                         try {
-                            if (media.file) {
-                                let uploadResult;
-                                
-                                // Handle videos separately
-                                if (media.type === 'video') {
-                                    uploadResult = await uploadCommentVideoSilent(media.file);
-                                    if (uploadResult && uploadResult.url) {
-                                        uploadedMediaAttachments.push({
-                                            type: 'video',
-                                            url: uploadResult.url,
-                                            filename: media.filename,
-                                            cloudinaryUrl: uploadResult.url,
-                                            publicId: uploadResult.publicId,
-                                            duration: media.duration
-                                        });
-                                        console.log('✅ Video uploaded:', uploadResult.url);
-                                    }
-                                } else {
-                                    // Handle images
-                                    uploadResult = await uploadCommentImageSilent(media.file);
-                                    if (uploadResult && uploadResult.url) {
-                                        uploadedMediaAttachments.push({
-                                            type: 'image',
-                                            url: uploadResult.url,
-                                            filename: media.filename,
-                                            cloudinaryUrl: uploadResult.url,
-                                            publicId: uploadResult.publicId
-                                        });
-                                        console.log('✅ Image uploaded:', uploadResult.url);
-                                    }
-                                }
+                            // Handle stickers (SVG data URLs) - no upload needed
+                            if (media.type === 'sticker') {
+                                console.log('✨ Adding sticker:', media.filename);
+                                uploadedMediaAttachments.push({
+                                    type: 'sticker',
+                                    url: media.url,
+                                    filename: media.filename
+                                });
+                                continue;
+                            }
+
+                            let uploadResult = null;
+                            const uploadFile = media.file || media.blob;
+
+                            if (!uploadFile) {
+                                console.warn('⚠️ No file/blob available for:', media.filename);
+                                continue;
+                            }
+
+                            if (media.type === 'video') {
+                                console.log('📹 Uploading video:', media.filename);
+                                uploadResult = await uploadCommentVideoSilent(uploadFile);
+                            } else if (media.type === 'audio') {
+                                console.log('🎤 Uploading audio:', media.filename);
+                                uploadResult = await uploadCommentAudioSilent(uploadFile);
+                            } else {
+                                console.log('🖼️ Uploading image:', media.filename);
+                                uploadResult = await uploadCommentImageSilent(uploadFile);
+                            }
+
+                            if (uploadResult && uploadResult.url) {
+                                uploadedMediaAttachments.push({
+                                    type: media.type,
+                                    url: uploadResult.url,
+                                    filename: uploadResult.fileName || media.filename,
+                                    publicId: uploadResult.publicId,
+                                    duration: uploadResult.duration
+                                });
+                                console.log('✅', media.type, 'uploaded successfully');
                             }
                         } catch (uploadError) {
-                            console.error('❌ Error uploading media:', uploadError);
+                            console.error('⚠️ Error uploading', media.type, ':', uploadError.message);
+                            // Continue with other files even if one fails
                         }
                     }
-                    
-                    console.log('✅ All media uploaded. Total:', uploadedMediaAttachments.length);
+
+                    console.log('✅ All media processed for comment:', uploadedMediaAttachments.length);
                 }
-                
+
                 // Create comment/reply object
                 const newItem = {
                     id: `comment_${Date.now()}`,
@@ -41142,21 +41859,24 @@ For more help, visit: help.pose.app
                     isReply: !!replyingToCommentId, // Mark if this is a reply
                     media: uploadedMediaAttachments // Store uploaded media with Cloudinary URLs
                 };
-                
+
                 console.log('New item created:', newItem);
-                
+
                 // Add to memory
                 if (!videoComments[currentCommentVideoId]) {
                     videoComments[currentCommentVideoId] = [];
                 }
-                
+
                 // Mark comment as pending (not fully saved yet)
                 newItem.isPending = true;
-                
+
+                // Store parent comment ID before clearing
+                const parentCommentId = replyingToCommentId;
+
                 // If replying to a comment, add as reply; otherwise add as top-level
-                if (replyingToCommentId) {
+                if (parentCommentId) {
                     const commentsArray = videoComments[currentCommentVideoId] || [];
-                    const parentComment = commentsArray.find(c => c.id === replyingToCommentId);
+                    const parentComment = commentsArray.find(c => c.id === parentCommentId);
                     if (parentComment) {
                         if (!parentComment.replies) {
                             parentComment.replies = [];
@@ -41164,7 +41884,7 @@ For more help, visit: help.pose.app
                         // Remove the @mention from the reply text before saving
                         newItem.text = newItem.text.replace(/^@[\w]+\s/, '').trim();
                         parentComment.replies.unshift(newItem);
-                        console.log('✅ Reply added to comment (pending):', replyingToCommentId);
+                        console.log('✅ Reply added to comment (pending):', parentCommentId);
                     }
                     replyingToCommentId = null;
                 } else {
@@ -41173,82 +41893,106 @@ For more help, visit: help.pose.app
                     videoComments[currentCommentVideoId] = commentsArray;
                     console.log('✅ Comment added to list (pending)');
                 }
-                
-                // Clear input
-                input.value = '';
-                
-                // Clear preview section
-                const previewSection = document.getElementById('commentPreviewSection');
-                const previewContainer = document.getElementById('commentMediaPreview');
-                if (previewSection && previewContainer) {
-                    previewSection.style.display = 'none';
-                    previewContainer.innerHTML = '';
-                }
-                
-                // Clear media attachments
-                if (window.commentMediaAttachments && window.commentMediaAttachments.length > 0) {
-                    console.log('🧹 Clearing media attachments, had:', window.commentMediaAttachments.length);
-                }
-                window.commentMediaAttachments = [];
-                
+
+                // Function to reset comment input
+                const resetCommentInput = () => {
+                    const input = document.getElementById('commentInput');
+                    if (input) {
+                        input.value = '';
+                    }
+
+                    // Clear preview section
+                    const previewSection = document.getElementById('commentPreviewSection');
+                    const previewContainer = document.getElementById('commentMediaPreview');
+                    if (previewSection && previewContainer) {
+                        previewSection.style.display = 'none';
+                        previewContainer.innerHTML = '';
+                    }
+
+                    // Clear media attachments
+                    if (window.commentMediaAttachments && window.commentMediaAttachments.length > 0) {
+                        console.log('🧹 Clearing media attachments, had:', window.commentMediaAttachments.length);
+                    }
+                    window.commentMediaAttachments = [];
+
+                    // Reset reply header
+                    const header = document.querySelector('.comment-header h3');
+                    if (header) {
+                        header.textContent = 'Comments';
+                        header.style.color = '';
+                    }
+
+                    // Reset replying state
+                    replyingToCommentId = null;
+                    window.replyingToReplyId = null;
+                };
+
+                // Clear input immediately for better UX
+                resetCommentInput();
+
                 // Reload comments immediately (show optimistic UI)
                 console.log('📋 Reloading comments with optimistic update...');
-                loadComments(currentCommentVideoId);
-                
+                loadComments(currentCommentVideoId).then(() => {
+                    // Re-enable button immediately after UI refresh
+                    const sendBtn = document.getElementById('commentSendBtn');
+                    if (sendBtn) {
+                        sendBtn.disabled = false;
+                    }
+                });
+
                 // Update comment count in the button
                 updateCommentCountInUI(currentCommentVideoId, newItem);
-                
+
                 // Save to Firebase in background (non-blocking)
-                console.log('💾 Saving to Firebase in background...');
-                if (replyingToCommentId || newItem.isReply) {
-                    const parentComment = videoComments[currentCommentVideoId].find(c => c.id === replyingToCommentId);
+                console.log('💾 Saving to Firebase with', uploadedMediaAttachments.length, 'media items (already uploaded to Cloudinary)...');
+                console.log('📌 parentCommentId:', parentCommentId, 'isReply:', newItem.isReply);
+                console.log('✅ All media uploaded to Cloudinary before Firebase save');
+                if (parentCommentId || newItem.isReply) {
+                    const parentComment = videoComments[currentCommentVideoId].find(c => c.id === parentCommentId);
+                    console.log('🔍 Found parent comment:', !!parentComment);
                     if (parentComment) {
+                        console.log('💾 Saving parent comment with', (parentComment.replies || []).length, 'replies to Firebase');
                         saveCommentToFirebase(currentCommentVideoId, parentComment, true).then(() => {
                             newItem.isPending = false;
-                            loadComments(currentCommentVideoId);
-                            
-                            // Re-enable send button
-                            const sendBtn = document.getElementById('commentSendBtn');
-                            if (sendBtn) {
-                                sendBtn.disabled = false;
-                            }
+                            console.log('✅ Reply saved to Firebase successfully');
+                            // Force refresh to load the updated parent comment with replies
+                            loadComments(currentCommentVideoId, true);
                         }).catch(error => {
                             console.error('❌ Error saving reply:', error);
                             newItem.isPending = false;
-                            
-                            // Re-enable button on error
+
+                            // Make sure button is enabled even on error
                             const sendBtn = document.getElementById('commentSendBtn');
                             if (sendBtn) {
                                 sendBtn.disabled = false;
                             }
                         });
+                    } else {
+                        console.error('❌ Parent comment not found for ID:', parentCommentId);
                     }
                 } else {
+                    console.log('💾 Saving as top-level comment to Firebase');
                     saveCommentToFirebase(currentCommentVideoId, newItem, false).then(() => {
                         newItem.isPending = false;
-                        loadComments(currentCommentVideoId);
-                        
-                        // Re-enable send button
-                        const sendBtn = document.getElementById('commentSendBtn');
-                        if (sendBtn) {
-                            sendBtn.disabled = false;
-                        }
+                        console.log('✅ Comment saved to Firebase successfully');
+                        // Force refresh for new top-level comments
+                        loadComments(currentCommentVideoId, true);
                     }).catch(error => {
                         console.error('❌ Error saving comment:', error);
                         newItem.isPending = false;
-                        
-                        // Re-enable button on error
+
+                        // Make sure button is enabled even on error
                         const sendBtn = document.getElementById('commentSendBtn');
                         if (sendBtn) {
                             sendBtn.disabled = false;
                         }
                     });
                 }
-                
+
                 console.log('✅ Comment submitted with', newItem.media ? newItem.media.length : 0, 'media items');
             } catch (error) {
                 console.error('❌ Error posting comment:', error);
-                
+
                 // Re-enable button on error
                 const sendBtn = document.getElementById('commentSendBtn');
                 if (sendBtn) {
@@ -41262,7 +42006,7 @@ For more help, visit: help.pose.app
             try {
                 // Find the comment button for this video
                 const buttons = document.querySelectorAll(`.comment-btn[data-post-id="${videoId}"]`);
-                
+
                 buttons.forEach(btn => {
                     const countSpan = btn.querySelector('.interaction-count');
                     if (countSpan) {
@@ -41284,8 +42028,67 @@ For more help, visit: help.pose.app
                     console.error('❌ Video not found:', videoId);
                     return;
                 }
-                
-                // Create comment data structure with media
+
+                // Create comment data structure with media (keep blob for playback, serialize URL for Firebase)
+                const cleanMedia = (comment.media || []).map(m => {
+                    // Skip if url is invalid (blob object instead of string)
+                    if (!m.url || typeof m.url !== 'string') {
+                        console.warn('⚠️ Skipping invalid media URL:', m);
+                        return null;
+                    }
+
+                    const mediaObj = {
+                        type: m.type || 'unknown',
+                        url: m.url,
+                        filename: m.filename || 'unnamed'
+                    };
+
+                    // Store blob reference locally (not in Firebase) but keep URL for cloud sync
+                    // Only add optional fields if they exist and are not undefined
+                    if (m.publicId && typeof m.publicId === 'string') mediaObj.publicId = m.publicId;
+                    if (m.isLocal !== undefined) mediaObj.isLocal = m.isLocal;
+                    if (m.cloudinaryUrl && typeof m.cloudinaryUrl === 'string') mediaObj.cloudinaryUrl = m.cloudinaryUrl;
+                    if (m.duration && typeof m.duration === 'number') mediaObj.duration = m.duration;
+
+                    return mediaObj;
+                }).filter(m => m !== null);
+
+                // Clean replies - remove temporary fields like isPending, userLiked, etc
+                const cleanReplies = (comment.replies || []).map(reply => {
+                    const cleanReplyMedia = (reply.media || []).map(m => {
+                        // Skip if url is invalid
+                        if (!m.url || typeof m.url !== 'string') {
+                            console.warn('⚠️ Skipping invalid reply media URL:', m);
+                            return null;
+                        }
+
+                        const mediaObj = {
+                            type: m.type || 'unknown',
+                            url: m.url,
+                            filename: m.filename || 'unnamed'
+                        };
+                        if (m.publicId && typeof m.publicId === 'string') mediaObj.publicId = m.publicId;
+                        if (m.isLocal !== undefined) mediaObj.isLocal = m.isLocal;
+                        if (m.cloudinaryUrl && typeof m.cloudinaryUrl === 'string') mediaObj.cloudinaryUrl = m.cloudinaryUrl;
+                        if (m.duration && typeof m.duration === 'number') mediaObj.duration = m.duration;
+                        return mediaObj;
+                    }).filter(m => m !== null);
+
+                    return {
+                        id: reply.id,
+                        text: reply.text || '',
+                        username: reply.username,
+                        userInitial: reply.userInitial,
+                        profilePic: reply.profilePic,
+                        timestamp: reply.timestamp,
+                        likes: reply.likes || 0,
+                        likedBy: reply.likedBy || {},
+                        userId: reply.userId,
+                        media: cleanReplyMedia,
+                        replies: reply.replies ? cleanReplies_Helper(reply.replies) : []
+                    };
+                });
+
                 const commentToSave = {
                     id: comment.id,
                     text: comment.text || '',
@@ -41294,34 +42097,88 @@ For more help, visit: help.pose.app
                     profilePic: comment.profilePic,
                     timestamp: comment.timestamp,
                     likes: comment.likes || 0,
-                    likedBy: {},
+                    likedBy: comment.likedBy || {},
                     userId: comment.userId,
-                    replies: comment.replies || [],
-                    media: comment.media || []
+                    replies: cleanReplies,
+                    media: cleanMedia
                 };
-                
+
+                // Check if comment has media that needs cloud upload
+                const hasLocalMedia = (comment.media || []).some(m => m.isLocal);
+                const hasAudio = (comment.media || []).some(m => m.type === 'audio');
+
                 console.log('💾 Saving comment to subcollection:', {
                     videoId,
                     commentId: comment.id,
                     hasText: !!comment.text,
-                    hasMedia: (comment.media || []).length > 0
+                    hasMedia: (comment.media || []).length > 0,
+                    hasAudio: hasAudio,
+                    hasLocalMedia: hasLocalMedia,
+                    replyCount: cleanReplies.length
                 });
-                
-                // Save to subcollection: videos/{videoId}/comments/{commentId}
+
+                // Save to subcollection with local URLs first (optimistic)
                 await db.collection('videos').doc(videoId).collection('comments').doc(comment.id).set(commentToSave);
-                
+
                 // Increment comment counter on main video doc
                 if (!isParentWithReply) {
                     await db.collection('videos').doc(videoId).update({
                         comments: firebase.firestore.FieldValue.increment(1)
                     });
                 }
-                
-                console.log('✅ Comment saved to subcollection successfully');
-                
+
+                console.log('✅ Comment saved to subcollection successfully with', cleanReplies.length, 'replies');
+
+                // Upload local media to Cloudinary in background (non-blocking)
+                if (hasLocalMedia) {
+                    console.log('📤 Starting background upload to Cloudinary...');
+                    uploadLocalMediaToCloudinary(videoId, comment.id, comment.media).catch(error => {
+                        console.error('❌ Background upload error:', error);
+                    });
+                }
+
             } catch (error) {
                 console.error('❌ Error in saveCommentToFirebase:', error);
+                showGenericToast('Error saving comment', 'error');
             }
+        }
+
+        // Helper function to clean nested replies recursively
+        function cleanReplies_Helper(replies) {
+            return (replies || []).map(reply => {
+                const cleanReplyMedia = (reply.media || []).map(m => {
+                    // Skip if url is invalid
+                    if (!m.url || typeof m.url !== 'string') {
+                        console.warn('⚠️ Skipping invalid nested reply media URL:', m);
+                        return null;
+                    }
+
+                    const mediaObj = {
+                        type: m.type || 'unknown',
+                        url: m.url,
+                        filename: m.filename || 'unnamed'
+                    };
+                    if (m.publicId && typeof m.publicId === 'string') mediaObj.publicId = m.publicId;
+                    if (m.isLocal !== undefined) mediaObj.isLocal = m.isLocal;
+                    if (m.cloudinaryUrl && typeof m.cloudinaryUrl === 'string') mediaObj.cloudinaryUrl = m.cloudinaryUrl;
+                    if (m.duration && typeof m.duration === 'number') mediaObj.duration = m.duration;
+                    return mediaObj;
+                }).filter(m => m !== null);
+
+                return {
+                    id: reply.id,
+                    text: reply.text || '',
+                    username: reply.username,
+                    userInitial: reply.userInitial,
+                    profilePic: reply.profilePic,
+                    timestamp: reply.timestamp,
+                    likes: reply.likes || 0,
+                    likedBy: reply.likedBy || {},
+                    userId: reply.userId,
+                    media: cleanReplyMedia,
+                    replies: reply.replies ? cleanReplies_Helper(reply.replies) : []
+                };
+            });
         }
 
         // Toggle comment like
@@ -41330,19 +42187,19 @@ For more help, visit: help.pose.app
                 showGenericToast('Please login to like comments', 'error');
                 return;
             }
-            
+
             const comments = videoComments[videoId];
             if (comments && comments[commentIndex]) {
                 const comment = comments[commentIndex];
-                
+
                 // Initialize likedBy if not exists
                 if (!comment.likedBy) {
                     comment.likedBy = {};
                 }
-                
+
                 // Check if user already liked
                 const isCurrentlyLiked = comment.likedBy[currentUser.uid];
-                
+
                 if (isCurrentlyLiked) {
                     delete comment.likedBy[currentUser.uid];
                     comment.likes = Math.max(0, comment.likes - 1);
@@ -41350,11 +42207,15 @@ For more help, visit: help.pose.app
                     comment.likedBy[currentUser.uid] = true;
                     comment.likes = (comment.likes || 0) + 1;
                 }
-                
-                // Save to Firebase
+
+                // Render comments list immediately to show like update
+                const commentList = document.getElementById('commentList');
+                if (commentList) {
+                    renderCommentsList(commentList, comments, videoId);
+                }
+
+                // Save to Firebase in background (non-blocking)
                 saveCommentLikeToFirebase(videoId, comment.id, !isCurrentlyLiked, comment.likes);
-                
-                loadComments(videoId);
             }
         }
 
@@ -41364,7 +42225,7 @@ For more help, visit: help.pose.app
                 showGenericToast('Please login to like replies', 'error');
                 return;
             }
-            
+
             const comments = videoComments[videoId];
             if (comments) {
                 const comment = comments.find(c => c.id === commentId);
@@ -41375,10 +42236,10 @@ For more help, visit: help.pose.app
                         if (!reply.likedBy) {
                             reply.likedBy = {};
                         }
-                        
+
                         // Check if user already liked
                         const isCurrentlyLiked = reply.likedBy[currentUser.uid];
-                        
+
                         if (isCurrentlyLiked) {
                             delete reply.likedBy[currentUser.uid];
                             reply.likes = Math.max(0, reply.likes - 1);
@@ -41386,11 +42247,15 @@ For more help, visit: help.pose.app
                             reply.likedBy[currentUser.uid] = true;
                             reply.likes = (reply.likes || 0) + 1;
                         }
-                        
-                        // Save to Firebase
+
+                        // Render comments list immediately to show like update
+                        const commentList = document.getElementById('commentList');
+                        if (commentList) {
+                            renderCommentsList(commentList, comments, videoId);
+                        }
+
+                        // Save to Firebase in background (non-blocking)
                         saveReplyLikeToFirebase(videoId, commentId, replyId, !isCurrentlyLiked, reply.likes);
-                        
-                        loadComments(videoId);
                     }
                 }
             }
@@ -41399,47 +42264,39 @@ For more help, visit: help.pose.app
         // Save comment like to Firebase
         function saveCommentLikeToFirebase(videoId, commentId, isLiked, likeCount) {
             try {
-                db.collection('videos').doc(videoId).get().then(doc => {
+                // Get comment from subcollection
+                db.collection('videos').doc(videoId).collection('comments').doc(commentId).get().then(doc => {
                     if (doc.exists) {
-                        const videoData = doc.data();
-                        const commentsArray = videoData.commentsArray || [];
-                        
-                        // Find and update comment
-                        const commentIndex = commentsArray.findIndex(c => c.id === commentId);
-                        if (commentIndex !== -1) {
-                            const comment = commentsArray[commentIndex];
-                            
-                            // Initialize likedBy array if not exists
-                            if (!comment.likedBy) {
-                                comment.likedBy = {};
-                            }
-                            
-                            if (isLiked) {
-                                // User liked
-                                comment.likedBy[currentUser.uid] = true;
-                            } else {
-                                // User unliked
-                                delete comment.likedBy[currentUser.uid];
-                            }
-                            
-                            // Update comment with likeCount
-                            comment.likes = likeCount;
-                            
-                            // Update comment in array
-                            commentsArray[commentIndex] = comment;
-                            
-                            // Save to Firebase
-                            db.collection('videos').doc(videoId).update({
-                                commentsArray: commentsArray
-                            }).then(() => {
-                                console.log('✅ Comment like saved:', commentId, 'Likes:', likeCount);
-                            }).catch(err => {
-                                console.error('❌ Error saving comment like:', err.message);
-                            });
+                        const comment = doc.data();
+
+                        // Initialize likedBy if not exists
+                        if (!comment.likedBy) {
+                            comment.likedBy = {};
                         }
+
+                        if (isLiked) {
+                            // User liked
+                            comment.likedBy[currentUser.uid] = true;
+                        } else {
+                            // User unliked
+                            delete comment.likedBy[currentUser.uid];
+                        }
+
+                        // Update comment with likeCount
+                        comment.likes = likeCount;
+
+                        // Save to Firebase subcollection
+                        db.collection('videos').doc(videoId).collection('comments').doc(commentId).update({
+                            likes: comment.likes,
+                            likedBy: comment.likedBy
+                        }).then(() => {
+                            console.log('✅ Comment like saved:', commentId, 'Likes:', likeCount);
+                        }).catch(err => {
+                            console.error('❌ Error saving comment like:', err.message);
+                        });
                     }
                 }).catch(err => {
-                    console.error('⚠️ Error fetching video:', err.message);
+                    console.error('⚠️ Error fetching comment:', err.message);
                 });
             } catch (error) {
                 console.error('Error saving comment like:', error);
@@ -41449,53 +42306,44 @@ For more help, visit: help.pose.app
         // Save reply like to Firebase
         function saveReplyLikeToFirebase(videoId, commentId, replyId, isLiked, likeCount) {
             try {
-                db.collection('videos').doc(videoId).get().then(doc => {
+                // Get parent comment from subcollection
+                db.collection('videos').doc(videoId).collection('comments').doc(commentId).get().then(doc => {
                     if (doc.exists) {
-                        const videoData = doc.data();
-                        const commentsArray = videoData.commentsArray || [];
-                        
-                        // Find parent comment
-                        const commentIndex = commentsArray.findIndex(c => c.id === commentId);
-                        if (commentIndex !== -1) {
-                            const comment = commentsArray[commentIndex];
-                            
-                            if (comment.replies) {
-                                // Find reply
-                                const replyIndex = comment.replies.findIndex(r => r.id === replyId);
-                                if (replyIndex !== -1) {
-                                    const reply = comment.replies[replyIndex];
-                                    
-                                    // Initialize likedBy array if not exists
-                                    if (!reply.likedBy) {
-                                        reply.likedBy = {};
-                                    }
-                                    
-                                    if (isLiked) {
-                                        // User liked
-                                        reply.likedBy[currentUser.uid] = true;
-                                    } else {
-                                        // User unliked
-                                        delete reply.likedBy[currentUser.uid];
-                                    }
-                                    
-                                    // Update reply with likeCount
-                                    reply.likes = likeCount;
-                                    
-                                    // Update reply in array
-                                    comment.replies[replyIndex] = reply;
-                                    
-                                    // Update parent comment
-                                    commentsArray[commentIndex] = comment;
-                                    
-                                    // Save to Firebase
-                                    db.collection('videos').doc(videoId).update({
-                                        commentsArray: commentsArray
-                                    }).then(() => {
-                                        console.log('✅ Reply like saved:', replyId, 'Likes:', likeCount);
-                                    }).catch(err => {
-                                        console.error('❌ Error saving reply like:', err.message);
-                                    });
+                        const comment = doc.data();
+
+                        if (comment.replies) {
+                            // Find reply
+                            const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                            if (replyIndex !== -1) {
+                                const reply = comment.replies[replyIndex];
+
+                                // Initialize likedBy if not exists
+                                if (!reply.likedBy) {
+                                    reply.likedBy = {};
                                 }
+
+                                if (isLiked) {
+                                    // User liked
+                                    reply.likedBy[currentUser.uid] = true;
+                                } else {
+                                    // User unliked
+                                    delete reply.likedBy[currentUser.uid];
+                                }
+
+                                // Update reply with likeCount
+                                reply.likes = likeCount;
+
+                                // Update reply in array
+                                comment.replies[replyIndex] = reply;
+
+                                // Save to Firebase subcollection
+                                db.collection('videos').doc(videoId).collection('comments').doc(commentId).update({
+                                    replies: comment.replies
+                                }).then(() => {
+                                    console.log('✅ Reply like saved:', replyId, 'Likes:', likeCount);
+                                }).catch(err => {
+                                    console.error('❌ Error saving reply like:', err.message);
+                                });
                             }
                         }
                     }
@@ -41515,13 +42363,13 @@ For more help, visit: help.pose.app
                 replyingToCommentId = comment.id;
                 const input = document.getElementById('commentInput');
                 const header = document.querySelector('.comment-header h3');
-                
+
                 // Update header to show replying to
                 if (header) {
                     header.textContent = `Replying to @${comment.username}`;
                     header.style.color = '#a855f7';
                 }
-                
+
                 input.value = '';
                 input.placeholder = `Reply to ${comment.username}...`;
                 input.focus();
@@ -41536,8 +42384,25 @@ For more help, visit: help.pose.app
             input.focus();
         }
 
+        // Initialize sticker grid
+        function initializeStickerGrid() {
+            const container = document.getElementById('stickerGridContainer');
+            if (!container || container.children.length > 0) return; // Already initialized
+            
+            container.innerHTML = stickerLibrary.map(sticker => `
+                <button onclick="insertSticker('${sticker.svg}', '${sticker.name}')"
+                    style="width:60px; height:60px; background:#222; border:1px solid #444; border-radius:8px; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+                    title="${sticker.name}"
+                    onmouseover="this.style.background='#333'; this.style.borderColor='#666';"
+                    onmouseout="this.style.background='#222'; this.style.borderColor='#444';">
+                    <img src="${sticker.svg}" style="width:50px; height:50px; object-fit:contain;">
+                </button>
+            `).join('');
+        }
+
         // Open sticker picker
         function openStickerPicker() {
+            initializeStickerGrid();
             const modal = document.getElementById('stickerModal');
             const gifModal = document.getElementById('gifModal');
             gifModal.style.display = 'none';
@@ -41545,11 +42410,35 @@ For more help, visit: help.pose.app
         }
 
         // Insert sticker
-        function insertSticker(sticker) {
-            const input = document.getElementById('commentInput');
-            input.value += ' ' + sticker + ' ';
-            input.focus();
+        function insertSticker(stickerSvg, stickerName) {
+            if (!window.commentMediaAttachments) {
+                window.commentMediaAttachments = [];
+            }
+
+            const mediaId = `sticker_${Date.now()}`;
+            window.commentMediaAttachments.push({
+                id: mediaId,
+                type: 'sticker',
+                url: stickerSvg,
+                filename: stickerName
+            });
+
+            // Show preview
+            const previewSection = document.getElementById('commentPreviewSection');
+            const previewContainer = document.getElementById('commentMediaPreview');
+            if (previewSection && previewContainer) {
+                previewSection.style.display = 'block';
+                const stickerPreview = document.createElement('div');
+                stickerPreview.style.cssText = 'width:80px; height:80px; background:#222; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid #444; position:relative;';
+                stickerPreview.innerHTML = `
+                    <img src="${stickerSvg}" style="width:60px; height:60px; object-fit:contain;">
+                    <button onclick="this.parentElement.remove()" style="position:absolute; top:-8px; right:-8px; width:20px; height:20px; background:#ff6b6b; border:none; border-radius:50%; color:white; cursor:pointer; font-size:12px; font-weight:bold;">×</button>
+                `;
+                previewContainer.appendChild(stickerPreview);
+            }
+
             document.getElementById('stickerModal').style.display = 'none';
+            console.log('✅ Sticker added:', stickerName);
         }
 
         // Open GIF picker
@@ -41558,7 +42447,7 @@ For more help, visit: help.pose.app
             const stickerModal = document.getElementById('stickerModal');
             stickerModal.style.display = 'none';
             modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
-            
+
             // Focus on search
             setTimeout(() => {
                 const search = document.getElementById('gifSearch');
@@ -41566,77 +42455,85 @@ For more help, visit: help.pose.app
             }, 100);
         }
 
-        // Search GIFs from Giphy API
+        // Local GIF library (emoji + symbols)
+        const localGifs = [
+            { name: 'laugh', emoji: '😂', tags: ['laugh', 'funny', 'lol'] },
+            { name: 'fire', emoji: '🔥', tags: ['fire', 'hot', 'cool'] },
+            { name: 'celebrate', emoji: '🎉', tags: ['celebrate', 'party', 'win'] },
+            { name: 'love', emoji: '❤️', tags: ['love', 'heart'] },
+            { name: 'cool', emoji: '😎', tags: ['cool', 'awesome'] },
+            { name: 'wow', emoji: '😲', tags: ['wow', 'surprise'] },
+            { name: 'think', emoji: '🤔', tags: ['think', 'question'] },
+            { name: 'cry', emoji: '😭', tags: ['cry', 'sad'] },
+            { name: 'angry', emoji: '😠', tags: ['angry', 'mad'] },
+            { name: 'thumbsup', emoji: '👍', tags: ['thumbs', 'good', 'like'] },
+            { name: 'clap', emoji: '👏', tags: ['clap', 'applause'] },
+            { name: 'dance', emoji: '💃', tags: ['dance', 'party'] },
+            { name: 'rocket', emoji: '🚀', tags: ['rocket', 'launch', 'go'] },
+            { name: 'star', emoji: '⭐', tags: ['star', 'shine', 'bright'] },
+            { name: 'sunglasses', emoji: '😎', tags: ['sunglasses', 'cool'] },
+            { name: 'ghost', emoji: '👻', tags: ['ghost', 'scary', 'spooky'] },
+            { name: 'unicorn', emoji: '🦄', tags: ['unicorn', 'magic'] },
+            { name: 'pizza', emoji: '🍕', tags: ['pizza', 'food'] },
+            { name: 'drink', emoji: '🍻', tags: ['drink', 'cheers'] },
+            { name: 'music', emoji: '🎵', tags: ['music', 'song', 'beat'] },
+        ];
+
+        // Search GIFs locally
         let gifSearchTimeout;
-        async function searchGifs(query) {
+        function searchGifs(query) {
             console.log('🔎 searchGifs called with:', query);
-            
+
             if (!query.trim()) {
-                document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>';
+                // Show all GIFs
+                displayGifs(localGifs);
                 return;
             }
-            
+
             // Clear previous timeout
             clearTimeout(gifSearchTimeout);
-            
+
             // Show loading state
-            document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">⏳ Loading GIFs...</div>';
-            
-            // Debounce search (wait 500ms before searching)
-            gifSearchTimeout = setTimeout(async () => {
-                try {
-                    // Using Giphy's free public API
-                    const GIPHY_API_KEY = 'giphy_key_dc6zaTOxFJmzC'; // Public key
-                    const url = `https://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(query)}&limit=15&api_key=${GIPHY_API_KEY}&rating=g`;
-                    console.log('🌐 Fetching from Giphy...');
-                    
-                    const response = await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-                    console.log('📡 Response status:', response.status);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    console.log('📦 Giphy response:', data);
-                    
-                    const results = document.getElementById('gifResults');
-                    if (data.data && data.data.length > 0) {
-                        results.innerHTML = data.data.map((gif) => {
-                            const gifUrl = gif.images.downsized.url || gif.images.fixed_height.url;
-                            return `
-                                <div style="position:relative; overflow:hidden; border-radius:8px; aspect-ratio:1; background:#333; cursor:pointer;" 
-                                     title="${gif.title}" 
-                                     onmouseover="this.style.opacity='0.8'" 
-                                     onmouseout="this.style.opacity='1'">
-                                    <img src="${gifUrl}" 
-                                         alt="${gif.title}" 
-                                         style="width:100%; height:100%; object-fit:cover;" 
-                                         onclick="insertGif('${gifUrl}')">
-                                </div>
-                            `;
-                        }).join('');
-                        console.log('✅ Loaded', data.data.length, 'GIFs from Giphy');
-                    } else {
-                        results.innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">No GIFs found for "' + query + '"</div>';
-                    }
-                } catch (error) {
-                    console.error('❌ Error searching GIFs:', error);
-                    document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#ff6b6b; padding:20px; grid-column:1/-1;">⚠️ Error loading GIFs. Try a different search or check your internet.</div>';
-                }
-            }, 500);
+            document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">🔍 Searching...</div>';
+
+            // Debounce search (wait 300ms before searching)
+            gifSearchTimeout = setTimeout(() => {
+                const lowerQuery = query.toLowerCase();
+                const results = localGifs.filter(gif =>
+                    gif.name.includes(lowerQuery) ||
+                    gif.tags.some(tag => tag.includes(lowerQuery))
+                );
+
+                console.log('✅ Found', results.length, 'matching GIFs');
+                displayGifs(results);
+            }, 300);
+        }
+
+        // Display GIFs
+        function displayGifs(gifs) {
+            const resultsContainer = document.getElementById('gifResults');
+            if (gifs.length > 0) {
+                resultsContainer.innerHTML = gifs.map((gif) => `
+                    <div style="position:relative; overflow:hidden; border-radius:8px; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor:pointer; display:flex; align-items:center; justify-content:center; aspect-ratio:1;" 
+                         title="${gif.name}" 
+                         onmouseover="this.style.opacity='0.8'" 
+                         onmouseout="this.style.opacity='1'"
+                         onclick="insertGif('${gif.emoji}', '${gif.name}')">
+                        <span style="font-size: 48px;">
+                            ${gif.emoji}
+                        </span>
+                    </div>
+                `).join('');
+            } else {
+                resultsContainer.innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">No GIFs found</div>';
+            }
         }
 
         // Close GIF modal
         function closeGifModal() {
             document.getElementById('gifModal').style.display = 'none';
             document.getElementById('gifSearch').value = '';
-            document.getElementById('gifResults').innerHTML = '<div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>';
+            displayGifs(localGifs);
         }
 
         // Add GIF search listener - attach directly to input
@@ -41655,12 +42552,12 @@ For more help, visit: help.pose.app
                 setTimeout(initGifSearch, 500);
             }
         }
-        
+
         // Initialize when page loads with delay to ensure DOM is ready
         window.addEventListener('load', () => {
             setTimeout(initGifSearch, 100);
         });
-        
+
         // Also try immediately in case page is already loaded
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -41670,26 +42567,18 @@ For more help, visit: help.pose.app
             setTimeout(initGifSearch, 100);
         }
 
-        // Insert GIF
-        function insertGif(gifUrl) {
+        // Insert GIF (emoji)
+        function insertGif(emoji, gifName) {
             const input = document.getElementById('commentInput');
-            const commentList = document.getElementById('commentList');
-            
-            // Create media object to store GIF separately
-            if (!window.commentMediaAttachments) {
-                window.commentMediaAttachments = [];
-            }
-            
-            const mediaId = `media_${Date.now()}`;
-            window.commentMediaAttachments.push({
-                id: mediaId,
-                type: 'gif',
-                url: gifUrl
-            });
-            
-            // Store reference in input (not the full URL)
-            input.value += `[GIF:${mediaId}]`;
+
+            // Just add emoji to input - it's already an emoji
+            input.value += ' ' + emoji + ' ';
             input.focus();
+
+            // Close modal
+            document.getElementById('gifModal').style.display = 'none';
+
+            console.log('✅ Added GIF:', gifName);
             document.getElementById('gifModal').style.display = 'none';
             showGenericToast('GIF added to comment', 'success');
         }
@@ -41703,20 +42592,20 @@ For more help, visit: help.pose.app
         function handleCommentImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             // Check file size (max 10MB)
             if (file.size > 10 * 1024 * 1024) {
                 showGenericToast('Image too large (max 10MB)', 'error');
                 return;
             }
-            
+
             // Read as base64 and store locally (will upload to Cloudinary on post)
             const reader = new FileReader();
             reader.onload = (e) => {
                 if (!window.commentMediaAttachments) {
                     window.commentMediaAttachments = [];
                 }
-                
+
                 const mediaId = `media_${Date.now()}`;
                 const mediaObject = {
                     id: mediaId,
@@ -41726,13 +42615,13 @@ For more help, visit: help.pose.app
                     file: file
                 };
                 window.commentMediaAttachments.push(mediaObject);
-                
+
                 // Add preview to preview section
                 const previewSection = document.getElementById('commentPreviewSection');
                 const previewContainer = document.getElementById('commentMediaPreview');
-                
+
                 previewSection.style.display = 'block';
-                
+
                 // Create preview card with remove button
                 const previewCard = document.createElement('div');
                 previewCard.id = `preview_${mediaId}`;
@@ -41743,7 +42632,7 @@ For more help, visit: help.pose.app
                     background: rgba(138, 43, 226, 0.1);
                     border: 1px solid rgba(138, 43, 226, 0.3);
                 `;
-                
+
                 previewCard.innerHTML = `
                     <img src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;">
                     <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
@@ -41764,14 +42653,14 @@ For more help, visit: help.pose.app
                         padding: 0;
                     ">×</button>
                 `;
-                
+
                 previewContainer.appendChild(previewCard);
-                
+
                 const input = document.getElementById('commentInput');
                 input.focus();
             };
             reader.readAsDataURL(file);
-            
+
             // Reset input
             event.target.value = '';
         }
@@ -41782,18 +42671,428 @@ For more help, visit: help.pose.app
             if (window.commentMediaAttachments) {
                 window.commentMediaAttachments = window.commentMediaAttachments.filter(m => m.id !== mediaId);
             }
-            
+
             // Remove preview card
             const previewCard = document.getElementById(`preview_${mediaId}`);
             if (previewCard) {
                 previewCard.style.animation = 'slideDown 0.2s ease';
                 setTimeout(() => previewCard.remove(), 200);
             }
-            
+
             // Hide preview section if no more attachments
             if (!window.commentMediaAttachments || window.commentMediaAttachments.length === 0) {
                 const previewSection = document.getElementById('commentPreviewSection');
                 previewSection.style.display = 'none';
+            }
+        }
+
+        // ===== VOICE RECORDING FOR COMMENTS =====
+        async function startVoiceRecording() {
+            try {
+                console.log('🎤 Starting voice recording...');
+
+                // Request microphone permission
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                voiceRecordingStream = stream;
+
+                // Create MediaRecorder instance
+                const mimeType = 'audio/webm;codecs=opus';
+                voiceRecorder = new MediaRecorder(stream, { mimeType });
+
+                const audioChunks = [];
+
+                voiceRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+
+                voiceRecorder.onstop = () => {
+                    if (audioChunks.length > 0) {
+                        const audioBlob = new Blob(audioChunks, { type: mimeType });
+                        saveVoiceRecording(audioBlob);
+                    }
+
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                    voiceRecordingStream = null;
+                };
+
+                // Start recording
+                voiceRecorder.start();
+                voiceRecordingStartTime = Date.now();
+
+                // Show recording UI
+                showVoiceRecordingUI();
+
+                // Update timer
+                voiceRecordingInterval = setInterval(updateVoiceRecordingTime, 100);
+
+                console.log('✅ Voice recording started');
+                showGenericToast('Recording... tap Cancel or Post to finish', 'info');
+            } catch (error) {
+                console.error('❌ Microphone error:', error);
+                if (error.name === 'NotAllowedError') {
+                    showGenericToast('Microphone permission denied', 'error');
+                } else if (error.name === 'NotFoundError') {
+                    showGenericToast('No microphone found', 'error');
+                } else {
+                    showGenericToast('Error accessing microphone', 'error');
+                }
+            }
+        }
+
+        function showVoiceRecordingUI() {
+            // Show modal
+            const modal = document.getElementById('voiceRecordingModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+
+            const statusBar = document.getElementById('voiceRecordingStatus');
+            if (statusBar) {
+                statusBar.style.display = 'flex';
+            }
+
+            // Disable other input buttons during recording
+            document.querySelectorAll('.comment-emoji-btn').forEach(btn => {
+                if (btn.id !== 'voiceRecordBtn') {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                }
+            });
+
+            // Change microphone button appearance
+            const voiceBtn = document.getElementById('voiceRecordBtn');
+            if (voiceBtn) {
+                voiceBtn.style.background = 'rgba(255, 0, 80, 0.2)';
+                voiceBtn.style.color = '#ff0050';
+            }
+        }
+
+        function hideVoiceRecordingUI() {
+            // Hide modal
+            const modal = document.getElementById('voiceRecordingModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+
+            const statusBar = document.getElementById('voiceRecordingStatus');
+            if (statusBar) {
+                statusBar.style.display = 'none';
+            }
+
+            // Re-enable other buttons
+            document.querySelectorAll('.comment-emoji-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            });
+
+            // Reset microphone button
+            const voiceBtn = document.getElementById('voiceRecordBtn');
+            if (voiceBtn) {
+                voiceBtn.style.background = '';
+                voiceBtn.style.color = '';
+            }
+        }
+
+        function updateVoiceRecordingTime() {
+            if (!voiceRecordingStartTime) return;
+
+            const elapsed = Math.floor((Date.now() - voiceRecordingStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Update compact timer
+            const timeDisplay = document.getElementById('voiceRecordingTime');
+            if (timeDisplay) {
+                timeDisplay.textContent = timeStr;
+            }
+
+            // Update modal timer
+            const timeDisplayModal = document.getElementById('voiceRecordingTimeModal');
+            if (timeDisplayModal) {
+                timeDisplayModal.textContent = timeStr;
+            }
+
+            // Max 2 minutes recording
+            if (elapsed >= 120) {
+                stopAndSaveVoiceRecording();
+            }
+        }
+
+        function pauseVoiceRecording() {
+            console.log('⏸️ Pausing voice recording');
+
+            if (!voiceRecorder) return;
+
+            if (voiceRecorder.state === 'recording') {
+                voiceRecorder.pause();
+                voiceRecordingPausedTime = Date.now() - voiceRecordingStartTime;
+
+                if (voiceRecordingInterval) {
+                    clearInterval(voiceRecordingInterval);
+                }
+
+                // Update button text
+                const pauseBtn = document.getElementById('voicePauseBtn');
+                if (pauseBtn) {
+                    pauseBtn.textContent = '▶ Resume';
+                    pauseBtn.onclick = resumeVoiceRecording;
+                }
+
+                const statusIndicator = document.querySelector('[style*="animation: blink-dot"]');
+                if (statusIndicator) {
+                    statusIndicator.style.animation = 'none';
+                    statusIndicator.style.opacity = '0.5';
+                }
+
+                showGenericToast('Recording paused', 'info');
+            } else if (voiceRecorder.state === 'paused') {
+                resumeVoiceRecording();
+            }
+        }
+
+        function resumeVoiceRecording() {
+            console.log('▶ Resuming voice recording');
+
+            if (!voiceRecorder || voiceRecorder.state !== 'paused') return;
+
+            voiceRecorder.resume();
+            voiceRecordingStartTime = Date.now() - voiceRecordingPausedTime;
+
+            // Update button
+            const pauseBtn = document.getElementById('voicePauseBtn');
+            if (pauseBtn) {
+                pauseBtn.textContent = '⏸ Pause';
+                pauseBtn.onclick = pauseVoiceRecording;
+            }
+
+            // Restore blinking indicator
+            const statusIndicator = document.querySelector('[style*="animation: blink-dot"]');
+            if (statusIndicator) {
+                statusIndicator.style.animation = 'blink-dot 1s ease-in-out infinite';
+                statusIndicator.style.opacity = '1';
+            }
+
+            voiceRecordingInterval = setInterval(updateVoiceRecordingTime, 100);
+
+            showGenericToast('Recording resumed', 'info');
+        }
+
+        function stopVoiceRecording() {
+            console.log('⏹️ Stopping voice recording');
+
+            if (voiceRecordingInterval) {
+                clearInterval(voiceRecordingInterval);
+            }
+
+            if (voiceRecorder && (voiceRecorder.state === 'recording' || voiceRecorder.state === 'paused')) {
+                voiceRecorder.stop();
+            }
+
+            voiceRecordingPausedTime = 0;
+            showGenericToast('Recording saved', 'success');
+        }
+
+        function cancelVoiceRecording() {
+            console.log('❌ Canceling voice recording');
+
+            if (voiceRecordingInterval) {
+                clearInterval(voiceRecordingInterval);
+            }
+
+            // Stop recording WITHOUT saving
+            if (voiceRecorder) {
+                // Don't call stop() - just abort
+                voiceRecorder.stream = null;
+            }
+
+            // Stop all audio tracks
+            if (voiceRecordingStream) {
+                voiceRecordingStream.getTracks().forEach(track => track.stop());
+                voiceRecordingStream = null;
+            }
+
+            voiceRecorder = null;
+            voiceRecordingPausedTime = 0;
+            voiceRecordingStartTime = null;
+            hideVoiceRecordingUI();
+            showGenericToast('Recording cancelled ✓', 'info');
+        }
+
+        function stopAndSaveVoiceRecording() {
+            console.log('⏹️ Auto-stopping voice recording (max 2 min reached)');
+
+            if (voiceRecordingInterval) {
+                clearInterval(voiceRecordingInterval);
+            }
+
+            if (voiceRecorder && (voiceRecorder.state === 'recording' || voiceRecorder.state === 'paused')) {
+                voiceRecorder.stop();
+            }
+
+            voiceRecordingPausedTime = 0;
+            showGenericToast('Max recording time reached', 'warning');
+        }
+
+        function saveVoiceRecording(audioBlob) {
+            console.log('💾 Saving voice recording, size:', audioBlob.size, 'bytes');
+
+            hideVoiceRecordingUI();
+
+            if (!window.commentMediaAttachments) {
+                window.commentMediaAttachments = [];
+            }
+
+            const mediaId = `media_${Date.now()}`;
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const mediaObject = {
+                id: mediaId,
+                type: 'audio',
+                blob: audioBlob,
+                filename: `voice_${Date.now()}.webm`,
+                file: new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' }),
+                blobUrl: audioUrl
+            };
+            window.commentMediaAttachments.push(mediaObject);
+
+            // Add preview to preview section
+            const previewSection = document.getElementById('commentPreviewSection');
+            const previewContainer = document.getElementById('commentMediaPreview');
+
+            previewSection.style.display = 'block';
+
+            // Create preview card with audio player and remove button
+            const previewCard = document.createElement('div');
+            previewCard.id = `preview_${mediaId}`;
+            previewCard.style.cssText = `
+                position: relative;
+                border-radius: 12px;
+                overflow: hidden;
+                background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(138, 43, 226, 0.05));
+                border: 2px solid rgba(138, 43, 226, 0.4);
+                padding: 14px;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: center;
+                gap: 10px;
+                grid-column: 1 / -1;
+                min-height: 100px;
+            `;
+
+            previewCard.innerHTML = `
+                 <div style="display: flex; align-items: center; gap: 10px;">
+                     <i class="fas fa-microphone" style="color: #8A2BE2; font-size: 20px;"></i>
+                     <span style="color: #aaa; font-size: 13px; font-weight: 600;">Voice Message</span>
+                 </div>
+                 <audio controls style="width: 100%; height: 40px; border-radius: 8px;">
+                     <source src="${audioUrl}" type="audio/webm">
+                 </audio>
+                 <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
+                     position: absolute;
+                     top: 2px;
+                     right: 2px;
+                     background: rgba(255, 0, 80, 0.9);
+                     border: none;
+                     color: white;
+                     width: 24px;
+                     height: 24px;
+                     border-radius: 50%;
+                     cursor: pointer;
+                     display: flex;
+                     align-items: center;
+                     justify-content: center;
+                     font-size: 16px;
+                     padding: 0;
+                 ">×</button>
+             `;
+
+            previewContainer.appendChild(previewCard);
+
+            const input = document.getElementById('commentInput');
+            input.focus();
+
+            showGenericToast('Voice message recorded ✓', 'success');
+        }
+
+        // Toggle audio playback
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateAudioDuration(audio) {
+            const wrapper = audio.closest('.comment-voice-wrapper');
+            if (wrapper) {
+                const durationSpan = wrapper.querySelector('.comment-voice-duration');
+                if (durationSpan) {
+                    durationSpan.textContent = formatTime(audio.duration);
+                }
+                const progressBar = wrapper.querySelector('.comment-voice-progress-bar');
+                if (progressBar) {
+                    progressBar.max = audio.duration || 100;
+                }
+            }
+        }
+
+        function updateAudioProgress(audio) {
+            const wrapper = audio.closest('.comment-voice-wrapper');
+            if (wrapper) {
+                const currentTimeSpan = wrapper.querySelector('.comment-voice-current-time');
+                if (currentTimeSpan) {
+                    currentTimeSpan.textContent = formatTime(audio.currentTime);
+                }
+            }
+        }
+
+        function toggleAudioPlay(button) {
+            const header = button.closest('.comment-voice-header');
+            const container = button.closest('.comment-voice-container');
+            const audio = container.querySelector('.comment-voice-player');
+            if (audio) {
+                if (audio.paused) {
+                    audio.play();
+                    button.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    audio.pause();
+                    button.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            }
+        }
+
+        // Toggle voice menu visibility and expand wrapper
+        function toggleVoiceMenu(button) {
+            const wrapper = button.closest('.comment-voice-wrapper');
+            if (wrapper) {
+                const controls = wrapper.querySelector('.comment-voice-controls');
+                if (controls) {
+                    controls.classList.toggle('active');
+                    wrapper.classList.toggle('expanded');
+                }
+            }
+        }
+
+        // Set audio playback speed
+        function setCommentAudioSpeed(audioId, speed) {
+            const audio = document.getElementById(audioId);
+            if (audio) {
+                audio.playbackRate = speed;
+
+                // Update button styles
+                const wrapper = audio.closest('.comment-voice-wrapper');
+                const buttons = wrapper.querySelectorAll('.comment-voice-speed-btn');
+                buttons.forEach(btn => {
+                    if (btn.textContent.includes(speed + 'x')) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
             }
         }
 
@@ -41802,7 +43101,7 @@ For more help, visit: help.pose.app
             const now = new Date();
             const date = new Date(timestamp);
             const seconds = Math.floor((now - date) / 1000);
-            
+
             if (seconds < 60) return 'now';
             if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
             if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
@@ -41828,7 +43127,7 @@ For more help, visit: help.pose.app
             `;
             toast.textContent = message;
             document.body.appendChild(toast);
-            
+
             setTimeout(() => {
                 toast.style.animation = 'slideDown 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
@@ -41838,19 +43137,26 @@ For more help, visit: help.pose.app
     </script>
 
     <!-- Hidden file inputs for media -->
-    <input type="file" id="commentGalleryInput" accept="image/*" style="display: none;" onchange="handleCommentImageUpload(event)">
+    <input type="file" id="commentGalleryInput" accept="image/*" style="display: none;"
+        onchange="handleCommentImageUpload(event)">
 
     <!-- GIF Modal -->
-    <div class="comment-modal" id="gifModal" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; max-height: 70vh; z-index: 1001; background: #000; border-radius: 20px 20px 0 0; overflow: hidden; flex-direction: column;">
-        <div class="comment-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div class="comment-modal" id="gifModal"
+        style="display: none; position: fixed; bottom: 0; left: 0; right: 0; max-height: 70vh; z-index: 1001; background: #000; border-radius: 20px 20px 0 0; overflow: hidden; flex-direction: column;">
+        <div class="comment-header"
+            style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
             <h3 style="color: #fff; margin: 0; font-size: 16px;">Search GIFs</h3>
-            <button onclick="closeGifModal()" style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">×</button>
+            <button onclick="closeGifModal()"
+                style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
         <div style="padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            <input type="text" id="gifSearch" placeholder="Search GIFs..." style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; color: #fff; font-size: 14px;">
+            <input type="text" id="gifSearch" placeholder="Search GIFs..."
+                style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; color: #fff; font-size: 14px;">
         </div>
-        <div id="gifResults" style="flex: 1; overflow-y: auto; padding: 12px 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; -webkit-overflow-scrolling: touch;">
-            <div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>
+        <div id="gifResults"
+            style="flex: 1; overflow-y: auto; padding: 12px 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; -webkit-overflow-scrolling: touch;">
+            <div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from
+                Giphy...</div>
         </div>
     </div>
 
@@ -41869,56 +43175,124 @@ For more help, visit: help.pose.app
                 <div class="empty-comments-text">No comments yet. Be the first!</div>
             </div>
         </div>
-        
+
         <!-- Media Preview Section -->
-        <div class="comment-preview-section" id="commentPreviewSection" style="display: none; padding: 12px 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-            <div id="commentMediaPreview" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px;">
+        <div class="comment-preview-section" id="commentPreviewSection"
+            style="display: none; padding: 12px 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <div id="commentMediaPreview"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px;">
             </div>
         </div>
-        
+
+        <!-- Voice Recording Modal -->
+        <div id="voiceRecordingModal"
+            style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(20,20,20,0.95)); border-radius: 24px 24px 0 0; z-index: 1100; padding: 30px 20px 40px 20px; box-shadow: 0 -10px 40px rgba(255,0,80,0.2); max-height: 70vh; overflow-y: auto;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
+                <div style="text-align: center;">
+                    <h2 style="color: #fff; margin: 0 0 8px 0; font-size: 20px; font-weight: 700;">Recording Voice
+                        Message</h2>
+                    <p style="color: #aaa; margin: 0; font-size: 14px;">Speak naturally, max 2 minutes</p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%;">
+                    <div
+                        style="display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(138,43,226,0.1); border-radius: 16px; padding: 20px 30px; width: 100%;">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <div
+                                style="width: 14px; height: 14px; background: #ff0050; border-radius: 50%; animation: blink-dot 1s ease-in-out infinite;">
+                            </div>
+                            <span id="voiceRecordingTimeModal"
+                                style="font-size: 28px; color: #ff0050; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px;">0:00</span>
+                            <span
+                                style="font-size: 11px; color: #ff0050; font-weight: 600; text-transform: uppercase;">Recording</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="pauseVoiceRecording()" title="Pause" id="voiceModalPauseBtn"
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px; background: none; border: 2px solid #ff0050; color: #ff0050; cursor: pointer; padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 700; transition: all 0.3s; flex: 1; max-width: 120px;">
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button onclick="stopVoiceRecording()" title="Stop & Save" id="voiceModalStopBtn"
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #ff0050, #ff4478); border: none; color: white; cursor: pointer; padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 700; transition: all 0.3s; flex: 1; max-width: 140px; box-shadow: 0 8px 25px rgba(255,0,80,0.4);">
+                            <i class="fas fa-stop"></i> Stop & Save
+                        </button>
+                        <button onclick="cancelVoiceRecording()" title="Cancel" id="voiceModalCancelBtn"
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #ccc; cursor: pointer; padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 700; transition: all 0.3s; flex: 1; max-width: 120px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Recording Status (Compact) -->
+        <div class="voice-recording-status" id="voiceRecordingStatus"
+            style="display: none; padding: 12px 15px; background: rgba(255, 0, 80, 0.1); border-top: 1px solid rgba(255, 0, 80, 0.3); border-bottom: 1px solid rgba(255, 0, 80, 0.3);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                    <div
+                        style="width: 8px; height: 8px; background: #ff0050; border-radius: 50%; animation: blink-dot 1s ease-in-out infinite;">
+                    </div>
+                    <span id="voiceRecordingTime" style="font-size: 14px; color: #ff0050; font-weight: 600;">0:00</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="pauseVoiceRecording()" title="Pause" id="voicePauseBtn"
+                        style="background: none; border: 1px solid #ff0050; color: #ff0050; cursor: pointer; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: all 0.2s;">⏸</button>
+                    <button onclick="stopVoiceRecording()" title="Stop" id="voiceStopBtn"
+                        style="background: linear-gradient(135deg, #ff0050, #ff4478); border: none; color: white; cursor: pointer; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: all 0.2s;">⏹</button>
+                    <button onclick="cancelVoiceRecording()" title="Cancel" id="voiceCancelBtn"
+                        style="background: none; border: 1px solid #999; color: #999; cursor: pointer; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: all 0.2s;">✕
+                        Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <div class="comment-input-section">
             <div class="comment-input-wrapper">
                 <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment...">
-                <button class="comment-emoji-btn" onclick="openVideoCommentPicker()" title="Add video (max 10s)">📹</button>
+                <button class="comment-emoji-btn" onclick="startVoiceRecording()" title="Record voice message"
+                    id="voiceRecordBtn">🎤</button>
+                <button class="comment-emoji-btn" onclick="openVideoCommentPicker()"
+                    title="Add video (max 10s)">📹</button>
                 <button class="comment-emoji-btn" onclick="openStickerPicker()" title="Add sticker">🎨</button>
                 <button class="comment-emoji-btn" onclick="openGalleryPicker()" title="Add image">🖼️</button>
                 <button class="comment-emoji-btn" onclick="insertEmoji()" title="Add emoji">😊</button>
             </div>
             <button class="comment-send-btn" onclick="postComment()" id="commentSendBtn">Post</button>
         </div>
-        <input type="file" id="commentGalleryInput" accept="image/*" style="display:none;" onchange="handleCommentImageUpload(event)">
-        <input type="file" id="commentVideoInput" accept="video/*" style="display:none;" onchange="handleCommentVideoUpload(event)">
-        
+        <input type="file" id="commentGalleryInput" accept="image/*" style="display:none;"
+            onchange="handleCommentImageUpload(event)">
+        <input type="file" id="commentVideoInput" accept="video/*" style="display:none;"
+            onchange="handleCommentVideoUpload(event)">
+
         <!-- Sticker Picker Modal -->
-        <div id="stickerModal" style="display:none; position:fixed; bottom:350px; left:0; right:0; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px; max-height:200px; overflow-y:auto;">
-            <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
-                <button onclick="insertSticker('😎')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">😎</button>
-                <button onclick="insertSticker('🔥')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">🔥</button>
-                <button onclick="insertSticker('💯')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">💯</button>
-                <button onclick="insertSticker('👍')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">👍</button>
-                <button onclick="insertSticker('🎉')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">🎉</button>
-                <button onclick="insertSticker('❤️')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">❤️</button>
-                <button onclick="insertSticker('😂')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">😂</button>
-                <button onclick="insertSticker('🚀')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">🚀</button>
-                <button onclick="insertSticker('⭐')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">⭐</button>
-                <button onclick="insertSticker('💪')" style="font-size:32px; background:none; border:none; cursor:pointer; padding:5px;">💪</button>
+        <div id="stickerModal"
+            style="display:none; position:fixed; bottom:100px; left:10px; right:10px; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px; max-height:250px; overflow-y:auto; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);">
+            <div id="stickerGridContainer" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
             </div>
         </div>
-        
+
         <!-- GIF Picker Modal -->
-        <div id="gifModal" style="display:none; position:fixed; bottom:350px; left:0; right:0; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px;">
+        <div id="gifModal"
+            style="display:none; position:fixed; bottom:350px; left:0; right:0; background:#1a1a1a; border-radius:12px; z-index:1001; padding:15px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <input type="text" id="gifSearch" placeholder="Search GIFs from Giphy..." style="flex:1; padding:10px; border:1px solid #333; border-radius:8px; background:#2a2a2a; color:#fff; margin-right:10px;">
-                <button onclick="closeGifModal()" style="background:none; border:1px solid #666; color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+                <input type="text" id="gifSearch" placeholder="Search GIFs (laugh, fire, cool, party, etc)..."
+                    style="flex:1; padding:10px; border:1px solid #333; border-radius:8px; background:#2a2a2a; color:#fff; margin-right:10px;">
+                <button onclick="closeGifModal()"
+                    style="background:none; border:1px solid #666; color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
             </div>
-            <div id="gifResults" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-height:200px; overflow-y:auto;">
-                <div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from Giphy...</div>
+            <div id="gifResults"
+                style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-height:200px; overflow-y:auto;">
+                <div style="text-align:center; color:#999; padding:20px; grid-column:1/-1;">Type to search GIFs from
+                    Giphy...</div>
             </div>
         </div>
     </div>
 
     <!-- Comment Media Viewer Modal -->
-    <div class="comment-media-viewer-overlay" id="commentMediaViewerOverlay" onclick="if(event.target === this) closeCommentMediaViewer()"></div>
+    <div class="comment-media-viewer-overlay" id="commentMediaViewerOverlay"
+        onclick="if(event.target === this) closeCommentMediaViewer()"></div>
     <div class="comment-media-viewer" id="commentMediaViewer">
         <button class="comment-media-viewer-close" onclick="closeCommentMediaViewer()">
             <i class="fas fa-times"></i>
@@ -41936,7 +43310,7 @@ For more help, visit: help.pose.app
                 <i class="fas fa-times"></i>
             </button>
         </div>
-    
+
         <div class="share-options">
             <!-- Social Platforms -->
             <div class="share-section">
@@ -41946,21 +43320,21 @@ For more help, visit: help.pose.app
                     </div>
                     <span>WhatsApp</span>
                 </div>
-    
+
                 <div class="share-item" onclick="shareToTelegram()">
                     <div class="share-icon telegram">
                         <i class="fab fa-telegram"></i>
                     </div>
                     <span>Telegram</span>
                 </div>
-    
+
                 <div class="share-item" onclick="shareToTwitter()">
                     <div class="share-icon twitter">
                         <i class="fab fa-twitter"></i>
                     </div>
                     <span>Twitter</span>
                 </div>
-    
+
                 <div class="share-item" onclick="shareToFacebook()">
                     <div class="share-icon facebook">
                         <i class="fab fa-facebook"></i>
@@ -41968,7 +43342,7 @@ For more help, visit: help.pose.app
                     <span>Facebook</span>
                 </div>
             </div>
-    
+
             <!-- Additional Options -->
             <div class="share-section">
                 <div class="share-item" onclick="copyShareLink()">
@@ -41977,21 +43351,21 @@ For more help, visit: help.pose.app
                     </div>
                     <span>Copy Link</span>
                 </div>
-    
+
                 <div class="share-item" onclick="saveVideo()">
                     <div class="share-icon save">
                         <i class="fas fa-bookmark"></i>
                     </div>
                     <span>Save</span>
                 </div>
-    
+
                 <div class="share-item" onclick="reportVideo()">
                     <div class="share-icon report">
                         <i class="fas fa-flag"></i>
                     </div>
                     <span>Report</span>
                 </div>
-                
+
                 <div class="share-item" onclick="shareWithFriends()">
                     <div class="share-icon friends">
                         <i class="fas fa-users"></i>
