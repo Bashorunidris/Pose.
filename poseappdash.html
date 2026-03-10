@@ -6985,15 +6985,43 @@
 
         /* ForYou Profile Section - Top (highest) */
         .forYou-profile-section {
-            position: absolute !important;
-            bottom: 280px !important;
-            left: 10px !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 12px !important;
-            right: 80px !important;
-            transition: bottom 0.3s ease !important;
-            z-index: 10 !important;
+             position: absolute !important;
+             bottom: 280px !important;
+             left: 10px !important;
+             display: flex !important;
+             align-items: center !important;
+             gap: 12px !important;
+             right: 80px !important;
+             transition: bottom 0.3s ease !important;
+             z-index: 10 !important;
+        }
+
+        .forYou-profile-name-wrapper {
+             display: flex !important;
+             align-items: center !important;
+             gap: 6px !important;
+             flex: 1 !important;
+        }
+
+        .forYou-follow-icon-badge {
+             width: 20px !important;
+             height: 20px !important;
+             background: linear-gradient(135deg, #ff0050, #ff4081) !important;
+             border-radius: 50% !important;
+             display: flex !important;
+             align-items: center !important;
+             justify-content: center !important;
+             color: white !important;
+             font-size: 10px !important;
+             box-shadow: 0 2px 6px rgba(255, 0, 80, 0.35) !important;
+             border: 1.5px solid white !important;
+             flex-shrink: 0 !important;
+             transition: all 0.2s ease !important;
+        }
+
+        .forYou-follow-icon-badge:hover {
+             transform: scale(1.15) !important;
+             box-shadow: 0 3px 10px rgba(255, 0, 80, 0.5) !important;
         }
 
         .forYou-profile-section.ad-closed {
@@ -7114,57 +7142,66 @@
             transform: scale(0.95) !important;
         }
 
-        /* Video Caption - Middle (below profile, above banner) */
+        /* Video Caption - TikTok Style */
         .forYou-caption {
-            position: absolute !important;
-            bottom: 230px !important;
-            left: 10px !important;
-            font-size: 13px !important;
-            max-width: 280px !important;
-            line-height: 1.4em !important;
-            transition: bottom 0.3s ease !important;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-            z-index: 10 !important;
-        }
+             position: absolute !important;
+             bottom: 220px !important;
+             left: 12px !important;
+             right: 15px !important;
+             z-index: 15 !important;
+             transition: bottom 0.3s ease !important;
+         }
 
-        .forYou-caption.ad-closed {
-            bottom: 170px !important;
-        }
+         .forYou-caption.ad-closed {
+             bottom: 150px !important;
+         }
 
-        .forYou-caption b {
-            font-size: 14px !important;
-            color: white !important;
-        }
+         .caption-text {
+              color: white !important;
+              font-size: 12px !important;
+              line-height: 1.35 !important;
+              text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+              max-height: 36px !important;
+              overflow: hidden !important;
+              display: -webkit-box !important;
+              -webkit-line-clamp: 2 !important;
+              -webkit-box-orient: vertical !important;
+              word-break: break-word !important;
+              margin-bottom: 6px !important;
+              text-overflow: ellipsis !important;
+         }
 
-        .forYou-caption span {
-            color: #aaa !important;
-        }
+         .caption-text b {
+              font-weight: 600 !important;
+         }
 
-        .caption-text {
-            max-height: 60px !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 3 !important;
-            -webkit-box-orient: vertical !important;
-            margin-bottom: 8px !important;
-        }
+         .see-more-btn {
+              background: linear-gradient(135deg, rgba(255, 0, 80, 0.2), rgba(255, 64, 129, 0.2)) !important;
+              border: 1px solid rgba(255, 0, 80, 0.4) !important;
+              color: #fff !important;
+              cursor: pointer !important;
+              font-size: 11px !important;
+              padding: 5px 10px !important;
+              text-decoration: none !important;
+              font-weight: 600 !important;
+              transition: all 0.2s !important;
+              display: inline-block !important;
+              border-radius: 4px !important;
+          }
 
-        .see-more-btn {
-            background: none !important;
-            border: none !important;
-            color: #aaa !important;
-            cursor: pointer !important;
-            font-size: 12px !important;
-            text-decoration: underline !important;
-            padding: 0 !important;
-            font-weight: 500 !important;
-            transition: color 0.2s ease !important;
-        }
+          .see-more-btn:hover {
+              background: linear-gradient(135deg, rgba(255, 0, 80, 0.3), rgba(255, 64, 129, 0.3)) !important;
+              border-color: rgba(255, 0, 80, 0.6) !important;
+              transform: translateY(-1px) !important;
+          }
 
-        .see-more-btn:hover {
-            color: #fff !important;
-        }
+          .see-more-btn:active {
+              transform: translateY(0) !important;
+          }
+
+          .see-more-btn:active {
+              transform: translateY(0) !important;
+          }
 
         /* Caption Modal Styles */
         .caption-modal-overlay {
@@ -7318,6 +7355,12 @@
                 gap: 16px !important;
             }
 
+            .forYou-follow-icon-badge {
+                width: 22px !important;
+                height: 22px !important;
+                font-size: 11px !important;
+            }
+
             .forYou-profile-section.ad-closed {
                 bottom: 200px !important;
             }
@@ -7341,18 +7384,23 @@
             }
 
             .forYou-caption {
-                bottom: 230px !important;
-                left: 20px !important;
-                max-width: 320px !important;
-                font-size: 14px !important;
+                bottom: 225px !important;
+                left: 16px !important;
+                right: 14px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 150px !important;
+                bottom: 160px !important;
             }
 
             .caption-text {
-                max-height: 72px !important;
+                font-size: 13px !important;
+                max-height: 37px !important;
+            }
+
+            .see-more-btn {
+                font-size: 11px !important;
+                padding: 5px 10px !important;
             }
 
             .forYou-banner-ad {
@@ -7389,6 +7437,12 @@
                 gap: 14px !important;
             }
 
+            .forYou-follow-icon-badge {
+                width: 21px !important;
+                height: 21px !important;
+                font-size: 10px !important;
+            }
+
             .forYou-profile-pic {
                 width: 52px !important;
                 height: 52px !important;
@@ -7404,9 +7458,23 @@
             }
 
             .forYou-caption {
-                left: 16px !important;
-                max-width: 300px !important;
-                font-size: 13px !important;
+                bottom: 220px !important;
+                left: 15px !important;
+                right: 13px !important;
+            }
+
+            .forYou-caption.ad-closed {
+                bottom: 157px !important;
+            }
+
+            .caption-text {
+                font-size: 12px !important;
+                max-height: 36px !important;
+            }
+
+            .see-more-btn {
+                font-size: 10px !important;
+                padding: 5px 9px !important;
             }
 
             .forYou-banner-ad {
@@ -7436,6 +7504,12 @@
                 gap: 12px !important;
             }
 
+            .forYou-follow-icon-badge {
+                width: 20px !important;
+                height: 20px !important;
+                font-size: 9px !important;
+            }
+
             .forYou-profile-section.ad-closed {
                 bottom: 190px !important;
             }
@@ -7459,19 +7533,23 @@
             }
 
             .forYou-caption {
-                bottom: 210px !important;
+                bottom: 218px !important;
                 left: 14px !important;
-                max-width: 280px !important;
-                font-size: 12px !important;
+                right: 12px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 140px !important;
+                bottom: 152px !important;
             }
 
             .caption-text {
-                max-height: 54px !important;
-                -webkit-line-clamp: 2 !important;
+                font-size: 12px !important;
+                max-height: 36px !important;
+            }
+
+            .see-more-btn {
+                font-size: 10px !important;
+                padding: 5px 8px !important;
             }
 
             .forYou-banner-ad {
@@ -7507,6 +7585,12 @@
                 gap: 10px !important;
             }
 
+            .forYou-follow-icon-badge {
+                width: 19px !important;
+                height: 19px !important;
+                font-size: 9px !important;
+            }
+
             .forYou-profile-section.ad-closed {
                 bottom: 150px !important;
             }
@@ -7530,19 +7614,23 @@
             }
 
             .forYou-caption {
-                bottom: 200px !important;
-                left: 10px !important;
-                max-width: 260px !important;
-                font-size: 11px !important;
+                bottom: 215px !important;
+                left: 12px !important;
+                right: 12px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 130px !important;
+                bottom: 148px !important;
             }
 
             .caption-text {
-                max-height: 48px !important;
-                -webkit-line-clamp: 2 !important;
+                font-size: 11px !important;
+                max-height: 35px !important;
+            }
+
+            .see-more-btn {
+                font-size: 10px !important;
+                padding: 5px 8px !important;
             }
 
             .forYou-banner-ad {
@@ -7576,6 +7664,12 @@
                 max-width: 280px !important;
                 gap: 8px !important;
                 right: auto !important;
+            }
+
+            .forYou-follow-icon-badge {
+                width: 18px !important;
+                height: 18px !important;
+                font-size: 8px !important;
             }
 
             .forYou-profile-section.ad-closed {
@@ -7613,24 +7707,23 @@
             }
 
             .forYou-caption {
-                bottom: 190px !important;
-                left: 8px !important;
-                max-width: 240px !important;
-                font-size: 10px !important;
+                bottom: 210px !important;
+                left: 10px !important;
+                right: 10px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 190px !important;
+                bottom: 142px !important;
             }
 
             .caption-text {
-                max-height: 40px !important;
-                -webkit-line-clamp: 2 !important;
                 font-size: 10px !important;
+                max-height: 34px !important;
             }
 
             .see-more-btn {
-                font-size: 10px !important;
+                font-size: 9px !important;
+                padding: 4px 7px !important;
             }
 
             .forYou-banner-ad {
@@ -7679,6 +7772,12 @@
                 gap: 6px !important;
             }
 
+            .forYou-follow-icon-badge {
+                width: 17px !important;
+                height: 17px !important;
+                font-size: 8px !important;
+            }
+
             .forYou-profile-section.ad-closed {
                 bottom: 200px !important;
             }
@@ -7702,20 +7801,23 @@
             }
 
             .forYou-caption {
-                bottom: 180px !important;
-                left: 6px !important;
-                max-width: 220px !important;
-                font-size: 9px !important;
-                line-height: 1.3em !important;
+                bottom: 205px !important;
+                left: 8px !important;
+                right: 10px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 175px !important;
+                bottom: 138px !important;
             }
 
             .caption-text {
-                max-height: 34px !important;
-                -webkit-line-clamp: 2 !important;
+                font-size: 9px !important;
+                max-height: 33px !important;
+            }
+
+            .see-more-btn {
+                font-size: 8px !important;
+                padding: 4px 6px !important;
             }
 
             .forYou-banner-ad {
@@ -21051,10 +21153,10 @@
                          </div>
                      </div>
                     <div class="forYou-caption" id="caption-${index}">
-                         <div class="caption-text">
+                         <div class="caption-text" id="caption-text-${index}">
                              <b>${data.caption || 'Discover great content'}</b>
                          </div>
-                         <button class="see-more-btn" onclick="showCaptionPopup(${index}, '${(data.caption || 'Discover great content').replace(/'/g, "\\'")}')">See more >></button>
+                         ${(data.caption || 'Discover great content').length > 50 ? `<button class="see-more-btn" data-caption-btn="${index}" onclick="handleSeeMoreClick(event, ${index}, \`${(data.caption || 'Discover great content').replace(/`/g, '\\`')}\`)">See more >></button>` : ''}
                      </div>
                     <div class="forYou-banner-ad">
                          <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='130'><rect width='250' height='130' fill='%234ecdc4'/><text x='125' y='70' text-anchor='middle' fill='white' font-size='18' font-family='Arial'>✨ Discover</text></svg>" alt="banner">
@@ -21066,7 +21168,12 @@
                                  <div class="forYou-profile-close">∞</div>
                              </div>
                              <div class="forYou-profile-info">
-                                 <div class="forYou-profile-name">${data.userName || 'Creator'}</div>
+                                 <div class="forYou-profile-name-wrapper">
+                                     <div class="forYou-profile-name">${data.userName || 'Creator'}</div>
+                                     <div class="forYou-follow-icon-badge">
+                                         <i class="fas fa-user-plus"></i>
+                                     </div>
+                                 </div>
                                  <div class="forYou-profile-caption">${Math.floor(Math.random() * 999) + 100}K followers</div>
                              </div>
                          </div>
@@ -21209,8 +21316,13 @@
                 console.log('🎵 Showing original audio for video from:', data.userName);
             }
 
-            // Click to play/pause
-            postDiv.onclick = () => {
+            // Click to play/pause (but ignore button clicks)
+            postDiv.onclick = (e) => {
+                // Ignore clicks on buttons
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    return false;
+                }
+                
                 if (isPlaying) {
                     video.pause();
                     if (customAudio) customAudio.pause();
@@ -40988,8 +41100,17 @@ For more help, visit: help.pose.app
             }
         }
 
+        // Handle see more button click
+        function handleSeeMoreClick(event, index, caption) {
+            event.preventDefault();
+            event.stopPropagation();
+            showCaptionPopup(index, caption);
+            return false;
+        }
+
         // Show caption popup modal
         function showCaptionPopup(index, caption) {
+            
             let modal = document.getElementById('captionModal');
             if (!modal) {
                 modal = document.createElement('div');
@@ -41003,6 +41124,11 @@ For more help, visit: help.pose.app
                     </div>
                 `;
                 document.body.appendChild(modal);
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeCaptionModal();
+                    }
+                };
             }
 
             const fullText = document.querySelector('.caption-full-text');
