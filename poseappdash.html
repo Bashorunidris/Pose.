@@ -146,6 +146,30 @@
             }
         }
 
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
         .modal-overlay.closing {
             animation: slideOutRight 0.3s ease-out;
         }
@@ -6985,43 +7009,43 @@
 
         /* ForYou Profile Section - Top (highest) */
         .forYou-profile-section {
-             position: absolute !important;
-             bottom: 280px !important;
-             left: 10px !important;
-             display: flex !important;
-             align-items: center !important;
-             gap: 12px !important;
-             right: 80px !important;
-             transition: bottom 0.3s ease !important;
-             z-index: 10 !important;
+            position: absolute !important;
+            bottom: 280px !important;
+            left: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            right: 80px !important;
+            transition: bottom 0.3s ease !important;
+            z-index: 10 !important;
         }
 
         .forYou-profile-name-wrapper {
-             display: flex !important;
-             align-items: center !important;
-             gap: 6px !important;
-             flex: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            flex: 1 !important;
         }
 
         .forYou-follow-icon-badge {
-             width: 20px !important;
-             height: 20px !important;
-             background: linear-gradient(135deg, #ff0050, #ff4081) !important;
-             border-radius: 50% !important;
-             display: flex !important;
-             align-items: center !important;
-             justify-content: center !important;
-             color: white !important;
-             font-size: 10px !important;
-             box-shadow: 0 2px 6px rgba(255, 0, 80, 0.35) !important;
-             border: 1.5px solid white !important;
-             flex-shrink: 0 !important;
-             transition: all 0.2s ease !important;
+            width: 20px !important;
+            height: 20px !important;
+            background: linear-gradient(135deg, #ff0050, #ff4081) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            font-size: 10px !important;
+            box-shadow: 0 2px 6px rgba(255, 0, 80, 0.35) !important;
+            border: 1.5px solid white !important;
+            flex-shrink: 0 !important;
+            transition: all 0.2s ease !important;
         }
 
         .forYou-follow-icon-badge:hover {
-             transform: scale(1.15) !important;
-             box-shadow: 0 3px 10px rgba(255, 0, 80, 0.5) !important;
+            transform: scale(1.15) !important;
+            box-shadow: 0 3px 10px rgba(255, 0, 80, 0.5) !important;
         }
 
         .forYou-profile-section.ad-closed {
@@ -7144,64 +7168,64 @@
 
         /* Video Caption - TikTok Style */
         .forYou-caption {
-             position: absolute !important;
-             bottom: 220px !important;
-             left: 12px !important;
-             right: 15px !important;
-             z-index: 15 !important;
-             transition: bottom 0.3s ease !important;
-         }
+            position: absolute !important;
+            bottom: 220px !important;
+            left: 12px !important;
+            right: 15px !important;
+            z-index: 15 !important;
+            transition: bottom 0.3s ease !important;
+        }
 
-         .forYou-caption.ad-closed {
-             bottom: 220px !important;
-         }
+        .forYou-caption.ad-closed {
+            bottom: 220px !important;
+        }
 
-         .caption-text {
-              color: white !important;
-              font-size: 12px !important;
-              line-height: 1.35 !important;
-              text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
-              max-height: 18px !important;
-              overflow: hidden !important;
-              display: -webkit-box !important;
-              -webkit-line-clamp: 1 !important;
-              -webkit-box-orient: vertical !important;
-              word-break: break-word !important;
-              margin-bottom: 6px !important;
-              text-overflow: ellipsis !important;
-         }
+        .caption-text {
+            color: white !important;
+            font-size: 12px !important;
+            line-height: 1.35 !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+            max-height: 18px !important;
+            overflow: hidden !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 1 !important;
+            -webkit-box-orient: vertical !important;
+            word-break: break-word !important;
+            margin-bottom: 6px !important;
+            text-overflow: ellipsis !important;
+        }
 
-         .caption-text b {
-              font-weight: 600 !important;
-         }
+        .caption-text b {
+            font-weight: 600 !important;
+        }
 
-         .see-more-btn {
-              background: linear-gradient(135deg, rgba(255, 0, 80, 0.2), rgba(255, 64, 129, 0.2)) !important;
-              border: 1px solid rgba(255, 0, 80, 0.4) !important;
-              color: #fff !important;
-              cursor: pointer !important;
-              font-size: 11px !important;
-              padding: 5px 10px !important;
-              text-decoration: none !important;
-              font-weight: 600 !important;
-              transition: all 0.2s !important;
-              display: inline-block !important;
-              border-radius: 4px !important;
-          }
+        .see-more-btn {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.2), rgba(255, 64, 129, 0.2)) !important;
+            border: 1px solid rgba(255, 0, 80, 0.4) !important;
+            color: #fff !important;
+            cursor: pointer !important;
+            font-size: 11px !important;
+            padding: 5px 10px !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            transition: all 0.2s !important;
+            display: inline-block !important;
+            border-radius: 4px !important;
+        }
 
-          .see-more-btn:hover {
-              background: linear-gradient(135deg, rgba(255, 0, 80, 0.3), rgba(255, 64, 129, 0.3)) !important;
-              border-color: rgba(255, 0, 80, 0.6) !important;
-              transform: translateY(-1px) !important;
-          }
+        .see-more-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.3), rgba(255, 64, 129, 0.3)) !important;
+            border-color: rgba(255, 0, 80, 0.6) !important;
+            transform: translateY(-1px) !important;
+        }
 
-          .see-more-btn:active {
-              transform: translateY(0) !important;
-          }
+        .see-more-btn:active {
+            transform: translateY(0) !important;
+        }
 
-          .see-more-btn:active {
-              transform: translateY(0) !important;
-          }
+        .see-more-btn:active {
+            transform: translateY(0) !important;
+        }
 
         /* Caption Modal Styles */
         .caption-modal-overlay {
@@ -8147,14 +8171,15 @@
             top: 0;
             background: rgba(0, 0, 0, 0.6);
             z-index: 999;
-            display: none !important;
-            animation: fadeIn 0.3s ease;
+            display: block;
             opacity: 0;
+            transition: opacity 0.15s ease-out;
+            pointer-events: none;
         }
 
         .comment-modal-overlay.active {
-            display: block !important;
             opacity: 1;
+            pointer-events: auto;
         }
 
         .comment-modal {
@@ -8169,8 +8194,13 @@
             display: none;
             flex-direction: column;
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.15s ease-out;
             width: 100%;
+        }
+
+        .comment-modal.active {
+            display: flex !important;
+            transform: translateY(0);
         }
 
         /* Mobile responsive - Extra small phones */
@@ -8201,13 +8231,9 @@
             }
 
             .comment-modal.active {
+                display: flex !important;
                 transform: translateX(-50%) translateY(0);
             }
-        }
-
-        .comment-modal.active {
-            transform: translateY(0);
-            display: flex !important;
         }
 
         .comment-header {
@@ -8265,6 +8291,177 @@
             padding: 10px 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             align-items: flex-start;
+            position: relative;
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .comment-actions-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-reactions {
+            display: none;
+            gap: 6px;
+            margin-left: auto;
+            position: fixed;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            padding: 8px 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            pointer-events: auto;
+        }
+
+        .comment-reactions.show {
+            display: flex;
+            animation: slideUp 0.25s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reaction-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reaction-btn:hover {
+            background: rgba(138, 43, 226, 0.2);
+            border-color: rgba(138, 43, 226, 0.5);
+            transform: scale(1.1);
+        }
+
+        .reaction-btn:active {
+            transform: scale(0.95);
+        }
+
+        .comment-reaction-counts {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            margin-left: 46px;
+        }
+
+        .reaction-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #a0aec0;
+            cursor: default;
+            transition: all 0.2s ease;
+        }
+
+        .reaction-count:hover {
+            background: rgba(138, 43, 226, 0.25);
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+
+        /* Avatar wrapper for badge positioning */
+        .comment-avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* Owner comment styling */
+        .comment-item.comment-owner {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 3px solid #8A2BE2;
+            padding-left: 9px;
+        }
+
+        .comment-item.comment-owner .comment-avatar {
+            border: 3px solid #8A2BE2;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+
+        /* First commenter styling */
+        .comment-item.comment-first {
+            background: rgba(255, 193, 7, 0.08);
+            border-left: 3px solid #FFC107;
+            padding-left: 9px;
+        }
+
+        .comment-item.comment-first .comment-avatar {
+            border: 3px solid #FFC107;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+        }
+
+        /* Badge on avatar ring */
+        .comment-badge-ring {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            border: 2px solid #000;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .comment-badge-owner-ring {
+            background: linear-gradient(135deg, #8A2BE2, #a855f7);
+            color: white;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.6);
+        }
+
+        .comment-badge-first-ring {
+            background: linear-gradient(135deg, #FFC107, #FFD54F);
+            color: #333;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.6);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 360px) {
@@ -8588,42 +8785,100 @@
             color: #fff;
         }
 
+        .comment-emoji-panel {
+            position: fixed;
+            bottom: 60px;
+            left: 10px;
+            right: 10px;
+            background: rgba(30, 30, 30, 0.98);
+            border-radius: 12px;
+            padding: 10px;
+            z-index: 999;
+            display: none;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: calc(100% - 20px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .comment-emoji-panel.active {
+            display: flex;
+            animation: slideUp 0.2s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .comment-emoji-panel {
+                bottom: 50px;
+                padding: 8px;
+                gap: 6px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .comment-emoji-panel {
+                bottom: 45px;
+                padding: 6px;
+                gap: 4px;
+            }
+        }
+
         .comment-send-btn {
             background: linear-gradient(135deg, #8A2BE2, #a855f7);
             border: none;
             color: #fff;
-            font-size: 13px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            padding: 10px 16px;
+            padding: 10px 12px;
             border-radius: 20px;
             transition: all 0.2s ease;
             white-space: nowrap;
             flex-shrink: 0;
-            min-width: 60px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
         }
 
         @media (max-width: 480px) {
             .comment-send-btn {
-                padding: 8px 14px;
-                font-size: 12px;
-                min-width: 55px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .comment-send-btn {
-                padding: 6px 10px;
-                font-size: 10px;
-                min-width: 45px;
+                padding: 8px 10px;
+                font-size: 14px;
+                min-width: 40px;
+                height: 40px;
             }
         }
 
         @media (max-width: 360px) {
             .comment-send-btn {
-                padding: 7px 12px;
+                padding: 6px 8px;
+                font-size: 12px;
+                min-width: 36px;
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .comment-send-btn {
+                padding: 5px 6px;
                 font-size: 11px;
-                min-width: 50px;
+                min-width: 32px;
+                height: 32px;
             }
         }
 
@@ -8858,23 +9113,23 @@
 
             .forYou-caption.ad-closed {
                 bottom: 170px !important;
-                }
+            }
 
-                .forYou-banner-ad {
+            .forYou-banner-ad {
                 bottom: 108px !important;
                 left: 10px !important;
                 width: 155px !important;
                 height: 87px !important;
-                }
+            }
 
-                .forYou-close-btn {
+            .forYou-close-btn {
                 width: 28px !important;
                 height: 28px !important;
                 font-size: 20px !important;
-                }
-                }
+            }
+        }
 
-                @media (max-width: 360px) {
+        @media (max-width: 360px) {
 
             .forYou-sidebar span {
                 font-size: 11px !important;
@@ -9081,14 +9336,69 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            font-size: 14px;
+            font-size: 12px;
             z-index: 1000;
             color: white;
-            background: #333;
-            padding: 15px 0;
-            border-radius: 20px 20px 0 0;
+            background: #000;
+            padding: 8px 0;
+            border-top: 1px solid #333;
+            height: 68px;
         }
 
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            gap: 3px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            flex: 1;
+            height: 100%;
+            color: #888;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.92);
+            background: rgba(138, 43, 226, 0.2);
+            color: #8A2BE2;
+        }
+
+        .nav-btn:hover {
+            background: rgba(138, 43, 226, 0.12);
+            color: #bbb;
+        }
+
+        .nav-btn.active {
+            color: #8A2BE2;
+            background: rgba(138, 43, 226, 0.15);
+        }
+
+        .nav-btn.active i svg {
+            filter: drop-shadow(0 0 6px rgba(138, 43, 226, 0.7));
+        }
+
+        .nav-btn i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.12s ease;
+        }
+
+        .nav-btn i svg {
+            transition: filter 0.12s ease;
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Keep old style for backwards compatibility */
         .bottom-nav div {
             display: flex;
             flex-direction: column;
@@ -17091,44 +17401,41 @@
         </div>
     </div>
     <div class="bottom-nav">
-        <div>
+        <div class="nav-btn" id="navHome" onclick="goToHome(event)" title="Go to Home">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                 </svg></i>
             <span>Home</span>
         </div>
-        <div onclick="openNotifications()">
+        <div class="nav-btn" id="navNotif" onclick="openNotifications(event)" title="Notifications">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path
                         d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
                 </svg></i>
             <span>Alert</span>
         </div>
-        <div onclick="openRecordingUI()">
+        <div class="nav-btn" id="navCreate" onclick="openRecordingUI(event)" title="Create Video">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5h3V9h4v3h3l-5 5z" />
                 </svg></i>
             <span>Create</span>
         </div>
-        <div onclick="openUploadPage()">
+        <div class="nav-btn" id="navUpload" onclick="openUploadPage(event)" title="Upload Video">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
                 </svg></i>
             <span>Upload</span>
         </div>
-        <div id="liveBtn">
-            <i>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <div class="nav-btn" id="navLive" onclick="handleLiveClick(event)" title="Live">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path
                         d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z" />
-                </svg>
-            </i>
+                </svg></i>
             <span>Live</span>
         </div>
-
-        <div class="music-link" onclick="window.location.href='posemusic.html'" style="cursor: pointer;">
+        <div class="nav-btn" id="navMusic" onclick="handleMusicClick(event)" title="Music">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
                 </svg></i>
@@ -21062,20 +21369,58 @@
             }
 
             const forYouFeed = document.getElementById('forYouFeed');
+            if (!forYouFeed) {
+                console.error('❌ forYouFeed element not found');
+                return;
+            }
 
             try {
                 console.log('📖 Loading For You feed...');
-                // Show loading message
-                forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #aaa; font-size: 18px;">Loading videos...</div>';
 
-                // Get all videos from videos collection (simple, clean query)
-                console.log('📖 Fetching all videos...');
+                // Show smart loading animation
+                showForYouLoadingAnimation(forYouFeed);
+
+                // Set a timeout to prevent infinite loading
+                const loadTimeout = setTimeout(() => {
+                    console.warn('⚠️ Loading timeout - showing cached videos');
+                    hideForYouLoadingAnimation();
+                }, 8000); // 8 second timeout
+
+                // Check if we have cached videos and if they're fresh
+                const cachedVideos = getForYouCachedVideos();
+                const cacheAge = getForYouCacheAge();
+                const isCacheFresh = cacheAge < 5 * 60 * 1000; // 5 minutes fresh
+
+                // Show cached videos immediately if available (even if stale)
+                if (cachedVideos && cachedVideos.length > 0) {
+                    console.log('⚡ Displaying cached videos:', cachedVideos.length);
+                    displayForYouVideos(forYouFeed, cachedVideos);
+                    forYouVideos = cachedVideos;
+                }
+
+                // If cache is fresh, skip network request
+                if (isCacheFresh && cachedVideos && cachedVideos.length > 0) {
+                    console.log('✅ Cache is fresh, skipping network request');
+                    hideForYouLoadingAnimation();
+                    forYouLoaded = true;
+                    setupVideoAutoPlay();
+                    return;
+                }
+
+                // Fetch fresh videos in background
+                console.log('📖 Fetching fresh videos from Firebase...');
+
+                // Show refresh indicator if we had cached videos
+                if (cachedVideos && cachedVideos.length > 0) {
+                    showForYouRefreshIndicator(forYouFeed);
+                }
+
                 let videosSnapshot;
                 try {
-                    videosSnapshot = await db.collection('videos').orderBy('createdAt', 'desc').get();
+                    videosSnapshot = await db.collection('videos').orderBy('createdAt', 'desc').limit(100).get();
                 } catch (indexError) {
-                    console.warn('⚠️ orderBy requires index, falling back to unordered query:', indexError.message);
-                    videosSnapshot = await db.collection('videos').get();
+                    console.warn('⚠️ orderBy requires index, falling back to unordered query');
+                    videosSnapshot = await db.collection('videos').limit(100).get();
                 }
 
                 forYouVideos = [];
@@ -21088,23 +21433,27 @@
                     });
                 });
 
-                // Sort by createdAt if not ordered by database
-                forYouVideos.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                // Shuffle videos randomly instead of sorting by date
+                forYouVideos = shuffleArray(forYouVideos);
 
-                console.log('✅ Loaded', forYouVideos.length, 'videos for For You feed from all users');
+                console.log('✅ Loaded', forYouVideos.length, 'fresh videos');
 
-                if (forYouVideos.length === 0) {
-                    forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #aaa;">No videos available yet</div>';
-                    return;
+                // Only update if we got new/different videos
+                if (forYouVideos.length > 0) {
+                    // Cache the videos
+                    cacheForYouVideos(forYouVideos);
+
+                    // Display fresh videos
+                    displayForYouVideos(forYouFeed, forYouVideos);
+                    console.log('🔄 Feed updated with fresh videos');
+                } else {
+                    if (!cachedVideos || cachedVideos.length === 0) {
+                        forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #aaa;">No videos available</div>';
+                    }
                 }
 
-                // Display all videos in TikTok-style vertical feed
-                forYouFeed.innerHTML = '';
-                forYouVideos.forEach((video, index) => {
-                    const videoPost = createForYouVideoPost(video, index);
-                    forYouFeed.appendChild(videoPost);
-                });
-
+                clearTimeout(loadTimeout);
+                hideForYouLoadingAnimation();
                 forYouLoaded = true;
 
                 // Setup Intersection Observer to only play visible video
@@ -21125,9 +21474,119 @@
                 }
 
             } catch (error) {
-                console.error('Error loading For You feed:', error);
-                forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #ff6b6b;">Error loading videos: ' + error.message + '</div>';
+                console.error('❌ Error loading For You feed:', error);
+                hideForYouLoadingAnimation();
+                if (forYouFeed) {
+                    forYouFeed.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; color: #ff6b6b;">Error loading videos. Please try again.</div>';
+                }
             }
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        // Fisher-Yates shuffle algorithm for random video order
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // ===== FOR YOU FEED CACHING & LOADING =====
+        const FORYOU_CACHE_KEY = 'forYouVideosCache';
+        const FORYOU_CACHE_TIME_KEY = 'forYouCacheTime';
+
+        // Get cached ForYou videos
+        function getForYouCachedVideos() {
+            try {
+                const cached = localStorage.getItem(FORYOU_CACHE_KEY);
+                return cached ? JSON.parse(cached) : null;
+            } catch (e) {
+                console.log('Cache read error:', e);
+                return null;
+            }
+        }
+
+        // Get cache age in milliseconds
+        function getForYouCacheAge() {
+            const cacheTime = localStorage.getItem(FORYOU_CACHE_TIME_KEY);
+            if (!cacheTime) return Infinity;
+            return Date.now() - parseInt(cacheTime);
+        }
+
+        // Cache ForYou videos
+        function cacheForYouVideos(videos) {
+            try {
+                localStorage.setItem(FORYOU_CACHE_KEY, JSON.stringify(videos));
+                localStorage.setItem(FORYOU_CACHE_TIME_KEY, Date.now().toString());
+                console.log('💾 Cached', videos.length, 'videos');
+            } catch (e) {
+                console.log('Cache write error:', e);
+            }
+        }
+
+        // Show loading animation
+        function showForYouLoadingAnimation(container) {
+            if (!container) {
+                console.warn('⚠️ Container not found for loading animation');
+                return;
+            }
+            container.innerHTML = `
+                 <div id="forYouLoadingSpinner" style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; gap: 20px;">
+                     <div style="width: 50px; height: 50px; border: 4px solid rgba(138, 43, 226, 0.3); border-top-color: #8A2BE2; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                     <div style="color: #aaa; font-size: 14px;">Loading amazing content...</div>
+                     <style>
+                         @keyframes spin {
+                             to { transform: rotate(360deg); }
+                         }
+                     </style>
+                 </div>
+             `;
+        }
+
+        // Hide loading animation
+        function hideForYouLoadingAnimation() {
+            const loader = document.getElementById('forYouLoadingSpinner');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        }
+
+        // Show subtle refresh indicator (top of feed)
+        function showForYouRefreshIndicator(forYouFeed) {
+            if (!forYouFeed.querySelector('[id="forYouRefreshIndicator"]')) {
+                const indicator = document.createElement('div');
+                indicator.id = 'forYouRefreshIndicator';
+                indicator.style.cssText = `
+                    position: sticky;
+                    top: 0;
+                    background: rgba(138, 43, 226, 0.1);
+                    border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+                    padding: 8px;
+                    text-align: center;
+                    color: #8A2BE2;
+                    font-size: 12px;
+                    z-index: 100;
+                    animation: slideDown 0.3s ease;
+                `;
+                indicator.textContent = '↻ Updating with fresh content...';
+                forYouFeed.insertBefore(indicator, forYouFeed.firstChild);
+
+                setTimeout(() => {
+                    indicator.style.animation = 'slideUp 0.3s ease';
+                    setTimeout(() => indicator.remove(), 300);
+                }, 2000);
+            }
+        }
+
+        // Display ForYou videos
+        function displayForYouVideos(container, videos) {
+            container.innerHTML = '';
+            videos.forEach((video, index) => {
+                const videoPost = createForYouVideoPost(video, index);
+                container.appendChild(videoPost);
+            });
         }
 
         // Create video post for For You feed (TikTok-style vertical feed)
@@ -21287,7 +21746,7 @@
                 customAudio.src = data.customAudio.url;
                 customAudio.style.display = 'none';
                 postDiv.appendChild(customAudio);
-                
+
                 // Start preloading audio immediately
                 customAudio.load();
 
@@ -21337,7 +21796,7 @@
                 if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                     return false;
                 }
-                
+
                 if (isPlaying) {
                     video.pause();
                     if (customAudio) customAudio.pause();
@@ -21536,13 +21995,20 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const video = entry.target;
+                    const videoPost = video.closest('.video-post');
+                    const videoId = videoPost?.querySelector('.forYou-overlay')?.getAttribute('data-video-id');
 
                     if (entry.isIntersecting) {
                         // Video is in view - play it
-                        console.log('▶️ Playing video');
+                        console.log('▶️ Playing video:', videoId);
                         video.play().catch(err => {
                             console.log('Play failed (may need user interaction):', err.message);
                         });
+
+                        // Preload video-related data in background
+                        if (videoId) {
+                            preloadVideoData(videoId);
+                        }
                     } else {
                         // Video is out of view - pause it
                         console.log('⏸️ Pausing video');
@@ -21590,6 +22056,265 @@
             });
         }
 
+        // Cache for preloaded data to avoid duplicate requests
+        const preloadedDataCache = {};
+        const PRELOAD_TIMEOUT = 5000; // 5 second timeout instead of 10
+        const MAX_CONCURRENT_PRELOADS = 3;
+        let currentPreloads = 0;
+
+        // Preload video-related data (comments, audio metadata, etc.)
+        function preloadVideoData(videoId) {
+            if (!videoId || !db) return;
+
+            // Skip if already preloading or preloaded
+            if (preloadedDataCache[videoId]) {
+                console.log('✅ Data already cached for video:', videoId);
+                return;
+            }
+
+            // Limit concurrent preloads to prevent overwhelming backend
+            if (currentPreloads >= MAX_CONCURRENT_PRELOADS) {
+                console.log('⏳ Preload queue full, skipping video:', videoId);
+                return;
+            }
+
+            console.log('⏳ Preloading data for video:', videoId);
+            preloadedDataCache[videoId] = 'loading';
+
+            // Preload comments in background
+            preloadComments(videoId);
+
+            // Preload audio metadata
+            preloadAudioMetadata(videoId);
+
+            // Preload interaction counts (likes, reposts, comments count) - only if user logged in
+            if (currentUser) {
+                preloadInteractionCounts(videoId);
+            }
+        }
+
+        // Render optimistic comment (instant feedback - TikTok style) with REAL user details AND badge immediately
+         function renderOptimisticComment(comment) {
+             const commentList = document.getElementById('commentList');
+             if (!commentList) return;
+
+             const commentItem = document.createElement('div');
+             commentItem.className = 'comment-item' + (comment.isOwner ? ' comment-owner' : '');
+             commentItem.id = `comment_${comment.id}`;
+             commentItem.style.opacity = '1';
+             commentItem.style.transition = 'opacity 0.3s ease';
+
+             // Use profile picture if available, otherwise use gradient with initials
+             const avatarHTML = comment.profilePic
+                 ? `<div class="comment-avatar" style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;">${comment.userInitial}</div>`
+                 : `<div class="comment-avatar" style="background: linear-gradient(135deg, #8A2BE2, #a855f7); font-size: 14px; font-weight: 600;">${comment.userInitial}</div>`;
+
+             // Show owner badge immediately if user is video owner
+             const badgeHTML = comment.isOwner ? '<div class="comment-badge-ring comment-badge-owner-ring">👑</div>' : '';
+
+             commentItem.innerHTML = `
+                 <div class="comment-left-container">
+                     <div class="comment-avatar-wrapper">
+                         ${avatarHTML}
+                         ${badgeHTML}
+                     </div>
+                 </div>
+                 <div class="comment-content">
+                     <div style="display: flex; align-items: center; gap: 8px;">
+                         <strong style="color: #fff; font-size: 14px;">${comment.username}</strong>
+                         <small style="color: #888; font-size: 12px;">now</small>
+                     </div>
+                     <div style="color: #ddd; font-size: 14px; margin-top: 6px; line-height: 1.4;">${comment.text}</div>
+                     ${comment.media && comment.media.length > 0 ? `
+                         <div style="margin-top: 8px; color: #888; font-size: 12px;">
+                             📎 ${comment.media.length} attachment${comment.media.length > 1 ? 's' : ''}
+                         </div>
+                     ` : ''}
+                 </div>
+             `;
+
+             commentList.insertBefore(commentItem, commentList.firstChild);
+         }
+
+        function clearPreviewSection() {
+            const previewSection = document.getElementById('commentPreviewSection');
+            if (previewSection) {
+                previewSection.style.display = 'none';
+                previewSection.innerHTML = '';
+            }
+        }
+
+        // Preload comments without displaying modal - with timeout and error handling
+        function preloadComments(videoId) {
+            if (!videoId || !db) return;
+
+            // Check both collection paths (videos and posts)
+            currentPreloads++;
+            const timeoutId = setTimeout(() => {
+                console.warn('⚠️ Comment preload timeout for video:', videoId);
+                currentPreloads--;
+            }, PRELOAD_TIMEOUT);
+
+            // Try 'videos' collection first, then fallback to 'posts'
+            const collectionsToTry = ['videos', 'posts'];
+            let commentsFetched = false;
+
+            const tryNextCollection = (index) => {
+                if (index >= collectionsToTry.length) {
+                    if (!commentsFetched) {
+                        clearTimeout(timeoutId);
+                        currentPreloads--;
+                        console.log('💡 Comment preload skipped (offline or slow connection)');
+                    }
+                    return;
+                }
+
+                const collectionName = collectionsToTry[index];
+
+                db.collection(collectionName).doc(videoId).collection('comments')
+                    .orderBy('timestamp', 'desc')
+                    .limit(50)
+                    .get()
+                    .then(snapshot => {
+                        if (snapshot.size > 0) {
+                            commentsFetched = true;
+                            clearTimeout(timeoutId);
+                            currentPreloads--;
+
+                            const commentsData = [];
+                            snapshot.forEach(doc => {
+                                commentsData.push({
+                                    id: doc.id,
+                                    ...doc.data()
+                                });
+                            });
+
+                            // Store in videoComments cache for instant display
+                            if (!videoComments) videoComments = {};
+                            videoComments[videoId] = commentsData;
+
+                            console.log('✅ Comments preloaded for video:', videoId, '- Count:', commentsData.length);
+                            preloadedDataCache[videoId] = 'loaded';
+                        } else {
+                            // Try next collection
+                            tryNextCollection(index + 1);
+                        }
+                    })
+                    .catch(error => {
+                        // Try next collection on error
+                        tryNextCollection(index + 1);
+                    });
+            };
+
+            tryNextCollection(0);
+        }
+
+        // Preload audio/sound metadata - with timeout and error handling
+        function preloadAudioMetadata(videoId) {
+            if (!videoId || !db) return;
+
+            currentPreloads++;
+            const timeoutId = setTimeout(() => {
+                console.warn('⚠️ Audio metadata preload timeout for video:', videoId);
+                currentPreloads--;
+            }, PRELOAD_TIMEOUT);
+
+            db.collection('posts').doc(videoId)
+                .get({ source: 'server' })
+                .then(doc => {
+                    clearTimeout(timeoutId);
+                    currentPreloads--;
+                    if (doc.exists) {
+                        console.log('🎵 Audio metadata preloaded for video:', videoId);
+                    }
+                })
+                .catch(error => {
+                    clearTimeout(timeoutId);
+                    currentPreloads--;
+                    console.log('💡 Audio metadata preload skipped (offline or slow connection)');
+                });
+        }
+
+        // Preload interaction counts - with timeout and error handling
+        function preloadInteractionCounts(videoId) {
+            if (!videoId || !db || !currentUser) return;
+
+            // Check if user has liked this video
+            currentPreloads++;
+            const likeTimeoutId = setTimeout(() => {
+                console.warn('⚠️ Like status preload timeout for video:', videoId);
+                currentPreloads--;
+            }, PRELOAD_TIMEOUT);
+
+            db.collection('posts').doc(videoId).collection('likes')
+                .doc(currentUser.uid)
+                .get({ source: 'server' })
+                .then(() => {
+                    clearTimeout(likeTimeoutId);
+                    currentPreloads--;
+                    console.log('👍 Like status preloaded for video:', videoId);
+                })
+                .catch(error => {
+                    clearTimeout(likeTimeoutId);
+                    currentPreloads--;
+                    // Silently fail
+                });
+
+            // Check if user has reposted this video
+            currentPreloads++;
+            const repostTimeoutId = setTimeout(() => {
+                console.warn('⚠️ Repost status preload timeout for video:', videoId);
+                currentPreloads--;
+            }, PRELOAD_TIMEOUT);
+
+            db.collection('posts').doc(videoId).collection('reposts')
+                .doc(currentUser.uid)
+                .get({ source: 'server' })
+                .then(() => {
+                    clearTimeout(repostTimeoutId);
+                    currentPreloads--;
+                    console.log('🔄 Repost status preloaded for video:', videoId);
+                })
+                .catch(error => {
+                    clearTimeout(repostTimeoutId);
+                    currentPreloads--;
+                    // Silently fail
+                });
+        }
+
+        // Network status monitoring
+        let isOnline = navigator.onLine;
+
+        window.addEventListener('online', () => {
+            isOnline = true;
+            console.log('🌐 Connection restored');
+            showGenericToast('Connection restored', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            console.log('📴 Connection lost - switching to offline mode');
+            showGenericToast('No internet connection - using cached data', 'warning');
+        });
+
+        // Check connection health periodically
+        setInterval(() => {
+            if (!isOnline) {
+                // Try to reconnect
+                fetch('https://www.google.com/favicon.ico', { mode: 'no-cors' })
+                    .then(() => {
+                        if (!isOnline) {
+                            isOnline = true;
+                            console.log('🌐 Reconnected');
+                            showGenericToast('Back online', 'success');
+                        }
+                    })
+                    .catch(() => {
+                        // Still offline
+                    });
+            }
+        }, 30000); // Check every 30 seconds
+
         // Global function to pause all videos
         function pauseAllFeedVideos() {
             const forYouTab = document.getElementById('forYouTab');
@@ -21602,6 +22327,86 @@
 
             console.log('🔇 All feed videos paused');
         }
+
+        // ===== BOTTOM NAV FUNCTIONS =====
+        let currentNavPage = 'home';
+
+        function goToHome(event) {
+            if (event) event.preventDefault();
+            console.log('🏠 Going to Home - Refreshing feed');
+            currentTab = 'forYou';
+            currentNavPage = 'home';
+            updateNavActiveState('navHome');
+
+            const forYouTab = document.getElementById('forYouTab');
+            const forYouFeed = document.getElementById('forYouFeed');
+
+            if (!forYouTab || !forYouFeed) {
+                console.error('❌ ForYou elements not found');
+                showGenericToast('Error loading feed', 'error');
+                return;
+            }
+
+            // Show tab
+            forYouTab.style.display = 'block';
+            document.getElementById('friendTab').style.display = 'none';
+            document.getElementById('poseTab').style.display = 'none';
+
+            // Show loading animation on feed
+            showForYouLoadingAnimation(forYouFeed);
+
+            // Clear cache to force fresh load
+            localStorage.removeItem('forYouVideosCache');
+            localStorage.removeItem('forYouCacheTime');
+
+            // Reset forYouLoaded flag to force reload
+            forYouLoaded = false;
+
+            // Reload the feed with fresh videos immediately
+            loadForYouFeed().catch(error => {
+                console.error('❌ Error reloading feed:', error);
+                hideForYouLoadingAnimation();
+                showGenericToast('Error loading videos', 'error');
+            });
+        }
+
+        function handleLiveClick(event) {
+            if (event) event.preventDefault();
+            console.log('📺 Live clicked');
+            updateNavActiveState('navLive');
+            showGenericToast('Live feature coming soon', 'info');
+        }
+
+        function handleMusicClick(event) {
+            if (event) event.preventDefault();
+            console.log('🎵 Music clicked');
+            updateNavActiveState('navMusic');
+            window.location.href = 'posemusic.html';
+        }
+
+        function updateNavActiveState(activeBtnId) {
+            // Remove active from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active to clicked button
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+        }
+
+        // Update nav state when clicking tabs
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const forYouTab = document.getElementById('forYouTab');
+                if (forYouTab) {
+                    forYouTab.style.display = 'block';
+                    updateNavActiveState('navHome');
+                }
+            }, 500);
+        });
 
         // Setup main tab navigation (For You, Tweet, Pose)
         function setupMainTabs() {
@@ -27170,9 +27975,14 @@ For more help, visit: help.pose.app
             const input = document.getElementById(inputId);
             const preview = document.getElementById(previewId);
 
+            if (!input || !preview) {
+                console.warn('⚠️ Preview elements not found:', inputId, previewId);
+                return;
+            }
+
             input.addEventListener('change', function (e) {
                 const file = e.target.files[0];
-                if (file) {
+                if (file && preview) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         if (file.type.startsWith('image/')) {
@@ -38435,7 +39245,9 @@ For more help, visit: help.pose.app
         }
 
         // Store history data globally for filtering
-        window.walletHistoryData = historyData;
+        if (typeof historyData !== 'undefined' && historyData) {
+            window.walletHistoryData = historyData;
+        }
         window.currentHistoryFilter = 'all';
         window.currentDateFilter = 'all';
 
@@ -40896,20 +41708,20 @@ For more help, visit: help.pose.app
         function toggleForYouRepost(event) {
             event.stopPropagation();
             const btn = event.currentTarget || event.target.closest('.repost-btn');
-            
+
             if (!btn) {
                 console.error('❌ Repost button not found');
                 return;
             }
-            
+
             const count = btn.querySelector('.interaction-count');
-            
+
             if (!count) {
                 console.error('❌ Count element not found in button:', btn);
                 console.log('Button HTML:', btn.outerHTML);
                 return;
             }
-            
+
             const videoId = btn.getAttribute('data-post-id');
 
             if (!videoId || !currentUser) {
@@ -40925,14 +41737,14 @@ For more help, visit: help.pose.app
                 btn.classList.remove('active');
                 count.textContent = Math.max(0, currentRepostCount - 1);
                 console.log('❌ Repost removed:', count.textContent);
-                
+
                 // Save to Firebase
                 updateVideoRepostsInFirebase(videoId, false, Math.max(0, currentRepostCount - 1));
             } else {
                 btn.classList.add('active');
                 count.textContent = currentRepostCount + 1;
                 console.log('✅ Repost added:', count.textContent);
-                
+
                 // Save to Firebase
                 updateVideoRepostsInFirebase(videoId, true, currentRepostCount + 1);
             }
@@ -40971,23 +41783,23 @@ For more help, visit: help.pose.app
             try {
                 const videoRef = db.collection('videos').doc(videoId);
                 const doc = await videoRef.get();
-                
+
                 if (doc.exists) {
                     const data = doc.data();
                     const repostCount = data.repostCount || 0;
                     const repostedBy = data.reposts || {};
-                    
+
                     // Update count
                     const countElement = repostBtn.querySelector('.interaction-count');
                     if (countElement) {
                         countElement.textContent = repostCount;
                     }
-                    
+
                     // Check if current user has reposted
                     if (currentUser && repostedBy[currentUser.uid]) {
                         repostBtn.classList.add('active');
                     }
-                    
+
                     console.log('✅ Repost data loaded:', repostCount);
                 } else {
                     // Initialize count as 0 if video doesn't exist yet
@@ -41028,7 +41840,7 @@ For more help, visit: help.pose.app
                             overlay.insertAdjacentHTML('beforeend', buttonsHTML);
                         }
                     }
-                    
+
                     // Load repost data from Firebase
                     const repostBtn = overlay.querySelector('.repost-btn');
                     if (repostBtn && videoId && videoId !== '') {
@@ -41134,7 +41946,7 @@ For more help, visit: help.pose.app
 
         // Show caption popup modal
         function showCaptionPopup(index, caption) {
-            
+
             let modal = document.getElementById('captionModal');
             if (!modal) {
                 modal = document.createElement('div');
@@ -41148,7 +41960,7 @@ For more help, visit: help.pose.app
                     </div>
                 `;
                 document.body.appendChild(modal);
-                modal.onclick = function(e) {
+                modal.onclick = function (e) {
                     if (e.target === modal) {
                         closeCaptionModal();
                     }
@@ -41662,41 +42474,29 @@ For more help, visit: help.pose.app
             currentCommentVideoId = videoId;
 
             try {
-                // Ensure user profile is loaded
-                if (!userProfileData && currentUser) {
-                    console.log('⏳ Loading user profile...');
-                    await loadUserProfile(currentUser.uid);
-                }
-
-                // Show modal
+                // Show modal immediately - don't wait for profile
                 const overlay = document.getElementById('commentOverlay');
                 const modal = document.getElementById('commentModal');
 
-                console.log('Overlay:', overlay, 'Modal:', modal);
-                console.log('User profile data:', userProfileData);
-
                 if (overlay) {
-                    overlay.style.display = 'block';
-                    setTimeout(() => {
-                        overlay.classList.add('active');
-                    }, 10);
+                    overlay.classList.add('active');
                 }
 
                 if (modal) {
-                    modal.style.display = 'flex';
-                    setTimeout(() => {
-                        modal.classList.add('active');
-                    }, 10);
+                    modal.classList.add('active');
                 }
 
-                // Load comments
-                loadComments(videoId);
+                // Focus input quickly
+                const input = document.getElementById('commentInput');
+                if (input) input.focus();
 
-                // Focus input
-                setTimeout(() => {
-                    const input = document.getElementById('commentInput');
-                    if (input) input.focus();
-                }, 300);
+                // Load user profile in background (if needed)
+                if (!userProfileData && currentUser) {
+                    loadUserProfile(currentUser.uid).catch(err => console.error('Profile load error:', err));
+                }
+
+                // Load comments in background
+                loadComments(videoId);
 
                 console.log('✅ Comment modal opened');
             } catch (error) {
@@ -41795,6 +42595,31 @@ For more help, visit: help.pose.app
             document.body.style.overflow = 'auto';
         }
 
+        // Helper: Get video owner ID from Firebase (fallback when data is incomplete)
+        async function getVideoOwnerIdFromFirebase(videoId) {
+            if (!db) return null;
+            
+            const collectionsToTry = ['videos', 'posts'];
+            
+            for (const collectionName of collectionsToTry) {
+                try {
+                    const docSnapshot = await db.collection(collectionName).doc(videoId).get();
+                    if (docSnapshot.exists) {
+                        const videoData = docSnapshot.data();
+                        const ownerId = videoData.userId || videoData.ownerId || videoData.createdBy || videoData.uploader;
+                        console.log(`✅ Found owner ID from ${collectionName}:`, ownerId);
+                        return ownerId;
+                    }
+                } catch (error) {
+                    console.warn(`⚠️ Error fetching from ${collectionName}:`, error.message);
+                    continue;
+                }
+            }
+            
+            console.error('❌ Could not find video owner ID in any collection');
+            return null;
+        }
+
         // Load comments for video
         async function loadComments(videoId, forceRefresh = false) {
             return new Promise((resolve) => {
@@ -41814,24 +42639,71 @@ For more help, visit: help.pose.app
 
                 let comments = videoComments[videoId] || [];
 
-                // Load from subcollection: videos/{videoId}/comments
-                if (comments.length === 0) {
-                    console.log('📥 Fetching comments from subcollection...');
-                    try {
-                        db.collection('videos').doc(videoId).collection('comments').orderBy('timestamp', 'desc').get().then(commentsSnapshot => {
-                            let fbComments = [];
-
-                            commentsSnapshot.forEach(doc => {
-                                fbComments.push(doc.data());
+                // Show cached comments immediately (TikTok style)
+                if (comments.length > 0) {
+                    console.log('⚡ Displaying cached comments:', comments.length);
+                    comments = comments.map(c => {
+                        if (!c.likedBy) c.likedBy = {};
+                        if (c.replies && c.replies.length > 0) {
+                            c.replies = c.replies.map(r => {
+                                if (!r.likedBy) r.likedBy = {};
+                                return r;
                             });
+                        }
+                        return c;
+                    });
+                    renderCommentsList(commentList, comments, videoId);
 
-                            if (fbComments.length > 0) {
-                                // Store in memory for future use
-                                videoComments[videoId] = fbComments;
-                                comments = fbComments;
-                                console.log('✅ Loaded', fbComments.length, 'comments from subcollection');
-                                console.log('Comments with replies:', comments.map(c => ({ id: c.id, replyCount: (c.replies || []).length })));
-                            }
+                    // Still fetch fresh data in background without blocking UI
+                    fetchCommentsInBackground(videoId);
+                    resolve();
+                    return;
+                }
+
+                // No cached comments - fetch from Firebase
+                console.log('📥 Fetching comments from Firebase...');
+                fetchCommentsInBackground(videoId, commentList);
+                resolve();
+            });
+        }
+
+        // Fetch comments in background
+        function fetchCommentsInBackground(videoId, commentListElement = null) {
+            const commentList = commentListElement || document.getElementById('commentList');
+            if (!commentList) return;
+
+            // Try both collection paths
+            const collectionsToTry = ['videos', 'posts'];
+
+            const tryFetch = (collectionIndex) => {
+                if (collectionIndex >= collectionsToTry.length) {
+                    console.log('📝 No comments found in any collection');
+                    if (!videoComments[videoId] || videoComments[videoId].length === 0) {
+                        renderCommentsList(commentList, [], videoId);
+                    }
+                    return;
+                }
+
+                const collectionName = collectionsToTry[collectionIndex];
+
+                db.collection(collectionName).doc(videoId).collection('comments')
+                    .orderBy('timestamp', 'desc')
+                    .limit(100)
+                    .get()
+                    .then(commentsSnapshot => {
+                        let fbComments = [];
+
+                        commentsSnapshot.forEach(doc => {
+                            fbComments.push({
+                                id: doc.id,
+                                ...doc.data()
+                            });
+                        });
+
+                        if (fbComments.length > 0) {
+                            // Store in memory for future use
+                            videoComments[videoId] = fbComments;
+                            console.log('✅ Loaded', fbComments.length, 'comments from', collectionName);
 
                             // Ensure likedBy is initialized for all comments and replies
                             fbComments = fbComments.map(c => {
@@ -41846,22 +42718,19 @@ For more help, visit: help.pose.app
                             });
 
                             renderCommentsList(commentList, fbComments, videoId);
-                            resolve();
-                        }).catch(error => {
-                            console.error('⚠️ Error loading comments from subcollection:', error.message);
-                            renderCommentsList(commentList, comments, videoId);
-                            resolve();
-                        });
-                    } catch (error) {
-                        console.error('⚠️ Error loading comments:', error.message);
-                        renderCommentsList(commentList, comments, videoId);
-                        resolve();
-                    }
-                } else {
-                    renderCommentsList(commentList, comments, videoId);
-                    resolve();
-                }
-            });
+                        } else {
+                            // Try next collection
+                            tryFetch(collectionIndex + 1);
+                        }
+                    })
+                    .catch(error => {
+                        console.log('⚠️ Error loading comments from', collectionName);
+                        // Try next collection
+                        tryFetch(collectionIndex + 1);
+                    });
+            };
+
+            tryFetch(0);
         }
 
         function renderCommentsList(commentList, comments, videoId) {
@@ -41873,25 +42742,119 @@ For more help, visit: help.pose.app
                 return;
             }
 
+            // Calculate total comment count including replies
+            const topLevelComments = comments.filter(comment => !comment.isReply);
+            const totalCommentCount = topLevelComments.reduce((total, comment) => {
+                const replyCount = (comment.replies && comment.replies.length) || 0;
+                return total + 1 + replyCount;
+            }, 0);
+
+            // Update comment count in button to show actual count
+            updateCommentCountDisplay(videoId, totalCommentCount);
+
             if (comments.length === 0) {
                 console.log('No comments, showing empty state');
-                commentList.innerHTML = `
-                    <div class="empty-comments">
-                        <div class="empty-comments-icon">💬</div>
-                        <div class="empty-comments-text">No comments yet. Be the first!</div>
-                    </div>
-                `;
+                // Smooth fade out before replacing
+                commentList.style.opacity = '1';
+                commentList.style.transition = 'opacity 0.15s ease-out';
+
+                setTimeout(() => {
+                    commentList.innerHTML = `
+                         <div class="empty-comments">
+                             <div class="empty-comments-icon">💬</div>
+                             <div class="empty-comments-text">No comments yet. Be the first!</div>
+                         </div>
+                     `;
+                    commentList.style.opacity = '1';
+                }, 50);
             } else {
                 console.log('Rendering', comments.length, 'comments...');
-
-                // Filter out replies - only show top-level comments
-                const topLevelComments = comments.filter(comment => !comment.isReply);
                 console.log('Top-level comments:', topLevelComments.length);
 
-                commentList.innerHTML = topLevelComments.map((comment, index) => `
-                    <div class="comment-item">
+                // Get video owner ID - try multiple sources for reliability
+                let videoOwnerId = null;
+
+                // Primary: Get from forYouVideos (most reliable)
+                const videoData = forYouVideos.find(v => v.id === videoId);
+                if (videoData) {
+                    // Try multiple possible field names for owner ID
+                    videoOwnerId = videoData.userId || videoData.ownerId || videoData.createdBy || videoData.uploader;
+                    console.log('📍 Got video owner from forYouVideos:', videoOwnerId, 'Video data keys:', Object.keys(videoData));
+                }
+
+                // Fallback: Get from comment data
+                if (!videoOwnerId && topLevelComments.length > 0) {
+                    // Get from first comment that has videoOwnerId
+                    const commentWithOwner = topLevelComments.find(c => c.videoOwnerId);
+                    if (commentWithOwner) {
+                        videoOwnerId = commentWithOwner.videoOwnerId;
+                        console.log('📍 Got video owner from comment data:', videoOwnerId);
+                    }
+                }
+
+                // Last resort: fetch from Firestore if not found
+                if (!videoOwnerId) {
+                    console.warn('⚠️ Video owner ID not found in forYouVideos or comments, will proceed without it');
+                    // Don't block rendering - proceed without owner ID and will be corrected on next load
+                }
+
+                console.log('🎬 Video Owner ID:', videoOwnerId);
+                console.log('📝 All comments:', topLevelComments.map(c => ({
+                    username: c.username,
+                    userId: c.userId,
+                    timestamp: c.timestamp,
+                    videoOwnerId: c.videoOwnerId
+                })));
+
+                // Determine first NON-OWNER commenter (earliest timestamp from non-owners)
+                const firstNonOwnerCommenter = topLevelComments.length > 0 ?
+                    topLevelComments
+                        .filter(comment => comment.userId !== videoOwnerId) // Exclude owner
+                        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))[0] : null;
+
+                const firstNonOwnerCommenterId = firstNonOwnerCommenter?.userId;
+                const firstNonOwnerCommentId = firstNonOwnerCommenter?.id; // Get the actual comment ID
+
+                console.log('🏆 First non-owner commenter:', firstNonOwnerCommenter?.username, '| ID:', firstNonOwnerCommenterId, '| CommentID:', firstNonOwnerCommentId);
+
+                const html = topLevelComments.map((comment, index) => {
+                    // Creator always gets Owner badge - check multiple ways
+                    // 1. Direct comparison: comment user = video owner
+                    const directOwnerCheck = (comment.userId === videoOwnerId);
+                    // 2. Self-referential check: comment stores video owner ID and matches
+                    const selfRefCheck = (comment.videoOwnerId && comment.userId === comment.videoOwnerId);
+                    // 3. Fallback: if no videoOwnerId from rendering but comment has it stored
+                    const storedOwnerCheck = (comment.videoOwnerId === comment.userId && comment.videoOwnerId);
+                    
+                    const isOwner = directOwnerCheck || selfRefCheck || storedOwnerCheck;
+
+                    // Only the FIRST comment from the first non-owner gets the "1st" badge
+                    // Check if this is the actual first comment from that user
+                    const isFirstCommenter = !isOwner && (comment.id === firstNonOwnerCommentId);
+
+                    const commentClass = isOwner ? 'comment-owner' : isFirstCommenter ? 'comment-first' : '';
+                    const badgeHTML = isOwner ? '<div class="comment-badge-ring comment-badge-owner-ring">👑</div>' :
+                        isFirstCommenter ? '<div class="comment-badge-ring comment-badge-first-ring">1st</div>' : '';
+
+                    // Detailed logging for debugging
+                    console.log('📌 OWNER CHECK - Comment:', comment.username, 
+                        '| commentId:', comment.id, 
+                        '| userId:', comment.userId, 
+                        '| videoOwnerId (stored):', comment.videoOwnerId,
+                        '| videoOwnerId (from video):', videoOwnerId,
+                        '| directOwnerCheck:', directOwnerCheck,
+                        '| selfRefCheck:', selfRefCheck, 
+                        '| storedOwnerCheck:', storedOwnerCheck,
+                        '| FINAL isOwner:', isOwner, 
+                        '| isFirst (1st badge):', isFirstCommenter);
+
+                    return `
+                    <div class="comment-item ${commentClass}" data-comment-id="${comment.id}" onmousedown="startCommentLongPress(event)" ontouchstart="startCommentLongPress(event)">
                          <div class="comment-left-container">
-                             <div class="comment-avatar" ${comment.profilePic ? `style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!comment.profilePic ? comment.userInitial || '👤' : ''}</div>
+                              <div class="comment-avatar-wrapper">
+                                  <div class="comment-avatar" ${comment.profilePic ? `style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!comment.profilePic ? comment.userInitial || '👤' : ''}</div>
+                                  ${badgeHTML}
+                              </div>
                              ${comment.media && comment.media.length > 0 ? `
                                  <div class="comment-media-container">
                                      ${comment.media.map(media => `
@@ -41938,19 +42901,33 @@ For more help, visit: help.pose.app
                              </div>
                              <div class="comment-text">${comment.text}</div>
                              <div class="comment-actions">
-                                 <button class="comment-like-btn ${comment.likedBy && currentUser && comment.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleCommentLike(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                     <i class="fas fa-heart"></i> ${comment.likes || 0}
-                                 </button>
-                                 <button class="comment-like-btn" onclick="replyComment(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                     Reply
-                                 </button>
-                             </div>
-                         </div>
-                     </div>
-                    ${comment.replies && comment.replies.length > 0 ? `
+                                 <div class="comment-actions-left">
+                                     <button class="comment-like-btn ${comment.likedBy && currentUser && comment.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleCommentLike(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                         <i class="fas fa-heart"></i> ${comment.likes || 0}
+                                     </button>
+                                     <button class="comment-like-btn" onclick="replyComment(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                         Reply
+                                     </button>
+                                 </div>
+                                 <div class="comment-reactions" id="reactions-${comment.id}">
+                                     <button class="reaction-btn" onclick="addCommentReaction(${index}, '${videoId}', '😠')" title="Angry">😠</button>
+                                     <button class="reaction-btn" onclick="addCommentReaction(${index}, '${videoId}', '😊')" title="Smile">😊</button>
+                                     <button class="reaction-btn" onclick="addCommentReaction(${index}, '${videoId}', '😑')" title="Indifferent">😑</button>
+                                 </div>
+                                 ${comment.reactions && Object.keys(comment.reactions).length > 0 ? `
+                                 <div class="comment-reaction-counts">
+                                     ${Object.entries(comment.reactions).map(([emoji, data]) => `
+                                         <span class="reaction-count" title="Reacted by ${Object.keys(data.users || {}).length} user${Object.keys(data.users || {}).length !== 1 ? 's' : ''}">${emoji} ${data.count}</span>
+                                     `).join('')}
+                                 </div>
+                                 ` : ''}
+                                 </div>
+                                 </div>
+                                 </div>
+                                 ${comment.replies && comment.replies.length > 0 ? `
                          <div style="margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3);" class="replies-container" id="replies-${comment.id}">
                              ${comment.replies.map((reply, replyIndex) => `
-                                 <div class="comment-item" style="padding-left: 12px; margin-top: 8px;" id="reply-${comment.id}-${replyIndex}">
+                                 <div class="comment-item" style="padding-left: 12px; margin-top: 8px;" id="reply-${comment.id}-${replyIndex}" data-comment-id="${comment.id}" data-reply-id="${reply.id}" onmousedown="startReplyLongPress(event)" ontouchstart="startReplyLongPress(event)">
                                       <div class="comment-left-container">
                                           <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
                                          ${reply.media && reply.media.length > 0 ? `
@@ -41997,19 +42974,44 @@ For more help, visit: help.pose.app
                                          </div>
                                          <div class="comment-text">${reply.text}</div>
                                          <div class="comment-actions">
-                                             <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${comment.id}', '${reply.id}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                                 <i class="fas fa-heart"></i> ${reply.likes || 0}
-                                             </button>
-                                             <button class="comment-like-btn" onclick="replyToReply('${comment.id}', '${reply.id}', '${reply.username}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                                 Reply
-                                             </button>
+                                             <div class="comment-actions-left">
+                                                 <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${comment.id}', '${reply.id}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                                     <i class="fas fa-heart"></i> ${reply.likes || 0}
+                                                 </button>
+                                                 <button class="comment-like-btn" onclick="replyToReply('${comment.id}', '${reply.id}', '${reply.username}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                                     Reply
+                                                 </button>
+                                             </div>
+                                             <div class="comment-reactions" id="reply-reactions-${comment.id}-${reply.id}">
+                                                 <button class="reaction-btn" onclick="addReplyReaction('${comment.id}', '${reply.id}', '${videoId}', '😠')" title="Angry">😠</button>
+                                                 <button class="reaction-btn" onclick="addReplyReaction('${comment.id}', '${reply.id}', '${videoId}', '😊')" title="Smile">😊</button>
+                                                 <button class="reaction-btn" onclick="addReplyReaction('${comment.id}', '${reply.id}', '${videoId}', '😑')" title="Indifferent">😑</button>
+                                             </div>
                                          </div>
+                                         ${reply.reactions && Object.keys(reply.reactions).length > 0 ? `
+                                         <div class="comment-reaction-counts">
+                                             ${Object.entries(reply.reactions).map(([emoji, data]) => `
+                                                 <span class="reaction-count" title="Reacted by ${Object.keys(data.users || {}).length} user${Object.keys(data.users || {}).length !== 1 ? 's' : ''}">${emoji} ${data.count}</span>
+                                             `).join('')}
+                                         </div>
+                                         ` : ''}
                                          </div>
                                          </div>
                                          `).join('')}
                                          </div>
                                          ` : ''}
-                                         `).join('');
+                                         `;
+                }).join('');
+
+                // Smooth fade transition instead of instant replace
+                commentList.style.opacity = '1';
+                commentList.style.transition = 'opacity 0.15s ease-out';
+
+                // Apply new HTML with smooth fade
+                setTimeout(() => {
+                    commentList.innerHTML = html;
+                    commentList.style.opacity = '1';
+                }, 50);
             }
         }
 
@@ -42096,7 +43098,14 @@ For more help, visit: help.pose.app
                     const previewSection = document.getElementById('commentPreviewSection');
                     const previewContainer = document.getElementById('commentMediaPreview');
 
+                    if (!previewSection || !previewContainer) {
+                        console.error('❌ Preview section or container not found');
+                        showGenericToast('Error showing preview', 'error');
+                        return;
+                    }
+
                     previewSection.style.display = 'block';
+                    console.log('✅ Preview section shown');
 
                     // Create preview card with remove button
                     const previewCard = document.createElement('div');
@@ -42398,15 +43407,15 @@ For more help, visit: help.pose.app
                     return;
                 }
 
-                // Disable send button while posting
+                // Disable send button immediately
                 const sendBtn = document.getElementById('commentSendBtn');
                 if (sendBtn) {
                     sendBtn.disabled = true;
                 }
 
-                // Fetch user profile directly from Firebase
+                // Fetch user profile FIRST to get correct name before rendering
                 console.log('🔄 Fetching user profile from Firebase...');
-                let fullName = 'User';
+                let fullName = currentUser.displayName || 'User'; // Fallback while loading
                 let profilePic = null;
 
                 try {
@@ -42425,6 +43434,40 @@ For more help, visit: help.pose.app
                 let userInitial = (fullName && fullName.length > 0) ? fullName[0].toUpperCase() : 'U';
 
                 console.log('Full name from profile:', fullName, 'Profile pic:', profilePic);
+
+                // Get video owner ID early for badge system (before rendering optimistic comment)
+                const videoData = forYouVideos.find(v => v.id === currentCommentVideoId);
+                const videoOwnerId = videoData?.userId;
+                
+                // Check if current user is the video owner
+                const isUserVideoOwner = currentUser.uid === videoOwnerId;
+
+                // NOW show optimistic comment with CORRECT name AND BADGE if applicable
+                const tempCommentId = `temp_${Date.now()}`;
+                const tempComment = {
+                    id: tempCommentId,
+                    text: text,
+                    username: fullName, // Use correct name from profile
+                    userInitial: userInitial,
+                    profilePic: profilePic,
+                    timestamp: new Date().toISOString(),
+                    likes: 0,
+                    likedBy: {},
+                    replies: [],
+                    media: mediaAttachments,
+                    isOptimistic: true,
+                    userId: currentUser.uid,
+                    videoOwnerId: videoOwnerId,
+                    isOwner: isUserVideoOwner // For badge display
+                };
+
+                // Render optimistic comment with correct info AND badge
+                renderOptimisticComment(tempComment);
+
+                // Clear input immediately for better UX
+                input.value = '';
+                window.commentMediaAttachments = [];
+                clearPreviewSection();
 
                 // Remove @mention if replying
                 if (text.startsWith('@')) {
@@ -42498,6 +43541,7 @@ For more help, visit: help.pose.app
                     likes: 0,
                     userLiked: false,
                     userId: currentUser.uid,
+                    videoOwnerId: videoOwnerId, // Add video owner for badge detection
                     replies: [],
                     isReply: !!replyingToCommentId, // Mark if this is a reply
                     media: uploadedMediaAttachments // Store uploaded media with Cloudinary URLs
@@ -42573,15 +43617,9 @@ For more help, visit: help.pose.app
                 // Clear input immediately for better UX
                 resetCommentInput();
 
-                // Reload comments immediately (show optimistic UI)
-                console.log('📋 Reloading comments with optimistic update...');
-                loadComments(currentCommentVideoId).then(() => {
-                    // Re-enable button immediately after UI refresh
-                    const sendBtn = document.getElementById('commentSendBtn');
-                    if (sendBtn) {
-                        sendBtn.disabled = false;
-                    }
-                });
+                // Don't reload comments here - let the optimistic render stay
+                // We'll refresh after Firebase save completes
+                console.log('✅ Optimistic comment shown, waiting for Firebase save...');
 
                 // Update comment count in the button
                 updateCommentCountInUI(currentCommentVideoId, newItem);
@@ -42599,7 +43637,13 @@ For more help, visit: help.pose.app
                             newItem.isPending = false;
                             console.log('✅ Reply saved to Firebase successfully');
                             // Force refresh to load the updated parent comment with replies
-                            loadComments(currentCommentVideoId, true);
+                            loadComments(currentCommentVideoId, true).then(() => {
+                                // Re-enable button after refresh
+                                const sendBtn = document.getElementById('commentSendBtn');
+                                if (sendBtn) {
+                                    sendBtn.disabled = false;
+                                }
+                            });
                         }).catch(error => {
                             console.error('❌ Error saving reply:', error);
                             newItem.isPending = false;
@@ -42619,7 +43663,13 @@ For more help, visit: help.pose.app
                         newItem.isPending = false;
                         console.log('✅ Comment saved to Firebase successfully');
                         // Force refresh for new top-level comments
-                        loadComments(currentCommentVideoId, true);
+                        loadComments(currentCommentVideoId, true).then(() => {
+                            // Re-enable button after refresh
+                            const sendBtn = document.getElementById('commentSendBtn');
+                            if (sendBtn) {
+                                sendBtn.disabled = false;
+                            }
+                        });
                     }).catch(error => {
                         console.error('❌ Error saving comment:', error);
                         newItem.isPending = false;
@@ -42635,6 +43685,14 @@ For more help, visit: help.pose.app
                 console.log('✅ Comment submitted with', newItem.media ? newItem.media.length : 0, 'media items');
             } catch (error) {
                 console.error('❌ Error posting comment:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    stack: error.stack
+                });
+                
+                // Show error to user
+                showGenericToast('Error: ' + error.message, 'error');
 
                 // Re-enable button on error
                 const sendBtn = document.getElementById('commentSendBtn');
@@ -42663,14 +43721,50 @@ For more help, visit: help.pose.app
             }
         }
 
+        // Update comment count display in button to show actual count from database
+        function updateCommentCountDisplay(videoId, actualCommentCount) {
+            try {
+                // Find all comment buttons for this video
+                const buttons = document.querySelectorAll(`.comment-btn[data-post-id="${videoId}"]`);
+
+                buttons.forEach(btn => {
+                    const countSpan = btn.querySelector('.interaction-count');
+                    if (countSpan) {
+                        countSpan.textContent = actualCommentCount;
+                        console.log('✅ Updated comment count display to:', actualCommentCount);
+                    }
+                });
+            } catch (error) {
+                console.error('Error updating comment count display:', error);
+            }
+        }
+
+        // Helper function to get the correct collection for a video
+        async function getCommentCollection(videoId) {
+            // Try 'videos' collection first, then 'posts'
+            const collectionsToTry = ['videos', 'posts'];
+
+            for (const collectionName of collectionsToTry) {
+                try {
+                    const doc = await db.collection(collectionName).doc(videoId).get();
+                    if (doc.exists) {
+                        return collectionName;
+                    }
+                } catch (error) {
+                    // Continue to next collection
+                }
+            }
+
+            // Default to 'videos' if neither exists (will be created on first write)
+            return 'videos';
+        }
+
         // Save comment to Firebase
         async function saveCommentToFirebase(videoId, comment, isParentWithReply = false) {
             try {
-                const video = forYouVideos.find(v => v.id === videoId);
-                if (!video) {
-                    console.error('❌ Video not found:', videoId);
-                    return;
-                }
+                // Don't require video to exist in forYouVideos - just save comment to database
+                // The comment will be saved to videos/{videoId}/comments or posts/{videoId}/comments
+                console.log('💾 Saving comment to Firebase for video:', videoId);
 
                 // Create comment data structure with media (keep blob for playback, serialize URL for Firebase)
                 const cleanMedia = (comment.media || []).map(m => {
@@ -42717,7 +43811,7 @@ For more help, visit: help.pose.app
                         return mediaObj;
                     }).filter(m => m !== null);
 
-                    return {
+                    const replyObj = {
                         id: reply.id,
                         text: reply.text || '',
                         username: reply.username,
@@ -42730,6 +43824,13 @@ For more help, visit: help.pose.app
                         media: cleanReplyMedia,
                         replies: reply.replies ? cleanReplies_Helper(reply.replies) : []
                     };
+                    
+                    // Only add videoOwnerId if it exists
+                    if (reply.videoOwnerId) {
+                        replyObj.videoOwnerId = reply.videoOwnerId;
+                    }
+                    
+                    return replyObj;
                 });
 
                 const commentToSave = {
@@ -42746,6 +43847,11 @@ For more help, visit: help.pose.app
                     media: cleanMedia
                 };
 
+                // Only add videoOwnerId if it exists (avoid undefined values in Firestore)
+                if (comment.videoOwnerId) {
+                    commentToSave.videoOwnerId = comment.videoOwnerId;
+                }
+
                 // Check if comment has media that needs cloud upload
                 const hasLocalMedia = (comment.media || []).some(m => m.isLocal);
                 const hasAudio = (comment.media || []).some(m => m.type === 'audio');
@@ -42760,17 +43866,29 @@ For more help, visit: help.pose.app
                     replyCount: cleanReplies.length
                 });
 
+                // Get the correct collection for this video
+                const collectionName = await getCommentCollection(videoId);
+
+                // Log what we're about to save for debugging
+                console.log('📌 About to save commentToSave:', {
+                    ...commentToSave,
+                    media: commentToSave.media ? `${commentToSave.media.length} items` : 'none'
+                });
+
                 // Save to subcollection with local URLs first (optimistic)
-                await db.collection('videos').doc(videoId).collection('comments').doc(comment.id).set(commentToSave);
+                await db.collection(collectionName).doc(videoId).collection('comments').doc(comment.id).set(commentToSave);
 
                 // Increment comment counter on main video doc
                 if (!isParentWithReply) {
-                    await db.collection('videos').doc(videoId).update({
+                    await db.collection(collectionName).doc(videoId).update({
                         comments: firebase.firestore.FieldValue.increment(1)
+                    }).catch(err => {
+                        // If update fails, it might be first comment, just log it
+                        console.warn('⚠️ Could not increment comment count:', err.message);
                     });
                 }
 
-                console.log('✅ Comment saved to subcollection successfully with', cleanReplies.length, 'replies');
+                console.log('✅ Comment saved to', collectionName, 'subcollection successfully with', cleanReplies.length, 'replies');
 
                 // Upload local media to Cloudinary in background (non-blocking)
                 if (hasLocalMedia) {
@@ -42782,7 +43900,12 @@ For more help, visit: help.pose.app
 
             } catch (error) {
                 console.error('❌ Error in saveCommentToFirebase:', error);
-                showGenericToast('Error saving comment', 'error');
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    stack: error.stack
+                });
+                showGenericToast('Error saving comment: ' + error.message, 'error');
             }
         }
 
@@ -42998,6 +44121,386 @@ For more help, visit: help.pose.app
             }
         }
 
+        // Add reaction to comment - 1 emoji per user only
+        function addCommentReaction(commentIndex, videoId, emoji) {
+            if (!currentUser) {
+                showGenericToast('Please login to react to comments', 'error');
+                return;
+            }
+
+            const comments = videoComments[videoId];
+            if (comments && comments[commentIndex]) {
+                const comment = comments[commentIndex];
+
+                // Initialize reactions if not exists
+                if (!comment.reactions) {
+                    comment.reactions = {};
+                }
+
+                // Find if user has any existing reaction on this comment
+                let existingReaction = null;
+                for (const [existingEmoji, data] of Object.entries(comment.reactions)) {
+                    if (data.users && data.users[currentUser.uid]) {
+                        existingReaction = existingEmoji;
+                        break;
+                    }
+                }
+
+                // If clicking same reaction, remove it
+                if (existingReaction === emoji) {
+                    delete comment.reactions[emoji].users[currentUser.uid];
+                    comment.reactions[emoji].count = Math.max(0, comment.reactions[emoji].count - 1);
+
+                    // Remove emoji object if count is 0
+                    if (comment.reactions[emoji].count === 0) {
+                        delete comment.reactions[emoji];
+                    }
+                } else {
+                    // Remove previous reaction if exists
+                    if (existingReaction) {
+                        delete comment.reactions[existingReaction].users[currentUser.uid];
+                        comment.reactions[existingReaction].count = Math.max(0, comment.reactions[existingReaction].count - 1);
+
+                        // Remove emoji object if count is 0
+                        if (comment.reactions[existingReaction].count === 0) {
+                            delete comment.reactions[existingReaction];
+                        }
+                    }
+
+                    // Add new reaction
+                    if (!comment.reactions[emoji]) {
+                        comment.reactions[emoji] = {
+                            count: 0,
+                            users: {}
+                        };
+                    }
+                    comment.reactions[emoji].users[currentUser.uid] = true;
+                    comment.reactions[emoji].count += 1;
+                }
+
+                // Render comments list immediately to show reaction update
+                const commentList = document.getElementById('commentList');
+                if (commentList) {
+                    renderCommentsList(commentList, comments, videoId);
+                }
+
+                // Save to Firebase in background (non-blocking)
+                saveCommentReactionToFirebase(videoId, comment.id, emoji, comment.reactions[emoji] || null, existingReaction);
+            }
+        }
+
+        // Add reaction to reply - 1 emoji per user only
+        function addReplyReaction(commentId, replyId, videoId, emoji) {
+            if (!currentUser) {
+                showGenericToast('Please login to react to replies', 'error');
+                return;
+            }
+
+            const comments = videoComments[videoId];
+            if (comments) {
+                const comment = comments.find(c => c.id === commentId);
+                if (comment && comment.replies) {
+                    const reply = comment.replies.find(r => r.id === replyId);
+                    if (reply) {
+                        // Initialize reactions if not exists
+                        if (!reply.reactions) {
+                            reply.reactions = {};
+                        }
+
+                        // Find if user has any existing reaction on this reply
+                        let existingReaction = null;
+                        for (const [existingEmoji, data] of Object.entries(reply.reactions)) {
+                            if (data.users && data.users[currentUser.uid]) {
+                                existingReaction = existingEmoji;
+                                break;
+                            }
+                        }
+
+                        // If clicking same reaction, remove it
+                        if (existingReaction === emoji) {
+                            delete reply.reactions[emoji].users[currentUser.uid];
+                            reply.reactions[emoji].count = Math.max(0, reply.reactions[emoji].count - 1);
+
+                            // Remove emoji object if count is 0
+                            if (reply.reactions[emoji].count === 0) {
+                                delete reply.reactions[emoji];
+                            }
+                        } else {
+                            // Remove previous reaction if exists
+                            if (existingReaction) {
+                                delete reply.reactions[existingReaction].users[currentUser.uid];
+                                reply.reactions[existingReaction].count = Math.max(0, reply.reactions[existingReaction].count - 1);
+
+                                // Remove emoji object if count is 0
+                                if (reply.reactions[existingReaction].count === 0) {
+                                    delete reply.reactions[existingReaction];
+                                }
+                            }
+
+                            // Add new reaction
+                            if (!reply.reactions[emoji]) {
+                                reply.reactions[emoji] = {
+                                    count: 0,
+                                    users: {}
+                                };
+                            }
+                            reply.reactions[emoji].users[currentUser.uid] = true;
+                            reply.reactions[emoji].count += 1;
+                        }
+
+                        // Render comments list immediately to show reaction update
+                        const commentList = document.getElementById('commentList');
+                        if (commentList) {
+                            renderCommentsList(commentList, comments, videoId);
+                        }
+
+                        // Save to Firebase in background (non-blocking)
+                        saveReplyReactionToFirebase(videoId, commentId, replyId, emoji, reply.reactions[emoji] || null, existingReaction);
+                    }
+                }
+            }
+        }
+
+        // Save comment reaction to Firebase
+        function saveCommentReactionToFirebase(videoId, commentId, emoji, reactionData, oldEmoji) {
+            try {
+                db.collection('videos').doc(videoId).collection('comments').doc(commentId).get().then(doc => {
+                    if (doc.exists) {
+                        const comment = doc.data();
+
+                        // Initialize reactions if not exists
+                        if (!comment.reactions) {
+                            comment.reactions = {};
+                        }
+
+                        // Remove old reaction if it exists
+                        if (oldEmoji && oldEmoji !== emoji) {
+                            delete comment.reactions[oldEmoji];
+                        }
+
+                        if (reactionData && reactionData.count > 0) {
+                            // Update or create reaction
+                            comment.reactions[emoji] = reactionData;
+                        } else {
+                            // Remove reaction if count is 0
+                            delete comment.reactions[emoji];
+                        }
+
+                        // Save to Firebase subcollection
+                        db.collection('videos').doc(videoId).collection('comments').doc(commentId).update({
+                            reactions: comment.reactions
+                        }).then(() => {
+                            console.log('✅ Comment reaction saved:', emoji, reactionData);
+                        }).catch(err => {
+                            console.error('❌ Error saving comment reaction:', err.message);
+                        });
+                    }
+                }).catch(err => {
+                    console.error('⚠️ Error fetching comment:', err.message);
+                });
+            } catch (error) {
+                console.error('Error saving comment reaction:', error);
+            }
+        }
+
+        // Save reply reaction to Firebase
+        function saveReplyReactionToFirebase(videoId, commentId, replyId, emoji, reactionData, oldEmoji) {
+            try {
+                db.collection('videos').doc(videoId).collection('comments').doc(commentId).get().then(doc => {
+                    if (doc.exists) {
+                        const comment = doc.data();
+
+                        if (comment.replies) {
+                            // Find reply
+                            const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                            if (replyIndex !== -1) {
+                                const reply = comment.replies[replyIndex];
+
+                                // Initialize reactions if not exists
+                                if (!reply.reactions) {
+                                    reply.reactions = {};
+                                }
+
+                                // Remove old reaction if it exists
+                                if (oldEmoji && oldEmoji !== emoji) {
+                                    delete reply.reactions[oldEmoji];
+                                }
+
+                                if (reactionData && reactionData.count > 0) {
+                                    // Update or create reaction
+                                    reply.reactions[emoji] = reactionData;
+                                } else {
+                                    // Remove reaction if count is 0
+                                    delete reply.reactions[emoji];
+                                }
+
+                                // Update reply in array
+                                comment.replies[replyIndex] = reply;
+
+                                // Save to Firebase subcollection
+                                db.collection('videos').doc(videoId).collection('comments').doc(commentId).update({
+                                    replies: comment.replies
+                                }).then(() => {
+                                    console.log('✅ Reply reaction saved:', emoji, reactionData);
+                                }).catch(err => {
+                                    console.error('❌ Error saving reply reaction:', err.message);
+                                });
+                            }
+                        }
+                    }
+                }).catch(err => {
+                    console.error('⚠️ Error fetching comment:', err.message);
+                });
+            } catch (error) {
+                console.error('Error saving reply reaction:', error);
+            }
+        }
+
+        // Long-press handling for comments
+        let longPressTimer = null;
+        let currentCommentId = null;
+
+        function startCommentLongPress(event) {
+            // Don't trigger long-press if clicking on buttons (like, reply, reaction buttons)
+            if (event.target.tagName === 'BUTTON' || 
+                event.target.closest('button') || 
+                event.target.classList.contains('comment-like-btn') ||
+                event.target.classList.contains('reaction-btn') ||
+                event.target.classList.contains('fa-heart') ||
+                event.target.classList.contains('fa-reply') ||
+                event.target.closest('.comment-actions')) {
+                return;
+            }
+
+            const commentElement = event.currentTarget;
+            currentCommentId = commentElement.dataset.commentId;
+
+            // Clear previous timer
+            if (longPressTimer) clearTimeout(longPressTimer);
+
+            // Start long-press timer (500ms)
+            longPressTimer = setTimeout(() => {
+                showCommentReactions(event, currentCommentId);
+            }, 500);
+        }
+
+        function showCommentReactions(event, commentId) {
+            // Prevent default long-press behavior
+            event.preventDefault();
+
+            // Hide all other visible reactions
+            document.querySelectorAll('.comment-reactions.show').forEach(el => {
+                if (el.id !== `reactions-${commentId}`) {
+                    el.classList.remove('show');
+                }
+            });
+
+            // Show reactions for this comment
+            const reactionsEl = document.getElementById(`reactions-${commentId}`);
+            if (reactionsEl) {
+                reactionsEl.classList.add('show');
+
+                // Position the reactions menu BELOW the comment to not block buttons
+                const rect = event.currentTarget.getBoundingClientRect();
+                const commentBottom = rect.bottom + window.scrollY;
+                const commentCenterX = rect.left + rect.width / 2;
+
+                // Position below comment, centered horizontally
+                reactionsEl.style.top = (commentBottom + 15) + 'px';
+                reactionsEl.style.left = (commentCenterX - 75) + 'px';
+
+                // Close reactions when user releases
+                document.addEventListener('mouseup', closeCommentReactionsOnMouseUp, { once: true });
+                document.addEventListener('touchend', closeCommentReactionsOnMouseUp, { once: true });
+            }
+        }
+
+        function closeCommentReactionsOnMouseUp() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }
+
+        // Long-press handling for replies
+        let replyLongPressTimer = null;
+        let currentReplyData = null;
+
+        function startReplyLongPress(event) {
+            // Don't trigger long-press if clicking on buttons (like, reply, reaction buttons)
+            if (event.target.tagName === 'BUTTON' || 
+                event.target.closest('button') || 
+                event.target.classList.contains('comment-like-btn') ||
+                event.target.classList.contains('reaction-btn') ||
+                event.target.classList.contains('fa-heart') ||
+                event.target.classList.contains('fa-reply') ||
+                event.target.closest('.comment-actions')) {
+                return;
+            }
+
+            const replyElement = event.currentTarget;
+            currentReplyData = {
+                commentId: replyElement.dataset.commentId,
+                replyId: replyElement.dataset.replyId
+            };
+
+            // Clear previous timer
+            if (replyLongPressTimer) clearTimeout(replyLongPressTimer);
+
+            // Start long-press timer (500ms)
+            replyLongPressTimer = setTimeout(() => {
+                showReplyReactions(event, currentReplyData);
+            }, 500);
+        }
+
+        function showReplyReactions(event, replyData) {
+            // Prevent default long-press behavior
+            event.preventDefault();
+
+            // Hide all other visible reactions
+            document.querySelectorAll('.comment-reactions.show').forEach(el => {
+                if (el.id !== `reply-reactions-${replyData.commentId}-${replyData.replyId}`) {
+                    el.classList.remove('show');
+                }
+            });
+
+            // Show reactions for this reply
+            const reactionsEl = document.getElementById(`reply-reactions-${replyData.commentId}-${replyData.replyId}`);
+            if (reactionsEl) {
+                reactionsEl.classList.add('show');
+
+                // Position the reactions menu BELOW the reply to not block buttons
+                const rect = event.currentTarget.getBoundingClientRect();
+                const replyBottom = rect.bottom + window.scrollY;
+                const replyCenterX = rect.left + rect.width / 2;
+
+                // Position below reply, centered horizontally
+                reactionsEl.style.top = (replyBottom + 15) + 'px';
+                reactionsEl.style.left = (replyCenterX - 75) + 'px';
+
+                // Close reactions when user releases
+                document.addEventListener('mouseup', closeReplyReactionsOnMouseUp, { once: true });
+                document.addEventListener('touchend', closeReplyReactionsOnMouseUp, { once: true });
+            }
+        }
+
+        function closeReplyReactionsOnMouseUp() {
+            if (replyLongPressTimer) {
+                clearTimeout(replyLongPressTimer);
+                replyLongPressTimer = null;
+            }
+        }
+
+        // Close reactions when clicking elsewhere
+        document.addEventListener('click', function (event) {
+            // Only close if not clicking on reactions or comment
+            if (!event.target.closest('.comment-reactions') && !event.target.closest('.comment-item')) {
+                document.querySelectorAll('.comment-reactions.show').forEach(el => {
+                    el.classList.remove('show');
+                });
+            }
+        });
+
         // Reply to comment
         function replyComment(commentIndex, videoId) {
             const comments = videoComments[videoId];
@@ -43027,11 +44530,27 @@ For more help, visit: help.pose.app
             input.focus();
         }
 
+        // Toggle emoji panel
+        function toggleEmojiPanel() {
+            const panel = document.getElementById('commentEmojiPanel');
+            panel.classList.toggle('active');
+        }
+
+        // Close emoji panel when clicking outside
+        document.addEventListener('click', function (event) {
+            const panel = document.getElementById('commentEmojiPanel');
+            const moreBtn = document.querySelector('.comment-more-emoji-btn');
+            if (!panel || !moreBtn) return;
+            if (!panel.contains(event.target) && !moreBtn.contains(event.target)) {
+                panel.classList.remove('active');
+            }
+        });
+
         // Initialize sticker grid
         function initializeStickerGrid() {
             const container = document.getElementById('stickerGridContainer');
             if (!container || container.children.length > 0) return; // Already initialized
-            
+
             container.innerHTML = stickerLibrary.map(sticker => `
                 <button onclick="insertSticker('${sticker.svg}', '${sticker.name}')"
                     style="width:60px; height:60px; background:#222; border:1px solid #444; border-radius:8px; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
@@ -43236,6 +44755,8 @@ For more help, visit: help.pose.app
             const file = event.target.files[0];
             if (!file) return;
 
+            console.log('🖼️ Image selected:', file.name);
+
             // Check file size (max 10MB)
             if (file.size > 10 * 1024 * 1024) {
                 showGenericToast('Image too large (max 10MB)', 'error');
@@ -43258,10 +44779,17 @@ For more help, visit: help.pose.app
                     file: file
                 };
                 window.commentMediaAttachments.push(mediaObject);
+                console.log('✅ Image added to attachments, total:', window.commentMediaAttachments.length);
 
                 // Add preview to preview section
                 const previewSection = document.getElementById('commentPreviewSection');
                 const previewContainer = document.getElementById('commentMediaPreview');
+
+                if (!previewSection || !previewContainer) {
+                    console.error('❌ Preview section or container not found');
+                    showGenericToast('Error showing preview', 'error');
+                    return;
+                }
 
                 previewSection.style.display = 'block';
 
@@ -43298,6 +44826,9 @@ For more help, visit: help.pose.app
                 `;
 
                 previewContainer.appendChild(previewCard);
+                console.log('✅ Preview card added, total in preview:', previewContainer.children.length);
+
+                showGenericToast('Image added! 🖼️', 'success');
 
                 const input = document.getElementById('commentInput');
                 input.focus();
@@ -43561,6 +45092,17 @@ For more help, visit: help.pose.app
             voiceRecorder = null;
             voiceRecordingPausedTime = 0;
             voiceRecordingStartTime = null;
+
+            // Clear any preview
+            const previewSection = document.getElementById('commentPreviewSection');
+            if (previewSection) {
+                previewSection.style.display = 'none';
+                previewSection.innerHTML = '';
+            }
+
+            // Clear attachments
+            window.commentMediaAttachments = [];
+
             hideVoiceRecordingUI();
             showGenericToast('Recording cancelled ✓', 'info');
         }
@@ -43604,6 +45146,13 @@ For more help, visit: help.pose.app
             // Add preview to preview section
             const previewSection = document.getElementById('commentPreviewSection');
             const previewContainer = document.getElementById('commentMediaPreview');
+
+            // Safety check
+            if (!previewSection || !previewContainer) {
+                console.error('Preview section elements not found');
+                showGenericToast('Error displaying preview', 'error');
+                return;
+            }
 
             previewSection.style.display = 'block';
 
@@ -43656,7 +45205,9 @@ For more help, visit: help.pose.app
             previewContainer.appendChild(previewCard);
 
             const input = document.getElementById('commentInput');
-            input.focus();
+            if (input) {
+                input.focus();
+            }
 
             showGenericToast('Voice message recorded ✓', 'success');
         }
@@ -43780,7 +45331,7 @@ For more help, visit: help.pose.app
     </script>
 
     <!-- Hidden file inputs for media -->
-    <input type="file" id="commentGalleryInput" accept="image/*" style="display: none;"
+    <input type="file" id="commentGalleryInput" accept="image/" style="display: none;"
         onchange="handleCommentImageUpload(event)">
 
     <!-- GIF Modal -->
@@ -43894,15 +45445,33 @@ For more help, visit: help.pose.app
         <div class="comment-input-section">
             <div class="comment-input-wrapper">
                 <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment...">
-                <button class="comment-emoji-btn" onclick="startVoiceRecording()" title="Record voice message"
-                    id="voiceRecordBtn">🎤</button>
-                <button class="comment-emoji-btn" onclick="openVideoCommentPicker()"
-                    title="Add video (max 10s)">📹</button>
-                <button class="comment-emoji-btn" onclick="openStickerPicker()" title="Add sticker">🎨</button>
-                <button class="comment-emoji-btn" onclick="openGalleryPicker()" title="Add image">🖼️</button>
-                <button class="comment-emoji-btn" onclick="insertEmoji()" title="Add emoji">😊</button>
+                <button class="comment-emoji-btn comment-sticker-btn" onclick="openStickerPicker()" title="Add sticker">
+                    <i class="fas fa-face-grin-squint"></i>
+                </button>
+                <button class="comment-emoji-btn comment-more-emoji-btn" onclick="toggleEmojiPanel()"
+                    title="More options">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
-            <button class="comment-send-btn" onclick="postComment()" id="commentSendBtn">Post</button>
+            <button class="comment-send-btn" onclick="postComment()" id="commentSendBtn"><i
+                    class="fas fa-paper-plane"></i></button>
+        </div>
+
+        <!-- Hidden emoji panel -->
+        <div id="commentEmojiPanel" class="comment-emoji-panel">
+            <button class="comment-emoji-btn" onclick="startVoiceRecording()" title="Record voice message"
+                id="voiceRecordBtn">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button class="comment-emoji-btn" onclick="openVideoCommentPicker()" title="Add video (max 10s)">
+                <i class="fas fa-video"></i>
+            </button>
+            <button class="comment-emoji-btn" onclick="openGalleryPicker()" title="Add image">
+                <i class="fas fa-photo-video"></i>
+            </button>
+            <button class="comment-emoji-btn" onclick="insertEmoji()" title="Add emoji">
+                <i class="fas fa-smile"></i>
+            </button>
         </div>
         <input type="file" id="commentGalleryInput" accept="image/*" style="display:none;"
             onchange="handleCommentImageUpload(event)">
@@ -50093,8 +51662,7 @@ For more help, visit: help.pose.app
         </div>
     </div>
 
-    <!-- SEARCH INTERFACE CSS -->
-    <style>
+  <style>
         /* Search Interface Overlay */
         .search-interface-overlay {
             display: none;
