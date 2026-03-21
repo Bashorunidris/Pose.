@@ -6943,6 +6943,11 @@
             cursor: pointer;
             position: relative;
             color: white;
+            transition: all 0.3s ease;
+        }
+
+        .tabs span:hover {
+            opacity: 0.8;
         }
 
         .tabs .active::after {
@@ -6957,7 +6962,546 @@
             background: white;
         }
 
-        .search-icon {
+        /* Main Content Sections */
+        .main-content-section {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 100px;
+            width: 100%;
+            height: calc(100% - 160px);
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Trend Section Styles */
+        .trend-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .trend-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .trend-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #ff0050, #ff4081);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .trend-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+        }
+
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        .trend-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .trend-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 0, 80, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .trend-item-rank {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff0050;
+            margin-bottom: 8px;
+        }
+
+        .trend-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+
+        .trend-item-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+             .trend-grid {
+                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                 gap: 12px;
+             }
+
+             .trend-header h2 {
+                 font-size: 22px;
+             }
+         }
+
+        /* Trend Modal Overlay Styles */
+         .trend-modal-overlay {
+             display: none;
+             position: fixed;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background: rgba(0, 0, 0, 0.95);
+             z-index: 2000;
+             width: 100%;
+             height: 100vh;
+             overflow-y: auto;
+             animation: slideInRight 0.3s ease-out;
+         }
+
+         .trend-modal-overlay.active {
+             display: flex;
+             flex-direction: column;
+         }
+
+         .trend-modal-overlay.closing {
+             animation: slideOutRight 0.3s ease-out;
+         }
+
+         .trend-modal-header {
+             position: sticky;
+             top: 0;
+             display: flex;
+             align-items: center;
+             justify-content: space-between;
+             padding: 16px 20px;
+             background: rgba(0, 0, 0, 0.95);
+             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+             z-index: 2001;
+         }
+
+         .trend-modal-close {
+             background: rgba(255, 0, 80, 0.2);
+             border: none;
+             color: white;
+             font-size: 24px;
+             cursor: pointer;
+             width: 40px;
+             height: 40px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             border-radius: 50%;
+             transition: all 0.2s;
+         }
+
+         .trend-modal-close:hover {
+             background: rgba(255, 0, 80, 0.5);
+             transform: scale(1.1);
+         }
+
+         .trend-modal-content {
+             flex: 1;
+             overflow-y: auto;
+             padding: 20px;
+         }
+
+        /* Trend Date Section Styles */
+         .trend-date-section {
+             margin-bottom: 30px;
+         }
+
+         .trend-date-header {
+             font-size: 18px;
+             font-weight: 700;
+             color: #ff0050;
+             margin-bottom: 15px;
+             padding: 10px 0;
+             border-bottom: 2px solid rgba(255, 0, 80, 0.3);
+         }
+
+         .trend-videos-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+             gap: 10px;
+             margin-bottom: 20px;
+         }
+
+         .trend-video-thumbnail {
+             position: relative;
+             aspect-ratio: 9/16;
+             background: rgba(255, 255, 255, 0.05);
+             border: 1px solid rgba(255, 255, 255, 0.1);
+             border-radius: 8px;
+             overflow: hidden;
+             cursor: pointer;
+             transition: all 0.3s ease;
+         }
+
+         .trend-video-thumbnail:hover {
+             transform: scale(1.05);
+             border-color: rgba(255, 0, 80, 0.5);
+             background: rgba(255, 0, 80, 0.1);
+         }
+
+         .trend-video-thumbnail img,
+         .trend-video-thumbnail video {
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
+         }
+
+         .trend-thumbnail-overlay {
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             background: rgba(0, 0, 0, 0.3);
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             opacity: 0;
+             transition: opacity 0.3s ease;
+         }
+
+         .trend-video-thumbnail:hover .trend-thumbnail-overlay {
+             opacity: 1;
+         }
+
+         .trend-play-icon {
+             width: 40px;
+             height: 40px;
+             background: rgba(255, 0, 80, 0.8);
+             border-radius: 50%;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             color: white;
+             font-size: 20px;
+         }
+
+         .trend-thumbnail-likes {
+             position: absolute;
+             bottom: 5px;
+             right: 5px;
+             background: rgba(0, 0, 0, 0.7);
+             color: white;
+             padding: 4px 8px;
+             border-radius: 4px;
+             font-size: 12px;
+             font-weight: 600;
+         }
+
+        /* Responsive Trend Modal - Tablet (768px to 1024px) */
+         @media (max-width: 1024px) {
+             .trend-modal-header {
+                 padding: 12px 16px;
+             }
+
+             .trend-modal-header h2 {
+                 font-size: 18px;
+             }
+
+             .trend-modal-content {
+                 padding: 16px;
+             }
+
+             .trend-date-header {
+                 font-size: 16px;
+                 margin-bottom: 12px;
+             }
+
+             .trend-videos-grid {
+                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                 gap: 8px;
+             }
+
+             .trend-thumbnail-likes {
+                 font-size: 11px;
+                 padding: 3px 6px;
+             }
+         }
+
+        /* Responsive Trend Modal - Small Tablets & Landscape Phones (600px to 768px) */
+         @media (max-width: 768px) {
+             .trend-modal-header {
+                 padding: 10px 12px;
+             }
+
+             .trend-modal-header h2 {
+                 font-size: 16px;
+             }
+
+             .trend-modal-close {
+                 width: 36px;
+                 height: 36px;
+                 font-size: 20px;
+             }
+
+             .trend-modal-content {
+                 padding: 12px;
+             }
+
+             .trend-date-section {
+                 margin-bottom: 20px;
+             }
+
+             .trend-date-header {
+                 font-size: 14px;
+                 margin-bottom: 10px;
+                 padding: 8px 0;
+             }
+
+             .trend-videos-grid {
+                 grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                 gap: 6px;
+             }
+
+             .trend-video-thumbnail {
+                 aspect-ratio: 9/16;
+             }
+
+             .trend-play-icon {
+                 width: 32px;
+                 height: 32px;
+                 font-size: 16px;
+             }
+
+             .trend-thumbnail-likes {
+                 font-size: 10px;
+                 padding: 2px 5px;
+                 bottom: 3px;
+                 right: 3px;
+             }
+         }
+
+        /* Responsive Trend Modal - Portrait Phones (480px to 600px) */
+         @media (max-width: 600px) {
+             .trend-modal-overlay {
+                 animation: slideInRight 0.2s ease-out;
+             }
+
+             .trend-modal-header {
+                 padding: 8px 10px;
+                 gap: 10px;
+             }
+
+             .trend-modal-header h2 {
+                 font-size: 14px;
+                 margin: 0;
+             }
+
+             .trend-modal-close {
+                 width: 32px;
+                 height: 32px;
+                 font-size: 18px;
+             }
+
+             .trend-modal-content {
+                 padding: 10px;
+             }
+
+             .trend-date-section {
+                 margin-bottom: 16px;
+             }
+
+             .trend-date-header {
+                 font-size: 13px;
+                 margin-bottom: 8px;
+                 padding: 6px 0;
+             }
+
+             .trend-videos-grid {
+                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                 gap: 5px;
+             }
+
+             .trend-video-thumbnail:hover {
+                 transform: scale(1.03);
+             }
+
+             .trend-play-icon {
+                 width: 28px;
+                 height: 28px;
+                 font-size: 14px;
+             }
+
+             .trend-thumbnail-likes {
+                 font-size: 9px;
+                 padding: 2px 4px;
+                 bottom: 2px;
+                 right: 2px;
+             }
+         }
+
+        /* Responsive Trend Modal - Small Phones (360px to 480px) */
+         @media (max-width: 480px) {
+             .trend-modal-header {
+                 padding: 6px 8px;
+             }
+
+             .trend-modal-header h2 {
+                 font-size: 13px;
+             }
+
+             .trend-modal-close {
+                 width: 30px;
+                 height: 30px;
+                 font-size: 16px;
+             }
+
+             .trend-modal-content {
+                 padding: 8px;
+             }
+
+             .trend-date-section {
+                 margin-bottom: 12px;
+             }
+
+             .trend-date-header {
+                 font-size: 12px;
+                 margin-bottom: 6px;
+                 padding: 4px 0;
+             }
+
+             .trend-videos-grid {
+                 grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                 gap: 4px;
+             }
+
+             .trend-video-thumbnail:hover {
+                 transform: scale(1.02);
+             }
+
+             .trend-thumbnail-overlay {
+                 opacity: 1;
+             }
+
+             .trend-play-icon {
+                 width: 24px;
+                 height: 24px;
+                 font-size: 12px;
+             }
+
+             .trend-thumbnail-likes {
+                 font-size: 8px;
+                 padding: 1px 3px;
+                 bottom: 1px;
+                 right: 1px;
+             }
+         }
+
+        /* Responsive Trend Modal - Extra Small Phones (320px and below) */
+         @media (max-width: 360px) {
+             .trend-modal-header {
+                 padding: 6px 6px;
+             }
+
+             .trend-modal-header h2 {
+                 font-size: 12px;
+             }
+
+             .trend-modal-close {
+                 width: 28px;
+                 height: 28px;
+                 font-size: 14px;
+             }
+
+             .trend-modal-content {
+                 padding: 6px;
+             }
+
+             .trend-date-section {
+                 margin-bottom: 10px;
+             }
+
+             .trend-date-header {
+                 font-size: 11px;
+                 margin-bottom: 5px;
+                 padding: 3px 0;
+             }
+
+             .trend-videos-grid {
+                 grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                 gap: 3px;
+             }
+
+             .trend-play-icon {
+                 width: 20px;
+                 height: 20px;
+                 font-size: 10px;
+             }
+
+             .trend-thumbnail-likes {
+                 font-size: 7px;
+                 padding: 1px 2px;
+             }
+         }
+
+        /* Trend Video Controls Styling */
+         #trendFullscreenVideoContainer video {
+             -webkit-touch-callout: none;
+             -webkit-user-select: none;
+             user-select: none;
+         }
+
+         #trendFullscreenVideoContainer video::-webkit-media-controls {
+             display: flex !important;
+         }
+
+         #trendFullscreenVideoContainer video::-webkit-media-controls-panel {
+             background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+         }
+
+         #trendFullscreenVideoContainer video::-webkit-media-controls-play-button,
+         #trendFullscreenVideoContainer video::-webkit-media-controls-mute-button {
+             filter: brightness(1.2);
+         }
+
+        /* Responsive Fullscreen Video Modal */
+         @media (max-width: 768px) {
+             #trendFullscreenModal {
+                 z-index: 3000;
+             }
+
+             #trendFullscreenVideoContainer {
+                 width: 100vw;
+                 height: 100vh;
+             }
+
+             #trendFullscreenVideoContainer video {
+                 width: 100%;
+                 height: 100%;
+             }
+         }
+
+         .search-icon {
             position: absolute;
             right: 20px;
             background: white;
@@ -8671,16 +9215,85 @@
         }
 
         /* Reply button styling */
-        .comment-like-btn:last-child {
+        .comment-reply-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+
+        .comment-reply-btn:hover {
             color: #8A2BE2;
         }
 
-        .comment-like-btn:last-child:hover {
+        .comment-replies-count {
+            background: none;
+            border: none;
+            color: #8A2BE2;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+
+        .comment-replies-count:hover {
             color: #a855f7;
+        }
+
+        .comment-replies-container {
+            margin-top: 12px;
+            padding-left: 40px;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            max-height: 1000px;
+            opacity: 1;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .comment-replies-container[style*="display: none"] {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .comment-reply-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reply-mention {
+            font-size: 11px;
+            color: #8A2BE2;
+            margin-bottom: 4px;
         }
 
         @media (max-width: 360px) {
             .comment-like-btn {
+                font-size: 11px;
+            }
+
+            .comment-reply-btn {
+                font-size: 11px;
+            }
+
+            .comment-replies-count {
                 font-size: 11px;
             }
         }
@@ -17137,6 +17750,13 @@
                 <!-- Account Management -->
                 <div class="settings-section danger-zone">
                     <h2>Account Management</h2>
+                    <button class="setting-item" onclick="logoutUser()">
+                        <div class="setting-info">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                     <button class="setting-item" onclick="showDeactivateConfirm()">
                         <div class="setting-info">
                             <i class="fas fa-power-off"></i>
@@ -17389,9 +18009,10 @@
             </svg>
         </div>
         <div class="tabs">
-            <span class="tab active">For You</span>
-            <span class="tab">tweet</span>
-            <span class="tab">Pose</span>
+            <span class="tab active" onclick="switchMainTab('forYou')">For You</span>
+            <span class="tab" onclick="switchMainTab('tweet')">tweet</span>
+            <span class="tab" onclick="switchMainTab('pose')">Pose</span>
+            <span class="tab" onclick="switchMainTab('trend')">Trend</span>
         </div>
         <div class="search-icon" id="searchIconBtn" style="cursor: pointer;" onclick="openSearchInterface();">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="black">
@@ -17400,6 +18021,23 @@
             </svg>
         </div>
     </div>
+
+    <!-- Main Content Sections -->
+    <div id="forYouSection" class="main-content-section active"></div>
+    <div id="tweetSection" class="main-content-section" style="display: none;"></div>
+    <div id="poseSection" class="main-content-section" style="display: none;"></div>
+    <div id="trendSection" class="main-content-section" style="display: none;">
+        <div class="trend-container">
+            <div class="trend-header">
+                <h2>Trending Now</h2>
+                <p class="trend-subtitle">Most Popular Content</p>
+            </div>
+            <div class="trend-grid" id="trendGrid">
+                <!-- Trending items will be populated here -->
+            </div>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <div class="nav-btn" id="navHome" onclick="goToHome(event)" title="Go to Home">
             <i><svg width="24" height="24" viewBox="0 0 24 24" fill="white">
@@ -19131,7 +19769,6 @@
         let currentCommentVideoId = null;
         let videoComments = {};
         let currentReplyIndex = null; // Track if replying to a comment
-        let replyingToCommentId = null;
         let userProfileData = null;
 
         // Voice recording variables
@@ -19159,6 +19796,57 @@
         const storage = firebase.storage();
 
         // currentUser already declared in early initialization script above
+
+        // ===== SESSION PERSISTENCE =====
+        const SESSION_KEY = 'pose_user_session';
+        const SESSION_EXPIRE_TIME = 30 * 24 * 60 * 60 * 1000;
+
+        function saveSessionLocally(user, userData) {
+            const session = {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName || '',
+                photoURL: user.photoURL || '',
+                userData: userData,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        }
+
+        function loadSessionFromStorage() {
+            const stored = localStorage.getItem(SESSION_KEY);
+            if (!stored) return null;
+            try {
+                const session = JSON.parse(stored);
+                const isExpired = (Date.now() - session.timestamp) > SESSION_EXPIRE_TIME;
+                if (isExpired) {
+                    localStorage.removeItem(SESSION_KEY);
+                    return null;
+                }
+                return session;
+            } catch (error) {
+                localStorage.removeItem(SESSION_KEY);
+                return null;
+            }
+        }
+
+        function clearSessionLocally() {
+            localStorage.removeItem(SESSION_KEY);
+        }
+
+        function displayUserProfile(userData) {
+            if (!userData) return;
+            const profileIcon = document.querySelector('.profile-icon');
+            if (profileIcon && userData.profileImage) {
+                profileIcon.innerHTML = `<img src="${userData.profileImage}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />`;
+            }
+            const profileName = document.querySelector('.profile-name');
+            if (profileName) profileName.textContent = userData.displayName || 'User';
+            const balanceEl = document.querySelector('.balance-display');
+            if (balanceEl && userData.balance !== undefined) balanceEl.textContent = `₦${userData.balance.toLocaleString()}`;
+        }
+
+
 
         // ====== Bank List by Country (Initialize Early) ======
         const BANKS_BY_COUNTRY = {
@@ -19877,163 +20565,175 @@
             });
 
             // Form submission handlers
-            document.getElementById('personal-signup-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('.submit-btn');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Signing up...';
-                submitBtn.disabled = true;
+            const personalSignupForm = document.getElementById('personal-signup-form');
+            if (personalSignupForm) {
+                personalSignupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const submitBtn = e.target.querySelector('.submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Signing up...';
+                    submitBtn.disabled = true;
 
-                const name = document.getElementById('personal-name').value.trim();
-                const username = document.getElementById('personal-username').value.trim();
-                const email = document.getElementById('personal-email').value.trim();
-                const password = document.getElementById('personal-password').value;
+                    const name = document.getElementById('personal-name').value.trim();
+                    const username = document.getElementById('personal-username').value.trim();
+                    const email = document.getElementById('personal-email').value.trim();
+                    const password = document.getElementById('personal-password').value;
 
-                if (!name || !username || !email || !password) {
-                    showAuthError('Please fill in all fields');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                    if (!name || !username || !email || !password) {
+                        showAuthError('Please fill in all fields');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                if (password.length < 6) {
-                    showAuthError('Password must be at least 6 characters');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                    if (password.length < 6) {
+                        showAuthError('Password must be at least 6 characters');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                try {
-                    // Create user
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
+                    try {
+                        // Create user
+                        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                        const user = userCredential.user;
 
-                    // Save user profile to Firestore
-                    await db.collection('users').doc(user.uid).set({
-                        name: name,
-                        username: username,
-                        email: email,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        followers: 0,
-                        following: 0,
-                        likes: 0,
-                        views: 0,
-                        earnings: 0
-                    });
+                        // Save user profile to Firestore
+                        await db.collection('users').doc(user.uid).set({
+                            name: name,
+                            username: username,
+                            email: email,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            followers: 0,
+                            following: 0,
+                            likes: 0,
+                            views: 0,
+                            earnings: 0
+                        });
 
-                    closeAuthModal();
-                    openProfile();
-                } catch (error) {
-                    showAuthError(error.message);
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+                        closeAuthModal();
+                        openProfile();
+                    } catch (error) {
+                        showAuthError(error.message);
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
 
-            document.getElementById('personal-login-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('.submit-btn');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Logging in...';
-                submitBtn.disabled = true;
+            const personalLoginForm = document.getElementById('personal-login-form');
+            if (personalLoginForm) {
+                personalLoginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const submitBtn = e.target.querySelector('.submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Logging in...';
+                    submitBtn.disabled = true;
 
-                const email = document.getElementById('personal-login-email').value.trim();
-                const password = document.getElementById('personal-login-password').value;
+                    const email = document.getElementById('personal-login-email').value.trim();
+                    const password = document.getElementById('personal-login-password').value;
 
-                if (!email || !password) {
-                    showAuthError('Please fill in all fields');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                    if (!email || !password) {
+                        showAuthError('Please fill in all fields');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                    closeAuthModal();
-                    openProfile();
-                } catch (error) {
-                    showAuthError(error.message);
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+                    try {
+                        await auth.signInWithEmailAndPassword(email, password);
+                        closeAuthModal();
+                        openProfile();
+                    } catch (error) {
+                        showAuthError(error.message);
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
 
-            document.getElementById('business-signup-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('.submit-btn');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Signing up...';
-                submitBtn.disabled = true;
+            const businessSignupForm = document.getElementById('business-signup-form');
+            if (businessSignupForm) {
+                businessSignupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const submitBtn = e.target.querySelector('.submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Signing up...';
+                    submitBtn.disabled = true;
 
-                const name = document.getElementById('business-name').value.trim();
-                const email = document.getElementById('business-email').value.trim();
-                const password = document.getElementById('business-password').value;
+                    const name = document.getElementById('business-name').value.trim();
+                    const email = document.getElementById('business-email').value.trim();
+                    const password = document.getElementById('business-password').value;
 
-                if (!name || !email || !password) {
-                    showAuthError('Please fill in all fields');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                    if (!name || !email || !password) {
+                        showAuthError('Please fill in all fields');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                if (password.length < 6) {
-                    showAuthError('Password must be at least 6 characters');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                    if (password.length < 6) {
+                        showAuthError('Password must be at least 6 characters');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                try {
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
+                    try {
+                        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                        const user = userCredential.user;
 
-                    await db.collection('users').doc(user.uid).set({
-                        name: name,
-                        email: email,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        followers: 0,
-                        following: 0,
-                        likes: 0,
-                        views: 0,
-                        earnings: 0
-                    });
+                        await db.collection('users').doc(user.uid).set({
+                            name: name,
+                            email: email,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            followers: 0,
+                            following: 0,
+                            likes: 0,
+                            views: 0,
+                            earnings: 0
+                        });
 
-                    closeAuthModal();
-                    openProfile();
-                } catch (error) {
-                    showAuthError(error.message);
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+                        closeAuthModal();
+                        openProfile();
+                    } catch (error) {
+                        showAuthError(error.message);
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
 
-            document.getElementById('business-login-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('.submit-btn');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Logging in...';
-                submitBtn.disabled = true;
+            const businessLoginForm = document.getElementById('business-login-form');
+            if (businessLoginForm) {
+                businessLoginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const submitBtn = e.target.querySelector('.submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Logging in...';
+                    submitBtn.disabled = true;
 
-                const email = document.getElementById('business-login-email').value.trim();
-                const password = document.getElementById('business-login-password').value;
+                    const email = document.getElementById('business-login-email').value.trim();
+                    const password = document.getElementById('business-login-password').value;
 
-                if (!email || !password) {
-                    showAuthError('Please fill in all fields');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                    if (!email || !password) {
+                        showAuthError('Please fill in all fields');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                    closeAuthModal();
-                    openProfile();
-                } catch (error) {
-                    showAuthError(error.message);
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+                    try {
+                        await auth.signInWithEmailAndPassword(email, password);
+                        closeAuthModal();
+                        openProfile();
+                    } catch (error) {
+                        showAuthError(error.message);
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
 
             // Forgot password
             document.querySelectorAll('.forgot-password').forEach(btn => {
@@ -20201,20 +20901,39 @@
 
         // Handle Login
         async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+            // Try to get personal login form fields first
+            let email = document.getElementById('personal-login-email')?.value.trim();
+            let password = document.getElementById('personal-login-password')?.value;
+
+            // Fall back to business login form if personal not found
+            if (!email) {
+                email = document.getElementById('business-login-email')?.value.trim();
+                password = document.getElementById('business-login-password')?.value;
+            }
 
             if (!email || !password) {
-                showError('loginError', 'Please fill in all fields');
+                showToast('Please fill in all fields', 'error');
                 return;
             }
 
             try {
-                await auth.signInWithEmailAndPassword(email, password);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Load user profile and save account
+                const userData = await loadUserProfile(user.uid);
+                if (userData) {
+                    saveSessionLocally(user, userData);
+                    saveAccountToList(user, userData);
+                    console.log('✅ Account added to saved accounts');
+                }
+
                 closeAuthModal();
+                closeSwitchAccountModal();
                 openProfile();
+                showToast('Account added successfully', 'success');
             } catch (error) {
-                showError('loginError', error.message);
+                showToast(error.message, 'error');
             }
         }
 
@@ -20225,25 +20944,43 @@
             errorEl.style.display = 'block';
         }
 
-        // Load User Profile
+        // Load User Profile - OPTIMIZED PARALLEL
         async function loadUserProfile(uid) {
             try {
-                const doc = await db.collection('users').doc(uid).get();
-                if (doc.exists) {
-                    const userData = doc.data();
+                const [userDoc, statsDoc, paymentsDoc] = await Promise.all([
+                    db.collection('users').doc(uid).get(),
+                    db.collection('userStats').doc(uid).get(),
+                    db.collection('payments').doc(uid).get()
+                ]);
 
-                    // Store user profile globally for comments
-                    userProfileData = userData;
-                    console.log('✅ User profile stored:', userData.username);
-
-                    document.getElementById('profileDisplayName').textContent = userData.name;
-                    document.getElementById('profileUsernameDisplay').textContent = '@' + userData.username;
-
-                    // ⚡ Load profile picture from Firebase
-                    updateProfilePicture(userData);
+                if (!userDoc.exists) {
+                    console.warn('❌ User profile not found');
+                    return null;
                 }
+
+                const userData = userDoc.data();
+                const stats = statsDoc.exists ? statsDoc.data() : {};
+                const payments = paymentsDoc.exists ? paymentsDoc.data() : {};
+
+                const fullUserData = {
+                    ...userData,
+                    uid: uid,
+                    stats: stats,
+                    payments: payments
+                };
+
+                userProfileData = userData;
+                currentUser = { uid, ...fullUserData };
+
+                document.getElementById('profileDisplayName').textContent = userData.name || '';
+                document.getElementById('profileUsernameDisplay').textContent = '@' + (userData.username || '');
+                updateProfilePicture(userData);
+
+                console.log('✅ User profile loaded (parallel):', uid);
+                return fullUserData;
             } catch (error) {
                 console.error('Error loading profile:', error);
+                return null;
             }
         }
 
@@ -20368,6 +21105,74 @@
         let storiesIsLoading = false;
 
         // Switch Profile Tab
+        // Switch main top navigation tabs
+        function switchMainTab(tabName) {
+             console.log('🔄 Switching to tab:', tabName);
+             
+             // If trend tab is clicked, open trend modal
+             if (tabName === 'trend') {
+                 console.log('📈 Opening Trend modal...');
+                 openTrendModal();
+                 return;
+             }
+             
+             // Update tab active state
+             const tabs = document.querySelectorAll('.tabs .tab');
+             tabs.forEach(tab => tab.classList.remove('active'));
+             event.target.classList.add('active');
+
+             // Hide all main content sections
+             document.querySelectorAll('.main-content-section').forEach(section => {
+                 section.style.display = 'none';
+             });
+
+             // Show selected section
+             const sectionId = tabName + 'Section';
+             const sectionElement = document.getElementById(sectionId);
+             if (sectionElement) {
+                 sectionElement.style.display = 'block';
+             }
+
+             // Load content based on tab
+             if (tabName === 'trend') {
+                 loadTrendingContent();
+             }
+         }
+
+        // Load trending content
+        function loadTrendingContent() {
+            const trendGrid = document.getElementById('trendGrid');
+            
+            // Sample trending data
+            const trendingData = [
+                { rank: 1, title: '#DanceChallenge', views: '2.5M', hashtag: '#DanceChallenge' },
+                { rank: 2, title: '#FitnessGoals', views: '2.1M', hashtag: '#FitnessGoals' },
+                { rank: 3, title: '#ComedySkit', views: '1.8M', hashtag: '#ComedySkit' },
+                { rank: 4, title: '#MusicCover', views: '1.6M', hashtag: '#MusicCover' },
+                { rank: 5, title: '#FashionTrend', views: '1.4M', hashtag: '#FashionTrend' },
+                { rank: 6, title: '#BeautyTips', views: '1.2M', hashtag: '#BeautyTips' },
+                { rank: 7, title: '#FoodReview', views: '980K', hashtag: '#FoodReview' },
+                { rank: 8, title: '#TravelVlog', views: '850K', hashtag: '#TravelVlog' }
+            ];
+
+            trendGrid.innerHTML = trendingData.map(trend => `
+                <div class="trend-item" onclick="searchHashtag('${trend.hashtag}')">
+                    <div class="trend-item-rank">#${trend.rank}</div>
+                    <div class="trend-item-title">${trend.title}</div>
+                    <div class="trend-item-stats">
+                        <span>👁️ ${trend.views} views</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search hashtag function
+        function searchHashtag(hashtag) {
+            console.log('Searching for:', hashtag);
+            // Add your search functionality here
+            alert(`Searching for ${hashtag}...`);
+        }
+
         function switchProfileTab(tabName) {
             // Update tab active state
             const tabs = document.querySelectorAll('.profile-tab');
@@ -20399,7 +21204,7 @@
             }
         }
 
-        // Load profile feed videos from posevideosposted where Screen4 saves
+        // Load profile feed videos from videos collection where Screen4 saves
         async function loadProfileFeed() {
             if (!currentUser) {
                 console.log('❌ No current user, cannot load feed');
@@ -20420,24 +21225,45 @@
                         '<div class="skeleton-item"></div>'.repeat(6) +
                         '</div>';
 
-                    // Get user document with videos array (same way as story tab)
-                    console.log('📖 Loading feed videos from user doc...');
-                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
-
-                    if (!userDoc.exists) {
-                        console.log('⚠️ User doc not found');
-                        feedGrid.innerHTML = '<div class="empty-state">No videos yet</div>';
-                        feedIsLoading = false;
-                        return;
+                    // Load from videos collection (where screen4 posts are saved)
+                    console.log('📖 Loading feed videos from videos collection for user:', currentUser.uid);
+                    
+                    let videosSnapshot;
+                    try {
+                        // Query videos collection filtered by userId
+                        videosSnapshot = await db.collection('videos')
+                            .where('userId', '==', currentUser.uid)
+                            .orderBy('createdAt', 'desc')
+                            .get();
+                    } catch (indexError) {
+                        // Fallback if index doesn't exist
+                        console.warn('⚠️ Query index missing, falling back to unordered query');
+                        videosSnapshot = await db.collection('videos')
+                            .where('userId', '==', currentUser.uid)
+                            .get();
                     }
 
-                    const userData = userDoc.data();
-                    const allVideos = userData?.videos || [];
+                    // Convert snapshot to array
+                    allUserVideos = [];
+                    videosSnapshot.forEach(doc => {
+                        const videoData = doc.data();
+                        // Filter OUT stories - only show regular videos (type !== 'story')
+                        if (!videoData.type || videoData.type !== 'story') {
+                            allUserVideos.push({
+                                ...videoData,
+                                id: doc.id
+                            });
+                        }
+                    });
 
-                    // Filter OUT stories - only show regular videos (type !== 'story')
-                    allUserVideos = allVideos.filter(video => !video.type || video.type !== 'story');
+                    // Sort by createdAt if not already sorted
+                    allUserVideos.sort((a, b) => {
+                        const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+                        const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+                        return dateB - dateA;
+                    });
 
-                    console.log('✅ Loaded feed videos from user doc:', allUserVideos.length, '(filtered out stories)');
+                    console.log('✅ Loaded feed videos from videos collection:', allUserVideos.length, '(filtered out stories)');
 
                     if (allUserVideos.length === 0) {
                         feedGrid.innerHTML = '<div class="empty-state">No videos yet</div>';
@@ -22094,25 +22920,25 @@
         }
 
         // Render optimistic comment (instant feedback - TikTok style) with REAL user details AND badge immediately
-         function renderOptimisticComment(comment) {
-             const commentList = document.getElementById('commentList');
-             if (!commentList) return;
+        function renderOptimisticComment(comment) {
+            const commentList = document.getElementById('commentList');
+            if (!commentList) return;
 
-             const commentItem = document.createElement('div');
-             commentItem.className = 'comment-item' + (comment.isOwner ? ' comment-owner' : '');
-             commentItem.id = `comment_${comment.id}`;
-             commentItem.style.opacity = '1';
-             commentItem.style.transition = 'opacity 0.3s ease';
+            const commentItem = document.createElement('div');
+            commentItem.className = 'comment-item' + (comment.isOwner ? ' comment-owner' : '');
+            commentItem.id = `comment_${comment.id}`;
+            commentItem.style.opacity = '1';
+            commentItem.style.transition = 'opacity 0.3s ease';
 
-             // Use profile picture if available, otherwise use gradient with initials
-             const avatarHTML = comment.profilePic
-                 ? `<div class="comment-avatar" style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;">${comment.userInitial}</div>`
-                 : `<div class="comment-avatar" style="background: linear-gradient(135deg, #8A2BE2, #a855f7); font-size: 14px; font-weight: 600;">${comment.userInitial}</div>`;
+            // Use profile picture if available, otherwise use gradient with initials
+            const avatarHTML = comment.profilePic
+                ? `<div class="comment-avatar" style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;">${comment.userInitial}</div>`
+                : `<div class="comment-avatar" style="background: linear-gradient(135deg, #8A2BE2, #a855f7); font-size: 14px; font-weight: 600;">${comment.userInitial}</div>`;
 
-             // Show owner badge immediately if user is video owner
-             const badgeHTML = comment.isOwner ? '<div class="comment-badge-ring comment-badge-owner-ring">👑</div>' : '';
+            // Show owner badge immediately if user is video owner
+            const badgeHTML = comment.isOwner ? '<div class="comment-badge-ring comment-badge-owner-ring">👑</div>' : '';
 
-             commentItem.innerHTML = `
+            commentItem.innerHTML = `
                  <div class="comment-left-container">
                      <div class="comment-avatar-wrapper">
                          ${avatarHTML}
@@ -22133,8 +22959,124 @@
                  </div>
              `;
 
-             commentList.insertBefore(commentItem, commentList.firstChild);
-         }
+            commentList.insertBefore(commentItem, commentList.firstChild);
+        }
+
+        // Render optimistic reply under parent comment
+        function renderOptimisticReply(parentCommentId, reply) {
+            const commentList = document.getElementById('commentList');
+            if (!commentList) return;
+
+            // Find the parent comment element
+            // Always try with 'comment_' prefix first
+            let parentElement = document.getElementById(`comment_${parentCommentId}`);
+
+            // If not found and parentCommentId already has prefix, try without modification
+            if (!parentElement && parentCommentId.startsWith('comment_')) {
+                parentElement = document.getElementById(parentCommentId);
+            }
+
+            if (!parentElement) {
+                console.warn('❌ Parent comment not found in DOM. Looking for:', `comment_${parentCommentId}`);
+                // Try searching by class as fallback
+                const allComments = document.querySelectorAll('.comment-item');
+                for (let comment of allComments) {
+                    if (comment.id && (comment.id === `comment_${parentCommentId}` || comment.id.includes(parentCommentId))) {
+                        parentElement = comment;
+                        break;
+                    }
+                }
+            }
+
+            if (!parentElement) {
+                console.warn('❌ Parent comment element still not found after fallback search');
+                return;
+            }
+
+            console.log('✅ Found parent element for reply:', parentCommentId);
+
+            // Create or find replies container
+            let repliesContainer = parentElement.querySelector('.replies-container');
+            if (!repliesContainer) {
+                repliesContainer = document.createElement('div');
+                repliesContainer.className = 'replies-container';
+                repliesContainer.id = `replies-${parentCommentId}`;
+                repliesContainer.style.cssText = 'margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3); padding-left: 12px; margin-top: 8px;';
+                parentElement.appendChild(repliesContainer);
+                console.log('✅ Created replies container');
+            }
+
+            const replyItem = document.createElement('div');
+            replyItem.className = 'comment-item' + (reply.isOwner ? ' comment-owner' : '');
+            replyItem.id = `reply_${parentCommentId}_${reply.id}`;
+            replyItem.setAttribute('data-comment-id', parentCommentId);
+            replyItem.setAttribute('data-reply-id', reply.id);
+            replyItem.setAttribute('data-reply-username', reply.username);
+            replyItem.style.cssText = 'padding-left: 12px; margin-top: 8px; opacity: 1; transition: opacity 0.3s ease;';
+
+            // Use profile picture if available
+            const avatarHTML = reply.profilePic
+                ? `<div class="comment-avatar" style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;">${reply.userInitial}</div>`
+                : `<div class="comment-avatar" style="background: linear-gradient(135deg, #8A2BE2, #a855f7); font-size: 12px;">${reply.userInitial}</div>`;
+
+            // Show owner badge for replies (same as comments)
+            const badgeHTML = reply.isOwner ? '<div class="comment-badge-ring comment-badge-owner-ring">👑</div>' : '';
+
+            console.log('📝 Rendering reply:', {
+                id: reply.id,
+                username: reply.username,
+                isOwner: reply.isOwner,
+                userId: reply.userId,
+                videoOwnerId: reply.videoOwnerId,
+                badgeHTML: badgeHTML,
+                className: 'comment-item' + (reply.isOwner ? ' comment-owner' : '')
+            });
+
+            // Get parent comment info to show context
+            const parentComment = videoComments[currentCommentVideoId]?.find(c => c.id === parentCommentId);
+            const parentUsername = parentComment?.username || 'user';
+            const parentIsOwner = parentComment?.isOwner ? ' (creator)' : '';
+            const replyContextHTML = `<span style="color: #a855f7; font-weight: 500;">@${parentUsername}${parentIsOwner}</span>`;
+
+            replyItem.innerHTML = `
+                     <div class="comment-left-container">
+                         <div class="comment-avatar-wrapper">
+                             ${avatarHTML}
+                             ${badgeHTML}
+                         </div>
+                     </div>
+                     <div class="comment-content">
+                         <div class="comment-user">
+                             <span class="comment-username" style="color: #a855f7;">${reply.username}</span>
+                             <span class="comment-time">now</span>
+                         </div>
+                         <div class="comment-text" style="color: #ddd; font-size: 14px; margin-top: 6px; line-height: 1.4;">
+                             ${replyContextHTML}
+                             <span style="color: #ddd; margin-left: 4px;">${reply.text}</span>
+                         </div>
+                         ${reply.media && reply.media.length > 0 ? `
+                             <div style="margin-top: 8px; color: #888; font-size: 12px;">
+                                 📎 ${reply.media.length} attachment${reply.media.length > 1 ? 's' : ''}
+                             </div>
+                         ` : ''}
+                         <div class="comment-actions">
+                             <div class="comment-actions-left">
+                                 <button class="comment-like-btn" onclick="toggleReplyLike('${parentCommentId}', '${reply.id}', '${currentCommentVideoId}')">
+                                     <i class="fas fa-heart"></i> ${reply.likes || 0}
+                                 </button>
+                             </div>
+                             <div class="comment-reactions" id="reply-reactions-${parentCommentId}-${reply.id}">
+                                 <button class="reaction-btn" onclick="addReplyReaction('${parentCommentId}', '${reply.id}', '${currentCommentVideoId}', '😠')" title="Angry">😠</button>
+                                 <button class="reaction-btn" onclick="addReplyReaction('${parentCommentId}', '${reply.id}', '${currentCommentVideoId}', '😊')" title="Smile">😊</button>
+                                 <button class="reaction-btn" onclick="addReplyReaction('${parentCommentId}', '${reply.id}', '${currentCommentVideoId}', '😑')" title="Indifferent">😑</button>
+                             </div>
+                         </div>
+                     </div>
+                 `;
+
+            repliesContainer.insertBefore(replyItem, repliesContainer.firstChild);
+            console.log('✅ Reply rendered:', reply.id);
+        }
 
         function clearPreviewSection() {
             const previewSection = document.getElementById('commentPreviewSection');
@@ -24093,6 +25035,28 @@
         }
 
         // Account Management Functions
+        // LOGOUT FUNCTION
+        async function logoutUser() {
+            try {
+                clearSessionLocally();
+                await auth.signOut();
+                currentUser = null;
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('currentUserId');
+
+                const authScreen = document.getElementById('auth-screen');
+                if (authScreen) authScreen.style.display = 'flex';
+                closeProfileSettings();
+                showToast('Logged out successfully', 'success');
+                console.log('✅ User logged out');
+            } catch (error) {
+                console.error('❌ Logout error:', error);
+                showToast('Error logging out', 'error');
+            }
+        }
+
+
+
         function showDeactivateConfirm() {
             const modal = document.getElementById('deactivateConfirmModal');
             if (modal) {
@@ -24892,55 +25856,86 @@ For more help, visit: help.pose.app
 
 
 
-        // Auth State Listener - MASTER (removed duplicates above)
-        auth.onAuthStateChanged((user) => {
-            // Check if guest mode is active
+        // Auth State Listener - OPTIMIZED TIKTOK STYLE
+        auth.onAuthStateChanged(async (user) => {
             const isGuestMode = sessionStorage.getItem('guestMode') === 'true';
 
             if (isGuestMode) {
-                // Guest mode - just watching
                 console.log('👤 Guest mode - viewing only');
                 const authScreen = document.getElementById('auth-screen');
-                if (authScreen) {
-                    authScreen.style.display = 'none';
-                }
-                // Don't load profile for guests
+                if (authScreen) authScreen.style.display = 'none';
             } else if (user) {
-                // Regular authenticated user
                 currentUser = user;
-                // Hide auth screen when user logs in
                 const authScreen = document.getElementById('auth-screen');
-                if (authScreen) {
-                    authScreen.style.display = 'none';
+                if (authScreen) authScreen.style.display = 'none';
+                console.log('✅ User authenticated:', user.uid);
+
+                // Load cached session first (instant)
+                const cachedSession = loadSessionFromStorage();
+                if (cachedSession && cachedSession.uid === user.uid) {
+                    displayUserProfile(cachedSession.userData);
+                    console.log('⚡ Using cached profile');
                 }
 
-                console.log('✅ Regular user logged in:', user.uid);
-                loadUserProfile(user.uid);
-                // Auto-load feed when user is authenticated
+                // Load fresh data in background
+                loadUserProfile(user.uid).then(userData => {
+                    if (userData) {
+                        saveSessionLocally(user, userData);
+                        displayUserProfile(userData);
+                    }
+                }).catch(err => console.warn('Fresh data load failed:', err));
+
                 setTimeout(() => {
-                    if (document.getElementById('profilePage').classList.contains('active')) {
+                    if (document.getElementById('profilePage')?.classList.contains('active')) {
                         loadProfileFeed();
                     }
                 }, 500);
             } else {
-                // Not authenticated and not guest
                 currentUser = null;
-                // Reset profile icon to default when logged out
+                clearSessionLocally();
                 const profileIcon = document.querySelector('.profile-icon');
                 if (profileIcon) {
-                    profileIcon.innerHTML = `
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-        `;
+                    profileIcon.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
                 }
             }
         });
 
         // Call this when page loads (add to your DOMContentLoaded)
-        document.addEventListener('DOMContentLoaded', function () {
+        // LOAD PROFILE FIRST - BEFORE APP INITIALIZATION
+        async function loadProfileFirstOnPageLoad() {
+            const cachedSession = loadSessionFromStorage();
+            if (cachedSession) {
+                currentUser = {
+                    uid: cachedSession.uid,
+                    email: cachedSession.email,
+                    displayName: cachedSession.displayName,
+                    photoURL: cachedSession.photoURL,
+                    ...cachedSession.userData
+                };
+                const authScreen = document.getElementById('auth-screen');
+                if (authScreen) authScreen.style.display = 'none';
+                displayUserProfile(cachedSession.userData);
+                console.log('⚡ Profile loaded first (cached)');
+
+                // Refresh in background
+                try {
+                    const uid = cachedSession.uid;
+                    const userData = await loadUserProfile(uid);
+                    if (userData) {
+                        saveSessionLocally(auth.currentUser || { uid: uid }, userData);
+                    }
+                } catch (e) {
+                    console.warn('Background refresh failed:', e);
+                }
+            }
+        }
+
+        // Execute on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', async function () {
+            console.log('🚀 App initializing...');
+            await loadProfileFirstOnPageLoad();
+
             // Check for unfinished video on page load
-            console.log('🚀 Page loaded, checking for unfinished videos...');
             setTimeout(() => {
                 try {
                     checkForUnfinishedVideo();
@@ -41578,22 +42573,41 @@ For more help, visit: help.pose.app
 
         // Toggle like for forYou videos
         function toggleForYouLike(event) {
+            console.log('🎯 Like button clicked!', event);
             event.stopPropagation();
+            
             const btn = event.currentTarget || event.target.closest('.like-btn');
+            if (!btn) {
+                console.error('❌ Button element not found');
+                return;
+            }
+            
             const videoId = btn.getAttribute('data-post-id');
             const icon = btn.querySelector('.btn-icon');
             const count = btn.querySelector('span.interaction-count');
 
-            if (!videoId || !currentUser) {
-                console.log('Video ID or user not found');
+            console.log('👍 Like clicked! VideoId:', videoId, 'CurrentUser:', currentUser?.uid);
+
+            if (!videoId) {
+                console.error('❌ Video ID not found on button', btn);
+                alert('Error: Video ID not found');
+                return;
+            }
+            
+            if (!currentUser) {
+                console.error('❌ User not logged in', currentUser);
+                alert('Please login first to like videos');
                 return;
             }
 
             const currentLikeCount = parseInt(count.textContent) || 0;
             const isLiked = btn.classList.contains('active');
 
+            console.log('📊 Current state - Count:', currentLikeCount, 'IsLiked:', isLiked);
+
             // Update UI instantly
             if (isLiked) {
+                console.log('🩶 Removing like...');
                 btn.classList.remove('active');
                 icon.querySelector('i').style.color = 'white';
                 count.textContent = Math.max(0, currentLikeCount - 1);
@@ -41601,6 +42615,7 @@ For more help, visit: help.pose.app
                 // Save to Firebase
                 updateVideoLikesInFirebase(videoId, false, currentLikeCount - 1);
             } else {
+                console.log('❤️ Adding like...');
                 btn.classList.add('active');
                 icon.querySelector('i').style.color = '#ff2d55';
                 count.textContent = currentLikeCount + 1;
@@ -41613,6 +42628,8 @@ For more help, visit: help.pose.app
         // Update likes in Firebase
         async function updateVideoLikesInFirebase(videoId, isLiking, newLikeCount) {
             try {
+                console.log('📤 Updating Firebase - VideoId:', videoId, 'IsLiking:', isLiking, 'NewCount:', newLikeCount);
+                
                 const videoRef = db.collection('videos').doc(videoId);
 
                 // Initialize likes object if not exists
@@ -41623,14 +42640,16 @@ For more help, visit: help.pose.app
                 if (isLiking) {
                     // Add like
                     updateData[`likes.${currentUser.uid}`] = true;
+                    console.log('❤️ Adding like for user:', currentUser.uid);
                 } else {
                     // Remove like
                     updateData[`likes.${currentUser.uid}`] = firebase.firestore.FieldValue.delete();
+                    console.log('🩶 Removing like for user:', currentUser.uid);
                 }
 
                 // Save to Firebase
                 await videoRef.update(updateData);
-                console.log('✅ Like updated in Firebase:', videoId, newLikeCount);
+                console.log('✅ Like updated in Firebase:', videoId, 'NewCount:', newLikeCount);
             } catch (error) {
                 console.error('❌ Error updating like in Firebase:', error);
             }
@@ -42598,9 +43617,9 @@ For more help, visit: help.pose.app
         // Helper: Get video owner ID from Firebase (fallback when data is incomplete)
         async function getVideoOwnerIdFromFirebase(videoId) {
             if (!db) return null;
-            
+
             const collectionsToTry = ['videos', 'posts'];
-            
+
             for (const collectionName of collectionsToTry) {
                 try {
                     const docSnapshot = await db.collection(collectionName).doc(videoId).get();
@@ -42615,7 +43634,7 @@ For more help, visit: help.pose.app
                     continue;
                 }
             }
-            
+
             console.error('❌ Could not find video owner ID in any collection');
             return null;
         }
@@ -42701,23 +43720,81 @@ For more help, visit: help.pose.app
                         });
 
                         if (fbComments.length > 0) {
-                            // Store in memory for future use
-                            videoComments[videoId] = fbComments;
-                            console.log('✅ Loaded', fbComments.length, 'comments from', collectionName);
+                             console.log('✅ Loaded', fbComments.length, 'comments from', collectionName);
 
-                            // Ensure likedBy is initialized for all comments and replies
-                            fbComments = fbComments.map(c => {
-                                if (!c.likedBy) c.likedBy = {};
-                                if (c.replies && c.replies.length > 0) {
-                                    c.replies = c.replies.map(r => {
-                                        if (!r.likedBy) r.likedBy = {};
-                                        return r;
-                                    });
-                                }
-                                return c;
-                            });
+                             // Load replies from subcollection for each comment
+                             const loadRepliesPromises = fbComments.map(async (comment) => {
+                                 try {
+                                     const repliesSnapshot = await db.collection(collectionName)
+                                         .doc(videoId)
+                                         .collection('comments')
+                                         .doc(comment.id)
+                                         .collection('replies')
+                                         .orderBy('timestamp', 'desc')
+                                         .get();
 
-                            renderCommentsList(commentList, fbComments, videoId);
+                                     const repliesFromSubcollection = [];
+                                     repliesSnapshot.forEach(doc => {
+                                         repliesFromSubcollection.push({
+                                             id: doc.id,
+                                             ...doc.data()
+                                         });
+                                     });
+
+                                     // Merge: replies from subcollection take precedence, then nested replies as fallback
+                                     if (repliesFromSubcollection.length > 0) {
+                                         console.log(`📝 Loaded ${repliesFromSubcollection.length} replies for comment ${comment.id}`);
+                                         comment.replies = repliesFromSubcollection;
+                                     } else if (!comment.replies) {
+                                         comment.replies = [];
+                                     }
+
+                                     return comment;
+                                 } catch (error) {
+                                     console.warn(`⚠️ Error loading replies for comment ${comment.id}:`, error.message);
+                                     // Fallback to nested replies if subcollection fails
+                                     if (!comment.replies) {
+                                         comment.replies = [];
+                                     }
+                                     return comment;
+                                 }
+                             });
+
+                             // Wait for all replies to load
+                             Promise.all(loadRepliesPromises).then(commentsWithReplies => {
+                                 // Ensure all replies have the required fields
+                                 commentsWithReplies.forEach(comment => {
+                                     if (comment.replies && comment.replies.length > 0) {
+                                         comment.replies = comment.replies.map(reply => ({
+                                             ...reply,
+                                             isReply: true,
+                                             parentCommentId: comment.id
+                                         }));
+                                     }
+                                 });
+
+                                 // Store in memory for future use
+                                 videoComments[videoId] = commentsWithReplies;
+                                 console.log('✅ Loaded', commentsWithReplies.length, 'parent comments with', commentsWithReplies.reduce((total, c) => total + (c.replies?.length || 0), 0), 'total replies');
+
+                                 // Ensure likedBy is initialized for all comments and replies
+                                 commentsWithReplies = commentsWithReplies.map(c => {
+                                     if (!c.likedBy) c.likedBy = {};
+                                     if (c.replies && c.replies.length > 0) {
+                                         c.replies = c.replies.map(r => {
+                                             if (!r.likedBy) r.likedBy = {};
+                                             return r;
+                                         });
+                                     }
+                                     return c;
+                                 });
+
+                                 renderCommentsList(commentList, commentsWithReplies, videoId);
+                             }).catch(error => {
+                                 console.error('❌ Error loading replies:', error);
+                                 // Fallback: render without replies if loading fails
+                                 renderCommentsList(commentList, fbComments, videoId);
+                             });
                         } else {
                             // Try next collection
                             tryFetch(collectionIndex + 1);
@@ -42731,6 +43808,132 @@ For more help, visit: help.pose.app
             };
 
             tryFetch(0);
+        }
+
+        const expandedReplies = new Set();
+
+        function toggleRepliesVisibility(commentId) {
+            const container = document.getElementById(`replies-container-${commentId}`);
+            const button = document.getElementById(`replies-toggle-${commentId}`);
+            
+            if (!container || !button) return;
+            
+            const isExpanded = expandedReplies.has(commentId);
+            
+            if (isExpanded) {
+                container.style.maxHeight = '0px';
+                container.style.opacity = '0';
+                container.style.display = 'none';
+                expandedReplies.delete(commentId);
+            } else {
+                container.style.display = 'block';
+                container.style.maxHeight = container.scrollHeight + 'px';
+                container.style.opacity = '1';
+                expandedReplies.add(commentId);
+            }
+        }
+
+        function toggleNestedRepliesVisibility(commentId, replyId) {
+            const nestedKey = `${commentId}-${replyId}`;
+            const container = document.getElementById(`nested-replies-${nestedKey}`);
+            
+            if (!container) return;
+            
+            const isExpanded = expandedReplies.has(nestedKey);
+            
+            if (isExpanded) {
+                container.style.maxHeight = '0px';
+                container.style.opacity = '0';
+                container.style.display = 'none';
+                expandedReplies.delete(nestedKey);
+            } else {
+                container.style.display = 'block';
+                container.style.maxHeight = container.scrollHeight + 'px';
+                container.style.opacity = '1';
+                expandedReplies.add(nestedKey);
+            }
+        }
+
+        function openReplyToReply(commentId, replyId, replyUsername, videoId) {
+            const replyInput = document.getElementById('commentInput');
+            if (!replyInput) return;
+            
+            // Set global variables so postComment() knows this is a reply
+            replyingToCommentId = commentId;
+            replyingToUsername = replyUsername;
+            replyingToReplyId = replyId;
+            
+            // Also set dataset attributes for nested reply tracking
+            replyInput.dataset.parentCommentId = commentId;
+            replyInput.dataset.parentReplyId = replyId;
+            replyInput.dataset.replyingToUsername = replyUsername;
+            replyInput.dataset.videoId = videoId;
+            replyInput.dataset.isReplyToReply = 'true';
+            
+            replyInput.placeholder = `Reply to @${replyUsername}...`;
+            // Clear input first to avoid double @, then set the correct username
+            replyInput.value = '';
+            replyInput.value = `@${replyUsername} `;
+            replyInput.focus();
+        }
+
+        function clearReplyContext() {
+            const replyInput = document.getElementById('commentInput');
+            if (replyInput) {
+                replyInput.dataset.parentCommentId = '';
+                replyInput.dataset.parentReplyId = '';
+                replyInput.dataset.replyingToUsername = '';
+                replyInput.dataset.videoId = '';
+                replyInput.dataset.isReplyToReply = 'false';
+                replyInput.placeholder = 'Say something...';
+            }
+        }
+
+        function renderReplyItem(reply, parentCommentId, videoId, isNested = false) {
+            // Ensure reply has replies array initialized
+            if (!reply.replies) reply.replies = [];
+            
+            const hasNestedReplies = reply.replies && reply.replies.length > 0;
+            const nestedKey = `${parentCommentId}-${reply.id}`;
+            const indent = isNested ? 'style="margin-left: 24px; opacity: 0.95;"' : '';
+            
+            return `
+                <div class="comment-reply-item" id="reply_${reply.id}" data-comment-id="${parentCommentId}" data-reply-id="${reply.id}" ${indent}>
+                    <div class="comment-left-container">
+                        <div class="comment-avatar-wrapper">
+                            <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
+                        </div>
+                    </div>
+                    <div class="comment-content" style="flex: 1;">
+                        <div class="comment-user">
+                            <span class="comment-username">${reply.username}</span>
+                            <span class="comment-time">${getTimeAgo(reply.timestamp)}</span>
+                        </div>
+                        ${reply.replyingTo ? `<div class="reply-mention"><i class="fas fa-at"></i> @${reply.replyingTo}</div>` : ''}
+                        <div class="comment-text">${reply.text}</div>
+                        <div class="comment-actions">
+                            <div class="comment-actions-left" style="display: flex; gap: 12px; align-items: center;">
+                                <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${parentCommentId}', '${reply.id}', '${videoId}')" style="display: flex; align-items: center; gap: 4px;">
+                                    <i class="fas fa-heart"></i> <span>${reply.likes || 0}</span>
+                                </button>
+                                <button class="comment-reply-btn" onclick="openReplyToReply('${parentCommentId}', '${reply.id}', '${reply.username}', '${videoId}')">
+                                    <i class="fas fa-reply"></i> Reply
+                                </button>
+                                ${hasNestedReplies ? `
+                                    <button class="comment-replies-count" id="nested-replies-toggle-${nestedKey}" onclick="toggleNestedRepliesVisibility('${parentCommentId}', '${reply.id}')" style="color: #999; cursor: pointer;">
+                                        <i class="fas fa-comment-dots"></i> ${reply.replies.length}
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ${hasNestedReplies ? `
+                            <div class="nested-replies-container" id="nested-replies-${nestedKey}" style="display: none; margin-top: 12px; border-left: 2px solid rgba(138, 43, 226, 0.2); padding-left: 24px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease-out, opacity 0.3s ease-out;">
+                                ${reply.replies.map(nestedReply => renderReplyItem(nestedReply, parentCommentId, videoId, true)).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
         }
 
         function renderCommentsList(commentList, comments, videoId) {
@@ -42799,6 +44002,22 @@ For more help, visit: help.pose.app
                 }
 
                 console.log('🎬 Video Owner ID:', videoOwnerId);
+
+                // Add videoOwnerId to all comments and their replies if not already present
+                comments.forEach(comment => {
+                    if (!comment.videoOwnerId && videoOwnerId) {
+                        comment.videoOwnerId = videoOwnerId;
+                    }
+                    // Also add to replies
+                    if (comment.replies && comment.replies.length > 0) {
+                        comment.replies.forEach(reply => {
+                            if (!reply.videoOwnerId && videoOwnerId) {
+                                reply.videoOwnerId = videoOwnerId;
+                            }
+                        });
+                    }
+                });
+
                 console.log('📝 All comments:', topLevelComments.map(c => ({
                     username: c.username,
                     userId: c.userId,
@@ -42818,6 +44037,9 @@ For more help, visit: help.pose.app
                 console.log('🏆 First non-owner commenter:', firstNonOwnerCommenter?.username, '| ID:', firstNonOwnerCommenterId, '| CommentID:', firstNonOwnerCommentId);
 
                 const html = topLevelComments.map((comment, index) => {
+                    // Ensure comment has replies array initialized
+                    if (!comment.replies) comment.replies = [];
+                    
                     // Creator always gets Owner badge - check multiple ways
                     // 1. Direct comparison: comment user = video owner
                     const directOwnerCheck = (comment.userId === videoOwnerId);
@@ -42825,7 +44047,7 @@ For more help, visit: help.pose.app
                     const selfRefCheck = (comment.videoOwnerId && comment.userId === comment.videoOwnerId);
                     // 3. Fallback: if no videoOwnerId from rendering but comment has it stored
                     const storedOwnerCheck = (comment.videoOwnerId === comment.userId && comment.videoOwnerId);
-                    
+
                     const isOwner = directOwnerCheck || selfRefCheck || storedOwnerCheck;
 
                     // Only the FIRST comment from the first non-owner gets the "1st" badge
@@ -42837,19 +44059,19 @@ For more help, visit: help.pose.app
                         isFirstCommenter ? '<div class="comment-badge-ring comment-badge-first-ring">1st</div>' : '';
 
                     // Detailed logging for debugging
-                    console.log('📌 OWNER CHECK - Comment:', comment.username, 
-                        '| commentId:', comment.id, 
-                        '| userId:', comment.userId, 
+                    console.log('📌 OWNER CHECK - Comment:', comment.username,
+                        '| commentId:', comment.id,
+                        '| userId:', comment.userId,
                         '| videoOwnerId (stored):', comment.videoOwnerId,
                         '| videoOwnerId (from video):', videoOwnerId,
                         '| directOwnerCheck:', directOwnerCheck,
-                        '| selfRefCheck:', selfRefCheck, 
+                        '| selfRefCheck:', selfRefCheck,
                         '| storedOwnerCheck:', storedOwnerCheck,
-                        '| FINAL isOwner:', isOwner, 
+                        '| FINAL isOwner:', isOwner,
                         '| isFirst (1st badge):', isFirstCommenter);
 
                     return `
-                    <div class="comment-item ${commentClass}" data-comment-id="${comment.id}" onmousedown="startCommentLongPress(event)" ontouchstart="startCommentLongPress(event)">
+                    <div class="comment-item ${commentClass}" id="comment_${comment.id}" data-comment-id="${comment.id}" onmousedown="startCommentLongPress(event)" ontouchstart="startCommentLongPress(event)">
                          <div class="comment-left-container">
                               <div class="comment-avatar-wrapper">
                                   <div class="comment-avatar" ${comment.profilePic ? `style="background-image: url('${comment.profilePic}'); background-size: cover; background-position: center;"` : ''}>${!comment.profilePic ? comment.userInitial || '👤' : ''}</div>
@@ -42905,9 +44127,12 @@ For more help, visit: help.pose.app
                                      <button class="comment-like-btn ${comment.likedBy && currentUser && comment.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleCommentLike(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                                          <i class="fas fa-heart"></i> ${comment.likes || 0}
                                      </button>
-                                     <button class="comment-like-btn" onclick="replyComment(${index}, '${videoId}')" ${comment.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                         Reply
+                                     <button class="comment-reply-btn" onclick="openReplyToComment('${comment.id}', '${comment.username}', '${videoId}')" title="Reply">
+                                         <i class="fas fa-reply"></i> Reply
                                      </button>
+                                     ${(comment.replies && comment.replies.length > 0) ? `<button class="comment-replies-count" onclick="toggleRepliesVisibility('${comment.id}')" id="replies-toggle-${comment.id}">
+                                         <i class="fas fa-comment-dots"></i> ${comment.replies.length} ${comment.replies.length === 1 ? 'reply' : 'replies'}
+                                     </button>` : ''}
                                  </div>
                                  <div class="comment-reactions" id="reactions-${comment.id}">
                                      <button class="reaction-btn" onclick="addCommentReaction(${index}, '${videoId}', '😠')" title="Angry">😠</button>
@@ -42924,82 +44149,13 @@ For more help, visit: help.pose.app
                                  </div>
                                  </div>
                                  </div>
-                                 ${comment.replies && comment.replies.length > 0 ? `
-                         <div style="margin-left: 46px; border-left: 2px solid rgba(138, 43, 226, 0.3);" class="replies-container" id="replies-${comment.id}">
-                             ${comment.replies.map((reply, replyIndex) => `
-                                 <div class="comment-item" style="padding-left: 12px; margin-top: 8px;" id="reply-${comment.id}-${replyIndex}" data-comment-id="${comment.id}" data-reply-id="${reply.id}" onmousedown="startReplyLongPress(event)" ontouchstart="startReplyLongPress(event)">
-                                      <div class="comment-left-container">
-                                          <div class="comment-avatar" ${reply.profilePic ? `style="background-image: url('${reply.profilePic}'); background-size: cover; background-position: center; font-size: 12px;"` : `style="font-size: 12px;"`}>${!reply.profilePic ? reply.userInitial || '👤' : ''}</div>
-                                         ${reply.media && reply.media.length > 0 ? `
-                                             <div class="comment-media-container">
-                                                 ${reply.media.map(media => `
-                                                     ${media.type === 'sticker' ? `
-                                                         <img src="${media.url}" style="width: 80px; height: 80px; object-fit: contain;" alt="Sticker">
-                                                     ` : media.type === 'video' ? `
-                                                         <video src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; background: #000; cursor: pointer;" onclick="openCommentMediaViewer('video', '${media.url}')" playsinline></video>
-                                                     ` : media.type === 'audio' ? `
-                                                         <div class="comment-voice-wrapper">
-                                                             <div class="comment-voice-container">
-                                                                 <div class="comment-voice-header">
-                                                                     <i class="fas fa-microphone"></i>
-                                                                     <button onclick="toggleAudioPlay(this)" class="comment-voice-play-btn"><i class="fas fa-play"></i></button>
-                                                                 </div>
-                                                                 <audio id="audio_${reply.id}" class="comment-voice-player" onloadedmetadata="updateAudioDuration(this)" ontimeupdate="updateAudioProgress(this)">
-                                                                     <source src="${media.url}" type="audio/webm">
-                                                                 </audio>
-                                                                 <div class="comment-voice-time">
-                                                                     <span class="comment-voice-current-time">0:00</span>
-                                                                     <span class="comment-voice-duration">0:00</span>
-                                                                 </div>
-                                                                 <button onclick="toggleVoiceMenu(this)" class="comment-voice-menu-btn" title="Speed">⋮</button>
-                                                                 </div>
-                                                                 <div class="comment-voice-controls">
-                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 0.5)" class="comment-voice-speed-btn">0.5x</button>
-                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 1)" class="comment-voice-speed-btn active">1x</button>
-                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 1.5)" class="comment-voice-speed-btn">1.5x</button>
-                                                                 <button onclick="setCommentAudioSpeed('audio_${reply.id}', 2)" class="comment-voice-speed-btn">2x</button>
-                                                             </div>
-                                                         </div>
-                                                     ` : `
-                                                         <img src="${media.url}" style="width: 100%; height: auto; border-radius: 8px; cursor: pointer;" alt="Media" onclick="openCommentMediaViewer('image', '${media.url}')">
-                                                     `}
-                                                 `).join('')}
-                                             </div>
-                                         ` : ''}
-                                     </div>
-                                     <div class="comment-content">
-                                         <div class="comment-user">
-                                             <span class="comment-username" style="color: #a855f7;">${reply.username}</span>
-                                             <span class="comment-time">${getTimeAgo(reply.timestamp)}</span>
-                                         </div>
-                                         <div class="comment-text">${reply.text}</div>
-                                         <div class="comment-actions">
-                                             <div class="comment-actions-left">
-                                                 <button class="comment-like-btn ${reply.likedBy && currentUser && reply.likedBy[currentUser.uid] ? 'liked' : ''}" onclick="toggleReplyLike('${comment.id}', '${reply.id}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                                     <i class="fas fa-heart"></i> ${reply.likes || 0}
-                                                 </button>
-                                                 <button class="comment-like-btn" onclick="replyToReply('${comment.id}', '${reply.id}', '${reply.username}', '${videoId}')" ${reply.isPending ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                                     Reply
-                                                 </button>
-                                             </div>
-                                             <div class="comment-reactions" id="reply-reactions-${comment.id}-${reply.id}">
-                                                 <button class="reaction-btn" onclick="addReplyReaction('${comment.id}', '${reply.id}', '${videoId}', '😠')" title="Angry">😠</button>
-                                                 <button class="reaction-btn" onclick="addReplyReaction('${comment.id}', '${reply.id}', '${videoId}', '😊')" title="Smile">😊</button>
-                                                 <button class="reaction-btn" onclick="addReplyReaction('${comment.id}', '${reply.id}', '${videoId}', '😑')" title="Indifferent">😑</button>
-                                             </div>
-                                         </div>
-                                         ${reply.reactions && Object.keys(reply.reactions).length > 0 ? `
-                                         <div class="comment-reaction-counts">
-                                             ${Object.entries(reply.reactions).map(([emoji, data]) => `
-                                                 <span class="reaction-count" title="Reacted by ${Object.keys(data.users || {}).length} user${Object.keys(data.users || {}).length !== 1 ? 's' : ''}">${emoji} ${data.count}</span>
-                                             `).join('')}
-                                         </div>
-                                         ` : ''}
-                                         </div>
-                                         </div>
-                                         `).join('')}
-                                         </div>
-                                         ` : ''}
+                                 
+                                 ${(comment.replies && comment.replies.length > 0) ? `
+                                 <div class="comment-replies-container" id="replies-container-${comment.id}" style="display: none; margin-top: 12px; padding-left: 40px; border-left: 2px solid rgba(255,255,255,0.1);">
+                                     ${comment.replies.map((reply, replyIndex) => renderReplyItem(reply, comment.id, videoId, false)).join('')}
+                                 </div>
+                                 ` : ''}
+
                                          `;
                 }).join('');
 
@@ -43012,29 +44168,6 @@ For more help, visit: help.pose.app
                     commentList.innerHTML = html;
                     commentList.style.opacity = '1';
                 }, 50);
-            }
-        }
-
-        // Reply to a reply - just reply to the parent comment with mention
-        function replyToReply(parentCommentId, replyId, replyUsername, videoId) {
-            console.log('📱 Replying to:', replyUsername, 'in comment:', parentCommentId);
-
-            // Just reply to the parent comment, mention will be added by the user
-            replyingToCommentId = parentCommentId;
-
-            const input = document.getElementById('commentInput');
-            if (input) {
-                // Pre-fill with mention
-                input.value = `@${replyUsername} `;
-                input.focus();
-
-                // Scroll to input
-                const inputSection = document.querySelector('.comment-input-section');
-                if (inputSection) {
-                    inputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-
-                console.log('✅ Ready to reply to:', replyUsername);
             }
         }
 
@@ -43094,56 +44227,52 @@ For more help, visit: help.pose.app
                     };
                     window.commentMediaAttachments.push(mediaObject);
 
-                    // Add preview to preview section
+                    // Add preview to preview section (same way as sticker)
                     const previewSection = document.getElementById('commentPreviewSection');
                     const previewContainer = document.getElementById('commentMediaPreview');
 
-                    if (!previewSection || !previewContainer) {
-                        console.error('❌ Preview section or container not found');
-                        showGenericToast('Error showing preview', 'error');
-                        return;
+                    if (previewSection && previewContainer) {
+                        previewSection.style.display = 'block';
+                        console.log('✅ Preview section shown');
+
+                        // Create preview card with remove button
+                        const previewCard = document.createElement('div');
+                        previewCard.id = `preview_${mediaId}`;
+                        previewCard.style.cssText = `
+                            position: relative;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            background: rgba(138, 43, 226, 0.1);
+                            border: 1px solid rgba(138, 43, 226, 0.3);
+                        `;
+
+                        previewCard.innerHTML = `
+                            <video src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;"></video>
+                            <div style="position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
+                                ${duration.toFixed(1)}s
+                            </div>
+                            <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
+                                position: absolute;
+                                top: 2px;
+                                left: 2px;
+                                background: rgba(255, 0, 80, 0.9);
+                                border: none;
+                                color: white;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 16px;
+                                padding: 0;
+                            ">×</button>
+                        `;
+
+                        previewContainer.appendChild(previewCard);
+                        showGenericToast('Video added! 📹', 'success');
                     }
-
-                    previewSection.style.display = 'block';
-                    console.log('✅ Preview section shown');
-
-                    // Create preview card with remove button
-                    const previewCard = document.createElement('div');
-                    previewCard.id = `preview_${mediaId}`;
-                    previewCard.style.cssText = `
-                        position: relative;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        background: rgba(138, 43, 226, 0.1);
-                        border: 1px solid rgba(138, 43, 226, 0.3);
-                    `;
-
-                    previewCard.innerHTML = `
-                        <video src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;"></video>
-                        <div style="position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px;">
-                            ${duration.toFixed(1)}s
-                        </div>
-                        <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
-                            position: absolute;
-                            top: 2px;
-                            left: 2px;
-                            background: rgba(255, 0, 80, 0.9);
-                            border: none;
-                            color: white;
-                            width: 24px;
-                            height: 24px;
-                            border-radius: 50%;
-                            cursor: pointer;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 16px;
-                            padding: 0;
-                        ">×</button>
-                    `;
-
-                    previewContainer.appendChild(previewCard);
-                    showGenericToast('Video added! 📹', 'success');
                 };
                 reader.readAsDataURL(file);
             };
@@ -43376,6 +44505,42 @@ For more help, visit: help.pose.app
             });
         }
 
+        // ===== REPLY FEATURE FUNCTIONS =====
+        let replyingToCommentId = null;
+        let replyingToUsername = null;
+        let replyingToReplyId = null;
+
+        function openReplyToComment(commentId, username, videoId, replyId = null) {
+            console.log('💬 Opening reply to comment:', { commentId, username, replyId });
+
+            replyingToCommentId = commentId;
+            replyingToUsername = username;
+            replyingToReplyId = replyId;
+
+            // Scroll to comment input
+            const commentInput = document.getElementById('commentInput');
+            if (commentInput) {
+                commentInput.focus();
+                commentInput.placeholder = `Reply to @${username}...`;
+                // Clear input first to avoid double @, then set the correct username
+                commentInput.value = '';
+                commentInput.value = `@${username} `;
+                commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Highlight the comment/reply being replied to
+            const targetId = replyId || commentId;
+            const element = document.querySelector(`[data-comment-id="${commentId}"], [data-reply-id="${replyId}"]`) || document.getElementById(`reply_${replyId}`) || document.getElementById(`comment_${commentId}`);
+            if (element) {
+                element.style.backgroundColor = 'rgba(76, 29, 149, 0.15)';
+                setTimeout(() => {
+                    element.style.backgroundColor = '';
+                }, 2000);
+            }
+        }
+
+
+
         // Post comment
         async function postComment() {
             try {
@@ -43435,17 +44600,51 @@ For more help, visit: help.pose.app
 
                 console.log('Full name from profile:', fullName, 'Profile pic:', profilePic);
 
-                // Get video owner ID early for badge system (before rendering optimistic comment)
-                const videoData = forYouVideos.find(v => v.id === currentCommentVideoId);
-                const videoOwnerId = videoData?.userId;
-                
+                // Get video owner ID for badge system
+                // For replies, use the parent comment's videoOwnerId (faster, already stored)
+                // For comments, get from forYouVideos
+                let videoOwnerId = null;
+
+                if (replyingToCommentId) {
+                    // This is a reply - get videoOwnerId from parent comment
+                    const parentComment = (videoComments[currentCommentVideoId] || []).find(c => c.id === replyingToCommentId);
+                    videoOwnerId = parentComment?.videoOwnerId;
+                    console.log('📝 Reply: Using videoOwnerId from parent comment:', videoOwnerId);
+
+                    // Fallback: if parent comment doesn't have videoOwnerId, get from forYouVideos
+                    if (!videoOwnerId) {
+                        const videoData = forYouVideos.find(v => v.id === currentCommentVideoId);
+                        videoOwnerId = videoData?.userId;
+                        console.log('📝 Reply: Fallback - Using videoOwnerId from forYouVideos:', videoOwnerId);
+                    }
+                } else {
+                    // This is a top-level comment - get from forYouVideos
+                    const videoData = forYouVideos.find(v => v.id === currentCommentVideoId);
+                    videoOwnerId = videoData?.userId;
+                    console.log('📝 Comment: Using videoOwnerId from forYouVideos:', videoOwnerId);
+                }
+
                 // Check if current user is the video owner
                 const isUserVideoOwner = currentUser.uid === videoOwnerId;
 
+                // Check if this will be the first non-owner comment (only for top-level)
+                const existingComments = videoComments[currentCommentVideoId] || [];
+                const topLevelComments = existingComments.filter(c => !c.isReply);
+                const isFirstNonOwnerComment = !replyingToCommentId && !isUserVideoOwner && topLevelComments.length === 0;
+
+                console.log('📊 Identity check:', {
+                    isReply: !!replyingToCommentId,
+                    isOwner: isUserVideoOwner,
+                    isFirstNonOwner: isFirstNonOwnerComment,
+                    currentUserId: currentUser.uid,
+                    videoOwnerId: videoOwnerId
+                });
+
                 // NOW show optimistic comment with CORRECT name AND BADGE if applicable
-                const tempCommentId = `temp_${Date.now()}`;
+                // Generate ID that will be used for both optimistic render and Firebase save
+                const commentId = `comment_${Date.now()}`;
                 const tempComment = {
-                    id: tempCommentId,
+                    id: commentId,
                     text: text,
                     username: fullName, // Use correct name from profile
                     userInitial: userInitial,
@@ -43453,16 +44652,38 @@ For more help, visit: help.pose.app
                     timestamp: new Date().toISOString(),
                     likes: 0,
                     likedBy: {},
+                    reactions: {}, // Initialize reactions
                     replies: [],
                     media: mediaAttachments,
                     isOptimistic: true,
                     userId: currentUser.uid,
                     videoOwnerId: videoOwnerId,
-                    isOwner: isUserVideoOwner // For badge display
+                    isOwner: isUserVideoOwner, // For badge display
+                    isFirstCommenter: isFirstNonOwnerComment // Mark if first non-owner comment
                 };
 
-                // Render optimistic comment with correct info AND badge
-                renderOptimisticComment(tempComment);
+                // Render optimistic comment or reply with correct info AND badge
+                 if (replyingToCommentId) {
+                     // This is a reply - render it under the parent
+                     tempComment.isReply = true;
+                     tempComment.replyingTo = replyingToUsername; // Store @mention username
+                     console.log('💬 About to render reply:', {
+                         parentId: replyingToCommentId,
+                         replyId: tempComment.id,
+                         username: tempComment.username,
+                         replyingTo: replyingToUsername,
+                         isOwner: tempComment.isOwner
+                     });
+
+                     // Don't search for parent element - just render the reply directly
+                     // The reply is already in the parent comment data (parentComment.replies)
+                     renderOptimisticReply(replyingToCommentId, tempComment);
+                     console.log('✅ Reply rendered under parent:', replyingToCommentId);
+                } else {
+                    // This is a top-level comment
+                    renderOptimisticComment(tempComment);
+                    console.log('📝 Optimistic top-level comment rendered');
+                }
 
                 // Clear input immediately for better UX
                 input.value = '';
@@ -43530,21 +44751,24 @@ For more help, visit: help.pose.app
                     console.log('✅ All media processed for comment:', uploadedMediaAttachments.length);
                 }
 
-                // Create comment/reply object
+                // Create comment/reply object - use same ID as optimistic render
                 const newItem = {
-                    id: `comment_${Date.now()}`,
+                    id: commentId,
                     text: text,
                     username: fullName,
                     userInitial: userInitial,
                     profilePic: profilePic,
                     timestamp: new Date().toISOString(),
                     likes: 0,
+                    likedBy: {}, // Initialize likedBy for replies
+                    reactions: {}, // Initialize reactions
                     userLiked: false,
                     userId: currentUser.uid,
                     videoOwnerId: videoOwnerId, // Add video owner for badge detection
                     replies: [],
                     isReply: !!replyingToCommentId, // Mark if this is a reply
-                    media: uploadedMediaAttachments // Store uploaded media with Cloudinary URLs
+                    media: uploadedMediaAttachments, // Store uploaded media with Cloudinary URLs
+                    replyingTo: replyingToUsername || null // Store @mention username for nested replies
                 };
 
                 console.log('New item created:', newItem);
@@ -43559,26 +44783,44 @@ For more help, visit: help.pose.app
 
                 // Store parent comment ID before clearing
                 const parentCommentId = replyingToCommentId;
+                const parentReplyId = input.dataset.parentReplyId || null;
+                const isReplyToReply = input.dataset.isReplyToReply === 'true';
 
                 // If replying to a comment, add as reply; otherwise add as top-level
                 if (parentCommentId) {
                     const commentsArray = videoComments[currentCommentVideoId] || [];
                     const parentComment = commentsArray.find(c => c.id === parentCommentId);
                     if (parentComment) {
-                        if (!parentComment.replies) {
-                            parentComment.replies = [];
+                        // Check if this is a reply-to-reply (nested reply)
+                        if (isReplyToReply && parentReplyId) {
+                            // Find parent reply and add nested reply
+                            if (!parentComment.replies) parentComment.replies = [];
+                            const parentReply = parentComment.replies.find(r => r.id === parentReplyId);
+                            if (parentReply) {
+                                if (!parentReply.replies) parentReply.replies = [];
+                                newItem.text = newItem.text.replace(/^@[\w]+\s/, '').trim();
+                                parentReply.replies.unshift(newItem);
+                                console.log('✅ Nested reply added:', { parentCommentId, parentReplyId });
+                            }
+                        } else {
+                            // Regular reply to comment
+                            if (!parentComment.replies) {
+                                parentComment.replies = [];
+                            }
+                            // Remove the @mention from the reply text before saving
+                            newItem.text = newItem.text.replace(/^@[\w]+\s/, '').trim();
+                            parentComment.replies.unshift(newItem);
+                            console.log('✅ Reply added to memory:', parentCommentId);
                         }
-                        // Remove the @mention from the reply text before saving
-                        newItem.text = newItem.text.replace(/^@[\w]+\s/, '').trim();
-                        parentComment.replies.unshift(newItem);
-                        console.log('✅ Reply added to comment (pending):', parentCommentId);
                     }
                     replyingToCommentId = null;
+                    clearReplyContext();
                 } else {
                     const commentsArray = videoComments[currentCommentVideoId] || [];
                     commentsArray.unshift(newItem);
                     videoComments[currentCommentVideoId] = commentsArray;
-                    console.log('✅ Comment added to list (pending)');
+                    console.log('✅ Comment added to memory');
+                    // Note: Already rendered optimistically at line ~43583
                 }
 
                 // Function to reset comment input
@@ -43610,8 +44852,7 @@ For more help, visit: help.pose.app
                     }
 
                     // Reset replying state
-                    replyingToCommentId = null;
-                    window.replyingToReplyId = null;
+                    clearReplyContext();
                 };
 
                 // Clear input immediately for better UX
@@ -43632,28 +44873,24 @@ For more help, visit: help.pose.app
                     const parentComment = videoComments[currentCommentVideoId].find(c => c.id === parentCommentId);
                     console.log('🔍 Found parent comment:', !!parentComment);
                     if (parentComment) {
-                        console.log('💾 Saving parent comment with', (parentComment.replies || []).length, 'replies to Firebase');
-                        saveCommentToFirebase(currentCommentVideoId, parentComment, true).then(() => {
-                            newItem.isPending = false;
+                        console.log('💾 Saving JUST the reply (not entire parent) to Firebase (in background)');
+                        // Save only this reply as a separate document in a replies subcollection
+                        // Don't save the entire parent comment again
+                        saveReplyToFirebase(currentCommentVideoId, parentCommentId, newItem).then(() => {
                             console.log('✅ Reply saved to Firebase successfully');
-                            // Force refresh to load the updated parent comment with replies
+                            // Reload comments to show the new reply
                             loadComments(currentCommentVideoId, true).then(() => {
-                                // Re-enable button after refresh
-                                const sendBtn = document.getElementById('commentSendBtn');
-                                if (sendBtn) {
-                                    sendBtn.disabled = false;
-                                }
+                                console.log('✅ Comments reloaded after reply saved');
                             });
                         }).catch(error => {
                             console.error('❌ Error saving reply:', error);
-                            newItem.isPending = false;
-
-                            // Make sure button is enabled even on error
-                            const sendBtn = document.getElementById('commentSendBtn');
-                            if (sendBtn) {
-                                sendBtn.disabled = false;
-                            }
                         });
+
+                        // Re-enable button IMMEDIATELY (don't wait for Firebase)
+                        const sendBtn = document.getElementById('commentSendBtn');
+                        if (sendBtn) {
+                            sendBtn.disabled = false;
+                        }
                     } else {
                         console.error('❌ Parent comment not found for ID:', parentCommentId);
                     }
@@ -43690,7 +44927,7 @@ For more help, visit: help.pose.app
                     code: error.code,
                     stack: error.stack
                 });
-                
+
                 // Show error to user
                 showGenericToast('Error: ' + error.message, 'error');
 
@@ -43824,12 +45061,12 @@ For more help, visit: help.pose.app
                         media: cleanReplyMedia,
                         replies: reply.replies ? cleanReplies_Helper(reply.replies) : []
                     };
-                    
+
                     // Only add videoOwnerId if it exists
                     if (reply.videoOwnerId) {
                         replyObj.videoOwnerId = reply.videoOwnerId;
                     }
-                    
+
                     return replyObj;
                 });
 
@@ -44014,16 +45251,146 @@ For more help, visit: help.pose.app
                             reply.likes = (reply.likes || 0) + 1;
                         }
 
-                        // Render comments list immediately to show like update
-                        const commentList = document.getElementById('commentList');
-                        if (commentList) {
-                            renderCommentsList(commentList, comments, videoId);
-                        }
+                        // Update UI only for this reply's like button (don't re-render entire list)
+                        updateReplyLikeButton(commentId, replyId, reply.likes, !isCurrentlyLiked);
 
                         // Save to Firebase in background (non-blocking)
                         saveReplyLikeToFirebase(videoId, commentId, replyId, !isCurrentlyLiked, reply.likes);
                     }
                 }
+            }
+        }
+
+        // Update only the reply like button without re-rendering entire list
+        function updateReplyLikeButton(commentId, replyId, likeCount, isNowLiked) {
+            // Find the reply element in the DOM
+            const replyElement = document.querySelector(`[data-comment-id="${commentId}"][data-reply-id="${replyId}"]`);
+            console.log('🔍 Looking for reply:', commentId, replyId, 'Found:', !!replyElement);
+
+            if (replyElement) {
+                // Find the actions section and get the first like button (the heart one)
+                const actionsDiv = replyElement.querySelector('.comment-actions-left');
+                if (actionsDiv) {
+                    const likeBtns = actionsDiv.querySelectorAll('.comment-like-btn');
+                    if (likeBtns && likeBtns.length > 0) {
+                        const likeBtn = likeBtns[0]; // First button is the like button
+                        // Update like count
+                        likeBtn.innerHTML = `<i class="fas fa-heart"></i> ${likeCount}`;
+
+                        // Add/remove liked class
+                        if (isNowLiked) {
+                            likeBtn.classList.add('liked');
+                        } else {
+                            likeBtn.classList.remove('liked');
+                        }
+                        console.log('✅ Like button updated:', likeCount, 'likes');
+                    }
+                }
+            } else {
+                console.warn('❌ Reply element not found for:', commentId, replyId);
+            }
+        }
+
+        // Update only the reply reactions without re-rendering entire list
+        function updateReplyReactions(commentId, replyId, reactions) {
+            const replyElement = document.querySelector(`[data-comment-id="${commentId}"][data-reply-id="${replyId}"]`);
+            if (replyElement) {
+                // Find the reaction counts container
+                const reactionCountsContainer = replyElement.querySelector('.comment-reaction-counts');
+
+                if (Object.keys(reactions).length > 0) {
+                    // Update or create reaction counts display
+                    if (!reactionCountsContainer) {
+                        // Create new reaction counts container if it doesn't exist
+                        const actionDiv = replyElement.querySelector('.comment-actions');
+                        if (actionDiv) {
+                            const newContainer = document.createElement('div');
+                            newContainer.className = 'comment-reaction-counts';
+                            actionDiv.appendChild(newContainer);
+                        }
+                    }
+
+                    const container = replyElement.querySelector('.comment-reaction-counts') || replyElement.querySelector('.comment-actions');
+                    if (container) {
+                        // Update reaction counts
+                        let reactionsHTML = '';
+                        for (const [emoji, data] of Object.entries(reactions)) {
+                            reactionsHTML += `<span class="reaction-count" title="Reacted by ${Object.keys(data.users || {}).length} user${Object.keys(data.users || {}).length !== 1 ? 's' : ''}">${emoji} ${data.count}</span>`;
+                        }
+
+                        let reactionCountsEl = container.querySelector('.comment-reaction-counts');
+                        if (!reactionCountsEl) {
+                            reactionCountsEl = document.createElement('div');
+                            reactionCountsEl.className = 'comment-reaction-counts';
+                            container.appendChild(reactionCountsEl);
+                        }
+                        reactionCountsEl.innerHTML = reactionsHTML;
+                    }
+                } else if (reactionCountsContainer) {
+                    // Remove reaction counts if no reactions left
+                    reactionCountsContainer.remove();
+                }
+            }
+        }
+
+        // Save reply to Firebase as a separate document
+        async function saveReplyToFirebase(videoId, parentCommentId, reply) {
+            try {
+                // Get the correct collection (videos or posts)
+                const collectionName = await getCommentCollection(videoId);
+
+                // Create a clean reply object without unnecessary fields
+                const cleanReplyMedia = (reply.media || []).map(m => {
+                    if (!m.url || typeof m.url !== 'string') return null;
+                    const mediaObj = {
+                        type: m.type || 'unknown',
+                        url: m.url,
+                        filename: m.filename || 'unnamed'
+                    };
+                    if (m.publicId && typeof m.publicId === 'string') mediaObj.publicId = m.publicId;
+                    if (m.duration && typeof m.duration === 'number') mediaObj.duration = m.duration;
+                    return mediaObj;
+                }).filter(m => m !== null);
+
+                const replyToSave = {
+                    id: reply.id,
+                    text: reply.text || '',
+                    username: reply.username,
+                    userInitial: reply.userInitial,
+                    profilePic: reply.profilePic,
+                    timestamp: reply.timestamp,
+                    likes: reply.likes || 0,
+                    likedBy: reply.likedBy || {},
+                    userId: reply.userId,
+                    media: cleanReplyMedia,
+                    replyingTo: reply.replyingTo || null // Save @mention username
+                };
+
+                // Add videoOwnerId if it exists
+                if (reply.videoOwnerId) {
+                    replyToSave.videoOwnerId = reply.videoOwnerId;
+                }
+
+                console.log('💾 Saving reply to separate document:', {
+                    videoId,
+                    parentCommentId,
+                    replyId: reply.id,
+                    username: reply.username
+                });
+
+                // Save the reply as a separate document in the parent comment's replies subcollection
+                await db.collection(collectionName)
+                    .doc(videoId)
+                    .collection('comments')
+                    .doc(parentCommentId)
+                    .collection('replies')
+                    .doc(reply.id)
+                    .set(replyToSave);
+
+                console.log('✅ Reply document saved successfully');
+            } catch (error) {
+                console.error('❌ Error saving reply document:', error);
+                throw error;
             }
         }
 
@@ -44248,11 +45615,8 @@ For more help, visit: help.pose.app
                             reply.reactions[emoji].count += 1;
                         }
 
-                        // Render comments list immediately to show reaction update
-                        const commentList = document.getElementById('commentList');
-                        if (commentList) {
-                            renderCommentsList(commentList, comments, videoId);
-                        }
+                        // Update UI only for this reply's reactions (don't re-render entire list)
+                        updateReplyReactions(commentId, replyId, reply.reactions);
 
                         // Save to Firebase in background (non-blocking)
                         saveReplyReactionToFirebase(videoId, commentId, replyId, emoji, reply.reactions[emoji] || null, existingReaction);
@@ -44362,8 +45726,8 @@ For more help, visit: help.pose.app
 
         function startCommentLongPress(event) {
             // Don't trigger long-press if clicking on buttons (like, reply, reaction buttons)
-            if (event.target.tagName === 'BUTTON' || 
-                event.target.closest('button') || 
+            if (event.target.tagName === 'BUTTON' ||
+                event.target.closest('button') ||
                 event.target.classList.contains('comment-like-btn') ||
                 event.target.classList.contains('reaction-btn') ||
                 event.target.classList.contains('fa-heart') ||
@@ -44428,8 +45792,8 @@ For more help, visit: help.pose.app
 
         function startReplyLongPress(event) {
             // Don't trigger long-press if clicking on buttons (like, reply, reaction buttons)
-            if (event.target.tagName === 'BUTTON' || 
-                event.target.closest('button') || 
+            if (event.target.tagName === 'BUTTON' ||
+                event.target.closest('button') ||
                 event.target.classList.contains('comment-like-btn') ||
                 event.target.classList.contains('reaction-btn') ||
                 event.target.classList.contains('fa-heart') ||
@@ -44470,13 +45834,17 @@ For more help, visit: help.pose.app
                 reactionsEl.classList.add('show');
 
                 // Position the reactions menu BELOW the reply to not block buttons
-                const rect = event.currentTarget.getBoundingClientRect();
-                const replyBottom = rect.bottom + window.scrollY;
-                const replyCenterX = rect.left + rect.width / 2;
+                // Use event.target or find the button element
+                const buttonEl = event.target.closest('button') || event.currentTarget;
+                if (buttonEl) {
+                    const rect = buttonEl.getBoundingClientRect();
+                    const replyBottom = rect.bottom + window.scrollY;
+                    const replyCenterX = rect.left + rect.width / 2;
 
-                // Position below reply, centered horizontally
-                reactionsEl.style.top = (replyBottom + 15) + 'px';
-                reactionsEl.style.left = (replyCenterX - 75) + 'px';
+                    // Position below reply, centered horizontally
+                    reactionsEl.style.top = (replyBottom + 15) + 'px';
+                    reactionsEl.style.left = (replyCenterX - 75) + 'px';
+                }
 
                 // Close reactions when user releases
                 document.addEventListener('mouseup', closeReplyReactionsOnMouseUp, { once: true });
@@ -44502,27 +45870,6 @@ For more help, visit: help.pose.app
         });
 
         // Reply to comment
-        function replyComment(commentIndex, videoId) {
-            const comments = videoComments[videoId];
-            if (comments && comments[commentIndex]) {
-                const comment = comments[commentIndex];
-                replyingToCommentId = comment.id;
-                const input = document.getElementById('commentInput');
-                const header = document.querySelector('.comment-header h3');
-
-                // Update header to show replying to
-                if (header) {
-                    header.textContent = `Replying to @${comment.username}`;
-                    header.style.color = '#a855f7';
-                }
-
-                input.value = '';
-                input.placeholder = `Reply to ${comment.username}...`;
-                input.focus();
-                console.log('💬 Replying to comment:', comment.id, 'by', comment.username);
-            }
-        }
-
         // Insert emoji
         function insertEmoji() {
             const input = document.getElementById('commentInput');
@@ -44781,54 +46128,50 @@ For more help, visit: help.pose.app
                 window.commentMediaAttachments.push(mediaObject);
                 console.log('✅ Image added to attachments, total:', window.commentMediaAttachments.length);
 
-                // Add preview to preview section
+                // Add preview to preview section (same way as sticker)
                 const previewSection = document.getElementById('commentPreviewSection');
                 const previewContainer = document.getElementById('commentMediaPreview');
 
-                if (!previewSection || !previewContainer) {
-                    console.error('❌ Preview section or container not found');
-                    showGenericToast('Error showing preview', 'error');
-                    return;
+                if (previewSection && previewContainer) {
+                    previewSection.style.display = 'block';
+
+                    // Create preview card with remove button
+                    const previewCard = document.createElement('div');
+                    previewCard.id = `preview_${mediaId}`;
+                    previewCard.style.cssText = `
+                        position: relative;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        background: rgba(138, 43, 226, 0.1);
+                        border: 1px solid rgba(138, 43, 226, 0.3);
+                    `;
+
+                    previewCard.innerHTML = `
+                        <img src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;">
+                        <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
+                            position: absolute;
+                            top: 2px;
+                            right: 2px;
+                            background: rgba(255, 0, 80, 0.9);
+                            border: none;
+                            color: white;
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 50%;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                            padding: 0;
+                        ">×</button>
+                    `;
+
+                    previewContainer.appendChild(previewCard);
+                    console.log('✅ Preview card added, total in preview:', previewContainer.children.length);
+
+                    showGenericToast('Image added! 🖼️', 'success');
                 }
-
-                previewSection.style.display = 'block';
-
-                // Create preview card with remove button
-                const previewCard = document.createElement('div');
-                previewCard.id = `preview_${mediaId}`;
-                previewCard.style.cssText = `
-                    position: relative;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    background: rgba(138, 43, 226, 0.1);
-                    border: 1px solid rgba(138, 43, 226, 0.3);
-                `;
-
-                previewCard.innerHTML = `
-                    <img src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover; display: block;">
-                    <button class="comment-remove-media" onclick="removeCommentMedia('${mediaId}')" style="
-                        position: absolute;
-                        top: 2px;
-                        right: 2px;
-                        background: rgba(255, 0, 80, 0.9);
-                        border: none;
-                        color: white;
-                        width: 24px;
-                        height: 24px;
-                        border-radius: 50%;
-                        cursor: pointer;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 16px;
-                        padding: 0;
-                    ">×</button>
-                `;
-
-                previewContainer.appendChild(previewCard);
-                console.log('✅ Preview card added, total in preview:', previewContainer.children.length);
-
-                showGenericToast('Image added! 🖼️', 'success');
 
                 const input = document.getElementById('commentInput');
                 input.focus();
@@ -50757,15 +52100,521 @@ For more help, visit: help.pose.app
             cachedData: {}
         };
 
-        async function openSearchInterface() {
-            pauseAllFeedVideos();
-            const overlay = document.getElementById('searchInterfaceOverlay');
-            if (overlay) {
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                await loadTrendingTab();
-            }
+        // Open Trend Modal
+        async function openTrendModal() {
+             console.log('✨ openTrendModal() called');
+             pauseAllFeedVideos();
+             const overlay = document.getElementById('trendModalOverlay');
+             if (overlay) {
+                 console.log('✨ Trend overlay found, opening...');
+                 overlay.classList.add('active');
+                 document.body.style.overflow = 'hidden';
+                 await loadTrendModalContent();
+                 console.log('✨ Trend content loaded in modal');
+             } else {
+                 console.error('❌ trendModalOverlay element not found!');
+             }
+         }
+
+        // Close Trend Modal
+        function closeTrendModal() {
+             console.log('❌ Closing trend modal...');
+             const overlay = document.getElementById('trendModalOverlay');
+             if (overlay) {
+                 overlay.classList.remove('active');
+                 document.body.style.overflow = 'auto';
+                 console.log('✅ Trend modal closed');
+             }
+         }
+
+        // Store for trend video player
+        let trendVideoPlayerData = [];
+        let trendCurrentVideoIndex = 0;
+
+        // Load Trend Modal Content - Grouped by Date with Most Likes
+        async function loadTrendModalContent() {
+             const trendContainer = document.getElementById('trendModalGrid');
+             
+             try {
+                 console.log('📊 Loading trending videos from Firebase...');
+                 
+                 // Show loading animation
+                 showTrendLoadingAnimation(trendContainer);
+                 
+                 // Set timeout to prevent infinite loading
+                 const loadTimeout = setTimeout(() => {
+                     console.warn('⚠️ Loading timeout - showing retry screen');
+                     hideTrendLoadingAnimation();
+                     showTrendLoadingTimeout(trendContainer);
+                 }, 10000); // 10 second timeout
+
+                 // Fetch all videos from Firebase
+                 let videosSnapshot;
+                 try {
+                     videosSnapshot = await db.collection('videos').limit(300).get();
+                 } catch (indexError) {
+                     videosSnapshot = await db.collection('videos').limit(300).get();
+                 }
+
+                 // Get videos and organize by date
+                 const videosByDate = {};
+                 
+                 videosSnapshot.forEach(doc => {
+                     const videoData = doc.data();
+                     const video = {
+                         id: doc.id,
+                         ...videoData,
+                         likeCount: videoData.likeCount || parseInt(videoData.likes) || 0,
+                         createdAt: videoData.createdAt ? new Date(videoData.createdAt.toDate ? videoData.createdAt.toDate() : videoData.createdAt) : new Date()
+                     };
+
+                     // Format date as key (e.g., "Jan 15, 2025")
+                     const dateKey = video.createdAt.toLocaleDateString('en-US', {
+                         month: 'short',
+                         day: 'numeric',
+                         year: 'numeric'
+                     });
+
+                     if (!videosByDate[dateKey]) {
+                         videosByDate[dateKey] = [];
+                     }
+                     videosByDate[dateKey].push(video);
+                 });
+
+                 // Sort videos within each date by likes (desc), and get top 15 per day
+                 const sortedDates = Object.keys(videosByDate).sort((a, b) => {
+                     return new Date(b) - new Date(a); // Sort dates descending (newest first)
+                 });
+
+                 // Build HTML for trending videos grouped by date
+                 let html = '';
+                 trendVideoPlayerData = [];
+
+                 sortedDates.forEach(dateKey => {
+                     let videosForDate = videosByDate[dateKey];
+                     
+                     // Sort by likes descending
+                     videosForDate.sort((a, b) => b.likeCount - a.likeCount);
+                     
+                     // Limit to 15 videos per day
+                     videosForDate = videosForDate.slice(0, 15);
+
+                     html += `
+                         <div class="trend-date-section">
+                             <div class="trend-date-header">${dateKey}</div>
+                             <div class="trend-videos-grid">
+                     `;
+
+                     videosForDate.forEach(video => {
+                         const videoIndex = trendVideoPlayerData.length;
+                         trendVideoPlayerData.push(video);
+
+                         html += `
+                             <div class="trend-video-thumbnail" onclick="openTrendVideoPlayer(${videoIndex})">
+                                 <video src="${video.videoUrl || ''}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                                 <div class="trend-thumbnail-overlay">
+                                     <div class="trend-play-icon">▶</div>
+                                 </div>
+                                 <div class="trend-thumbnail-likes">❤️ ${video.likeCount}</div>
+                             </div>
+                         `;
+                     });
+
+                     html += `
+                             </div>
+                         </div>
+                     `;
+                 });
+
+                 console.log('✅ Loaded', trendVideoPlayerData.length, 'trending videos');
+
+                 // Hide loading and show content
+                 hideTrendLoadingAnimation();
+                 clearTimeout(loadTimeout);
+
+                 if (trendVideoPlayerData.length > 0) {
+                     trendContainer.innerHTML = html;
+                     
+                     // Restore like states from Firebase after feed loads
+                     setTimeout(() => {
+                         restoreTrendLikeStates();
+                     }, 300);
+                 } else {
+                     trendContainer.innerHTML = '<div style="color: #aaa; text-align: center; padding: 40px;">No trending videos yet</div>';
+                 }
+
+             } catch (error) {
+                 console.error('❌ Error loading trending videos:', error);
+                 hideTrendLoadingAnimation();
+                 clearTimeout(loadTimeout);
+                 trendContainer.innerHTML = `
+                     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 20px;">
+                         <div style="font-size: 48px;">❌</div>
+                         <div style="color: #ff6b6b; font-size: 16px; font-weight: 600;">Error Loading Trends</div>
+                         <div style="color: #aaa; font-size: 14px; text-align: center; max-width: 300px;">Something went wrong while loading. Please check your connection and try again.</div>
+                         <button onclick="reloadTrendContent()" style="
+                             background: linear-gradient(45deg, #ff0050, #ff4478);
+                             color: white;
+                             border: none;
+                             padding: 12px 30px;
+                             border-radius: 8px;
+                             font-size: 14px;
+                             font-weight: 600;
+                             cursor: pointer;
+                             transition: all 0.3s;
+                             margin-top: 10px;
+                         " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                             🔄 Retry Loading
+                         </button>
+                     </div>
+                 `;
+             }
+         }
+
+        // Show trend loading animation
+        function showTrendLoadingAnimation(container) {
+             if (!container) {
+                 console.warn('⚠️ Trend container not found for loading animation');
+                 return;
+             }
+             container.innerHTML = `
+                  <div id="trendLoadingSpinner" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 20px;">
+                      <div style="width: 50px; height: 50px; border: 4px solid rgba(255, 0, 80, 0.3); border-top-color: #ff0050; border-radius: 50%; animation: trendSpin 0.8s linear infinite;"></div>
+                      <div style="color: #aaa; font-size: 14px;">Loading trending videos...</div>
+                      <style>
+                          @keyframes trendSpin {
+                              to { transform: rotate(360deg); }
+                          }
+                      </style>
+                  </div>
+              `;
         }
+
+        // Hide trend loading animation
+        function hideTrendLoadingAnimation() {
+             const loader = document.getElementById('trendLoadingSpinner');
+             if (loader) {
+                 loader.style.display = 'none';
+             }
+        }
+
+        // Show trend loading timeout error with retry button
+        function showTrendLoadingTimeout(container) {
+             if (!container) return;
+             container.innerHTML = `
+                  <div id="trendLoadingError" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 20px;">
+                      <div style="font-size: 48px;">⏱️</div>
+                      <div style="color: #ff6b6b; font-size: 16px; font-weight: 600;">Loading Timeout</div>
+                      <div style="color: #aaa; font-size: 14px; text-align: center; max-width: 300px;">The server is taking longer than expected. Please try again.</div>
+                      <button onclick="reloadTrendContent()" style="
+                          background: linear-gradient(45deg, #ff0050, #ff4478);
+                          color: white;
+                          border: none;
+                          padding: 12px 30px;
+                          border-radius: 8px;
+                          font-size: 14px;
+                          font-weight: 600;
+                          cursor: pointer;
+                          transition: all 0.3s;
+                          margin-top: 10px;
+                      " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                          🔄 Retry Loading
+                      </button>
+                  </div>
+              `;
+        }
+
+        // Reload trend content
+        function reloadTrendContent() {
+             console.log('🔄 Retrying to load trend content...');
+             const trendContainer = document.getElementById('trendModalGrid');
+             if (trendContainer) {
+                 loadTrendModalContent();
+             }
+        }
+
+        // Restore like states for trend videos
+        function restoreTrendLikeStates() {
+             if (!currentUser) return;
+
+             const likeButtons = document.querySelectorAll('#trendModalGrid .interaction-btn.like-btn');
+
+             likeButtons.forEach(btn => {
+                 const videoId = btn.getAttribute('data-post-id');
+
+                 // Find video in trendVideoPlayerData
+                 const video = trendVideoPlayerData.find(v => v.id === videoId);
+
+                 if (video) {
+                     // Update like count from video data
+                     const countEl = btn.querySelector('.interaction-count');
+                     if (countEl) {
+                         countEl.textContent = video.likeCount || 0;
+                     }
+
+                     // Check if current user has liked
+                     if (video.likes && video.likes[currentUser.uid]) {
+                         // User has liked this video
+                         btn.classList.add('active');
+                         const icon = btn.querySelector('.btn-icon i');
+                         if (icon) {
+                             icon.style.color = '#ff2d55';
+                         }
+                     } else {
+                         btn.classList.remove('active');
+                         const icon = btn.querySelector('.btn-icon i');
+                         if (icon) {
+                             icon.style.color = 'white';
+                         }
+                     }
+                 }
+             });
+        }
+
+        // Open trend video in For You feed
+        function openTrendVideoPlayer(index) {
+             trendCurrentVideoIndex = index;
+             console.log('🎥 Opening trend video in For You feed:', index);
+             
+             const trendVideo = trendVideoPlayerData[index];
+             if (!trendVideo) {
+                 console.error('❌ Video not found at index', index);
+                 return;
+             }
+
+             console.log('📊 Trend video data:', trendVideo);
+
+             // Close trend modal first
+             closeTrendModal();
+             
+             // Switch to For You tab
+             setTimeout(() => {
+                 console.log('📺 Switching to For You page...');
+                 
+                 // Get the For You feed container
+                 const forYouFeed = document.getElementById('forYouFeed');
+                 if (!forYouFeed) {
+                     console.error('❌ forYouFeed element not found!');
+                     return;
+                 }
+
+                 // Clear the feed and show just this video
+                 forYouFeed.innerHTML = '';
+                 
+                 // Create the video post element
+                 const videoPost = createForYouVideoPost(trendVideo, 0);
+                 forYouFeed.appendChild(videoPost);
+                 
+                 console.log('✅ Video added to For You feed');
+                 
+                 // Show For You section
+                 const forYouSection = document.getElementById('forYouSection');
+                 document.querySelectorAll('.main-content-section').forEach(s => s.style.display = 'none');
+                 forYouSection.style.display = 'block';
+                 
+                 // Update active tab
+                 document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+                 document.querySelector('.tabs .tab:nth-child(1)').classList.add('active');
+                 
+                 // Setup video autoplay
+                 setupVideoAutoPlay();
+                 
+                 // Scroll to top
+                 setTimeout(() => {
+                     forYouFeed.scrollTop = 0;
+                     console.log('⬆️ Scrolled to top');
+                     
+                     // Restore like state
+                     restoreLikeStates();
+                     console.log('❤️ Like states restored');
+                 }, 100);
+             }, 300);
+        }
+
+        // Display full-screen trend video
+        function displayTrendFullscreenVideo(index) {
+             if (index < 0 || index >= trendVideoPlayerData.length) return;
+             
+             const video = trendVideoPlayerData[index];
+             const videoContainer = document.getElementById('trendFullscreenVideoContainer');
+             
+             const isUploadedFile = video.isUploadedFile || false;
+             const mirrorStyle = isUploadedFile ? 'none' : 'scaleX(-1)';
+
+             videoContainer.innerHTML = `
+                 <video src="${video.videoUrl}" preload="auto" loop muted controls style="width: 100%; height: 100%; object-fit: cover; transform: ${mirrorStyle};" playsinline webkit-playsinline></video>
+                 <div class="play-pause-overlay">
+                     <svg class="play-icon" viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: white;">
+                         <path d="M8 5v14l11-7z" />
+                     </svg>
+                     <svg class="pause-icon" viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: white; display: none;">
+                         <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                     </svg>
+                 </div>
+                 <div class="forYou-overlay" data-video-id="${video.id || ''}">
+                     <div class="forYou-audio-interface" id="trendAudioInterface">
+                          <div class="forYou-audio-player" onclick="openSoundDetailsModal(${index}); event.stopPropagation();">
+                              <div class="forYou-audio-info">
+                                  <div class="forYou-audio-username">${video.userName || 'Creator'}</div>
+                                  <div class="forYou-audio-icon-container">
+                                      <div class="forYou-spinning-disk-vinyl" style="background-image: url('${video.userProfilePic || ''}');"></div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                     <div class="forYou-caption" id="trendCaption">
+                          <div class="caption-text">
+                              <b>${truncateCaption(video.caption || 'Trending content', 7)}</b>
+                          </div>
+                          ${(video.caption || 'Trending content').split(' ').length > 7 ? `<button class="see-more-btn" onclick="handleSeeMoreClick(event, 0, \`${(video.caption || 'Trending content').replace(/`/g, '\\`')}\`)">See more >></button>` : ''}
+                      </div>
+                     <div class="forYou-profile-section">
+                          <div class="forYou-profile-container">
+                              <div class="forYou-profile-pic" style="background-image: url('${video.userProfilePic || ''}');">
+                                  <div class="forYou-profile-close">∞</div>
+                              </div>
+                              <div class="forYou-profile-info">
+                                  <div class="forYou-profile-name-wrapper">
+                                      <div class="forYou-profile-name">${video.userName || 'Creator'}</div>
+                                      <div class="forYou-follow-icon-badge">
+                                          <i class="fas fa-user-plus"></i>
+                                      </div>
+                                  </div>
+                                  <div class="forYou-profile-caption">${Math.floor(Math.random() * 999) + 100}K followers</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="interaction-buttons">
+                          <button class="interaction-btn like-btn" data-post-id="${video.id || 'trend_' + index}">
+                              <div class="btn-icon">
+                                  <i class="fas fa-heart"></i>
+                              </div>
+                              <span class="interaction-count">${video.likeCount || 0}</span>
+                          </button>
+                          
+                          <button class="interaction-btn comment-btn" onclick="openCommentModal(event, '${video.id || 'trend_' + index}')" data-post-id="${video.id || 'trend_' + index}">
+                              <div class="btn-icon">
+                                  <i class="fas fa-comment"></i>
+                              </div>
+                              <span class="interaction-count">${video.comments || 0}</span>
+                          </button>
+                          
+                          <button class="interaction-btn share-btn" onclick="openShareMenu(event, '${video.id || 'trend_' + index}')" data-post-id="${video.id || 'trend_' + index}">
+                              <div class="btn-icon">
+                                  <i class="fas fa-share"></i>
+                              </div>
+                              <span class="interaction-count">${video.shares || 0}</span>
+                          </button>
+                      </div>
+                 </div>
+             `;
+
+             // Setup video controls
+             setupTrendVideoControls();
+             
+             // Setup like button for fullscreen
+             setTimeout(() => {
+                 const likeBtn = videoContainer.querySelector('.like-btn');
+                 if (likeBtn) {
+                     console.log('❤️ Like button found, videoId:', video.id);
+                     likeBtn.removeEventListener('click', toggleForYouLike);
+                     likeBtn.addEventListener('click', toggleForYouLike);
+                     console.log('✅ Like button event listener attached');
+                 } else {
+                     console.warn('❌ Like button not found in fullscreen video');
+                 }
+             }, 100);
+        }
+
+        // Setup video controls for trend fullscreen
+        function setupTrendVideoControls() {
+             const videoContainer = document.getElementById('trendFullscreenVideoContainer');
+             const video = videoContainer.querySelector('video');
+             const playIcon = videoContainer.querySelector('.play-icon');
+             const pauseIcon = videoContainer.querySelector('.pause-icon');
+             const playPauseOverlay = videoContainer.querySelector('.play-pause-overlay');
+
+             if (!video) {
+                 console.error('❌ Video element not found');
+                 return;
+             }
+
+             console.log('🎬 Setting up video controls...');
+
+             // Handle play/pause on video element
+             video.addEventListener('play', () => {
+                 console.log('▶️ Video playing');
+                 if (playIcon) playIcon.style.display = 'none';
+                 if (pauseIcon) pauseIcon.style.display = 'block';
+             });
+
+             video.addEventListener('pause', () => {
+                 console.log('⏸️ Video paused');
+                 if (playIcon) playIcon.style.display = 'block';
+                 if (pauseIcon) pauseIcon.style.display = 'none';
+             });
+
+             // Handle click on play/pause overlay
+             if (playPauseOverlay) {
+                 playPauseOverlay.addEventListener('click', (e) => {
+                     e.stopPropagation();
+                     toggleTrendVideoPlayPause(video);
+                 });
+             }
+
+             // Space bar to play/pause
+             document.addEventListener('keydown', (e) => {
+                 if (e.code === 'Space' && document.getElementById('trendFullscreenModal').classList.contains('active')) {
+                     e.preventDefault();
+                     toggleTrendVideoPlayPause(video);
+                 }
+             });
+
+             // Start playing automatically
+             video.play().catch(err => {
+                 console.warn('⚠️ Autoplay prevented:', err);
+                 if (playIcon) playIcon.style.display = 'block';
+                 if (pauseIcon) pauseIcon.style.display = 'none';
+             });
+        }
+
+        // Toggle play/pause for trend video
+        function toggleTrendVideoPlayPause(video) {
+             if (!video) return;
+             
+             if (video.paused) {
+                 console.log('▶️ Playing video');
+                 video.play().catch(err => console.warn('Play error:', err));
+             } else {
+                 console.log('⏸️ Pausing video');
+                 video.pause();
+             }
+        }
+
+        // Close trend fullscreen video
+        function closeTrendFullscreenVideo() {
+             const modal = document.getElementById('trendFullscreenModal');
+             if (modal) {
+                 modal.classList.remove('active');
+                 document.body.style.overflow = 'auto';
+                 console.log('✅ Closed trend video player');
+             }
+        }
+
+        async function openSearchInterface() {
+             console.log('✨ openSearchInterface() called');
+             pauseAllFeedVideos();
+             const overlay = document.getElementById('searchInterfaceOverlay');
+             if (overlay) {
+                 console.log('✨ Search overlay found, opening...');
+                 overlay.classList.add('active');
+                 document.body.style.overflow = 'hidden';
+                 await loadTrendingTab();
+                 console.log('✨ Trending content loaded in modal');
+             } else {
+                 console.error('❌ searchInterfaceOverlay element not found!');
+             }
+         }
 
         function closeSearchInterface() {
             const overlay = document.getElementById('searchInterfaceOverlay');
@@ -51624,11 +53473,39 @@ For more help, visit: help.pose.app
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
         }
-        document.getElementById("liveBtn").addEventListener("click", function () {
-            window.location.href = "poselive.html";
+        document.addEventListener('DOMContentLoaded', function () {
+            const liveBtn = document.getElementById("liveBtn");
+            if (liveBtn) {
+                liveBtn.addEventListener("click", function () {
+                    window.location.href = "poselive.html";
+                });
+            }
         });
 
     </script>
+
+    <!-- TREND MODAL -->
+    <div class="trend-modal-overlay" id="trendModalOverlay">
+        <div class="trend-modal-header">
+            <h2 style="color: white; margin: 0; flex: 1;">📈 Trending Now</h2>
+            <button class="trend-modal-close" onclick="closeTrendModal()">✕</button>
+        </div>
+        <div class="trend-modal-content">
+            <div class="trend-container">
+                <div class="trend-grid" id="trendModalGrid">
+                    <!-- Trending items will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TREND FULLSCREEN VIDEO MODAL -->
+    <div class="modal-overlay" id="trendFullscreenModal" style="display: none; z-index: 3000;">
+        <div id="trendFullscreenVideoContainer" class="video-post" style="width: 100%; height: 100%; display: flex; position: relative;">
+            <!-- Video will be populated here -->
+        </div>
+        <button class="modal-close" onclick="closeTrendFullscreenVideo()" style="z-index: 3001;">✕</button>
+    </div>
 
     <!-- SEARCH INTERFACE MODAL -->
     <div class="search-interface-overlay" id="searchInterfaceOverlay">
@@ -51662,7 +53539,7 @@ For more help, visit: help.pose.app
         </div>
     </div>
 
-  <style>
+    <style>
         /* Search Interface Overlay */
         .search-interface-overlay {
             display: none;
@@ -52377,3 +54254,4 @@ For more help, visit: help.pose.app
 </body>
 
 </html>
+ 
