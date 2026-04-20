@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Channel Creation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #7c3aed;
+      --purple-dark: #4c1d95;
+      --purple-soft: #c4b5fd;
+      --purple-light: #ede9fe;
+      --white: #ffffff;
+      --bg: #fafafa;
+      --text: #1a1a2e;
+      --sub: #6b6b8a;
+      --border: rgba(0,0,0,0.08);
+      --input-bg: #f5f4fb;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 72px 24px 100px;
+      gap: 28px;
+    }
+    .page.active { display: flex; }
+
+    .hero-img {
+      width: 220px;
+      height: 220px;
+      border-radius: 24px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+
+    .heading { text-align: center; }
+    .heading h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .heading h1 span { color: var(--purple); }
+    .heading p {
+      font-size: 14px;
+      color: var(--sub);
+      line-height: 1.65;
+      max-width: 290px;
+      margin: 0 auto;
+    }
+
+    .steps { display: flex; gap: 6px; align-items: center; }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: all 0.3s ease;
+    }
+    .dot.active { width: 22px; border-radius: 4px; background: var(--purple); }
+    .dot.done { background: var(--purple-soft); }
+
+    .form-fields { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--sub);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 88px;
+      line-height: 1.6;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--purple);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #bbb; }
+
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 13px; top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--purple-soft);
+      border-bottom: none;
+      pointer-events: none;
+    }
+    .select-wrap select { padding-right: 36px; cursor: pointer; }
+
+    .upload-section { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; }
+    .upload-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--sub);
+      margin-bottom: 6px;
+    }
+    .upload-drop {
+      width: 100%;
+      border: 1.5px dashed rgba(124,58,237,0.25);
+      border-radius: 14px;
+      background: var(--input-bg);
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: border-color 0.2s, background 0.2s;
+      overflow: hidden;
+    }
+    .upload-drop:hover {
+      border-color: var(--purple);
+      background: #f0ebff;
+    }
+    .upload-drop input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; z-index: 2;
+    }
+    .upload-drop.profile { height: 128px; }
+    .upload-drop.banner  { height: 96px; }
+    .upload-drop .ico {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: var(--purple-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .upload-drop .ico svg { width: 17px; height: 17px; }
+    .upload-drop .lbl { font-size: 13px; font-weight: 500; color: var(--purple); }
+    .upload-drop .hint { font-size: 11px; color: #aaa; }
+    .upload-drop .preview {
+      position: absolute; inset: 0; z-index: 1;
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 13px;
+      display: none;
+    }
+
+    .bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(250,250,250,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .btn-back {
+      display: flex; align-items: center; gap: 6px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sub);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 9px 18px 9px 13px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      visibility: hidden;
+    }
+    .btn-back.visible { visibility: visible; }
+    .btn-back:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-light); }
+    .btn-back svg { width: 14px; height: 14px; transition: transform 0.2s; }
+    .btn-back:hover svg { transform: translateX(-2px); }
+
+    .btn-next,
+    .btn-create {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--purple);
+      color: var(--white);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-next:hover,
+    .btn-create:hover { background: var(--purple-dark); transform: translateY(-1px); }
+    .btn-next svg,
+    .btn-create svg { width: 15px; height: 15px; transition: transform 0.2s; }
+    .btn-next:hover svg { transform: translateX(3px); }
+    .btn-create { display: none; }
+
+    /* Loading overlay */
+    #loadingOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    #loadingOverlay.show { display: flex; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--purple-light);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loadingOverlay p {
+      font-size: 14px;
+      color: var(--sub);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p id="loadingText">Creating your channel…</p>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="page active" id="page1">
+    <img
+      src="https://i.ibb.co/jktdyyTj/Chat-GPT-Image-Apr-15-2026-12-33-30-PM.png"
+      alt="Channel creation illustration"
+      class="hero-img"
+    />
+    <div class="heading">
+      <h1>Create your <span>channel</span></h1>
+      <p>Set up your space to share content, connect with your audience, and grow your community.</p>
+    </div>
+    <div class="steps">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page" id="page2">
+    <div class="heading">
+      <h1>About your <span>channel</span></h1>
+      <p>Tell people what your channel is about so they know what to expect.</p>
+    </div>
+    <div class="form-fields">
+      <div class="form-group">
+        <label>Channel name</label>
+        <input id="channelName" type="text" placeholder="e.g. TechWithTunde" maxlength="60"/>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="channelDesc" placeholder="Tell viewers what your channel is all about…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Country</label>
+        <div class="select-wrap">
+          <select id="channelCountry">
+            <option value="" disabled selected>Select your country</option>
+            <option>Nigeria</option><option>Ghana</option><option>Kenya</option>
+            <option>South Africa</option><option>United States</option><option>United Kingdom</option>
+            <option>Canada</option><option>Australia</option><option>India</option>
+            <option>Germany</option><option>France</option><option>Brazil</option>
+            <option>Indonesia</option><option>Japan</option><option>South Korea</option>
+            <option>Mexico</option><option>Egypt</option><option>Ethiopia</option>
+            <option>Tanzania</option><option>Uganda</option><option>Rwanda</option>
+            <option>Senegal</option><option>Côte d'Ivoire</option><option>Cameroon</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="dot done"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page" id="page3">
+    <div class="heading">
+      <h1>Add your <span>visuals</span></h1>
+      <p>A great profile photo and banner help your channel make a strong first impression.</p>
+    </div>
+    <div class="upload-section">
+      <div>
+        <p class="upload-label">Profile image</p>
+        <div class="upload-drop profile" id="profileCard">
+          <input type="file" id="profileFile" accept="image/*" onchange="previewImg(this,'profileCard','profilePreview')"/>
+          <img id="profilePreview" class="preview"/>
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <span class="lbl">Upload photo</span>
+          <span class="hint">PNG or JPG · max 5 MB</span>
+        </div>
+      </div>
+      <div>
+        <p class="upload-label">Channel banner</p>
+        <div class="upload-drop banner" id="bannerCard">
+          <input type="file" id="bannerFile" accept="image/*" onchange="previewImg(this,'bannerCard','bannerPreview')"/>
+          <img id="bannerPreview" class="preview"/>
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/>
+            </svg>
+          </div>
+          <span class="lbl">Upload banner</span>
+          <span class="hint">Best size: 1280 × 320 px</span>
+        </div>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot active"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bar">
+    <button class="btn-back" id="backBtn" onclick="goBack()">
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back
+    </button>
+
+    <button class="btn-next" id="nextBtn" onclick="goNext()">
+      Next
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <button class="btn-create" id="createBtn" onclick="createChannel()">
+      Create channel
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+<script>
+    // ── Firebase Init ──────────────────────────────────────────
+    const firebaseConfig = {
+      apiKey: "AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",
+      authDomain: "rewarderhub.firebaseapp.com",
+      projectId: "rewarderhub",
+      storageBucket: "rewarderhub.appspot.com",
+      messagingSenderId: "85965945106",
+      appId: "1:85965945106:web:fa0a57d8968926e1041bcb",
+      measurementId: "G-F2ERB5NGN0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db   = firebase.firestore();
+    const auth = firebase.auth();
+
+    // ── Cloudinary Config ──────────────────────────────────────
+    const CLOUDINARY_CLOUD_NAME    = 'dzhdgxjhl';
+    const CLOUDINARY_UPLOAD_PRESET = 'posepreset';
+    const CLOUDINARY_API_URL       = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+    // ── Get email from URL param ───────────────────────────────
+    const urlParams   = new URLSearchParams(window.location.search);
+    const passedEmail = urlParams.get('email') || '';
+
+    // ── Pages ──────────────────────────────────────────────────
+    let current = 1;
+    const total = 3;
+
+    function showPage(n) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page' + n).classList.add('active');
+
+      const back   = document.getElementById('backBtn');
+      const next   = document.getElementById('nextBtn');
+      const create = document.getElementById('createBtn');
+
+      back.classList.toggle('visible', n > 1);
+      next.style.display   = n < total ? 'flex' : 'none';
+      create.style.display = n === total ? 'flex' : 'none';
+    }
+
+    function goNext() {
+      if (current === 2) {
+        const name    = document.getElementById('channelName').value.trim();
+        const country = document.getElementById('channelCountry').value;
+        if (!name)    { alert('Please enter a channel name.'); return; }
+        if (!country) { alert('Please select your country.');  return; }
+      }
+      if (current < total) { current++; showPage(current); }
+    }
+
+    function goBack() {
+      if (current > 1) { current--; showPage(current); }
+    }
+
+    function previewImg(input, cardId, previewId) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img  = document.getElementById(previewId);
+        const card = document.getElementById(cardId);
+        img.src = e.target.result;
+        img.style.display = 'block';
+        card.querySelectorAll('.ico, .lbl, .hint').forEach(el => el.style.opacity = '0');
+        card.style.borderStyle = 'solid';
+        card.style.borderColor = '#7c3aed';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ── Upload image to Cloudinary ─────────────────────────────
+    async function uploadToCloudinary(file) {
+      if (!file) return null;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      const response = await fetch(CLOUDINARY_API_URL, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) throw new Error('Cloudinary upload failed');
+      const data = await response.json();
+      return data.secure_url;
+    }
+
+    // ── Create Channel ─────────────────────────────────────────
+    async function createChannel() {
+      const user = auth.currentUser;
+      if (!user) {
+        alert('You must be logged in to create a channel.');
+        return;
+      }
+
+      const name    = document.getElementById('channelName').value.trim();
+      const desc    = document.getElementById('channelDesc').value.trim();
+      const country = document.getElementById('channelCountry').value;
+
+      if (!name) { alert('Please enter a channel name.'); return; }
+
+      const overlay     = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      overlay.classList.add('show');
+
+      try {
+        // Upload profile photo to Cloudinary
+        loadingText.textContent = 'Uploading profile photo…';
+        const profileFile = document.getElementById('profileFile').files[0];
+        const profileURL  = await uploadToCloudinary(profileFile);
+
+        // Upload banner to Cloudinary
+        loadingText.textContent = 'Uploading banner…';
+        const bannerFile = document.getElementById('bannerFile').files[0];
+        const bannerURL  = await uploadToCloudinary(bannerFile);
+
+        // Save everything to Firestore
+        loadingText.textContent = 'Saving your channel…';
+        await db.collection('channels').doc(user.uid).set({
+          uid:         user.uid,
+          email:       user.email || passedEmail,
+          name:        name,
+          description: desc,
+          country:     country,
+          profileURL:  profileURL || '',
+          bannerURL:   bannerURL  || '',
+          subscribers: 0,
+          createdAt:   firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // Redirect to dashboard
+        loadingText.textContent = 'All done! Redirecting…';
+        setTimeout(() => {
+       // TO THIS:
+
+window.location.href = `channeldashboard.html?uid=${user.uid}`;
+        }, 800);
+
+      } catch (error) {
+        console.error('Channel creation error:', error);
+        overlay.classList.remove('show');
+        alert('Something went wrong: ' + error.message);
+      }
+    }
+
+    showPage(1);
+</script>
+</body>
+</html>
