@@ -1,0 +1,2672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pose Channel Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* ==============================
+       CSS VARIABLES
+    ============================== */
+    :root {
+      --purple-950:  #2E1065;
+      --purple-deep: #4C1D95;
+      --purple-main: #7C3AED;
+      --purple-mid:  #8B5CF6;
+      --purple-light:#A78BFA;
+      --purple-pale: #EDE9FE;
+      --purple-ghost:#F5F3FF;
+      --white:       #FFFFFF;
+      --gray-50:     #FAFAFA;
+      --gray-100:    #F4F4F5;
+      --gray-200:    #E4E4E7;
+      --gray-400:    #A1A1AA;
+      --gray-500:    #71717A;
+      --gray-700:    #3F3F46;
+      --gray-900:    #18181B;
+      --text-main:   #1A0A3B;
+      --green:       #059669;
+      --red:         #DC2626;
+      --shadow-xs:   0 1px 2px rgba(0,0,0,0.06);
+      --shadow-sm:   0 2px 8px rgba(91,33,182,0.08);
+      --shadow-md:   0 4px 20px rgba(91,33,182,0.14);
+      --shadow-lg:   0 8px 32px rgba(91,33,182,0.18);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ==============================
+       LOADING SCREEN
+    ============================== */
+    #dashLoader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: white;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px;
+    }
+    #dashLoader.hidden { display: none; }
+    .dash-spinner {
+      width: 42px; height: 42px;
+      border: 3px solid #EDE9FE;
+      border-top-color: #7C3AED;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #dashLoader p { font-size: 14px; color: #71717A; font-family: 'DM Sans', sans-serif; }
+
+    /* ==============================
+       PAGES
+    ============================== */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; animation: pageIn 0.35s cubic-bezier(.25,.8,.25,1) both; }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==============================
+       TOP BAR
+    ============================== */
+    .topbar {
+      position: sticky; top: 0; z-index: 200;
+      width: 100%; height: 62px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-xs);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+    }
+    .topbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px; font-weight: 700;
+      color: var(--purple-deep);
+      letter-spacing: -.4px;
+    }
+    .topbar-brand em { font-style: italic; color: var(--purple-mid); }
+    .topbar-actions { display: flex; gap: 8px; }
+
+    /* ==============================
+       BUTTONS
+    ============================== */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px; font-weight: 500;
+      border-radius: 10px; border: none; cursor: pointer;
+      padding: 8px 16px;
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+    .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray-700);
+      border: 1.5px solid var(--gray-200);
+    }
+    .btn-ghost:hover {
+      border-color: var(--purple-light);
+      color: var(--purple-main);
+      background: var(--purple-ghost);
+    }
+    .btn-purple {
+      background: var(--purple-main);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(124,58,237,.3);
+    }
+    .btn-purple:hover {
+      background: var(--purple-deep);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(76,29,149,.35);
+    }
+    .btn-purple:active { transform: translateY(0); }
+
+    .btn-outline-purple {
+      background: transparent;
+      color: var(--purple-main);
+      border: 1.5px solid var(--purple-main);
+    }
+    .btn-outline-purple:hover { background: var(--purple-pale); }
+
+    .btn-lg {
+      padding: 12px 22px; font-size: 15px;
+      border-radius: 13px; justify-content: center;
+    }
+
+    /* ==============================
+       MAIN TABS BAR
+    ============================== */
+    .tabs-bar {
+      width: 100%;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+
+    .tab-item {
+      flex: 1; min-width: 90px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 13.5px; font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: all .2s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .tab-item:hover { color: var(--purple-main); background: var(--purple-ghost); }
+    .tab-item.active {
+      color: var(--purple-main);
+      border-bottom-color: var(--purple-main);
+      font-weight: 600;
+    }
+
+    /* ==============================
+       CHANNEL BANNER + AVATAR
+    ============================== */
+    .channel-banner {
+      width: 100%; height: 210px;
+      background: linear-gradient(135deg, #2E1065 0%, #6D28D9 55%, #A78BFA 100%);
+      position: relative; overflow: hidden;
+    }
+    .channel-banner::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.09) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .channel-banner::before {
+      content: '';
+      position: absolute;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+      top: -80px; right: -60px;
+    }
+    .banner-upload-hint {
+      position: absolute; bottom: 14px; right: 16px; z-index: 2;
+      font-size: 11px; color: rgba(255,255,255,.6);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .banner-upload-hint svg { width: 12px; height: 12px; }
+
+    .channel-avatar-wrap {
+      position: absolute;
+      bottom: -48px; left: 50%; transform: translateX(-50%);
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      border: 4px solid white;
+      background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer; z-index: 3; overflow: hidden;
+      transition: transform .2s ease;
+    }
+    .channel-avatar-wrap:hover { transform: translateX(-50%) scale(1.04); }
+    .channel-avatar-initials {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px; font-weight: 700; color: white;
+    }
+
+    /* ==============================
+       CHANNEL INFO
+    ============================== */
+    .channel-info {
+      margin-top: 60px;
+      text-align: center;
+      padding: 0 20px 10px;
+    }
+    .channel-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700; color: var(--text-main);
+    }
+    .channel-handle { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
+    .channel-badge {
+      display: inline-block; margin-top: 8px;
+      background: var(--purple-pale); color: var(--purple-deep);
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    /* ==============================
+       STATS ROW
+    ============================== */
+    .stats-container {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      width: 100%; margin-top: 18px;
+      border-top: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .stat-card {
+      padding: 20px 12px; text-align: center;
+      border-right: 1px solid var(--gray-200);
+      background: var(--white);
+      transition: background .2s ease; cursor: default;
+    }
+    .stat-card:last-child { border-right: none; }
+    .stat-card:hover { background: var(--purple-ghost); }
+    .stat-icon { font-size: 18px; margin-bottom: 4px; }
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; font-weight: 700;
+      color: var(--purple-deep); line-height: 1;
+    }
+    .stat-label {
+      font-size: 10.5px; color: var(--gray-500); margin-top: 5px;
+      text-transform: uppercase; letter-spacing: .6px;
+    }
+
+    /* ==============================
+       CTA ROW
+    ============================== */
+    .cta-row {
+      display: flex; gap: 12px;
+      padding: 22px 20px; justify-content: center;
+    }
+    .cta-row .btn-lg { flex: 1; max-width: 210px; }
+
+    /* ==============================
+       STUDIO PAGE
+    ============================== */
+    #page-studio { background: var(--gray-50); }
+
+    .studio-topbar {
+      position: sticky; top: 0; z-index: 200;
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-xs);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 500; color: var(--gray-700);
+      cursor: pointer; padding: 7px 13px;
+      border-radius: 9px; border: 1.5px solid var(--gray-200);
+      background: white; transition: all .2s ease;
+    }
+    .back-btn svg { width: 14px; height: 14px; }
+    .back-btn:hover { border-color: var(--purple-light); color: var(--purple-main); }
+    .studio-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700; color: var(--text-main);
+    }
+
+    /* ==============================
+       STUDIO LAYOUT
+    ============================== */
+    .studio-layout {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+    .studio-sidebar {
+      width: 70px; background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      padding: 14px 0;
+      display: flex; flex-direction: column; gap: 3px;
+      flex-shrink: 0;
+      position: sticky; top: 60px;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    .sb-tab {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      padding: 10px 6px; cursor: pointer;
+      border-radius: 10px; margin: 0 5px;
+      color: var(--gray-400); transition: all .2s ease;
+    }
+    .sb-tab:hover { background: var(--purple-ghost); color: var(--purple-main); }
+    .sb-tab.active { background: var(--purple-pale); color: var(--purple-main); }
+    .sb-tab svg { width: 20px; height: 20px; }
+    .sb-label {
+      font-size: 8.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+
+    /* ==============================
+       STUDIO CONTENT
+    ============================== */
+    .studio-content {
+      flex: 1; padding: 20px 18px;
+      display: flex; flex-direction: column; gap: 20px;
+      overflow-y: auto; min-width: 0;
+    }
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==============================
+       ANALYTICS CARD
+    ============================== */
+    .analytics-card { padding: 22px; }
+    .analytics-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .analytics-htitle {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700; color: var(--text-main);
+    }
+    .analytics-hsub { font-size: 12px; color: var(--gray-500); margin-top: 3px; }
+    .analytics-period-badge {
+      font-size: 11px; font-weight: 600; color: var(--gray-500);
+      background: var(--gray-100); padding: 4px 10px;
+      border-radius: 20px; border: 1px solid var(--gray-200);
+    }
+    .analytics-nums {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-bottom: 20px;
+    }
+    .anum-card {
+      background: var(--purple-ghost);
+      border: 1px solid var(--purple-pale);
+      border-radius: 12px; padding: 14px 12px;
+    }
+    .anum-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700; color: var(--purple-deep);
+    }
+    .anum-label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+    .anum-change { font-size: 11px; font-weight: 600; color: var(--green); margin-top: 5px; }
+    .anum-change.down { color: var(--red); }
+    .chart-wrap { width: 100%; height: 175px; position: relative; }
+    #analyticsChart { display: block; width: 100%; height: 100%; }
+
+    /* ==============================
+       BANNER SECTIONS
+    ============================== */
+    .banner-section { padding: 20px; }
+    .banner-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15.5px; font-weight: 700; color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .banner-badge {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; font-weight: 600;
+      color: var(--purple-main); background: var(--purple-pale);
+      padding: 2px 9px; border-radius: 20px;
+    }
+    .banner-scroll {
+      display: flex; gap: 12px;
+      overflow-x: auto; padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--purple-pale) transparent;
+    }
+    .banner-scroll::-webkit-scrollbar { height: 4px; }
+    .banner-scroll::-webkit-scrollbar-thumb { background: var(--purple-pale); border-radius: 2px; }
+
+    .bcard {
+      flex-shrink: 0; width: 185px;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--gray-200);
+      background: var(--white); cursor: pointer;
+      transition: all .2s ease;
+    }
+    .bcard:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--purple-light); }
+    .bcard-thumb {
+      width: 100%; height: 105px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; font-size: 30px;
+    }
+    .bcard-play-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.12);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s ease;
+    }
+    .bcard:hover .bcard-play-overlay { opacity: 1; }
+    .bcard-play-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,.92);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .bcard-body { padding: 10px 11px 12px; }
+    .bcard-name {
+      font-size: 12px; font-weight: 600; color: var(--text-main);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .bcard-stats { display: flex; gap: 7px; margin-top: 6px; flex-wrap: wrap; }
+    .bstat { font-size: 10px; color: var(--gray-500); }
+    .bcard-revenue { margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--purple-main); }
+
+    /* ==============================
+       TWO-COL BANNERS
+    ============================== */
+    .two-col-banners { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* ==============================
+       PERFORMANCE TABLE
+    ============================== */
+    .table-section { padding: 20px; overflow-x: auto; }
+    .table-header-row {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 14px;
+    }
+    .table-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15.5px; font-weight: 700; color: var(--text-main);
+    }
+    .period-tabs { display: flex; gap: 5px; }
+    .ptab {
+      padding: 5px 13px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1.5px solid var(--gray-200);
+      background: white; color: var(--gray-500);
+      transition: all .15s ease;
+    }
+    .ptab.active { background: var(--purple-main); color: white; border-color: var(--purple-main); }
+    .ptab:hover:not(.active) { border-color: var(--purple-light); color: var(--purple-main); }
+
+    table { width: 100%; border-collapse: collapse; min-width: 520px; }
+    thead th {
+      text-align: left; font-size: 10.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .7px;
+      color: var(--gray-400); padding: 9px 12px;
+      border-bottom: 1.5px solid var(--gray-200);
+    }
+    thead th.c { text-align: center; }
+    tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .15s ease; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--purple-ghost); }
+    tbody td { padding: 11px 12px; font-size: 13px; color: var(--gray-700); vertical-align: middle; }
+    td.c { text-align: center; }
+
+    .mpill {
+      display: inline-block; background: var(--purple-ghost);
+      color: var(--purple-deep); font-size: 11.5px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .vthumbs {
+      width: 40px; height: 26px; border-radius: 4px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .vname-cell { display: flex; align-items: center; gap: 8px; }
+    .vname-text { font-size: 13px; font-weight: 500; color: var(--text-main); }
+
+    /* ==============================
+       GRADIENT HELPERS
+    ============================== */
+    .g1 { background: linear-gradient(135deg, #3B0764, #7C3AED); }
+    .g2 { background: linear-gradient(135deg, #1E1B4B, #4338CA); }
+    .g3 { background: linear-gradient(135deg, #4C1D95, #A78BFA); }
+    .g4 { background: linear-gradient(135deg, #6D28D9, #C4B5FD); }
+    .g5 { background: linear-gradient(135deg, #2E1065, #8B5CF6); }
+    .g6 { background: linear-gradient(135deg, #5B21B6, #DDD6FE); }
+    .g7 { background: linear-gradient(135deg, #312E81, #6366F1); }
+
+    /* ==============================
+       EARNINGS PAGE
+    ============================== */
+    #page-earnings { background: var(--gray-50); }
+
+    .earn-seg {
+      padding: 7px 18px; border-radius: 9px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      color: var(--gray-500); transition: all .18s ease; user-select: none;
+    }
+    .earn-seg.active {
+      background: var(--purple-main); color: white;
+      box-shadow: 0 2px 8px rgba(124,58,237,.25);
+    }
+    .curr-btn {
+      padding: 5px 12px; border-radius: 7px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      color: var(--gray-500); transition: all .15s ease; user-select: none;
+    }
+    .curr-btn.active { background: var(--purple-main); color: white; }
+    .tl-pill {
+      padding: 6px 14px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1.5px solid var(--gray-200);
+      background: white; color: var(--gray-500);
+      transition: all .15s ease; user-select: none;
+    }
+    .tl-pill.active { background: var(--purple-main); color: white; border-color: var(--purple-main); }
+    .tl-pill:hover:not(.active) { border-color: var(--purple-light); color: var(--purple-main); }
+
+    /* ==============================
+       LEGIBILITY PAGE
+    ============================== */
+    #page-legibility { background: var(--gray-50); }
+
+    .leg-hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, #1E0A3C 0%, #4C1D95 50%, #6D28D9 100%);
+      padding: 50px 24px 44px; text-align: center;
+    }
+    .leg-hero-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(50px); opacity: .25; pointer-events: none;
+    }
+    .leg-orb1 { width:260px;height:260px;background:#A78BFA;top:-80px;left:-60px;animation:legFloat 7s ease-in-out infinite; }
+    .leg-orb2 { width:200px;height:200px;background:#7C3AED;bottom:-60px;right:-40px;animation:legFloat 9s ease-in-out infinite reverse; }
+    .leg-orb3 { width:140px;height:140px;background:#DDD6FE;top:20px;right:60px;animation:legFloat 6s ease-in-out infinite 1s; }
+
+    @keyframes legFloat {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-18px) scale(1.06); }
+    }
+    .leg-hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.12); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.2); color: #DDD6FE;
+      font-size: 12px; font-weight: 600;
+      padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 18px; animation: legFadeUp .6s ease both;
+    }
+    .leg-hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px; font-weight: 700; line-height: 1.15;
+      color: white; margin-bottom: 12px;
+      animation: legFadeUp .6s ease .1s both;
+    }
+    .leg-hero-title em { color: #C4B5FD; font-style: italic; }
+    .leg-hero-sub {
+      font-size: 13.5px; color: rgba(255,255,255,.7);
+      max-width: 400px; margin: 0 auto 24px; line-height: 1.6;
+      animation: legFadeUp .6s ease .2s both;
+    }
+    .leg-hero-stats {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      animation: legFadeUp .6s ease .3s both;
+    }
+    .leg-hstat { text-align: center; }
+    .leg-hstat-val { display: block; font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:white; }
+    .leg-hstat-label { font-size:10px; color:rgba(255,255,255,.55); text-transform:uppercase; letter-spacing:.7px; }
+    .leg-hstat-div { width:1px; height:36px; background:rgba(255,255,255,.2); }
+
+    @keyframes legFadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .leg-body { padding: 20px 16px; display: flex; flex-direction: column; gap: 20px; }
+
+    .leg-section {
+      background: var(--white); border-radius: 18px;
+      border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); padding: 22px;
+    }
+    .leg-sec-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+    .leg-sec-icon {
+      width: 46px; height: 46px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid transparent; flex-shrink: 0;
+    }
+    .leg-icon-green  { background:#D1FAE5; color:#059669; border-color:#A7F3D0; }
+    .leg-icon-blue   { background:#DBEAFE; color:#2563EB; border-color:#BFDBFE; }
+    .leg-icon-purple { background:#EDE9FE; color:#7C3AED; border-color:#DDD6FE; }
+    .leg-sec-num  { font-size:10px; font-weight:700; color:var(--gray-400); letter-spacing:1px; text-transform:uppercase; }
+    .leg-sec-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:var(--text-main); }
+    .leg-sec-desc { font-size:13px; color:var(--gray-500); line-height:1.6; margin-bottom:18px; }
+
+    .leg-tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .leg-tier-card {
+      border-radius: 14px; padding: 18px;
+      position: relative; overflow: hidden;
+      border: 1.5px solid var(--gray-200);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .leg-tier-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .leg-tier-free { background: var(--purple-ghost); border-color: var(--purple-pale); }
+    .leg-tier-paid { background: #FFFBEB; border-color: #FDE68A; }
+    .leg-tier-glow {
+      position: absolute; width: 120px; height: 120px; border-radius: 50%;
+      background: var(--purple-light); filter: blur(40px); opacity: .15;
+      top: -30px; right: -30px; pointer-events: none;
+    }
+    .paid-glow { background: #FBBF24; }
+    .leg-tier-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .leg-tier-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+    .free-badge { background:var(--purple-pale); color:var(--purple-deep); }
+    .paid-badge { background:#FEF3C7; color:#92400E; }
+    .leg-tier-tag { font-size:10px; color:var(--gray-400); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+    .leg-metric { margin-bottom:12px; }
+    .leg-metric:last-child { margin-bottom:0; }
+    .leg-metric-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+    .leg-metric-icon { color:var(--gray-500); display:flex; }
+    .leg-metric-label { font-size:12px; color:var(--gray-500); flex:1; }
+    .leg-metric-val { font-size:13px; font-weight:700; color:var(--text-main); }
+    .leg-bar-bg { height:6px; background:var(--gray-200); border-radius:99px; overflow:hidden; }
+    .leg-bar-fill { height:100%; border-radius:99px; width:0; transition:width 1.2s cubic-bezier(.25,.8,.25,1); }
+    .leg-bar-hint { font-size:10px; color:var(--gray-400); margin-top:3px; }
+
+    .leg-ratings { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .leg-rating-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 14px; padding: 16px; text-align: center;
+      transition: transform .2s ease, box-shadow .2s ease;
+      opacity: 0; transform: translateY(12px);
+      animation: legCardIn .5s ease forwards;
+      animation-delay: var(--delay, 0s);
+    }
+    .leg-rating-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .leg-rating-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px; border: 2px solid transparent;
+      animation: legPulse 3s ease-in-out infinite;
+    }
+    @keyframes legPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,.15); }
+      50%      { box-shadow: 0 0 0 6px rgba(124,58,237,0); }
+    }
+    .leg-rating-badge { display:inline-block; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-bottom:8px; }
+    .leg-rating-desc { font-size:11.5px; color:var(--gray-500); line-height:1.5; margin-bottom:10px; }
+    .leg-rating-tags { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; }
+    .rtag { font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; }
+    .rtag-green  { background:#D1FAE5; color:#065F46; }
+    .rtag-blue   { background:#DBEAFE; color:#1E40AF; }
+    .rtag-orange { background:#FEF3C7; color:#92400E; }
+    .rtag-red    { background:#FEE2E2; color:#991B1B; }
+
+    @keyframes legCardIn {
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    .leg-rules { display:flex; flex-direction:column; gap:10px; }
+    .leg-rule-item {
+      display:flex; align-items:center; gap:12px;
+      padding:14px; border-radius:12px;
+      border:1px solid var(--gray-100); background:var(--gray-50);
+      transition:all .2s ease;
+      opacity:0; transform:translateX(-10px);
+      animation:legSlideIn .5s ease forwards;
+      animation-delay:var(--delay,0s);
+    }
+    .leg-rule-item:hover { background:var(--white); border-color:var(--purple-pale); box-shadow:var(--shadow-sm); }
+    @keyframes legSlideIn { to { opacity:1; transform:translateX(0); } }
+    .leg-rule-icon { width:40px; height:40px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .leg-rule-body { flex:1; min-width:0; }
+    .leg-rule-title { font-size:13.5px; font-weight:600; color:var(--text-main); margin-bottom:2px; }
+    .leg-rule-desc  { font-size:12px; color:var(--gray-500); line-height:1.4; }
+    .leg-rule-status { font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+    .danger { background:#FEE2E2; color:#991B1B; }
+    .warn   { background:#FEF3C7; color:#92400E; }
+    .safe   { background:#D1FAE5; color:#065F46; }
+
+    .leg-conduct-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .leg-conduct-card {
+      border:1.5px solid var(--gray-200); border-radius:14px; padding:16px;
+      transition:all .2s ease;
+      opacity:0; transform:translateY(10px);
+      animation:legCardIn .5s ease forwards;
+      animation-delay:var(--delay,0s);
+    }
+    .leg-conduct-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--purple-pale); }
+    .leg-conduct-icon { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+    .leg-conduct-title { font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:6px; }
+    .leg-conduct-body  { font-size:12px; color:var(--gray-500); line-height:1.5; margin-bottom:10px; }
+    .leg-conduct-footer { font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:20px; display:inline-block; }
+    .danger-footer { background:#FEE2E2; color:#991B1B; }
+    .warn-footer   { background:#FEF3C7; color:#92400E; }
+    .safe-footer   { background:#D1FAE5; color:#065F46; }
+
+    .leg-resources { display:flex; flex-direction:column; gap:10px; }
+    .leg-res-card {
+      display:flex; align-items:center; gap:14px;
+      padding:16px; border-radius:14px;
+      border:1.5px solid var(--gray-200);
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:all .25s ease;
+      opacity:0; transform:translateY(10px);
+      animation:legCardIn .5s ease forwards;
+      animation-delay:var(--delay,0s);
+    }
+    .leg-res-card:hover { border-color:var(--purple-light); box-shadow:var(--shadow-md); transform:translateX(4px); }
+    .leg-res-shine {
+      position:absolute; top:0; left:-75%; width:50%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+      transform:skewX(-15deg); transition:left .6s ease;
+    }
+    .leg-res-card:hover .leg-res-shine { left:130%; }
+    .leg-res-icon { width:48px; height:48px; border-radius:13px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .leg-res-content { flex:1; min-width:0; }
+    .leg-res-title { font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:3px; }
+    .leg-res-desc  { font-size:12px; color:var(--gray-500); line-height:1.4; }
+    .leg-res-arrow { color:var(--gray-400); transition:color .2s, transform .2s; }
+    .leg-res-card:hover .leg-res-arrow { color:var(--purple-main); transform:translateX(3px); }
+
+    .leg-reveal { opacity:0; transform:translateY(20px); transition:opacity .55s ease, transform .55s ease; }
+    .leg-reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ==============================
+       SETTINGS PAGE
+    ============================== */
+    .sett-row {
+      display:flex; align-items:center; gap:14px;
+      padding:14px 12px; border-radius:12px;
+      cursor:pointer; transition:background .15s; margin-bottom:4px;
+    }
+    .sett-row:hover { background:var(--purple-ghost); }
+    .sett-icon {
+      width:38px; height:38px; border-radius:11px;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; font-size:15px;
+    }
+    .sett-toggle { position:relative; width:44px; height:24px; flex-shrink:0; }
+    .sett-toggle input { opacity:0; width:0; height:0; }
+    .sett-slider {
+      position:absolute; inset:0; background:var(--gray-200);
+      border-radius:99px; cursor:pointer; transition:.3s;
+    }
+    .sett-slider:before {
+      content:''; position:absolute;
+      height:18px; width:18px; left:3px; bottom:3px;
+      background:white; border-radius:50%; transition:.3s;
+    }
+    .sett-toggle input:checked + .sett-slider { background:var(--purple-main); }
+    .sett-toggle input:checked + .sett-slider:before { transform:translateX(20px); }
+    .sett-section-title {
+      font-family:'Playfair Display',serif; font-size:17px;
+      font-weight:700; color:var(--text-main); margin-bottom:16px;
+    }
+    .earn-tab-btn {
+      padding:8px 18px; border-radius:9px;
+      font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--gray-500); border:none; background:transparent;
+      transition:all .18s;
+    }
+    .earn-tab-btn.active { background:var(--purple-main); color:white; box-shadow:0 2px 8px rgba(124,58,237,.25); }
+
+    @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+
+    /* ==============================
+       RESPONSIVE
+    ============================== */
+    @media (max-width: 520px) {
+      .analytics-nums { grid-template-columns: 1fr 1fr; }
+      .two-col-banners { grid-template-columns: 1fr; }
+      .topbar-brand { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       LOADING SCREEN
+  ============================================================ -->
+  <div id="dashLoader">
+    <div class="dash-spinner"></div>
+    <p>Loading your channel…</p>
+  </div>
+
+  <!-- ============================================================
+       PAGE 1 — HOME
+  ============================================================ -->
+  <div id="page-home" class="page active">
+
+    <div class="topbar">
+      <div class="topbar-brand">Pose <em>Channel</em></div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" onclick="openSettings()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Settings
+        </button>
+        <button class="btn btn-purple" onclick="auth.signOut().then(()=>window.location.href='index.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="tabs-bar">
+      <div class="tab-item active" data-tab="home"        onclick="onMainTab(this,'home')">🏠 Home</div>
+      <div class="tab-item"        data-tab="studio"      onclick="onMainTab(this,'studio')">🎬 Studio</div>
+      <div class="tab-item"        data-tab="earnings"    onclick="onMainTab(this,'earnings')">💰 Earnings</div>
+      <div class="tab-item"        data-tab="legibility"  onclick="onMainTab(this,'legibility')">📋 Legibility</div>
+    </div>
+
+    <div class="channel-banner">
+      <div class="banner-upload-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+        Edit banner
+      </div>
+      <div class="channel-avatar-wrap" title="Change channel photo">
+        <span class="channel-avatar-initials">P</span>
+      </div>
+    </div>
+
+    <div class="channel-info">
+      <div class="channel-name">Pose Channel</div>
+      <div class="channel-handle">@posechannel &nbsp;·&nbsp; Creator</div>
+      <span class="channel-badge">✦ Verified Creator</span>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">👁</div>
+        <div class="stat-value">—</div>
+        <div class="stat-label">Total Views</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎬</div>
+        <div class="stat-value">—</div>
+        <div class="stat-label">Videos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value">—</div>
+        <div class="stat-label">Subscribers</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn btn-purple btn-lg" onclick="alert('Upload Video')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+        Upload Video
+      </button>
+      <button class="btn btn-outline-purple btn-lg" onclick="alert('All Videos')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        </svg>
+        See All Videos
+      </button>
+    </div>
+
+  </div><!-- /page-home -->
+
+
+  <!-- ============================================================
+       PAGE 2 — STUDIO
+  ============================================================ -->
+  <div id="page-studio" class="page">
+
+    <div class="studio-topbar">
+      <button class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back
+      </button>
+      <span class="studio-title">Studio Analytics</span>
+    </div>
+
+    <div class="studio-layout">
+
+      <div class="studio-sidebar">
+        <div class="sb-tab active" onclick="onSidebarTab(this,'views')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+          <span class="sb-label">Views</span>
+        </div>
+        <div class="sb-tab" onclick="onSidebarTab(this,'likes')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          <span class="sb-label">Likes</span>
+        </div>
+        <div class="sb-tab" onclick="onSidebarTab(this,'fan')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span class="sb-label">Fan</span>
+        </div>
+        <div class="sb-tab" onclick="onSidebarTab(this,'comments')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+          </svg>
+          <span class="sb-label">Cmts</span>
+        </div>
+        <div class="sb-tab" onclick="onSidebarTab(this,'engagement')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+          <span class="sb-label">Engage</span>
+        </div>
+      </div>
+
+      <div class="studio-content">
+
+        <div class="card analytics-card">
+          <div class="analytics-header">
+            <div>
+              <div class="analytics-htitle" id="aTitle">Monthly Views</div>
+              <div class="analytics-hsub" id="aSub">Total views across all content · Last 6 months</div>
+            </div>
+            <div class="analytics-period-badge">Last 6 months</div>
+          </div>
+          <div class="analytics-nums" id="aNums"></div>
+          <div class="chart-wrap">
+            <canvas id="analyticsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card banner-section">
+          <div class="banner-title">🔥 Most Watched Videos <span class="banner-badge">Top 10</span></div>
+          <div class="banner-scroll" id="banner-watched"></div>
+        </div>
+
+        <div class="card banner-section">
+          <div class="banner-title">💰 Most Paid Videos <span class="banner-badge">Top Earners</span></div>
+          <div class="banner-scroll" id="banner-paid"></div>
+        </div>
+
+        <div class="two-col-banners">
+          <div class="card banner-section">
+            <div class="banner-title">❤️ Most Liked</div>
+            <div class="banner-scroll" id="banner-liked"></div>
+          </div>
+          <div class="card banner-section">
+            <div class="banner-title">⚡ Most Engaged</div>
+            <div class="banner-scroll" id="banner-engaged"></div>
+          </div>
+        </div>
+
+        <div class="card table-section">
+          <div class="table-header-row">
+            <div class="table-title">Video Performance</div>
+            <div class="period-tabs">
+              <div class="ptab active" onclick="onPeriod(this,'24h')">24 hrs</div>
+              <div class="ptab" onclick="onPeriod(this,'72h')">72 hrs</div>
+              <div class="ptab" onclick="onPeriod(this,'7d')">7 days</div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Video</th>
+                <th class="c">👁 Views</th>
+                <th class="c">❤️ Likes</th>
+                <th class="c">💬 Comments</th>
+                <th class="c">💰 Revenue</th>
+              </tr>
+            </thead>
+            <tbody id="perfBody"></tbody>
+          </table>
+        </div>
+
+      </div><!-- /studio-content -->
+    </div><!-- /studio-layout -->
+  </div><!-- /page-studio -->
+
+
+  <!-- ============================================================
+       PAGE 3 — EARNINGS
+  ============================================================ -->
+  <div id="page-earnings" class="page">
+
+    <div class="studio-topbar">
+      <button class="back-btn" onclick="goBackFromEarnings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back
+      </button>
+      <span class="studio-title">Earnings</span>
+    </div>
+
+    <div style="padding:16px 18px 0;">
+      <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;width:fit-content;">
+        <div class="earn-seg active" onclick="onEarnSeg(this,'free')">Free</div>
+        <div class="earn-seg" onclick="onEarnSeg(this,'paid')">Paid</div>
+        <div class="earn-seg" onclick="onEarnSeg(this,'total')">Total</div>
+      </div>
+    </div>
+
+    <div style="padding:16px 18px;">
+      <div class="card" style="padding:22px;">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <span style="font-size:13px;font-weight:500;color:var(--gray-500);">Revenue Summary</span>
+          <div style="display:flex;align-items:center;gap:0;background:var(--gray-100);border-radius:9px;padding:3px;border:1px solid var(--gray-200);">
+            <div class="curr-btn active" id="currNGN" onclick="onCurrency('NGN')">₦ NGN</div>
+            <div class="curr-btn" id="currUSD" onclick="onCurrency('USD')">$ USD</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100);">
+          <div>
+            <div style="font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:600;">Ads Revenue</div>
+            <div style="font-size:12px;color:var(--gray-500);margin-top:3px;">From platform ad partner program</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--purple-deep);" id="adsRevDisplay">—</div>
+            <div style="font-size:11px;color:var(--green);font-weight:600;margin-top:2px;" id="adsRevChange">—</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100);">
+          <div>
+            <div style="font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:600;">Direct Sales</div>
+            <div style="font-size:12px;color:var(--gray-500);margin-top:3px;">Pay-per-view &amp; purchases</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--purple-deep);" id="directRevDisplay">—</div>
+            <div style="font-size:11px;color:var(--green);font-weight:600;margin-top:2px;" id="directRevChange">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:14px;padding:18px 20px;text-align:center;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.9px;font-weight:700;color:var(--purple-mid);margin-bottom:8px;">Total Take-Home</div>
+          <div id="totalRevDisplay" style="font-family:'Playfair Display',serif;font-weight:700;color:var(--purple-deep);line-height:1;font-size:42px;">—</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-top:8px;" id="totalRevSub">—</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:6px;margin-top:12px;" id="rateNote">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+          </svg>
+          <span style="font-size:11px;color:var(--gray-400);" id="rateNoteText">Loading live exchange rate…</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:0 18px 30px;">
+      <div class="card" style="padding:20px;">
+        <div style="font-family:'Playfair Display',serif;font-size:15.5px;font-weight:700;color:var(--text-main);margin-bottom:16px;">📅 Revenue Timeline</div>
+        <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;">
+          <div class="tl-pill active" onclick="onTimeline(this,'24h')">24 hrs</div>
+          <div class="tl-pill" onclick="onTimeline(this,'72h')">72 hrs</div>
+          <div class="tl-pill" onclick="onTimeline(this,'7d')">7 days</div>
+          <div class="tl-pill" onclick="onTimeline(this,'30d')">30 days</div>
+        </div>
+        <div id="timelineList" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+
+  </div><!-- /page-earnings -->
+
+
+  <!-- ============================================================
+       PAGE 4 — LEGIBILITY
+  ============================================================ -->
+  <div id="page-legibility" class="page">
+
+    <div class="studio-topbar">
+      <button class="back-btn" onclick="goBackFromLegibility()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back
+      </button>
+      <span class="studio-title">Legibility &amp; Standards</span>
+    </div>
+
+    <div class="leg-hero">
+      <div class="leg-hero-orb leg-orb1"></div>
+      <div class="leg-hero-orb leg-orb2"></div>
+      <div class="leg-hero-orb leg-orb3"></div>
+      <div class="leg-hero-content">
+        <div class="leg-hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Platform Standards
+        </div>
+        <h1 class="leg-hero-title">Pose Channel<br><em>Legibility Guide</em></h1>
+        <p class="leg-hero-sub">Everything you need to know about monetization eligibility, content policies, and creator conduct on Pose Channel.</p>
+        <div class="leg-hero-stats">
+          <div class="leg-hstat"><span class="leg-hstat-val" data-count="5">0</span><span class="leg-hstat-label">Policy Sections</span></div>
+          <div class="leg-hstat-div"></div>
+          <div class="leg-hstat"><span class="leg-hstat-val" data-count="4">0</span><span class="leg-hstat-label">Rating Tiers</span></div>
+          <div class="leg-hstat-div"></div>
+          <div class="leg-hstat"><span class="leg-hstat-val" data-count="24">0</span><span class="leg-hstat-label">Hour Review</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="leg-body">
+
+      <!-- Section 1: Monetization Tiers -->
+      <div class="leg-section leg-reveal">
+        <div class="leg-sec-header">
+          <div class="leg-sec-icon leg-icon-green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="leg-sec-num">01</div>
+            <div class="leg-sec-title">Monetization &amp; Eligibility Tiers</div>
+          </div>
+        </div>
+        <p class="leg-sec-desc">Track your progress toward each revenue tier directly from your dashboard. Both thresholds must be met simultaneously to qualify.</p>
+        <div class="leg-tiers">
+          <div class="leg-tier-card leg-tier-free">
+            <div class="leg-tier-glow"></div>
+            <div class="leg-tier-head">
+              <div class="leg-tier-badge free-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                Standard
+              </div>
+              <div class="leg-tier-tag">Free Content</div>
+            </div>
+            <div class="leg-tier-metrics">
+              <div class="leg-metric">
+                <div class="leg-metric-row">
+                  <div class="leg-metric-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                  </div>
+                  <span class="leg-metric-label">Followers</span>
+                  <span class="leg-metric-val">2,000</span>
+                </div>
+                <div class="leg-bar-bg"><div class="leg-bar-fill" data-w="74" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
+                <div class="leg-bar-hint">1,480 / 2,000</div>
+              </div>
+              <div class="leg-metric">
+                <div class="leg-metric-row">
+                  <div class="leg-metric-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  </div>
+                  <span class="leg-metric-label">Views</span>
+                  <span class="leg-metric-val">1,000</span>
+                </div>
+                <div class="leg-bar-bg"><div class="leg-bar-fill" data-w="92" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
+                <div class="leg-bar-hint">920 / 1,000</div>
+              </div>
+            </div>
+          </div>
+          <div class="leg-tier-card leg-tier-paid">
+            <div class="leg-tier-glow paid-glow"></div>
+            <div class="leg-tier-head">
+              <div class="leg-tier-badge paid-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Premium
+              </div>
+              <div class="leg-tier-tag">Paid Content</div>
+            </div>
+            <div class="leg-tier-metrics">
+              <div class="leg-metric">
+                <div class="leg-metric-row">
+                  <div class="leg-metric-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    </svg>
+                  </div>
+                  <span class="leg-metric-label">Followers</span>
+                  <span class="leg-metric-val">500</span>
+                </div>
+                <div class="leg-bar-bg"><div class="leg-bar-fill" data-w="100" style="background:linear-gradient(90deg,#D97706,#FBBF24)"></div></div>
+                <div class="leg-bar-hint" style="color:var(--green)">✓ Threshold met</div>
+              </div>
+              <div class="leg-metric">
+                <div class="leg-metric-row">
+                  <div class="leg-metric-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  </div>
+                  <span class="leg-metric-label">Views</span>
+                  <span class="leg-metric-val">100</span>
+                </div>
+                <div class="leg-bar-bg"><div class="leg-bar-fill" data-w="100" style="background:linear-gradient(90deg,#D97706,#FBBF24)"></div></div>
+                <div class="leg-bar-hint" style="color:var(--green)">✓ Threshold met</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Age Rating -->
+      <div class="leg-section leg-reveal">
+        <div class="leg-sec-header">
+          <div class="leg-sec-icon leg-icon-blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="leg-sec-num">02</div>
+            <div class="leg-sec-title">Mandatory Age Rating System</div>
+          </div>
+        </div>
+        <p class="leg-sec-desc">Every video must be manually rated during upload. Inaccurate ratings are a direct violation of Pose Channel terms and may lead to demonetization.</p>
+        <div class="leg-ratings">
+          <div class="leg-rating-card" style="--delay:.05s">
+            <div class="leg-rating-icon" style="background:#D1FAE5;color:#059669;border-color:#A7F3D0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/>
+              </svg>
+            </div>
+            <div class="leg-rating-badge" style="background:#D1FAE5;color:#065F46">All Ages</div>
+            <div class="leg-rating-desc">General audiences. No profanity, violence, or suggestive themes of any kind.</div>
+            <div class="leg-rating-tags"><span class="rtag rtag-green">✔ Ad-safe</span><span class="rtag rtag-green">✔ Monetizable</span></div>
+          </div>
+          <div class="leg-rating-card" style="--delay:.1s">
+            <div class="leg-rating-icon" style="background:#DBEAFE;color:#2563EB;border-color:#BFDBFE">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 8v4"/><circle cx="12" cy="16" r="1" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="leg-rating-badge" style="background:#DBEAFE;color:#1E40AF">Teen</div>
+            <div class="leg-rating-desc">Mild language or fantasy violence permitted. Not suitable for very young audiences.</div>
+            <div class="leg-rating-tags"><span class="rtag rtag-blue">✔ Ad-safe</span><span class="rtag rtag-blue">✔ Monetizable</span></div>
+          </div>
+          <div class="leg-rating-card" style="--delay:.15s">
+            <div class="leg-rating-icon" style="background:#FEF3C7;color:#D97706;border-color:#FDE68A">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="leg-rating-badge" style="background:#FEF3C7;color:#92400E">Mature</div>
+            <div class="leg-rating-desc">Adults only. Must be strictly gated — younger users must not be able to access this content.</div>
+            <div class="leg-rating-tags"><span class="rtag rtag-orange">⚠ Gated</span><span class="rtag rtag-orange">Limited Ads</span></div>
+          </div>
+          <div class="leg-rating-card" style="--delay:.2s">
+            <div class="leg-rating-icon" style="background:#FEE2E2;color:#DC2626;border-color:#FECACA">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <div class="leg-rating-badge" style="background:#FEE2E2;color:#991B1B">Inaccurate</div>
+            <div class="leg-rating-desc">Providing a false rating violates Pose Channel terms and will result in immediate demonetization.</div>
+            <div class="leg-rating-tags"><span class="rtag rtag-red">✖ Violation</span><span class="rtag rtag-red">Demonetized</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Content Integrity -->
+      <div class="leg-section leg-reveal">
+        <div class="leg-sec-header">
+          <div class="leg-sec-icon leg-icon-purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.084-.134-2.135-.382-3.016z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="leg-sec-num">03</div>
+            <div class="leg-sec-title">Content Integrity &amp; Advertising Safety</div>
+          </div>
+        </div>
+        <p class="leg-sec-desc">Violation of any rule below results in immediate removal of ads from that video — or the entire channel.</p>
+        <div class="leg-rules">
+          <div class="leg-rule-item" style="--delay:.04s">
+            <div class="leg-rule-icon" style="background:#FEF3C7;color:#D97706">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              </svg>
+            </div>
+            <div class="leg-rule-body">
+              <div class="leg-rule-title">Inappropriate Language</div>
+              <div class="leg-rule-desc">Frequent profanity — especially in the first 30 seconds — disqualifies a video from monetization.</div>
+            </div>
+            <div class="leg-rule-status danger">✖ Ad Risk</div>
+          </div>
+          <div class="leg-rule-item" style="--delay:.08s">
+            <div class="leg-rule-icon" style="background:#FEE2E2;color:#DC2626">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              </svg>
+            </div>
+            <div class="leg-rule-body">
+              <div class="leg-rule-title">Violence &amp; Sensitive Events</div>
+              <div class="leg-rule-desc">Graphic violence, self-harm encouragement, or exploitation of tragedies is strictly prohibited.</div>
+            </div>
+            <div class="leg-rule-status danger">✖ Banned</div>
+          </div>
+          <div class="leg-rule-item" style="--delay:.12s">
+            <div class="leg-rule-icon" style="background:#FEE2E2;color:#DC2626">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+            </div>
+            <div class="leg-rule-body">
+              <div class="leg-rule-title">Harmful or Dangerous Acts</div>
+              <div class="leg-rule-desc">Videos that show or encourage acts leading to serious physical injury are not eligible for ads.</div>
+            </div>
+            <div class="leg-rule-status danger">✖ Banned</div>
+          </div>
+          <div class="leg-rule-item" style="--delay:.16s">
+            <div class="leg-rule-icon" style="background:#FEF3C7;color:#D97706">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+              </svg>
+            </div>
+            <div class="leg-rule-body">
+              <div class="leg-rule-title">Shocking Content</div>
+              <div class="leg-rule-desc">Content designed to disgust or petrify (e.g. graphic medical procedures without educational context) is banned.</div>
+            </div>
+            <div class="leg-rule-status warn">⚠ Review</div>
+          </div>
+          <div class="leg-rule-item" style="--delay:.20s">
+            <div class="leg-rule-icon" style="background:#EDE9FE;color:#7C3AED">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+            </div>
+            <div class="leg-rule-body">
+              <div class="leg-rule-title">Intellectual Property</div>
+              <div class="leg-rule-desc">Ads only served where the creator owns 100% of visual and audio rights. Unlicensed music or clips restrict ad-serving.</div>
+            </div>
+            <div class="leg-rule-status safe">✔ Required</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Rules of Conduct -->
+      <div class="leg-section leg-reveal">
+        <div class="leg-sec-header">
+          <div class="leg-sec-icon" style="background:#FCE7F3;color:#DB2777;border-color:#FBCFE8">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <div>
+            <div class="leg-sec-num">04</div>
+            <div class="leg-sec-title">Rules of Good Conduct</div>
+          </div>
+        </div>
+        <p class="leg-sec-desc">These rules govern the entire Pose community and ensure a professional, respectful environment for all creators and viewers.</p>
+        <div class="leg-conduct-grid">
+          <div class="leg-conduct-card" style="--delay:.05s">
+            <div class="leg-conduct-icon" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE);color:#6D28D9">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="leg-conduct-title">User Safety</div>
+            <div class="leg-conduct-body">Content that promotes bullying, harassment, or doxing of other users will result in a <strong>permanent ban</strong>.</div>
+            <div class="leg-conduct-footer danger-footer">⚡ Permanent Ban</div>
+          </div>
+          <div class="leg-conduct-card" style="--delay:.1s">
+            <div class="leg-conduct-icon" style="background:linear-gradient(135deg,#FEE2E2,#FECACA);color:#DC2626">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <div class="leg-conduct-title">Zero Hate Tolerance</div>
+            <div class="leg-conduct-body">No content promoting hatred or discrimination based on race, religion, gender, or orientation.</div>
+            <div class="leg-conduct-footer danger-footer">⚡ Zero Tolerance</div>
+          </div>
+          <div class="leg-conduct-card" style="--delay:.15s">
+            <div class="leg-conduct-icon" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);color:#D97706">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M9 9h6M9 12h6M9 15h4"/>
+              </svg>
+            </div>
+            <div class="leg-conduct-title">No Deceptive Behaviour</div>
+            <div class="leg-conduct-body">Clickbait thumbnails are prohibited. Titles, metadata, and tags must accurately represent the video content.</div>
+            <div class="leg-conduct-footer warn-footer">⚠ Policy Violation</div>
+          </div>
+          <div class="leg-conduct-card" style="--delay:.2s">
+            <div class="leg-conduct-icon" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0);color:#059669">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <div class="leg-conduct-title">Interactive Safety</div>
+            <div class="leg-conduct-body">Users can report any video. Pose Channel moderators review <strong>all reports within 24 hours</strong> of submission.</div>
+            <div class="leg-conduct-footer safe-footer">✔ 24hr Review</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Resources -->
+      <div class="leg-section leg-reveal" style="margin-bottom:40px;">
+        <div class="leg-sec-header">
+          <div class="leg-sec-icon" style="background:#DBEAFE;color:#2563EB;border-color:#BFDBFE">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <div>
+            <div class="leg-sec-num">05</div>
+            <div class="leg-sec-title">Essential Operational Resources</div>
+          </div>
+        </div>
+        <p class="leg-sec-desc">Official tools and guides to help you create, protect, and monetize your content on Pose Channel.</p>
+        <div class="leg-resources">
+          <div class="leg-res-card" style="--delay:.05s" onclick="alert('Opening Creator Handbook…')">
+            <div class="leg-res-shine"></div>
+            <div class="leg-res-icon" style="background:linear-gradient(135deg,#4C1D95,#7C3AED)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+            </div>
+            <div class="leg-res-content">
+              <div class="leg-res-title">Pose Creator Handbook</div>
+              <div class="leg-res-desc">Optimize video lighting, sound, and titles for maximum legibility and reach.</div>
+            </div>
+            <div class="leg-res-arrow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+          <div class="leg-res-card" style="--delay:.1s" onclick="alert('Opening Safety Center…')">
+            <div class="leg-res-shine"></div>
+            <div class="leg-res-icon" style="background:linear-gradient(135deg,#065F46,#059669)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="leg-res-content">
+              <div class="leg-res-title">Pose Safety Center</div>
+              <div class="leg-res-desc">Learn how to block accounts, manage privacy settings, and report violations.</div>
+            </div>
+            <div class="leg-res-arrow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+          <div class="leg-res-card" style="--delay:.15s" onclick="alert('Opening Monetization Appeals…')">
+            <div class="leg-res-shine"></div>
+            <div class="leg-res-icon" style="background:linear-gradient(135deg,#92400E,#D97706)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="leg-res-content">
+              <div class="leg-res-title">Monetization Appeals</div>
+              <div class="leg-res-desc">Request a manual review if you believe your video was incorrectly demonetized.</div>
+            </div>
+            <div class="leg-res-arrow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /leg-body -->
+  </div><!-- /page-legibility -->
+
+
+  <!-- ============================================================
+       FIREBASE SDK
+  ============================================================ -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- ============================================================
+       APPLICATION SCRIPT
+  ============================================================ -->
+  <script>
+    /* ====================================================
+       FIREBASE INIT
+    ==================================================== */
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",
+      authDomain:        "rewarderhub.firebaseapp.com",
+      projectId:         "rewarderhub",
+      storageBucket:     "rewarderhub.appspot.com",
+      messagingSenderId: "85965945106",
+      appId:             "1:85965945106:web:fa0a57d8968926e1041bcb",
+      measurementId:     "G-F2ERB5NGN0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db   = firebase.firestore();
+    const auth = firebase.auth();
+
+    /* ====================================================
+       GET UID FROM URL
+    ==================================================== */
+    const urlParams = new URLSearchParams(window.location.search);
+    let CHANNEL_UID = urlParams.get('uid');
+
+    /* ====================================================
+       GLOBAL STATE
+    ==================================================== */
+    let channelData  = null;
+    let videosData   = [];
+    let earningsData = null;
+
+    let currentMetric = 'views';
+    let currentPeriod = '24h';
+    let earnSeg       = 'total';
+    let earnCurrency  = 'NGN';
+    let usdToNgn      = null;
+    let earnTimeline  = '24h';
+
+    /* ====================================================
+       AUTH → BOOT
+    ==================================================== */
+    auth.onAuthStateChanged(user => {
+      if (!user) { window.location.href = 'index.html'; return; }
+      if (!CHANNEL_UID) CHANNEL_UID = user.uid;
+      bootDashboard();
+    });
+
+    /* ====================================================
+       BOOT — REAL-TIME LISTENERS
+    ==================================================== */
+    function bootDashboard() {
+      db.collection('channels').doc(CHANNEL_UID)
+        .onSnapshot(snap => {
+          if (!snap.exists) { window.location.href = 'channelintro.html'; return; }
+          channelData = snap.data();
+          renderHome();
+          hideLoader();
+        }, err => { console.error('Channel error:', err); hideLoader(); });
+
+      db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos')
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(snap => {
+          videosData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderHomeStats();
+          if (isPageActive('page-studio')) renderStudioData();
+        }, err => console.error('Videos error:', err));
+
+      db.collection('channels').doc(CHANNEL_UID)
+        .collection('earnings').doc('summary')
+        .onSnapshot(snap => {
+          earningsData = snap.exists ? snap.data() : null;
+          if (isPageActive('page-earnings')) {
+            renderEarningsSummary();
+            renderTimeline();
+          }
+        }, err => console.error('Earnings error:', err));
+    }
+
+    function isPageActive(id) {
+      const p = document.getElementById(id);
+      return p && p.classList.contains('active');
+    }
+
+    function hideLoader() {
+      const l = document.getElementById('dashLoader');
+      if (l) l.classList.add('hidden');
+    }
+
+    /* ====================================================
+       HOME PAGE
+    ==================================================== */
+    function renderHome() {
+      if (!channelData) return;
+      const d = channelData;
+
+      if (d.bannerURL) {
+        const banner = document.querySelector('.channel-banner');
+        banner.style.backgroundImage    = `url('${d.bannerURL}')`;
+        banner.style.backgroundSize     = 'cover';
+        banner.style.backgroundPosition = 'center';
+        banner.style.backgroundRepeat   = 'no-repeat';
+      }
+
+      const avatarWrap = document.querySelector('.channel-avatar-wrap');
+      if (d.profileURL) {
+        avatarWrap.innerHTML = `<img src="${d.profileURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+      } else {
+        const initial = (d.name || 'C').charAt(0).toUpperCase();
+        avatarWrap.innerHTML = `<span class="channel-avatar-initials">${initial}</span>`;
+      }
+
+      document.querySelector('.channel-name').textContent = d.name || 'My Channel';
+      const slug = (d.name || 'channel').toLowerCase().replace(/\s+/g, '');
+      document.querySelector('.channel-handle').textContent = `@${slug} · ${d.country || 'Creator'}`;
+
+      renderHomeStats();
+    }
+
+    function renderHomeStats() {
+      const totalViews = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
+      const videoCount = videosData.length;
+      const subs       = channelData ? (Number(channelData.subscribers) || 0) : 0;
+
+      const vals = document.querySelectorAll('.stat-value');
+      const lbls = document.querySelectorAll('.stat-label');
+      if (vals[0]) vals[0].textContent = fmt(totalViews);
+      if (vals[1]) vals[1].textContent = videoCount;
+      if (vals[2]) vals[2].textContent = fmt(subs);
+      if (lbls[2]) lbls[2].textContent = 'Subscribers';
+    }
+
+    /* ====================================================
+       FORMAT HELPERS
+    ==================================================== */
+    function fmt(n) {
+      n = Number(n) || 0;
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000)     return (n / 1_000).toFixed(0) + 'K';
+      return n.toString();
+    }
+
+    function fmtCurr(usd) {
+      usd = Number(usd) || 0;
+      if (earnCurrency === 'USD')
+        return '$' + usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const ngn = usd * (usdToNgn || 1620);
+      return '₦' + ngn.toLocaleString('en-NG', { maximumFractionDigits: 0 });
+    }
+
+    /* ====================================================
+       NAVIGATION
+    ==================================================== */
+    function onMainTab(el, tab) {
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      const pages = ['page-home','page-studio','page-earnings','page-legibility'];
+      pages.forEach(id => { const p = document.getElementById(id); if (p) p.classList.remove('active'); });
+
+      if (tab === 'studio')     { openStudio();     return; }
+      if (tab === 'earnings')   { openEarnings();   return; }
+      if (tab === 'legibility') { openLegibility(); return; }
+      document.getElementById('page-home').classList.add('active');
+    }
+
+    function openStudio() {
+      document.getElementById('page-studio').classList.add('active');
+      window.scrollTo(0, 0);
+      renderStudioData();
+    }
+
+    function goBack() {
+      document.getElementById('page-studio').classList.remove('active');
+      document.getElementById('page-home').classList.add('active');
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="home"]').classList.add('active');
+    }
+
+    function openEarnings() {
+      document.getElementById('page-earnings').classList.add('active');
+      window.scrollTo(0, 0);
+      fetchExchangeRate();
+    }
+
+    function goBackFromEarnings() {
+      document.getElementById('page-earnings').classList.remove('active');
+      document.getElementById('page-home').classList.add('active');
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="home"]').classList.add('active');
+    }
+
+    function openLegibility() {
+      document.getElementById('page-legibility').classList.add('active');
+      window.scrollTo(0, 0);
+
+      setTimeout(() => {
+        document.querySelectorAll('.leg-bar-fill').forEach(bar => {
+          bar.style.width = (bar.getAttribute('data-w') || 0) + '%';
+        });
+      }, 300);
+
+      document.querySelectorAll('.leg-hstat-val[data-count]').forEach(el => {
+        const target = parseInt(el.getAttribute('data-count'));
+        let current  = 0;
+        const step   = Math.ceil(target / 24);
+        const timer  = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = current;
+          if (current >= target) clearInterval(timer);
+        }, 50);
+      });
+
+      setTimeout(() => {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('#page-legibility .leg-reveal').forEach(el => obs.observe(el));
+      }, 100);
+    }
+
+    function goBackFromLegibility() {
+      document.getElementById('page-legibility').classList.remove('active');
+      document.getElementById('page-home').classList.add('active');
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="home"]').classList.add('active');
+    }
+
+    /* ====================================================
+       STUDIO — RENDER
+    ==================================================== */
+    function renderStudioData() {
+      currentMetric = currentMetric || 'views';
+      renderAnalytics(currentMetric);
+      renderBanners();
+      renderPerfTable(currentPeriod || '24h');
+      document.querySelectorAll('.sb-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('.sb-tab').classList.add('active');
+      setTimeout(drawChart, 80);
+    }
+
+    function getLast6Months() {
+      const result = [];
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        result.push({
+          key:   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
+          label: d.toLocaleString('default', { month: 'short' }),
+        });
+      }
+      return result;
+    }
+
+    const MONTHS_LABELS = getLast6Months().map(m => m.label);
+
+    function buildMonthlyData(field) {
+      const months  = getLast6Months();
+      const buckets = {};
+      months.forEach(m => buckets[m.key] = 0);
+      videosData.forEach(v => {
+        if (!v.createdAt) return;
+        const date = v.createdAt.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
+        const key  = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        if (buckets[key] !== undefined) buckets[key] += Number(v[field] || 0);
+      });
+      return months.map(m => buckets[m.key]);
+    }
+
+    function buildEngagementData() {
+      const months  = getLast6Months();
+      const buckets = {};
+      months.forEach(m => buckets[m.key] = { total: 0, count: 0 });
+      videosData.forEach(v => {
+        if (!v.createdAt || !v.views) return;
+        const date = v.createdAt.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
+        const key  = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        if (buckets[key] !== undefined) {
+          const eng = ((Number(v.likes || 0) + Number(v.comments || 0)) / Number(v.views)) * 100;
+          buckets[key].total += eng;
+          buckets[key].count += 1;
+        }
+      });
+      return months.map(m => {
+        const b = buckets[m.key];
+        return b.count > 0 ? Math.round(b.total / b.count) : 0;
+      });
+    }
+
+    const METRIC_CONFIG = {
+      views:      { title: 'Monthly Views',        sub: 'Total views across all content · Last 6 months',             color: '#7C3AED' },
+      likes:      { title: 'Monthly Likes',         sub: 'Total likes received across all content · Last 6 months',   color: '#DB2777' },
+      fan:        { title: 'Subscriber Growth',     sub: 'Total subscribers on your channel',                         color: '#059669' },
+      comments:   { title: 'Monthly Comments',      sub: 'Comments across all content · Last 6 months',               color: '#D97706' },
+      engagement: { title: 'Engagement Rate (%)',   sub: 'Average engagement rate across all videos · Last 6 months', color: '#7C3AED' },
+    };
+
+    let CHART_DATA = { data: [0,0,0,0,0,0], color: '#7C3AED' };
+
+    function renderAnalytics(metric) {
+      const cfg = METRIC_CONFIG[metric];
+      let data, nums;
+
+      if (metric === 'engagement') {
+        data = buildEngagementData();
+        const cur  = data[data.length - 1] || 0;
+        const prev = data[data.length - 2] || 0;
+        const peak = Math.max(...data) || 0;
+        const avg  = data.length ? Math.round(data.reduce((a,b) => a+b, 0) / data.length) : 0;
+        const chg  = prev > 0 ? (((cur - prev) / prev) * 100).toFixed(0) + '%' : '—';
+        nums = [
+          { l: 'Current Rate', v: cur  + '%', c: chg },
+          { l: 'Avg. Rate',    v: avg  + '%', c: '' },
+          { l: 'Peak Rate',    v: peak + '%', c: '' },
+        ];
+      } else if (metric === 'fan') {
+        const subs = channelData ? (Number(channelData.subscribers) || 0) : 0;
+        data = [0, 0, 0, 0, 0, subs];
+        nums = [
+          { l: 'Total Fans',   v: fmt(subs), c: '' },
+          { l: 'Avg. Monthly', v: '0',       c: '' },
+          { l: 'All-time',     v: fmt(subs), c: '' },
+        ];
+      } else {
+        data = buildMonthlyData(metric);
+        const cur  = data[data.length - 1] || 0;
+        const prev = data[data.length - 2] || 0;
+        const peak = Math.max(...data) || 0;
+        const avg  = Math.round(data.reduce((a,b) => a+b, 0) / data.length) || 0;
+        const chg  = prev > 0
+          ? (cur >= prev ? '+' : '') + (((cur - prev) / prev) * 100).toFixed(0) + '%'
+          : '—';
+        nums = [
+          { l: 'This Month',   v: fmt(cur),  c: chg },
+          { l: 'Avg. Monthly', v: fmt(avg),  c: '' },
+          { l: 'Peak Month',   v: fmt(peak), c: '' },
+        ];
+      }
+
+      CHART_DATA = { data, color: cfg.color };
+
+      document.getElementById('aTitle').textContent = cfg.title;
+      document.getElementById('aSub').textContent   = cfg.sub;
+      document.getElementById('aNums').innerHTML = nums.map(n => `
+        <div class="anum-card">
+          <div class="anum-value">${n.v || '0'}</div>
+          <div class="anum-label">${n.l}</div>
+          ${n.c ? `<div class="anum-change">${n.c} vs last period</div>` : ''}
+        </div>`).join('');
+    }
+
+    function onSidebarTab(el, metric) {
+      document.querySelectorAll('.sb-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      currentMetric = metric;
+      renderAnalytics(metric);
+      setTimeout(drawChart, 50);
+    }
+
+    function onPeriod(el, period) {
+      document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      currentPeriod = period;
+      renderPerfTable(period);
+    }
+
+    /* ====================================================
+       CHART
+    ==================================================== */
+    function drawChart() {
+      const canvas = document.getElementById('analyticsChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const raw = CHART_DATA.data;
+      const col = CHART_DATA.color;
+
+      canvas.width  = canvas.offsetWidth  * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const W   = canvas.offsetWidth;
+      const H   = canvas.offsetHeight;
+      const pad = { t: 16, r: 14, b: 30, l: 46 };
+      const iW  = W - pad.l - pad.r;
+      const iH  = H - pad.t - pad.b;
+
+      const allZero = raw.every(v => v === 0);
+      const minV    = allZero ? 0 : Math.min(...raw) * 0.88;
+      const maxV    = allZero ? 10 : Math.max(...raw) * 1.06;
+      const rng     = maxV - minV || 1;
+
+      const px = i => pad.l + (i / (raw.length - 1)) * iW;
+      const py = v => H - pad.b - ((v - minV) / rng) * iH;
+
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.strokeStyle = '#F4F4F5'; ctx.lineWidth = 1;
+      for (let g = 0; g <= 4; g++) {
+        const y = pad.t + iH * g / 4;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+      }
+
+      const grad = ctx.createLinearGradient(0, pad.t, 0, H - pad.b);
+      grad.addColorStop(0, col + '40');
+      grad.addColorStop(1, col + '00');
+
+      const buildPath = () => {
+        ctx.moveTo(px(0), py(raw[0]));
+        for (let i = 1; i < raw.length; i++) {
+          const cx = (px(i - 1) + px(i)) / 2;
+          ctx.bezierCurveTo(cx, py(raw[i - 1]), cx, py(raw[i]), px(i), py(raw[i]));
+        }
+      };
+
+      ctx.beginPath(); buildPath();
+      ctx.lineTo(px(raw.length - 1), H - pad.b);
+      ctx.lineTo(px(0), H - pad.b);
+      ctx.closePath();
+      ctx.fillStyle = grad; ctx.fill();
+
+      ctx.beginPath(); buildPath();
+      ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
+
+      raw.forEach((v, i) => {
+        ctx.beginPath();
+        ctx.arc(px(i), py(v), 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = col; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+      });
+
+      ctx.font = '10px DM Sans, sans-serif'; ctx.fillStyle = '#A1A1AA'; ctx.textAlign = 'center';
+      MONTHS_LABELS.forEach((m, i) => ctx.fillText(m, px(i), H - 7));
+
+      ctx.textAlign = 'right';
+      for (let g = 0; g <= 4; g++) {
+        const v   = minV + rng * (1 - g / 4);
+        const y   = pad.t + iH * g / 4;
+        const lbl = v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(0)+'K' : Math.round(v)+'';
+        ctx.fillText(lbl, pad.l - 5, y + 4);
+      }
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (isPageActive('page-studio')) drawChart();
+      }, 120);
+    });
+
+    /* ====================================================
+       BANNER CARDS
+    ==================================================== */
+    const G_CLASSES = ['g1','g2','g3','g4','g5','g6','g7'];
+    const V_EMOJIS  = ['🎬','🏆','⭐','💫','🔥','🌟','✨','💎','🎯','🎪'];
+
+    function makeBcard(v, showRev, idx) {
+      const g     = G_CLASSES[idx % G_CLASSES.length];
+      const emoji = V_EMOJIS[idx % V_EMOJIS.length];
+      const thumb = v.thumbnailURL
+        ? `<img src="${v.thumbnailURL}" style="width:100%;height:100%;object-fit:cover;" />`
+        : `<span>${emoji}</span>`;
+      return `
+        <div class="bcard">
+          <div class="bcard-thumb ${v.thumbnailURL ? '' : g}" style="${v.thumbnailURL ? 'background:#000;' : ''}">
+            ${thumb}
+            <div class="bcard-play-overlay">
+              <div class="bcard-play-btn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#7C3AED">
+                  <polygon points="5,3 19,12 5,21"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="bcard-body">
+            <div class="bcard-name">${v.title || v.name || 'Untitled'}</div>
+            <div class="bcard-stats">
+              <span class="bstat">👁 ${fmt(v.views    || 0)}</span>
+              <span class="bstat">❤️ ${fmt(v.likes    || 0)}</span>
+              <span class="bstat">💬 ${fmt(v.comments || 0)}</span>
+            </div>
+            ${showRev ? `<div class="bcard-revenue">$${(Number(v.revenue) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })} earned</div>` : ''}
+          </div>
+        </div>`;
+    }
+
+    function emptyBannerMsg(msg) {
+      return `<div style="padding:24px;color:var(--gray-400);font-size:13px;text-align:center;width:100%;font-style:italic;">${msg}</div>`;
+    }
+
+    function renderBanners() {
+      if (!videosData.length) {
+        const msg = emptyBannerMsg('No videos yet — upload your first video');
+        ['banner-watched','banner-paid','banner-liked','banner-engaged']
+          .forEach(id => { document.getElementById(id).innerHTML = msg; });
+        return;
+      }
+      const engSort = v => ((Number(v.likes||0) + Number(v.comments||0)) / (Number(v.views)||1)) * 100;
+      const byViews = [...videosData].sort((a,b) => (b.views||0)   - (a.views||0));
+      const byRev   = [...videosData].sort((a,b) => (b.revenue||0) - (a.revenue||0));
+      const byLikes = [...videosData].sort((a,b) => (b.likes||0)   - (a.likes||0)).slice(0,4);
+      const byEng   = [...videosData].sort((a,b) => engSort(b) - engSort(a)).slice(0,4);
+
+      document.getElementById('banner-watched').innerHTML = byViews.map((v,i) => makeBcard(v, true,  i)).join('');
+      document.getElementById('banner-paid').innerHTML    = byRev.map((v,i)   => makeBcard(v, true,  i)).join('');
+      document.getElementById('banner-liked').innerHTML   = byLikes.map((v,i) => makeBcard(v, false, i)).join('');
+      document.getElementById('banner-engaged').innerHTML = byEng.map((v,i)   => makeBcard(v, false, i)).join('');
+    }
+
+    /* ====================================================
+       PERFORMANCE TABLE
+    ==================================================== */
+    function renderPerfTable(period) {
+      const tbody = document.getElementById('perfBody');
+      if (!videosData.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--gray-400);font-size:13px;font-style:italic;">
+          No videos yet. Upload your first video to see performance data.
+        </td></tr>`;
+        return;
+      }
+      const rows = [...videosData].sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0)).slice(0, 10);
+      tbody.innerHTML = rows.map((r, i) => {
+        const g   = G_CLASSES[i % G_CLASSES.length];
+        const rev = '$' + (Number(r.revenue) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return `
+          <tr>
+            <td>
+              <div class="vname-cell">
+                <div class="vthumbs ${g}"></div>
+                <span class="vname-text">${r.title || r.name || 'Untitled'}</span>
+              </div>
+            </td>
+            <td class="c"><span class="mpill">${fmt(r.views    || 0)}</span></td>
+            <td class="c"><span class="mpill">${fmt(r.likes    || 0)}</span></td>
+            <td class="c"><span class="mpill">${fmt(r.comments || 0)}</span></td>
+            <td class="c"><span class="mpill">${rev}</span></td>
+          </tr>`;
+      }).join('');
+    }
+
+    /* ====================================================
+       EARNINGS — EXCHANGE RATE
+    ==================================================== */
+    async function fetchExchangeRate() {
+      document.getElementById('rateNoteText').textContent = 'Fetching live exchange rate…';
+      try {
+        const res  = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const json = await res.json();
+        usdToNgn   = json.rates['NGN'];
+        document.getElementById('rateNoteText').textContent =
+          `Live rate: $1 USD = ₦${usdToNgn.toLocaleString('en-NG', { maximumFractionDigits: 2 })} · Updated just now`;
+      } catch {
+        usdToNgn = 1620;
+        document.getElementById('rateNoteText').textContent =
+          'Rate unavailable — using fallback: $1 = ₦1,620';
+      }
+      renderEarningsSummary();
+      renderTimeline();
+    }
+
+    /* ====================================================
+       EARNINGS — RENDER
+    ==================================================== */
+    function getSegValues() {
+      if (!earningsData) return { ads: 0, direct: 0, adsChange: '—', directChange: '—' };
+      if (earnSeg === 'free') return {
+        ads: earningsData.adsRevenue || 0, direct: 0,
+        adsChange: earningsData.adsChange || '—', directChange: '—',
+      };
+      if (earnSeg === 'paid') return {
+        ads: 0, direct: earningsData.directRevenue || 0,
+        adsChange: '—', directChange: earningsData.directChange || '—',
+      };
+      return {
+        ads:          earningsData.adsRevenue    || 0,
+        direct:       earningsData.directRevenue || 0,
+        adsChange:    earningsData.adsChange     || '—',
+        directChange: earningsData.directChange  || '—',
+      };
+    }
+
+    function renderEarningsSummary() {
+      const seg   = getSegValues();
+      const total = seg.ads + seg.direct;
+
+      document.getElementById('adsRevDisplay').textContent    = seg.ads    > 0 ? fmtCurr(seg.ads)    : '—';
+      document.getElementById('directRevDisplay').textContent = seg.direct > 0 ? fmtCurr(seg.direct) : '—';
+      document.getElementById('adsRevChange').textContent     = seg.adsChange;
+      document.getElementById('directRevChange').textContent  = seg.directChange;
+
+      const totalEl = document.getElementById('totalRevDisplay');
+      totalEl.textContent = total > 0 ? fmtCurr(total) : '₦0';
+      totalEl.style.fontSize = earnCurrency === 'NGN' ? '32px' : '42px';
+
+      document.getElementById('totalRevSub').textContent = total === 0
+        ? 'No earnings yet — keep uploading to start earning'
+        : earnCurrency === 'NGN'
+          ? `≈ $${total.toLocaleString('en-US', { minimumFractionDigits: 2 })} USD`
+          : `≈ ₦${(total * (usdToNgn || 1620)).toLocaleString('en-NG')} NGN`;
+    }
+
+    function renderTimeline() {
+      const list = document.getElementById('timelineList');
+      const tl   = earningsData?.timeline?.[earnSeg]?.[earnTimeline];
+      if (!tl || !tl.length) {
+        list.innerHTML = `<div style="padding:28px;text-align:center;color:var(--gray-400);font-size:13px;font-style:italic;">
+          No revenue data for this period yet.
+        </div>`;
+        return;
+      }
+      list.innerHTML = tl.map(r => {
+        const isDiff = r.diff;
+        const val    = fmtCurr(r.usd || 0);
+        return `
+          <div style="display:flex;align-items:center;justify-content:space-between;
+            padding:14px 16px;border-radius:12px;
+            background:${isDiff ? 'var(--purple-ghost)' : 'var(--gray-50)'};
+            border:1px solid ${isDiff ? 'var(--purple-pale)' : 'var(--gray-200)'};">
+            <div>
+              <div style="font-size:13px;font-weight:${isDiff?'700':'500'};
+                color:${isDiff?'var(--purple-deep)':'var(--gray-700)'};">${r.label}</div>
+              ${isDiff ? '<div style="font-size:11px;color:var(--purple-mid);margin-top:2px;">vs prior period</div>' : ''}
+            </div>
+            <div style="font-family:'Playfair Display',serif;font-size:${isDiff?'20':'18'}px;font-weight:700;
+              color:${isDiff?'var(--purple-deep)':'var(--gray-900)'};">
+              ${isDiff && (r.usd||0) > 0 ? '+' : ''}${val}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function onEarnSeg(el, seg) {
+      document.querySelectorAll('.earn-seg').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      earnSeg = seg;
+      renderEarningsSummary();
+      renderTimeline();
+    }
+
+    function onCurrency(curr) {
+      earnCurrency = curr;
+      document.getElementById('currNGN').classList.toggle('active', curr === 'NGN');
+      document.getElementById('currUSD').classList.toggle('active', curr === 'USD');
+      renderEarningsSummary();
+      renderTimeline();
+    }
+
+    function onTimeline(el, period) {
+      document.querySelectorAll('.tl-pill').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      earnTimeline = period;
+      renderTimeline();
+    }
+
+    /* ====================================================
+       SETTINGS
+    ==================================================== */
+    function openSettings() {
+      if (document.getElementById('page-settings')) {
+        ['page-home','page-studio','page-earnings','page-legibility'].forEach(id => {
+          const p = document.getElementById(id); if (p) p.classList.remove('active');
+        });
+        document.getElementById('page-settings').classList.add('active');
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      const d       = channelData || {};
+      const name    = d.name || 'My Channel';
+      const slug    = name.toLowerCase().replace(/\s+/g, '');
+      const initial = name.charAt(0).toUpperCase();
+      const subs    = fmt(Number(d.subscribers) || 0);
+      const coins   = fmt(Number(d.coins) || 0);
+      const earned  = earningsData
+        ? fmtCurr((earningsData.adsRevenue || 0) + (earningsData.directRevenue || 0))
+        : '₦0';
+
+      const avatarHTML = d.profileURL
+        ? `<img src="${d.profileURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`
+        : initial;
+
+      const page = document.createElement('div');
+      page.id        = 'page-settings';
+      page.className = 'page active';
+      page.innerHTML = `
+        <div class="studio-topbar">
+          <button class="back-btn" onclick="closeSettings()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back
+          </button>
+          <span class="studio-title">Settings</span>
+        </div>
+
+        <div style="max-width:700px;margin:0 auto;padding:20px 18px 80px;">
+
+          <!-- PROFILE CARD -->
+          <div style="background:linear-gradient(135deg,#2E1065,#6D28D9);border-radius:20px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;">
+            <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-60px;right:-50px;"></div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+              <div id="settAvatar" onclick="openModal('photoModal')"
+                style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);
+                display:flex;align-items:center;justify-content:center;
+                font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:white;
+                border:3px solid rgba(255,255,255,.3);flex-shrink:0;cursor:pointer;overflow:hidden;">
+                ${avatarHTML}
+              </div>
+              <div style="flex:1;">
+                <div id="displayName" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${name}</div>
+                <div id="displayHandle" style="font-size:13px;color:rgba(255,255,255,.65);margin-top:2px;">@${slug} · ${d.country || 'Creator'} ✦</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+              <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
+                <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${earned}</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Total Earned</div>
+              </div>
+              <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
+                <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">🪙 ${coins}</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Pose Coins</div>
+              </div>
+              <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
+                <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${subs}</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Subscribers</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button onclick="openModal('editProfileModal')"
+                style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
+                border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
+                <i class="fa-solid fa-pen" style="margin-right:6px;font-size:12px;"></i>Edit Profile
+              </button>
+              <button onclick="openModal('photoModal')"
+                style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
+                border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
+                <i class="fa-solid fa-camera" style="margin-right:6px;font-size:12px;"></i>Change Photo
+              </button>
+            </div>
+          </div>
+
+          <!-- HOW YOU EARN -->
+          <div class="card" style="padding:22px;margin-bottom:20px;">
+            <div class="sett-section-title"><i class="fa-solid fa-coins" style="color:var(--purple-main);margin-right:8px;"></i>How You Earn on Pose</div>
+            <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:18px;line-height:1.6;">
+              With Pose, creators earn in two main ways: <strong>Pay-As-You-Watch</strong> (direct viewer payments via Pose Coin)
+              and <strong>Ad Revenue</strong> (earn from free video views and engagement).
+            </p>
+            <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;width:fit-content;margin-bottom:18px;">
+              <button class="earn-tab-btn active" onclick="switchEarnTab(this,'model2')">
+                <i class="fa-solid fa-coins" style="margin-right:5px;"></i>Pay-Per-Watch
+              </button>
+              <button class="earn-tab-btn" onclick="switchEarnTab(this,'ads')">
+                <i class="fa-solid fa-rectangle-ad" style="margin-right:5px;"></i>Ad Revenue
+              </button>
+            </div>
+            <div id="panel-model2">
+              <div style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:14px;padding:18px;">
+                <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;">
+                  <div style="background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-coins" style="color:white;font-size:16px;"></i>
+                  </div>
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:var(--text-main);">Pay-As-You-Watch</div>
+                    <div style="font-size:11.5px;color:var(--purple-mid);">Viewers pay per video using Pose Coin · No subscriptions</div>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                  <div style="background:white;border-radius:10px;padding:12px;border:1px solid var(--gray-200);">
+                    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-bottom:8px;">Coin Pricing</div>
+                    <div style="font-size:12px;color:var(--gray-700);line-height:2;">
+                      🪙 1–8 · Short video<br>🪙 8–20 · Medium video<br>🪙 20–40 · Movie/Long
+                    </div>
+                  </div>
+                  <div style="background:white;border-radius:10px;padding:12px;border:1px solid var(--gray-200);">
+                    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-bottom:10px;">Revenue Split</div>
+                    <div>
+                      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-700);margin-bottom:4px;"><span>You</span><span style="font-weight:700;color:var(--purple-deep);">75%</span></div>
+                      <div style="height:8px;background:var(--gray-200);border-radius:99px;overflow:hidden;"><div style="height:100%;width:75%;background:linear-gradient(90deg,var(--purple-deep),var(--purple-mid));border-radius:99px;"></div></div>
+                    </div>
+                    <div style="margin-top:8px;">
+                      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-500);margin-bottom:4px;"><span>Pose</span><span style="font-weight:600;">25%</span></div>
+                      <div style="height:8px;background:var(--gray-200);border-radius:99px;overflow:hidden;"><div style="height:100%;width:25%;background:#D1D5DB;border-radius:99px;"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="openModal('coinPriceModal')"
+                  style="width:100%;padding:12px;border-radius:11px;background:var(--purple-main);color:white;font-size:13px;font-weight:600;cursor:pointer;border:none;box-shadow:0 4px 14px rgba(124,58,237,.3);">
+                  <i class="fa-solid fa-coins" style="margin-right:6px;"></i>Set Coin Price for Next Upload
+                </button>
+              </div>
+            </div>
+            <div id="panel-ads" style="display:none;">
+              <div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:18px;">
+                <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center;">
+                  <div style="background:linear-gradient(135deg,#92400E,#D97706);width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-rectangle-ad" style="color:white;font-size:16px;"></i>
+                  </div>
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:var(--text-main);">Ad Revenue — Free Videos</div>
+                    <div style="font-size:11.5px;color:#B45309;">Earn from views on your free content</div>
+                  </div>
+                </div>
+                <div style="background:white;border-radius:10px;padding:12px;border:1px solid #FDE68A;margin-bottom:12px;">
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#FEF3C7;border-radius:9px;">
+                    <i class="fa-solid fa-eye" style="color:#D97706;font-size:18px;"></i>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#92400E;">₦200–₦500 per 1,000 views</div>
+                      <div style="font-size:11.5px;color:#B45309;">Minimum 1,000 free views to unlock payout</div>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="openModal('boostModal')"
+                  style="width:100%;padding:12px;border-radius:11px;background:linear-gradient(135deg,#92400E,#D97706);color:white;font-size:13px;font-weight:600;cursor:pointer;border:none;">
+                  <i class="fa-solid fa-rocket" style="margin-right:6px;"></i>Boost a Video Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- NOTIFICATIONS -->
+          <div class="card" style="padding:22px;margin-bottom:20px;">
+            <div class="sett-section-title"><i class="fa-solid fa-bell" style="color:var(--purple-main);margin-right:8px;"></i>Notifications</div>
+            ${[
+              { id:'notif1', label:'New view on paid video',  desc:'Notify when someone buys a view',       on: true  },
+              { id:'notif2', label:'Ad revenue milestone',    desc:'Alert at ₦5K, ₦10K, ₦50K earned',      on: true  },
+              { id:'notif3', label:'New follower',            desc:'When someone follows your channel',     on: true  },
+              { id:'notif4', label:'Comment on video',        desc:'Get notified on new comments',          on: false },
+              { id:'notif5', label:'Payout processed',        desc:'When earnings are sent to your bank',   on: true  },
+            ].map(n => `
+              <div class="sett-row" style="justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div class="sett-icon" style="background:var(--purple-ghost);color:var(--purple-main);"><i class="fa-solid fa-bell"></i></div>
+                  <div>
+                    <div style="font-size:13.5px;font-weight:600;color:var(--text-main);">${n.label}</div>
+                    <div style="font-size:12px;color:var(--gray-500);">${n.desc}</div>
+                  </div>
+                </div>
+                <label class="sett-toggle">
+                  <input type="checkbox" ${n.on ? 'checked' : ''} onchange="saveNotifPref('${n.id}', this.checked)">
+                  <span class="sett-slider"></span>
+                </label>
+              </div>`).join('')}
+          </div>
+
+          <!-- PRIVACY & SECURITY -->
+          <div class="card" style="padding:22px;margin-bottom:20px;">
+            <div class="sett-section-title"><i class="fa-solid fa-shield-halved" style="color:var(--purple-main);margin-right:8px;"></i>Privacy &amp; Security</div>
+            <div class="sett-row" onclick="openModal('passwordModal')">
+              <div class="sett-icon" style="background:#FEE2E2;color:#DC2626;"><i class="fa-solid fa-lock"></i></div>
+              <div style="flex:1;"><div style="font-size:13.5px;font-weight:600;color:var(--text-main);">Change Password</div><div style="font-size:12px;color:var(--gray-500);">Update your account password</div></div>
+              <i class="fa-solid fa-chevron-right" style="color:var(--gray-400);font-size:13px;"></i>
+            </div>
+            <div class="sett-row" style="justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div class="sett-icon" style="background:#DBEAFE;color:#2563EB;"><i class="fa-solid fa-eye-slash"></i></div>
+                <div>
+                  <div style="font-size:13.5px;font-weight:600;color:var(--text-main);">Private Channel</div>
+                  <div style="font-size:12px;color:var(--gray-500);">Hide from public search</div>
+                </div>
+              </div>
+              <label class="sett-toggle">
+                <input type="checkbox" onchange="saveChannelField('isPrivate', this.checked)">
+                <span class="sett-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ACCOUNT ACTIONS -->
+          <div class="card" style="padding:22px;margin-bottom:20px;">
+            <div class="sett-section-title"><i class="fa-solid fa-user-gear" style="color:var(--purple-main);margin-right:8px;"></i>Account Actions</div>
+            <button onclick="confirmLogout()"
+              style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+              padding:12px;border-radius:11px;font-size:14px;font-weight:600;color:#DC2626;
+              background:#FEF2F2;border:1.5px solid #FECACA;cursor:pointer;">
+              <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </button>
+            <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--gray-400);">
+              Pose Channel · ${d.email || ''}
+            </div>
+          </div>
+
+        </div><!-- /max-width -->
+
+        <div id="settModals"></div>
+        <div id="settToast"
+          style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+          background:var(--text-main);color:white;padding:10px 22px;border-radius:30px;
+          font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:9999;
+          pointer-events:none;white-space:nowrap;"></div>
+      `;
+
+      ['page-home','page-studio','page-earnings','page-legibility'].forEach(id => {
+        const p = document.getElementById(id); if (p) p.classList.remove('active');
+      });
+      document.body.appendChild(page);
+      window.scrollTo(0, 0);
+    }
+
+    /* ── Save helpers ── */
+    async function saveChannelField(field, value) {
+      try {
+        await db.collection('channels').doc(CHANNEL_UID).update({ [field]: value });
+        showToast('Saved!');
+      } catch (e) { showToast('Save failed: ' + e.message); }
+    }
+
+    async function saveNotifPref(key, value) {
+      try {
+        await db.collection('channels').doc(CHANNEL_UID)
+          .update({ [`notifications.${key}`]: value });
+        showToast('Notification preference saved');
+      } catch { showToast('Preference saved locally'); }
+    }
+
+    function switchEarnTab(el, tab) {
+      document.querySelectorAll('.earn-tab-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('panel-model2').style.display = tab === 'model2' ? 'block' : 'none';
+      document.getElementById('panel-ads').style.display    = tab === 'ads'    ? 'block' : 'none';
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('settToast');
+      if (!t) return;
+      t.textContent = msg;
+      t.style.opacity   = '1';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        t.style.opacity   = '0';
+        t.style.transform = 'translateX(-50%) translateY(20px)';
+      }, 2500);
+    }
+
+    function openModal(id) {
+      const d = channelData || {};
+      const modals = {
+        editProfileModal: `
+          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:20px;">Edit Profile</h3>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:5px;">CHANNEL NAME</label>
+            <input id="editName" value="${d.name || ''}"
+              style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--gray-200);font-size:14px;color:var(--text-main);outline:none;"
+              onfocus="this.style.borderColor='var(--purple-main)'"
+              onblur="this.style.borderColor='var(--gray-200)'" />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:5px;">DESCRIPTION</label>
+            <textarea id="editDesc"
+              style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--gray-200);font-size:14px;color:var(--text-main);outline:none;resize:none;height:80px;font-family:'DM Sans',sans-serif;"
+              onfocus="this.style.borderColor='var(--purple-main)'"
+              onblur="this.style.borderColor='var(--gray-200)'">${d.description || ''}</textarea>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="saveProfile()" style="flex:1;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;">Save Changes</button>
+            <button onclick="closeModal()" style="padding:11px 18px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>
+          </div>`,
+
+        passwordModal: `
+          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:20px;">Change Password</h3>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:5px;">NEW PASSWORD</label>
+            <input id="newPwd" type="password" placeholder="Min. 6 characters"
+              style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--gray-200);font-size:14px;outline:none;"
+              onfocus="this.style.borderColor='var(--purple-main)'"
+              onblur="this.style.borderColor='var(--gray-200)'" />
+          </div>
+          <div style="display:flex;gap:10px;margin-top:6px;">
+            <button onclick="changePassword()" style="flex:1;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;">Update Password</button>
+            <button onclick="closeModal()" style="padding:11px 18px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>
+          </div>`,
+
+        photoModal: `
+          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;">Change Channel Photo</h3>
+          <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:16px;">Upload a new profile image for your channel.</p>
+          <input type="file" id="newPhotoFile" accept="image/*" style="display:none" onchange="uploadNewPhoto(this)" />
+          <button onclick="document.getElementById('newPhotoFile').click()"
+            style="width:100%;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;">
+            <i class="fa-solid fa-camera" style="margin-right:6px;"></i>Choose Photo
+          </button>
+          <button onclick="closeModal()" style="width:100%;padding:11px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>`,
+
+        coinPriceModal: `
+          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;">Set Coin Price</h3>
+          <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:20px;">Choose how many Pose Coins viewers pay to watch your next upload.</p>
+          <div style="background:var(--purple-ghost);border-radius:14px;padding:16px;margin-bottom:16px;">
+            <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--purple-deep);text-align:center;margin:12px 0 4px;" id="coinVal">🪙 8</div>
+            <div style="font-size:13px;color:var(--gray-500);text-align:center;margin-bottom:16px;" id="coinNaira">≈ ₦240 per view</div>
+            <input type="range" style="width:100%;margin:10px 0;" min="1" max="40" value="8" id="coinSlider"
+              oninput="const v=+this.value;document.getElementById('coinVal').textContent='🪙 '+v;document.getElementById('coinNaira').textContent='≈ ₦'+(v*30).toLocaleString()+' per view';document.getElementById('coinCat').textContent=v<=8?'Short Video':v<=20?'Medium Video':'Movie / Long';">
+            <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--gray-400);margin-top:4px;">
+              <span>🪙1 (₦30)</span><span>🪙40 (₦1,200)</span>
+            </div>
+          </div>
+          <div style="background:white;border-radius:11px;padding:12px 14px;border:1px solid var(--gray-200);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;color:var(--gray-500);">Category</span>
+            <span style="font-size:13px;font-weight:700;color:var(--purple-deep);" id="coinCat">Short Video</span>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="saveCoinPrice()" style="flex:1;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;">Confirm Price</button>
+            <button onclick="closeModal()" style="padding:11px 18px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>
+          </div>`,
+
+        boostModal: `
+          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;">Boost a Video</h3>
+          <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:18px;">Select a promotion stage to amplify your video's reach.</p>
+          ${[
+            { stage:'Stage 1', price:'₦50,000',  coins:'🪙 2,000',  reach:'Up to 100,000 views',   col:'#D97706' },
+            { stage:'Stage 2', price:'₦100,000', coins:'🪙 4,000',  reach:'Up to 250,000 views',   col:'#B45309' },
+            { stage:'Stage 3', price:'₦250,000', coins:'🪙 10,000', reach:'Up to 1,000,000 views', col:'#92400E' },
+          ].map(s => `
+            <div onclick="document.querySelectorAll('.boost-opt').forEach(x=>x.style.border='1.5px solid #FDE68A');this.style.border='2.5px solid #D97706';window._selectedBoost='${s.stage}';"
+              class="boost-opt"
+              style="display:flex;justify-content:space-between;align-items:center;
+              background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:12px;
+              padding:13px 15px;margin-bottom:8px;cursor:pointer;">
+              <div>
+                <div style="font-size:13.5px;font-weight:700;color:var(--text-main);">${s.stage}</div>
+                <div style="font-size:12px;color:#B45309;">${s.coins} · ${s.reach}</div>
+              </div>
+              <div style="font-size:14px;font-weight:700;color:${s.col};">${s.price}</div>
+            </div>`).join('')}
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button onclick="if(!window._selectedBoost){showToast('Please select a stage');return;}showToast(window._selectedBoost+' boost activated!');closeModal();"
+              style="flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#92400E,#D97706);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;">
+              <i class="fa-solid fa-rocket" style="margin-right:6px;"></i>Boost Now
+            </button>
+            <button onclick="closeModal()" style="padding:11px 18px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>
+          </div>`,
+      };
+
+      const content = modals[id];
+      if (!content) return;
+      const container = document.getElementById('settModals');
+      container.innerHTML = `
+        <div onclick="if(event.target===this)closeModal();"
+          style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;
+          display:flex;align-items:flex-end;justify-content:center;padding:0;">
+          <div style="background:white;border-radius:24px 24px 0 0;padding:28px 24px 40px;
+            width:100%;max-width:520px;max-height:85vh;overflow-y:auto;
+            animation:slideUp .3s cubic-bezier(.25,.8,.25,1);">
+            <div style="width:40px;height:4px;background:var(--gray-200);border-radius:99px;margin:0 auto 22px;"></div>
+            ${content}
+          </div>
+        </div>`;
+    }
+
+    function closeModal() {
+      const c = document.getElementById('settModals');
+      if (c) c.innerHTML = '';
+    }
+
+    async function saveProfile() {
+      const name = document.getElementById('editName')?.value.trim();
+      const desc = document.getElementById('editDesc')?.value.trim();
+      if (!name) { showToast('Channel name is required'); return; }
+      try {
+        await db.collection('channels').doc(CHANNEL_UID).update({ name, description: desc || '' });
+        const el = document.getElementById('displayName');
+        if (el) el.textContent = name;
+        closeModal();
+        showToast('Profile updated!');
+      } catch (e) { showToast('Save failed: ' + e.message); }
+    }
+
+    async function changePassword() {
+      const pwd = document.getElementById('newPwd')?.value;
+      if (!pwd || pwd.length < 6) { showToast('Password must be at least 6 characters'); return; }
+      try {
+        await auth.currentUser.updatePassword(pwd);
+        closeModal();
+        showToast('Password updated successfully');
+      } catch (e) { showToast('Error: ' + e.message); }
+    }
+
+    async function uploadNewPhoto(input) {
+      const file = input.files[0];
+      if (!file) return;
+      showToast('Uploading photo…');
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'posepreset');
+        const res  = await fetch('https://api.cloudinary.com/v1_1/dzhdgxjhl/image/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        const url  = data.secure_url;
+        await db.collection('channels').doc(CHANNEL_UID).update({ profileURL: url });
+        const avatarWrap = document.querySelector('.channel-avatar-wrap');
+        if (avatarWrap)
+          avatarWrap.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+        const settAvatar = document.getElementById('settAvatar');
+        if (settAvatar)
+          settAvatar.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+        closeModal();
+        showToast('Profile photo updated!');
+      } catch (e) { showToast('Upload failed: ' + e.message); }
+    }
+
+    async function saveCoinPrice() {
+      const price = Number(document.getElementById('coinSlider')?.value) || 8;
+      try {
+        await db.collection('channels').doc(CHANNEL_UID).update({ defaultCoinPrice: price });
+        closeModal();
+        showToast(`Coin price set to 🪙 ${price}`);
+      } catch (e) { showToast('Save failed: ' + e.message); }
+    }
+
+    function closeSettings() {
+      const p = document.getElementById('page-settings');
+      if (p) p.classList.remove('active');
+      document.getElementById('page-home').classList.add('active');
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="home"]').classList.add('active');
+    }
+
+    function confirmLogout() {
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;
+          display:flex;align-items:center;justify-content:center;padding:20px;">
+          <div style="background:white;border-radius:20px;padding:28px;max-width:340px;width:100%;text-align:center;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#FEF2F2;
+              display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+              <i class="fa-solid fa-right-from-bracket" style="color:#DC2626;font-size:22px;"></i>
+            </div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:8px;">Log Out?</div>
+            <div style="font-size:13px;color:var(--gray-500);margin-bottom:22px;">You will be signed out of your Pose Channel account.</div>
+            <button onclick="auth.signOut().then(()=>window.location.href='index.html')"
+              style="width:100%;padding:12px;border-radius:11px;background:#DC2626;color:white;
+              font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;">
+              <i class="fa-solid fa-right-from-bracket" style="margin-right:6px;"></i>Yes, Log Out
+            </button>
+            <button onclick="document.body.removeChild(this.closest('div[style*=fixed]').parentElement);"
+              style="width:100%;padding:12px;border-radius:11px;background:var(--gray-100);
+              color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">
+              Cancel
+            </button>
+          </div>
+        </div>`;
+      document.body.appendChild(div);
+    }
+  </script>
+
+</body>
+</html>
