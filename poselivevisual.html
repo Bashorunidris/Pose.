@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Go Live</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple:       #7C3AED;
+  --purple-mid:   #9D5CF6;
+  --purple-light: #C084FC;
+  --purple-glow:  rgba(124,58,237,0.45);
+  --pink:         #EC4899;
+  --pink-glow:    rgba(236,72,153,0.35);
+  --black:        #06060A;
+  --black-2:      #0D0D14;
+  --black-3:      #13131E;
+  --black-4:      #1A1A28;
+  --glass:        rgba(255,255,255,0.055);
+  --glass-b:      rgba(255,255,255,0.10);
+  --muted:        rgba(255,255,255,0.42);
+  --text:         #fff;
+
+  /* Tab accent colors */
+  --video-c:  #7C3AED;
+  --voice-c:  #EC4899;
+  --chat-c:   #3B82F6;
+  --gaming-c: #10B981;
+}
+
+html, body {
+  height: 100%; width: 100%;
+  background: var(--black);
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  overflow: hidden;
+}
+
+#app {
+  position: relative;
+  width: 100%; height: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── AMBIENT ── */
+.ambient { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.orb { position: absolute; border-radius: 50%; filter: blur(90px); animation: drift 9s ease-in-out infinite alternate; }
+.orb-1 { width: 320px; height: 320px; background: radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%); top: -100px; left: -80px; }
+.orb-2 { width: 260px; height: 260px; background: radial-gradient(circle, rgba(236,72,153,0.18), transparent 70%); top: 40px; right: -90px; animation-delay: -4s; }
+.orb-3 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%); bottom: 180px; left: 40%; animation-delay: -7s; }
+.orb-accent { width: 0; height: 0; transition: width 0.5s, height 0.5s, background 0.5s; border-radius: 50%; filter: blur(100px); top: 30%; left: 20%; opacity: 0.5; }
+
+@keyframes drift {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(25px, 35px) scale(1.12); }
+}
+
+.grid-tex {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at top, black 0%, transparent 65%);
+}
+
+/* ── TOP BAR ── */
+#topbar {
+  position: relative; z-index: 10;
+  display: flex; align-items: center;
+  padding: 52px 20px 16px;
+  gap: 14px;
+  animation: slideDown 0.45s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.back-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--glass);
+  border: 1px solid var(--glass-b);
+  backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  color: #fff;
+}
+.back-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.08); }
+.back-btn:active { transform: scale(0.9); }
+.back-icon { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+.topbar-title { flex: 1; }
+.topbar-title h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.topbar-title p { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 400; }
+
+.live-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(124,58,237,0.18);
+  border: 1px solid rgba(124,58,237,0.38);
+  border-radius: 100px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--purple-light); flex-shrink: 0;
+}
+.pulse-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--purple-light);
+  animation: pulseDot 1.3s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.25; transform: scale(0.65); }
+}
+
+/* ── TAB BAR ── */
+#tab-bar {
+  position: relative; z-index: 10;
+  padding: 0 20px 0;
+  animation: fadeUp 0.45s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.tab-track {
+  display: flex; gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 5px;
+}
+
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 9px 4px;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  border: 1px solid transparent;
+  position: relative; overflow: hidden;
+}
+.tab-btn:hover { transform: scale(1.04); }
+.tab-btn:active { transform: scale(0.96); }
+
+.tab-btn .t-icon { font-size: 18px; line-height: 1; }
+.tab-btn .t-label { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); transition: color 0.25s; white-space: nowrap; }
+
+/* Active states per tab */
+.tab-btn.active-video  { background: rgba(124,58,237,0.22); border-color: rgba(124,58,237,0.38); }
+.tab-btn.active-voice  { background: rgba(236,72,153,0.22); border-color: rgba(236,72,153,0.38); }
+.tab-btn.active-chat   { background: rgba(59,130,246,0.22);  border-color: rgba(59,130,246,0.38); }
+.tab-btn.active-gaming { background: rgba(16,185,129,0.22);  border-color: rgba(16,185,129,0.38); }
+
+.tab-btn.active-video  .t-label { color: var(--purple-light); }
+.tab-btn.active-voice  .t-label { color: #F9A8D4; }
+.tab-btn.active-chat   .t-label { color: #93C5FD; }
+.tab-btn.active-gaming .t-label { color: #6EE7B7; }
+
+.tab-btn .tab-glow {
+  position: absolute; inset: 0; border-radius: 13px; opacity: 0; transition: opacity 0.3s;
+}
+.tab-btn.active-video  .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.3), transparent 70%); opacity: 1; }
+.tab-btn.active-voice  .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(236,72,153,0.3), transparent 70%); opacity: 1; }
+.tab-btn.active-chat   .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.3), transparent 70%); opacity: 1; }
+.tab-btn.active-gaming .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(16,185,129,0.3), transparent 70%); opacity: 1; }
+
+/* ── PANEL AREA ── */
+#panels {
+  position: relative; z-index: 10;
+  flex: 1; overflow: hidden;
+  margin-top: 16px;
+}
+
+.panel {
+  position: absolute; inset: 0;
+  padding: 0 20px 0;
+  overflow-y: auto; scrollbar-width: none;
+  opacity: 0; transform: translateX(30px);
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+.panel::-webkit-scrollbar { display: none; }
+.panel.active {
+  opacity: 1; transform: translateX(0);
+  pointer-events: all;
+}
+.panel.exit-left { opacity: 0; transform: translateX(-30px); }
+
+/* ── PANEL HEADER ── */
+.panel-hero {
+  border-radius: 24px;
+  overflow: hidden; position: relative;
+  margin-bottom: 16px;
+  height: 160px;
+  display: flex; align-items: flex-end;
+  padding: 20px;
+}
+
+.panel-hero-bg {
+  position: absolute; inset: 0;
+}
+.panel[data-mode="video"]  .panel-hero-bg { background: linear-gradient(135deg, #1a0a2e 0%, #2d0a4e 50%, #120820 100%); }
+.panel[data-mode="voice"]  .panel-hero-bg { background: linear-gradient(135deg, #1a0818 0%, #3a0a2a 50%, #110610 100%); }
+.panel[data-mode="chat"]   .panel-hero-bg { background: linear-gradient(135deg, #060f1e 0%, #0a1a3a 50%, #060a14 100%); }
+.panel[data-mode="gaming"] .panel-hero-bg { background: linear-gradient(135deg, #05130f 0%, #082318 50%, #050d0a 100%); }
+
+.hero-blob {
+  position: absolute; border-radius: 50%; filter: blur(50px);
+}
+.panel[data-mode="video"]  .hero-blob { width: 200px; height: 200px; background: rgba(124,58,237,0.5); right: -40px; top: -40px; }
+.panel[data-mode="voice"]  .hero-blob { width: 200px; height: 200px; background: rgba(236,72,153,0.5); right: -40px; top: -40px; }
+.panel[data-mode="chat"]   .hero-blob { width: 200px; height: 200px; background: rgba(59,130,246,0.5); right: -40px; top: -40px; }
+.panel[data-mode="gaming"] .hero-blob { width: 200px; height: 200px; background: rgba(16,185,129,0.5); right: -40px; top: -40px; }
+
+.hero-blob-2 {
+  position: absolute; border-radius: 50%; filter: blur(60px);
+}
+.panel[data-mode="video"]  .hero-blob-2 { width: 140px; height: 140px; background: rgba(192,132,252,0.3); left: 20px; bottom: -20px; }
+.panel[data-mode="voice"]  .hero-blob-2 { width: 140px; height: 140px; background: rgba(244,114,182,0.3); left: 20px; bottom: -20px; }
+.panel[data-mode="chat"]   .hero-blob-2 { width: 140px; height: 140px; background: rgba(96,165,250,0.3); left: 20px; bottom: -20px; }
+.panel[data-mode="gaming"] .hero-blob-2 { width: 140px; height: 140px; background: rgba(52,211,153,0.3); left: 20px; bottom: -20px; }
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.hero-icon-big {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  font-size: 64px; opacity: 0.15;
+  animation: heroFloat 3s ease-in-out infinite alternate;
+}
+@keyframes heroFloat {
+  from { transform: translateY(-50%) translateY(-6px); }
+  to   { transform: translateY(-50%) translateY(6px); }
+}
+
+.hero-content { position: relative; z-index: 2; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 100px; padding: 4px 12px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.panel[data-mode="video"]  .hero-tag { background: rgba(124,58,237,0.3); border: 1px solid rgba(124,58,237,0.5); color: var(--purple-light); }
+.panel[data-mode="voice"]  .hero-tag { background: rgba(236,72,153,0.3); border: 1px solid rgba(236,72,153,0.5); color: #F9A8D4; }
+.panel[data-mode="chat"]   .hero-tag { background: rgba(59,130,246,0.3); border: 1px solid rgba(59,130,246,0.5); color: #93C5FD; }
+.panel[data-mode="gaming"] .hero-tag { background: rgba(16,185,129,0.3); border: 1px solid rgba(16,185,129,0.5); color: #6EE7B7; }
+
+.hero-title { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+.hero-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; font-weight: 400; }
+
+/* ── SETTINGS LIST ── */
+.settings-list {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 16px;
+}
+
+.setting-row {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 14px 16px;
+  gap: 14px;
+  transition: background 0.2s;
+}
+.setting-row:hover { background: rgba(255,255,255,0.07); }
+
+.setting-icon {
+  width: 38px; height: 38px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.panel[data-mode="video"]  .setting-icon { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.3); }
+.panel[data-mode="voice"]  .setting-icon { background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.3); }
+.panel[data-mode="chat"]   .setting-icon { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.3); }
+.panel[data-mode="gaming"] .setting-icon { background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); }
+
+.setting-text { flex: 1; min-width: 0; }
+.setting-label { font-size: 13px; font-weight: 700; }
+.setting-desc  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* Toggle */
+.toggle-wrap { position: relative; flex-shrink: 0; }
+.toggle { appearance: none; width: 44px; height: 24px; border-radius: 100px; cursor: pointer; transition: background 0.3s; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.1); }
+.toggle::after { content:''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+
+.panel[data-mode="video"]  .toggle:checked { background: var(--purple); border-color: var(--purple); }
+.panel[data-mode="voice"]  .toggle:checked { background: var(--pink); border-color: var(--pink); }
+.panel[data-mode="chat"]   .toggle:checked { background: #3B82F6; border-color: #3B82F6; }
+.panel[data-mode="gaming"] .toggle:checked { background: #10B981; border-color: #10B981; }
+
+.toggle:checked::after { transform: translateX(20px); }
+
+/* Select */
+.setting-select {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 5px 10px;
+  font-size: 12px; font-weight: 600; color: #fff;
+  font-family: 'Outfit', sans-serif; cursor: pointer;
+  appearance: none;
+  outline: none;
+}
+
+/* Section label */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--muted); text-transform: uppercase;
+  margin: 4px 0 8px;
+}
+
+/* Stats row */
+.stats-row {
+  display: flex; gap: 10px; margin-bottom: 16px;
+}
+.stat-card {
+  flex: 1; border-radius: 16px; padding: 12px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-align: center;
+}
+.stat-val { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }
+.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+
+.panel[data-mode="video"]  .stat-val { color: var(--purple-light); }
+.panel[data-mode="voice"]  .stat-val { color: #F9A8D4; }
+.panel[data-mode="chat"]   .stat-val { color: #93C5FD; }
+.panel[data-mode="gaming"] .stat-val { color: #6EE7B7; }
+
+/* Space for go-live btn */
+.panel-bottom-space { height: 24px; }
+
+/* ── GO LIVE BUTTON AREA ── */
+#go-live-wrap {
+  position: relative; z-index: 10;
+  padding: 12px 20px 36px;
+  flex-shrink: 0;
+  animation: fadeUp 0.45s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.go-live-btn {
+  width: 100%; height: 62px; border-radius: 20px;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; position: relative; overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px; font-weight: 900; color: #fff;
+  letter-spacing: 0.02em;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
+}
+.go-live-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+}
+.go-live-btn:hover { transform: translateY(-3px) scale(1.02); }
+.go-live-btn:active { transform: scale(0.97); }
+
+/* Per-tab btn gradient */
+.go-live-btn.video-btn  { background: linear-gradient(135deg, #5B21B6, #7C3AED, #9D5CF6); box-shadow: 0 12px 40px rgba(124,58,237,0.5); }
+.go-live-btn.voice-btn  { background: linear-gradient(135deg, #9D174D, #EC4899, #F472B6); box-shadow: 0 12px 40px rgba(236,72,153,0.5); }
+.go-live-btn.chat-btn   { background: linear-gradient(135deg, #1D4ED8, #3B82F6, #60A5FA); box-shadow: 0 12px 40px rgba(59,130,246,0.5); }
+.go-live-btn.gaming-btn { background: linear-gradient(135deg, #065F46, #10B981, #34D399); box-shadow: 0 12px 40px rgba(16,185,129,0.5); }
+
+.btn-shimmer {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.btn-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.8); animation: pulseDot 1s ease-in-out infinite; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── LOADER ── */
+#loader {
+  position: absolute; inset: 0; z-index: 200;
+  background: var(--black);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 14px;
+  transition: opacity 0.4s;
+}
+#loader.gone { opacity: 0; pointer-events: none; }
+.loader-icon { font-size: 44px; animation: loaderPop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes loaderPop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.loader-bar { width: 100px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; }
+.loader-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--purple), var(--purple-light)); border-radius: 100px; animation: loadBar 1s ease forwards; }
+@keyframes loadBar { to { width: 100%; } }
+
+/* ── TOAST ── */
+#toast {
+  position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%);
+  z-index: 300;
+  background: rgba(20,20,35,0.95); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px; padding: 10px 20px;
+  font-size: 13px; font-weight: 500; color: #fff;
+  white-space: nowrap; backdrop-filter: blur(20px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+@media (max-height: 700px) {
+  #topbar { padding-top: 28px; }
+  .panel-hero { height: 130px; }
+  .hero-title { font-size: 20px; }
+  .go-live-btn { height: 56px; font-size: 16px; }
+  #go-live-wrap { padding-bottom: 24px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="ambient">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-accent" id="accentOrb"></div>
+  </div>
+  <div class="grid-tex"></div>
+
+  <div id="loader">
+    <div class="loader-icon">📡</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+
+  <!-- Top Bar -->
+  <div id="topbar">
+    <div class="back-btn" id="backBtn">
+      <svg class="back-icon" viewBox="0 0 24 24">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </div>
+    <div class="topbar-title">
+      <h1>Go Live</h1>
+      <p id="subtitle">Select your broadcast mode</p>
+    </div>
+    <div class="live-pill">
+      <div class="pulse-dot"></div>
+      LIVE
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div id="tab-bar">
+    <div class="tab-track">
+      <div class="tab-btn active-video" data-tab="video" onclick="switchTab('video')">
+        <div class="tab-glow"></div>
+        <span class="t-icon">📹</span>
+        <span class="t-label">Stream</span>
+      </div>
+      <div class="tab-btn" data-tab="voice" onclick="switchTab('voice')">
+        <div class="tab-glow"></div>
+        <span class="t-icon">🎙️</span>
+        <span class="t-label">Voice</span>
+      </div>
+      <div class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
+        <div class="tab-glow"></div>
+        <span class="t-icon">💬</span>
+        <span class="t-label">Chat</span>
+      </div>
+      <div class="tab-btn" data-tab="gaming" onclick="switchTab('gaming')">
+        <div class="tab-glow"></div>
+        <span class="t-icon">🎮</span>
+        <span class="t-label">Gaming</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panels -->
+  <div id="panels">
+
+    <!-- VIDEO PANEL -->
+    <div class="panel active" data-mode="video" id="panel-video">
+      <div class="panel-hero">
+        <div class="panel-hero-bg"></div>
+        <div class="hero-blob"></div>
+        <div class="hero-blob-2"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-icon-big">📹</div>
+        <div class="hero-content">
+          <div class="hero-tag">📹 Live Stream</div>
+          <div class="hero-title">Video Broadcast</div>
+          <div class="hero-sub">Camera · Audio · HD Quality</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="v-viewers">0</div><div class="stat-lbl">Viewers</div></div>
+        <div class="stat-card"><div class="stat-val" id="v-followers">—</div><div class="stat-lbl">Followers</div></div>
+        <div class="stat-card"><div class="stat-val">HD</div><div class="stat-lbl">Quality</div></div>
+      </div>
+
+      <div class="section-label">Stream Settings</div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div class="setting-icon">📸</div>
+          <div class="setting-text">
+            <div class="setting-label">Front Camera</div>
+            <div class="setting-desc">Selfie camera for face-cam streaming</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🎵</div>
+          <div class="setting-text">
+            <div class="setting-label">Microphone</div>
+            <div class="setting-desc">Enable audio for your stream</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">✨</div>
+          <div class="setting-text">
+            <div class="setting-label">Beauty Filter</div>
+            <div class="setting-desc">Auto-enhance your appearance</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle">
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">📶</div>
+          <div class="setting-text">
+            <div class="setting-label">Stream Quality</div>
+            <div class="setting-desc">Higher quality uses more data</div>
+          </div>
+          <select class="setting-select">
+            <option>1080p HD</option>
+            <option>720p</option>
+            <option>480p</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🎁</div>
+          <div class="setting-text">
+            <div class="setting-label">Gift Alerts</div>
+            <div class="setting-desc">Show on-screen when you receive gifts</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+      </div>
+      <div class="panel-bottom-space"></div>
+    </div>
+
+    <!-- VOICE PANEL -->
+    <div class="panel" data-mode="voice" id="panel-voice">
+      <div class="panel-hero">
+        <div class="panel-hero-bg"></div>
+        <div class="hero-blob"></div>
+        <div class="hero-blob-2"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-icon-big">🎙️</div>
+        <div class="hero-content">
+          <div class="hero-tag">🎙️ Voice Stream</div>
+          <div class="hero-title">Audio Broadcast</div>
+          <div class="hero-sub">No camera · Low data · Podcast-style</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="a-viewers">0</div><div class="stat-lbl">Listeners</div></div>
+        <div class="stat-card"><div class="stat-val">🎙️</div><div class="stat-lbl">Audio Only</div></div>
+        <div class="stat-card"><div class="stat-val">LOW</div><div class="stat-lbl">Data Use</div></div>
+      </div>
+
+      <div class="section-label">Audio Settings</div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div class="setting-icon">🎙️</div>
+          <div class="setting-text">
+            <div class="setting-label">Microphone</div>
+            <div class="setting-desc">Primary audio source</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🔇</div>
+          <div class="setting-text">
+            <div class="setting-label">Noise Cancellation</div>
+            <div class="setting-desc">Filter background noise out</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🎧</div>
+          <div class="setting-text">
+            <div class="setting-label">Background Music</div>
+            <div class="setting-desc">Play music behind your voice</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle">
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">📢</div>
+          <div class="setting-text">
+            <div class="setting-label">Audio Quality</div>
+            <div class="setting-desc">Higher = better sound, more data</div>
+          </div>
+          <select class="setting-select">
+            <option>High (320kbps)</option>
+            <option>Medium (128kbps)</option>
+            <option>Low (64kbps)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">👥</div>
+          <div class="setting-text">
+            <div class="setting-label">Co-host Invite</div>
+            <div class="setting-desc">Allow others to speak on air</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+      </div>
+      <div class="panel-bottom-space"></div>
+    </div>
+
+    <!-- CHAT PANEL -->
+    <div class="panel" data-mode="chat" id="panel-chat">
+      <div class="panel-hero">
+        <div class="panel-hero-bg"></div>
+        <div class="hero-blob"></div>
+        <div class="hero-blob-2"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-icon-big">💬</div>
+        <div class="hero-content">
+          <div class="hero-tag">💬 Live Chat</div>
+          <div class="hero-title">Chat Session</div>
+          <div class="hero-sub">Text-only · Interactive · Polls & Q&A</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="c-viewers">0</div><div class="stat-lbl">Chatters</div></div>
+        <div class="stat-card"><div class="stat-val">💬</div><div class="stat-lbl">Text Only</div></div>
+        <div class="stat-card"><div class="stat-val">FAST</div><div class="stat-lbl">Response</div></div>
+      </div>
+
+      <div class="section-label">Chat Settings</div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div class="setting-icon">📊</div>
+          <div class="setting-text">
+            <div class="setting-label">Live Polls</div>
+            <div class="setting-desc">Let your audience vote in real-time</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">❓</div>
+          <div class="setting-text">
+            <div class="setting-label">Q&amp;A Mode</div>
+            <div class="setting-desc">Audience can submit questions</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🚫</div>
+          <div class="setting-text">
+            <div class="setting-label">Slow Mode</div>
+            <div class="setting-desc">Limit messages to one per interval</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle">
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">⏱️</div>
+          <div class="setting-text">
+            <div class="setting-label">Slow Mode Interval</div>
+            <div class="setting-desc">Time between user messages</div>
+          </div>
+          <select class="setting-select">
+            <option>3 seconds</option>
+            <option>5 seconds</option>
+            <option>10 seconds</option>
+            <option>30 seconds</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🤖</div>
+          <div class="setting-text">
+            <div class="setting-label">Auto-Moderation</div>
+            <div class="setting-desc">Filter spam and toxic messages</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+      </div>
+      <div class="panel-bottom-space"></div>
+    </div>
+
+    <!-- GAMING PANEL -->
+    <div class="panel" data-mode="gaming" id="panel-gaming">
+      <div class="panel-hero">
+        <div class="panel-hero-bg"></div>
+        <div class="hero-blob"></div>
+        <div class="hero-blob-2"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-icon-big">🎮</div>
+        <div class="hero-content">
+          <div class="hero-tag">🎮 Live Gaming</div>
+          <div class="hero-title">Game Broadcast</div>
+          <div class="hero-sub">Screen share · Commentary · Leaderboard</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="g-viewers">0</div><div class="stat-lbl">Viewers</div></div>
+        <div class="stat-card"><div class="stat-val">🏆</div><div class="stat-lbl">Ranked</div></div>
+        <div class="stat-card"><div class="stat-val">60fps</div><div class="stat-lbl">Target</div></div>
+      </div>
+
+      <div class="section-label">Gaming Settings</div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div class="setting-icon">📱</div>
+          <div class="setting-text">
+            <div class="setting-label">Screen Share</div>
+            <div class="setting-desc">Broadcast your game screen live</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🎙️</div>
+          <div class="setting-text">
+            <div class="setting-label">Commentary Mic</div>
+            <div class="setting-desc">Your voice over the gameplay</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🏆</div>
+          <div class="setting-text">
+            <div class="setting-label">Leaderboard</div>
+            <div class="setting-desc">Show top viewer scores on-stream</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">⚡</div>
+          <div class="setting-text">
+            <div class="setting-label">Frame Rate</div>
+            <div class="setting-desc">Higher fps needs stronger connection</div>
+          </div>
+          <select class="setting-select">
+            <option>60 fps</option>
+            <option>30 fps</option>
+            <option>24 fps</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🎁</div>
+          <div class="setting-text">
+            <div class="setting-label">In-game Gifts</div>
+            <div class="setting-desc">Viewers send gifts during gameplay</div>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+      </div>
+      <div class="panel-bottom-space"></div>
+    </div>
+
+  </div>
+
+  <!-- Go Live Button -->
+  <div id="go-live-wrap">
+    <button class="go-live-btn video-btn" id="goLiveBtn" onclick="goLive()">
+      <div class="btn-shimmer"></div>
+      <div class="btn-dot"></div>
+      Go Live Now
+    </button>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+/* ── Firebase ── */
+const firebaseConfig = {
+  apiKey: "AIzaSyBm9PmWgTKGKlzZ1xrJwhUXd93bCClSrEE",
+  authDomain: "billsandmallng.firebaseapp.com",
+  projectId: "billsandmallng",
+  storageBucket: "billsandmallng.firebasestorage.app",
+  messagingSenderId: "242278413301",
+  appId: "1:242278413301:web:fad95e8c553a18b8e2a6bc",
+  measurementId: "G-8GEQEC5SXQ"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+/* ── URL Params ── */
+const params  = new URLSearchParams(window.location.search);
+const urlUid  = params.get('uid');
+const refPage = document.referrer || 'index.html';
+
+/* ── Back Button ── */
+document.getElementById('backBtn').onclick = () => {
+  if (history.length > 1) { history.back(); }
+  else { window.location.href = refPage; }
+};
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  clearTimeout(toastTimer);
+  t.textContent = msg;
+  t.classList.add('show');
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ── Tab State ── */
+let currentTab = 'video';
+
+const tabMeta = {
+  video:  { label: 'Live Stream',   sub: 'Camera & HD video broadcast',   btnClass: 'video-btn',  accentColor: 'rgba(124,58,237,0.4)'  },
+  voice:  { label: 'Voice Stream',  sub: 'Audio-only podcast broadcast',   btnClass: 'voice-btn',  accentColor: 'rgba(236,72,153,0.4)'  },
+  chat:   { label: 'Live Chat',     sub: 'Real-time interactive chat',     btnClass: 'chat-btn',   accentColor: 'rgba(59,130,246,0.4)'  },
+  gaming: { label: 'Live Gaming',   sub: 'Screen share & commentary',      btnClass: 'gaming-btn', accentColor: 'rgba(16,185,129,0.4)'  },
+};
+
+function switchTab(tab) {
+  if (tab === currentTab) return;
+
+  /* Deactivate old tab btn */
+  document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).className = 'tab-btn';
+
+  /* Exit current panel */
+  const oldPanel = document.getElementById('panel-' + currentTab);
+  oldPanel.classList.remove('active');
+  oldPanel.classList.add('exit-left');
+  setTimeout(() => oldPanel.classList.remove('exit-left'), 400);
+
+  currentTab = tab;
+
+  /* Activate new tab btn */
+  document.querySelector(`.tab-btn[data-tab="${tab}"]`).className = `tab-btn active-${tab}`;
+
+  /* Enter new panel */
+  const newPanel = document.getElementById('panel-' + tab);
+  newPanel.style.transform = 'translateX(30px)';
+  newPanel.style.opacity = '0';
+  newPanel.classList.add('active');
+  requestAnimationFrame(() => {
+    newPanel.style.transform = '';
+    newPanel.style.opacity = '';
+  });
+
+  /* Update subtitle */
+  document.getElementById('subtitle').textContent = tabMeta[tab].sub;
+
+  /* Update go-live btn */
+  const btn = document.getElementById('goLiveBtn');
+  btn.className = `go-live-btn ${tabMeta[tab].btnClass}`;
+
+  /* Update accent orb */
+  const orb = document.getElementById('accentOrb');
+  orb.style.width = '280px';
+  orb.style.height = '280px';
+  orb.style.background = `radial-gradient(circle, ${tabMeta[tab].accentColor}, transparent 70%)`;
+  setTimeout(() => { orb.style.width = '0'; orb.style.height = '0'; }, 1200);
+}
+
+/* ── Go Live ── */
+async function goLive() {
+  const user = auth.currentUser;
+  if (!user) {
+    showToast('⚠️ Please log in to go live');
+    return;
+  }
+
+  const btn = document.getElementById('goLiveBtn');
+  btn.style.opacity = '0.7';
+  btn.textContent = 'Starting…';
+
+  try {
+    const existing = await db.collection('live_sessions')
+      .where('hostUid', '==', user.uid)
+      .where('status', '==', 'live')
+      .get();
+
+    let sid = null;
+    if (!existing.empty) {
+      sid = existing.docs[0].id;
+      showToast('🔴 Rejoining your active stream…');
+    }
+
+    const base = `poselive.html?uid=${encodeURIComponent(user.uid)}&mode=${currentTab}`;
+    window.location.href = sid ? `${base}&sid=${sid}` : base;
+
+  } catch (err) {
+    console.error(err);
+    window.location.href = `poselive.html?uid=${encodeURIComponent(user.uid)}&mode=${currentTab}`;
+  }
+}
+
+/* ── Load viewer/follower stats ── */
+async function loadStats(user) {
+  if (!user) return;
+  try {
+    const snap = await db.collection('users').doc(user.uid).get();
+    if (snap.exists) {
+      const d = snap.data();
+      const followers = (d.followers ?? 0).toLocaleString();
+      document.getElementById('v-followers').textContent = followers;
+    }
+  } catch (e) { /* silent */ }
+}
+
+/* ── Auth ── */
+auth.onAuthStateChanged(async (user) => {
+  if (user) await loadStats(user);
+
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('gone');
+    setTimeout(() => loader.remove(), 500);
+  }, 900);
+});
+</script>
+</body>
+</html>
