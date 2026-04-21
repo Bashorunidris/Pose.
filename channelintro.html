@@ -518,25 +518,36 @@
 
         // Save everything to Firestore
         loadingText.textContent = 'Saving your channel…';
-        await db.collection('channels').doc(user.uid).set({
-          uid:         user.uid,
-          email:       user.email || passedEmail,
-          name:        name,
-          description: desc,
-          country:     country,
-          profileURL:  profileURL || '',
-          bannerURL:   bannerURL  || '',
-          subscribers: 0,
-          createdAt:   firebase.firestore.FieldValue.serverTimestamp()
-        });
+        
+      // Check channel limit
+const existing = await db.collection('channels')
+  .where('ownerUid', '==', user.uid).get();
+if (existing.size >= 5) {
+  overlay.classList.remove('show');
+  alert('You can only create up to 5 channels under one account.');
+  return;
+}
 
-        // Redirect to dashboard
-        loadingText.textContent = 'All done! Redirecting…';
-        setTimeout(() => {
-       // TO THIS:
+const channelRef = db.collection('channels').doc();
+const channelId  = channelRef.id;
 
-window.location.href = `channeldashboard.html?uid=${user.uid}`;
-        }, 800);
+await channelRef.set({
+  channelId:   channelId,
+  ownerUid:    user.uid,
+  email:       user.email || passedEmail,
+  name:        name,
+  description: desc,
+  country:     country,
+  profileURL:  profileURL || '',
+  bannerURL:   bannerURL  || '',
+  subscribers: 0,
+  createdAt:   firebase.firestore.FieldValue.serverTimestamp()
+});
+
+loadingText.textContent = 'All done! Redirecting…';
+setTimeout(() => {
+  window.location.href = `channeldashboard.html?uid=${channelId}`;
+}, 800);
 
       } catch (error) {
         console.error('Channel creation error:', error);
