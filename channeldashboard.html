@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     /* ==============================
        CSS VARIABLES
@@ -548,6 +551,60 @@
     }
     .tl-pill.active { background: var(--purple-main); color: white; border-color: var(--purple-main); }
     .tl-pill:hover:not(.active) { border-color: var(--purple-light); color: var(--purple-main); }
+
+    .pay-method-tab {
+      flex: 1; padding: 10px 8px; border-radius: 9px;
+      font-size: 12.5px; font-weight: 600; cursor: pointer;
+      color: var(--gray-500); transition: all .18s ease;
+      user-select: none; text-align: center;
+    }
+    .pay-method-tab.active {
+      background: var(--purple-main); color: white;
+      box-shadow: 0 2px 8px rgba(124,58,237,.25);
+    }
+    .pay-method-tab.locked {
+      opacity: .5; pointer-events: none;
+    }
+
+    .earn-popup-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15, 5, 40, 0.75);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: flex-end; justify-content: center;
+      animation: fadeIn .3s ease both;
+    }
+    .earn-popup-overlay.hidden { display: none; }
+    .earn-popup-card {
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+      width: 100%; max-width: 540px;
+      padding: 10px 24px 40px;
+      animation: slideUp .4s cubic-bezier(.25,.8,.25,1) both;
+      box-shadow: 0 -12px 48px rgba(76,29,149,.25);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .earn-input {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 11px; font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none; transition: border .2s;
+      box-sizing: border-box;
+    }
+    .earn-input:focus { border-color: var(--purple-main); }
+    .earn-primary-btn {
+      width: 100%; padding: 14px; border-radius: 13px;
+      background: linear-gradient(135deg, var(--purple-deep), var(--purple-main));
+      color: white; font-size: 14px; font-weight: 700;
+      border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 14px rgba(124,58,237,.3);
+      transition: all .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .earn-primary-btn:disabled {
+      opacity: .5; cursor: not-allowed;
+    }
 
     /* ==============================
        LEGIBILITY PAGE
@@ -1220,13 +1277,9 @@ input[type=range].ucoin-slider {
 .spmode-option.selected .spmode-radio::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: white; }
 .spmode-label { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
 .spmode-sub   { font-size: 12px; color: var(--gray-500); margin-top: 2px; line-height: 1.4; }
-  </style>
-</head>
-<body>
-<!-- Font Awesome 6 Free CDN — add this inside your <head> if not already present -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
+  
 
-<style>
+
   /* Uniform icon sizing helpers */
   .tab-item .fa, .tab-item .fas { margin-right: 5px; }
   .stat-icon .fas { font-size: 1.25rem; }
@@ -1234,8 +1287,1096 @@ input[type=range].ucoin-slider {
   .banner-title .fas { margin-right: 6px; }
   th .fas { margin-right: 4px; }
   .tl-cal .fas { margin-right: 5px; }
-</style>
 
+
+/* ==============================
+   ALL VIDEOS PAGE
+============================== */
+#page-allvideos { background: var(--gray-50); }
+
+.av-topbar {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-xs);
+}
+.av-topbar-row1 {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px;
+}
+.av-search-wrap {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  background: var(--gray-100); border-radius: 11px;
+  padding: 9px 13px; border: 1.5px solid var(--gray-200);
+  transition: border-color .2s;
+}
+.av-search-wrap:focus-within {
+  border-color: var(--purple-main);
+  background: var(--white);
+}
+.av-search-wrap svg { flex-shrink: 0; color: var(--gray-400); width: 15px; height: 15px; }
+.av-search-input {
+  border: none; outline: none; background: transparent;
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  color: var(--text-main); width: 100%;
+}
+.av-search-input::placeholder { color: var(--gray-400); }
+
+.av-tabs {
+  display: flex; border-bottom: 1px solid var(--gray-200);
+  padding: 0 18px;
+}
+.av-tab {
+  padding: 12px 16px; font-size: 13.5px; font-weight: 600;
+  color: var(--gray-500); cursor: pointer; user-select: none;
+  border-bottom: 2.5px solid transparent; transition: all .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.av-tab:hover { color: var(--purple-main); }
+.av-tab.active { color: var(--purple-main); border-bottom-color: var(--purple-main); }
+.av-tab-count {
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px; background: var(--purple-pale);
+  color: var(--purple-deep);
+}
+
+.av-content { padding: 16px 16px 80px; }
+
+/* Sort row */
+.av-sort-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.av-sort-label { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+.av-sort-select {
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--gray-700); background: var(--white);
+  border: 1.5px solid var(--gray-200); border-radius: 9px;
+  padding: 5px 10px; outline: none; cursor: pointer;
+}
+.av-sort-select:focus { border-color: var(--purple-main); }
+
+/* Single video card */
+.av-vcard {
+  background: var(--white); border-radius: 14px;
+  border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+  overflow: hidden; margin-bottom: 12px;
+  transition: transform .2s, box-shadow .2s;
+}
+.av-vcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.av-vcard-inner { display: flex; gap: 0; }
+.av-vcard-thumb {
+  width: 120px; min-width: 120px; height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; position: relative; flex-shrink: 0;
+}
+.av-vcard-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.av-vcard-body { padding: 11px 13px; flex: 1; min-width: 0; }
+.av-vcard-title {
+  font-size: 13.5px; font-weight: 700; color: var(--text-main);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+.av-vcard-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.av-vmeta-item { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 3px; }
+.av-vcard-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.av-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px; display: inline-flex; align-items: center; gap: 3px;
+}
+.av-badge-free    { background: #D1FAE5; color: #065F46; }
+.av-badge-paid    { background: var(--purple-pale); color: var(--purple-deep); }
+.av-badge-sched   { background: #FEF3C7; color: #92400E; }
+.av-badge-rated   { background: var(--gray-100); color: var(--gray-600); }
+.av-vcard-revenue {
+  font-size: 12px; font-weight: 700; color: var(--purple-main);
+  margin-top: 4px;
+}
+.av-vcard-date { font-size: 10.5px; color: var(--gray-400); margin-top: 3px; }
+
+/* Season card */
+.av-season-card {
+  background: var(--white); border-radius: 16px;
+  border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+  overflow: hidden; margin-bottom: 14px;
+  transition: box-shadow .2s;
+}
+.av-season-card:hover { box-shadow: var(--shadow-md); }
+.av-season-header {
+  display: flex; gap: 0; cursor: pointer;
+  padding: 14px 16px; align-items: center;
+  border-bottom: 1px solid transparent;
+  transition: background .15s;
+}
+.av-season-card.open .av-season-header { border-bottom-color: var(--gray-200); }
+.av-season-header:hover { background: var(--purple-ghost); }
+.av-season-thumb {
+  width: 70px; height: 46px; border-radius: 9px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0; margin-right: 13px;
+}
+.av-season-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.av-season-info { flex: 1; min-width: 0; }
+.av-season-title {
+  font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700;
+  color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.av-season-sub { font-size: 11.5px; color: var(--gray-500); margin-top: 3px; }
+.av-season-stats {
+  display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;
+}
+.av-season-rev {
+  font-size: 12px; font-weight: 700; color: var(--purple-main); margin-top: 4px;
+}
+.av-season-chevron {
+  color: var(--gray-400); margin-left: 8px; flex-shrink: 0;
+  transition: transform .3s;
+}
+.av-season-card.open .av-season-chevron { transform: rotate(180deg); }
+
+/* Episode list inside season */
+.av-ep-list { padding: 6px 14px 14px; }
+.av-ep-row {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 11px; border-radius: 11px;
+  margin-bottom: 6px; cursor: default;
+  transition: background .15s;
+  border: 1px solid transparent;
+}
+.av-ep-row:hover { background: var(--purple-ghost); border-color: var(--purple-pale); }
+.av-ep-num {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--purple-pale); color: var(--purple-deep);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.av-ep-thumb {
+  width: 56px; height: 36px; border-radius: 7px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.av-ep-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.av-ep-info { flex: 1; min-width: 0; }
+.av-ep-title {
+  font-size: 13px; font-weight: 600; color: var(--text-main);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.av-ep-meta { display: flex; gap: 8px; margin-top: 3px; flex-wrap: wrap; }
+.av-ep-right { text-align: right; flex-shrink: 0; }
+.av-ep-price { font-size: 12px; font-weight: 700; color: var(--purple-main); }
+.av-ep-rev { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 2px; }
+
+/* Empty state */
+.av-empty {
+  text-align: center; padding: 60px 20px;
+}
+.av-empty-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--purple-ghost); color: var(--purple-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin: 0 auto 16px;
+}
+.av-empty-title {
+  font-family: 'Playfair Display', serif; font-size: 20px;
+  font-weight: 700; color: var(--text-main); margin-bottom: 8px;
+}
+.av-empty-sub { font-size: 13px; color: var(--gray-500); margin-bottom: 22px; }
+
+/* ==============================
+   VIDEO DETAIL PAGE
+============================== */
+#page-videodetail { background: #0A0A0A; }
+
+.vd-topbar {
+  position: sticky; top: 0; z-index: 300;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: rgba(10,10,10,.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.vd-back-btn {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,.75);
+  cursor: pointer; padding: 7px 12px;
+  border-radius: 9px; border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.07); transition: all .2s;
+  white-space: nowrap;
+}
+.vd-back-btn:hover { background: rgba(255,255,255,.14); color: white; }
+.vd-back-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.vd-topbar-title {
+  font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,.85);
+  flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Player */
+.vd-player-wrap {
+  width: 100%; background: #000;
+  position: relative; overflow: hidden;
+}
+.vd-video {
+  width: 100%; display: block;
+  max-height: 56.25vw;
+  min-height: 200px;
+  background: #000;
+  object-fit: contain;
+}
+.vd-trailer-chip {
+  position: absolute; top: 10px; left: 10px; z-index: 10;
+  background: rgba(0,0,0,.72); backdrop-filter: blur(6px);
+  color: #FDE68A; font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid rgba(253,230,138,.35);
+  display: flex; align-items: center; gap: 4px;
+  pointer-events: none;
+}
+
+/* Shimmer loader */
+.vd-shimmer {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  display: flex; align-items: center; justify-content: center;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Body */
+.vd-body {
+  background: var(--white);
+  border-radius: 18px 18px 0 0;
+  margin-top: -4px; position: relative; z-index: 2;
+  padding: 20px 16px 80px;
+  box-shadow: 0 -8px 30px rgba(0,0,0,.4);
+}
+
+/* Title area */
+.vd-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px; font-weight: 700;
+  color: var(--text-main); line-height: 1.3;
+  margin-bottom: 10px;
+}
+.vd-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.vd-badge {
+  font-size: 10.5px; font-weight: 700; padding: 3px 9px;
+  border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;
+}
+
+/* Stats bar */
+.vd-stats-bar {
+  display: flex; gap: 0;
+  border: 1px solid var(--gray-200);
+  border-radius: 14px; overflow: hidden;
+  margin-bottom: 16px;
+}
+.vd-stat-item {
+  flex: 1; text-align: center;
+  padding: 13px 8px;
+  border-right: 1px solid var(--gray-200);
+  background: var(--white);
+  transition: background .15s;
+}
+.vd-stat-item:last-child { border-right: none; }
+.vd-stat-item:hover { background: var(--purple-ghost); }
+.vd-stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; color: var(--purple-deep);
+  line-height: 1;
+}
+.vd-stat-lbl {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--gray-400); margin-top: 4px; font-weight: 600;
+}
+
+/* Revenue card */
+.vd-rev-card {
+  background: linear-gradient(135deg, #2E1065 0%, #6D28D9 60%, #A78BFA 100%);
+  border-radius: 16px; padding: 18px 18px;
+  margin-bottom: 16px; position: relative; overflow: hidden;
+}
+.vd-rev-card::before {
+  content: '';
+  position: absolute; width: 180px; height: 180px;
+  border-radius: 50%; background: rgba(255,255,255,.06);
+  top: -50px; right: -40px;
+}
+.vd-rev-lbl {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: rgba(255,255,255,.55);
+  margin-bottom: 8px;
+}
+.vd-rev-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px; font-weight: 700; color: white;
+  margin-bottom: 2px;
+}
+.vd-rev-naira {
+  font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 14px;
+}
+.vd-rev-row {
+  display: flex; gap: 10px;
+}
+.vd-rev-mini {
+  flex: 1; background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 11px; padding: 11px 12px;
+}
+.vd-rev-mini-val {
+  font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px;
+}
+.vd-rev-mini-lbl {
+  font-size: 10px; color: rgba(255,255,255,.5);
+  text-transform: uppercase; letter-spacing: .5px;
+}
+
+/* Info card */
+.vd-info-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: 16px; padding: 18px; margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.vd-info-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-weight: 700; color: var(--text-main);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+}
+.vd-info-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 11px 0; border-bottom: 1px solid var(--gray-100);
+}
+.vd-info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.vd-info-key {
+  font-size: 12px; font-weight: 600; color: var(--gray-400);
+  text-transform: uppercase; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.vd-info-key i { width: 14px; text-align: center; }
+.vd-info-val {
+  font-size: 13px; font-weight: 600; color: var(--text-main);
+  text-align: right; max-width: 60%;
+}
+
+/* Description */
+.vd-desc-card {
+  background: var(--gray-50); border: 1px solid var(--gray-200);
+  border-radius: 14px; padding: 16px; margin-bottom: 16px;
+}
+.vd-desc-text {
+  font-size: 13.5px; color: var(--gray-600); line-height: 1.7;
+}
+.vd-desc-text.clamped {
+  display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.vd-desc-toggle {
+  font-size: 12px; font-weight: 700; color: var(--purple-main);
+  cursor: pointer; margin-top: 6px; display: inline-block;
+}
+
+/* Comments */
+.vd-comments-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: 16px; padding: 18px; margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.vd-comments-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.vd-comments-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700; color: var(--text-main);
+  display: flex; align-items: center; gap: 7px;
+}
+.vd-comment-item {
+  display: flex; gap: 10px; padding: 12px 0;
+  border-bottom: 1px solid var(--gray-100);
+  animation: fadeSlideIn .35s ease both;
+}
+.vd-comment-item:last-child { border-bottom: none; }
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.vd-comment-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white;
+}
+.vd-comment-body { flex: 1; min-width: 0; }
+.vd-comment-author {
+  font-size: 12.5px; font-weight: 700; color: var(--text-main); margin-bottom: 3px;
+}
+.vd-comment-text {
+  font-size: 13px; color: var(--gray-600); line-height: 1.5;
+}
+.vd-comment-time {
+  font-size: 10.5px; color: var(--gray-400); margin-top: 4px;
+}
+.vd-comments-empty {
+  text-align: center; padding: 28px 20px;
+  color: var(--gray-400); font-size: 13px; font-style: italic;
+}
+.vd-comments-loading {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px; color: var(--gray-400); font-size: 13px;
+}
+
+/* Scheduled overlay */
+.vd-sched-banner {
+  background: linear-gradient(135deg, #92400E, #D97706);
+  border-radius: 14px; padding: 16px 18px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px;
+}
+.vd-sched-icon {
+  width: 40px; height: 40px; border-radius: 11px;
+  background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.vd-sched-text { color: white; }
+.vd-sched-label { font-size: 11px; font-weight: 700; opacity: .7; text-transform: uppercase; letter-spacing: .5px; }
+.vd-sched-date  { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-top: 2px; }
+/* Minimised upload bar */
+#uppopMiniBar {
+  position: fixed; bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; display: none;
+  background: linear-gradient(135deg, var(--purple-deep), var(--purple-main));
+  border-radius: 30px; padding: 12px 20px;
+  box-shadow: 0 8px 28px rgba(124,58,237,.45);
+  display: none; align-items: center; gap: 12px;
+  min-width: 280px; max-width: 360px;
+  cursor: pointer;
+  animation: slideUp .3s ease both;
+}
+#uppopMiniBar.visible { display: flex; }
+.uppop-mini-spinner {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,.3);
+  border-top-color: white;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+.uppop-mini-label {
+  flex: 1; font-size: 13px; font-weight: 600; color: white;
+}
+.uppop-mini-pct {
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,.8);
+}
+.uppop-mini-expand {
+  color: rgba(255,255,255,.7); font-size: 13px;
+}
+
+
+/* ==============================
+   UPLOAD PROGRESS POPUP REDESIGN
+============================== */
+#uploadProgressPopup {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(15, 5, 40, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: fadeIn .3s ease both;
+}
+#uploadProgressPopup.hidden { display: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.uppop-card {
+  background: var(--white);
+  border-radius: 28px 28px 0 0;
+  width: 100%; max-width: 540px;
+  padding: 10px 24px 52px;
+  animation: slideUp .4s cubic-bezier(.25,.8,.25,1) both;
+  box-shadow: 0 -12px 48px rgba(76,29,149,.25);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.uppop-handle {
+  width: 44px; height: 5px;
+  background: var(--gray-200);
+  border-radius: 99px;
+  margin: 14px auto 22px;
+}
+
+.uppop-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px; text-align: center;
+}
+
+.uppop-sub {
+  font-size: 13px; color: var(--gray-500);
+  text-align: center; margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* File Row */
+.uppop-file-row {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, var(--purple-ghost), #EDE9FE88);
+  border: 1.5px solid var(--purple-pale);
+  border-radius: 16px; padding: 14px 16px;
+  margin-bottom: 22px;
+}
+
+.uppop-file-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  background: linear-gradient(135deg, var(--purple-deep), var(--purple-main));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: white; font-size: 20px;
+  box-shadow: 0 4px 12px rgba(124,58,237,.35);
+}
+
+.uppop-file-name {
+  font-size: 14px; font-weight: 700; color: var(--text-main);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.uppop-file-size {
+  font-size: 12px; color: var(--gray-400); margin-top: 3px;
+}
+
+/* Steps */
+.uppop-steps {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 22px;
+}
+
+.uppop-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 15px; border-radius: 14px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  transition: all .35s ease;
+}
+
+.uppop-step.active {
+  border-color: var(--purple-main);
+  background: var(--purple-ghost);
+  box-shadow: 0 2px 12px rgba(124,58,237,.12);
+}
+
+.uppop-step.done {
+  border-color: #A7F3D0;
+  background: #ECFDF5;
+}
+
+.uppop-step.error {
+  border-color: #FECACA;
+  background: #FEF2F2;
+}
+
+.uppop-step-icon {
+  width: 38px; height: 38px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 15px;
+  background: var(--gray-100); color: var(--gray-400);
+  transition: all .35s ease;
+}
+
+.uppop-step.active .uppop-step-icon {
+  background: var(--purple-pale); color: var(--purple-main);
+  box-shadow: 0 2px 8px rgba(124,58,237,.2);
+}
+
+.uppop-step.done .uppop-step-icon {
+  background: #D1FAE5; color: #059669;
+}
+
+.uppop-step.error .uppop-step-icon {
+  background: #FEE2E2; color: #DC2626;
+}
+
+.uppop-step-label {
+  font-size: 13.5px; font-weight: 600;
+  color: var(--gray-400); flex: 1;
+  transition: color .3s;
+}
+
+.uppop-step.active .uppop-step-label { color: var(--purple-deep); }
+.uppop-step.done  .uppop-step-label  { color: #065F46; }
+.uppop-step.error .uppop-step-label  { color: #991B1B; }
+
+.uppop-step-status {
+  font-size: 11px; font-weight: 700;
+  color: var(--gray-300);
+  padding: 3px 9px; border-radius: 20px;
+  background: var(--gray-100);
+  transition: all .3s;
+}
+
+.uppop-step.active .uppop-step-status {
+  color: var(--purple-main);
+  background: var(--purple-pale);
+}
+
+.uppop-step.done .uppop-step-status {
+  color: #059669;
+  background: #D1FAE5;
+}
+
+.uppop-step.error .uppop-step-status {
+  color: #DC2626;
+  background: #FEE2E2;
+}
+
+/* Main Progress Bar */
+.uppop-main-prog {
+  margin-bottom: 20px;
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+
+.uppop-prog-label {
+  display: flex; justify-content: space-between;
+  font-size: 12.5px; font-weight: 700;
+  color: var(--purple-deep);
+  margin-bottom: 10px;
+}
+
+.uppop-prog-bg {
+  height: 12px; background: var(--gray-200);
+  border-radius: 99px; overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.06);
+}
+
+.uppop-prog-fill {
+  height: 100%; border-radius: 99px; width: 0%;
+  background: linear-gradient(90deg, var(--purple-deep), var(--purple-mid), #C4B5FD);
+  background-size: 200% 100%;
+  transition: width .4s ease;
+  animation: progShimmer 2s linear infinite;
+}
+
+@keyframes progShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.uppop-speed {
+  font-size: 11.5px; color: var(--gray-500);
+  text-align: center; margin-top: 8px;
+  font-weight: 500;
+}
+
+/* Buttons Row */
+.uppop-btn-row {
+  display: flex; gap: 10px;
+}
+
+.uppop-cancel-btn {
+  flex: 1; padding: 14px; border-radius: 13px;
+  background: var(--gray-100); color: var(--gray-600);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  font-family: 'DM Sans', sans-serif;
+  transition: all .2s ease;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.uppop-cancel-btn:hover {
+  background: #FEE2E2; color: #DC2626;
+  border-color: #FECACA;
+}
+
+.uppop-min-btn {
+  flex: 1; padding: 14px; border-radius: 13px;
+  background: var(--purple-ghost); color: var(--purple-main);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  border: 1.5px solid var(--purple-pale);
+  font-family: 'DM Sans', sans-serif;
+  transition: all .2s ease;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.uppop-min-btn:hover {
+  background: var(--purple-pale);
+  border-color: var(--purple-light);
+}
+
+/* ==============================
+   COUNTDOWN OVERLAY REDESIGN
+============================== */
+#uploadCountdownOverlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, #1E0A3C 0%, #4C1D95 50%, #7C3AED 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 18px;
+  animation: fadeIn .3s ease both;
+}
+#uploadCountdownOverlay.hidden { display: none; }
+
+.ucount-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); opacity: .2; pointer-events: none;
+}
+.ucount-orb1 { width:300px;height:300px;background:#A78BFA;top:-80px;left:-80px; }
+.ucount-orb2 { width:220px;height:220px;background:#7C3AED;bottom:-60px;right:-50px; }
+
+.ucount-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #DDD6FE; font-size: 12px; font-weight: 600;
+  padding: 6px 16px; border-radius: 20px;
+  backdrop-filter: blur(6px);
+}
+
+.ucount-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 700; color: white;
+  text-align: center; line-height: 1.3;
+}
+
+.ucount-sub {
+  font-size: 13.5px; color: rgba(255,255,255,.6);
+  text-align: center; max-width: 280px; line-height: 1.6;
+}
+
+.ucount-ring {
+  width: 180px; height: 180px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.ucount-ring svg {
+  position: absolute; inset: 0;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 12px rgba(167,139,250,.5));
+}
+
+.ucount-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,.12);
+  stroke-width: 7;
+}
+
+.ucount-ring-fill {
+  fill: none; stroke: white; stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset .85s cubic-bezier(.4,0,.2,1);
+}
+
+.ucount-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 88px; font-weight: 700; color: white;
+  line-height: 1; position: relative; z-index: 1;
+  animation: countPulse .9s ease-in-out infinite;
+  text-shadow: 0 4px 24px rgba(167,139,250,.5);
+}
+
+@keyframes countPulse {
+  0%,100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.08); opacity: .85; }
+}
+
+.ucount-footer {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 10px 20px; border-radius: 30px;
+}
+
+.ucount-footer span {
+  font-size: 13px; color: rgba(255,255,255,.65); font-weight: 500;
+}
+
+/* ==============================
+   MINI BAR REDESIGN
+============================== */
+#uppopMiniBar {
+  position: fixed; bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; display: none;
+  background: linear-gradient(135deg, #2E1065, #7C3AED);
+  border-radius: 30px; padding: 13px 20px;
+  box-shadow: 0 8px 32px rgba(124,58,237,.5);
+  align-items: center; gap: 14px;
+  min-width: 300px; max-width: 380px;
+  cursor: pointer;
+  animation: slideUp .35s cubic-bezier(.25,.8,.25,1) both;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+#uppopMiniBar.visible { display: flex; }
+
+#uppopMiniBar:hover {
+  box-shadow: 0 12px 40px rgba(124,58,237,.65);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.uppop-mini-spinner {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,.25);
+  border-top-color: white;
+  animation: spin .75s linear infinite;
+  flex-shrink: 0;
+}
+
+.uppop-mini-content { flex: 1; min-width: 0; }
+
+.uppop-mini-label {
+  font-size: 13px; font-weight: 600; color: white;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.uppop-mini-pct {
+  font-size: 11px; color: rgba(255,255,255,.65);
+  margin-top: 2px; font-weight: 500;
+}
+
+.uppop-mini-bar-bg {
+  height: 3px; background: rgba(255,255,255,.2);
+  border-radius: 99px; overflow: hidden; margin-top: 5px;
+}
+
+.uppop-mini-bar-fill {
+  height: 100%; background: white;
+  border-radius: 99px; width: 0%;
+  transition: width .4s ease;
+}
+
+.uppop-mini-expand {
+  color: rgba(255,255,255,.6); font-size: 14px;
+  flex-shrink: 0; transition: color .2s;
+}
+
+#uppopMiniBar:hover .uppop-mini-expand { color: white; }
+
+
+/* ============================================================
+   HISTORY POPUP CSS
+   Paste inside your existing <style> block
+============================================================ */
+
+/* ── Tab buttons ── */
+.hist-tab {
+  flex: 1;
+  padding: 9px 8px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--gray-500);
+  transition: all .18s;
+  user-select: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hist-tab.active {
+  background: var(--purple-main);
+  color: white;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, .25);
+}
+
+/* ── Filter pills ── */
+.hist-filter {
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  background: white;
+  color: var(--gray-500);
+  transition: all .15s;
+  user-select: none;
+}
+.hist-filter.active {
+  background: var(--purple-main);
+  color: white;
+  border-color: var(--purple-main);
+}
+.hist-filter:hover:not(.active) {
+  border-color: var(--purple-light);
+  color: var(--purple-main);
+}
+
+/* ── Transaction row ── */
+.hist-txn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--gray-100);
+  background: var(--white);
+  transition: background .15s;
+}
+.hist-txn-row:hover {
+  background: var(--purple-ghost);
+}
+.hist-txn-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.hist-txn-body {
+  flex: 1;
+  min-width: 0;
+}
+.hist-txn-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.hist-txn-sub {
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-top: 2px;
+}
+.hist-txn-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* ── Withdraw request card ── */
+.hist-req-card {
+  border: 1.5px solid var(--gray-200);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: var(--white);
+  transition: box-shadow .2s;
+}
+.hist-req-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+.hist-req-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.hist-req-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-400);
+}
+.hist-req-status {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.req-pending    { background: #FEF3C7; color: #92400E; }
+.req-approved   { background: #D1FAE5; color: #065F46; }
+.req-rejected   { background: #FEE2E2; color: #991B1B; }
+.req-processing { background: #DBEAFE; color: #1E40AF; }
+
+.hist-req-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--purple-deep);
+  margin-bottom: 4px;
+}
+.hist-req-bank {
+  font-size: 12px;
+  color: var(--gray-500);
+}
+.hist-req-date {
+  font-size: 11px;
+  color: var(--gray-400);
+  margin-top: 8px;
+}
+.hist-req-note {
+  margin-top: 10px;
+  padding: 9px 12px;
+  background: var(--gray-50);
+  border-radius: 9px;
+  font-size: 12px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* ── Support type selector ── */
+.supp-type {
+  padding: 7px 13px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  background: white;
+  color: var(--gray-500);
+  transition: all .18s;
+  user-select: none;
+}
+.supp-type.active {
+  background: var(--purple-main);
+  color: white;
+  border-color: var(--purple-main);
+}
+
+/* ── Support inbox card ── */
+.supp-inbox-card {
+  border: 1.5px solid var(--gray-200);
+  border-radius: 13px;
+  padding: 14px 16px;
+  background: var(--white);
+  transition: background .15s;
+}
+.supp-inbox-card.unread {
+  border-color: var(--purple-main);
+  background: var(--purple-ghost);
+}
+.supp-inbox-from {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.supp-inbox-sub {
+  font-size: 12px;
+  color: var(--gray-600);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.supp-inbox-time {
+  font-size: 10.5px;
+  color: var(--gray-400);
+  margin-top: 6px;
+}
+.supp-inbox-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+</style>
+</head>
+<body>
 <!-- ============================================================
      LOADING SCREEN
 ============================================================ -->
@@ -1328,7 +2469,7 @@ input[type=range].ucoin-slider {
   </svg>
   Upload Video
 </button>
-    <button class="btn btn-outline-purple btn-lg" onclick="alert('All Videos')">
+    <button class="btn btn-outline-purple btn-lg" onclick="openAllVideos()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
       </svg>
@@ -1416,7 +2557,7 @@ input[type=range].ucoin-slider {
 
       <div class="card banner-section">
         <div class="banner-title">
-          <i class="fas fa-money-bill-wave"></i> Most Paid Videos
+          <i class="fas fa-coins"></i> Most Paid Videos
           <span class="banner-badge">Top Earners</span>
         </div>
         <div class="banner-scroll" id="banner-paid"></div>
@@ -1453,7 +2594,7 @@ input[type=range].ucoin-slider {
               <th class="c"><i class="fas fa-eye"></i> Views</th>
               <th class="c"><i class="fas fa-heart"></i> Likes</th>
               <th class="c"><i class="fas fa-comment"></i> Comments</th>
-              <th class="c"><i class="fas fa-coins"></i> Revenue</th>
+              <th class="c"><i class="fas fa-coins"></i> Coins</th>
             </tr>
           </thead>
           <tbody id="perfBody"></tbody>
@@ -1537,6 +2678,29 @@ input[type=range].ucoin-slider {
     </div>
   </div>
 
+  <!-- Action Buttons -->
+  <div style="padding:0 18px 12px;display:flex;gap:8px;">
+    <button onclick="openPayMethodPopup()"
+      style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;gap:6px;">
+      <i class="fas fa-building-columns"></i> Payment
+    </button>
+    <button onclick="openWithdrawPopup()"
+      style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135deg,#059669,#10B981);color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(5,150,105,.3);display:flex;align-items:center;justify-content:center;gap:6px;">
+      <i class="fas fa-wallet"></i> Withdraw
+    </button>
+    <button onclick="openHistoryPopup()"
+      style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135deg,#1E40AF,#3B82F6);color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;gap:6px;">
+      <i class="fas fa-clock-rotate-left"></i> History
+    </button>
+  </div>
+
+  <div style="padding:0 18px 16px;">
+    <div style="display:flex;align-items:center;gap:6px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 14px;">
+      <i class="fas fa-clock" style="color:#D97706;font-size:12px;"></i>
+      <span style="font-size:11px;color:#92400E;line-height:1.4;">Withdrawals are processed <b>9 AM – 12 AM daily</b> · Takes <b>15 min to 1 hour</b></span>
+    </div>
+  </div>
+
   <div style="padding:0 18px 30px;">
     <div class="card" style="padding:20px;">
       <div style="font-family:'Playfair Display',serif;font-size:15.5px;font-weight:700;color:var(--text-main);margin-bottom:16px;">
@@ -1554,8 +2718,153 @@ input[type=range].ucoin-slider {
 
 </div><!-- /page-earnings -->
 
+<!-- ============ PAYMENT METHOD POPUP ============ -->
+<div id="payMethodPopup" class="earn-popup-overlay hidden">
+  <div class="earn-popup-card">
+    <div class="uppop-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-main);">
+        <i class="fas fa-building-columns" style="margin-right:6px;color:var(--purple-main);"></i> Payment Method
+      </div>
+      <button onclick="closePayMethodPopup()" style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="font-size:12px;color:var(--gray-400);margin-bottom:18px;">Choose how you receive your earnings</div>
+    <div id="pmDateWarning" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:12px 14px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:600;color:#DC2626;"><i class="fas fa-lock" style="margin-right:4px;"></i> Payment method changes are locked</div>
+      <div style="font-size:11px;color:#991B1B;margin-top:4px;">You can only change your payment method between the <b>1st and 25th</b> of each month.</div>
+    </div>
 
-    <!-- ============================================================
+    <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;margin-bottom:20px;">
+      <div class="pay-method-tab active" id="pmAuto" onclick="onPayMethod('auto')">
+        <i class="fas fa-clock" style="margin-right:5px;"></i>Auto Monthly
+      </div>
+      <div class="pay-method-tab" id="pmManual" onclick="onPayMethod('manual')">
+        <i class="fas fa-hand-holding-dollar" style="margin-right:5px;"></i>Manual Request
+      </div>
+    </div>
+
+    <div id="pmAutoDesc" style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:12px;padding:14px 16px;margin-bottom:18px;">
+      <div style="font-size:13px;font-weight:600;color:var(--purple-deep);margin-bottom:4px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i> Automatic Transfer</div>
+      <div style="font-size:12px;color:var(--gray-500);line-height:1.5;">Your earnings are automatically sent to your bank on the <b>25th of every month</b>. Minimum payout: ₦5,000.</div>
+    </div>
+    <div id="pmManualDesc" style="background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:18px;display:none;">
+      <div style="font-size:13px;font-weight:600;color:#92400E;margin-bottom:4px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i> Manual Request</div>
+      <div style="font-size:12px;color:var(--gray-500);line-height:1.5;">Withdraw anytime using the <b>Withdraw</b> button. Minimum: ₦2,000. Fees apply.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;">Account Number</label>
+        <input type="text" id="pmAcctNum" maxlength="10" placeholder="e.g. 0123456789" class="earn-input" />
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;">Account Name</label>
+        <input type="text" id="pmAcctName" placeholder="e.g. John Doe" class="earn-input" />
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;">Bank Name</label>
+        <input type="text" id="pmBankName" placeholder="e.g. Access Bank" class="earn-input" />
+      </div>
+    </div>
+
+    <button id="pmSaveBtn" onclick="savePaymentMethod()" class="earn-primary-btn" style="margin-top:18px;">
+      <i class="fas fa-save" style="margin-right:6px;"></i> Save Payment Details
+    </button>
+    <div id="pmSavedBadge" style="display:none;margin-top:12px;text-align:center;">
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;padding:7px 16px;border-radius:20px;border:1px solid #A7F3D0;">
+        <i class="fas fa-check-circle"></i> Payment details saved
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WITHDRAW POPUP ============ -->
+<div id="withdrawPopup" class="earn-popup-overlay hidden">
+  <div class="earn-popup-card">
+    <div class="uppop-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-main);">
+        <i class="fas fa-wallet" style="margin-right:6px;color:#059669;"></i> Withdraw Earnings
+      </div>
+      <button onclick="closeWithdrawPopup()" style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div style="margin:16px 0;background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));border-radius:16px;padding:20px;text-align:center;color:white;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:6px;">Available Balance</div>
+      <div id="wdBalance" style="font-family:'Playfair Display',serif;font-size:36px;font-weight:700;">₦0</div>
+    </div>
+
+    <!-- Amount Input -->
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gray-500);display:block;margin-bottom:8px;">
+        <i class="fas fa-coins" style="margin-right:5px;color:var(--purple-main);"></i>Amount to Withdraw
+      </label>
+      <div style="position:relative;">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:700;color:var(--gray-400);">₦</span>
+        <input
+          type="number"
+          id="wdAmountInput"
+          min="2000"
+          placeholder="0"
+          oninput="onWdAmountInput(this.value)"
+          style="width:100%;padding:13px 14px 13px 30px;border-radius:12px;
+            border:1.5px solid var(--gray-200);font-size:20px;font-weight:700;
+            font-family:'Playfair Display',serif;color:var(--purple-deep);
+            outline:none;box-sizing:border-box;transition:border .2s;"
+          onfocus="this.style.borderColor='var(--purple-main)'"
+          onblur="this.style.borderColor='var(--gray-200)'"
+        />
+      </div>
+      <!-- Quick amount chips -->
+      <div id="wdQuickChips" style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;"></div>
+      <div id="wdAmountError" style="display:none;font-size:11.5px;color:var(--red);margin-top:6px;font-weight:600;">
+        <i class="fas fa-triangle-exclamation" style="margin-right:4px;"></i><span id="wdAmountErrorText"></span>
+      </div>
+    </div>
+
+    <div id="wdBankInfo" style="background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:8px;">Sending to:</div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:14px;font-weight:700;color:var(--text-main);" id="wdAcctName">—</div>
+        <div style="font-size:13px;color:var(--gray-500);" id="wdAcctNum">—</div>
+        <div style="font-size:12px;color:var(--gray-400);" id="wdBankName">—</div>
+      </div>
+    </div>
+
+    <div id="wdNoBankMsg" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:13px;font-weight:600;color:#DC2626;margin-bottom:4px;"><i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i> No bank account set up</div>
+      <div style="font-size:12px;color:#991B1B;">Go to <b>Payment Method</b> to add your bank details first.</div>
+    </div>
+
+    <div id="wdFeeBreakdown" style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:600;color:var(--purple-deep);margin-bottom:8px;"><i class="fas fa-receipt" style="margin-right:4px;"></i> Fee Breakdown</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray-600);margin-bottom:4px;">
+        <span>Withdrawal Amount</span><span id="wdAmountDisplay">₦0</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray-600);margin-bottom:4px;">
+        <span>Processing Fee</span><span id="wdFeeDisplay">₦0</span>
+      </div>
+      <div style="border-top:1px solid var(--purple-pale);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:var(--purple-deep);">
+        <span>You Receive</span><span id="wdReceiveDisplay">₦0</span>
+      </div>
+    </div>
+
+    <div id="wdMinWarning" style="display:none;background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400E;text-align:center;">
+      <i class="fas fa-info-circle" style="margin-right:4px;"></i> Minimum withdrawal is ₦2,000
+    </div>
+
+    <div id="wdMethodWarning" style="display:none;background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400E;text-align:center;">
+      <i class="fas fa-info-circle" style="margin-right:4px;"></i> Switch payment method to "Manual Request" to withdraw
+    </div>
+
+    <button id="withdrawBtn" onclick="requestWithdrawal()" disabled class="earn-primary-btn" style="background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 14px rgba(5,150,105,.3);">
+      <i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal
+    </button>
+  </div>
+</div>
+
+
+ <!-- ============================================================
      PAGE 4 — LEGIBILITY
      Drop this entire block into your HTML where needed.
      Requires: Font Awesome (fas icons) + your existing CSS vars
@@ -2684,6 +3993,7 @@ input[type=range].ucoin-slider {
         </div>
       </div>
 
+
       <!-- Schedule -->
       <div class="upload-card">
         <div class="upload-card-title"><i class="fas fa-calendar-days"></i> Release Schedule</div>
@@ -2711,7 +4021,6 @@ input[type=range].ucoin-slider {
           Scheduling a release and sharing your trailer first is a great way to build hype before launch.
         </div>
       </div>
-
       <!-- Pricing -->
       <div class="upload-card">
         <div class="upload-card-title"><i class="fas fa-coins"></i> Pricing</div>
@@ -2936,8 +4245,8 @@ input[type=range].ucoin-slider {
         <!-- Season Schedule -->
         <div class="upload-card">
           <div class="upload-card-title"><i class="fas fa-calendar-days"></i> Season Premiere Date</div>
-          <div class="usched-toggle" onclick="toggleSched('seaSchedToggle','seaSchedDate')">
-            <div>
+         <div class="usched-toggle" onclick="toggleSched('seaSchedToggle','seaSchedDate',true)"></div>
+          <div>
               <div class="usched-toggle-label">Schedule Premiere</div>
               <div class="usched-toggle-sub">Season page goes live on this date</div>
             </div>
@@ -2993,12 +4302,10 @@ input[type=range].ucoin-slider {
       </div>
 
       <!-- ── EPISODE FORM (shown after season selected/created) ── -->
-      <div id="episodeBlock">
-
+     <div id="episodeBlock" style="display:none;">
         <div class="upload-card">
           <div class="upload-card-title"><i class="fas fa-play-circle"></i> Episode Details</div>
-
-          <div class="ufield">
+      <div class="ufield">
             <div class="ufield-label"><span class="ureq-dot"></span> Episode Number</div>
             <input class="ufield-input" type="number" id="epNumber" value="1" min="1">
             <div class="uhelp"><i class="fas fa-circle-info"></i> Auto-filled from the last episode. Edit freely.</div>
@@ -3090,8 +4397,10 @@ input[type=range].ucoin-slider {
         <!-- Episode Schedule -->
         <div class="upload-card">
           <div class="upload-card-title"><i class="fas fa-calendar-days"></i> Episode Release Date</div>
-          <div class="usched-toggle" onclick="toggleSched('epSchedToggle','epSchedDate')">
-            <div>
+          
+
+<div class="usched-toggle" onclick="toggleSched('epSchedToggle','epSchedDate',true)">
+          <div>
               <div class="usched-toggle-label">Schedule This Episode</div>
               <div class="usched-toggle-sub">Override the season premiere date for this episode</div>
             </div>
@@ -3167,8 +4476,333 @@ input[type=range].ucoin-slider {
 </div><!-- /page-upload -->
 
 
+<!-- ============================================================
+     PAGE — ALL VIDEOS
+============================================================ -->
+<div id="page-allvideos" class="page">
+
+  <div class="av-topbar">
+    <div class="av-topbar-row1">
+      <button class="back-btn" onclick="closeAllVideos()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back
+      </button>
+      <div class="av-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input class="av-search-input" id="avSearchInput"
+          placeholder="Search videos, seasons, episodes…"
+          oninput="onAvSearch(this.value)" />
+      </div>
+    </div>
+    <div class="av-tabs">
+      <div class="av-tab active" id="avTabSingle" onclick="switchAvTab('single')">
+        <i class="fas fa-film"></i> Single Videos
+        <span class="av-tab-count" id="avCountSingle">0</span>
+      </div>
+      <div class="av-tab" id="avTabSeason" onclick="switchAvTab('season')">
+        <i class="fas fa-layer-group"></i> Seasons &amp; Episodes
+        <span class="av-tab-count" id="avCountSeason">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="av-content">
+
+    <!-- Sort row -->
+    <div class="av-sort-row">
+      <span class="av-sort-label" id="avSortLabel">Showing all videos</span>
+      <select class="av-sort-select" id="avSortSelect" onchange="onAvSort(this.value)">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="views">Most Viewed</option>
+        <option value="revenue">Top Earning</option>
+      </select>
+    </div>
+
+    <!-- Single Videos Panel -->
+    <div id="avPanelSingle"></div>
+
+    <!-- Seasons Panel -->
+    <div id="avPanelSeason" style="display:none;"></div>
+
+  </div>
+</div>
 
 
+<!-- ============================================================
+     PAGE — VIDEO DETAIL
+============================================================ -->
+<div id="page-videodetail" class="page">
+
+  <div class="vd-topbar">
+    <button class="vd-back-btn" id="vdBackBtn" onclick="closeVideoDetail()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back
+    </button>
+    <span class="vd-topbar-title" id="vdTopTitle">Video</span>
+  </div>
+
+  <!-- Player -->
+  <div class="vd-player-wrap" id="vdPlayerWrap">
+    <div class="vd-shimmer" id="vdShimmer">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="vd-body" id="vdBody">
+    <!-- filled by JS -->
+  </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     UPLOAD PROGRESS POPUP
+============================================================ -->
+<div id="uploadProgressPopup" class="hidden">
+  <div class="uppop-card">
+    <div class="uppop-handle"></div>
+    <div class="uppop-title" id="uppopTitle">Uploading Video…</div>
+    <div class="uppop-sub" id="uppopSub">Please keep this page open</div>
+
+    <div class="uppop-file-row">
+      <div class="uppop-file-icon"><i class="fas fa-file-video"></i></div>
+      <div style="flex:1;min-width:0;">
+        <div class="uppop-file-name" id="uppopFileName">video.mp4</div>
+        <div class="uppop-file-size" id="uppopFileSize">—</div>
+      </div>
+    </div>
+
+    <div class="uppop-steps" id="uppopSteps"></div>
+
+    <div class="uppop-main-prog">
+      <div class="uppop-prog-label">
+        <span id="uppopProgLabel">Uploading…</span>
+        <span id="uppopProgPct">0%</span>
+      </div>
+      <div class="uppop-prog-bg">
+        <div class="uppop-prog-fill" id="uppopProgFill"></div>
+      </div>
+      <div class="uppop-speed" id="uppopSpeed"></div>
+    </div>
+<div style="display:flex;gap:10px;">
+  <button class="uppop-cancel-btn" id="uppopMinBtn" onclick="minimiseUploadPopup()"
+    style="flex:1;background:var(--purple-ghost);color:var(--purple-main);border-color:var(--purple-pale);">
+    <i class="fas fa-minus" style="margin-right:6px;"></i>Minimise
+  </button>
+  <button class="uppop-cancel-btn" id="uppopCancelBtn" onclick="cancelUpload()" style="flex:1;">
+    <i class="fas fa-times" style="margin-right:6px;"></i>Cancel
+  </button>
+</div>
+  
+  </div>
+</div>
+<!-- Minimised Upload Bar -->
+<div id="uppopMiniBar" onclick="expandUploadPopup()">
+  <div class="uppop-mini-spinner"></div>
+  <div class="uppop-mini-content">
+    <div class="uppop-mini-label" id="uppopMiniLabel">Uploading…</div>
+    <div class="uppop-mini-pct" id="uppopMiniPct">0%</div>
+    <div class="uppop-mini-bar-bg"><div class="uppop-mini-bar-fill" id="uppopMiniBarFill"></div></div>
+  </div>
+  <div class="uppop-mini-expand"><i class="fas fa-chevron-up"></i></div>
+</div>
+
+<!-- ============================================================
+     HISTORY POPUP — paste just before </body>
+============================================================ -->
+<div id="historyPopup" class="earn-popup-overlay hidden">
+  <div class="earn-popup-card" style="padding-bottom:52px;">
+    <div class="uppop-handle"></div>
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-main);">
+        <i class="fas fa-clock-rotate-left" style="margin-right:7px;color:var(--purple-main);"></i>History
+      </div>
+      <button onclick="closeHistoryPopup()"
+        style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- 3 Tabs -->
+    <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;margin-bottom:20px;">
+      <div class="hist-tab active" id="htab-transactions" onclick="switchHistTab('transactions')">
+        <i class="fas fa-receipt" style="margin-right:5px;font-size:11px;"></i>Transactions
+      </div>
+      <div class="hist-tab" id="htab-requests" onclick="switchHistTab('requests')">
+        <i class="fas fa-paper-plane" style="margin-right:5px;font-size:11px;"></i>Requests
+      </div>
+      <div class="hist-tab" id="htab-support" onclick="switchHistTab('support')">
+        <i class="fas fa-headset" style="margin-right:5px;font-size:11px;"></i>Support
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         TAB 1 — TRANSACTIONS
+    ═══════════════════════════════════ -->
+    <div id="hpanel-transactions">
+
+      <!-- Filter pills -->
+      <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+        <div class="hist-filter active" id="hf-all"    onclick="filterTransactions('all')">All</div>
+        <div class="hist-filter"        id="hf-ads"    onclick="filterTransactions('ads')">Ads</div>
+        <div class="hist-filter"        id="hf-sales"  onclick="filterTransactions('sales')">Sales</div>
+        <div class="hist-filter"        id="hf-payout" onclick="filterTransactions('payout')">Payouts</div>
+        <div class="hist-filter"        id="hf-refund" onclick="filterTransactions('refund')">Refunds</div>
+      </div>
+
+      <!-- Summary strip (filled by JS) -->
+      <div id="htxn-summary"
+        style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
+      </div>
+
+      <!-- Transaction rows (filled by JS) -->
+      <div id="htxn-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+    </div>
+
+
+    <!-- ══════════════════════════════════
+         TAB 2 — WITHDRAW REQUESTS
+    ═══════════════════════════════════ -->
+    <div id="hpanel-requests" style="display:none;">
+
+      <!-- Status filter pills -->
+      <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+        <div class="hist-filter active" id="hreq-all"      onclick="filterRequests('all')">All</div>
+        <div class="hist-filter"        id="hreq-pending"  onclick="filterRequests('pending')">Pending</div>
+        <div class="hist-filter"        id="hreq-approved" onclick="filterRequests('approved')">Approved</div>
+        <div class="hist-filter"        id="hreq-rejected" onclick="filterRequests('rejected')">Rejected</div>
+      </div>
+
+      <!-- Request cards (filled by JS) -->
+      <div id="hreq-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    </div>
+
+
+    <!-- ══════════════════════════════════
+         TAB 3 — SUPPORT
+    ═══════════════════════════════════ -->
+    <div id="hpanel-support" style="display:none;">
+
+      <!-- Compose card -->
+      <div style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);
+        border-radius:14px;padding:18px;margin-bottom:18px;">
+
+        <div style="font-size:14px;font-weight:700;color:var(--purple-deep);margin-bottom:14px;">
+          <i class="fas fa-pen-to-square" style="margin-right:7px;"></i>New Message
+        </div>
+
+        <!-- Type selector -->
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.6px;color:var(--gray-500);margin-bottom:7px;">Type</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <div class="supp-type active" id="stype-complaint"    onclick="setSuppType('complaint')">
+              <i class="fas fa-triangle-exclamation" style="margin-right:4px;font-size:11px;"></i>Complaint
+            </div>
+            <div class="supp-type" id="stype-report"              onclick="setSuppType('report')">
+              <i class="fas fa-flag" style="margin-right:4px;font-size:11px;"></i>Report
+            </div>
+            <div class="supp-type" id="stype-notification"        onclick="setSuppType('notification')">
+              <i class="fas fa-bell" style="margin-right:4px;font-size:11px;"></i>Notification
+            </div>
+            <div class="supp-type" id="stype-inquiry"             onclick="setSuppType('inquiry')">
+              <i class="fas fa-circle-question" style="margin-right:4px;font-size:11px;"></i>Inquiry
+            </div>
+          </div>
+          <input type="hidden" id="suppType" value="complaint">
+        </div>
+
+        <!-- Subject -->
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.6px;color:var(--gray-500);margin-bottom:6px;">Subject</div>
+          <input type="text" id="suppSubject" class="earn-input"
+            placeholder="e.g. Payment not received for withdrawal on 20 Apr">
+        </div>
+
+        <!-- Related Transaction ID -->
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.6px;color:var(--gray-500);margin-bottom:6px;">
+            Related Transaction ID
+            <span style="font-weight:400;text-transform:none;font-size:11px;
+              color:var(--gray-400);letter-spacing:0;"> (optional)</span>
+          </div>
+          <input type="text" id="suppTxnId" class="earn-input"
+            placeholder="e.g. WD-20240420-001">
+        </div>
+
+        <!-- Amount involved -->
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.6px;color:var(--gray-500);margin-bottom:6px;">
+            Amount Involved
+            <span style="font-weight:400;text-transform:none;font-size:11px;
+              color:var(--gray-400);letter-spacing:0;"> (optional)</span>
+          </div>
+          <input type="text" id="suppAmount" class="earn-input" placeholder="e.g. ₦25,000">
+        </div>
+
+        <!-- Message -->
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;
+            letter-spacing:.6px;color:var(--gray-500);margin-bottom:6px;">
+            Message <span style="color:var(--red);font-size:13px;">*</span>
+          </div>
+          <textarea id="suppMessage" class="earn-input"
+            style="min-height:90px;resize:vertical;line-height:1.5;"
+            placeholder="Describe your issue, complaint, or inquiry in detail…"></textarea>
+        </div>
+
+        <button id="suppSubmitBtn" onclick="submitSupportMessage()" class="earn-primary-btn">
+          <i class="fas fa-paper-plane" style="margin-right:7px;"></i>Send Message
+        </button>
+
+        <!-- Success badge -->
+        <div id="suppSuccessBadge" style="display:none;margin-top:12px;text-align:center;">
+          <span style="display:inline-flex;align-items:center;gap:6px;
+            background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;
+            padding:7px 16px;border-radius:20px;border:1px solid #A7F3D0;">
+            <i class="fas fa-check-circle"></i> Message sent — we'll reply within 24 hours
+          </span>
+        </div>
+      </div>
+
+      <!-- Inbox -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:12px;
+        display:flex;align-items:center;justify-content:space-between;">
+        <span>
+          <i class="fas fa-inbox" style="margin-right:7px;color:var(--purple-main);"></i>Inbox
+        </span>
+        <span id="hsupp-unread-badge"
+          style="display:none;font-size:10px;font-weight:700;
+          padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
+        </span>
+      </div>
+
+      <!-- Inbox messages (filled by JS) -->
+      <div id="hsupp-inbox" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+    </div>
+
+  </div>
+</div>
   <!-- ============================================================
        FIREBASE SDK
   ============================================================ -->
@@ -3208,13 +4842,16 @@ input[type=range].ucoin-slider {
     let channelData  = null;
     let videosData   = [];
     let earningsData = null;
-
-    let currentMetric = 'views';
-    let currentPeriod = '24h';
-    let earnSeg       = 'total';
-    let earnCurrency  = 'NGN';
-    let usdToNgn      = null;
-    let earnTimeline  = '24h';
+let currentMetric  = 'views';
+let currentPeriod  = '24h';
+let earnSeg        = 'total';
+let earnCurrency   = 'NGN';
+let usdToNgn       = null;
+let earnTimeline   = '24h';
+let activeXHR      = null;
+let uploadCancelled = false;
+let _uploadStartTime = null;
+let _uploadedBytes   = 0;
 
     /* ====================================================
        AUTH → BOOT
@@ -3273,7 +4910,12 @@ input[type=range].ucoin-slider {
           renderHomeStats();
           if (isPageActive('page-studio')) renderStudioData();
         }, err => console.error('Videos error:', err));
-
+db.collection('channels').doc(CHANNEL_UID)
+  .collection('seasons')
+  .onSnapshot(() => {
+    renderHomeStats();
+  }, err => console.error('Seasons error:', err));
+  
       db.collection('channels').doc(CHANNEL_UID)
         .collection('earnings').doc('summary')
         .onSnapshot(snap => {
@@ -3324,18 +4966,39 @@ input[type=range].ucoin-slider {
       renderHomeStats();
     }
 
-    function renderHomeStats() {
-      const totalViews = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
-      const videoCount = videosData.length;
-      const subs       = channelData ? (Number(channelData.subscribers) || 0) : 0;
+   function renderHomeStats() {
+  const totalViews = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
+  const subs       = channelData ? (Number(channelData.subscribers) || 0) : 0;
 
-      const vals = document.querySelectorAll('.stat-value');
-      const lbls = document.querySelectorAll('.stat-label');
-      if (vals[0]) vals[0].textContent = fmt(totalViews);
-      if (vals[1]) vals[1].textContent = videoCount;
-      if (vals[2]) vals[2].textContent = fmt(subs);
-      if (lbls[2]) lbls[2].textContent = 'Fans';
-    }
+  const vals = document.querySelectorAll('.stat-value');
+  const lbls = document.querySelectorAll('.stat-label');
+  if (vals[0]) vals[0].textContent = fmt(totalViews);
+  if (vals[2]) vals[2].textContent = fmt(subs);
+  if (lbls[2]) lbls[2].textContent = 'Fans';
+
+  // Count singles + all episodes across all seasons
+  countAllContent().then(total => {
+    if (vals[1]) vals[1].textContent = total;
+  });
+}
+
+async function countAllContent() {
+  const singleCount = videosData.length;
+
+  try {
+    const seasonsSnap = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('seasons').get();
+
+    let episodeCount = 0;
+    seasonsSnap.docs.forEach(doc => {
+      episodeCount += Number(doc.data().episodeCount || 0);
+    });
+
+    return singleCount + episodeCount;
+  } catch (e) {
+    return singleCount;
+  }
+}
 
     /* ====================================================
        FORMAT HELPERS
@@ -3435,10 +5098,11 @@ function fmtUserCurr(usd) {
     }
 
     function openEarnings() {
-      document.getElementById('page-earnings').classList.add('active');
-      window.scrollTo(0, 0);
-      fetchExchangeRate();
-    }
+    document.getElementById('page-earnings').classList.add('active');
+          window.scrollTo(0, 0);
+          fetchExchangeRate();
+          loadPaymentDetails();
+        }
 
     function goBackFromEarnings() {
       document.getElementById('page-earnings').classList.remove('active');
@@ -3713,15 +5377,22 @@ function fmtUserCurr(usd) {
     const G_CLASSES = ['g1','g2','g3','g4','g5','g6','g7'];
     const V_EMOJIS  = ['🎬','🏆','⭐','💫','🔥','🌟','✨','💎','🎯','🎪'];
 
+    function getVideoThumb(v) {
+      if (v.thumbnailURL) return v.thumbnailURL;
+      if (v.videoUrl) return v.videoUrl.replace(/\.[^.]+$/, '.jpg');
+      return '';
+    }
+
     function makeBcard(v, showRev, idx) {
       const g     = G_CLASSES[idx % G_CLASSES.length];
-      const emoji = V_EMOJIS[idx % V_EMOJIS.length];
-      const thumb = v.thumbnailURL
-        ? `<img src="${v.thumbnailURL}" style="width:100%;height:100%;object-fit:cover;" />`
-        : `<span>${emoji}</span>`;
+      const thumbSrc = getVideoThumb(v);
+      const thumb = thumbSrc
+        ? `<img src="${thumbSrc}" style="width:100%;height:100%;object-fit:cover;" />`
+        : `<span>${V_EMOJIS[idx % V_EMOJIS.length]}</span>`;
+      const vJson = JSON.stringify(v).replace(/"/g, '&quot;');
       return `
-        <div class="bcard">
-          <div class="bcard-thumb ${v.thumbnailURL ? '' : g}" style="${v.thumbnailURL ? 'background:#000;' : ''}">
+        <div class="bcard" onclick="openVideoDetail(${vJson}, 'page-studio')" style="cursor:pointer;">
+          <div class="bcard-thumb ${thumbSrc ? '' : g}" style="${thumbSrc ? 'background:#000;' : ''}">
             ${thumb}
             <div class="bcard-play-overlay">
               <div class="bcard-play-btn">
@@ -3738,7 +5409,7 @@ function fmtUserCurr(usd) {
               <span class="bstat">❤️ ${fmt(v.likes    || 0)}</span>
               <span class="bstat">💬 ${fmt(v.comments || 0)}</span>
             </div>
-            ${showRev ? `<div class="bcard-revenue">$${(Number(v.revenue) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })} earned</div>` : ''}
+            ${showRev ? `<div class="bcard-revenue">🪙 ${fmt(Number(v.revenue) || 0)} coins earned</div>` : ''}
           </div>
         </div>`;
     }
@@ -3779,13 +5450,14 @@ function fmtUserCurr(usd) {
       }
       const rows = [...videosData].sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0)).slice(0, 10);
       tbody.innerHTML = rows.map((r, i) => {
-        const g   = G_CLASSES[i % G_CLASSES.length];
-        const rev = '$' + (Number(r.revenue) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const g    = G_CLASSES[i % G_CLASSES.length];
+        const rev  = '🪙 ' + fmt(Number(r.revenue) || 0);
+        const rJson = JSON.stringify(r).replace(/"/g, '&quot;');
         return `
-          <tr>
+          <tr onclick="openVideoDetail(${rJson}, 'page-studio')" style="cursor:pointer;">
             <td>
               <div class="vname-cell">
-                <div class="vthumbs ${g}"></div>
+                <div class="vthumbs ${g}" ${getVideoThumb(r) ? `style="background:url('${getVideoThumb(r)}') center/cover;"` : ''}></div>
                 <span class="vname-text">${r.title || r.name || 'Untitled'}</span>
               </div>
             </td>
@@ -3919,9 +5591,280 @@ document.getElementById('totalRevSub').textContent = total === 0
     }
 
     /* ====================================================
-       SETTINGS
+       PAYMENT METHOD & WITHDRAWAL
     ==================================================== */
-    function openSettings() {
+    let payMethod = 'auto';
+
+    function isPayMethodChangeLocked() {
+      const day = new Date().getDate();
+      return day > 25;
+    }
+
+    function getWithdrawFee(amount) {
+      if (amount >= 1000000) return 500;
+      if (amount >= 50000)   return 200;
+      if (amount >= 1000)    return 100;
+      return 0;
+    }
+
+    function getTotalBalance() {
+      if (!earningsData) return 0;
+      return (Number(earningsData.adsRevenue) || 0) + (Number(earningsData.directRevenue) || 0);
+    }
+
+    /* ── Popup open / close ── */
+    function openPayMethodPopup() {
+      loadPaymentDetails();
+      const locked = isPayMethodChangeLocked();
+      document.getElementById('pmDateWarning').style.display = locked ? '' : 'none';
+      document.getElementById('pmAuto').classList.toggle('locked', locked);
+      document.getElementById('pmManual').classList.toggle('locked', locked);
+      document.getElementById('payMethodPopup').classList.remove('hidden');
+    }
+    function closePayMethodPopup() {
+      document.getElementById('payMethodPopup').classList.add('hidden');
+    }
+
+    
+    function closeWithdrawPopup() {
+      document.getElementById('withdrawPopup').classList.add('hidden');
+    }
+
+    /* ── Payment method toggle ── */
+    function onPayMethod(method) {
+      if (isPayMethodChangeLocked()) return;
+      payMethod = method;
+      document.getElementById('pmAuto').classList.toggle('active', method === 'auto');
+      document.getElementById('pmManual').classList.toggle('active', method === 'manual');
+      document.getElementById('pmAutoDesc').style.display  = method === 'auto' ? '' : 'none';
+      document.getElementById('pmManualDesc').style.display = method === 'manual' ? '' : 'none';
+    }
+
+    /* ── Save ── */
+    function savePaymentMethod() {
+      const acctNum  = document.getElementById('pmAcctNum').value.trim();
+      const acctName = document.getElementById('pmAcctName').value.trim();
+      const bankName = document.getElementById('pmBankName').value.trim();
+
+      if (!acctNum || !acctName || !bankName) { alert('Please fill in all bank details.'); return; }
+      if (acctNum.length < 10) { alert('Account number must be 10 digits.'); return; }
+
+      const btn = document.getElementById('pmSaveBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Saving…';
+
+      db.collection('channels').doc(CHANNEL_UID).update({
+        paymentMethod: payMethod,
+        bankAcctNum:   acctNum,
+        bankAcctName:  acctName,
+        bankName:      bankName,
+      }).then(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save" style="margin-right:6px;"></i> Save Payment Details';
+        document.getElementById('pmSavedBadge').style.display = '';
+        setTimeout(() => { document.getElementById('pmSavedBadge').style.display = 'none'; }, 4000);
+      }).catch(e => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save" style="margin-right:6px;"></i> Save Payment Details';
+        alert('Failed to save: ' + e.message);
+      });
+    }
+
+    /* ── Withdraw ── */
+   /* ── Open Withdraw Popup ── */
+function openWithdrawPopup() {
+  const popup    = document.getElementById('withdrawPopup');
+  const acctNum  = document.getElementById('pmAcctNum').value.trim();
+  const acctName = document.getElementById('pmAcctName').value.trim();
+  const bankName = document.getElementById('pmBankName').value.trim();
+  const balance  = getTotalBalance();
+  const hasBank  = acctNum.length >= 10 && acctName && bankName;
+
+  // Reset amount input
+  const amtInput = document.getElementById('wdAmountInput');
+  amtInput.value = '';
+
+  document.getElementById('wdBalance').textContent = '₦' + balance.toLocaleString('en-NG');
+
+  // Build quick-select chips
+  const chipsEl = document.getElementById('wdQuickChips');
+  const presets = buildWdChips(balance);
+  chipsEl.innerHTML = presets.map(p => `
+    <div class="wd-chip ${p.isMax ? 'max-chip' : ''}"
+      onclick="applyWdChip(${p.amount}, this)">
+      ${p.label}
+    </div>`).join('');
+
+  // Bank info
+  document.getElementById('wdBankInfo').style.display   = hasBank ? '' : 'none';
+  document.getElementById('wdNoBankMsg').style.display  = hasBank ? 'none' : '';
+  if (hasBank) {
+    document.getElementById('wdAcctName').textContent = acctName;
+    document.getElementById('wdAcctNum').textContent  = acctNum;
+    document.getElementById('wdBankName').textContent = bankName;
+  }
+
+  // Reset breakdown
+  document.getElementById('wdAmountDisplay').textContent  = '₦0';
+  document.getElementById('wdFeeDisplay').textContent     = '₦0';
+  document.getElementById('wdReceiveDisplay').textContent = '₦0';
+  document.getElementById('wdFeeBreakdown').style.display = hasBank ? '' : 'none';
+
+  document.getElementById('wdMinWarning').style.display    = 'none';
+  document.getElementById('wdMethodWarning').style.display =
+    (payMethod !== 'manual' && hasBank) ? '' : 'none';
+  document.getElementById('wdAmountError').style.display   = 'none';
+  document.getElementById('withdrawBtn').disabled = true;
+
+  popup.classList.remove('hidden');
+}
+
+/* ── Build quick-select chip amounts ── */
+function buildWdChips(balance) {
+  const MIN  = 2000;
+  const base = [2000, 5000, 10000, 20000, 50000, 100000];
+  const chips = [];
+
+  for (const amt of base) {
+    if (amt <= balance) {
+      chips.push({ amount: amt, label: '₦' + amt.toLocaleString('en-NG'), isMax: false });
+    }
+    if (chips.length >= 4) break;
+  }
+
+  // Always add Max chip if balance ≥ MIN
+  if (balance >= MIN) {
+    chips.push({ amount: balance, label: 'Max ₦' + balance.toLocaleString('en-NG'), isMax: true });
+  }
+
+  return chips;
+}
+
+/* ── Apply a chip value ── */
+function applyWdChip(amount, el) {
+  document.querySelectorAll('.wd-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('wdAmountInput').value = amount;
+  onWdAmountInput(amount);
+}
+
+/* ── Live amount input handler ── */
+function onWdAmountInput(raw) {
+  const balance  = getTotalBalance();
+  const amount   = Number(raw) || 0;
+  const fee      = getWithdrawFee(amount);
+  const receive  = Math.max(0, amount - fee);
+  const errorEl  = document.getElementById('wdAmountError');
+  const errorTxt = document.getElementById('wdAmountErrorText');
+  const btn      = document.getElementById('withdrawBtn');
+
+  // Deselect chips if user typed a custom value
+  const chips = document.querySelectorAll('.wd-chip');
+  chips.forEach(c => {
+    const chipAmt = Number(c.getAttribute('onclick')?.match(/\d+/)?.[0]);
+    if (chipAmt !== amount) c.classList.remove('active');
+  });
+
+  // Update breakdown live
+  document.getElementById('wdAmountDisplay').textContent  =
+    '₦' + amount.toLocaleString('en-NG');
+  document.getElementById('wdFeeDisplay').textContent     =
+    '₦' + fee.toLocaleString('en-NG');
+  document.getElementById('wdReceiveDisplay').textContent =
+    '₦' + receive.toLocaleString('en-NG');
+
+  // Validate
+  let valid = true;
+  errorEl.style.display = 'none';
+  document.getElementById('wdMinWarning').style.display = 'none';
+
+  if (amount > 0 && amount < 2000) {
+    errorTxt.textContent = 'Minimum withdrawal is ₦2,000';
+    errorEl.style.display = '';
+    valid = false;
+  } else if (amount > balance) {
+    errorTxt.textContent = `Amount exceeds your balance of ₦${balance.toLocaleString('en-NG')}`;
+    errorEl.style.display = '';
+    valid = false;
+  }
+
+  const acctNum  = document.getElementById('pmAcctNum').value.trim();
+  const acctName = document.getElementById('pmAcctName').value.trim();
+  const bankName = document.getElementById('pmBankName').value.trim();
+  const hasBank  = acctNum.length >= 10 && acctName && bankName;
+
+  btn.disabled = !(valid && amount >= 2000 && hasBank && payMethod === 'manual');
+}
+
+/* ── Request Withdrawal (updated to use custom amount) ── */
+function requestWithdrawal() {
+  const acctNum  = document.getElementById('pmAcctNum').value.trim();
+  const acctName = document.getElementById('pmAcctName').value.trim();
+  const bankName = document.getElementById('pmBankName').value.trim();
+  const balance  = getTotalBalance();
+  const amount   = Number(document.getElementById('wdAmountInput').value) || 0;
+  const fee      = getWithdrawFee(amount);
+  const receive  = amount - fee;
+
+  // Final guard
+  if (amount < 2000) {
+    document.getElementById('wdAmountInput').classList.add('uerror');
+    setTimeout(() => document.getElementById('wdAmountInput').classList.remove('uerror'), 700);
+    return;
+  }
+  if (amount > balance) {
+    document.getElementById('wdAmountInput').classList.add('uerror');
+    setTimeout(() => document.getElementById('wdAmountInput').classList.remove('uerror'), 700);
+    return;
+  }
+
+  if (!confirm(
+    `Withdraw ₦${amount.toLocaleString('en-NG')} to:\n\n` +
+    `Bank: ${bankName}\nAccount: ${acctNum}\nName: ${acctName}\n\n` +
+    `Fee: ₦${fee.toLocaleString('en-NG')}\nYou receive: ₦${receive.toLocaleString('en-NG')}\n\nProceed?`
+  )) return;
+
+  const btn = document.getElementById('withdrawBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Processing…';
+
+  db.collection('channels').doc(CHANNEL_UID).collection('withdrawals').add({
+    amount,
+    fee,
+    netAmount:     receive,
+    bankAcctNum:   acctNum,
+    bankAcctName:  acctName,
+    bankName,
+    status:        'pending',
+    requestedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+    channelId:     CHANNEL_UID,
+  }).then(() => {
+    btn.innerHTML =
+      '<i class="fas fa-check-circle" style="margin-right:6px;"></i> Withdrawal Requested!';
+    btn.style.background = '#059669';
+    setTimeout(() => closeWithdrawPopup(), 2500);
+  }).catch(e => {
+    btn.disabled = false;
+    btn.innerHTML =
+      '<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal';
+    alert('Withdrawal failed: ' + e.message);
+  });
+}
+    
+    /* ── Load saved details ── */
+    function loadPaymentDetails() {
+      if (!CHANNEL_UID) return;
+      db.collection('channels').doc(CHANNEL_UID).get().then(doc => {
+        if (!doc.exists) return;
+        const d = doc.data();
+        if (d.paymentMethod) { payMethod = d.paymentMethod; onPayMethod(payMethod); }
+        if (d.bankAcctNum)  document.getElementById('pmAcctNum').value  = d.bankAcctNum;
+        if (d.bankAcctName) document.getElementById('pmAcctName').value = d.bankAcctName;
+        if (d.bankName)     document.getElementById('pmBankName').value = d.bankName;
+      });
+    }
+
+  function openSettings() {
       if (document.getElementById('page-settings')) {
         ['page-home','page-studio','page-earnings','page-legibility'].forEach(id => {
           const p = document.getElementById(id); if (p) p.classList.remove('active');
@@ -3960,8 +5903,7 @@ return;
 
         <div style="max-width:700px;margin:0 auto;padding:20px 18px 80px;">
 
-          <!-- PROFILE CARD -->
-          <div style="background:linear-gradient(135deg,#2E1065,#6D28D9);border-radius:20px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;">
+         <div style="background:linear-gradient(135deg,#2E1065,#6D28D9);border-radius:20px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;">
             <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-60px;right:-50px;"></div>
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
               <div id="settAvatar" onclick="openModal('photoModal')"
@@ -4004,8 +5946,7 @@ return;
             </div>
           </div>
 
-          <!-- HOW YOU EARN -->
-          <div class="card" style="padding:22px;margin-bottom:20px;">
+         <div class="card" style="padding:22px;margin-bottom:20px;">
             <div class="sett-section-title"><i class="fa-solid fa-coins" style="color:var(--purple-main);margin-right:8px;"></i>How You Earn on Pose</div>
             <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:18px;line-height:1.6;">
               With Pose, creators earn in two main ways: <strong>Pay-As-You-Watch</strong> (direct viewer payments via Pose Coin)
@@ -4110,7 +6051,7 @@ return;
 
          
 
-      <!-- ACCOUNT ACTIONS -->
+     
 <div class="card" style="padding:22px;margin-bottom:20px;">
   <div class="sett-section-title"><i class="fa-solid fa-user-gear" style="color:var(--purple-main);margin-right:8px;"></i>Account Actions</div>
 
@@ -4521,7 +6462,7 @@ function closeUpload() {
 ==================================================== */
 const CLOUDINARY_CLOUD  = 'dzhdgxjhl';
 const CLOUDINARY_PRESET = 'posepreset';
-const CHUNK_SIZE        = 50 * 1024 * 1024; // 50 MB
+const CHUNK_SIZE        = 20 * 1024 * 1024; // 20 MB — stays well under Cloudinary's 100 MB limit
 
 let singleVideoFile   = null;
 let singleTrailerFile = null;
@@ -4550,6 +6491,11 @@ function openUpload() {
       av.textContent = name.charAt(0).toUpperCase();
     }
   }
+
+  document.getElementById('panel-single').style.display = 'block';
+document.getElementById('panel-single').classList.add('active');
+document.getElementById('panel-season').style.display = 'none';
+document.getElementById('panel-season').classList.remove('active'); 
   window.scrollTo(0, 0);
 }
 
@@ -4567,9 +6513,18 @@ function closeUpload() {
 function switchUploadTab(el, tab) {
   document.querySelectorAll('.upload-tab-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('panel-single').classList.remove('active');
-  document.getElementById('panel-season').classList.remove('active');
-  document.getElementById('panel-' + tab).classList.add('active');
+  
+  document.querySelectorAll('.upload-panel').forEach(p => {
+    p.style.display = 'none';
+    p.classList.remove('active');
+  });
+  
+  const target = document.getElementById('panel-' + tab);
+  target.style.display = 'block';
+  target.classList.add('active');
+  
+  window.scrollTo(0, 0);
+  
   if (tab === 'season' && seasonMode === 'add') loadExistingSeasons();
 }
 
@@ -4579,7 +6534,7 @@ function switchUploadTab(el, tab) {
 function handleFileSelect(input, previewId, progressId) {
   const file = input.files[0];
   if (!file) return;
-  storeFileRef(input.id, file);
+  if (storeFileRef(input.id, file) === false) { input.value = ''; return; }
   showFilePreview(file, previewId);
   if (progressId) resetProgress(progressId);
 }
@@ -4589,12 +6544,20 @@ function handleDrop(event, fileInputId, previewId, progressId) {
   event.currentTarget.classList.remove('dragover');
   const file = event.dataTransfer.files[0];
   if (!file) return;
-  storeFileRef(fileInputId, file);
+  if (storeFileRef(fileInputId, file) === false) return;
   showFilePreview(file, previewId);
   if (progressId) resetProgress(progressId);
 }
 
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
+
 function storeFileRef(inputId, file) {
+  if (file && (inputId === 'sVideoFile' || inputId === 'epVideoFile') && file.size > MAX_VIDEO_SIZE) {
+    alert(`Video file is too large (${formatBytes(file.size)}). Maximum allowed is 100 MB.`);
+    const input = document.getElementById(inputId);
+    if (input) input.value = '';
+    return false;
+  }
   if (inputId === 'sVideoFile')    singleVideoFile   = file;
   if (inputId === 'sTrailerFile')  singleTrailerFile = file;
   if (inputId === 'seaTrailerFile') seasonTrailerFile = file;
@@ -4691,10 +6654,29 @@ function selectRating(context, rating, el) {
   if (hidden) hidden.value = rating;
 }
 
-function toggleSched(toggleId, dateWrapId) {
+
+function toggleSched(toggleId, dateWrapId, fromWrapper) {
   const cb   = document.getElementById(toggleId);
   const wrap = document.getElementById(dateWrapId);
-  if (cb && wrap) wrap.classList.toggle('visible', cb.checked);
+  if (!cb || !wrap) return;
+  if (fromWrapper) cb.checked = !cb.checked;  // ← toggle checkbox when div is clicked
+  wrap.classList.toggle('visible', cb.checked);
+
+  // Update button labels
+  const sSched = document.getElementById('sSchedToggle');
+  const sBtn   = document.getElementById('sPostBtn');
+  if (sSched && sBtn && !sBtn.disabled) {
+    sBtn.innerHTML = sSched.checked
+      ? '<i class="fas fa-clock"></i> Schedule Video'
+      : '<i class="fas fa-paper-plane"></i> Post Video';
+  }
+  const eSched = document.getElementById('epSchedToggle');
+  const eBtn   = document.getElementById('epPostBtn');
+  if (eSched && eBtn && !eBtn.disabled) {
+    eBtn.innerHTML = eSched.checked
+      ? '<i class="fas fa-clock"></i> Schedule Episode'
+      : '<i class="fas fa-paper-plane"></i> Post Episode';
+  }
 }
 
 function setPrice(context, mode) {
@@ -4760,8 +6742,95 @@ function setSeasonPriceMode(mode) {
     mode === 'full-season' ? 'block' : 'none';
   document.getElementById('seaMixedWrap').style.display =
     mode === 'mixed' ? 'block' : 'none';
-}
 
+  // ── Connect to episode pricing ──
+  const epPricingCard = document.getElementById('epPostBtn')
+    ?.closest('.upload-form-wrap')
+    ?.querySelector('#epFreeBtn')?.closest('.upload-card');
+
+  if (mode === 'free') {
+    // Season is free — force episode to free, hide paid option
+    setPrice('episode', 'free');
+    document.getElementById('epPaidBtn').style.display  = 'none';
+    document.getElementById('epFreeBtn').style.pointerEvents = 'none';
+    document.getElementById('epFreeBtn').style.opacity  = '0.6';
+
+    const hint = document.getElementById('epPriceHint');
+    if (hint) hint.remove();
+    const hintEl = document.createElement('div');
+    hintEl.id = 'epPriceHint';
+    hintEl.className = 'uhelp';
+    hintEl.style.marginBottom = '10px';
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
+      Season is set to <strong>Free (Ad-Supported)</strong> — all episodes are free.
+      Change the season pricing model above to enable paid episodes.`;
+    document.getElementById('epFreeBtn').closest('.uprice-toggle')
+      .insertAdjacentElement('beforebegin', hintEl);
+
+  } else if (mode === 'full-season') {
+    // Full season buy — episodes are unlocked via season purchase, free individually
+    setPrice('episode', 'free');
+    document.getElementById('epPaidBtn').style.display  = 'none';
+    document.getElementById('epFreeBtn').style.pointerEvents = 'none';
+    document.getElementById('epFreeBtn').style.opacity  = '0.6';
+
+    const hint = document.getElementById('epPriceHint');
+    if (hint) hint.remove();
+    const hintEl = document.createElement('div');
+    hintEl.id = 'epPriceHint';
+    hintEl.className = 'uhelp';
+    hintEl.style.marginBottom = '10px';
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
+      Viewers buy the <strong>full season</strong> for 🪙 ${
+        document.getElementById('seaFullCoinSlider')?.value || 20
+      } coins and unlock all episodes. Individual episode pricing is disabled.`;
+    document.getElementById('epFreeBtn').closest('.uprice-toggle')
+      .insertAdjacentElement('beforebegin', hintEl);
+
+  } else if (mode === 'per-episode') {
+    // Per episode — episode pricing fully unlocked
+    document.getElementById('epPaidBtn').style.display  = 'flex';
+    document.getElementById('epFreeBtn').style.pointerEvents = 'auto';
+    document.getElementById('epFreeBtn').style.opacity  = '1';
+
+    const hint = document.getElementById('epPriceHint');
+    if (hint) hint.remove();
+    const hintEl = document.createElement('div');
+    hintEl.id = 'epPriceHint';
+    hintEl.className = 'uhelp';
+    hintEl.style.marginBottom = '10px';
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
+      <strong>Pay per episode</strong> — set a coin price for each episode individually below.`;
+    document.getElementById('epFreeBtn').closest('.uprice-toggle')
+      .insertAdjacentElement('beforebegin', hintEl);
+
+  } else if (mode === 'mixed') {
+    // Mixed — episodes are individually free or paid
+    document.getElementById('epPaidBtn').style.display  = 'flex';
+    document.getElementById('epFreeBtn').style.pointerEvents = 'auto';
+    document.getElementById('epFreeBtn').style.opacity  = '1';
+
+    const freeCount = Number(document.getElementById('seaFreeEpCount')?.value) || 1;
+    const epNum     = Number(document.getElementById('epNumber')?.value) || 1;
+
+    const hint = document.getElementById('epPriceHint');
+    if (hint) hint.remove();
+    const hintEl = document.createElement('div');
+    hintEl.id = 'epPriceHint';
+    hintEl.className = 'uhelp';
+    hintEl.style.marginBottom = '10px';
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
+      <strong>Mixed mode</strong> — first ${freeCount} episode(s) are free.
+      Episode ${epNum} ${epNum <= freeCount ? 'is free' : 'requires coin payment'}.
+      Set pricing below accordingly.`;
+    document.getElementById('epFreeBtn').closest('.uprice-toggle')
+      .insertAdjacentElement('beforebegin', hintEl);
+
+    // Auto-suggest free if within free count
+    if (epNum <= freeCount) setPrice('episode', 'free');
+    else setPrice('episode', 'paid');
+  }
+}
 function setSeasonMode(mode) {
   seasonMode = mode;
   document.getElementById('smodeNewBtn')?.classList.toggle('active', mode === 'new');
@@ -4788,99 +6857,314 @@ function scrollTo_(id) {
 /* ====================================================
    CLOUDINARY — DIRECT UPLOAD (< 100 MB)
 ==================================================== */
-function uploadDirect(file, folder, resourceType, progressId) {
+/* ====================================================
+   UPLOAD FILE — CHUNKED TO CLOUDINARY
+==================================================== */
+
+
+  async function uploadFile(file, resourceType, progressId, folder, onProgress) {
+  if (!folder) folder = `pose/${CHANNEL_UID}/${Date.now()}`;
+  _uploadStartTime = Date.now();
+  _uploadSpeedState.lastTime = 0;
+  _uploadSpeedState.lastLoaded = 0;
+
+  updateUploadProgress(0, 'Uploading…', '');
+  const url = await uploadSingleBlob(file, folder, resourceType, (pct, speed) => {
+    if (onProgress) onProgress(pct, 'Uploading…', speed);
+    if (progressId) showProgress(progressId, 'Uploading…', pct);
+  });
+  return { url, chunks: [], isChunked: false };
+}
+
+
+
+function showChunkRetryPrompt(chunkIndex, total) {
+  return new Promise(resolve => {
+    const row = document.getElementById('uppop-chunk-' + chunkIndex);
+    if (!row) { resolve(); return; }
+
+    // Inject retry button into the row
+    const existing = row.querySelector('.chunk-retry-btn');
+    if (existing) existing.remove();
+
+    const btn = document.createElement('button');
+    btn.className = 'chunk-retry-btn';
+    btn.style.cssText = `
+      padding:5px 12px; border-radius:8px;
+      background:var(--purple-main); color:white;
+      font-size:11px; font-weight:700;
+      border:none; cursor:pointer; flex-shrink:0;
+    `;
+    btn.innerHTML = '<i class="fas fa-rotate-right" style="margin-right:4px;"></i>Retry';
+    btn.onclick = () => {
+      btn.remove();
+      resolve();
+    };
+    row.appendChild(btn);
+
+    // Also update title
+    document.getElementById('uppopTitle').textContent = 'Part Failed — Retry?';
+    document.getElementById('uppopSub').textContent =
+      `Part ${chunkIndex + 1} of ${total} failed. Tap Retry to continue.`;
+  });
+}
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+const _uploadSpeedState = { lastTime: 0, lastLoaded: 0 };
+function trackUploadSpeed(loaded, total) {
+  const now = Date.now();
+  if (!_uploadSpeedState.lastTime) {
+    _uploadSpeedState.lastTime = now;
+    _uploadSpeedState.lastLoaded = loaded;
+    return '';
+  }
+  const dt = (now - _uploadSpeedState.lastTime) / 1000;
+  if (dt < 0.5) return '';
+  const bytes = loaded - _uploadSpeedState.lastLoaded;
+  _uploadSpeedState.lastTime = now;
+  _uploadSpeedState.lastLoaded = loaded;
+  const mbps = ((bytes / dt) / (1024 * 1024)).toFixed(1);
+  return `${mbps} MB/s`;
+}
+
+function uploadSingleBlob(blob, folder, resourceType, onProgress) {
   return new Promise((resolve, reject) => {
     const fd = new FormData();
-    fd.append('file', file);
+    fd.append('file', blob);
     fd.append('upload_preset', CLOUDINARY_PRESET);
     fd.append('folder', folder);
 
     const xhr = new XMLHttpRequest();
+    activeXHR = xhr;
     xhr.open('POST',
       `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`);
+    xhr.timeout = 0;
 
-    if (progressId) {
-      xhr.upload.onprogress = e => {
-        if (e.lengthComputable) {
-          showProgress(progressId, 'Uploading…',
-            Math.round((e.loaded / e.total) * 100));
-        }
-      };
-    }
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        const pct   = Math.round((e.loaded / e.total) * 100);
+        const speed = trackUploadSpeed(e.loaded, e.total);
+        if (onProgress) onProgress(pct, speed);
+      }
+    };
 
     xhr.onload = () => {
+      activeXHR = null;
       if (xhr.status === 200) {
         resolve(JSON.parse(xhr.responseText).secure_url);
       } else {
-        reject(new Error('Upload failed (' + xhr.status + ')'));
+        reject(new Error(`Upload failed (${xhr.status})`));
       }
     };
-    xhr.onerror = () => reject(new Error('Network error during upload'));
+    xhr.onerror   = () => { activeXHR = null; reject(new Error('Network error')); };
+    xhr.ontimeout = () => { activeXHR = null; reject(new Error('Timed out')); };
+    xhr.onabort   = () => { activeXHR = null; reject(new Error('Cancelled')); };
+    xhr.send(fd);
+  });
+}
+
+/* Send one chunk using Cloudinary's chunked upload protocol */
+function uploadChunkToCloudinary(chunkBlob, folder, resourceType, uniqueId, startByte, endByte, totalSize, onProgress) {
+  return new Promise((resolve, reject) => {
+    const fd = new FormData();
+    fd.append('file', chunkBlob);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    fd.append('folder', folder);
+
+    const xhr = new XMLHttpRequest();
+    activeXHR = xhr;
+    xhr.open('POST',
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`);
+    xhr.timeout = 0;
+
+    xhr.setRequestHeader('X-Unique-Upload-Id', uniqueId);
+    xhr.setRequestHeader('Content-Range', `bytes ${startByte}-${endByte}/${totalSize}`);
+
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        const pct   = Math.round((e.loaded / e.total) * 100);
+        const speed = trackUploadSpeed(e.loaded, e.total);
+        if (onProgress) onProgress(pct, speed);
+      }
+    };
+
+    xhr.onload = () => {
+      activeXHR = null;
+      if (xhr.status === 200) {
+        const resp = JSON.parse(xhr.responseText);
+        resolve(resp.secure_url || null);
+      } else if (xhr.status === 416) {
+        // Cloudinary returns 416 while waiting for more chunks — not an error
+        resolve(null);
+      } else {
+        reject(new Error(`Chunk upload failed (${xhr.status})`));
+      }
+    };
+    xhr.onerror   = () => { activeXHR = null; reject(new Error('Network error')); };
+    xhr.ontimeout = () => { activeXHR = null; reject(new Error('Timed out')); };
+    xhr.onabort   = () => { activeXHR = null; reject(new Error('Cancelled')); };
     xhr.send(fd);
   });
 }
 
 /* ====================================================
-   CLOUDINARY — CHUNKED UPLOAD (>= 100 MB)
+   UPLOAD POPUP PHASE HELPERS
 ==================================================== */
-async function uploadChunked(file, folder, resourceType, progressId) {
-  const uniqueId   = `${CHANNEL_UID}_${Date.now()}`;
-  const totalSize  = file.size;
-  const totalChunks = Math.ceil(totalSize / CHUNK_SIZE);
-  let offset       = 0;
-  let chunkIndex   = 0;
-  let finalUrl     = null;
+function setUploadPopupPhase(phase, totalChunks) {
+  const stepsEl = document.getElementById('uppopSteps');
 
-  while (offset < totalSize) {
-    const end   = Math.min(offset + CHUNK_SIZE, totalSize);
-    const chunk = file.slice(offset, end);
-    chunkIndex++;
-
-    const label = `Uploading part ${chunkIndex} of ${totalChunks}…`;
-    showProgress(progressId, label,
-      Math.round((chunkIndex / totalChunks) * 100));
-
-    finalUrl = await new Promise((resolve, reject) => {
-      const fd = new FormData();
-      fd.append('file', chunk, file.name);
-      fd.append('upload_preset', CLOUDINARY_PRESET);
-      fd.append('folder', folder);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST',
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`);
-      xhr.setRequestHeader('X-Unique-Upload-Id', uniqueId);
-      xhr.setRequestHeader('Content-Range',
-        `bytes ${offset}-${end - 1}/${totalSize}`);
-
-      xhr.onload = () => {
-        if (xhr.status === 200 || xhr.status === 201) {
-          resolve(JSON.parse(xhr.responseText).secure_url || null);
-        } else if (xhr.status === 206) {
-          resolve('__partial__'); // intermediate chunk, no URL yet
-        } else {
-          reject(new Error(`Chunk ${chunkIndex} failed (${xhr.status})`));
-        }
-      };
-      xhr.onerror = () => reject(new Error('Network error on chunk ' + chunkIndex));
-      xhr.send(fd);
-    });
-
-    offset = end;
+  if (phase === 'splitting') {
+    document.getElementById('uppopTitle').textContent = 'Preparing Video…';
+    document.getElementById('uppopSub').textContent   = 'Splitting into parts for reliable upload';
+    stepsEl.innerHTML = `
+      <div class="uppop-step active" id="uppop-split-row">
+        <div class="uppop-step-icon">
+          <i class="fas fa-scissors fa-spin"></i>
+        </div>
+        <div style="flex:1;">
+          <div class="uppop-step-label">Splitting video into parts</div>
+          <div style="margin-top:6px;">
+            <div class="uppop-prog-bg" style="height:6px;">
+              <div class="uppop-prog-fill" id="uppop-split-fill" style="height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--purple-deep),var(--purple-mid));transition:width .3s;"></div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:4px;" id="uppop-split-label">
+            Preparing part 0 of ${totalChunks}…
+          </div>
+        </div>
+        <div class="uppop-step-status" id="uppop-split-status">Working</div>
+      </div>`;
   }
 
-  return finalUrl; // will be null on partials — final chunk returns the URL
+  if (phase === 'uploading') {
+    document.getElementById('uppopTitle').textContent = 'Uploading Parts…';
+    document.getElementById('uppopSub').textContent   =
+      `Uploading ${totalChunks} part${totalChunks > 1 ? 's' : ''} · Keep this page open`;
+
+    // Build a row per chunk
+    let rows = '';
+    for (let i = 0; i < totalChunks; i++) {
+      rows += `
+        <div class="uppop-step" id="uppop-chunk-${i}">
+          <div class="uppop-step-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+          <div class="uppop-step-label">Part ${i + 1} of ${totalChunks}</div>
+          <div class="uppop-step-status" id="uppop-chunk-status-${i}">Waiting</div>
+        </div>`;
+    }
+    stepsEl.innerHTML = rows;
+  }
+}
+
+function updateSplitProgress(current, total, pct) {
+  const fill  = document.getElementById('uppop-split-fill');
+  const label = document.getElementById('uppop-split-label');
+  const status = document.getElementById('uppop-split-status');
+  if (fill)  fill.style.width      = pct + '%';
+  
+  if (label) label.textContent     = `Preparing part ${current} of ${total}…`;
+  if (status) status.textContent   = pct + '%';
+  updateUploadProgress(pct, `Splitting part ${current} of ${total}…`, '');
+}
+
+function setChunkRowState(index, state, statusText) {
+  const row    = document.getElementById('uppop-chunk-' + index);
+  const status = document.getElementById('uppop-chunk-status-' + index);
+  if (!row) return;
+  row.className = 'uppop-step ' + state;
+  if (status) status.textContent = statusText;
+  const icon = row.querySelector('.uppop-step-icon i');
+  if (icon) {
+    if (state === 'active') icon.className = 'fas fa-spinner fa-spin';
+    if (state === 'done')   icon.className = 'fas fa-check';
+    if (state === 'error')  icon.className = 'fas fa-times';
+  }
+}
+
+function updateUploadProgress(pct, label, speed) {
+  document.getElementById('uppopProgFill').style.width  = pct + '%';
+  document.getElementById('uppopProgPct').textContent   = pct + '%';
+  document.getElementById('uppopProgLabel').textContent = label;
+  if (speed) document.getElementById('uppopSpeed').textContent = speed;
+
+  const miniLabel   = document.getElementById('uppopMiniLabel');
+  const miniPct     = document.getElementById('uppopMiniPct');
+  const miniBarFill = document.getElementById('uppopMiniBarFill');
+  if (miniLabel)   miniLabel.textContent    = label;
+  if (miniPct)     miniPct.textContent      = pct + '%';
+  if (miniBarFill) miniBarFill.style.width  = pct + '%';
 }
 
 /* ====================================================
-   SMART UPLOAD DISPATCHER
+   COUNTDOWN OVERLAY (matches Posewebapp style)
 ==================================================== */
-async function uploadFile(file, resourceType, progressId, folder) {
-  if (!folder) folder = `pose/${CHANNEL_UID}/${Date.now()}`;
-  if (file.size >= 100 * 1024 * 1024) {
-    return uploadChunked(file, folder, resourceType, progressId);
-  }
-  return uploadDirect(file, folder, resourceType, progressId);
+function showCountdown() {
+  return new Promise(resolve => {
+    let remaining = 3;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'recordingCountdownOverlay';
+    overlay.style.cssText = `
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    `;
+
+    const number = document.createElement('div');
+    number.style.cssText = `
+      font-size: 120px; font-weight: bold;
+      color: #FFD700;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      animation: recordingCountdownPulse 1s ease-in-out;
+    `;
+    number.textContent = remaining;
+
+    overlay.appendChild(number);
+    document.body.appendChild(overlay);
+
+    if (!document.getElementById('recordingCountdownStyle')) {
+      const style = document.createElement('style');
+      style.id = 'recordingCountdownStyle';
+      style.textContent = `
+        @keyframes recordingCountdownPulse {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const interval = setInterval(() => {
+      remaining--;
+      if (remaining > 0) {
+        number.textContent = remaining;
+        number.style.animation = 'none';
+        setTimeout(() => {
+          number.style.animation = 'recordingCountdownPulse 1s ease-in-out';
+        }, 10);
+      } else {
+        clearInterval(interval);
+        overlay.remove();
+        resolve();
+      }
+    }, 1000);
+  });
+}
+
+/* ====================================================
+   ETA CALCULATOR
+==================================================== */
+function calcETA(loaded, total) {
+  if (!_uploadStartTime || loaded === 0) return '';
+  const elapsed = (Date.now() - _uploadStartTime) / 1000;
+  const rate = loaded / elapsed;
+  const remaining = (total - loaded) / rate;
+  if (remaining < 60) return `~${Math.ceil(remaining)}s left`;
+  return `~${Math.ceil(remaining / 60)}min left`;
 }
 
 /* ====================================================
@@ -4891,7 +7175,23 @@ async function postSingleVideo() {
   const rating = document.getElementById('sRating').value;
   const btn    = document.getElementById('sPostBtn');
 
-  // Validate
+  // Validate schedule first (before countdown)
+  const isScheduled  = document.getElementById('sSchedToggle').checked;
+  const schedDTVal   = document.getElementById('sSchedDT').value;
+  let scheduleDate   = null;
+  if (isScheduled) {
+    if (!schedDTVal) {
+      shakeField('sSchedDT'); scrollTo_('sSchedDT'); return;
+    }
+    const schedTime = new Date(schedDTVal);
+    if (schedTime <= new Date()) {
+      shakeField('sSchedDT'); scrollTo_('sSchedDT');
+      alert('Schedule date must be in the future.'); return;
+    }
+    scheduleDate = firebase.firestore.Timestamp.fromDate(schedTime);
+  }
+
+  // Validate fields
   let hasError = false;
   if (!singleVideoFile) {
     shakeField('sVideoDrop'); scrollTo_('sVideoDrop'); hasError = true;
@@ -4909,38 +7209,93 @@ async function postSingleVideo() {
   if (hasError) return;
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Uploading…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Starting…';
+
+  // Countdown 3-2-1
+  await showCountdown();
+
+  // Build step list
+  const steps = [
+    { icon: 'fa-video',    label: 'Uploading video' },
+    { icon: 'fa-film',     label: 'Uploading trailer' },
+    { icon: 'fa-image',    label: 'Uploading thumbnail' },
+    { icon: 'fa-database', label: 'Saving to database' },
+  ];
+  if (!singleTrailerFile)                                   steps[1].label = 'Trailer (skipped)';
+  if (!document.getElementById('sThumbFile').files[0])      steps[2].label = 'Thumbnail (skipped)';
+
+  showUploadPopup(
+    singleVideoFile.name,
+    formatBytes(singleVideoFile.size),
+    steps
+  );
 
   try {
+    uploadCancelled = false;
     const videoDocRef = db.collection('channels').doc(CHANNEL_UID).collection('videos').doc();
     const videoId     = videoDocRef.id;
     const folder      = `pose/${CHANNEL_UID}/${videoId}`;
 
-    // Upload main video
-    const videoUrl = await uploadFile(
-      singleVideoFile, 'video', 'sVideoProgress', folder + '/main');
+    // Step 0 — Upload main video
+    setUploadStep(0, 'active', 'Uploading…');
+    document.getElementById('uppopTitle').textContent = 'Uploading Video…';
 
-    // Upload trailer (non-blocking progress)
+    const videoResult = await uploadFile(
+      singleVideoFile, 'video', null, folder + '/main',
+      (pct, label, speed) => {
+        const eta = calcETA(
+          (singleVideoFile.size * pct) / 100,
+          singleVideoFile.size
+        );
+        const speedEta = [speed, eta].filter(Boolean).join(' · ');
+        updateUploadProgress(
+          Math.round(pct * 0.7),
+          label || 'Uploading video…',
+          speedEta
+        );
+      }
+    );
+
+    const videoUrl    = videoResult.url;
+    const videoChunks = videoResult.chunks;
+    const isChunked   = videoResult.isChunked;
+    setUploadStep(0, 'done', 'Done ✓');
+
+    // Step 1 — Trailer
     let trailerUrl = null;
     if (singleTrailerFile) {
-      trailerUrl = await uploadFile(singleTrailerFile, 'video', null, folder + '/trailer');
+      setUploadStep(1, 'active', 'Uploading…');
+      updateUploadProgress(72, 'Uploading trailer…', '');
+      const tResult = await uploadFile(singleTrailerFile, 'video', null, folder + '/trailer',
+        (pct) => updateUploadProgress(70 + Math.round(pct * 0.1), 'Uploading trailer…', '')
+      );
+      trailerUrl = tResult.url;
+      setUploadStep(1, 'done', 'Done ✓');
+    } else {
+      setUploadStep(1, 'done', 'Skipped');
     }
 
-    // Upload thumbnail
+    // Step 2 — Thumbnail
     let thumbUrl = null;
     const thumbFile = document.getElementById('sThumbFile').files[0];
     if (thumbFile) {
-      thumbUrl = await uploadFile(thumbFile, 'image', null, folder + '/thumb');
+      setUploadStep(2, 'active', 'Uploading…');
+      updateUploadProgress(82, 'Uploading thumbnail…', '');
+      const thResult = await uploadFile(thumbFile, 'image', null, folder + '/thumb',
+        (pct) => updateUploadProgress(80 + Math.round(pct * 0.1), 'Uploading thumbnail…', '')
+      );
+      thumbUrl = thResult.url;
+      setUploadStep(2, 'done', 'Done ✓');
+    } else {
+      setUploadStep(2, 'done', 'Skipped');
     }
 
-    // Schedule
-    const isScheduled  = document.getElementById('sSchedToggle').checked;
-    const schedDTVal   = document.getElementById('sSchedDT').value;
-    const scheduleDate = isScheduled && schedDTVal
-      ? firebase.firestore.Timestamp.fromDate(new Date(schedDTVal))
-      : null;
+    // Step 3 — Save to Firestore
+    setUploadStep(3, 'active', 'Saving…');
+    updateUploadProgress(95, 'Saving to database…', '');
+    document.getElementById('uppopTitle').textContent = 'Almost Done…';
 
-    // Pricing
+    const status = isScheduled ? 'scheduled' : 'live';
     const priceMode = document.getElementById('sPriceMode').value;
     const coinPrice = Number(document.getElementById('sCoinPrice').value) || 0;
 
@@ -4949,6 +7304,8 @@ async function postSingleVideo() {
       description:  document.getElementById('sDesc').value.trim(),
       ageRating:    rating,
       videoUrl,
+      videoChunks:  videoChunks || [],
+      isChunked:    isChunked   || false,
       trailerUrl,
       thumbnailURL: thumbUrl,
       priceMode,
@@ -4964,16 +7321,49 @@ async function postSingleVideo() {
       createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
     });
 
-    showSuccessScreen(
-      'Video Posted! 🎉',
-      `"${title}" is live and ready for your viewers.`
-    );
+    setUploadStep(3, 'done', 'Done ✓');
+    updateUploadProgress(100, 'Complete!', '');
+    document.getElementById('uppopTitle').textContent = 'Upload Complete! 🎉';
+    document.getElementById('uppopSub').textContent   = 'Your video has been saved';
+    document.getElementById('uppopCancelBtn').style.display = 'none';
+
+    await sleep(1400);
+    hideUploadPopup();
+
+    if (isScheduled) {
+      const d = new Date(schedDTVal);
+      const ds = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      const ts = d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      showSuccessScreen('Video Scheduled! ⏰', `"${title}" will go live on ${ds} at ${ts}.`);
+    } else {
+      showSuccessScreen('Video Posted! 🎉', `"${title}" is live and ready for your viewers.`);
+    }
 
   } catch (e) {
+    if (uploadCancelled) return;
     console.error('postSingleVideo error:', e);
+
+    document.querySelectorAll('.uppop-step.active').forEach(s => {
+      s.className = 'uppop-step error';
+      const icon = s.querySelector('.uppop-step-icon i');
+      if (icon) icon.className = 'fas fa-times';
+      const st = s.querySelector('.uppop-step-status');
+      if (st) st.textContent = 'Failed';
+    });
+
+    document.getElementById('uppopTitle').textContent = 'Upload Failed';
+    document.getElementById('uppopSub').textContent   = e.message;
+
+    const cancelBtn = document.getElementById('uppopCancelBtn');
+    if (cancelBtn) {
+      cancelBtn.innerHTML  = '<i class="fas fa-times" style="margin-right:6px;"></i>Close';
+      cancelBtn.style.background  = '#FEE2E2';
+      cancelBtn.style.color       = '#DC2626';
+      cancelBtn.style.borderColor = '#FECACA';
+    }
+
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
-    alert('Upload failed: ' + e.message);
   }
 }
 
@@ -5017,9 +7407,21 @@ async function createSeason() {
 
     const isScheduled  = document.getElementById('seaSchedToggle').checked;
     const schedDTVal   = document.getElementById('seaSchedDT').value;
-    const scheduleDate = isScheduled && schedDTVal
-      ? firebase.firestore.Timestamp.fromDate(new Date(schedDTVal))
-      : null;
+    let scheduleDate   = null;
+    if (isScheduled) {
+      if (!schedDTVal) {
+        shakeField('seaSchedDT'); scrollTo_('seaSchedDT');
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell'; return;
+      }
+      const schedTime = new Date(schedDTVal);
+      if (schedTime <= new Date()) {
+        shakeField('seaSchedDT'); scrollTo_('seaSchedDT');
+        alert('Premiere date must be in the future.');
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell'; return;
+      }
+      scheduleDate = firebase.firestore.Timestamp.fromDate(schedTime);
+    }
+    const status = isScheduled ? 'scheduled' : 'live';
 
     const priceMode       = document.getElementById('seaPriceMode').value;
     const fullSeasonCoins = priceMode === 'full-season'
@@ -5039,6 +7441,7 @@ async function createSeason() {
       freeEpCount,
       scheduleDate,
       isScheduled:     !!scheduleDate,
+      status,
       episodeCount:    0,
       channelId:       CHANNEL_UID,
       createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
@@ -5049,7 +7452,7 @@ async function createSeason() {
     btn.disabled = false;
     btn.style.background = '#059669';
     btn.innerHTML = '<i class="fas fa-check" style="margin-right:8px;"></i>Season Created — Add Episodes Below';
-
+document.getElementById('episodeBlock').style.display = 'block';
     document.getElementById('episodeBlock')
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -5121,7 +7524,7 @@ async function selectExistingSeason(seasonId) {
   document.getElementById('sea-item-' + seasonId)?.classList.add('selected');
   document.getElementById('selectedSeasonId').value = seasonId;
   currentSeasonId = seasonId;
-
+document.getElementById('episodeBlock').style.display = 'block';
   // Load season info
   try {
     const seaSnap = await db.collection('channels').doc(CHANNEL_UID)
@@ -5192,15 +7595,13 @@ async function selectExistingSeason(seasonId) {
 /* ====================================================
    POST EPISODE
 ==================================================== */
-async function postEpisode() {
+
+    async function postEpisode() {
   const epTitle = document.getElementById('epTitle').value.trim();
   const btn     = document.getElementById('epPostBtn');
 
   let hasError = false;
-  if (!currentSeasonId) {
-    alert('Please create or select a season first.');
-    return;
-  }
+  if (!currentSeasonId) { alert('Please create or select a season first.'); return; }
   if (!epVideoFile_) {
     shakeField('epVideoDrop'); scrollTo_('epVideoDrop'); hasError = true;
   }
@@ -5210,7 +7611,25 @@ async function postEpisode() {
   if (hasError) return;
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Uploading…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Starting…';
+
+  // Countdown
+  await showCountdown();
+
+  const steps = [
+    { icon: 'fa-video',        label: 'Uploading episode video' },
+    { icon: 'fa-clapperboard', label: 'Uploading trailer'       },
+    { icon: 'fa-image',        label: 'Uploading thumbnail'     },
+    { icon: 'fa-database',     label: 'Saving to database'      },
+  ];
+  if (!epTrailerFile_) steps[1].label = 'Trailer (skipped)';
+  if (!document.getElementById('epThumbFile').files[0]) steps[2].label = 'Thumbnail (skipped)';
+
+  showUploadPopup(
+    epVideoFile_.name,
+    formatBytes(epVideoFile_.size),
+    steps
+  );
 
   try {
     const epRef  = db.collection('channels').doc(CHANNEL_UID)
@@ -5219,38 +7638,73 @@ async function postEpisode() {
     const epId   = epRef.id;
     const folder = `pose/${CHANNEL_UID}/seasons/${currentSeasonId}/ep/${epId}`;
 
-    const videoUrl = await uploadFile(
-      epVideoFile_, 'video', 'epVideoProgress', folder + '/main');
+    // Step 0 — Episode video
+    setUploadStep(0, 'active', 'Uploading…');
+    document.getElementById('uppopTitle').textContent = 'Uploading Episode…';
 
+    const videoResult = await uploadFile(
+      epVideoFile_, 'video', null, folder + '/main',
+      (pct, label, speed) => {
+        updateUploadProgress(Math.round(pct * 0.7), label || 'Uploading…', speed);
+      }
+    );
+    const videoUrl    = videoResult.url;
+    const videoChunks = videoResult.chunks;
+    const isChunked   = videoResult.isChunked;
+    setUploadStep(0, 'done', 'Done ✓');
+
+    // Step 1 — Trailer
     let trailerUrl = null;
     if (epTrailerFile_) {
-      trailerUrl = await uploadFile(epTrailerFile_, 'video', null, folder + '/trailer');
+      setUploadStep(1, 'active', 'Uploading…');
+      updateUploadProgress(72, 'Uploading trailer…', '');
+      const tResult = await uploadFile(epTrailerFile_, 'video', null, folder + '/trailer',
+        (pct) => updateUploadProgress(70 + Math.round(pct * 0.1), 'Uploading trailer…', '')
+      );
+      trailerUrl = tResult.url;
+      setUploadStep(1, 'done', 'Done ✓');
+    } else {
+      setUploadStep(1, 'done', 'Skipped');
     }
 
+    // Step 2 — Thumbnail
     let thumbUrl = null;
     const epThumb = document.getElementById('epThumbFile').files[0];
     if (epThumb) {
-      thumbUrl = await uploadFile(epThumb, 'image', null, folder + '/thumb');
+      setUploadStep(2, 'active', 'Uploading…');
+      updateUploadProgress(82, 'Uploading thumbnail…', '');
+      const thResult = await uploadFile(epThumb, 'image', null, folder + '/thumb',
+        (pct) => updateUploadProgress(80 + Math.round(pct * 0.1), 'Uploading thumbnail…', '')
+      );
+      thumbUrl = thResult.url;
+      setUploadStep(2, 'done', 'Done ✓');
+    } else {
+      setUploadStep(2, 'done', 'Skipped');
     }
+
+    // Step 3 — Save to Firestore
+    setUploadStep(3, 'active', 'Saving…');
+    updateUploadProgress(95, 'Saving to database…', '');
+    document.getElementById('uppopTitle').textContent = 'Almost Done…';
 
     const isScheduled  = document.getElementById('epSchedToggle').checked;
     const schedDTVal   = document.getElementById('epSchedDT').value;
     const scheduleDate = isScheduled && schedDTVal
       ? firebase.firestore.Timestamp.fromDate(new Date(schedDTVal))
       : null;
-
     const priceMode = document.getElementById('epPriceMode').value;
     const coinPrice = Number(document.getElementById('epCoinPrice').value) || 0;
     const epNumber  = Number(document.getElementById('epNumber').value)    || 1;
 
     const batch = db.batch();
-
     batch.set(epRef, {
       episodeNumber: epNumber,
       title:         epTitle,
       description:   document.getElementById('epDesc').value.trim(),
       thumbnailURL:  thumbUrl,
       videoUrl,
+      videoChunks:   videoChunks || [],
+      isChunked:     isChunked   || false,
       trailerUrl,
       priceMode,
       coinPrice,
@@ -5273,26 +7727,96 @@ async function postEpisode() {
 
     await batch.commit();
 
+    setUploadStep(3, 'done', 'Done ✓');
+    updateUploadProgress(100, 'Complete!', '');
+    document.getElementById('uppopTitle').textContent = 'Episode Live! 🎬';
+    document.getElementById('uppopSub').textContent   = 'Your episode has been saved';
+    document.getElementById('uppopCancelBtn').style.display = 'none';
+
+    await sleep(1400);
+    hideUploadPopup();
+
     showSuccessScreen(
       'Episode Posted! 🎬',
       `Episode ${epNumber}: "${epTitle}" is live and ready for viewers.`
     );
 
   } catch (e) {
+    if (uploadCancelled) return;
     console.error('postEpisode error:', e);
+
+    document.querySelectorAll('.uppop-step.active').forEach(s => {
+      s.className = 'uppop-step error';
+      const icon = s.querySelector('.uppop-step-icon i');
+      if (icon) icon.className = 'fas fa-times';
+      const status = s.querySelector('.uppop-step-status');
+      if (status) status.textContent = 'Failed';
+    });
+
+    document.getElementById('uppopTitle').textContent = 'Upload Failed';
+    document.getElementById('uppopSub').textContent   = e.message;
+
+    const cancelBtn = document.getElementById('uppopCancelBtn');
+    if (cancelBtn) {
+      cancelBtn.innerHTML   = '<i class="fas fa-times" style="margin-right:6px;"></i>Close';
+      cancelBtn.style.background   = '#FEE2E2';
+      cancelBtn.style.color        = '#DC2626';
+      cancelBtn.style.borderColor  = '#FECACA';
+    }
+
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode';
-    alert('Upload failed: ' + e.message);
   }
+}
+
+
+
+function setUploadStep(index, state, statusText) {
+  const step   = document.getElementById('uppop-step-' + index);
+  const status = document.getElementById('uppop-step-status-' + index);
+  if (!step) return;
+  step.className = 'uppop-step ' + state;
+  if (status) status.textContent = statusText;
+  const icon = step.querySelector('.uppop-step-icon i');
+  if (icon) {
+    if (state === 'active') icon.className = 'fas fa-spinner fa-spin';
+    if (state === 'done')   icon.className = 'fas fa-check';
+    if (state === 'error')  icon.className = 'fas fa-times';
+  }
+}
+
+
+function showUploadPopup(fileName, fileSize, steps) {
+  const popup = document.getElementById('uploadProgressPopup');
+  document.getElementById('uppopFileName').textContent = fileName;
+  document.getElementById('uppopFileSize').textContent = fileSize;
+  document.getElementById('uppopProgPct').textContent  = '0%';
+  document.getElementById('uppopProgFill').style.width = '0%';
+  document.getElementById('uppopProgLabel').textContent = 'Starting…';
+  document.getElementById('uppopSpeed').textContent     = '';
+
+  const stepsEl = document.getElementById('uppopSteps');
+  stepsEl.innerHTML = steps.map((s, i) => `
+    <div class="uppop-step" id="uppop-step-${i}">
+      <div class="uppop-step-icon"><i class="fas ${s.icon}"></i></div>
+      <div class="uppop-step-label">${s.label}</div>
+      <div class="uppop-step-status" id="uppop-step-status-${i}">Waiting</div>
+    </div>`).join('');
+
+  popup.classList.remove('hidden');
 }
 
 /* ====================================================
    SUCCESS SCREEN
 ==================================================== */
 function showSuccessScreen(title, sub) {
-  document.getElementById('panel-single').classList.remove('active');
-  document.getElementById('panel-season').classList.remove('active');
-  document.querySelector('.upload-tabs').style.display = 'none';
+  // Hide panels
+  document.getElementById('panel-single').style.display = 'none';
+  document.getElementById('panel-season').style.display = 'none';
+  document.querySelector('.upload-tabs').style.display  = 'none';
+
+  // Hide any upload UI
+  hideUploadPopup();
 
   document.getElementById('uSuccessTitle').textContent = title;
   document.getElementById('uSuccessSub').textContent   = sub;
@@ -5303,63 +7827,47 @@ function showSuccessScreen(title, sub) {
 /* ====================================================
    RESET UPLOAD PAGE
 ==================================================== */
+
 function resetUploadPage() {
-  // Clear file refs
   singleVideoFile = singleTrailerFile = seasonTrailerFile =
   epVideoFile_    = epTrailerFile_    = null;
   currentSeasonId = null;
+  uploadCancelled = false;
+  activeXHR       = null;
 
-  // Clear file inputs
   ['sVideoFile','sTrailerFile','seaTrailerFile',
    'epVideoFile','epTrailerFile',
    'sThumbFile','seaThumbFile','epThumbFile']
-    .forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
 
-  // Hide previews
   ['sVideoPreview','sTrailerPreview','seaTrailerPreview',
    'epVideoPreview','epTrailerPreview']
-    .forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
+    .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
 
-  // Reset progress bars
   ['sVideoProgress','epVideoProgress'].forEach(resetProgress);
 
-  // Clear text inputs / textareas
   ['sTitle','sDesc','seaTitle','seaDesc','epTitle','epDesc']
-    .forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
 
-  // Reset age rating pills
   ['sRatingPills','seaRatingPills'].forEach(id => {
     document.getElementById(id)
       ?.querySelectorAll('.urating-pill')
       .forEach(p => { p.className = 'urating-pill'; });
   });
-  document.getElementById('sRating').value  = '';
+  document.getElementById('sRating').value   = '';
   document.getElementById('seaRating').value = '';
 
-  // Reset pricing
   setPrice('single',  'free');
   setPrice('episode', 'free');
   setSeasonPriceMode('free');
 
-  // Reset schedule toggles
   ['sSchedToggle','seaSchedToggle','epSchedToggle'].forEach(id => {
-    const cb = document.getElementById(id);
-    if (cb) cb.checked = false;
+    const cb = document.getElementById(id); if (cb) cb.checked = false;
   });
   ['sSchedDate','seaSchedDate','epSchedDate'].forEach(id => {
     document.getElementById(id)?.classList.remove('visible');
   });
 
-  // Reset thumbnail previews
   ['sThumbPreview','seaThumbPreview','epThumbPreview'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = `
@@ -5369,7 +7877,6 @@ function resetUploadPage() {
       </div>`;
   });
 
-  // Reset season create button
   const seaBtn = document.getElementById('seaCreateBtn');
   if (seaBtn) {
     seaBtn.disabled = false;
@@ -5377,29 +7884,1506 @@ function resetUploadPage() {
     seaBtn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell';
   }
 
-  // Reset post button
   const sBtn = document.getElementById('sPostBtn');
-  if (sBtn) {
-    sBtn.disabled = false;
-    sBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
-  }
-  const eBtn = document.getElementById('epPostBtn');
-  if (eBtn) {
-    eBtn.disabled = false;
-    eBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode';
-  }
+  if (sBtn) { sBtn.disabled = false; sBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video'; }
 
-  // Hide success, restore tabs + single panel
+  const eBtn = document.getElementById('epPostBtn');
+  if (eBtn) { eBtn.disabled = false; eBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode'; }
+
   document.getElementById('uSuccessScreen').classList.remove('visible');
   document.querySelector('.upload-tabs').style.display = 'flex';
-  document.getElementById('panel-single').classList.add('active');
-  document.getElementById('panel-season').classList.remove('active');
+  document.getElementById('panel-single').style.display = 'block';
+  document.getElementById('panel-season').style.display = 'none';
+  document.getElementById('episodeBlock').style.display = 'none';
+  document.getElementById('uppopMiniBar').classList.remove('visible');
 
   document.querySelectorAll('.upload-tab-btn').forEach((b, i) => {
     b.classList.toggle('active', i === 0);
   });
 
   window.scrollTo(0, 0);
+}
+
+
+
+
+/* ====================================================
+   ALL VIDEOS PAGE
+==================================================== */
+let avTab      = 'single';
+let avSort     = 'newest';
+let avQuery    = '';
+let avSeasons  = [];
+
+function openAllVideos() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-allvideos').classList.add('active');
+  window.scrollTo(0, 0);
+  avQuery = '';
+  document.getElementById('avSearchInput').value = '';
+  document.getElementById('avSortSelect').value  = 'newest';
+  avSort = 'newest';
+  avTab  = 'single';
+  document.getElementById('avTabSingle').classList.add('active');
+  document.getElementById('avTabSeason').classList.remove('active');
+  document.getElementById('avPanelSingle').style.display = 'block';
+  document.getElementById('avPanelSeason').style.display = 'none';
+  renderAvSingle();
+  loadAvSeasons();
+}
+
+function closeAllVideos() {
+  document.getElementById('page-allvideos').classList.remove('active');
+  document.getElementById('page-home').classList.add('active');
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="home"]').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function switchAvTab(tab) {
+  avTab = tab;
+  document.getElementById('avTabSingle').classList.toggle('active', tab === 'single');
+  document.getElementById('avTabSeason').classList.toggle('active', tab === 'season');
+  document.getElementById('avPanelSingle').style.display = tab === 'single' ? 'block' : 'none';
+  document.getElementById('avPanelSeason').style.display = tab === 'season' ? 'block' : 'none';
+  if (tab === 'season' && !avSeasons.length) loadAvSeasons();
+}
+
+function onAvSearch(q) {
+  avQuery = q.toLowerCase().trim();
+  if (avTab === 'single') renderAvSingle();
+  else renderAvSeasons();
+}
+
+function onAvSort(val) {
+  avSort = val;
+  if (avTab === 'single') renderAvSingle();
+  else renderAvSeasons();
+}
+
+/* ── helpers ── */
+function avApplySort(arr) {
+  return [...arr].sort((a, b) => {
+    if (avSort === 'oldest')  return avTime(a) - avTime(b);
+    if (avSort === 'views')   return (Number(b.views)   || 0) - (Number(a.views)   || 0);
+    if (avSort === 'revenue') return (Number(b.revenue) || 0) - (Number(a.revenue) || 0);
+    return avTime(b) - avTime(a); // newest
+  });
+}
+function avTime(v) {
+  if (!v.createdAt) return 0;
+  return v.createdAt.toMillis ? v.createdAt.toMillis() : new Date(v.createdAt).getTime();
+}
+function avFmtDate(v) {
+  if (!v.createdAt) return '—';
+  const d = v.createdAt.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+function avRatingColor(r) {
+  if (r === 'all')    return 'background:#D1FAE5;color:#065F46;';
+  if (r === 'teen')   return 'background:#DBEAFE;color:#1E40AF;';
+  if (r === 'mature') return 'background:#FEF3C7;color:#92400E;';
+  return 'background:var(--gray-100);color:var(--gray-600);';
+}
+function avGradient(i) {
+  const g = ['g1','g2','g3','g4','g5','g6','g7'];
+  return g[i % g.length];
+}
+const AV_EMOJI = ['🎬','🏆','⭐','💫','🔥','🌟','✨','💎','🎯','🎪','🎭','🎦'];
+
+/* ── render single videos ── */
+function renderAvSingle() {
+  const panel = document.getElementById('avPanelSingle');
+
+  let filtered = videosData.filter(v => {
+    if (!avQuery) return true;
+    return (v.title || '').toLowerCase().includes(avQuery) ||
+           (v.description || '').toLowerCase().includes(avQuery);
+  });
+
+  document.getElementById('avCountSingle').textContent = filtered.length;
+  filtered = avApplySort(filtered);
+
+  const totalQ = avQuery ? `"${avQuery}"` : 'all videos';
+  document.getElementById('avSortLabel').textContent =
+    `Showing ${filtered.length} ${filtered.length === 1 ? 'video' : 'videos'}${avQuery ? ' matching ' + totalQ : ''}`;
+
+  if (!filtered.length) {
+    panel.innerHTML = `
+      <div class="av-empty">
+        <div class="av-empty-icon"><i class="fas fa-film"></i></div>
+        <div class="av-empty-title">${avQuery ? 'No results found' : 'No Videos Yet'}</div>
+        <div class="av-empty-sub">${avQuery
+          ? 'Try a different search term'
+          : 'Upload your first video to get started'}</div>
+        ${!avQuery ? `<button class="btn btn-purple btn-lg"
+          style="margin:0 auto;display:inline-flex;" onclick="closeAllVideos();openUpload();">
+          <i class="fas fa-upload" style="margin-right:7px;"></i>Upload Now
+        </button>` : ''}
+      </div>`;
+    return;
+  }
+
+  panel.innerHTML = filtered.map((v, i) => {
+    const thumbHTML = v.thumbnailURL
+      ? `<img src="${v.thumbnailURL}" alt="${v.title}" />`
+      : `<span>${AV_EMOJI[i % AV_EMOJI.length]}</span>`;
+
+    const thumbBg = v.thumbnailURL ? 'background:#000;' : '';
+    const coins   = Number(v.coinPrice) || 0;
+    const rev     = Number(v.revenue)   || 0;
+    const isPaid  = v.priceMode === 'paid';
+    const isSched = v.isScheduled && v.scheduleDate;
+
+    const priceBadge = isPaid
+      ? `<span class="av-badge av-badge-paid">🪙 ${coins} Pose Coins</span>`
+      : `<span class="av-badge av-badge-free"><i class="fas fa-rectangle-ad"></i> Ad-Supported</span>`;
+
+    const schedBadge = isSched
+      ? `<span class="av-badge av-badge-sched"><i class="fas fa-clock"></i> Scheduled</span>`
+      : '';
+
+    const ratedBadge = v.ageRating
+      ? `<span class="av-badge" style="${avRatingColor(v.ageRating)}">${
+          v.ageRating === 'all' ? '✔ All Ages' :
+          v.ageRating === 'teen' ? '👤 Teen' : '⚠ Mature'}</span>`
+      : '';
+
+    const revLine = rev > 0
+      ? `<div class="av-vcard-revenue">
+           🪙 ${Math.round(rev * (usdToNgn || 1620) / 30).toLocaleString()} earned
+           &nbsp;·&nbsp; ₦${(rev * (usdToNgn || 1620)).toLocaleString('en-NG', {maximumFractionDigits:0})}
+         </div>`
+      : '';
+
+    return `
+     <div class="av-vcard" onclick="openVideoDetail(${JSON.stringify(v).replace(/"/g, '&quot;')}, 'page-allvideos')" style="cursor:pointer;">
+    <div class="av-vcard-inner">
+          <div class="av-vcard-thumb ${v.thumbnailURL ? '' : avGradient(i)}" style="${thumbBg}">
+            ${thumbHTML}
+          </div>
+          <div class="av-vcard-body">
+            <div class="av-vcard-title" title="${v.title || 'Untitled'}">${v.title || 'Untitled'}</div>
+            <div class="av-vcard-meta">
+              <span class="av-vmeta-item"><i class="fas fa-eye"></i> ${fmt(v.views || 0)}</span>
+              <span class="av-vmeta-item"><i class="fas fa-heart"></i> ${fmt(v.likes || 0)}</span>
+              <span class="av-vmeta-item"><i class="fas fa-comment"></i> ${fmt(v.comments || 0)}</span>
+            </div>
+            <div class="av-vcard-badges">
+              ${priceBadge}${schedBadge}${ratedBadge}
+            </div>
+            ${revLine}
+            <div class="av-vcard-date"><i class="fas fa-calendar" style="margin-right:4px;opacity:.5;"></i>${avFmtDate(v)}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── load seasons + episodes ── */
+async function loadAvSeasons() {
+  const panel = document.getElementById('avPanelSeason');
+  panel.innerHTML = `
+    <div style="padding:40px;text-align:center;color:var(--gray-400);">
+      <div class="dash-spinner" style="margin:0 auto 12px;"></div>
+      Loading seasons…
+    </div>`;
+
+  try {
+    const snap = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('seasons').orderBy('createdAt', 'desc').get();
+
+    avSeasons = snap.docs.map(d => ({ id: d.id, ...d.data(), _episodes: null }));
+    document.getElementById('avCountSeason').textContent = avSeasons.length;
+    renderAvSeasons();
+  } catch (e) {
+    panel.innerHTML = `<div style="padding:30px;text-align:center;color:var(--red);font-size:13px;">
+      Failed to load seasons: ${e.message}</div>`;
+  }
+}
+
+function renderAvSeasons() {
+  const panel = document.getElementById('avPanelSeason');
+
+  let list = avSeasons.filter(s => {
+    if (!avQuery) return true;
+    return (s.title || '').toLowerCase().includes(avQuery);
+  });
+
+  list = avApplySort(list);
+
+  if (!list.length) {
+    panel.innerHTML = `
+      <div class="av-empty">
+        <div class="av-empty-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="av-empty-title">${avQuery ? 'No seasons found' : 'No Seasons Yet'}</div>
+        <div class="av-empty-sub">${avQuery
+          ? 'Try a different search term'
+          : 'Start a season from the Upload tab'}</div>
+      </div>`;
+    return;
+  }
+
+  panel.innerHTML = list.map((s, i) => {
+    const thumbHTML = s.thumbnailURL
+      ? `<img src="${s.thumbnailURL}" alt="${s.title}" />`
+      : `<span>${AV_EMOJI[i % AV_EMOJI.length]}</span>`;
+
+    const thumbBg = s.thumbnailURL ? 'background:#000;' : '';
+    const rev     = Number(s.totalRevenue) || 0;
+
+    const priceBadgeText =
+      s.priceMode === 'free'         ? '<i class="fas fa-rectangle-ad"></i> Free'        :
+      s.priceMode === 'per-episode'  ? `<i class="fas fa-coins"></i> Per Episode`         :
+      s.priceMode === 'full-season'  ? `🪙 ${s.fullSeasonCoins || 0} Full Season`         :
+      s.priceMode === 'mixed'        ? `<i class="fas fa-shuffle"></i> Mixed`             : 'Free';
+
+    const priceBadgeClass = s.priceMode === 'free' ? 'av-badge-free' : 'av-badge-paid';
+
+    const revLine = rev > 0
+      ? `<div class="av-season-rev">
+           🪙 ${Math.round(rev * (usdToNgn || 1620) / 30).toLocaleString()} earned
+         </div>`
+      : '';
+
+    return `
+      <div class="av-season-card" id="avSea-${s.id}">
+        <div class="av-season-header" onclick="toggleAvSeason('${s.id}')">
+          <div class="av-season-thumb ${s.thumbnailURL ? '' : avGradient(i)}" style="${thumbBg}">
+            ${thumbHTML}
+          </div>
+          <div class="av-season-info">
+            <div class="av-season-title">${s.title || 'Untitled Season'}</div>
+            <div class="av-season-sub">Season ${s.seasonNumber || 1} · ${s.episodeCount || 0} episodes</div>
+            <div class="av-season-stats">
+              <span class="av-badge ${priceBadgeClass}">${priceBadgeText}</span>
+              ${s.ageRating ? `<span class="av-badge" style="${avRatingColor(s.ageRating)}">${
+                s.ageRating === 'all' ? '✔ All Ages' :
+                s.ageRating === 'teen' ? '👤 Teen' : '⚠ Mature'}</span>` : ''}
+            </div>
+            ${revLine}
+          </div>
+          <svg class="av-season-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+        <div class="av-ep-list" id="avEpList-${s.id}" style="display:none;"></div>
+      </div>`;
+  }).join('');
+}
+
+async function toggleAvSeason(seasonId) {
+  const card    = document.getElementById('avSea-' + seasonId);
+  const epList  = document.getElementById('avEpList-' + seasonId);
+  const isOpen  = card.classList.contains('open');
+
+  if (isOpen) {
+    card.classList.remove('open');
+    epList.style.display = 'none';
+    return;
+  }
+
+  card.classList.add('open');
+  epList.style.display = 'block';
+
+  const sea = avSeasons.find(s => s.id === seasonId);
+  if (sea?._episodes) { renderAvEpisodes(seasonId, sea._episodes, sea); return; }
+
+  epList.innerHTML = `
+    <div style="padding:20px;text-align:center;color:var(--gray-400);font-size:13px;">
+      <div class="dash-spinner" style="margin:0 auto 8px;width:28px;height:28px;border-width:2px;"></div>
+      Loading episodes…
+    </div>`;
+
+  try {
+    const snap = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('seasons').doc(seasonId)
+      .collection('episodes').orderBy('episodeNumber').get();
+
+    const episodes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (sea) sea._episodes = episodes;
+    renderAvEpisodes(seasonId, episodes, sea);
+  } catch (e) {
+    epList.innerHTML = `<div style="padding:16px;color:var(--red);font-size:13px;">
+      Failed to load episodes: ${e.message}</div>`;
+  }
+}
+
+// Safe click handler — avoids JSON-in-attribute quoting issues
+document.addEventListener('click', function(e) {
+  const vcard = e.target.closest('[data-vd-id]');
+  if (!vcard) return;
+  const videoId  = vcard.dataset.vdId;
+  const seasonId = vcard.dataset.vdSea || null;
+
+  let video = null;
+  if (seasonId) {
+    const sea = avSeasons.find(s => s.id === seasonId);
+    video = sea?._episodes?.find(ep => ep.id === videoId);
+  } else {
+    video = videosData.find(v => v.id === videoId);
+  }
+  if (video) openVideoDetail(video, 'page-allvideos');
+});
+
+function renderAvEpisodes(seasonId, episodes, sea) {
+  const epList = document.getElementById('avEpList-' + seasonId);
+
+  if (!episodes.length) {
+    epList.innerHTML = `
+      <div style="padding:20px;text-align:center;color:var(--gray-400);font-size:13px;font-style:italic;">
+        No episodes uploaded yet.
+      </div>`;
+    return;
+  }
+
+  // Season summary bar
+  const totalViews = episodes.reduce((s, e) => s + (Number(e.views) || 0), 0);
+  const totalLikes = episodes.reduce((s, e) => s + (Number(e.likes) || 0), 0);
+  const totalRev   = episodes.reduce((s, e) => s + (Number(e.revenue) || 0), 0);
+  const totalCoins = Math.round(totalRev * (usdToNgn || 1620) / 30);
+
+  const summaryBar = `
+    <div style="display:flex;gap:8px;padding:12px 11px 8px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:80px;background:var(--purple-ghost);
+        border:1px solid var(--purple-pale);border-radius:10px;padding:10px;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+          color:var(--purple-deep);">${fmt(totalViews)}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;
+          color:var(--gray-400);margin-top:2px;">Total Views</div>
+      </div>
+      <div style="flex:1;min-width:80px;background:var(--purple-ghost);
+        border:1px solid var(--purple-pale);border-radius:10px;padding:10px;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+          color:var(--purple-deep);">${fmt(totalLikes)}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;
+          color:var(--gray-400);margin-top:2px;">Total Likes</div>
+      </div>
+      ${totalRev > 0 ? `
+      <div style="flex:1;min-width:80px;background:linear-gradient(135deg,#EDE9FE,#DDD6FE);
+        border:1px solid var(--purple-pale);border-radius:10px;padding:10px;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+          color:var(--purple-deep);">🪙 ${totalCoins.toLocaleString()}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;
+          color:var(--gray-400);margin-top:2px;">Season Earned</div>
+      </div>` : ''}
+    </div>
+    <div style="height:1px;background:var(--gray-200);margin:0 11px 8px;"></div>`;
+
+  const episodeRows = episodes.map((ep, i) => {
+    const thumbHTML = ep.thumbnailURL
+      ? `<img src="${ep.thumbnailURL}" alt="${ep.title}" />`
+      : `<span>${AV_EMOJI[i % AV_EMOJI.length]}</span>`;
+    const thumbBg = ep.thumbnailURL ? 'background:#000;' : '';
+
+    const isPaid = ep.priceMode === 'paid';
+    const coins  = Number(ep.coinPrice) || 0;
+    const rev    = Number(ep.revenue)   || 0;
+    const epCoinsEarned = Math.round(rev * (usdToNgn || 1620) / 30);
+
+    const priceHTML = isPaid
+      ? `<div class="av-ep-price">🪙 ${coins}</div>`
+      : `<div class="av-ep-price" style="color:var(--green);">Free</div>`;
+
+    const revHTML = rev > 0
+      ? `<div class="av-ep-rev">🪙 ${epCoinsEarned.toLocaleString()} earned</div>`
+      : '';
+
+    const schedHTML = ep.isScheduled
+      ? `<span class="av-badge av-badge-sched" style="font-size:9px;">
+           <i class="fas fa-clock"></i> Scheduled</span>` : '';
+
+    return `
+     <div class="av-ep-row" style="cursor:pointer;"
+  onclick="openVideoDetail({...${JSON.stringify(ep).replace(/"/g, '&quot;')}, seasonId:'${seasonId}'}, 'page-allvideos')">
+    <div class="av-ep-num">${ep.episodeNumber || i + 1}</div>
+        <div class="av-ep-thumb ${ep.thumbnailURL ? '' : avGradient(i)}" style="${thumbBg}">
+          ${thumbHTML}
+        </div>
+        <div class="av-ep-info">
+          <div class="av-ep-title">${ep.title || 'Untitled Episode'}</div>
+          <div class="av-ep-meta">
+            <span class="av-vmeta-item" style="font-size:10.5px;">
+              <i class="fas fa-eye"></i> ${fmt(ep.views || 0)}</span>
+            <span class="av-vmeta-item" style="font-size:10.5px;">
+              <i class="fas fa-heart"></i> ${fmt(ep.likes || 0)}</span>
+            <span class="av-vmeta-item" style="font-size:10.5px;">
+              <i class="fas fa-comment"></i> ${fmt(ep.comments || 0)}</span>
+            ${schedHTML}
+          </div>
+        </div>
+        <div class="av-ep-right">
+          ${priceHTML}
+          ${revHTML}
+        </div>
+      </div>`;
+  }).join('');
+
+  epList.innerHTML = summaryBar + episodeRows;
+}
+
+/* ====================================================
+   VIDEO DETAIL PAGE
+==================================================== */
+let vdCurrentVideo  = null;
+let vdReturnPage    = 'page-allvideos';
+const AVATAR_COLORS = ['#7C3AED','#059669','#D97706','#DB2777','#2563EB','#DC2626','#0891B2'];
+
+function openVideoDetail(video, returnPage) {
+  vdCurrentVideo = video;
+  vdReturnPage   = returnPage || 'page-allvideos';
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-videodetail').classList.add('active');
+  window.scrollTo(0, 0);
+
+  document.getElementById('vdTopTitle').textContent = video.title || 'Video';
+
+  renderVdPlayer(video);
+  renderVdBody(video);
+  loadVdComments(video);
+}
+
+function closeVideoDetail() {
+  // Pause & remove video to stop playback
+  const vid = document.querySelector('#vdPlayerWrap video');
+  if (vid) { vid.pause(); vid.src = ''; }
+
+  document.getElementById('page-videodetail').classList.remove('active');
+  document.getElementById(vdReturnPage).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ── Player ── */
+function renderVdPlayer(video) {
+  const wrap = document.getElementById('vdPlayerWrap');
+
+  // Always start with shimmer while video loads
+  wrap.innerHTML = `<div class="vd-shimmer" id="vdShimmer">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+      stroke="rgba(255,255,255,.2)" stroke-width="1.5">
+      <polygon points="5 3 19 12 5 21 5 3"/>
+    </svg>
+  </div>`;
+
+  const src = video.videoUrl || '';
+  if (!src) {
+    wrap.innerHTML = `
+      <div style="aspect-ratio:16/9;background:#111;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;color:rgba(255,255,255,.3);gap:10px;">
+        <i class="fas fa-video-slash" style="font-size:32px;"></i>
+        <span style="font-size:13px;">Video not available</span>
+      </div>`;
+    return;
+  }
+
+  const trailerChip = video.trailerUrl
+    ? `<div class="vd-trailer-chip"><i class="fas fa-play"></i> Trailer available below</div>`
+    : '';
+
+  const videoEl = document.createElement('video');
+  videoEl.className    = 'vd-video';
+  videoEl.controls     = true;
+  videoEl.preload      = 'metadata';
+  videoEl.playsInline  = true;
+  videoEl.src          = src;
+  if (video.thumbnailURL) videoEl.poster = video.thumbnailURL;
+
+  videoEl.addEventListener('canplay', () => {
+    const shimmer = document.getElementById('vdShimmer');
+    if (shimmer) shimmer.remove();
+  });
+  videoEl.addEventListener('error', () => {
+    wrap.innerHTML = `
+      <div style="aspect-ratio:16/9;background:#111;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;color:rgba(255,255,255,.3);gap:10px;">
+        <i class="fas fa-triangle-exclamation" style="font-size:32px;color:#D97706;"></i>
+        <span style="font-size:13px;">Could not load video</span>
+      </div>`;
+  });
+
+  wrap.innerHTML = trailerChip;
+  wrap.appendChild(videoEl);
+}
+
+/* ── Body ── */
+function renderVdBody(video) {
+  const body  = document.getElementById('vdBody');
+  const rev   = Number(video.revenue)   || 0;
+  const coins = Math.round(rev * (usdToNgn || 1620) / 30);
+  const naira = (rev * (usdToNgn || 1620)).toLocaleString('en-NG', { maximumFractionDigits: 0 });
+  const isPaid  = video.priceMode === 'paid';
+  const isSched = video.isScheduled;
+
+  // Scheduled banner
+  let schedHTML = '';
+  if (isSched && video.scheduleDate) {
+    const dt = video.scheduleDate.toDate
+      ? video.scheduleDate.toDate()
+      : new Date(video.scheduleDate);
+    const isPast = dt < new Date();
+    schedHTML = `
+      <div class="vd-sched-banner">
+        <div class="vd-sched-icon">${isPast ? '✅' : '⏰'}</div>
+        <div class="vd-sched-text">
+          <div class="vd-sched-label">${isPast ? 'Released on schedule' : 'Scheduled for'}</div>
+          <div class="vd-sched-date">${dt.toLocaleString('en-GB', {
+            weekday: 'short', day: 'numeric', month: 'long',
+            year: 'numeric', hour: '2-digit', minute: '2-digit'
+          })}</div>
+        </div>
+      </div>`;
+  }
+
+  // Price badge
+  const priceBadge = isPaid
+    ? `<span class="vd-badge" style="background:var(--purple-pale);color:var(--purple-deep);">
+         🪙 ${video.coinPrice || 0} Pose Coins
+       </span>`
+    : `<span class="vd-badge" style="background:#D1FAE5;color:#065F46;">
+         <i class="fas fa-rectangle-ad"></i> Free · Ad-Supported
+       </span>`;
+
+  const ratingBadge = video.ageRating
+    ? `<span class="vd-badge" style="${
+        video.ageRating === 'all'    ? 'background:#D1FAE5;color:#065F46;' :
+        video.ageRating === 'teen'   ? 'background:#DBEAFE;color:#1E40AF;' :
+                                       'background:#FEF3C7;color:#92400E;'
+      }">
+        ${video.ageRating === 'all' ? '✔ All Ages' :
+          video.ageRating === 'teen' ? '👤 Teen' : '⚠ Mature'}
+       </span>`
+    : '';
+
+  const typeTag = video.episodeNumber !== undefined
+    ? `<span class="vd-badge" style="background:var(--gray-100);color:var(--gray-600);">
+         <i class="fas fa-layer-group"></i> Episode ${video.episodeNumber}
+       </span>`
+    : `<span class="vd-badge" style="background:var(--gray-100);color:var(--gray-600);">
+         <i class="fas fa-film"></i> Single Video
+       </span>`;
+
+  // Revenue card (only if any earned or paid)
+  let revCardHTML = '';
+  if (rev > 0 || isPaid) {
+    const perView = isPaid
+      ? `₦${((video.coinPrice || 0) * 30 * .75).toLocaleString('en-NG')} per view (75% share)`
+      : `₦${((usdToNgn || 1620) * 0.00081).toFixed(0)}–₦${((usdToNgn || 1620) * 0.0035).toFixed(0)} per view via ads`;
+
+    revCardHTML = `
+      <div class="vd-rev-card">
+        <div class="vd-rev-lbl"><i class="fas fa-coins" style="margin-right:5px;"></i>Revenue</div>
+        <div class="vd-rev-main">🪙 ${coins.toLocaleString()}</div>
+        <div class="vd-rev-naira">₦${naira} total earned</div>
+        <div class="vd-rev-row">
+          <div class="vd-rev-mini">
+            <div class="vd-rev-mini-val">₦${naira}</div>
+            <div class="vd-rev-mini-lbl">In Naira</div>
+          </div>
+          <div class="vd-rev-mini">
+            <div class="vd-rev-mini-val">🪙 ${coins.toLocaleString()}</div>
+            <div class="vd-rev-mini-lbl">Pose Coins</div>
+          </div>
+          <div class="vd-rev-mini">
+            <div class="vd-rev-mini-val" style="font-size:11px;">${perView}</div>
+            <div class="vd-rev-mini-lbl">Rate</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Release date
+  let releaseDateStr = '—';
+  const dateSource = video.scheduleDate || video.createdAt;
+  if (dateSource) {
+    const d = dateSource.toDate ? dateSource.toDate() : new Date(dateSource);
+    releaseDateStr = d.toLocaleDateString('en-GB', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
+  // Trailer section
+  let trailerHTML = '';
+  if (video.trailerUrl) {
+    trailerHTML = `
+      <div class="vd-info-card" style="margin-bottom:16px;">
+        <div class="vd-info-title"><i class="fas fa-play" style="color:var(--purple-main);"></i> Trailer</div>
+        <video controls preload="metadata" playsinline
+          style="width:100%;border-radius:11px;background:#000;max-height:200px;"
+          src="${video.trailerUrl}"
+          ${video.thumbnailURL ? `poster="${video.thumbnailURL}"` : ''}>
+        </video>
+        <div style="font-size:11.5px;color:var(--gray-500);margin-top:8px;">
+          <i class="fas fa-circle-info" style="margin-right:4px;color:var(--purple-light);"></i>
+          Trailer is always free to watch
+        </div>
+      </div>`;
+  }
+
+  // Description
+  const desc = video.description || '';
+  const descHTML = desc ? `
+    <div class="vd-desc-card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+        color:var(--gray-400);margin-bottom:8px;">Description</div>
+      <div class="vd-desc-text clamped" id="vdDescText">${desc}</div>
+      <div class="vd-desc-toggle" id="vdDescToggle" onclick="toggleVdDesc()">Show more</div>
+    </div>` : '';
+
+  body.innerHTML = `
+    <div class="vd-title">${video.title || 'Untitled'}</div>
+    <div class="vd-badges">${typeTag}${priceBadge}${ratingBadge}</div>
+
+    ${schedHTML}
+
+    <div class="vd-stats-bar">
+      <div class="vd-stat-item">
+        <div class="vd-stat-val">${fmt(video.views    || 0)}</div>
+        <div class="vd-stat-lbl">👁 Views</div>
+      </div>
+      <div class="vd-stat-item">
+        <div class="vd-stat-val">${fmt(video.likes    || 0)}</div>
+        <div class="vd-stat-lbl">❤️ Likes</div>
+      </div>
+      <div class="vd-stat-item">
+        <div class="vd-stat-val">${fmt(video.comments || 0)}</div>
+        <div class="vd-stat-lbl">💬 Comments</div>
+      </div>
+    </div>
+
+    ${revCardHTML}
+
+    <div class="vd-info-card">
+      <div class="vd-info-title">
+        <i class="fas fa-circle-info" style="color:var(--purple-main);"></i> Video Info
+      </div>
+      <div class="vd-info-row">
+        <span class="vd-info-key"><i class="fas fa-calendar"></i> Release Date</span>
+        <span class="vd-info-val">${releaseDateStr}</span>
+      </div>
+      <div class="vd-info-row">
+        <span class="vd-info-key"><i class="fas fa-coins"></i> Pricing</span>
+        <span class="vd-info-val">${isPaid
+          ? `🪙 ${video.coinPrice || 0} Pose Coins = ₦${((video.coinPrice || 0) * 30).toLocaleString()}`
+          : 'Free · Ad-Supported'}</span>
+      </div>
+      ${isPaid ? `
+      <div class="vd-info-row">
+        <span class="vd-info-key"><i class="fas fa-handshake"></i> Your Cut</span>
+        <span class="vd-info-val" style="color:var(--green);">
+          75% · 🪙 ${Math.round((video.coinPrice || 0) * .75)} per view
+        </span>
+      </div>` : ''}
+      <div class="vd-info-row">
+        <span class="vd-info-key"><i class="fas fa-shield"></i> Age Rating</span>
+        <span class="vd-info-val">${
+          video.ageRating === 'all'    ? '✔ All Ages' :
+          video.ageRating === 'teen'   ? '👤 Teen (13+)' :
+          video.ageRating === 'mature' ? '⚠ Mature (18+)' : '—'
+        }</span>
+      </div>
+      ${isSched ? `
+      <div class="vd-info-row">
+        <span class="vd-info-key"><i class="fas fa-clock"></i> Status</span>
+        <span class="vd-info-val" style="color:#D97706;">
+          ${(() => {
+            if (!video.scheduleDate) return 'Scheduled';
+            const dt = video.scheduleDate.toDate
+              ? video.scheduleDate.toDate()
+              : new Date(video.scheduleDate);
+            return dt < new Date() ? '✅ Released' : '⏳ Upcoming';
+          })()}
+        </span>
+      </div>` : `
+      <div class="vd-info-row">
+        <span class="vd-info-key"><i class="fas fa-circle-check"></i> Status</span>
+        <span class="vd-info-val" style="color:var(--green);">✅ Live</span>
+      </div>`}
+    </div>
+
+    ${descHTML}
+    ${trailerHTML}
+
+    <div class="vd-comments-card">
+      <div class="vd-comments-header">
+        <div class="vd-comments-title">
+          <i class="fas fa-comments" style="color:var(--purple-main);"></i>
+          Comments
+          <span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;
+            background:var(--purple-pale);color:var(--purple-deep);"
+            id="vdCommentCount">${fmt(video.comments || 0)}</span>
+        </div>
+      </div>
+      <div id="vdCommentsList">
+        <div class="vd-comments-loading">
+          <div class="dash-spinner" style="width:22px;height:22px;border-width:2px;flex-shrink:0;"></div>
+          Loading comments…
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleVdDesc() {
+  const el  = document.getElementById('vdDescText');
+  const btn = document.getElementById('vdDescToggle');
+  if (!el) return;
+  const clamped = el.classList.toggle('clamped');
+  btn.textContent = clamped ? 'Show more' : 'Show less';
+}
+
+/* ── Comments ── */
+async function loadVdComments(video) {
+  const listEl = document.getElementById('vdCommentsList');
+  if (!listEl) return;
+
+  try {
+    // Determine collection path — single vs episode
+    let colRef;
+    if (video.seasonId) {
+      colRef = db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(video.seasonId)
+        .collection('episodes').doc(video.id)
+        .collection('comments');
+    } else {
+      colRef = db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos').doc(video.id)
+        .collection('comments');
+    }
+
+    const snap = await colRef.orderBy('createdAt', 'desc').limit(30).get();
+
+    if (snap.empty) {
+      listEl.innerHTML = `
+        <div class="vd-comments-empty">
+          <div style="font-size:28px;margin-bottom:8px;">💬</div>
+          No comments yet on this video.
+        </div>`;
+      return;
+    }
+
+    const countEl = document.getElementById('vdCommentCount');
+    if (countEl) countEl.textContent = snap.size;
+
+    listEl.innerHTML = snap.docs.map((doc, i) => {
+      const c    = doc.data();
+      const name = c.userName || c.userHandle || 'Viewer';
+      const text = c.text || c.content || c.comment || '';
+      const time = c.createdAt
+        ? (c.createdAt.toDate
+            ? c.createdAt.toDate()
+            : new Date(c.createdAt)
+          ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        : '';
+      const avatarColor = AVATAR_COLORS[i % AVATAR_COLORS.length];
+      const initials    = name.slice(0, 2).toUpperCase();
+
+      return `
+        <div class="vd-comment-item" style="animation-delay:${i * 0.04}s;">
+          <div class="vd-comment-avatar" style="background:${avatarColor};">${initials}</div>
+          <div class="vd-comment-body">
+            <div class="vd-comment-author">${name}</div>
+            <div class="vd-comment-text">${text}</div>
+            ${time ? `<div class="vd-comment-time">${time}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
+  } catch (e) {
+    listEl.innerHTML = `
+      <div class="vd-comments-empty">
+        Could not load comments (${e.message})
+      </div>`;
+  }
+}
+
+
+function minimiseUploadPopup() {
+  document.getElementById('uploadProgressPopup').classList.add('hidden');
+  document.getElementById('uppopMiniBar').classList.add('visible');
+}
+
+function expandUploadPopup() {
+  document.getElementById('uppopMiniBar').classList.remove('visible');
+  document.getElementById('uploadProgressPopup').classList.remove('hidden');
+}
+
+
+
+function cancelUpload() {
+  uploadCancelled = true;
+  if (activeXHR) {
+    activeXHR.abort();
+    activeXHR = null;
+  }
+  hideUploadPopup();
+  const sBtn = document.getElementById('sPostBtn');
+  const eBtn = document.getElementById('epPostBtn');
+  if (sBtn) { sBtn.disabled = false; sBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video'; }
+  if (eBtn) { eBtn.disabled = false; eBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode'; }
+}
+
+
+function hideUploadPopup() {
+  document.getElementById('uploadProgressPopup').classList.add('hidden');
+  const countdownEl = document.getElementById('recordingCountdownOverlay');
+  if (countdownEl) countdownEl.remove();
+  document.getElementById('uppopMiniBar').classList.remove('visible');
+}
+
+/* ============================================================
+   HISTORY POPUP JAVASCRIPT
+   Paste inside your existing <script> block
+============================================================ */
+
+/* ── State ── */
+let histTab         = 'transactions';
+let txnFilter       = 'all';
+let reqFilter       = 'all';
+let suppType        = 'complaint';
+let allTransactions = [];
+let allRequests     = [];
+
+/* ====================================================
+   OPEN / CLOSE
+==================================================== */
+function openHistoryPopup() {
+  document.getElementById('historyPopup').classList.remove('hidden');
+  histTab = 'transactions';
+  switchHistTab('transactions');
+  loadTransactions();
+  loadWithdrawRequests();
+  loadSupportInbox();
+}
+
+function closeHistoryPopup() {
+  document.getElementById('historyPopup').classList.add('hidden');
+}
+
+/* ====================================================
+   TAB SWITCH
+==================================================== */
+function switchHistTab(tab) {
+  histTab = tab;
+  ['transactions', 'requests', 'support'].forEach(t => {
+    document.getElementById('htab-' + t)
+      ?.classList.toggle('active', t === tab);
+    document.getElementById('hpanel-' + t).style.display =
+      t === tab ? 'block' : 'none';
+  });
+}
+
+/* ====================================================
+   TAB 1 — TRANSACTIONS
+==================================================== */
+async function loadTransactions() {
+  const listEl = document.getElementById('htxn-list');
+  listEl.innerHTML = histLoadingHTML('Loading transactions…');
+
+  try {
+    /* withdrawals */
+    const wdSnap = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('withdrawals')
+      .orderBy('requestedAt', 'desc')
+      .limit(50).get();
+
+    const withdrawals = wdSnap.docs.map(d => ({
+      id: d.id, ...d.data(), _type: 'payout',
+    }));
+
+    /* ad payments (may not exist yet) */
+    let adsEntries = [];
+    try {
+      const snap = await db.collection('channels').doc(CHANNEL_UID)
+        .collection('adPayments')
+        .orderBy('createdAt', 'desc')
+        .limit(30).get();
+      adsEntries = snap.docs.map(d => ({
+        id: d.id, ...d.data(), _type: 'ads',
+      }));
+    } catch (_) {}
+
+    /* direct sales payments (may not exist yet) */
+    let salesEntries = [];
+    try {
+      const snap = await db.collection('channels').doc(CHANNEL_UID)
+        .collection('salesPayments')
+        .orderBy('createdAt', 'desc')
+        .limit(30).get();
+      salesEntries = snap.docs.map(d => ({
+        id: d.id, ...d.data(), _type: 'sales',
+      }));
+    } catch (_) {}
+
+    /* merge and sort newest first */
+    allTransactions = [...withdrawals, ...adsEntries, ...salesEntries]
+      .sort((a, b) => txnTimestamp(b) - txnTimestamp(a));
+
+    /* show demo data if nothing stored yet */
+    if (!allTransactions.length) {
+      allTransactions = buildDemoTransactions();
+    }
+
+    renderTransactions();
+  } catch (e) {
+    listEl.innerHTML = histErrorHTML('Failed to load: ' + e.message);
+  }
+}
+
+function txnTimestamp(t) {
+  const src = t.requestedAt || t.createdAt || t.paidAt;
+  if (!src) return 0;
+  return src.toMillis ? src.toMillis() : new Date(src).getTime();
+}
+
+function buildDemoTransactions() {
+  const now = Date.now();
+  return [
+    {
+      id: 'demo1', _type: 'ads',
+      description: 'Ad revenue — Apr 2025',
+      amount: 3240, status: 'paid',
+      requestedAt: { toMillis: () => now - 86400000 * 2 },
+    },
+    {
+      id: 'demo2', _type: 'sales',
+      description: 'Pay-per-watch sales',
+      amount: 8750, status: 'paid',
+      requestedAt: { toMillis: () => now - 86400000 * 5 },
+    },
+    {
+      id: 'demo3', _type: 'payout',
+      description: 'Withdrawal to Access Bank',
+      amount: 10000, fee: 100, netAmount: 9900,
+      bankAcctName: 'John Doe', bankName: 'Access Bank',
+      status: 'approved',
+      requestedAt: { toMillis: () => now - 86400000 * 8 },
+    },
+  ];
+}
+
+function renderTransactions() {
+  const summaryEl = document.getElementById('htxn-summary');
+  const listEl    = document.getElementById('htxn-list');
+
+  const filtered = txnFilter === 'all'
+    ? allTransactions
+    : allTransactions.filter(t => t._type === txnFilter);
+
+  /* summary strip */
+  const totalIn  = allTransactions
+    .filter(t => t._type !== 'payout')
+    .reduce((s, t) => s + (Number(t.amount) || 0), 0);
+  const totalOut = allTransactions
+    .filter(t => t._type === 'payout')
+    .reduce((s, t) => s + (Number(t.netAmount || t.amount) || 0), 0);
+  const pending  = allTransactions
+    .filter(t => t._type === 'payout' && t.status === 'pending').length;
+
+  summaryEl.innerHTML = `
+    <div style="background:var(--purple-ghost);border:1px solid var(--purple-pale);
+      border-radius:11px;padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Total Earned</div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+        color:var(--purple-deep);">₦${totalIn.toLocaleString('en-NG')}</div>
+    </div>
+    <div style="background:#ECFDF5;border:1px solid #A7F3D0;
+      border-radius:11px;padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Total Withdrawn</div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+        color:#059669;">₦${totalOut.toLocaleString('en-NG')}</div>
+    </div>
+    <div style="background:#FEF3C7;border:1px solid #FDE68A;
+      border-radius:11px;padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Pending</div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+        color:#92400E;">${pending}</div>
+    </div>`;
+
+  if (!filtered.length) {
+    listEl.innerHTML = histEmptyHTML(
+      txnFilter === 'all' ? 'No transactions yet' : 'No ' + txnFilter + ' transactions',
+      txnFilter === 'all'
+        ? 'Your earnings and payouts will appear here'
+        : 'Switch filter to see other transactions'
+    );
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(t => txnRowHTML(t)).join('');
+}
+
+function txnRowHTML(t) {
+  const isPayout = t._type === 'payout';
+  const isAds    = t._type === 'ads';
+  const isRefund = t._type === 'refund';
+
+  const iconBg    = isPayout ? '#ECFDF5'                 : isAds ? '#FEF3C7'   : isRefund ? '#FEE2E2' : 'var(--purple-pale)';
+  const iconColor = isPayout ? '#059669'                 : isAds ? '#D97706'   : isRefund ? '#DC2626' : 'var(--purple-deep)';
+  const icon      = isPayout ? 'fa-arrow-up-from-bracket': isAds ? 'fa-rectangle-ad' : isRefund ? 'fa-rotate-left' : 'fa-coins';
+  const amtColor  = isPayout ? '#059669'                 : isRefund ? '#DC2626' : 'var(--purple-deep)';
+  const amtSign   = isPayout || isRefund ? '−' : '+';
+  const amount    = isPayout ? (t.netAmount || t.amount || 0) : (t.amount || 0);
+
+  const desc    = t.description || (isPayout ? 'Withdrawal' : isAds ? 'Ad Revenue' : 'Sale');
+  const sub     = isPayout
+    ? `To ${t.bankName || '—'} · ${t.bankAcctName || '—'}${t.fee ? ' · Fee ₦' + t.fee : ''}`
+    : desc;
+  const dateStr = txnDateStr(t);
+
+  return `
+    <div class="hist-txn-row">
+      <div class="hist-txn-icon" style="background:${iconBg};color:${iconColor};">
+        <i class="fas ${icon}"></i>
+      </div>
+      <div class="hist-txn-body">
+        <div class="hist-txn-title">${desc}</div>
+        <div class="hist-txn-sub">${sub}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:5px;">
+          <span style="font-size:10.5px;color:var(--gray-400);">${dateStr}</span>
+          ${txnStatusBadge(t.status)}
+        </div>
+      </div>
+      <div class="hist-txn-amount" style="color:${amtColor};">
+        ${amtSign}₦${Number(amount).toLocaleString('en-NG')}
+      </div>
+    </div>`;
+}
+
+function txnStatusBadge(status) {
+  if (!status) return '';
+  const map = {
+    paid:       'background:#D1FAE5;color:#065F46;',
+    approved:   'background:#D1FAE5;color:#065F46;',
+    pending:    'background:#FEF3C7;color:#92400E;',
+    processing: 'background:#DBEAFE;color:#1E40AF;',
+    rejected:   'background:#FEE2E2;color:#991B1B;',
+    failed:     'background:#FEE2E2;color:#991B1B;',
+  };
+  const style = map[status] || 'background:var(--gray-100);color:var(--gray-600);';
+  return `<span style="font-size:10px;font-weight:700;padding:2px 8px;
+    border-radius:20px;${style}">
+    ${status.charAt(0).toUpperCase() + status.slice(1)}
+  </span>`;
+}
+
+function txnDateStr(t) {
+  const src = t.requestedAt || t.createdAt || t.paidAt;
+  if (!src) return '—';
+  const d = src.toDate ? src.toDate() : new Date(src);
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
+}
+
+function filterTransactions(filter) {
+  txnFilter = filter;
+  ['all', 'ads', 'sales', 'payout', 'refund'].forEach(f => {
+    document.getElementById('hf-' + f)?.classList.toggle('active', f === filter);
+  });
+  renderTransactions();
+}
+
+/* ====================================================
+   TAB 2 — WITHDRAW REQUESTS
+==================================================== */
+async function loadWithdrawRequests() {
+  const listEl = document.getElementById('hreq-list');
+  listEl.innerHTML = histLoadingHTML('Loading requests…');
+
+  try {
+    const snap = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('withdrawals')
+      .orderBy('requestedAt', 'desc')
+      .limit(40).get();
+
+    allRequests = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    if (!allRequests.length) {
+      allRequests = buildDemoRequests();
+    }
+
+    renderRequests();
+  } catch (e) {
+    listEl.innerHTML = histErrorHTML('Failed to load: ' + e.message);
+  }
+}
+
+function buildDemoRequests() {
+  const now = Date.now();
+  return [
+    {
+      id: 'WD-20250420-001',
+      amount: 15000, fee: 100, netAmount: 14900,
+      bankAcctName: 'Adewale Tunde', bankName: 'GTBank', bankAcctNum: '0123456789',
+      status: 'approved',
+      requestedAt: { toMillis: () => now - 86400000 * 3 },
+      processedAt: { toDate: () => new Date(now - 86400000 * 2) },
+      note: 'Processed successfully. Funds should reflect within 30 minutes.',
+    },
+    {
+      id: 'WD-20250424-001',
+      amount: 8000, fee: 100, netAmount: 7900,
+      bankAcctName: 'Adewale Tunde', bankName: 'GTBank', bankAcctNum: '0123456789',
+      status: 'pending',
+      requestedAt: { toMillis: () => now - 3600000 },
+    },
+  ];
+}
+
+function renderRequests() {
+  const listEl = document.getElementById('hreq-list');
+
+  const filtered = reqFilter === 'all'
+    ? allRequests
+    : allRequests.filter(r => r.status === reqFilter);
+
+  if (!filtered.length) {
+    listEl.innerHTML = histEmptyHTML(
+      reqFilter === 'all' ? 'No withdrawal requests' : 'No ' + reqFilter + ' requests',
+      'Your withdrawal requests will appear here once submitted'
+    );
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(r => reqCardHTML(r)).join('');
+}
+
+function reqCardHTML(r) {
+  const statusClassMap = {
+    pending: 'req-pending', approved: 'req-approved',
+    rejected: 'req-rejected', processing: 'req-processing',
+  };
+  const statusIconMap = {
+    pending: 'fa-clock', approved: 'fa-check-circle',
+    rejected: 'fa-times-circle', processing: 'fa-spinner',
+  };
+
+  const statusClass = statusClassMap[r.status] || 'req-pending';
+  const statusIcon  = statusIconMap[r.status]  || 'fa-clock';
+  const statusLabel = (r.status || 'pending').charAt(0).toUpperCase()
+    + (r.status || '').slice(1);
+
+  const dateStr = txnDateStr(r);
+
+  const processedStr = r.processedAt
+    ? (() => {
+        const d = r.processedAt.toDate
+          ? r.processedAt.toDate()
+          : new Date(r.processedAt);
+        return d.toLocaleDateString('en-GB', {
+          day: 'numeric', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit',
+        });
+      })()
+    : null;
+
+  const etaBlock = r.status === 'pending' ? `
+    <div style="display:flex;align-items:center;gap:6px;margin-top:10px;
+      background:#FEF3C7;border-radius:9px;padding:9px 12px;">
+      <i class="fas fa-clock" style="color:#D97706;font-size:12px;flex-shrink:0;"></i>
+      <span style="font-size:11.5px;color:#92400E;line-height:1.4;">
+        Processed daily <b>9 AM – 12 AM</b> · ETA 15 min – 1 hour
+      </span>
+    </div>` : '';
+
+  const noteBlock = r.note ? `
+    <div class="hist-req-note">
+      <i class="fas fa-circle-info" style="margin-right:5px;color:var(--purple-light);"></i>
+      ${r.note}
+    </div>` : '';
+
+  const cancelBtn = r.status === 'pending' ? `
+    <button onclick="cancelWithdrawalRequest('${r.id}')"
+      style="margin-top:12px;width:100%;padding:10px;border-radius:10px;
+      background:#FEE2E2;color:#DC2626;font-size:12.5px;font-weight:600;
+      border:1.5px solid #FECACA;cursor:pointer;font-family:'DM Sans',sans-serif;
+      display:flex;align-items:center;justify-content:center;gap:6px;">
+      <i class="fas fa-times"></i> Cancel Request
+    </button>` : '';
+
+  return `
+    <div class="hist-req-card">
+      <div class="hist-req-header">
+        <div>
+          <div class="hist-req-id">${r.id || 'WD-' + Math.random().toString(36).slice(2,10).toUpperCase()}</div>
+          <div class="hist-req-amount">
+            ₦${Number(r.netAmount || r.amount || 0).toLocaleString('en-NG')}
+          </div>
+          ${r.fee ? `<div style="font-size:11px;color:var(--gray-400);">
+            ₦${Number(r.amount || 0).toLocaleString()} − ₦${Number(r.fee || 0).toLocaleString()} fee
+          </div>` : ''}
+        </div>
+        <div class="hist-req-status ${statusClass}">
+          <i class="fas ${statusIcon}" style="margin-right:4px;"></i>${statusLabel}
+        </div>
+      </div>
+
+      <div class="hist-req-bank">
+        <i class="fas fa-building-columns"
+          style="margin-right:5px;color:var(--gray-400);"></i>
+        ${r.bankName || '—'} · ${r.bankAcctNum || '—'} · ${r.bankAcctName || '—'}
+      </div>
+
+      <div class="hist-req-date">
+        <i class="fas fa-calendar"
+          style="margin-right:4px;opacity:.5;"></i>Requested: ${dateStr}
+        ${processedStr
+          ? `<br><i class="fas fa-check" style="margin-right:4px;opacity:.5;"></i>Processed: ${processedStr}`
+          : ''}
+      </div>
+
+      ${etaBlock}
+      ${noteBlock}
+      ${cancelBtn}
+    </div>`;
+}
+
+function filterRequests(filter) {
+  reqFilter = filter;
+  ['all', 'pending', 'approved', 'rejected'].forEach(f => {
+    document.getElementById('hreq-' + f)?.classList.toggle('active', f === filter);
+  });
+  renderRequests();
+}
+
+async function cancelWithdrawalRequest(requestId) {
+  if (!confirm('Cancel this withdrawal request?')) return;
+  try {
+    await db.collection('channels').doc(CHANNEL_UID)
+      .collection('withdrawals').doc(requestId)
+      .update({
+        status: 'cancelled',
+        cancelledAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    await loadWithdrawRequests();
+  } catch (e) {
+    alert('Could not cancel: ' + e.message);
+  }
+}
+
+/* ====================================================
+   TAB 3 — SUPPORT
+==================================================== */
+function setSuppType(type) {
+  suppType = type;
+  ['complaint', 'report', 'notification', 'inquiry'].forEach(t => {
+    document.getElementById('stype-' + t)?.classList.toggle('active', t === type);
+  });
+  document.getElementById('suppType').value = type;
+}
+
+async function submitSupportMessage() {
+  const subject = document.getElementById('suppSubject').value.trim();
+  const message = document.getElementById('suppMessage').value.trim();
+  const btn     = document.getElementById('suppSubmitBtn');
+
+  if (!message) {
+    document.getElementById('suppMessage').classList.add('uerror');
+    setTimeout(() => document.getElementById('suppMessage').classList.remove('uerror'), 700);
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML =
+    '<i class="fas fa-spinner fa-spin" style="margin-right:7px;"></i>Sending…';
+
+  try {
+    await db.collection('channels').doc(CHANNEL_UID)
+      .collection('supportMessages').add({
+        type:           suppType,
+        subject:        subject || '(no subject)',
+        message,
+        txnId:          document.getElementById('suppTxnId').value.trim()  || null,
+        amountInvolved: document.getElementById('suppAmount').value.trim() || null,
+        status:         'open',
+        from:           'creator',
+        channelId:      CHANNEL_UID,
+        createdAt:      firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+    btn.disabled = false;
+    btn.innerHTML =
+      '<i class="fas fa-paper-plane" style="margin-right:7px;"></i>Send Message';
+
+    /* clear form */
+    document.getElementById('suppSubject').value = '';
+    document.getElementById('suppMessage').value = '';
+    document.getElementById('suppTxnId').value   = '';
+    document.getElementById('suppAmount').value  = '';
+    setSuppType('complaint');
+
+    /* show success badge */
+    document.getElementById('suppSuccessBadge').style.display = '';
+    setTimeout(() => {
+      document.getElementById('suppSuccessBadge').style.display = 'none';
+    }, 5000);
+
+    await loadSupportInbox();
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML =
+      '<i class="fas fa-paper-plane" style="margin-right:7px;"></i>Send Message';
+    alert('Failed to send: ' + e.message);
+  }
+}
+
+async function loadSupportInbox() {
+  const inboxEl = document.getElementById('hsupp-inbox');
+  if (!inboxEl) return;
+
+  try {
+    const snap = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('supportMessages')
+      .orderBy('createdAt', 'desc')
+      .limit(20).get();
+
+    const msgs   = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const unread = msgs.filter(m => m.from === 'support' && !m.read).length;
+
+    const badge = document.getElementById('hsupp-unread-badge');
+    if (badge) {
+      badge.textContent   = unread + ' new';
+      badge.style.display = unread > 0 ? '' : 'none';
+    }
+
+    if (!msgs.length) {
+      inboxEl.innerHTML = histEmptyHTML(
+        'Inbox is empty',
+        'Messages from Pose support will appear here'
+      );
+      return;
+    }
+
+    inboxEl.innerHTML = msgs.map(m => suppInboxCardHTML(m)).join('');
+  } catch (e) {
+    inboxEl.innerHTML = histErrorHTML('Could not load inbox: ' + e.message);
+  }
+}
+
+function suppInboxCardHTML(m) {
+  const isFromSupport = m.from === 'support';
+  const isUnread      = isFromSupport && !m.read;
+
+  const dateStr = (() => {
+    if (!m.createdAt) return '';
+    const d = m.createdAt.toDate ? m.createdAt.toDate() : new Date(m.createdAt);
+    return d.toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+  })();
+
+  const typeLabelMap = {
+    complaint: 'Complaint', report: 'Report',
+    notification: 'Notification', inquiry: 'Inquiry',
+  };
+  const typeBgMap = {
+    complaint:    'background:#FEE2E2;color:#991B1B;',
+    report:       'background:#FEF3C7;color:#92400E;',
+    notification: 'background:var(--purple-pale);color:var(--purple-deep);',
+    inquiry:      'background:#DBEAFE;color:#1E40AF;',
+  };
+
+  const typeLabel = typeLabelMap[m.type] || 'Message';
+  const typeBg    = typeBgMap[m.type]    || 'background:var(--gray-100);color:var(--gray-600);';
+
+  const statusBadge = m.status ? `
+    <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;
+      ${m.status === 'open'
+        ? 'background:#FEF3C7;color:#92400E;'
+        : m.status === 'resolved'
+          ? 'background:#D1FAE5;color:#065F46;'
+          : 'background:var(--gray-100);color:var(--gray-600);'}">
+      ${m.status.charAt(0).toUpperCase() + m.status.slice(1)}
+    </span>` : '';
+
+  return `
+    <div class="supp-inbox-card ${isUnread ? 'unread' : ''}">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:28px;height:28px;border-radius:8px;
+            background:${isFromSupport ? 'var(--purple-pale)' : 'var(--gray-100)'};
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas ${isFromSupport ? 'fa-headset' : 'fa-user'}"
+              style="font-size:11px;color:${isFromSupport
+                ? 'var(--purple-main)' : 'var(--gray-500)'};"></i>
+          </div>
+          <span class="supp-inbox-from">
+            ${isFromSupport ? 'Pose Payment Support' : 'You'}
+            ${isUnread
+              ? `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;
+                  background:var(--purple-main);margin-left:5px;vertical-align:middle;"></span>`
+              : ''}
+          </span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span class="supp-inbox-badge" style="${typeBg}">${typeLabel}</span>
+          ${statusBadge}
+        </div>
+      </div>
+
+      ${m.subject
+        ? `<div style="font-size:12.5px;font-weight:700;color:var(--text-main);
+            margin-bottom:4px;">${m.subject}</div>`
+        : ''}
+      <div class="supp-inbox-sub">${m.message || ''}</div>
+
+      ${m.txnId
+        ? `<div style="font-size:11px;color:var(--purple-mid);margin-top:5px;">
+            <i class="fas fa-hashtag" style="margin-right:3px;"></i>${m.txnId}
+          </div>`
+        : ''}
+      ${m.amountInvolved
+        ? `<div style="font-size:11px;color:var(--gray-500);margin-top:3px;">
+            <i class="fas fa-coins" style="margin-right:3px;"></i>${m.amountInvolved}
+          </div>`
+        : ''}
+
+      <div class="supp-inbox-time">
+        <i class="fas fa-clock" style="margin-right:4px;opacity:.5;"></i>${dateStr}
+      </div>
+    </div>`;
+}
+
+/* ====================================================
+   SHARED UTILITY HTML BUILDERS
+==================================================== */
+function histLoadingHTML(label) {
+  return `
+    <div style="padding:32px;text-align:center;color:var(--gray-400);">
+      <div class="dash-spinner"
+        style="margin:0 auto 12px;width:28px;height:28px;border-width:2px;"></div>
+      <div style="font-size:13px;">${label}</div>
+    </div>`;
+}
+
+function histEmptyHTML(title, sub) {
+  return `
+    <div style="padding:32px 20px;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:50%;
+        background:var(--purple-ghost);color:var(--purple-mid);
+        display:flex;align-items:center;justify-content:center;
+        margin:0 auto 12px;font-size:22px;">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+        color:var(--text-main);margin-bottom:5px;">${title}</div>
+      <div style="font-size:12.5px;color:var(--gray-500);">${sub}</div>
+    </div>`;
+}
+
+function histErrorHTML(msg) {
+  return `
+    <div style="padding:20px;text-align:center;color:var(--red);font-size:13px;">
+      <i class="fas fa-triangle-exclamation" style="margin-right:5px;"></i>${msg}
+    </div>`;
+}
+
+
+function goBackToPose() {
+  window.location.href = 'poseappdash.html';
 }
   </script>
 
