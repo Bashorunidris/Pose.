@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Go Live</title>
+<title>Live</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -28,8 +28,6 @@
   --glass-b:      rgba(255,255,255,0.10);
   --muted:        rgba(255,255,255,0.42);
   --text:         #fff;
-
-  /* Tab accent colors */
   --video-c:  #7C3AED;
   --voice-c:  #EC4899;
   --chat-c:   #3B82F6;
@@ -43,25 +41,18 @@ html, body {
   color: var(--text);
   overflow: hidden;
 }
-
-#app {
+#root {
   position: relative;
   width: 100%; height: 100%;
-  max-width: 430px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
 }
 
-/* ── AMBIENT ── */
+/* ─── AMBIENT ─── */
 .ambient { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .orb { position: absolute; border-radius: 50%; filter: blur(90px); animation: drift 9s ease-in-out infinite alternate; }
-.orb-1 { width: 320px; height: 320px; background: radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%); top: -100px; left: -80px; }
-.orb-2 { width: 260px; height: 260px; background: radial-gradient(circle, rgba(236,72,153,0.18), transparent 70%); top: 40px; right: -90px; animation-delay: -4s; }
-.orb-3 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%); bottom: 180px; left: 40%; animation-delay: -7s; }
-.orb-accent { width: 0; height: 0; transition: width 0.5s, height 0.5s, background 0.5s; border-radius: 50%; filter: blur(100px); top: 30%; left: 20%; opacity: 0.5; }
-
+.orb-1 { width: 320px; height: 320px; background: radial-gradient(circle, rgba(124,58,237,0.28), transparent 70%); top: -100px; left: -80px; }
+.orb-2 { width: 260px; height: 260px; background: radial-gradient(circle, rgba(236,72,153,0.15), transparent 70%); top: 40px; right: -90px; animation-delay: -4s; }
+.orb-3 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(124,58,237,0.12), transparent 70%); bottom: 180px; left: 40%; animation-delay: -7s; }
 @keyframes drift {
   0%   { transform: translate(0,0) scale(1); }
   100% { transform: translate(25px, 35px) scale(1.12); }
@@ -75,329 +66,32 @@ html, body {
   background-size: 36px 36px;
   mask-image: radial-gradient(ellipse at top, black 0%, transparent 65%);
 }
-
-/* ── TOP BAR ── */
-#topbar {
-  position: relative; z-index: 10;
-  display: flex; align-items: center;
-  padding: 52px 20px 16px;
-  gap: 14px;
-  animation: slideDown 0.45s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-22px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.back-btn {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--glass);
-  border: 1px solid var(--glass-b);
-  backdrop-filter: blur(16px);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0;
-  transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
-  color: #fff;
-}
-.back-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.08); }
-.back-btn:active { transform: scale(0.9); }
-.back-icon { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-.topbar-title { flex: 1; }
-.topbar-title h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
-.topbar-title p { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 400; }
-
-.live-pill {
-  display: flex; align-items: center; gap: 5px;
-  background: rgba(124,58,237,0.18);
-  border: 1px solid rgba(124,58,237,0.38);
-  border-radius: 100px; padding: 5px 12px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-  color: var(--purple-light); flex-shrink: 0;
-}
-.pulse-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--purple-light);
-  animation: pulseDot 1.3s ease-in-out infinite;
-}
-@keyframes pulseDot {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.25; transform: scale(0.65); }
-}
-
-/* ── TAB BAR ── */
-#tab-bar {
-  position: relative; z-index: 10;
-  padding: 0 20px 0;
-  animation: fadeUp 0.45s 0.1s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-.tab-track {
-  display: flex; gap: 6px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px; padding: 5px;
-}
-
-.tab-btn {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  gap: 3px; padding: 9px 4px;
-  border-radius: 13px;
-  cursor: pointer;
-  transition: background 0.25s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
-  border: 1px solid transparent;
-  position: relative; overflow: hidden;
-}
-.tab-btn:hover { transform: scale(1.04); }
-.tab-btn:active { transform: scale(0.96); }
-
-.tab-btn .t-icon { font-size: 18px; line-height: 1; }
-.tab-btn .t-label { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); transition: color 0.25s; white-space: nowrap; }
-
-/* Active states per tab */
-.tab-btn.active-video  { background: rgba(124,58,237,0.22); border-color: rgba(124,58,237,0.38); }
-.tab-btn.active-voice  { background: rgba(236,72,153,0.22); border-color: rgba(236,72,153,0.38); }
-.tab-btn.active-chat   { background: rgba(59,130,246,0.22);  border-color: rgba(59,130,246,0.38); }
-.tab-btn.active-gaming { background: rgba(16,185,129,0.22);  border-color: rgba(16,185,129,0.38); }
-
-.tab-btn.active-video  .t-label { color: var(--purple-light); }
-.tab-btn.active-voice  .t-label { color: #F9A8D4; }
-.tab-btn.active-chat   .t-label { color: #93C5FD; }
-.tab-btn.active-gaming .t-label { color: #6EE7B7; }
-
-.tab-btn .tab-glow {
-  position: absolute; inset: 0; border-radius: 13px; opacity: 0; transition: opacity 0.3s;
-}
-.tab-btn.active-video  .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.3), transparent 70%); opacity: 1; }
-.tab-btn.active-voice  .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(236,72,153,0.3), transparent 70%); opacity: 1; }
-.tab-btn.active-chat   .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.3), transparent 70%); opacity: 1; }
-.tab-btn.active-gaming .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(16,185,129,0.3), transparent 70%); opacity: 1; }
-
-/* ── PANEL AREA ── */
-#panels {
-  position: relative; z-index: 10;
-  flex: 1; overflow: hidden;
-  margin-top: 16px;
-}
-
-.panel {
+.page {
   position: absolute; inset: 0;
-  padding: 0 20px 0;
-  overflow-y: auto; scrollbar-width: none;
-  opacity: 0; transform: translateX(30px);
-  pointer-events: none;
-  transition: opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  display: flex; flex-direction: column;
+  transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              opacity 0.38s ease;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
-.panel::-webkit-scrollbar { display: none; }
-.panel.active {
-  opacity: 1; transform: translateX(0);
-  pointer-events: all;
+.page.page-hidden-right { 
+  transform: translateX(100%) scale(0.96); 
+  opacity: 0; 
+  pointer-events: none; 
 }
-.panel.exit-left { opacity: 0; transform: translateX(-30px); }
-
-/* ── PANEL HEADER ── */
-.panel-hero {
-  border-radius: 24px;
-  overflow: hidden; position: relative;
-  margin-bottom: 16px;
-  height: 160px;
-  display: flex; align-items: flex-end;
-  padding: 20px;
+.page.page-hidden-left  { 
+  transform: translateX(-30%) scale(0.97); 
+  opacity: 0; 
+  pointer-events: none; 
 }
-
-.panel-hero-bg {
-  position: absolute; inset: 0;
+.page.page-visible      { 
+  transform: translateX(0) scale(1); 
+  opacity: 1; 
+  pointer-events: all; 
 }
-.panel[data-mode="video"]  .panel-hero-bg { background: linear-gradient(135deg, #1a0a2e 0%, #2d0a4e 50%, #120820 100%); }
-.panel[data-mode="voice"]  .panel-hero-bg { background: linear-gradient(135deg, #1a0818 0%, #3a0a2a 50%, #110610 100%); }
-.panel[data-mode="chat"]   .panel-hero-bg { background: linear-gradient(135deg, #060f1e 0%, #0a1a3a 50%, #060a14 100%); }
-.panel[data-mode="gaming"] .panel-hero-bg { background: linear-gradient(135deg, #05130f 0%, #082318 50%, #050d0a 100%); }
-
-.hero-blob {
-  position: absolute; border-radius: 50%; filter: blur(50px);
-}
-.panel[data-mode="video"]  .hero-blob { width: 200px; height: 200px; background: rgba(124,58,237,0.5); right: -40px; top: -40px; }
-.panel[data-mode="voice"]  .hero-blob { width: 200px; height: 200px; background: rgba(236,72,153,0.5); right: -40px; top: -40px; }
-.panel[data-mode="chat"]   .hero-blob { width: 200px; height: 200px; background: rgba(59,130,246,0.5); right: -40px; top: -40px; }
-.panel[data-mode="gaming"] .hero-blob { width: 200px; height: 200px; background: rgba(16,185,129,0.5); right: -40px; top: -40px; }
-
-.hero-blob-2 {
-  position: absolute; border-radius: 50%; filter: blur(60px);
-}
-.panel[data-mode="video"]  .hero-blob-2 { width: 140px; height: 140px; background: rgba(192,132,252,0.3); left: 20px; bottom: -20px; }
-.panel[data-mode="voice"]  .hero-blob-2 { width: 140px; height: 140px; background: rgba(244,114,182,0.3); left: 20px; bottom: -20px; }
-.panel[data-mode="chat"]   .hero-blob-2 { width: 140px; height: 140px; background: rgba(96,165,250,0.3); left: 20px; bottom: -20px; }
-.panel[data-mode="gaming"] .hero-blob-2 { width: 140px; height: 140px; background: rgba(52,211,153,0.3); left: 20px; bottom: -20px; }
-
-.hero-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.hero-icon-big {
-  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
-  font-size: 64px; opacity: 0.15;
-  animation: heroFloat 3s ease-in-out infinite alternate;
-}
-@keyframes heroFloat {
-  from { transform: translateY(-50%) translateY(-6px); }
-  to   { transform: translateY(-50%) translateY(6px); }
-}
-
-.hero-content { position: relative; z-index: 2; }
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 5px;
-  border-radius: 100px; padding: 4px 12px;
-  font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.panel[data-mode="video"]  .hero-tag { background: rgba(124,58,237,0.3); border: 1px solid rgba(124,58,237,0.5); color: var(--purple-light); }
-.panel[data-mode="voice"]  .hero-tag { background: rgba(236,72,153,0.3); border: 1px solid rgba(236,72,153,0.5); color: #F9A8D4; }
-.panel[data-mode="chat"]   .hero-tag { background: rgba(59,130,246,0.3); border: 1px solid rgba(59,130,246,0.5); color: #93C5FD; }
-.panel[data-mode="gaming"] .hero-tag { background: rgba(16,185,129,0.3); border: 1px solid rgba(16,185,129,0.5); color: #6EE7B7; }
-
-.hero-title { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
-.hero-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; font-weight: 400; }
-
-/* ── SETTINGS LIST ── */
-.settings-list {
-  display: flex; flex-direction: column; gap: 10px;
-  margin-bottom: 16px;
-}
-
-.setting-row {
-  display: flex; align-items: center;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px; padding: 14px 16px;
-  gap: 14px;
-  transition: background 0.2s;
-}
-.setting-row:hover { background: rgba(255,255,255,0.07); }
-
-.setting-icon {
-  width: 38px; height: 38px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px; flex-shrink: 0;
-}
-.panel[data-mode="video"]  .setting-icon { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.3); }
-.panel[data-mode="voice"]  .setting-icon { background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.3); }
-.panel[data-mode="chat"]   .setting-icon { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.3); }
-.panel[data-mode="gaming"] .setting-icon { background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); }
-
-.setting-text { flex: 1; min-width: 0; }
-.setting-label { font-size: 13px; font-weight: 700; }
-.setting-desc  { font-size: 11px; color: var(--muted); margin-top: 1px; }
-
-/* Toggle */
-.toggle-wrap { position: relative; flex-shrink: 0; }
-.toggle { appearance: none; width: 44px; height: 24px; border-radius: 100px; cursor: pointer; transition: background 0.3s; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.1); }
-.toggle::after { content:''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-
-.panel[data-mode="video"]  .toggle:checked { background: var(--purple); border-color: var(--purple); }
-.panel[data-mode="voice"]  .toggle:checked { background: var(--pink); border-color: var(--pink); }
-.panel[data-mode="chat"]   .toggle:checked { background: #3B82F6; border-color: #3B82F6; }
-.panel[data-mode="gaming"] .toggle:checked { background: #10B981; border-color: #10B981; }
-
-.toggle:checked::after { transform: translateX(20px); }
-
-/* Select */
-.setting-select {
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px; padding: 5px 10px;
-  font-size: 12px; font-weight: 600; color: #fff;
-  font-family: 'Outfit', sans-serif; cursor: pointer;
-  appearance: none;
-  outline: none;
-}
-
-/* Section label */
-.section-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
-  color: var(--muted); text-transform: uppercase;
-  margin: 4px 0 8px;
-}
-
-/* Stats row */
-.stats-row {
-  display: flex; gap: 10px; margin-bottom: 16px;
-}
-.stat-card {
-  flex: 1; border-radius: 16px; padding: 12px 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  text-align: center;
-}
-.stat-val { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }
-.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 500; }
-
-.panel[data-mode="video"]  .stat-val { color: var(--purple-light); }
-.panel[data-mode="voice"]  .stat-val { color: #F9A8D4; }
-.panel[data-mode="chat"]   .stat-val { color: #93C5FD; }
-.panel[data-mode="gaming"] .stat-val { color: #6EE7B7; }
-
-/* Space for go-live btn */
-.panel-bottom-space { height: 24px; }
-
-/* ── GO LIVE BUTTON AREA ── */
-#go-live-wrap {
-  position: relative; z-index: 10;
-  padding: 12px 20px 36px;
-  flex-shrink: 0;
-  animation: fadeUp 0.45s 0.3s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-.go-live-btn {
-  width: 100%; height: 62px; border-radius: 20px;
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; position: relative; overflow: hidden;
-  font-family: 'Outfit', sans-serif;
-  font-size: 18px; font-weight: 900; color: #fff;
-  letter-spacing: 0.02em;
-  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
-}
-.go-live-btn::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-}
-.go-live-btn:hover { transform: translateY(-3px) scale(1.02); }
-.go-live-btn:active { transform: scale(0.97); }
-
-/* Per-tab btn gradient */
-.go-live-btn.video-btn  { background: linear-gradient(135deg, #5B21B6, #7C3AED, #9D5CF6); box-shadow: 0 12px 40px rgba(124,58,237,0.5); }
-.go-live-btn.voice-btn  { background: linear-gradient(135deg, #9D174D, #EC4899, #F472B6); box-shadow: 0 12px 40px rgba(236,72,153,0.5); }
-.go-live-btn.chat-btn   { background: linear-gradient(135deg, #1D4ED8, #3B82F6, #60A5FA); box-shadow: 0 12px 40px rgba(59,130,246,0.5); }
-.go-live-btn.gaming-btn { background: linear-gradient(135deg, #065F46, #10B981, #34D399); box-shadow: 0 12px 40px rgba(16,185,129,0.5); }
-
-.btn-shimmer {
-  position: absolute; inset: 0;
-  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
-  transform: translateX(-100%);
-  animation: shimmer 2.5s ease-in-out infinite;
-}
-@keyframes shimmer {
-  0%   { transform: translateX(-100%); }
-  60%  { transform: translateX(100%); }
-  100% { transform: translateX(100%); }
-}
-
-.btn-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.8); animation: pulseDot 1s ease-in-out infinite; }
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── LOADER ── */
+/* ─── LOADER ─── */
 #loader {
-  position: absolute; inset: 0; z-index: 200;
+  position: absolute; inset: 0; z-index: 500;
   background: var(--black);
   display: flex; align-items: center; justify-content: center;
   flex-direction: column; gap: 14px;
@@ -410,10 +104,10 @@ html, body {
 .loader-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--purple), var(--purple-light)); border-radius: 100px; animation: loadBar 1s ease forwards; }
 @keyframes loadBar { to { width: 100%; } }
 
-/* ── TOAST ── */
+/* ─── TOAST ─── */
 #toast {
-  position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%);
-  z-index: 300;
+  position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
+  z-index: 600;
   background: rgba(20,20,35,0.95); border: 1px solid rgba(255,255,255,0.1);
   border-radius: 100px; padding: 10px 20px;
   font-size: 13px; font-weight: 500; color: #fff;
@@ -423,407 +117,1458 @@ html, body {
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
 
+/* ════════════════════════════════════
+   PAGE 1 — LIVE FEED
+════════════════════════════════════ */
+#page-feed { z-index: 1; background: var(--black); }
+
+/* Top bar */
+#feed-topbar {
+  position: relative; z-index: 10;
+  display: flex; align-items: center;
+  padding: 52px 20px 14px;
+  gap: 12px;
+}
+.feed-brand { flex: 1; }
+.feed-brand h1 {
+  font-size: 26px; font-weight: 900; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 0%, var(--purple-light) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.feed-brand p { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+.live-indicator {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35);
+  border-radius: 100px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--purple-light);
+}
+.pulse-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--purple-light);
+  animation: pulseDot 1.3s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.25; transform: scale(0.65); }
+}
+
+/* Go Live Btn - top right */
+.go-live-top-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #5B21B6, #7C3AED, #9D5CF6);
+  border: none; border-radius: 100px;
+  padding: 9px 16px; cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px; font-weight: 800; color: #fff;
+  letter-spacing: 0.04em; white-space: nowrap;
+  box-shadow: 0 6px 24px rgba(124,58,237,0.45);
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.go-live-top-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+}
+.go-live-top-btn:hover { transform: scale(1.06) translateY(-2px); box-shadow: 0 10px 32px rgba(124,58,237,0.6); }
+.go-live-top-btn:active { transform: scale(0.95); }
+.go-live-top-btn .btn-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.85); animation: pulseDot 1s ease-in-out infinite; }
+
+/* Filter chips */
+#filter-bar {
+  position: relative; z-index: 10;
+  padding: 0 20px 14px;
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+}
+#filter-bar::-webkit-scrollbar { display: none; }
+
+.chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 100px; border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; flex-shrink: 0;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09);
+  color: var(--muted);
+}
+.chip:hover { background: rgba(255,255,255,0.10); color: #fff; }
+.chip.active {
+  color: #fff;
+  transform: scale(1.04);
+}
+.chip[data-filter="all"].active    { background: rgba(124,58,237,0.25); border-color: rgba(124,58,237,0.5); }
+.chip[data-filter="video"].active  { background: rgba(124,58,237,0.25); border-color: rgba(124,58,237,0.5); }
+.chip[data-filter="voice"].active  { background: rgba(236,72,153,0.25); border-color: rgba(236,72,153,0.5); }
+.chip[data-filter="chat"].active   { background: rgba(59,130,246,0.25);  border-color: rgba(59,130,246,0.5); }
+.chip[data-filter="gaming"].active { background: rgba(16,185,129,0.25);  border-color: rgba(16,185,129,0.5); }
+
+/* Feed scroll area */
+#feed-scroll {
+  flex: 1; overflow-y: auto; scrollbar-width: none;
+  padding: 0 20px 120px;
+  position: relative; z-index: 10;
+}
+#feed-scroll::-webkit-scrollbar { display: none; }
+
+/* Section row */
+.feed-section { margin-bottom: 28px; }
+.feed-section-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.feed-section-title {
+  font-size: 14px; font-weight: 800; letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 7px;
+}
+.section-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 100px; letter-spacing: 0.06em;
+}
+.video-badge  { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); color: var(--purple-light); }
+.voice-badge  { background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); color: #F9A8D4; }
+.chat-badge   { background: rgba(59,130,246,0.2);  border: 1px solid rgba(59,130,246,0.4);  color: #93C5FD; }
+.gaming-badge { background: rgba(16,185,129,0.2);  border: 1px solid rgba(16,185,129,0.4);  color: #6EE7B7; }
+
+.see-all-link {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  cursor: pointer; letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.see-all-link:hover { color: #fff; }
+
+/* ── Featured card (first video stream) ── */
+.card-featured {
+  border-radius: 22px; overflow: hidden; position: relative;
+  height: 200px; margin-bottom: 10px; cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
+}
+.card-featured:hover { transform: scale(1.02) translateY(-3px); }
+.card-featured:active { transform: scale(0.98); }
+
+.card-feat-bg {
+  position: absolute; inset: 0;
+}
+.card-featured[data-mode="video"]  .card-feat-bg { background: linear-gradient(135deg, #1a0a2e 0%, #2d0a4e 50%, #120820 100%); }
+.card-featured[data-mode="voice"]  .card-feat-bg { background: linear-gradient(135deg, #1a0818 0%, #3a0a2a 50%, #110610 100%); }
+.card-featured[data-mode="chat"]   .card-feat-bg { background: linear-gradient(135deg, #060f1e 0%, #0a1a3a 50%, #060a14 100%); }
+.card-featured[data-mode="gaming"] .card-feat-bg { background: linear-gradient(135deg, #05130f 0%, #082318 50%, #050d0a 100%); }
+
+.card-feat-blob {
+  position: absolute; border-radius: 50%; filter: blur(50px);
+}
+.card-featured[data-mode="video"]  .card-feat-blob { width:180px; height:180px; background:rgba(124,58,237,0.55); right:-30px; top:-30px; }
+.card-featured[data-mode="voice"]  .card-feat-blob { width:180px; height:180px; background:rgba(236,72,153,0.55); right:-30px; top:-30px; }
+.card-featured[data-mode="chat"]   .card-feat-blob { width:180px; height:180px; background:rgba(59,130,246,0.55);  right:-30px; top:-30px; }
+.card-featured[data-mode="gaming"] .card-feat-blob { width:180px; height:180px; background:rgba(16,185,129,0.55);  right:-30px; top:-30px; }
+
+.card-feat-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.card-feat-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
+}
+
+.card-feat-emoji {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  font-size: 68px; opacity: 0.18; animation: heroFloat 3s ease-in-out infinite alternate;
+}
+@keyframes heroFloat {
+  from { transform: translateY(-50%) translateY(-6px); }
+  to   { transform: translateY(-50%) translateY(6px); }
+}
+
+.card-feat-content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 16px 18px; z-index: 2;
+}
+.card-feat-top {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.live-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,20,20,0.85); border-radius: 6px;
+  padding: 3px 8px; font-size: 10px; font-weight: 800;
+  letter-spacing: 0.08em; color: #fff;
+}
+.live-tag .ld { width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: pulseDot 0.9s infinite; }
+
+.viewer-pill {
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(0,0,0,0.45); border-radius: 100px;
+  padding: 3px 10px; font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+
+.streamer-info { display: flex; align-items: center; gap: 10px; }
+.streamer-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 900; flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.card-featured[data-mode="video"]  .streamer-av { background: linear-gradient(135deg,#5B21B6,#7C3AED); }
+.card-featured[data-mode="voice"]  .streamer-av { background: linear-gradient(135deg,#9D174D,#EC4899); }
+.card-featured[data-mode="chat"]   .streamer-av { background: linear-gradient(135deg,#1D4ED8,#3B82F6); }
+.card-featured[data-mode="gaming"] .streamer-av { background: linear-gradient(135deg,#065F46,#10B981); }
+
+.streamer-name { font-size: 15px; font-weight: 800; }
+.streamer-title { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 1px; }
+
+/* ── Horizontal scroll row ── */
+.h-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.h-scroll::-webkit-scrollbar { display: none; }
+
+/* ── Stream card (small) ── */
+.stream-card {
+  border-radius: 16px; overflow: hidden; position: relative;
+  width: 160px; height: 110px; flex-shrink: 0; cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.stream-card:hover { transform: scale(1.04) translateY(-3px); }
+.stream-card:active { transform: scale(0.96); }
+
+.sc-bg { position: absolute; inset: 0; }
+.stream-card[data-mode="video"]  .sc-bg { background: linear-gradient(135deg,#1a0a2e,#2d0a4e); }
+.stream-card[data-mode="voice"]  .sc-bg { background: linear-gradient(135deg,#1a0818,#3a0a2a); }
+.stream-card[data-mode="chat"]   .sc-bg { background: linear-gradient(135deg,#060f1e,#0a1a3a); }
+.stream-card[data-mode="gaming"] .sc-bg { background: linear-gradient(135deg,#05130f,#082318); }
+
+.sc-blob {
+  position: absolute; border-radius: 50%; filter: blur(30px);
+}
+.stream-card[data-mode="video"]  .sc-blob { width:100px; height:100px; background:rgba(124,58,237,0.5); right:-15px; top:-15px; }
+.stream-card[data-mode="voice"]  .sc-blob { width:100px; height:100px; background:rgba(236,72,153,0.5); right:-15px; top:-15px; }
+.stream-card[data-mode="chat"]   .sc-blob { width:100px; height:100px; background:rgba(59,130,246,0.5);  right:-15px; top:-15px; }
+.stream-card[data-mode="gaming"] .sc-blob { width:100px; height:100px; background:rgba(16,185,129,0.5);  right:-15px; top:-15px; }
+
+.sc-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 55%); }
+.sc-emoji { position: absolute; right: 10px; top: 8px; font-size: 28px; opacity: 0.22; }
+.sc-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 10px; }
+
+.sc-live-row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+.sc-live { background: rgba(255,20,20,0.85); border-radius: 4px; padding: 2px 6px; font-size: 9px; font-weight: 800; color: #fff; letter-spacing: 0.06em; }
+.sc-views { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.sc-name { font-size: 12px; font-weight: 800; line-height: 1.1; }
+.sc-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Tall card row (voice/chat) ── */
+.stream-card-tall {
+  border-radius: 16px; overflow: hidden; position: relative;
+  width: 130px; height: 140px; flex-shrink: 0; cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.stream-card-tall:hover { transform: scale(1.04) translateY(-3px); }
+.stream-card-tall:active { transform: scale(0.96); }
+.stream-card-tall .sc-bg   { position: absolute; inset: 0; }
+.stream-card-tall .sc-blob { position: absolute; border-radius: 50%; filter: blur(30px); }
+.stream-card-tall[data-mode="voice"]  .sc-bg   { background: linear-gradient(135deg,#1a0818,#3a0a2a); }
+.stream-card-tall[data-mode="chat"]   .sc-bg   { background: linear-gradient(135deg,#060f1e,#0a1a3a); }
+.stream-card-tall[data-mode="voice"]  .sc-blob { width:90px; height:90px; background:rgba(236,72,153,0.5); right:-10px; top:-10px; }
+.stream-card-tall[data-mode="chat"]   .sc-blob { width:90px; height:90px; background:rgba(59,130,246,0.5);  right:-10px; top:-10px; }
+.stream-card-tall .sc-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%); }
+.stream-card-tall .sc-emoji { position: absolute; right: 10px; top: 10px; font-size: 32px; opacity: 0.2; }
+.stream-card-tall .sc-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; }
+
+/* ── Avatar row (voice streams) ── */
+.av-card {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; width: 80px; flex-shrink: 0; cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.av-card:hover { transform: scale(1.06) translateY(-3px); }
+.av-card:active { transform: scale(0.96); }
+
+.av-ring {
+  width: 62px; height: 62px; border-radius: 50%; position: relative;
+  background: linear-gradient(135deg,#9D174D,#EC4899);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.av-ring::before {
+  content: ''; position: absolute; inset: -3px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  z-index: -1; animation: ringPulse 2s ease-in-out infinite;
+}
+@keyframes ringPulse {
+  0%,100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.05); }
+}
+.av-ring.chat-ring { background: linear-gradient(135deg,#1D4ED8,#3B82F6); }
+.av-ring.chat-ring::before { background: linear-gradient(135deg, #3B82F6, var(--purple)); }
+
+.av-live-dot {
+  position: absolute; bottom: 2px; right: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #FF1414; border: 2px solid var(--black);
+  animation: pulseDot 1s infinite;
+}
+.av-name { font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2; }
+.av-views { font-size: 10px; color: var(--muted); text-align: center; }
+
+/* ── Wide card row (gaming) ── */
+.stream-card-wide {
+  border-radius: 16px; overflow: hidden; position: relative;
+  width: 200px; height: 120px; flex-shrink: 0; cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.stream-card-wide:hover { transform: scale(1.04) translateY(-3px); }
+.stream-card-wide:active { transform: scale(0.96); }
+.stream-card-wide .sc-bg   { position: absolute; inset: 0; background: linear-gradient(135deg,#05130f,#082318); }
+.stream-card-wide .sc-blob { position: absolute; border-radius: 50%; filter: blur(35px); width:120px; height:120px; background:rgba(16,185,129,0.5); right:-20px; top:-20px; }
+.stream-card-wide .sc-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%); }
+.stream-card-wide .sc-emoji { position: absolute; right: 12px; top: 10px; font-size: 36px; opacity: 0.2; }
+.stream-card-wide .sc-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 50px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.empty-emoji { font-size: 48px; opacity: 0.4; }
+.empty-title { font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.5); }
+.empty-sub { font-size: 13px; color: var(--muted); }
+
+/* ════════════════════════════════════
+   PAGE 2 — GO LIVE SETUP
+════════════════════════════════════ */
+#page-golive { z-index: 2; background: var(--black); }
+
+/* Top Bar */
+#golive-topbar {
+  position: relative; z-index: 10;
+  display: flex; align-items: center;
+  padding: 52px 20px 16px;
+  gap: 14px;
+}
+.back-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--glass); border: 1px solid var(--glass-b);
+  backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  color: #fff;
+}
+.back-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.08); }
+.back-btn:active { transform: scale(0.9); }
+.back-icon { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+.topbar-title { flex: 1; }
+.topbar-title h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.topbar-title p  { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 400; }
+
+.live-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(124,58,237,0.18); border: 1px solid rgba(124,58,237,0.38);
+  border-radius: 100px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--purple-light); flex-shrink: 0;
+}
+
+/* Tab Bar */
+#tab-bar {
+  position: relative; z-index: 10;
+  padding: 0 20px 0;
+}
+.tab-track {
+  display: flex; gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 5px;
+}
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 9px 4px; border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  border: 1px solid transparent; position: relative; overflow: hidden;
+}
+.tab-btn:hover  { transform: scale(1.04); }
+.tab-btn:active { transform: scale(0.96); }
+.tab-btn .t-icon  { font-size: 18px; line-height: 1; }
+.tab-btn .t-label { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); transition: color 0.25s; white-space: nowrap; }
+.tab-btn.active-video  { background: rgba(124,58,237,0.22); border-color: rgba(124,58,237,0.38); }
+.tab-btn.active-voice  { background: rgba(236,72,153,0.22); border-color: rgba(236,72,153,0.38); }
+.tab-btn.active-chat   { background: rgba(59,130,246,0.22);  border-color: rgba(59,130,246,0.38); }
+.tab-btn.active-gaming { background: rgba(16,185,129,0.22);  border-color: rgba(16,185,129,0.38); }
+.tab-btn.active-video  .t-label { color: var(--purple-light); }
+.tab-btn.active-voice  .t-label { color: #F9A8D4; }
+.tab-btn.active-chat   .t-label { color: #93C5FD; }
+.tab-btn.active-gaming .t-label { color: #6EE7B7; }
+.tab-btn .tab-glow { position: absolute; inset: 0; border-radius: 13px; opacity: 0; transition: opacity 0.3s; }
+.tab-btn.active-video  .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.3), transparent 70%); opacity: 1; }
+.tab-btn.active-voice  .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(236,72,153,0.3), transparent 70%); opacity: 1; }
+.tab-btn.active-chat   .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.3), transparent 70%); opacity: 1; }
+.tab-btn.active-gaming .tab-glow { background: radial-gradient(circle at 50% 50%, rgba(16,185,129,0.3), transparent 70%); opacity: 1; }
+
+/* Panels */
+#panels {
+  position: relative; z-index: 10;
+  flex: 1; overflow: hidden; margin-top: 16px;
+}
+.panel {
+  position: absolute; inset: 0; padding: 0 20px;
+  overflow-y: auto; scrollbar-width: none;
+  opacity: 0; transform: translateX(30px);
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+.panel::-webkit-scrollbar { display: none; }
+.panel.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+.panel.exit-left { opacity: 0; transform: translateX(-30px); }
+
+/* Panel hero */
+.panel-hero {
+  border-radius: 24px; overflow: hidden; position: relative;
+  margin-bottom: 16px; height: 160px;
+  display: flex; align-items: flex-end; padding: 20px;
+}
+.panel-hero-bg { position: absolute; inset: 0; }
+.panel[data-mode="video"]  .panel-hero-bg { background: linear-gradient(135deg, #1a0a2e 0%, #2d0a4e 50%, #120820 100%); }
+.panel[data-mode="voice"]  .panel-hero-bg { background: linear-gradient(135deg, #1a0818 0%, #3a0a2a 50%, #110610 100%); }
+.panel[data-mode="chat"]   .panel-hero-bg { background: linear-gradient(135deg, #060f1e 0%, #0a1a3a 50%, #060a14 100%); }
+.panel[data-mode="gaming"] .panel-hero-bg { background: linear-gradient(135deg, #05130f 0%, #082318 50%, #050d0a 100%); }
+.hero-blob { position: absolute; border-radius: 50%; filter: blur(50px); }
+.panel[data-mode="video"]  .hero-blob { width:200px; height:200px; background:rgba(124,58,237,0.5); right:-40px; top:-40px; }
+.panel[data-mode="voice"]  .hero-blob { width:200px; height:200px; background:rgba(236,72,153,0.5); right:-40px; top:-40px; }
+.panel[data-mode="chat"]   .hero-blob { width:200px; height:200px; background:rgba(59,130,246,0.5);  right:-40px; top:-40px; }
+.panel[data-mode="gaming"] .hero-blob { width:200px; height:200px; background:rgba(16,185,129,0.5);  right:-40px; top:-40px; }
+.hero-blob-2 { position: absolute; border-radius: 50%; filter: blur(60px); }
+.panel[data-mode="video"]  .hero-blob-2 { width:140px; height:140px; background:rgba(192,132,252,0.3); left:20px; bottom:-20px; }
+.panel[data-mode="voice"]  .hero-blob-2 { width:140px; height:140px; background:rgba(244,114,182,0.3); left:20px; bottom:-20px; }
+.panel[data-mode="chat"]   .hero-blob-2 { width:140px; height:140px; background:rgba(96,165,250,0.3);  left:20px; bottom:-20px; }
+.panel[data-mode="gaming"] .hero-blob-2 { width:140px; height:140px; background:rgba(52,211,153,0.3);  left:20px; bottom:-20px; }
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.hero-icon-big { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: 0.15; animation: heroFloat 3s ease-in-out infinite alternate; }
+.hero-content { position: relative; z-index: 2; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 100px; padding: 4px 12px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;
+}
+.panel[data-mode="video"]  .hero-tag { background: rgba(124,58,237,0.3); border: 1px solid rgba(124,58,237,0.5); color: var(--purple-light); }
+.panel[data-mode="voice"]  .hero-tag { background: rgba(236,72,153,0.3); border: 1px solid rgba(236,72,153,0.5); color: #F9A8D4; }
+.panel[data-mode="chat"]   .hero-tag { background: rgba(59,130,246,0.3);  border: 1px solid rgba(59,130,246,0.5);  color: #93C5FD; }
+.panel[data-mode="gaming"] .hero-tag { background: rgba(16,185,129,0.3);  border: 1px solid rgba(16,185,129,0.5);  color: #6EE7B7; }
+.hero-title { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+.hero-sub   { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; font-weight: 400; }
+
+/* Settings */
+.settings-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.setting-row {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 14px 16px; gap: 14px;
+  transition: background 0.2s;
+}
+.setting-row:hover { background: rgba(255,255,255,0.07); }
+.setting-icon {
+  width: 38px; height: 38px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.panel[data-mode="video"]  .setting-icon { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.3); }
+.panel[data-mode="voice"]  .setting-icon { background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.3); }
+.panel[data-mode="chat"]   .setting-icon { background: rgba(59,130,246,0.2);  border: 1px solid rgba(59,130,246,0.3); }
+.panel[data-mode="gaming"] .setting-icon { background: rgba(16,185,129,0.2);  border: 1px solid rgba(16,185,129,0.3); }
+.setting-text { flex: 1; min-width: 0; }
+.setting-label { font-size: 13px; font-weight: 700; }
+.setting-desc  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+.toggle-wrap { position: relative; flex-shrink: 0; }
+.toggle { appearance: none; width: 44px; height: 24px; border-radius: 100px; cursor: pointer; transition: background 0.3s; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.1); }
+.toggle::after { content:''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.panel[data-mode="video"]  .toggle:checked { background: var(--purple); border-color: var(--purple); }
+.panel[data-mode="voice"]  .toggle:checked { background: var(--pink);   border-color: var(--pink); }
+.panel[data-mode="chat"]   .toggle:checked { background: #3B82F6;       border-color: #3B82F6; }
+.panel[data-mode="gaming"] .toggle:checked { background: #10B981;       border-color: #10B981; }
+.toggle:checked::after { transform: translateX(20px); }
+
+.setting-select {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 5px 10px;
+  font-size: 12px; font-weight: 600; color: #fff;
+  font-family: 'Outfit', sans-serif; cursor: pointer; appearance: none; outline: none;
+}
+
+.section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin: 4px 0 8px; }
+
+.stats-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.stat-card { flex: 1; border-radius: 16px; padding: 12px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); text-align: center; }
+.stat-val { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }
+.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+.panel[data-mode="video"]  .stat-val { color: var(--purple-light); }
+.panel[data-mode="voice"]  .stat-val { color: #F9A8D4; }
+.panel[data-mode="chat"]   .stat-val { color: #93C5FD; }
+.panel[data-mode="gaming"] .stat-val { color: #6EE7B7; }
+
+.panel-bottom-space { height: 24px; }
+
+/* Go Live bottom btn */
+#go-live-wrap {
+  position: relative; z-index: 10;
+  padding: 12px 20px 36px; flex-shrink: 0;
+}
+.go-live-btn {
+  width: 100%; height: 62px; border-radius: 20px;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; position: relative; overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px; font-weight: 900; color: #fff;
+  letter-spacing: 0.02em;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
+}
+.go-live-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%); }
+.go-live-btn:hover  { transform: translateY(-3px) scale(1.02); }
+.go-live-btn:active { transform: scale(0.97); }
+.go-live-btn.video-btn  { background: linear-gradient(135deg,#5B21B6,#7C3AED,#9D5CF6); box-shadow: 0 12px 40px rgba(124,58,237,0.5); }
+.go-live-btn.voice-btn  { background: linear-gradient(135deg,#9D174D,#EC4899,#F472B6); box-shadow: 0 12px 40px rgba(236,72,153,0.5); }
+.go-live-btn.chat-btn   { background: linear-gradient(135deg,#1D4ED8,#3B82F6,#60A5FA); box-shadow: 0 12px 40px rgba(59,130,246,0.5); }
+.go-live-btn.gaming-btn { background: linear-gradient(135deg,#065F46,#10B981,#34D399); box-shadow: 0 12px 40px rgba(16,185,129,0.5); }
+.btn-shimmer {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  transform: translateX(-100%); animation: shimmer 2.5s ease-in-out infinite;
+}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 60% { transform: translateX(100%); } 100% { transform: translateX(100%); } }
+.btn-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.8); animation: pulseDot 1s ease-in-out infinite; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-height: 700px) {
-  #topbar { padding-top: 28px; }
-  .panel-hero { height: 130px; }
+  
+ .panel-hero { height: 130px; }
   .hero-title { font-size: 20px; }
   .go-live-btn { height: 56px; font-size: 16px; }
   #go-live-wrap { padding-bottom: 24px; }
+  .card-featured { height: 165px; }
+}
+#feed-topbar,
+#golive-topbar {
+  padding-left: clamp(16px, 4vw, 32px);
+  padding-right: clamp(16px, 4vw, 32px);
+}
+
+#filter-bar,
+#feed-scroll,
+.panel,
+#tab-bar,
+#go-live-wrap {
+  padding-left: clamp(16px, 4vw, 32px);
+  padding-right: clamp(16px, 4vw, 32px);
+}
+
+#feed-scroll,
+#panels,
+.panel,
+#feed-content,
+#filter-bar,
+#feed-topbar,
+#golive-topbar,
+#tab-bar,
+#go-live-wrap {
+  width: 100%;
+  max-width: 100%;
+  left: 0;
+  right: 0;
+}
+
+.coming-soon-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 6, 10, 0.72);
+  backdrop-filter: blur(3px);
+  border-radius: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 10;
+  cursor: default;
+}
+
+.coming-soon-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(124,58,237,0.35), rgba(236,72,153,0.25));
+  border: 1px solid rgba(124,58,237,0.5);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.coming-soon-badge .cs-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--purple-light);
+  animation: pulseDot 1.3s ease-in-out infinite;
+}
+
+.coming-soon-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+/* ── Live Coming Soon Card ── */
+.live-coming-soon-card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(124,58,237,0.08),rgba(236,72,153,0.06),rgba(59,130,246,0.05));
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:24px;padding:32px 24px;margin:16px 0;
+  text-align:center;
+}
+.lcs-glow{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,0.18),transparent 70%);
+  pointer-events:none;animation:lcsFloat 6s ease-in-out infinite alternate;
+}
+@keyframes lcsFloat{0%{transform:translateX(-50%) translateY(0) scale(1)}100%{transform:translateX(-50%) translateY(12px) scale(1.1)}}
+.lcs-icon{font-size:48px;margin-bottom:10px;position:relative;z-index:1;animation:lcsBounce 2s ease-in-out infinite}
+@keyframes lcsBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.lcs-title{
+  font-size:22px;font-weight:900;letter-spacing:-0.02em;
+  background:linear-gradient(135deg,#C084FC,#F472B6,#60A5FA);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:10px;position:relative;z-index:1;
+}
+.lcs-desc{
+  font-size:13px;font-weight:400;line-height:1.6;
+  color:rgba(255,255,255,0.65);max-width:320px;margin:0 auto 20px;
+  position:relative;z-index:1;
+}
+.lcs-desc strong{color:#C084FC;font-weight:700}
+.lcs-progress-wrap{position:relative;z-index:1;margin-bottom:22px}
+.lcs-progress-bar{
+  width:100%;max-width:280px;height:8px;border-radius:100px;
+  background:rgba(255,255,255,0.08);margin:0 auto 8px;overflow:hidden;
+}
+.lcs-progress-fill{
+  height:100%;border-radius:100px;width:0%;
+  background:linear-gradient(90deg,var(--purple),var(--pink),var(--purple-light));
+  background-size:200% 100%;
+  animation:lcsShimmer 2s linear infinite;
+  transition:width 1.5s cubic-bezier(0.22,1,0.36,1);
+}
+@keyframes lcsShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.lcs-progress-label{
+  font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);
+  font-family:'JetBrains Mono','Outfit',monospace;
+}
+.lcs-progress-label span{color:var(--purple-light);font-weight:800}
+.lcs-features{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  max-width:300px;margin:0 auto 18px;position:relative;z-index:1;
+}
+.lcs-feat{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:10px 12px;
+  font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);
+}
+.lcs-feat span{font-size:16px}
+.lcs-cta{
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,0.4);position:relative;z-index:1;
+  letter-spacing:0.01em;
+}
+
+    /* ── Setup page styles ── */
+    #setup-topbar{
+      position:relative;z-index:10;
+      display:flex;align-items:center;
+      padding:52px 20px 16px;gap:14px;
+      flex-shrink:0;
+    }
+
+    #setup-scroll{
+      flex:1;overflow-y:auto;scrollbar-width:none;
+      padding:0 20px 120px;position:relative;z-index:10;
+    }
+    #setup-scroll::-webkit-scrollbar{display:none}
+
+    /* section heading */
+    .setup-section-title{
+      font-size:10px;font-weight:700;letter-spacing:0.12em;
+      color:var(--muted);text-transform:uppercase;
+      margin:20px 0 8px;
+    }
+    .setup-section-title:first-child{margin-top:4px}
+
+    /* field card */
+    .setup-field{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:16px;padding:14px 16px;
+      margin-bottom:10px;
+      transition:background 0.2s;
+    }
+    .setup-field:focus-within{
+      background:rgba(255,255,255,0.07);
+      border-color:rgba(255,255,255,0.14);
+    }
+
+    .setup-field-row{
+      display:flex;align-items:center;gap:14px;
+    }
+
+    .setup-field-icon{
+      width:38px;height:38px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:17px;flex-shrink:0;
+    }
+
+    .setup-field-icon.voice-icon{background:rgba(236,72,153,0.2);border:1px solid rgba(236,72,153,0.3)}
+    .setup-field-icon.chat-icon{background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.3)}
+
+    .setup-field-body{flex:1;min-width:0}
+    .setup-field-label{font-size:13px;font-weight:700;margin-bottom:2px}
+    .setup-field-desc{font-size:11px;color:var(--muted)}
+
+    /* text / number inputs */
+    .setup-input{
+      width:100%;
+      background:transparent;
+      border:none;outline:none;
+      color:var(--text);
+      font-family:'Outfit',sans-serif;
+      font-size:14px;font-weight:500;
+      margin-top:8px;
+      padding:8px 12px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      transition:border-color 0.2s;
+    }
+    .setup-input:focus{border-color:rgba(255,255,255,0.2)}
+    .setup-input::placeholder{color:var(--muted);font-weight:400}
+
+    /* coin input wrapper */
+    .coin-wrap{
+      display:flex;align-items:center;gap:8px;margin-top:8px;
+    }
+    .coin-prefix{
+      display:flex;align-items:center;gap:5px;
+      background:rgba(245,158,11,0.12);
+      border:1px solid rgba(245,158,11,0.25);
+      border-radius:10px;padding:8px 12px;
+      font-size:12px;font-weight:700;color:var(--coin);
+      flex-shrink:0;white-space:nowrap;
+    }
+    .coin-input{
+      flex:1;background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:10px;padding:8px 12px;
+      color:var(--text);font-family:'Outfit',sans-serif;
+      font-size:14px;font-weight:500;outline:none;
+      transition:border-color 0.2s;
+    }
+    .coin-input:focus{border-color:rgba(245,158,11,0.4)}
+    .coin-input::placeholder{color:var(--muted);font-weight:400}
+
+    /* toggle row (reuse existing toggle styles) */
+    .setup-toggle-row{
+      display:flex;align-items:center;
+      justify-content:space-between;gap:14px;
+    }
+    .setup-toggle-info{flex:1}
+    .setup-toggle-label{font-size:13px;font-weight:700}
+    .setup-toggle-desc{font-size:11px;color:var(--muted);margin-top:1px}
+
+    /* privacy selector */
+    .privacy-row{
+      display:flex;gap:10px;margin-top:8px;
+    }
+    .privacy-opt{
+      flex:1;border-radius:12px;padding:12px 10px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.04);
+      cursor:pointer;text-align:center;
+      transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .privacy-opt:hover{background:rgba(255,255,255,0.08)}
+    .privacy-opt.selected-public{
+      border-color:rgba(34,197,94,0.5);
+      background:rgba(34,197,94,0.1);
+    }
+    .privacy-opt.selected-private{
+      border-color:rgba(245,158,11,0.5);
+      background:rgba(245,158,11,0.1);
+    }
+    .privacy-opt-icon{font-size:22px;margin-bottom:4px}
+    .privacy-opt-label{font-size:12px;font-weight:700}
+    .privacy-opt-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+    /* timer selector */
+    .timer-row{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;
+    }
+    .timer-chip{
+      padding:7px 14px;border-radius:100px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.04);
+      font-size:12px;font-weight:700;color:var(--muted);
+      cursor:pointer;white-space:nowrap;
+      transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .timer-chip:hover{background:rgba(255,255,255,0.08);color:#fff}
+    .timer-chip.selected-voice{
+      background:rgba(236,72,153,0.2);
+      border-color:rgba(236,72,153,0.5);
+      color:#F9A8D4;
+    }
+    .timer-chip.selected-chat{
+      background:rgba(59,130,246,0.2);
+      border-color:rgba(59,130,246,0.5);
+      color:#93C5FD;
+    }
+
+    /* go live bottom btn for setup page */
+    #setup-go-live-wrap{
+      position:relative;z-index:10;
+      padding:12px 20px 36px;flex-shrink:0;
+    }
+
+    @media(max-height:700px){
+      #setup-topbar{padding-top:28px}
+      #setup-scroll{padding-bottom:80px}
+    }
+  
+  #page-setup .toggle:checked {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+#page-setup .toggle:checked::after {
+  transform: translateX(20px);
+}
+#page-setup {
+  z-index: 3;
+  background: var(--black);
+  overflow: hidden;
+}
+
+#page-setup.page-visible * {
+  pointer-events: all;
+}
+
+#page-setup input,
+#page-setup select,
+#page-setup textarea,
+#page-setup .toggle,
+#page-setup .privacy-opt,
+#page-setup .timer-chip,
+#page-setup .back-btn {
+  pointer-events: all !important;
+  position: relative;
+  z-index: 20;
+}
+
+#page-setup #setup-scroll {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: all !important;
+  z-index: 10;
+}
+
+#page-setup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#setup-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto !important;
+}
+
+#setup-go-live-wrap {
+  flex-shrink: 0;
 }
 </style>
 </head>
 <body>
-<div id="app">
+<div id="root">
 
+  <!-- AMBIENT (shared) -->
   <div class="ambient">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
-    <div class="orb orb-accent" id="accentOrb"></div>
   </div>
   <div class="grid-tex"></div>
 
+  <!-- LOADER -->
   <div id="loader">
     <div class="loader-icon">📡</div>
     <div class="loader-bar"><div class="loader-fill"></div></div>
   </div>
 
-  <!-- Top Bar -->
-  <div id="topbar">
-    <div class="back-btn" id="backBtn">
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- ═══════════════════════════════
+       PAGE 1 — LIVE FEED
+  ═══════════════════════════════ -->
+  <div class="page page-visible" id="page-feed">
+
+    <!-- Top bar -->
+    <div id="feed-topbar">
+      <div class="feed-brand">
+        <h1>Live Now 🔥</h1>
+        <p id="feed-subtitle">Loading streams…</p>
+      </div>
+      <div class="live-indicator">
+        <div class="pulse-dot"></div>
+        <span id="live-count">0</span> LIVE
+      </div>
+      <button class="go-live-top-btn" onclick="openGoLive()">
+        <div class="btn-dot"></div>
+        Go Live
+      </button>
+    </div>
+
+    <!-- Filter chips -->
+    <div id="filter-bar">
+      <button class="chip active" data-filter="all"    onclick="setFilter('all')">🔥 All</button>
+      <button class="chip"        data-filter="video"  onclick="setFilter('video')">📹 Video</button>
+      <button class="chip"        data-filter="voice"  onclick="setFilter('voice')">🎙️ Voice</button>
+      <button class="chip"        data-filter="chat"   onclick="setFilter('chat')">💬 Chat</button>
+      <button class="chip"        data-filter="gaming" onclick="setFilter('gaming')">🎮 Gaming</button>
+    </div>
+
+    <!-- Feed -->
+    <div id="feed-scroll">
+      <div id="feed-content">
+
+        <!-- Coming Soon Banner -->
+        <div class="live-coming-soon-card">
+          <div class="lcs-glow"></div>
+          <div class="lcs-icon">🚀</div>
+          <div class="lcs-title">Live is Coming Soon!</div>
+          <div class="lcs-desc">We're building something incredible. The full Live experience will unlock once we hit our first <strong>5,000 users</strong>. Be part of the journey!</div>
+          <div class="lcs-progress-wrap">
+            <div class="lcs-progress-bar">
+              <div class="lcs-progress-fill" id="lcs-progress-fill"></div>
+            </div>
+            <div class="lcs-progress-label"><span id="lcs-user-count">0</span> / 5,000 users</div>
+          </div>
+          <div class="lcs-features">
+            <div class="lcs-feat"><span>💬</span> Live Chat Rooms</div>
+            <div class="lcs-feat"><span>🎁</span> Gifts &amp; Donations</div>
+            <div class="lcs-feat"><span>🎙️</span> Voice &amp; Video</div>
+            <div class="lcs-feat"><span>🎮</span> Gaming Streams</div>
+          </div>
+          <div class="lcs-cta">Invite friends to help us get there faster! 🎯</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       PAGE 2 — GO LIVE SETUP
+  ═══════════════════════════════ -->
+  <div class="page page-hidden-right" id="page-golive">
+
+    <!-- Top Bar -->
+    <div id="golive-topbar">
+      <div class="back-btn" onclick="closeGoLive()">
+        <svg class="back-icon" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </div>
+      <div class="topbar-title">
+        <h1>Go Live</h1>
+        <p id="subtitle">Select your broadcast mode</p>
+      </div>
+      <div class="live-pill">
+        <div class="pulse-dot"></div>
+        LIVE
+      </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div id="tab-bar">
+      <div class="tab-track">
+        <div class="tab-btn active-video" data-tab="video" onclick="switchTab('video')">
+          <div class="tab-glow"></div>
+          <span class="t-icon">📹</span>
+          <span class="t-label">Stream</span>
+        </div>
+        <div class="tab-btn" data-tab="voice" onclick="switchTab('voice')">
+          <div class="tab-glow"></div>
+          <span class="t-icon">🎙️</span>
+          <span class="t-label">Voice</span>
+        </div>
+        <div class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
+          <div class="tab-glow"></div>
+          <span class="t-icon">💬</span>
+          <span class="t-label">Chat</span>
+        </div>
+        <div class="tab-btn" data-tab="gaming" onclick="switchTab('gaming')">
+          <div class="tab-glow"></div>
+          <span class="t-icon">🎮</span>
+          <span class="t-label">Gaming</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panels -->
+    <div id="panels">
+
+      <!-- VIDEO -->
+      <div class="panel active" data-mode="video" id="panel-video">
+        <div class="panel-hero">
+          <div class="panel-hero-bg"></div><div class="hero-blob"></div><div class="hero-blob-2"></div><div class="hero-grid"></div>
+          <div class="hero-icon-big">📹</div>
+          <div class="hero-content">
+            <div class="hero-tag">📹 Live Stream</div>
+            <div class="hero-title">Video Broadcast</div>
+            <div class="hero-sub">Camera · Audio · HD Quality</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="v-viewers">0</div><div class="stat-lbl">Viewers</div></div>
+          <div class="stat-card"><div class="stat-val" id="v-followers">—</div><div class="stat-lbl">Followers</div></div>
+          <div class="stat-card"><div class="stat-val">HD</div><div class="stat-lbl">Quality</div></div>
+        </div>
+        <div class="section-label">Stream Settings</div>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="setting-icon">📸</div>
+            <div class="setting-text"><div class="setting-label">Front Camera</div><div class="setting-desc">Selfie camera for face-cam streaming</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🎵</div>
+            <div class="setting-text"><div class="setting-label">Microphone</div><div class="setting-desc">Enable audio for your stream</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">✨</div>
+            <div class="setting-text"><div class="setting-label">Beauty Filter</div><div class="setting-desc">Auto-enhance your appearance</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle"></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">📶</div>
+            <div class="setting-text"><div class="setting-label">Stream Quality</div><div class="setting-desc">Higher quality uses more data</div></div>
+            <select class="setting-select"><option>1080p HD</option><option>720p</option><option>480p</option></select>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🎁</div>
+            <div class="setting-text"><div class="setting-label">Gift Alerts</div><div class="setting-desc">Show on-screen when you receive gifts</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+        </div>
+        <div class="panel-bottom-space"></div>
+      </div>
+
+      <!-- VOICE -->
+      <div class="panel" data-mode="voice" id="panel-voice">
+        <div class="panel-hero">
+          <div class="panel-hero-bg"></div><div class="hero-blob"></div><div class="hero-blob-2"></div><div class="hero-grid"></div>
+          <div class="hero-icon-big">🎙️</div>
+          <div class="hero-content">
+            <div class="hero-tag">🎙️ Voice Stream</div>
+            <div class="hero-title">Audio Broadcast</div>
+            <div class="hero-sub">No camera · Low data · Podcast-style</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="a-viewers">0</div><div class="stat-lbl">Listeners</div></div>
+          <div class="stat-card"><div class="stat-val">🎙️</div><div class="stat-lbl">Audio Only</div></div>
+          <div class="stat-card"><div class="stat-val">LOW</div><div class="stat-lbl">Data Use</div></div>
+        </div>
+        <div class="section-label">Audio Settings</div>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="setting-icon">🎙️</div>
+            <div class="setting-text"><div class="setting-label">Microphone</div><div class="setting-desc">Primary audio source</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🔇</div>
+            <div class="setting-text"><div class="setting-label">Noise Cancellation</div><div class="setting-desc">Filter background noise out</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🎧</div>
+            <div class="setting-text"><div class="setting-label">Background Music</div><div class="setting-desc">Play music behind your voice</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle"></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">📢</div>
+            <div class="setting-text"><div class="setting-label">Audio Quality</div><div class="setting-desc">Higher = better sound, more data</div></div>
+            <select class="setting-select"><option>High (320kbps)</option><option>Medium (128kbps)</option><option>Low (64kbps)</option></select>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">👥</div>
+            <div class="setting-text"><div class="setting-label">Co-host Invite</div><div class="setting-desc">Allow others to speak on air</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+        </div>
+        <div class="panel-bottom-space"></div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="panel" data-mode="chat" id="panel-chat">
+        <div class="panel-hero">
+          <div class="panel-hero-bg"></div><div class="hero-blob"></div><div class="hero-blob-2"></div><div class="hero-grid"></div>
+          <div class="hero-icon-big">💬</div>
+          <div class="hero-content">
+            <div class="hero-tag">💬 Live Chat</div>
+            <div class="hero-title">Chat Session</div>
+            <div class="hero-sub">Text-only · Interactive · Polls & Q&A</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="c-viewers">0</div><div class="stat-lbl">Chatters</div></div>
+          <div class="stat-card"><div class="stat-val">💬</div><div class="stat-lbl">Text Only</div></div>
+          <div class="stat-card"><div class="stat-val">FAST</div><div class="stat-lbl">Response</div></div>
+        </div>
+        <div class="section-label">Chat Settings</div>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="setting-icon">📊</div>
+            <div class="setting-text"><div class="setting-label">Live Polls</div><div class="setting-desc">Let your audience vote in real-time</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">❓</div>
+            <div class="setting-text"><div class="setting-label">Q&amp;A Mode</div><div class="setting-desc">Audience can submit questions</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🚫</div>
+            <div class="setting-text"><div class="setting-label">Slow Mode</div><div class="setting-desc">Limit messages to one per interval</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle"></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">⏱️</div>
+            <div class="setting-text"><div class="setting-label">Slow Mode Interval</div><div class="setting-desc">Time between user messages</div></div>
+            <select class="setting-select"><option>3 seconds</option><option>5 seconds</option><option>10 seconds</option><option>30 seconds</option></select>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🤖</div>
+            <div class="setting-text"><div class="setting-label">Auto-Moderation</div><div class="setting-desc">Filter spam and toxic messages</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+        </div>
+        <div class="panel-bottom-space"></div>
+      </div>
+
+      <!-- GAMING -->
+      <div class="panel" data-mode="gaming" id="panel-gaming">
+        <div class="panel-hero">
+          <div class="panel-hero-bg"></div><div class="hero-blob"></div><div class="hero-blob-2"></div><div class="hero-grid"></div>
+          <div class="hero-icon-big">🎮</div>
+          <div class="hero-content">
+            <div class="hero-tag">🎮 Live Gaming</div>
+            <div class="hero-title">Game Broadcast</div>
+            <div class="hero-sub">Screen share · Commentary · Leaderboard</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="g-viewers">0</div><div class="stat-lbl">Viewers</div></div>
+          <div class="stat-card"><div class="stat-val">🏆</div><div class="stat-lbl">Ranked</div></div>
+          <div class="stat-card"><div class="stat-val">60fps</div><div class="stat-lbl">Target</div></div>
+        </div>
+        <div class="section-label">Gaming Settings</div>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="setting-icon">📱</div>
+            <div class="setting-text"><div class="setting-label">Screen Share</div><div class="setting-desc">Broadcast your game screen live</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🎙️</div>
+            <div class="setting-text"><div class="setting-label">Commentary Mic</div><div class="setting-desc">Your voice over the gameplay</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🏆</div>
+            <div class="setting-text"><div class="setting-label">Leaderboard</div><div class="setting-desc">Show top viewer scores on-stream</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">⚡</div>
+            <div class="setting-text"><div class="setting-label">Frame Rate</div><div class="setting-desc">Higher fps needs stronger connection</div></div>
+            <select class="setting-select"><option>60 fps</option><option>30 fps</option><option>24 fps</option></select>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🎁</div>
+            <div class="setting-text"><div class="setting-label">In-game Gifts</div><div class="setting-desc">Viewers send gifts during gameplay</div></div>
+            <div class="toggle-wrap"><input type="checkbox" class="toggle" checked></div>
+          </div>
+        </div>
+        <div class="panel-bottom-space"></div>
+      </div>
+
+    </div>
+
+
+    
+<div id="go-live-wrap">
+
+  <!-- VIDEO — coming soon -->
+  <button class="go-live-btn video-btn" id="goLiveBtn-video" onclick="startLive()" style="display:flex;opacity:0.45;filter:grayscale(0.4);cursor:not-allowed;">
+    <div class="btn-shimmer"></div>
+    <div class="btn-dot"></div>
+    📹 Coming Soon
+  </button>
+
+  <!-- VOICE — set up live -->
+  <button class="go-live-btn voice-btn" id="goLiveBtn-voice" onclick="openSetup('voice')" style="display:none">
+    <div class="btn-shimmer"></div>
+    <div class="btn-dot"></div>
+    🎙️ Set Up Live
+  </button>
+
+  <!-- CHAT — set up live -->
+  <button class="go-live-btn chat-btn" id="goLiveBtn-chat" onclick="openSetup('chat')" style="display:none">
+    <div class="btn-shimmer"></div>
+    <div class="btn-dot"></div>
+    💬 Set Up Live
+  </button>
+
+  <!-- GAMING — coming soon -->
+  <button class="go-live-btn gaming-btn" id="goLiveBtn-gaming" onclick="startLive()" style="display:none;opacity:0.45;filter:grayscale(0.4);cursor:not-allowed;">
+    <div class="btn-shimmer"></div>
+    <div class="btn-dot"></div>
+    🎮 Coming Soon
+  </button>
+
+  <div id="coming-soon-hint" style="
+    text-align:center;font-size:11px;color:rgba(255,255,255,0.35);
+    font-weight:500;margin-top:8px;letter-spacing:0.04em;display:block;">
+    ⏳ This mode is coming soon
+  </div>
+
+</div>
+
+  </div><!-- /page-golive -->
+
+</div><!-- /root -->
+<div class="page page-hidden-right" id="page-setup">
+
+  
+  <!-- Top bar -->
+  <div id="setup-topbar">
+    <div class="back-btn" onclick="closeSetup()">
       <svg class="back-icon" viewBox="0 0 24 24">
         <polyline points="15 18 9 12 15 6"/>
       </svg>
     </div>
     <div class="topbar-title">
-      <h1>Go Live</h1>
-      <p id="subtitle">Select your broadcast mode</p>
+      <h1 id="setup-title">Set Up Voice Live</h1>
+      <p id="setup-subtitle">Configure your session before going live</p>
     </div>
-    <div class="live-pill">
+    <div class="live-pill" id="setup-mode-pill">
       <div class="pulse-dot"></div>
-      LIVE
+      <span id="setup-mode-label">VOICE</span>
     </div>
   </div>
 
-  <!-- Tab Bar -->
-  <div id="tab-bar">
-    <div class="tab-track">
-      <div class="tab-btn active-video" data-tab="video" onclick="switchTab('video')">
-        <div class="tab-glow"></div>
-        <span class="t-icon">📹</span>
-        <span class="t-label">Stream</span>
-      </div>
-      <div class="tab-btn" data-tab="voice" onclick="switchTab('voice')">
-        <div class="tab-glow"></div>
-        <span class="t-icon">🎙️</span>
-        <span class="t-label">Voice</span>
-      </div>
-      <div class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
-        <div class="tab-glow"></div>
-        <span class="t-icon">💬</span>
-        <span class="t-label">Chat</span>
-      </div>
-      <div class="tab-btn" data-tab="gaming" onclick="switchTab('gaming')">
-        <div class="tab-glow"></div>
-        <span class="t-icon">🎮</span>
-        <span class="t-label">Gaming</span>
-      </div>
-    </div>
-  </div>
+  <!-- Scrollable form -->
+  <div id="setup-scroll">
 
-  <!-- Panels -->
-  <div id="panels">
+    <!-- Room Info -->
+    <div class="setup-section-title">Room Info</div>
 
-    <!-- VIDEO PANEL -->
-    <div class="panel active" data-mode="video" id="panel-video">
-      <div class="panel-hero">
-        <div class="panel-hero-bg"></div>
-        <div class="hero-blob"></div>
-        <div class="hero-blob-2"></div>
-        <div class="hero-grid"></div>
-        <div class="hero-icon-big">📹</div>
-        <div class="hero-content">
-          <div class="hero-tag">📹 Live Stream</div>
-          <div class="hero-title">Video Broadcast</div>
-          <div class="hero-sub">Camera · Audio · HD Quality</div>
+    <div class="setup-field">
+      <div class="setup-field-row">
+        <div class="setup-field-icon" id="setup-icon-1">🎙️</div>
+        <div class="setup-field-body">
+          <div class="setup-field-label">Room Name</div>
+          <div class="setup-field-desc">What viewers will see at the top</div>
         </div>
       </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-val" id="v-viewers">0</div><div class="stat-lbl">Viewers</div></div>
-        <div class="stat-card"><div class="stat-val" id="v-followers">—</div><div class="stat-lbl">Followers</div></div>
-        <div class="stat-card"><div class="stat-val">HD</div><div class="stat-lbl">Quality</div></div>
-      </div>
-
-      <div class="section-label">Stream Settings</div>
-      <div class="settings-list">
-        <div class="setting-row">
-          <div class="setting-icon">📸</div>
-          <div class="setting-text">
-            <div class="setting-label">Front Camera</div>
-            <div class="setting-desc">Selfie camera for face-cam streaming</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🎵</div>
-          <div class="setting-text">
-            <div class="setting-label">Microphone</div>
-            <div class="setting-desc">Enable audio for your stream</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">✨</div>
-          <div class="setting-text">
-            <div class="setting-label">Beauty Filter</div>
-            <div class="setting-desc">Auto-enhance your appearance</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle">
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">📶</div>
-          <div class="setting-text">
-            <div class="setting-label">Stream Quality</div>
-            <div class="setting-desc">Higher quality uses more data</div>
-          </div>
-          <select class="setting-select">
-            <option>1080p HD</option>
-            <option>720p</option>
-            <option>480p</option>
-          </select>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🎁</div>
-          <div class="setting-text">
-            <div class="setting-label">Gift Alerts</div>
-            <div class="setting-desc">Show on-screen when you receive gifts</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-      </div>
-      <div class="panel-bottom-space"></div>
+      <input class="setup-input" id="input-room-name" type="text" placeholder="e.g. Sunday Vibes with Kemi" maxlength="60">
     </div>
 
-    <!-- VOICE PANEL -->
-    <div class="panel" data-mode="voice" id="panel-voice">
-      <div class="panel-hero">
-        <div class="panel-hero-bg"></div>
-        <div class="hero-blob"></div>
-        <div class="hero-blob-2"></div>
-        <div class="hero-grid"></div>
-        <div class="hero-icon-big">🎙️</div>
-        <div class="hero-content">
-          <div class="hero-tag">🎙️ Voice Stream</div>
-          <div class="hero-title">Audio Broadcast</div>
-          <div class="hero-sub">No camera · Low data · Podcast-style</div>
+    <div class="setup-field">
+      <div class="setup-field-row">
+        <div class="setup-field-icon" id="setup-icon-2">📝</div>
+        <div class="setup-field-body">
+          <div class="setup-field-label">Stream Title / Description</div>
+          <div class="setup-field-desc">Tell people what the session is about</div>
         </div>
       </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-val" id="a-viewers">0</div><div class="stat-lbl">Listeners</div></div>
-        <div class="stat-card"><div class="stat-val">🎙️</div><div class="stat-lbl">Audio Only</div></div>
-        <div class="stat-card"><div class="stat-val">LOW</div><div class="stat-lbl">Data Use</div></div>
-      </div>
-
-      <div class="section-label">Audio Settings</div>
-      <div class="settings-list">
-        <div class="setting-row">
-          <div class="setting-icon">🎙️</div>
-          <div class="setting-text">
-            <div class="setting-label">Microphone</div>
-            <div class="setting-desc">Primary audio source</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🔇</div>
-          <div class="setting-text">
-            <div class="setting-label">Noise Cancellation</div>
-            <div class="setting-desc">Filter background noise out</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🎧</div>
-          <div class="setting-text">
-            <div class="setting-label">Background Music</div>
-            <div class="setting-desc">Play music behind your voice</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle">
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">📢</div>
-          <div class="setting-text">
-            <div class="setting-label">Audio Quality</div>
-            <div class="setting-desc">Higher = better sound, more data</div>
-          </div>
-          <select class="setting-select">
-            <option>High (320kbps)</option>
-            <option>Medium (128kbps)</option>
-            <option>Low (64kbps)</option>
-          </select>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">👥</div>
-          <div class="setting-text">
-            <div class="setting-label">Co-host Invite</div>
-            <div class="setting-desc">Allow others to speak on air</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-      </div>
-      <div class="panel-bottom-space"></div>
+      <input class="setup-input" id="input-stream-title" type="text" placeholder="e.g. Late night Q&A — drop your questions!" maxlength="120">
     </div>
 
-    <!-- CHAT PANEL -->
-    <div class="panel" data-mode="chat" id="panel-chat">
-      <div class="panel-hero">
-        <div class="panel-hero-bg"></div>
-        <div class="hero-blob"></div>
-        <div class="hero-blob-2"></div>
-        <div class="hero-grid"></div>
-        <div class="hero-icon-big">💬</div>
-        <div class="hero-content">
-          <div class="hero-tag">💬 Live Chat</div>
-          <div class="hero-title">Chat Session</div>
-          <div class="hero-sub">Text-only · Interactive · Polls & Q&A</div>
-        </div>
-      </div>
+    <!-- Privacy -->
+    <div class="setup-section-title">Privacy</div>
 
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-val" id="c-viewers">0</div><div class="stat-lbl">Chatters</div></div>
-        <div class="stat-card"><div class="stat-val">💬</div><div class="stat-lbl">Text Only</div></div>
-        <div class="stat-card"><div class="stat-val">FAST</div><div class="stat-lbl">Response</div></div>
-      </div>
-
-      <div class="section-label">Chat Settings</div>
-      <div class="settings-list">
-        <div class="setting-row">
-          <div class="setting-icon">📊</div>
-          <div class="setting-text">
-            <div class="setting-label">Live Polls</div>
-            <div class="setting-desc">Let your audience vote in real-time</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
+    <div class="setup-field">
+      <div class="setup-field-label" style="margin-bottom:4px">Who can join?</div>
+      <div class="setup-field-desc">Private rooms require your approval to enter</div>
+      <div class="privacy-row">
+        <div class="privacy-opt selected-public" id="opt-public" onclick="selectPrivacy('public')">
+          <div class="privacy-opt-icon">🌍</div>
+          <div class="privacy-opt-label">Public</div>
+          <div class="privacy-opt-sub">Anyone can join</div>
         </div>
-        <div class="setting-row">
-          <div class="setting-icon">❓</div>
-          <div class="setting-text">
-            <div class="setting-label">Q&amp;A Mode</div>
-            <div class="setting-desc">Audience can submit questions</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🚫</div>
-          <div class="setting-text">
-            <div class="setting-label">Slow Mode</div>
-            <div class="setting-desc">Limit messages to one per interval</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle">
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">⏱️</div>
-          <div class="setting-text">
-            <div class="setting-label">Slow Mode Interval</div>
-            <div class="setting-desc">Time between user messages</div>
-          </div>
-          <select class="setting-select">
-            <option>3 seconds</option>
-            <option>5 seconds</option>
-            <option>10 seconds</option>
-            <option>30 seconds</option>
-          </select>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🤖</div>
-          <div class="setting-text">
-            <div class="setting-label">Auto-Moderation</div>
-            <div class="setting-desc">Filter spam and toxic messages</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
+        <div class="privacy-opt" id="opt-private" onclick="selectPrivacy('private')">
+          <div class="privacy-opt-icon">🔒</div>
+          <div class="privacy-opt-label">Private</div>
+          <div class="privacy-opt-sub">You approve requests</div>
         </div>
       </div>
-      <div class="panel-bottom-space"></div>
     </div>
 
-    <!-- GAMING PANEL -->
-    <div class="panel" data-mode="gaming" id="panel-gaming">
-      <div class="panel-hero">
-        <div class="panel-hero-bg"></div>
-        <div class="hero-blob"></div>
-        <div class="hero-blob-2"></div>
-        <div class="hero-grid"></div>
-        <div class="hero-icon-big">🎮</div>
-        <div class="hero-content">
-          <div class="hero-tag">🎮 Live Gaming</div>
-          <div class="hero-title">Game Broadcast</div>
-          <div class="hero-sub">Screen share · Commentary · Leaderboard</div>
-        </div>
-      </div>
+    <!-- Chat Permissions -->
+    <div class="setup-section-title">Chat Permissions</div>
 
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-val" id="g-viewers">0</div><div class="stat-lbl">Viewers</div></div>
-        <div class="stat-card"><div class="stat-val">🏆</div><div class="stat-lbl">Ranked</div></div>
-        <div class="stat-card"><div class="stat-val">60fps</div><div class="stat-lbl">Target</div></div>
-      </div>
-
-      <div class="section-label">Gaming Settings</div>
-      <div class="settings-list">
-        <div class="setting-row">
-          <div class="setting-icon">📱</div>
-          <div class="setting-text">
-            <div class="setting-label">Screen Share</div>
-            <div class="setting-desc">Broadcast your game screen live</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
+    <div class="setup-field">
+      <div class="setup-toggle-row">
+        <div class="setup-field-icon" id="setup-icon-img">🖼️</div>
+        <div class="setup-toggle-info">
+          <div class="setup-toggle-label">Images in Chat</div>
+          <div class="setup-toggle-desc">Allow viewers to send images</div>
         </div>
-        <div class="setting-row">
-          <div class="setting-icon">🎙️</div>
-          <div class="setting-text">
-            <div class="setting-label">Commentary Mic</div>
-            <div class="setting-desc">Your voice over the gameplay</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🏆</div>
-          <div class="setting-text">
-            <div class="setting-label">Leaderboard</div>
-            <div class="setting-desc">Show top viewer scores on-stream</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">⚡</div>
-          <div class="setting-text">
-            <div class="setting-label">Frame Rate</div>
-            <div class="setting-desc">Higher fps needs stronger connection</div>
-          </div>
-          <select class="setting-select">
-            <option>60 fps</option>
-            <option>30 fps</option>
-            <option>24 fps</option>
-          </select>
-        </div>
-        <div class="setting-row">
-          <div class="setting-icon">🎁</div>
-          <div class="setting-text">
-            <div class="setting-label">In-game Gifts</div>
-            <div class="setting-desc">Viewers send gifts during gameplay</div>
-          </div>
-          <div class="toggle-wrap">
-            <input type="checkbox" class="toggle" checked>
-          </div>
+        <div class="toggle-wrap">
+          <input type="checkbox" class="toggle" id="toggle-images" checked>
         </div>
       </div>
-      <div class="panel-bottom-space"></div>
     </div>
 
-  </div>
+    <div class="setup-field">
+      <div class="setup-toggle-row">
+        <div class="setup-field-icon" id="setup-icon-vid">🎬</div>
+        <div class="setup-toggle-info">
+          <div class="setup-toggle-label">Videos in Chat</div>
+          <div class="setup-toggle-desc">Allow viewers to send video clips</div>
+        </div>
+        <div class="toggle-wrap">
+          <input type="checkbox" class="toggle" id="toggle-videos">
+        </div>
+      </div>
+    </div>
 
-  <!-- Go Live Button -->
-  <div id="go-live-wrap">
-    <button class="go-live-btn video-btn" id="goLiveBtn" onclick="goLive()">
+    <!-- Monetisation -->
+    <div class="setup-section-title">Monetisation</div>
+
+    <div class="setup-field">
+      <div class="setup-toggle-row">
+        <div class="setup-field-icon">💰</div>
+        <div class="setup-toggle-info">
+          <div class="setup-toggle-label">Allow Donations</div>
+          <div class="setup-toggle-desc">Viewers can send Pose Coins to you</div>
+        </div>
+        <div class="toggle-wrap">
+          <input type="checkbox" class="toggle" id="toggle-donations" checked onchange="toggleDonationFields()">
+        </div>
+      </div>
+    </div>
+
+    <div id="donation-fields">
+      <div class="setup-field">
+        <div class="setup-field-row">
+          <div class="setup-field-icon">🪙</div>
+          <div class="setup-field-body">
+            <div class="setup-field-label">Minimum Donation</div>
+            <div class="setup-field-desc">Least amount a viewer can donate</div>
+          </div>
+        </div>
+        <div class="coin-wrap">
+          <div class="coin-prefix">🪙 PC</div>
+          <input class="coin-input" id="input-min-donation" type="number" min="1" placeholder="e.g. 50">
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-field">
+      <div class="setup-field-row">
+        <div class="setup-field-icon">⭐</div>
+        <div class="setup-field-body">
+          <div class="setup-field-label">Fan Subscription Amount</div>
+          <div class="setup-field-desc">Monthly Pose Coins fans pay to subscribe</div>
+        </div>
+      </div>
+      <div class="coin-wrap">
+        <div class="coin-prefix">🪙 PC</div>
+        <input class="coin-input" id="input-sub-amount" type="number" min="1" placeholder="e.g. 200">
+      </div>
+    </div>
+
+    <!-- Goals -->
+    <div class="setup-section-title">Goals</div>
+
+    <div class="setup-field">
+      <div class="setup-field-row">
+        <div class="setup-field-icon">👥</div>
+        <div class="setup-field-body">
+          <div class="setup-field-label">Follower Target</div>
+          <div class="setup-field-desc">Goal shown on your stream progress bar</div>
+        </div>
+      </div>
+      <input class="setup-input" id="input-follower-target" type="number" min="1" placeholder="e.g. 1000">
+    </div>
+
+    <!-- Timer -->
+    <div class="setup-section-title">Session Timer</div>
+
+    <div class="setup-field">
+      <div class="setup-field-label" style="margin-bottom:4px">Auto-end after</div>
+      <div class="setup-field-desc" style="margin-bottom:0">Stream ends automatically when timer runs out</div>
+      <div class="timer-row" id="timer-row">
+        <div class="timer-chip" data-val="30m" onclick="selectTimer(this)">30 min</div>
+        <div class="timer-chip" data-val="1h"  onclick="selectTimer(this)">1 hour</div>
+        <div class="timer-chip" data-val="2h"  onclick="selectTimer(this)">2 hours</div>
+        <div class="timer-chip" data-val="3h"  onclick="selectTimer(this)">3 hours</div>
+        <div class="timer-chip selected-voice" data-val="no-limit" onclick="selectTimer(this)" id="timer-no-limit">No limit</div>
+      </div>
+    </div>
+
+  </div><!-- /setup-scroll -->
+
+  <!-- Go Live button -->
+  <div id="setup-go-live-wrap">
+    <button class="go-live-btn voice-btn" id="setup-go-live-btn" onclick="launchLive()">
       <div class="btn-shimmer"></div>
       <div class="btn-dot"></div>
-      Go Live Now
+      <span id="setup-go-live-text">🎙️ Go Live Now</span>
     </button>
+    <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:0.03em">
+      Your room will be visible to others once you go live
+    </div>
   </div>
 
-  <div id="toast"></div>
-</div>
+</div><!-- /page-setup -->
+
+
 
 <script>
 /* ── Firebase ── */
@@ -840,17 +1585,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
-/* ── URL Params ── */
-const params  = new URLSearchParams(window.location.search);
-const urlUid  = params.get('uid');
-const refPage = document.referrer || 'index.html';
-
-/* ── Back Button ── */
-document.getElementById('backBtn').onclick = () => {
-  if (history.length > 1) { history.back(); }
-  else { window.location.href = refPage; }
-};
-
 /* ── Toast ── */
 let toastTimer;
 function showToast(msg) {
@@ -861,114 +1595,492 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-/* ── Tab State ── */
-let currentTab = 'video';
+function openGoLive() {
+  const feed   = document.getElementById('page-feed');
+  const golive = document.getElementById('page-golive');
+  feed.style.transition = 'transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease';
+  golive.style.transition = 'transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease';
+  feed.classList.replace('page-visible','page-hidden-left');
+  golive.classList.replace('page-hidden-right','page-visible');
+}
 
+function closeGoLive() {
+  const feed   = document.getElementById('page-feed');
+  const golive = document.getElementById('page-golive');
+  feed.style.transition = 'transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease';
+  golive.style.transition = 'transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease';
+  golive.classList.replace('page-visible','page-hidden-right');
+  feed.classList.replace('page-hidden-left','page-visible');
+}
+/* ── Go Live tab switching ── */
+let currentTab = 'video';
 const tabMeta = {
-  video:  { label: 'Live Stream',   sub: 'Camera & HD video broadcast',   btnClass: 'video-btn',  accentColor: 'rgba(124,58,237,0.4)'  },
-  voice:  { label: 'Voice Stream',  sub: 'Audio-only podcast broadcast',   btnClass: 'voice-btn',  accentColor: 'rgba(236,72,153,0.4)'  },
-  chat:   { label: 'Live Chat',     sub: 'Real-time interactive chat',     btnClass: 'chat-btn',   accentColor: 'rgba(59,130,246,0.4)'  },
-  gaming: { label: 'Live Gaming',   sub: 'Screen share & commentary',      btnClass: 'gaming-btn', accentColor: 'rgba(16,185,129,0.4)'  },
+  video:  { label: 'Live Stream',  sub: 'Camera & HD video broadcast',  btnClass: 'video-btn' },
+  voice:  { label: 'Voice Stream', sub: 'Audio-only podcast broadcast',  btnClass: 'voice-btn' },
+  chat:   { label: 'Live Chat',    sub: 'Real-time interactive chat',    btnClass: 'chat-btn'  },
+  gaming: { label: 'Live Gaming',  sub: 'Screen share & commentary',     btnClass: 'gaming-btn'},
 };
+
 
 function switchTab(tab) {
   if (tab === currentTab) return;
-
-  /* Deactivate old tab btn */
   document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).className = 'tab-btn';
-
-  /* Exit current panel */
-  const oldPanel = document.getElementById('panel-' + currentTab);
-  oldPanel.classList.remove('active');
-  oldPanel.classList.add('exit-left');
-  setTimeout(() => oldPanel.classList.remove('exit-left'), 400);
-
+  const old = document.getElementById('panel-' + currentTab);
+  old.classList.remove('active'); old.classList.add('exit-left');
+  setTimeout(() => old.classList.remove('exit-left'), 400);
   currentTab = tab;
-
-  /* Activate new tab btn */
   document.querySelector(`.tab-btn[data-tab="${tab}"]`).className = `tab-btn active-${tab}`;
-
-  /* Enter new panel */
-  const newPanel = document.getElementById('panel-' + tab);
-  newPanel.style.transform = 'translateX(30px)';
-  newPanel.style.opacity = '0';
-  newPanel.classList.add('active');
-  requestAnimationFrame(() => {
-    newPanel.style.transform = '';
-    newPanel.style.opacity = '';
-  });
-
-  /* Update subtitle */
+  const np = document.getElementById('panel-' + tab);
+  np.style.transform = 'translateX(30px)'; np.style.opacity = '0';
+  np.classList.add('active');
+  requestAnimationFrame(() => { np.style.transform = ''; np.style.opacity = ''; });
   document.getElementById('subtitle').textContent = tabMeta[tab].sub;
 
-  /* Update go-live btn */
-  const btn = document.getElementById('goLiveBtn');
-  btn.className = `go-live-btn ${tabMeta[tab].btnClass}`;
+  // swap buttons
+  ['video','voice','chat','gaming'].forEach(t => {
+    document.getElementById('goLiveBtn-' + t).style.display = t === tab ? 'flex' : 'none';
+  });
 
-  /* Update accent orb */
-  const orb = document.getElementById('accentOrb');
-  orb.style.width = '280px';
-  orb.style.height = '280px';
-  orb.style.background = `radial-gradient(circle, ${tabMeta[tab].accentColor}, transparent 70%)`;
-  setTimeout(() => { orb.style.width = '0'; orb.style.height = '0'; }, 1200);
+  // coming soon hint
+  const comingSoon = ['video','gaming'];
+  const hint = document.getElementById('coming-soon-hint');
+  const btn  = document.getElementById('goLiveBtn-' + tab);
+  if (comingSoon.includes(tab)) {
+    hint.style.display = 'block';
+    btn.style.opacity  = '0.45';
+    btn.style.filter   = 'grayscale(0.4)';
+    btn.style.cursor   = 'not-allowed';
+  } else {
+    hint.style.display = 'none';
+    btn.style.opacity  = '1';
+    btn.style.filter   = '';
+    btn.style.cursor   = 'pointer';
+  }
 }
 
-/* ── Go Live ── */
-async function goLive() {
+/* ── Start Live (go live action) ── */
+async function startLive() {
   const user = auth.currentUser;
-  if (!user) {
-    showToast('⚠️ Please log in to go live');
-    return;
-  }
-
+  if (!user) { showToast('⚠️ Please log in to go live'); return; }
   const btn = document.getElementById('goLiveBtn');
-  btn.style.opacity = '0.7';
-  btn.textContent = 'Starting…';
-
+  btn.style.opacity = '0.7'; btn.textContent = 'Starting…';
   try {
     const existing = await db.collection('live_sessions')
-      .where('hostUid', '==', user.uid)
-      .where('status', '==', 'live')
-      .get();
-
+      .where('hostUid', '==', user.uid).where('status', '==', 'live').get();
     let sid = null;
-    if (!existing.empty) {
-      sid = existing.docs[0].id;
-      showToast('🔴 Rejoining your active stream…');
-    }
-
+    if (!existing.empty) { sid = existing.docs[0].id; showToast('🔴 Rejoining your active stream…'); }
     const base = `poselive.html?uid=${encodeURIComponent(user.uid)}&mode=${currentTab}`;
     window.location.href = sid ? `${base}&sid=${sid}` : base;
-
   } catch (err) {
     console.error(err);
     window.location.href = `poselive.html?uid=${encodeURIComponent(user.uid)}&mode=${currentTab}`;
   }
 }
 
-/* ── Load viewer/follower stats ── */
+/* ── Load user stats ── */
 async function loadStats(user) {
   if (!user) return;
   try {
     const snap = await db.collection('users').doc(user.uid).get();
     if (snap.exists) {
       const d = snap.data();
-      const followers = (d.followers ?? 0).toLocaleString();
-      document.getElementById('v-followers').textContent = followers;
+      document.getElementById('v-followers').textContent = (d.followers ?? 0).toLocaleString();
     }
-  } catch (e) { /* silent */ }
+  } catch(e) {}
+}
+
+/* ════════════════════════════════════
+   FEED — Live streams
+════════════════════════════════════ */
+
+const MODE_META = {
+  video:  { emoji:'📹', label:'Video Stream',  badgeClass:'video-badge',  color:'rgba(124,58,237', colRaw:'#7C3AED' },
+  voice:  { emoji:'🎙️', label:'Voice Stream',  badgeClass:'voice-badge',  color:'rgba(236,72,153', colRaw:'#EC4899' },
+  chat:   { emoji:'💬', label:'Live Chat',     badgeClass:'chat-badge',   color:'rgba(59,130,246',  colRaw:'#3B82F6'  },
+  gaming: { emoji:'🎮', label:'Game Stream',   badgeClass:'gaming-badge', color:'rgba(16,185,129',  colRaw:'#10B981'  },
+};
+
+let allSessions   = [];
+let activeFilter  = 'all';
+let liveUnsubscribe = null;
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.filter === f);
+  });
+  renderFeed();
+}
+
+function getInitials(name) {
+  if (!name) return '?';
+  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function fmtViewers(n) {
+  if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+  return String(n || 0);
+}
+
+function watchNow(sid, mode, uid) {
+  window.location.href = `poselive.html?sid=${encodeURIComponent(sid)}&mode=${mode}&viewerUid=${encodeURIComponent(uid || '')}`;
+}
+
+function buildFeaturedCard(s) {
+  const m = MODE_META[s.mode] || MODE_META.video;
+  const initials = getInitials(s.hostName);
+  return `
+  <div class="card-featured" data-mode="${s.mode}" onclick="watchNow('${s.id}','${s.mode}','')">
+    <div class="card-feat-bg"></div>
+    <div class="card-feat-blob"></div>
+    <div class="card-feat-grid"></div>
+    <div class="card-feat-overlay"></div>
+    <div class="card-feat-emoji">${m.emoji}</div>
+    <div class="card-feat-content">
+      <div class="card-feat-top">
+        <div class="live-tag"><div class="ld"></div> LIVE</div>
+        <div class="viewer-pill">👁 ${fmtViewers(s.viewerCount)} watching</div>
+        <span class="section-badge ${m.badgeClass}">${m.label}</span>
+      </div>
+      <div class="streamer-info">
+        <div class="streamer-av">${initials}</div>
+        <div>
+          <div class="streamer-name">${s.hostName || 'Anonymous'}</div>
+          <div class="streamer-title">${s.title || 'Live Stream'}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildSmallCard(s) {
+  const m = MODE_META[s.mode] || MODE_META.video;
+  return `
+  <div class="stream-card" data-mode="${s.mode}" onclick="watchNow('${s.id}','${s.mode}','')">
+    <div class="sc-bg"></div><div class="sc-blob"></div><div class="sc-overlay"></div>
+    <div class="sc-emoji">${m.emoji}</div>
+    <div class="sc-content">
+      <div class="sc-live-row"><span class="sc-live">LIVE</span><span class="sc-views">👁 ${fmtViewers(s.viewerCount)}</span></div>
+      <div class="sc-name">${s.hostName || 'User'}</div>
+      <div class="sc-sub">${s.title || m.label}</div>
+    </div>
+  </div>`;
+}
+
+function buildAvatarCard(s) {
+  const initials = getInitials(s.hostName);
+  const isChat = s.mode === 'chat';
+  return `
+  <div class="av-card" onclick="watchNow('${s.id}','${s.mode}','')">
+    <div class="av-ring ${isChat ? 'chat-ring' : ''}" style="position:relative">
+      ${initials}
+      <div class="av-live-dot"></div>
+    </div>
+    <div class="av-name">${s.hostName || 'User'}</div>
+    <div class="av-views">👁 ${fmtViewers(s.viewerCount)}</div>
+  </div>`;
+}
+
+function buildWideCard(s) {
+  return `
+  <div class="stream-card-wide" data-mode="${s.mode}" onclick="watchNow('${s.id}','${s.mode}','')">
+    <div class="sc-bg"></div><div class="sc-blob"></div><div class="sc-overlay"></div>
+    <div class="sc-emoji">🎮</div>
+    <div class="sc-content">
+      <div class="sc-live-row"><span class="sc-live">LIVE</span><span class="sc-views">👁 ${fmtViewers(s.viewerCount)}</span></div>
+      <div class="sc-name">${s.hostName || 'User'}</div>
+      <div class="sc-sub">${s.title || 'Gaming Stream'}</div>
+    </div>
+  </div>`;
+}
+
+function renderFeed() {
+  const filtered = activeFilter === 'all'
+    ? allSessions
+    : allSessions.filter(s => s.mode === activeFilter);
+
+  const total = allSessions.length;
+  document.getElementById('live-count').textContent = total;
+  document.getElementById('feed-subtitle').textContent =
+    total === 0 ? 'No one is live right now' : `${total} stream${total !== 1 ? 's' : ''} happening now`;
+
+  const container = document.getElementById('feed-content');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-emoji">📡</div>
+        <div class="empty-title">No ${activeFilter === 'all' ? '' : activeFilter + ' '}streams live</div>
+        <div class="empty-sub">Be the first to go live!</div>
+      </div>`;
+    return;
+  }
+
+  /* Group by mode */
+  const groups = { video:[], voice:[], chat:[], gaming:[] };
+  filtered.forEach(s => { if (groups[s.mode]) groups[s.mode].push(s); });
+
+  let html = '';
+
+  /* Sort sessions by viewer count */
+  Object.keys(groups).forEach(k => groups[k].sort((a,b) => (b.viewerCount||0)-(a.viewerCount||0)));
+
+  /* ── VIDEO section ── */
+  if (groups.video.length) {
+    html += `<div class="feed-section">
+      <div class="feed-section-hdr">
+        <div class="feed-section-title">📹 Video Streams <span class="section-badge video-badge">${groups.video.length} LIVE</span></div>
+        <div class="see-all-link" onclick="setFilter('video')">See all →</div>
+      </div>`;
+    if (groups.video.length >= 1) {
+      html += buildFeaturedCard(groups.video[0]);
+    }
+    if (groups.video.length > 1) {
+      html += `<div class="h-scroll">`;
+      groups.video.slice(1).forEach(s => { html += buildSmallCard(s); });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  /* ── VOICE section ── */
+  if (groups.voice.length) {
+    html += `<div class="feed-section">
+      <div class="feed-section-hdr">
+        <div class="feed-section-title">🎙️ Voice Rooms <span class="section-badge voice-badge">${groups.voice.length} LIVE</span></div>
+        <div class="see-all-link" onclick="setFilter('voice')">See all →</div>
+      </div>
+      <div class="h-scroll">`;
+    groups.voice.forEach(s => { html += buildAvatarCard(s); });
+    html += `</div></div>`;
+  }
+
+  /* ── CHAT section ── */
+  if (groups.chat.length) {
+    html += `<div class="feed-section">
+      <div class="feed-section-hdr">
+        <div class="feed-section-title">💬 Chat Sessions <span class="section-badge chat-badge">${groups.chat.length} LIVE</span></div>
+        <div class="see-all-link" onclick="setFilter('chat')">See all →</div>
+      </div>
+      <div class="h-scroll">`;
+    groups.chat.forEach(s => { html += buildAvatarCard(s); });
+    html += `</div></div>`;
+  }
+
+  /* ── GAMING section ── */
+  if (groups.gaming.length) {
+    html += `<div class="feed-section">
+      <div class="feed-section-hdr">
+        <div class="feed-section-title">🎮 Gaming Streams <span class="section-badge gaming-badge">${groups.gaming.length} LIVE</span></div>
+        <div class="see-all-link" onclick="setFilter('gaming')">See all →</div>
+      </div>
+      <div class="h-scroll">`;
+    groups.gaming.forEach(s => { html += buildWideCard(s); });
+    html += `</div></div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function subscribeLive() {
+  if (liveUnsubscribe) liveUnsubscribe();
+  liveUnsubscribe = db.collection('live_sessions')
+    .where('status', '==', 'live')
+    .onSnapshot(snap => {
+      allSessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderFeed();
+    }, err => {
+      console.error('Firestore error:', err);
+      document.getElementById('feed-subtitle').textContent = 'Could not load streams';
+    });
+}
+
+/* ── Coming Soon – user count from Firebase ── */
+function loadUserCount() {
+  db.collection('users').get().then(snap => {
+    const count = snap.size;
+    const target = 5000;
+    const pct = Math.min((count / target) * 100, 100);
+    const el = document.getElementById('lcs-user-count');
+    const fill = document.getElementById('lcs-progress-fill');
+    if (el) el.textContent = count.toLocaleString();
+    if (fill) setTimeout(() => { fill.style.width = pct + '%'; }, 400);
+  }).catch(() => {});
 }
 
 /* ── Auth ── */
 auth.onAuthStateChanged(async (user) => {
   if (user) await loadStats(user);
-
+  loadUserCount();
+  subscribeLive();
   setTimeout(() => {
     const loader = document.getElementById('loader');
     loader.classList.add('gone');
     setTimeout(() => loader.remove(), 500);
   }, 900);
 });
+
+ /* ── switchTab — updated ── */
+function switchTab(tab) {
+  if (tab === currentTab) return;
+  document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).className = 'tab-btn';
+  const old = document.getElementById('panel-' + currentTab);
+  old.classList.remove('active'); old.classList.add('exit-left');
+  setTimeout(() => old.classList.remove('exit-left'), 400);
+  currentTab = tab;
+  document.querySelector(`.tab-btn[data-tab="${tab}"]`).className = `tab-btn active-${tab}`;
+  const np = document.getElementById('panel-' + tab);
+  np.style.transform = 'translateX(30px)'; np.style.opacity = '0';
+  np.classList.add('active');
+  requestAnimationFrame(() => { np.style.transform = ''; np.style.opacity = ''; });
+  document.getElementById('subtitle').textContent = tabMeta[tab].sub;
+
+  /* swap buttons */
+  ['video','voice','chat','gaming'].forEach(t => {
+    document.getElementById('goLiveBtn-' + t).style.display = t === tab ? 'flex' : 'none';
+  });
+
+  /* coming soon hint */
+  const comingSoon = ['video','gaming'];
+  const hint = document.getElementById('coming-soon-hint');
+  const btn  = document.getElementById('goLiveBtn-' + tab);
+  if (comingSoon.includes(tab)) {
+    hint.style.display = 'block';
+    btn.style.opacity  = '0.45';
+    btn.style.filter   = 'grayscale(0.4)';
+    btn.style.cursor   = 'not-allowed';
+  } else {
+    hint.style.display = 'none';
+    btn.style.opacity  = '1';
+    btn.style.filter   = '';
+    btn.style.cursor   = 'pointer';
+  }
+}
+
+/* ── init coming soon state for default video tab ── */
+document.getElementById('coming-soon-hint').style.display = 'block';
+document.getElementById('goLiveBtn-video').style.opacity  = '0.45';
+document.getElementById('goLiveBtn-video').style.filter   = 'grayscale(0.4)';
+document.getElementById('goLiveBtn-video').style.cursor   = 'not-allowed';
+
+
+/* ══════════════════════════════════════
+   SETUP PAGE JS
+══════════════════════════════════════ */
+
+let setupMode = 'voice';
+let selectedPrivacy = 'public';
+let selectedTimer   = 'no-limit';
+
+const modeColors = {
+  voice:  { pill: 'rgba(236,72,153,0.18)', pillBorder: 'rgba(236,72,153,0.38)', pillText: '#F9A8D4', btnClass: 'voice-btn', label: 'VOICE', title: 'Set Up Voice Live', icon: '🎙️', timerSel: 'selected-voice' },
+  chat:   { pill: 'rgba(59,130,246,0.18)',  pillBorder: 'rgba(59,130,246,0.38)',  pillText: '#93C5FD', btnClass: 'chat-btn',  label: 'CHAT',  title: 'Set Up Chat Live',  icon: '💬', timerSel: 'selected-chat' },
+};
+
+function openSetup(mode) {
+  setupMode = mode;
+  const m = modeColors[mode];
+
+  /* update pill */
+  const pill = document.getElementById('setup-mode-pill');
+  pill.style.background   = m.pill;
+  pill.style.borderColor  = m.pillBorder;
+  pill.style.color        = m.pillText;
+  document.getElementById('setup-mode-label').textContent = m.label;
+
+  /* update title */
+  document.getElementById('setup-title').textContent    = m.title;
+  document.getElementById('setup-subtitle').textContent = 'Configure your session before going live';
+
+  /* update icons color class */
+  document.querySelectorAll('.setup-field-icon').forEach(el => {
+    el.classList.remove('voice-icon','chat-icon');
+    el.classList.add(mode + '-icon');
+  });
+
+  /* update go live btn class */
+  const glBtn = document.getElementById('setup-go-live-btn');
+  glBtn.className = `go-live-btn ${m.btnClass}`;
+  document.getElementById('setup-go-live-text').textContent = m.icon + ' Go Live Now';
+
+  /* refresh timer chip selection colour */
+  refreshTimerChips();
+
+  /* navigate */
+  document.getElementById('page-golive').classList.replace('page-visible','page-hidden-left');
+  document.getElementById('page-setup').classList.replace('page-hidden-right','page-visible');
+}
+
+function closeSetup() {
+  document.getElementById('page-setup').classList.replace('page-visible','page-hidden-right');
+  document.getElementById('page-golive').classList.replace('page-hidden-left','page-visible');
+}
+
+function selectPrivacy(type) {
+  selectedPrivacy = type;
+  document.getElementById('opt-public').className  = 'privacy-opt' + (type==='public'  ? ' selected-public'  : '');
+  document.getElementById('opt-private').className = 'privacy-opt' + (type==='private' ? ' selected-private' : '');
+}
+
+function selectTimer(el) {
+  selectedTimer = el.dataset.val;
+  refreshTimerChips();
+}
+
+function refreshTimerChips() {
+  const selClass = modeColors[setupMode].timerSel;
+  document.querySelectorAll('.timer-chip').forEach(c => {
+    c.classList.remove('selected-voice','selected-chat');
+    if (c.dataset.val === selectedTimer) c.classList.add(selClass);
+  });
+}
+
+function toggleDonationFields() {
+  const on = document.getElementById('toggle-donations').checked;
+  document.getElementById('donation-fields').style.display = on ? 'block' : 'none';
+}
+
+function launchLive() {
+  const roomName       = document.getElementById('input-room-name').value.trim();
+  const streamTitle    = document.getElementById('input-stream-title').value.trim();
+  const allowImages    = document.getElementById('toggle-images').checked;
+  const allowVideos    = document.getElementById('toggle-videos').checked;
+  const allowDonations = document.getElementById('toggle-donations').checked;
+  const minDonation    = document.getElementById('input-min-donation').value || '0';
+  const subAmount      = document.getElementById('input-sub-amount').value || '0';
+  const followerTarget = document.getElementById('input-follower-target').value || '0';
+
+  if (!roomName) {
+    showToast('⚠️ Please enter a room name');
+    document.getElementById('input-room-name').focus();
+    return;
+  }
+
+  /* build URL params */
+  const params = new URLSearchParams({
+    mode:          setupMode,
+    roomName,
+    streamTitle,
+    privacy:       selectedPrivacy,
+    allowImages:   allowImages  ? '1' : '0',
+    allowVideos:   allowVideos  ? '1' : '0',
+    allowDonations:allowDonations ? '1' : '0',
+    minDonation,
+    subAmount,
+    followerTarget,
+    timer:         selectedTimer,
+  });
+
+  /* if user is logged in, pass uid and display name */
+  const user = typeof auth !== 'undefined' ? auth.currentUser : null;
+  if (user) {
+    params.set('uid', user.uid);
+    if (user.displayName) params.set('hostName', user.displayName);
+    if (user.photoURL) params.set('hostPhoto', user.photoURL);
+  }
+
+  window.location.href = `poselivechat.html?${params.toString()}`;
+}
 </script>
 </body>
 </html>
