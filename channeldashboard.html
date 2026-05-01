@@ -1037,9 +1037,11 @@ select.ufield-input { cursor: pointer; }
   transition: all .2s ease; user-select: none;
   display: flex; align-items: center; gap: 6px;
 }
+.urating-pill.sel-kids   { background:#D1FAE5; border-color:#A7F3D0; color:#065F46; }
 .urating-pill.sel-all    { background:#D1FAE5; border-color:#A7F3D0; color:#065F46; }
 .urating-pill.sel-teen   { background:#DBEAFE; border-color:#BFDBFE; color:#1E40AF; }
 .urating-pill.sel-mature { background:#FEF3C7; border-color:#FDE68A; color:#92400E; }
+.urating-pill.sel-adult  { background:#FEE2E2; border-color:#FECACA; color:#991B1B; }
 .urating-pill.uerror     { border-color: var(--red); }
 
 /* Price Toggle */
@@ -1066,6 +1068,17 @@ select.ufield-input { cursor: pointer; }
   font-size: 38px; font-weight: 700; color: var(--purple-deep);
   text-align: center; margin-bottom: 3px;
 }
+.ucoin-num-input {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 700; color: var(--purple-deep);
+  width: 110px; text-align: center;
+  background: #fff; border: 1.5px solid var(--purple-pale);
+  border-radius: 10px; padding: 2px 6px; outline: none;
+  -moz-appearance: textfield;
+}
+.ucoin-num-input:focus { border-color: var(--purple-main); box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
+.ucoin-num-input::-webkit-outer-spin-button,
+.ucoin-num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .ucoin-naira { font-size: 13px; color: var(--gray-500); text-align: center; margin-bottom: 14px; }
 .ucoin-cat {
   display: block; font-size: 11px; font-weight: 700;
@@ -2377,17 +2390,15 @@ input[type=range].ucoin-slider {
 </style>
 </head>
 <body>
-<!-- ============================================================
-     LOADING SCREEN
-============================================================ -->
+    
+ 
 <div id="dashLoader">
   <div class="dash-spinner"></div>
   <p>Loading your channel…</p>
 </div>
 
-<!-- ============================================================
-     PAGE 1 — HOME
-============================================================ -->
+    
+ 
 <div id="page-home" class="page active">
 
   <div class="topbar">
@@ -2480,9 +2491,8 @@ input[type=range].ucoin-slider {
 </div><!-- /page-home -->
 
 
-<!-- ============================================================
-     PAGE 2 — STUDIO
-============================================================ -->
+      
+ 
 <div id="page-studio" class="page">
 
   <div class="studio-topbar">
@@ -2606,9 +2616,8 @@ input[type=range].ucoin-slider {
 </div><!-- /page-studio -->
 
 
-<!-- ============================================================
-     PAGE 3 — EARNINGS
-============================================================ -->
+      
+ 
 <div id="page-earnings" class="page">
 
   <div class="studio-topbar">
@@ -2864,11 +2873,7 @@ input[type=range].ucoin-slider {
 </div>
 
 
- <!-- ============================================================
-     PAGE 4 — LEGIBILITY
-     Drop this entire block into your HTML where needed.
-     Requires: Font Awesome (fas icons) + your existing CSS vars
-============================================================ -->
+ 
 <div id="page-legibility" class="page">
 
   <!-- TOP BAR -->
@@ -3137,7 +3142,7 @@ input[type=range].ucoin-slider {
               </div>
               <div style="text-align:right;">
                 <div style="font-size:13px;font-weight:700;color:var(--purple-deep);">&#129693; 1&ndash;8</div>
-                <div style="font-size:10.5px;color:var(--gray-400);">&#8358;25&ndash;&#8358;200</div>
+                <div style="font-size:10.5px;color:var(--gray-400);">&#8358;25&ndash;&#8358;200 &nbsp;·&nbsp; 1 coin = &#8358;25</div>
               </div>
             </div>
 
@@ -3163,7 +3168,7 @@ input[type=range].ucoin-slider {
               </div>
               <div style="text-align:right;">
                 <div style="font-size:13px;font-weight:700;color:#6B21A8;">&#129693; 20&ndash;40</div>
-                <div style="font-size:10.5px;color:var(--gray-400);">&#8358;500&ndash;&#8358;1,000</div>
+                <div style="font-size:10.5px;color:var(--gray-400);">&#8358;500&ndash;&#8358;1,000 &nbsp;·&nbsp; 1 coin = &#8358;25</div>
               </div>
             </div>
 
@@ -3804,15 +3809,12 @@ input[type=range].ucoin-slider {
         </div>
 
       </div>
-    </div><!-- /Section 05 -->
+    </div>
 
-  </div><!-- /leg-body -->
-</div><!-- /page-legibility -->
+  </div>
+</div>
 
-
-<!-- ============================================================
-     PAGE 5 — UPLOAD
-============================================================ -->
+ 
 <div id="page-upload" class="page">
 
   <div class="studio-topbar">
@@ -3952,12 +3954,41 @@ input[type=range].ucoin-slider {
           <div class="uhelp"><i class="fas fa-circle-info"></i> Keep it descriptive and honest — clickbait titles violate Pose policy.</div>
         </div>
 
+       <!-- Category -->
+        <div class="ufield">
+          <div class="ufield-label"><span class="ureq-dot"></span> Category</div>
+          <select class="ufield-input" id="sCategory">
+            <option value="">— Select a category —</option>
+            <option value="comedy">😂 Comedy</option>
+            <option value="funny">🤣 Funny / Skits</option>
+            <option value="dance">💃 Dance</option>
+            <option value="music-video">🎵 Music Video</option>
+            <option value="afrobeats">🥁 Afrobeats / Afropop</option>
+            <option value="highlife">🎷 Highlife / Juju</option>
+            <option value="gospel">🙏 Gospel / Worship</option>
+            <option value="nollywood">🎬 Nollywood / Drama</option>
+            <option value="documentary">🎙 Documentary</option>
+            <option value="education">📚 Education / Tutorial</option>
+            <option value="lifestyle">✨ Lifestyle / Vlog</option>
+            <option value="fashion">👗 Fashion / Beauty</option>
+            <option value="food">🍲 Food / Cooking</option>
+            <option value="sports">⚽ Sports / Fitness</option>
+            <option value="tech">💻 Tech / Gaming</option>
+            <option value="news">📰 News / Politics</option>
+            <option value="travel">✈️ Travel / Adventure</option>
+            <option value="kids">🧒 Kids / Family</option>
+            <option value="romance">❤️ Romance / Relationships</option>
+            <option value="motivation">🔥 Motivation / Self-Help</option>
+          </select>
+          <div class="uhelp"><i class="fas fa-circle-info"></i> Choose the category that best describes your video. This helps viewers discover your content.</div>
+        </div>
+
         <!-- Description -->
         <div class="ufield">
-          <div class="ufield-label">Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
+          <div class="ufield-label"><span class="ureq-dot"></span> Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(min. 10 words)</span></div>
           <textarea class="ufield-input" id="sDesc"
-            placeholder="Tell viewers what this video is about…"></textarea>
-          <div class="uhelp"><i class="fas fa-circle-info"></i> Good descriptions help viewers find your content through search.</div>
+            placeholder="Tell viewers what this video is about… (at least 10 words required)"></textarea>
+          <div class="uhelp"><i class="fas fa-circle-info"></i> A good description helps viewers find your content through search. Minimum 10 words required.</div>
         </div>
 
         <!-- Thumbnail -->
@@ -3976,19 +4007,17 @@ input[type=range].ucoin-slider {
         <div class="ufield">
           <div class="ufield-label"><span class="ureq-dot"></span> Age Rating</div>
           <div class="urating-pills" id="sRatingPills">
-            <div class="urating-pill" onclick="selectRating('single','all',this)">
-              <i class="fas fa-circle-check"></i> All Ages
-            </div>
-            <div class="urating-pill" onclick="selectRating('single','teen',this)">
-              <i class="fas fa-user"></i> Teen
-            </div>
-            <div class="urating-pill" onclick="selectRating('single','mature',this)">
-              <i class="fas fa-triangle-exclamation"></i> Mature
-            </div>
+            <div class="urating-pill" onclick="selectRating('single','3+',this)">3+</div>
+            <div class="urating-pill" onclick="selectRating('single','7+',this)">7+</div>
+            <div class="urating-pill" onclick="selectRating('single','10+',this)">10+</div>
+            <div class="urating-pill" onclick="selectRating('single','13+',this)">13+</div>
+            <div class="urating-pill" onclick="selectRating('single','16+',this)">16+</div>
+            <div class="urating-pill" onclick="selectRating('single','18+',this)">18+</div>
+            <div class="urating-pill" onclick="selectRating('single','25+',this)">25+</div>
           </div>
           <input type="hidden" id="sRating" value="">
           <div class="uhelp"><i class="fas fa-circle-info"></i>
-            <span><strong>Required.</strong> Inaccurate ratings result in immediate demonetization. All Ages = no profanity/violence. Teen = mild language/fantasy. Mature = adults only, strictly gated.</span>
+            <span><strong>Required.</strong> Inaccurate ratings result in immediate demonetization. <strong>3+/7+</strong> = young children, no scary or risky content. <strong>10+/13+</strong> = mild language or fantasy violence. <strong>16+/18+</strong> = mature themes, must be strictly gated. <strong>25+</strong> = adults-only / explicit.</span>
           </div>
         </div>
       </div>
@@ -3997,7 +4026,7 @@ input[type=range].ucoin-slider {
       <!-- Schedule -->
       <div class="upload-card">
         <div class="upload-card-title"><i class="fas fa-calendar-days"></i> Release Schedule</div>
-        <div class="usched-toggle" onclick="toggleSched('sSchedToggle','sSchedDate')">
+     <div class="usched-toggle" onclick="toggleSched('sSchedToggle','sSchedDate',true)">
           <div>
             <div class="usched-toggle-label">Schedule for Later</div>
             <div class="usched-toggle-sub">Video unlocks on the date you choose</div>
@@ -4038,24 +4067,24 @@ input[type=range].ucoin-slider {
           <i class="fas fa-rectangle-ad"></i>
           <div>
             <div class="ufree-badge-text">Ad-Supported — Free to Watch</div>
-            <div class="ufree-badge-sub">You earn ₦810–₦3,500+ per 1,000 views through ads</div>
+            <div class="ufree-badge-sub">You earn ₦810–₦3,500+ per 1,000 views through ads · 1 Pose Coin = ₦25</div>
           </div>
         </div>
 
         <!-- Paid Coin Slider -->
         <div id="sCoinWrap" class="ucoin-wrap" style="display:none;">
-          <div class="ucoin-display" id="sCoinVal">🪙 8</div>
+          <div class="ucoin-display" id="sCoinVal">🪙 <input type="number" class="ucoin-num-input" id="sCoinInput" min="1" max="80" value="8" oninput="updateCoinFromInput('s')"></div>
           <div class="ucoin-naira" id="sCoinNaira">≈ ₦240 per view</div>
           <div class="ucoin-cat short" id="sCoinCat">Short Video</div>
           <input type="range" class="ucoin-slider" id="sCoinSlider"
-            min="1" max="40" value="8"
+            min="1" max="80" value="8"
             oninput="updateCoinSlider('s')">
           <div class="ucoin-range-labels">
-            <span>🪙 1 (₦30)</span><span>🪙 40 (₦1,200)</span>
+            <span id="sCoinMinLbl">🪙 1 (₦25)</span><span id="sCoinMaxLbl">🪙 80 (₦2,000)</span>
           </div>
           <div class="uhelp" style="margin-top:10px;">
             <i class="fas fa-circle-info"></i>
-            You keep 75% of every purchase. Short videos (1–8 coins) have higher conversion. Long films can go up to 40 coins.
+            1 Pose Coin = ₦25. You keep 75% of every purchase. Short videos (1–8 coins) have higher conversion. Long films can go up to 80 coins. Type a value or use the slider.
           </div>
         </div>
         <input type="hidden" id="sPriceMode" value="free">
@@ -4108,11 +4137,41 @@ input[type=range].ucoin-slider {
             <div class="uhelp"><i class="fas fa-circle-info"></i> Auto-filled based on your existing seasons. Edit if needed.</div>
           </div>
 
+          <!-- Season Category -->
+          <div class="ufield">
+            <div class="ufield-label"><span class="ureq-dot"></span> Category</div>
+            <select class="ufield-input" id="seaCategory">
+              <option value="">— Select a category —</option>
+              <option value="comedy">😂 Comedy</option>
+              <option value="funny">🤣 Funny / Skits</option>
+              <option value="dance">💃 Dance</option>
+              <option value="music-video">🎵 Music Video</option>
+              <option value="afrobeats">🥁 Afrobeats / Afropop</option>
+              <option value="highlife">🎷 Highlife / Juju</option>
+              <option value="gospel">🙏 Gospel / Worship</option>
+              <option value="nollywood">🎬 Nollywood / Drama</option>
+              <option value="documentary">🎙 Documentary</option>
+              <option value="education">📚 Education / Tutorial</option>
+              <option value="lifestyle">✨ Lifestyle / Vlog</option>
+              <option value="fashion">👗 Fashion / Beauty</option>
+              <option value="food">🍲 Food / Cooking</option>
+              <option value="sports">⚽ Sports / Fitness</option>
+              <option value="tech">💻 Tech / Gaming</option>
+              <option value="news">📰 News / Politics</option>
+              <option value="travel">✈️ Travel / Adventure</option>
+              <option value="kids">🧒 Kids / Family</option>
+              <option value="romance">❤️ Romance / Relationships</option>
+              <option value="motivation">🔥 Motivation / Self-Help</option>
+            </select>
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Category applies to the entire season and all its episodes.</div>
+          </div>
+
           <!-- Season Description -->
           <div class="ufield">
-            <div class="ufield-label">Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
+            <div class="ufield-label"><span class="ureq-dot"></span> Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(min. 10 words)</span></div>
             <textarea class="ufield-input" id="seaDesc"
-              placeholder="What is this season about?"></textarea>
+              placeholder="What is this season about? (at least 10 words required)"></textarea>
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Minimum 10 words required. Helps viewers understand what the season covers.</div>
           </div>
 
           <!-- Season Thumbnail -->
@@ -4159,15 +4218,13 @@ input[type=range].ucoin-slider {
           <div class="ufield">
             <div class="ufield-label"><span class="ureq-dot"></span> Age Rating (applies to all episodes)</div>
             <div class="urating-pills" id="seaRatingPills">
-              <div class="urating-pill" onclick="selectRating('season','all',this)">
-                <i class="fas fa-circle-check"></i> All Ages
-              </div>
-              <div class="urating-pill" onclick="selectRating('season','teen',this)">
-                <i class="fas fa-user"></i> Teen
-              </div>
-              <div class="urating-pill" onclick="selectRating('season','mature',this)">
-                <i class="fas fa-triangle-exclamation"></i> Mature
-              </div>
+              <div class="urating-pill" onclick="selectRating('season','3+',this)">3+</div>
+              <div class="urating-pill" onclick="selectRating('season','7+',this)">7+</div>
+              <div class="urating-pill" onclick="selectRating('season','10+',this)">10+</div>
+              <div class="urating-pill" onclick="selectRating('season','13+',this)">13+</div>
+              <div class="urating-pill" onclick="selectRating('season','16+',this)">16+</div>
+              <div class="urating-pill" onclick="selectRating('season','18+',this)">18+</div>
+              <div class="urating-pill" onclick="selectRating('season','25+',this)">25+</div>
             </div>
             <input type="hidden" id="seaRating" value="">
             <div class="uhelp"><i class="fas fa-circle-info"></i>
@@ -4318,9 +4375,10 @@ input[type=range].ucoin-slider {
           </div>
 
           <div class="ufield">
-            <div class="ufield-label">Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
+            <div class="ufield-label"><span class="ureq-dot"></span> Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(min. 10 words)</span></div>
             <textarea class="ufield-input" id="epDesc"
-              placeholder="What happens in this episode?"></textarea>
+              placeholder="What happens in this episode? (at least 10 words required)"></textarea>
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Minimum 10 words required per episode.</div>
           </div>
 
           <div class="ufield">
@@ -4445,18 +4503,18 @@ input[type=range].ucoin-slider {
           </div>
 
           <div id="epCoinWrap" class="ucoin-wrap" style="display:none;">
-            <div class="ucoin-display" id="epCoinVal">🪙 8</div>
+            <div class="ucoin-display" id="epCoinVal">🪙 <input type="number" class="ucoin-num-input" id="epCoinInput" min="1" max="80" value="8" oninput="updateCoinFromInput('ep')"></div>
             <div class="ucoin-naira" id="epCoinNaira">≈ ₦240 per episode view</div>
             <div class="ucoin-cat short" id="epCoinCat">Short Episode</div>
             <input type="range" class="ucoin-slider" id="epCoinSlider"
-              min="1" max="40" value="8"
+              min="1" max="80" value="8"
               oninput="updateCoinSlider('ep')">
             <div class="ucoin-range-labels">
-              <span>🪙 1 (₦30)</span><span>🪙 40 (₦1,200)</span>
+              <span id="epCoinMinLbl">🪙 1 (₦25)</span><span id="epCoinMaxLbl">🪙 80 (₦2,000)</span>
             </div>
             <div class="uhelp" style="margin-top:10px;">
               <i class="fas fa-circle-info"></i>
-              Per-episode pricing. Viewers can also buy the full season if that option is set.
+              1 Pose Coin = ₦25. You keep 75% per episode. Type a value (1–80) or use the slider. Viewers can also buy the full season if that option is set.
             </div>
           </div>
           <input type="hidden" id="epPriceMode" value="free">
@@ -4476,9 +4534,8 @@ input[type=range].ucoin-slider {
 </div><!-- /page-upload -->
 
 
-<!-- ============================================================
-     PAGE — ALL VIDEOS
-============================================================ -->
+    
+ 
 <div id="page-allvideos" class="page">
 
   <div class="av-topbar">
@@ -4534,9 +4591,8 @@ input[type=range].ucoin-slider {
 </div>
 
 
-<!-- ============================================================
-     PAGE — VIDEO DETAIL
-============================================================ -->
+    
+ 
 <div id="page-videodetail" class="page">
 
   <div class="vd-topbar">
@@ -4567,9 +4623,8 @@ input[type=range].ucoin-slider {
 
 
 
-<!-- ============================================================
-     UPLOAD PROGRESS POPUP
-============================================================ -->
+    
+ 
 <div id="uploadProgressPopup" class="hidden">
   <div class="uppop-card">
     <div class="uppop-handle"></div>
@@ -4619,9 +4674,8 @@ input[type=range].ucoin-slider {
   <div class="uppop-mini-expand"><i class="fas fa-chevron-up"></i></div>
 </div>
 
-<!-- ============================================================
-     HISTORY POPUP — paste just before </body>
-============================================================ -->
+    
+ 
 <div id="historyPopup" class="earn-popup-overlay hidden">
   <div class="earn-popup-card" style="padding-bottom:52px;">
     <div class="uppop-handle"></div>
@@ -4803,16 +4857,14 @@ input[type=range].ucoin-slider {
 
   </div>
 </div>
-  <!-- ============================================================
-       FIREBASE SDK
-  ============================================================ -->
+        
+   
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-  <!-- ============================================================
-       APPLICATION SCRIPT
-  ============================================================ -->
+          
+   
   <script>
     /* ====================================================
        FIREBASE INIT
@@ -5013,9 +5065,9 @@ async function countAllContent() {
    function fmtCurr(usd) {
   usd = Number(usd) || 0;
   if (earnCurrency === 'COIN') {
-    // 1 Pose Coin = ₦30, so coins = NGN / 30 = (usd * ngnRate) / 30
+    // 1 Pose Coin = ₦25
     const ngn   = usd * (usdToNgn || 1620);
-    const coins = Math.round(ngn / 30);
+    const coins = Math.round(ngn / 25);
     return '🪙 ' + coins.toLocaleString();
   }
   if (earnCurrency === 'USER') return fmtUserCurr(usd);
@@ -5530,7 +5582,7 @@ function fmtUserCurr(usd) {
 document.getElementById('totalRevSub').textContent = total === 0
   ? 'No earnings yet — keep uploading to start earning'
   : earnCurrency === 'NGN'
-    ? `≈ 🪙 ${Math.round((total * (usdToNgn||1620)) / 30).toLocaleString()} Pose Coins`
+    ? `≈ 🪙 ${Math.round((total * (usdToNgn||1620)) / 25).toLocaleString()} Pose Coins`
     : earnCurrency === 'COIN'
       ? `≈ ₦${(total * (usdToNgn||1620)).toLocaleString('en-NG', {maximumFractionDigits:0})}`
       : `≈ ₦${(total * (usdToNgn||1620)).toLocaleString('en-NG', {maximumFractionDigits:0})} · ${uc.name}`;
@@ -6191,11 +6243,11 @@ setTimeout(loadChannelSwitchList, 500);
           <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:20px;">Choose how many Pose Coins viewers pay to watch your next upload.</p>
           <div style="background:var(--purple-ghost);border-radius:14px;padding:16px;margin-bottom:16px;">
             <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--purple-deep);text-align:center;margin:12px 0 4px;" id="coinVal">🪙 8</div>
-            <div style="font-size:13px;color:var(--gray-500);text-align:center;margin-bottom:16px;" id="coinNaira">≈ ₦240 per view</div>
+            <div style="font-size:13px;color:var(--gray-500);text-align:center;margin-bottom:16px;" id="coinNaira">₦200 per view · 1 coin = ₦25</div>
             <input type="range" style="width:100%;margin:10px 0;" min="1" max="40" value="8" id="coinSlider"
-              oninput="const v=+this.value;document.getElementById('coinVal').textContent='🪙 '+v;document.getElementById('coinNaira').textContent='≈ ₦'+(v*30).toLocaleString()+' per view';document.getElementById('coinCat').textContent=v<=8?'Short Video':v<=20?'Medium Video':'Movie / Long';">
+              oninput="const v=+this.value; const ngn=v*25; const lp=getCoinLocalPrice(v); const uc=getUserCurrency(); document.getElementById('coinVal').textContent='🪙 '+v; document.getElementById('coinNaira').textContent= uc.code==='NGN'||!userCurrencyRates[uc.code] ? '₦'+ngn.toLocaleString('en-NG')+' per view · 1 coin = ₦25' : '₦'+ngn.toLocaleString('en-NG')+' · '+lp+' per view · 1 coin = ₦25'; document.getElementById('coinCat').textContent=v<=8?'Short Video':v<=20?'Medium Video':'Movie / Long';">
             <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--gray-400);margin-top:4px;">
-              <span>🪙1 (₦30)</span><span>🪙40 (₦1,200)</span>
+              <span>🪙1 (₦25)</span><span>🪙40 (₦1,000)</span>
             </div>
           </div>
           <div style="background:white;border-radius:11px;padding:12px 14px;border:1px solid var(--gray-200);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
@@ -6646,8 +6698,14 @@ function selectRating(context, rating, el) {
     ?.querySelectorAll('.urating-pill')
     .forEach(p => { p.className = 'urating-pill'; });
 
-  const cls = rating === 'all'  ? 'sel-all'  :
-              rating === 'teen' ? 'sel-teen' : 'sel-mature';
+  // Map rating tier → color class
+  const cls =
+    (rating === '3+'  || rating === '7+')                     ? 'sel-kids'   :
+    (rating === '10+' || rating === '13+' || rating === 'teen') ? 'sel-teen'   :
+    (rating === '16+' || rating === '18+' || rating === 'mature') ? 'sel-mature' :
+    (rating === '25+')                                        ? 'sel-adult'  :
+    (rating === 'all')                                        ? 'sel-all'    :
+                                                                'sel-all';
   el.classList.add(cls);
 
   const hidden = document.getElementById(hiddenId);
@@ -6697,34 +6755,101 @@ function setPrice(context, mode) {
   }
 }
 
+function getCoinLocalPrice(coins) {
+  const ngn = coins * 25;
+  const uc  = getUserCurrency();
+  const rate = userCurrencyRates[uc.code];
+  // Convert NGN → local currency: local = ngn * (localRate / ngnRate)
+  const ngnRate = userCurrencyRates['NGN'] || (usdToNgn || 1620);
+  if (uc.code === 'NGN' || !rate) {
+    return `₦${ngn.toLocaleString('en-NG')}`;
+  }
+  const localAmt = (ngn / ngnRate) * rate;
+  const formatted = localAmt < 1
+    ? localAmt.toFixed(2)
+    : localAmt.toLocaleString('en', { maximumFractionDigits: 2 });
+  return `${uc.symbol}${formatted}`;
+}
+
 function updateCoinSlider(prefix) {
   const slider = document.getElementById(prefix + 'CoinSlider');
   if (!slider) return;
-  const v = Number(slider.value);
+  let v = Number(slider.value);
+  if (!Number.isFinite(v) || v < 1) v = 1;
+  if (v > 80) v = 80;
+  const ngn = v * 25;
+  const localPrice = getCoinLocalPrice(v);
+  const uc  = getUserCurrency();
 
-  document.getElementById(prefix + 'CoinVal').textContent   = '🪙 ' + v;
-  document.getElementById(prefix + 'CoinNaira').textContent =
-    '≈ ₦' + (v * 30).toLocaleString() + ' per view';
+  // Sync number input (without overwriting while user is mid-typing the same value)
+  const numInput = document.getElementById(prefix + 'CoinInput');
+  if (numInput && Number(numInput.value) !== v) numInput.value = v;
+
+  const nairaEl = document.getElementById(prefix + 'CoinNaira');
+  if (nairaEl) {
+    if (uc.code === 'NGN' || !userCurrencyRates[uc.code]) {
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} per view  ·  1 coin = ₦25`;
+    } else {
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} · ${localPrice} per view  ·  1 coin = ₦25 / ${getCoinLocalPrice(1)}`;
+    }
+  }
+
+  // Update min/max range labels with both Naira AND channel owner's local currency
+  const minLbl = document.getElementById(prefix + 'CoinMinLbl');
+  const maxLbl = document.getElementById(prefix + 'CoinMaxLbl');
+  if (minLbl) {
+    minLbl.textContent = (uc.code === 'NGN' || !userCurrencyRates[uc.code])
+      ? '🪙 1 (₦25)'
+      : `🪙 1 (₦25 · ${getCoinLocalPrice(1)})`;
+  }
+  if (maxLbl) {
+    maxLbl.textContent = (uc.code === 'NGN' || !userCurrencyRates[uc.code])
+      ? '🪙 80 (₦2,000)'
+      : `🪙 80 (₦2,000 · ${getCoinLocalPrice(80)})`;
+  }
 
   const catEl = document.getElementById(prefix + 'CoinCat');
   if (catEl) {
     catEl.className = 'ucoin-cat';
-    if      (v <= 8)  { catEl.classList.add('short');  catEl.textContent = 'Short Video'; }
-    else if (v <= 20) { catEl.classList.add('medium'); catEl.textContent = 'Medium Video'; }
-    else              { catEl.classList.add('long');   catEl.textContent = 'Movie / Long'; }
+    if      (v <= 8)  { catEl.classList.add('short');  catEl.textContent = 'Short Video (🪙1–8)'; }
+    else if (v <= 30) { catEl.classList.add('medium'); catEl.textContent = 'Medium Video (🪙9–30)'; }
+    else              { catEl.classList.add('long');   catEl.textContent = 'Movie / Long (🪙31–80)'; }
   }
 
   const cp = document.getElementById(prefix === 's' ? 'sCoinPrice' : 'epCoinPrice');
   if (cp) cp.value = v;
 }
 
+function updateCoinFromInput(prefix) {
+  const input  = document.getElementById(prefix + 'CoinInput');
+  const slider = document.getElementById(prefix + 'CoinSlider');
+  if (!input || !slider) return;
+  let v = parseInt(input.value, 10);
+  if (!Number.isFinite(v)) return; // allow user to clear field temporarily
+  if (v < 1)  v = 1;
+  if (v > 80) v = 80;
+  slider.value = v;
+  updateCoinSlider(prefix);
+}
+
 function updateSeasonCoinSlider() {
   const slider = document.getElementById('seaFullCoinSlider');
   if (!slider) return;
-  const v = Number(slider.value);
-  document.getElementById('seaFullCoinVal').textContent   = '🪙 ' + v;
-  document.getElementById('seaFullCoinNaira').textContent =
-    '≈ ₦' + (v * 30).toLocaleString() + ' for full season';
+  const v         = Number(slider.value);
+  const ngn       = v * 25;
+  const localPrice = getCoinLocalPrice(v);
+  const uc        = getUserCurrency();
+
+  document.getElementById('seaFullCoinVal').textContent = '🪙 ' + v;
+
+  const nairaEl = document.getElementById('seaFullCoinNaira');
+  if (nairaEl) {
+    if (uc.code === 'NGN' || !userCurrencyRates[uc.code]) {
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} for full season  ·  1 coin = ₦25`;
+    } else {
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} · ${localPrice} for full season  ·  1 coin = ₦25 / ${getCoinLocalPrice(1)}`;
+    }
+  }
 }
 
 function setSeasonPriceMode(mode) {
@@ -7312,6 +7437,7 @@ async function postSingleVideo() {
       coinPrice,
       scheduleDate,
       isScheduled:  !!scheduleDate,
+      category,
       type:         'single',
       views:        0,
       likes:        0,
@@ -7371,12 +7497,20 @@ async function postSingleVideo() {
    CREATE SEASON
 ==================================================== */
 async function createSeason() {
-  const title  = document.getElementById('seaTitle').value.trim();
-  const rating = document.getElementById('seaRating').value;
-  const btn    = document.getElementById('seaCreateBtn');
+ const title       = document.getElementById('seaTitle').value.trim();
+  const rating      = document.getElementById('seaRating').value;
+  const category    = document.getElementById('seaCategory').value;
+  const desc        = document.getElementById('seaDesc').value.trim();
+  const btn         = document.getElementById('seaCreateBtn');
 
   let hasError = false;
-  if (!title)  { shakeField('seaTitle'); scrollTo_('seaTitle'); hasError = true; }
+  if (!title)    { shakeField('seaTitle');    scrollTo_('seaTitle');    hasError = true; }
+  if (!category) { shakeField('seaCategory'); if (!hasError) scrollTo_('seaCategory'); hasError = true; }
+  const descWords = desc.split(/\s+/).filter(w => w.length > 0);
+  if (descWords.length < 10) {
+    shakeField('seaDesc'); if (!hasError) scrollTo_('seaDesc'); hasError = true;
+    document.getElementById('seaDesc').placeholder = '⚠ At least 10 words required — currently ' + descWords.length;
+  }
   if (!rating) {
     document.getElementById('seaRatingPills')
       .querySelectorAll('.urating-pill')
@@ -7442,6 +7576,7 @@ async function createSeason() {
       scheduleDate,
       isScheduled:     !!scheduleDate,
       status,
+      category,
       episodeCount:    0,
       channelId:       CHANNEL_UID,
       createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
@@ -7598,15 +7733,24 @@ document.getElementById('episodeBlock').style.display = 'block';
 
     async function postEpisode() {
   const epTitle = document.getElementById('epTitle').value.trim();
+  const epDesc  = document.getElementById('epDesc').value.trim();
   const btn     = document.getElementById('epPostBtn');
 
   let hasError = false;
-  if (!currentSeasonId) { alert('Please create or select a season first.'); return; }
+  if (!currentSeasonId) {
+    alert('Please create or select a season first.');
+    return;
+  }
   if (!epVideoFile_) {
     shakeField('epVideoDrop'); scrollTo_('epVideoDrop'); hasError = true;
   }
   if (!epTitle) {
     shakeField('epTitle'); if (!hasError) scrollTo_('epTitle'); hasError = true;
+  }
+  const epDescWords = epDesc.split(/\s+/).filter(w => w.length > 0);
+  if (epDescWords.length < 10) {
+    shakeField('epDesc'); if (!hasError) scrollTo_('epDesc'); hasError = true;
+    document.getElementById('epDesc').placeholder = '⚠ At least 10 words required — currently ' + epDescWords.length;
   }
   if (hasError) return;
 
@@ -8241,7 +8385,7 @@ function renderAvEpisodes(seasonId, episodes, sea) {
   const totalViews = episodes.reduce((s, e) => s + (Number(e.views) || 0), 0);
   const totalLikes = episodes.reduce((s, e) => s + (Number(e.likes) || 0), 0);
   const totalRev   = episodes.reduce((s, e) => s + (Number(e.revenue) || 0), 0);
-  const totalCoins = Math.round(totalRev * (usdToNgn || 1620) / 30);
+  const totalCoins = Math.round(totalRev * (usdToNgn || 1620) / 25);
 
   const summaryBar = `
     <div style="display:flex;gap:8px;padding:12px 11px 8px;flex-wrap:wrap;">
@@ -8410,7 +8554,7 @@ function renderVdPlayer(video) {
 function renderVdBody(video) {
   const body  = document.getElementById('vdBody');
   const rev   = Number(video.revenue)   || 0;
-  const coins = Math.round(rev * (usdToNgn || 1620) / 30);
+  const coins = Math.round(rev * (usdToNgn || 1620) / 25);
   const naira = (rev * (usdToNgn || 1620)).toLocaleString('en-NG', { maximumFractionDigits: 0 });
   const isPaid  = video.priceMode === 'paid';
   const isSched = video.isScheduled;
@@ -9384,6 +9528,72 @@ function histErrorHTML(msg) {
 
 function goBackToPose() {
   window.location.href = 'poseappdash.html';
+}
+
+function confirmDeleteAccount() {
+  const div = document.createElement('div');
+  div.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,.5);
+    z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;`;
+  div.innerHTML = `
+    <div style="background:white;border-radius:20px;padding:28px;max-width:340px;
+      width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+      <div style="width:60px;height:60px;border-radius:50%;background:#FEE2E2;
+        display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+        <i class="fa-solid fa-trash" style="color:#DC2626;font-size:24px;"></i>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+        margin-bottom:8px;color:var(--text-main);">Delete Account?</div>
+      <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;line-height:1.6;">
+        This will permanently delete your channel, all videos, and earnings data.
+        <strong>This cannot be undone.</strong>
+      </div>
+      <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:11px;
+        padding:11px 14px;margin-bottom:20px;font-size:12px;color:#DC2626;">
+        <i class="fas fa-triangle-exclamation" style="margin-right:5px;"></i>
+        Your pending earnings may be forfeited.
+      </div>
+      <button id="deleteConfirmBtn"
+        style="width:100%;padding:12px;border-radius:11px;background:#DC2626;color:white;
+        font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;
+        font-family:'DM Sans',sans-serif;"
+        onclick="executeDeleteAccount(this)">
+        <i class="fas fa-trash" style="margin-right:6px;"></i>Yes, Delete Everything
+      </button>
+      <button onclick="this.closest('div[style*=fixed]').remove()"
+        style="width:100%;padding:12px;border-radius:11px;background:var(--gray-100);
+        color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;
+        border:1.5px solid var(--gray-200);font-family:'DM Sans',sans-serif;">
+        Cancel
+      </button>
+    </div>`;
+  document.body.appendChild(div);
+}
+
+async function executeDeleteAccount(btn) {
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Deleting…';
+
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Not authenticated');
+
+    // Delete channel document
+    await db.collection('channels').doc(CHANNEL_UID).delete();
+
+    // Delete Firebase Auth user
+    await user.delete();
+
+    window.location.href = 'index.html';
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Yes, Delete Everything';
+
+    if (e.code === 'auth/requires-recent-login') {
+      alert('For security, please log out and log back in before deleting your account.');
+    } else {
+      alert('Delete failed: ' + e.message);
+    }
+  }
 }
   </script>
 
