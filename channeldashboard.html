@@ -868,6 +868,79 @@
 ============================== */
 #page-upload { background: var(--gray-50); }
 
+/* ── Upload Info Banner ── */
+.upload-info-banner{
+  display:flex; align-items:flex-start; gap:12px;
+  margin:14px 16px 0;
+  padding:12px 14px;
+  background:linear-gradient(135deg, rgba(124,58,237,.10), rgba(124,58,237,.04));
+  border:1px solid rgba(124,58,237,.25);
+  border-left:4px solid var(--purple-main);
+  border-radius:10px;
+  position:relative;
+  animation:uibFade .35s ease;
+}
+@keyframes uibFade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.uib-icon{
+  flex-shrink:0;
+  width:34px;height:34px;border-radius:50%;
+  background:var(--purple-main); color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  box-shadow:0 2px 8px rgba(124,58,237,.35);
+}
+.uib-text{flex:1;min-width:0;line-height:1.35;}
+.uib-title{
+  font-size:13.5px; font-weight:700; color:var(--purple-deep);
+  margin-bottom:3px;
+}
+.uib-sub{
+  font-size:12px; color:var(--gray-600,#4b5563);
+}
+.uib-sub b{ color:var(--purple-main); font-weight:600; }
+.uib-close{
+  position:absolute; top:6px; right:6px;
+  width:24px;height:24px;border:none;border-radius:6px;
+  background:transparent; color:var(--gray-500);
+  cursor:pointer; font-size:12px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s, color .15s;
+}
+.uib-close:hover{ background:rgba(124,58,237,.10); color:var(--purple-main); }
+
+/* ── "Preparing to add episodes…" loader ── */
+.prep-ep-loader{
+  display:none; align-items:center; gap:14px;
+  margin:18px 16px;
+  padding:14px 18px;
+  background:#fff;
+  border:1px solid var(--purple-light, rgba(124,58,237,.30));
+  border-left:4px solid var(--purple-main);
+  border-radius:12px;
+  box-shadow:0 4px 18px rgba(124,58,237,.12);
+  opacity:0; transform:translateY(-4px);
+  transition:opacity .25s ease, transform .25s ease;
+}
+.prep-ep-loader.show{ opacity:1; transform:none; }
+.pel-spinner{
+  width:26px; height:26px; flex-shrink:0;
+  border:3px solid rgba(124,58,237,.18);
+  border-top-color:var(--purple-main);
+  border-radius:50%;
+  animation:pelSpin .7s linear infinite;
+}
+@keyframes pelSpin{to{transform:rotate(360deg);}}
+.pel-text{ line-height:1.3; }
+.pel-title{ font-size:13.5px; font-weight:700; color:var(--purple-deep); }
+.pel-sub{ font-size:11.5px; color:var(--gray-500,#6b7280); margin-top:2px; }
+
+@media (max-width:520px){
+  .upload-info-banner{ margin:10px 12px 0; padding:10px 12px; gap:10px; }
+  .uib-title{ font-size:12.5px; }
+  .uib-sub{ font-size:11.5px; }
+  .uib-icon{ width:30px;height:30px; font-size:12px; }
+}
+
 /* Upload Tabs */
 .upload-tabs {
   background: var(--white);
@@ -1648,6 +1721,121 @@ input[type=range].ucoin-slider {
   text-transform: uppercase; letter-spacing: .5px;
 }
 
+/* ── Views Pool card (free videos only) ── */
+.vd-pool-card{
+  background:#fff;
+  border:1px solid var(--purple-light, rgba(124,58,237,.30));
+  border-left:4px solid var(--purple-main);
+  border-radius:16px; padding:18px; margin-bottom:16px;
+  box-shadow:0 4px 18px rgba(124,58,237,.10);
+}
+.vd-pool-header{
+  display:flex; align-items:center; gap:12px; margin-bottom:14px;
+}
+.vd-pool-icon{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));
+  color:#fff; display:flex;align-items:center;justify-content:center;
+  font-size:15px; box-shadow:0 3px 10px rgba(124,58,237,.35);
+}
+.vd-pool-title{ font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--text-main); }
+.vd-pool-sub  { font-size:11.5px; color:var(--gray-500); margin-top:2px; }
+.vd-pool-badge{
+  margin-left:auto;
+  font-size:10px; font-weight:800; letter-spacing:.6px;
+  padding:4px 9px; border-radius:20px;
+  background:#D1FAE5; color:#065F46;
+}
+.vd-pool-notice{
+  display:flex; gap:10px; align-items:flex-start;
+  background:var(--purple-ghost,#F5F3FF);
+  border:1px solid var(--purple-pale, rgba(124,58,237,.18));
+  border-radius:12px; padding:12px 14px; margin-bottom:14px;
+  font-size:12px; line-height:1.5; color:#4b5563;
+}
+.vd-pool-notice i{ color:var(--purple-main); margin-top:2px; flex-shrink:0; }
+.vd-pool-notice b { color:var(--purple-deep); }
+
+.vd-pool-bar{
+  height:10px; border-radius:6px;
+  background:#EDE9FE; overflow:hidden; margin-bottom:8px;
+}
+.vd-pool-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--purple-main),#A78BFA);
+  border-radius:6px; transition:width .6s ease;
+  min-width:2px;
+}
+.vd-pool-bar-legend{
+  display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  font-size:10.5px; color:var(--gray-500); margin-bottom:14px;
+}
+.vd-dot{ display:inline-block; width:8px;height:8px;border-radius:50%; margin-right:5px; vertical-align:middle; }
+.vd-dot-this { background:var(--purple-main); }
+.vd-dot-other{ background:#EDE9FE; border:1px solid var(--purple-light,rgba(124,58,237,.3)); }
+
+.vd-pool-grid{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:14px;
+}
+@media (min-width:480px){ .vd-pool-grid{ grid-template-columns:repeat(4,1fr); } }
+.vd-pool-stat{
+  background:var(--gray-50,#F9FAFB);
+  border:1px solid var(--gray-200);
+  border-radius:11px; padding:10px 12px;
+}
+.vd-pool-stat-val{ font-size:16px; font-weight:800; color:var(--text-main); line-height:1.2; }
+.vd-pool-stat-lbl{ font-size:10.5px; color:var(--gray-500); margin-top:3px; }
+.vd-pool-stat-accent{
+  background:linear-gradient(135deg,#ECFDF5,#D1FAE5);
+  border-color:#A7F3D0;
+}
+.vd-pool-stat-accent .vd-pool-stat-val{ color:#065F46; }
+.vd-pool-stat-accent .vd-pool-stat-lbl{ color:#047857; font-weight:600; }
+
+.vd-pool-flow{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:6px; flex-wrap:nowrap; overflow-x:auto;
+  background:#FAFAFA; border:1px dashed var(--gray-200);
+  border-radius:11px; padding:10px; margin-bottom:14px;
+}
+.vd-pool-flow::-webkit-scrollbar{ display:none; }
+.vd-pool-flow-step{
+  flex-shrink:0;
+  font-size:11px; font-weight:700; color:var(--text-main);
+  background:#fff; border:1px solid var(--gray-200);
+  padding:6px 10px; border-radius:20px; white-space:nowrap;
+}
+.vd-pool-flow-pool{ background:var(--purple-pale); color:var(--purple-deep); border-color:var(--purple-light,rgba(124,58,237,.3)); }
+.vd-pool-flow-rev { background:#FEF3C7; color:#92400E; border-color:#FDE68A; }
+.vd-pool-flow-take{ background:#D1FAE5; color:#065F46; border-color:#A7F3D0; }
+.vd-pool-arrow{ color:var(--gray-400); font-size:11px; flex-shrink:0; }
+
+.vd-pool-notif{
+  display:flex; gap:10px; align-items:flex-start;
+  background:#FFFBEB; border:1px solid #FDE68A;
+  border-radius:12px; padding:11px 13px; margin-bottom:14px;
+  font-size:11.5px; line-height:1.5; color:#92400E;
+}
+.vd-pool-notif-icon{
+  width:26px;height:26px;border-radius:50%;
+  background:#F59E0B;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px; flex-shrink:0;
+}
+.vd-pool-notif-text b{ color:#78350F; }
+
+.vd-pool-cta{
+  width:100%;
+  padding:11px 14px; border:none; border-radius:11px;
+  background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));
+  color:#fff; font-size:13px; font-weight:700; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 3px 12px rgba(124,58,237,.30);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.vd-pool-cta:hover{ transform:translateY(-1px); box-shadow:0 5px 16px rgba(124,58,237,.40); }
+
 /* Info card */
 .vd-info-card {
   background: var(--white); border: 1px solid var(--gray-200);
@@ -1740,6 +1928,97 @@ input[type=range].ucoin-slider {
   display: flex; align-items: center; gap: 10px;
   padding: 16px; color: var(--gray-400); font-size: 13px;
 }
+
+/* ── Video Detail Action Buttons ── */
+.vd-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.vd-action-btn {
+  flex: 1; min-width: 100px; padding: 12px 14px;
+  border-radius: 12px; border: 1.5px solid var(--gray-200);
+  background: var(--white); color: var(--text-main);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: all .2s ease;
+}
+.vd-action-btn:hover { border-color: var(--purple-light); background: var(--purple-ghost); color: var(--purple-main); }
+.vd-action-btn.danger { border-color: #FECACA; color: #DC2626; }
+.vd-action-btn.danger:hover { background: #FEF2F2; border-color: #DC2626; }
+.vd-action-btn.warn { border-color: #FDE68A; color: #92400E; }
+.vd-action-btn.warn:hover { background: #FFFBEB; border-color: #D97706; }
+.vd-action-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.vd-delete-overlay {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(15, 5, 40, 0.8); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn .25s ease both;
+}
+.vd-delete-card {
+  background: #fff; border-radius: 22px; padding: 28px 24px;
+  max-width: 380px; width: 90%; text-align: center;
+  box-shadow: 0 12px 48px rgba(0,0,0,.3);
+  animation: slideUp .35s cubic-bezier(.25,.8,.25,1) both;
+}
+.vd-delete-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #FEE2E2; color: #DC2626;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin: 0 auto 16px;
+}
+.vd-delete-title {
+  font-family: 'Playfair Display', serif; font-size: 20px;
+  font-weight: 700; color: var(--text-main); margin-bottom: 8px;
+}
+.vd-delete-sub { font-size: 13px; color: var(--gray-500); line-height: 1.6; margin-bottom: 20px; }
+.vd-delete-countdown {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: #FEF2F2; border: 3px solid #FECACA;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif; font-size: 28px;
+  font-weight: 700; color: #DC2626; margin: 0 auto 18px;
+  animation: recordingCountdownPulse 1s ease-in-out infinite;
+}
+.vd-delete-progress { height: 6px; background: #FEE2E2; border-radius: 99px; overflow: hidden; margin-bottom: 18px; }
+.vd-delete-progress-fill { height: 100%; background: #DC2626; border-radius: 99px; transition: width 1s linear; }
+.vd-delete-btns { display: flex; gap: 10px; }
+.vd-delete-cancel-btn {
+  flex: 1; padding: 13px; border-radius: 12px; border: 1.5px solid var(--gray-200);
+  background: var(--white); color: var(--text-main); font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.vd-delete-cancel-btn:hover { border-color: var(--purple-light); background: var(--purple-ghost); }
+.vd-delete-confirm-btn {
+  flex: 1; padding: 13px; border-radius: 12px; border: none;
+  background: #DC2626; color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s;
+  opacity: 0.4; pointer-events: none;
+}
+.vd-delete-confirm-btn.enabled { opacity: 1; pointer-events: auto; }
+.vd-delete-confirm-btn.enabled:hover { background: #B91C1C; }
+
+.vd-resched-overlay {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(15, 5, 40, 0.8); backdrop-filter: blur(10px);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: fadeIn .25s ease both;
+}
+.vd-resched-card {
+  background: #fff; border-radius: 22px 22px 0 0; padding: 24px 22px 36px;
+  max-width: 440px; width: 100%;
+  box-shadow: 0 -8px 36px rgba(0,0,0,.25);
+  animation: slideUp .35s cubic-bezier(.25,.8,.25,1) both;
+}
+.vd-resched-title {
+  font-family: 'Playfair Display', serif; font-size: 18px;
+  font-weight: 700; color: var(--text-main); margin-bottom: 6px; text-align: center;
+}
+.vd-resched-sub { font-size: 13px; color: var(--gray-500); margin-bottom: 18px; text-align: center; }
+.vd-resched-input {
+  width: 100%; padding: 13px 14px; border: 1.5px solid var(--gray-200);
+  border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+  color: var(--text-main); margin-bottom: 16px; outline: none;
+  transition: border-color .2s;
+}
+.vd-resched-input:focus { border-color: var(--purple-main); }
 
 /* Scheduled overlay */
 .vd-sched-banner {
@@ -2473,6 +2752,26 @@ input[type=range].ucoin-slider {
     </div>
   </div>
 
+  <!-- Channel-wide payout requirement strip (always visible on home) -->
+  <div id="homeEligStrip" onclick="onMainTab(document.querySelector('.tab-item[data-tab=&quot;earnings&quot;]'),'earnings');"
+    style="cursor:pointer;margin:0 16px 14px;padding:11px 14px;border-radius:12px;
+      background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;
+      display:flex;align-items:center;gap:10px;">
+    <div style="width:32px;height:32px;border-radius:50%;background:#F59E0B;color:#fff;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i class="fas fa-shield-halved"></i>
+    </div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:12.5px;font-weight:800;color:#78350F;line-height:1.3;">
+        Payout Requirements
+      </div>
+      <div id="homeEligText" style="font-size:11px;color:#92400E;line-height:1.4;margin-top:2px;">
+        Ads need <b>1,000 channel views</b> · Paid videos release every <b>10 views</b>.
+      </div>
+    </div>
+    <i class="fas fa-chevron-right" style="color:#92400E;font-size:11px;flex-shrink:0;"></i>
+  </div>
+
   <div class="cta-row">
     <button class="btn btn-purple btn-lg" onclick="openUpload()">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2676,6 +2975,53 @@ input[type=range].ucoin-slider {
         <div style="font-size:11px;text-transform:uppercase;letter-spacing:.9px;font-weight:700;color:var(--purple-mid);margin-bottom:8px;">Total Take-Home</div>
         <div id="totalRevDisplay" style="font-family:'Playfair Display',serif;font-weight:700;color:var(--purple-deep);line-height:1;font-size:42px;">—</div>
         <div style="font-size:12px;color:var(--gray-500);margin-top:8px;" id="totalRevSub">—</div>
+      </div>
+
+      <!-- Available vs Locked breakdown -->
+      <div id="availLockBox" style="display:none;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:12px;padding:12px;">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;color:#047857;">Available to Withdraw</div>
+          <div id="availAmount" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#065F46;margin-top:4px;">₦0</div>
+          <div style="font-size:10.5px;color:#047857;margin-top:2px;">Met 1K / 10-view rules</div>
+        </div>
+        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px;">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;color:#92400E;">🔒 Locked in Pools</div>
+          <div id="lockedAmount" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#78350F;margin-top:4px;">₦0</div>
+          <div style="font-size:10.5px;color:#92400E;margin-top:2px;">Releases as views build up</div>
+        </div>
+      </div>
+
+      <!-- Eligibility / threshold banner -->
+      <div id="eligibilityBanner" style="margin-top:14px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <i class="fas fa-shield-halved" style="color:#D97706;"></i>
+          <span style="font-size:12.5px;font-weight:800;color:#78350F;">Withdrawal Requirements</span>
+        </div>
+        <div style="font-size:11.5px;color:#92400E;line-height:1.55;margin-bottom:8px;">
+          <b>Ads Revenue:</b> channel needs <b>1,000 views</b> from ad-supported videos before money leaves the pool.<br/>
+          <b>Paid Videos:</b> each paid video needs <b>10 views</b> per batch — earnings flow out 10 views at a time.
+        </div>
+
+        <!-- Ads progress -->
+        <div id="adsEligibilityRow" style="background:#fff;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:#78350F;margin-bottom:6px;">
+            <span><i class="fas fa-rectangle-ad" style="margin-right:4px;"></i> Ads Revenue Pool</span>
+            <span id="adsEligStatus">—</span>
+          </div>
+          <div style="height:8px;background:#FEF3C7;border-radius:4px;overflow:hidden;">
+            <div id="adsEligBar" style="height:100%;width:0%;background:linear-gradient(90deg,#F59E0B,#D97706);transition:width .5s;"></div>
+          </div>
+          <div id="adsEligText" style="font-size:10.5px;color:#92400E;margin-top:5px;">—</div>
+        </div>
+
+        <!-- Paid progress -->
+        <div id="paidEligibilityRow" style="background:#fff;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;">
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:#78350F;margin-bottom:4px;">
+            <span><i class="fas fa-coins" style="margin-right:4px;"></i> Paid Video Pool</span>
+            <span id="paidEligStatus">—</span>
+          </div>
+          <div id="paidEligText" style="font-size:10.5px;color:#92400E;margin-top:2px;line-height:1.5;">—</div>
+        </div>
       </div>
 
       <div style="display:flex;align-items:center;gap:6px;margin-top:12px;" id="rateNote">
@@ -3838,6 +4184,22 @@ input[type=range].ucoin-slider {
     </div>
   </div>
 
+  <!-- ── INFO BANNER ── -->
+  <div class="upload-info-banner" id="uploadInfoBanner">
+    <div class="uib-icon"><i class="fas fa-rocket"></i></div>
+    <div class="uib-text">
+      <div class="uib-title">Fill every detail — it pays you back 💰</div>
+      <div class="uib-sub">
+        Accurate <b>category</b>, <b>subcategory</b>, <b>tags</b> and <b>description</b> help us push your video to the right audience,
+        boost watch-time, unlock <b>monetization</b> faster and grow your <b>earnings</b>.
+      </div>
+    </div>
+    <button class="uib-close" type="button" aria-label="Dismiss"
+      onclick="document.getElementById('uploadInfoBanner').style.display='none'">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
   <!-- Upload Tabs -->
   <div class="upload-tabs">
     <div class="upload-tab-btn active" onclick="switchUploadTab(this,'single')">
@@ -3957,30 +4319,48 @@ input[type=range].ucoin-slider {
        <!-- Category -->
         <div class="ufield">
           <div class="ufield-label"><span class="ureq-dot"></span> Category</div>
-          <select class="ufield-input" id="sCategory">
+          <select class="ufield-input" id="sCategory" onchange="populateSubcategory('sCategory','sSubcategory')">
             <option value="">— Select a category —</option>
             <option value="comedy">😂 Comedy</option>
             <option value="funny">🤣 Funny / Skits</option>
             <option value="dance">💃 Dance</option>
-            <option value="music-video">🎵 Music Video</option>
+            <option value="music">🎵 Music</option>
+            <option value="music-video">🎶 Music Video</option>
             <option value="afrobeats">🥁 Afrobeats / Afropop</option>
             <option value="highlife">🎷 Highlife / Juju</option>
             <option value="gospel">🙏 Gospel / Worship</option>
+            <option value="movies">🎥 Movies</option>
+            <option value="tvshows">📺 TV Shows</option>
+            <option value="anime">🎌 Anime</option>
             <option value="nollywood">🎬 Nollywood / Drama</option>
             <option value="documentary">🎙 Documentary</option>
+            <option value="documentaries">🌍 Documentaries</option>
             <option value="education">📚 Education / Tutorial</option>
             <option value="lifestyle">✨ Lifestyle / Vlog</option>
             <option value="fashion">👗 Fashion / Beauty</option>
             <option value="food">🍲 Food / Cooking</option>
             <option value="sports">⚽ Sports / Fitness</option>
-            <option value="tech">💻 Tech / Gaming</option>
+            <option value="gaming">🎮 Gaming</option>
+            <option value="tech">💻 Tech</option>
             <option value="news">📰 News / Politics</option>
             <option value="travel">✈️ Travel / Adventure</option>
             <option value="kids">🧒 Kids / Family</option>
             <option value="romance">❤️ Romance / Relationships</option>
+            <option value="thriller">👁️ Thriller</option>
+            <option value="scifi">🌌 Sci-Fi</option>
+            <option value="health">🧘 Health</option>
             <option value="motivation">🔥 Motivation / Self-Help</option>
           </select>
           <div class="uhelp"><i class="fas fa-circle-info"></i> Choose the category that best describes your video. This helps viewers discover your content.</div>
+        </div>
+
+        <!-- Subcategory (dynamic — depends on main category) -->
+        <div class="ufield" id="sSubcategoryWrap" style="display:none;">
+          <div class="ufield-label">Subcategory</div>
+          <select class="ufield-input" id="sSubcategory">
+            <option value="">— Select a subcategory —</option>
+          </select>
+          <div class="uhelp"><i class="fas fa-circle-info"></i> Pick a subcategory so viewers can find your video under the right tab on the watch page.</div>
         </div>
 
         <!-- Description -->
@@ -4022,6 +4402,78 @@ input[type=range].ucoin-slider {
         </div>
       </div>
 
+
+      <!-- Production & Cast -->
+      <div class="upload-card">
+        <div class="upload-card-title"><i class="fas fa-clapperboard"></i> Production &amp; Cast <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional)</span></div>
+        <div class="uhelp" style="margin-bottom:14px;">
+          <i class="fas fa-circle-info"></i>
+          Adding cast and production credits boosts discoverability — viewers can search by actor, director, or studio.
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Director(s)</div>
+          <input class="ufield-input" type="text" id="sDirector"
+            placeholder="e.g. Kunle Afolayan, Genevieve Nnaji">
+          <div class="uhelp"><i class="fas fa-circle-info"></i> Separate multiple directors with commas.</div>
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Writer(s) / Screenplay</div>
+          <input class="ufield-input" type="text" id="sWriter"
+            placeholder="e.g. Biyi Bandele, Chimamanda Adichie">
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Producer(s)</div>
+          <input class="ufield-input" type="text" id="sProducer"
+            placeholder="e.g. Mo Abudu, EbonyLife Studios">
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Cast / Actors &amp; Actresses</div>
+          <textarea class="ufield-input" id="sCast"
+            placeholder="e.g. Genevieve Nnaji, Ramsey Nouah, Rita Dominic, Pete Edochie…"></textarea>
+          <div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated list of leads &amp; supporting cast.</div>
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Studio / Production Company</div>
+          <input class="ufield-input" type="text" id="sStudio"
+            placeholder="e.g. EbonyLife Studios, Inkblot Productions">
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Year of Release</div>
+          <input class="ufield-input" type="number" id="sYear" min="1900" max="2100"
+            placeholder="e.g. 2024">
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Language</div>
+          <input class="ufield-input" type="text" id="sLanguage"
+            placeholder="e.g. English, Yoruba, Igbo, Pidgin">
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Country / Region</div>
+          <input class="ufield-input" type="text" id="sCountry"
+            placeholder="e.g. Nigeria, Ghana, South Africa">
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Genre Tags</div>
+          <input class="ufield-input" type="text" id="sGenres"
+            placeholder="e.g. Drama, Thriller, Family">
+          <div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated. These appear as filter tags on the watch page.</div>
+        </div>
+
+        <div class="ufield">
+          <div class="ufield-label">Subtitles / Captions Available</div>
+          <input class="ufield-input" type="text" id="sSubtitles"
+            placeholder="e.g. English, French, Hausa">
+        </div>
+      </div>
 
       <!-- Schedule -->
       <div class="upload-card">
@@ -4140,30 +4592,48 @@ input[type=range].ucoin-slider {
           <!-- Season Category -->
           <div class="ufield">
             <div class="ufield-label"><span class="ureq-dot"></span> Category</div>
-            <select class="ufield-input" id="seaCategory">
+            <select class="ufield-input" id="seaCategory" onchange="populateSubcategory('seaCategory','seaSubcategory')">
               <option value="">— Select a category —</option>
               <option value="comedy">😂 Comedy</option>
               <option value="funny">🤣 Funny / Skits</option>
               <option value="dance">💃 Dance</option>
-              <option value="music-video">🎵 Music Video</option>
+              <option value="music">🎵 Music</option>
+              <option value="music-video">🎶 Music Video</option>
               <option value="afrobeats">🥁 Afrobeats / Afropop</option>
               <option value="highlife">🎷 Highlife / Juju</option>
               <option value="gospel">🙏 Gospel / Worship</option>
+              <option value="movies">🎥 Movies</option>
+              <option value="tvshows">📺 TV Shows</option>
+              <option value="anime">🎌 Anime</option>
               <option value="nollywood">🎬 Nollywood / Drama</option>
               <option value="documentary">🎙 Documentary</option>
+              <option value="documentaries">🌍 Documentaries</option>
               <option value="education">📚 Education / Tutorial</option>
               <option value="lifestyle">✨ Lifestyle / Vlog</option>
               <option value="fashion">👗 Fashion / Beauty</option>
               <option value="food">🍲 Food / Cooking</option>
               <option value="sports">⚽ Sports / Fitness</option>
-              <option value="tecnoh">💻 Tech / Gaming</option>
+              <option value="gaming">🎮 Gaming</option>
+              <option value="tech">💻 Tech</option>
               <option value="news">📰 News / Politics</option>
               <option value="travel">✈️ Travel / Adventure</option>
               <option value="kids">🧒 Kids / Family</option>
               <option value="romance">❤️ Romance / Relationships</option>
+              <option value="thriller">👁️ Thriller</option>
+              <option value="scifi">🌌 Sci-Fi</option>
+              <option value="health">🧘 Health</option>
               <option value="motivation">🔥 Motivation / Self-Help</option>
             </select>
             <div class="uhelp"><i class="fas fa-circle-info"></i> Category applies to the entire season and all its episodes.</div>
+          </div>
+
+          <!-- Season Subcategory (dynamic — depends on main category) -->
+          <div class="ufield" id="seaSubcategoryWrap" style="display:none;">
+            <div class="ufield-label">Subcategory</div>
+            <select class="ufield-input" id="seaSubcategory">
+              <option value="">— Select a subcategory —</option>
+            </select>
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Pick a subcategory so viewers can find your season under the right tab on the watch page.</div>
           </div>
 
           <!-- Season Description -->
@@ -4230,6 +4700,78 @@ input[type=range].ucoin-slider {
             <div class="uhelp"><i class="fas fa-circle-info"></i>
               <strong>Required.</strong> This rating covers the entire season. Individual episodes cannot exceed this rating.
             </div>
+          </div>
+        </div>
+
+        <!-- Season Production & Cast -->
+        <div class="upload-card">
+          <div class="upload-card-title"><i class="fas fa-clapperboard"></i> Production &amp; Cast <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional — applies to whole season)</span></div>
+          <div class="uhelp" style="margin-bottom:14px;">
+            <i class="fas fa-circle-info"></i>
+            Cast and credits entered here cover every episode. You can add a per-episode "Guest Cast" later.
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Director(s)</div>
+            <input class="ufield-input" type="text" id="seaDirector"
+              placeholder="e.g. Kunle Afolayan, Genevieve Nnaji">
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Separate multiple directors with commas.</div>
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Writer(s) / Screenplay</div>
+            <input class="ufield-input" type="text" id="seaWriter"
+              placeholder="e.g. Biyi Bandele, Chimamanda Adichie">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Producer(s) / Executive Producer</div>
+            <input class="ufield-input" type="text" id="seaProducer"
+              placeholder="e.g. Mo Abudu, EbonyLife Studios">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Main Cast / Actors &amp; Actresses</div>
+            <textarea class="ufield-input" id="seaCast"
+              placeholder="e.g. Genevieve Nnaji, Ramsey Nouah, Rita Dominic, Pete Edochie…"></textarea>
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated list of recurring leads &amp; supporting cast.</div>
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Studio / Production Company</div>
+            <input class="ufield-input" type="text" id="seaStudio"
+              placeholder="e.g. EbonyLife Studios, Inkblot Productions">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Year of Release</div>
+            <input class="ufield-input" type="number" id="seaYear" min="1900" max="2100"
+              placeholder="e.g. 2024">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Language</div>
+            <input class="ufield-input" type="text" id="seaLanguage"
+              placeholder="e.g. English, Yoruba, Igbo, Pidgin">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Country / Region</div>
+            <input class="ufield-input" type="text" id="seaCountry"
+              placeholder="e.g. Nigeria, Ghana, South Africa">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Genre Tags</div>
+            <input class="ufield-input" type="text" id="seaGenres"
+              placeholder="e.g. Drama, Thriller, Family">
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated. Used as filter tags on the season page.</div>
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Subtitles / Captions Available</div>
+            <input class="ufield-input" type="text" id="seaSubtitles"
+              placeholder="e.g. English, French, Hausa">
           </div>
         </div>
 
@@ -4449,6 +4991,34 @@ input[type=range].ucoin-slider {
             <button class="ufile-remove" onclick="removeFile('epTrailerFile','epTrailerPreview',null)">
               <i class="fas fa-times"></i>
             </button>
+          </div>
+        </div>
+
+        <!-- Episode Production & Guest Cast -->
+        <div class="upload-card">
+          <div class="upload-card-title"><i class="fas fa-clapperboard"></i> Episode Credits <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional)</span></div>
+          <div class="uhelp" style="margin-bottom:14px;">
+            <i class="fas fa-circle-info"></i>
+            Main cast is inherited from the season. Use these fields only for episode-specific credits.
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Episode Director</div>
+            <input class="ufield-input" type="text" id="epDirector"
+              placeholder="Leave blank to use the season director">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Episode Writer</div>
+            <input class="ufield-input" type="text" id="epWriter"
+              placeholder="Leave blank to use the season writer">
+          </div>
+
+          <div class="ufield">
+            <div class="ufield-label">Guest Cast</div>
+            <textarea class="ufield-input" id="epGuestCast"
+              placeholder="e.g. Special guests appearing only in this episode…"></textarea>
+            <div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated list of guest stars.</div>
           </div>
         </div>
 
@@ -5019,20 +5589,36 @@ db.collection('channels').doc(CHANNEL_UID)
     }
 
    function renderHomeStats() {
-  const totalViews = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
-  const subs       = channelData ? (Number(channelData.subscribers) || 0) : 0;
+   const totalViews = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
+   const subs       = channelData ? (Number(channelData.subscribers) || 0) : 0;
 
-  const vals = document.querySelectorAll('.stat-value');
-  const lbls = document.querySelectorAll('.stat-label');
-  if (vals[0]) vals[0].textContent = fmt(totalViews);
-  if (vals[2]) vals[2].textContent = fmt(subs);
-  if (lbls[2]) lbls[2].textContent = 'Fans';
+   const vals = document.querySelectorAll('.stat-value');
+   const lbls = document.querySelectorAll('.stat-label');
+   if (vals[0]) vals[0].textContent = fmt(totalViews);
+   if (vals[2]) vals[2].textContent = fmt(subs);
+   if (lbls[2]) lbls[2].textContent = 'Fans';
 
-  // Count singles + all episodes across all seasons
-  countAllContent().then(total => {
+   // Count singles + all episodes across all seasons
+   countAllContent().then(total => {
     if (vals[1]) vals[1].textContent = total;
-  });
-}
+   });
+
+   // Update home eligibility strip with live progress
+   const txt = document.getElementById('homeEligText');
+   if (txt && typeof getAdsBreakdown === 'function') {
+    const ads  = getAdsBreakdown();
+    const paid = getPaidBreakdown();
+    const adsLine = ads.unlocked
+      ? `✅ Ads unlocked (${ads.poolViews.toLocaleString('en-NG')} views)`
+      : `🔒 Ads: ${ads.poolViews.toLocaleString('en-NG')} / 1,000 views`;
+    const paidLine = paid.videoCount === 0
+      ? 'No paid videos yet'
+      : (paid.lockedViews > 0
+          ? `🔒 Paid: next batch in ${paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold)} view${(paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold))===1?'':'s'}`
+          : '✅ Paid videos releasing in 10-view batches');
+    txt.innerHTML = `${adsLine} · ${paidLine}`;
+   }
+   }
 
 async function countAllContent() {
   const singleCount = videosData.length;
@@ -5586,6 +6172,80 @@ document.getElementById('totalRevSub').textContent = total === 0
     : earnCurrency === 'COIN'
       ? `≈ ₦${(total * (usdToNgn||1620)).toLocaleString('en-NG', {maximumFractionDigits:0})}`
       : `≈ ₦${(total * (usdToNgn||1620)).toLocaleString('en-NG', {maximumFractionDigits:0})} · ${uc.name}`;
+
+      renderEligibilityBanner();
+    }
+
+    /* ==================================================
+       ELIGIBILITY BANNER · 1K ads + 10-view paid rules
+    ================================================== */
+    function renderEligibilityBanner() {
+      const ads     = getAdsBreakdown();
+      const paid    = getPaidBreakdown();
+      const released = ads.released + paid.released;
+      const locked   = ads.locked   + paid.locked;
+
+      // Available + Locked tiles
+      const box = document.getElementById('availLockBox');
+      if (box) {
+        box.style.display = (released + locked) > 0 ? 'grid' : 'none';
+        const a = document.getElementById('availAmount');
+        const l = document.getElementById('lockedAmount');
+        if (a) a.textContent = '₦' + Math.round(released).toLocaleString('en-NG');
+        if (l) l.textContent = '₦' + Math.round(locked).toLocaleString('en-NG');
+      }
+
+      // Ads progress
+      const adsBar    = document.getElementById('adsEligBar');
+      const adsStatus = document.getElementById('adsEligStatus');
+      const adsText   = document.getElementById('adsEligText');
+      if (adsBar) {
+        const pct  = Math.min(100, (ads.poolViews / ADS_VIEW_THRESHOLD) * 100);
+        adsBar.style.width = pct.toFixed(1) + '%';
+        if (ads.unlocked) {
+          adsBar.style.background = 'linear-gradient(90deg,#10B981,#059669)';
+          adsStatus.textContent = '✅ Unlocked';
+          adsStatus.style.color = '#065F46';
+          adsText.innerHTML =
+            `<b>${ads.poolViews.toLocaleString('en-NG')}</b> views in pool · ` +
+            `<b>${ads.releasedViews.toLocaleString('en-NG')}</b> released ` +
+            `(₦${Math.round(ads.released).toLocaleString('en-NG')}), ` +
+            `next batch in <b>${ADS_VIEW_THRESHOLD - ads.lockedViews}</b> view${(ADS_VIEW_THRESHOLD - ads.lockedViews)===1?'':'s'}.`;
+        } else {
+          adsBar.style.background = 'linear-gradient(90deg,#F59E0B,#D97706)';
+          adsStatus.textContent = `🔒 ${ads.poolViews.toLocaleString('en-NG')} / ${ADS_VIEW_THRESHOLD.toLocaleString('en-NG')}`;
+          adsStatus.style.color = '#92400E';
+          const need = ADS_VIEW_THRESHOLD - ads.poolViews;
+          adsText.innerHTML =
+            `Need <b>${need.toLocaleString('en-NG')}</b> more view${need===1?'':'s'} from ad-supported videos to unlock ` +
+            `₦${Math.round(ads.locked).toLocaleString('en-NG')} of locked Ads Revenue.`;
+        }
+      }
+
+      // Paid progress
+      const paidStatus = document.getElementById('paidEligStatus');
+      const paidText   = document.getElementById('paidEligText');
+      if (paidStatus) {
+        if (paid.videoCount === 0) {
+          paidStatus.textContent = '— No paid videos';
+          paidStatus.style.color = '#92400E';
+          paidText.textContent =
+            'You have no paid videos. Upload one to earn per-view directly.';
+        } else if (paid.released > 0 || paid.locked > 0) {
+          paidStatus.textContent =
+            `₦${Math.round(paid.released).toLocaleString('en-NG')} released · ₦${Math.round(paid.locked).toLocaleString('en-NG')} locked`;
+          paidStatus.style.color = paid.released > 0 ? '#065F46' : '#92400E';
+          paidText.innerHTML =
+            `Each paid video releases earnings every <b>10 views</b>. ` +
+            `<b>${paid.releasedViews.toLocaleString('en-NG')}</b> view${paid.releasedViews===1?'':'s'} have released so far · ` +
+            `<b>${paid.lockedViews.toLocaleString('en-NG')}</b> view${paid.lockedViews===1?'':'s'} still pending the next 10-view batch.`;
+        } else {
+          paidStatus.textContent = '🔒 0 / 10';
+          paidStatus.style.color = '#92400E';
+          paidText.innerHTML =
+            'Each paid video releases earnings every <b>10 views</b>. No paid views yet.';
+        }
+      }
     }
 
     function renderTimeline() {
@@ -5659,7 +6319,102 @@ document.getElementById('totalRevSub').textContent = total === 0
       return 0;
     }
 
+    /* ====================================================
+       PAYOUT-ELIGIBILITY CONSTANTS
+       ────────────────────────────────────────────────────
+       • ADS  → channel-wide 1,000 views (from free, ad-supported videos)
+                must be reached before any Ads Revenue can be withdrawn /
+                released to spendable Earnings.
+       • PAID → per-video. For every batch of 10 views a paid video gets,
+                the matching earnings flow from the paid-pool into the
+                spendable Earnings. Below 10 views the money is locked
+                in that video's pool.
+    ==================================================== */
+    const ADS_VIEW_THRESHOLD  = 1000;
+    const PAID_VIEW_THRESHOLD = 10;
+
+    function getAdsPoolViews() {
+      return (Array.isArray(videosData) ? videosData : [])
+        .filter(v => v && v.priceMode !== 'paid')
+        .reduce((s, v) => s + (Number(v.views) || 0), 0);
+    }
+
+    /* Ads breakdown — channel-wide pool releases in 1K-view batches */
+    function getAdsBreakdown() {
+      const total      = Number(earningsData?.adsRevenue) || 0;
+      const poolViews  = getAdsPoolViews();
+      const releasedV  = Math.floor(poolViews / ADS_VIEW_THRESHOLD) * ADS_VIEW_THRESHOLD;
+      const lockedV    = Math.max(0, poolViews - releasedV);
+      const ratio      = poolViews > 0 ? (releasedV / poolViews) : 0;
+      const released   = Math.round(total * ratio);
+      const locked     = Math.max(0, total - released);
+      return {
+        total, released, locked,
+        poolViews, releasedViews: releasedV, lockedViews: lockedV,
+        threshold: ADS_VIEW_THRESHOLD,
+        unlocked: poolViews >= ADS_VIEW_THRESHOLD,
+      };
+    }
+
+    /* Paid breakdown — each paid video releases earnings in 10-view batches */
+    function getPaidBreakdown() {
+      const paidVids = (Array.isArray(videosData) ? videosData : [])
+        .filter(v => v && v.priceMode === 'paid');
+
+      let computedReleased = 0, computedLocked = 0;
+      let releasedViews = 0, lockedViews = 0;
+      const COIN_TO_NGN = 25;       // 1 Pose Coin = ₦25
+      const CREATOR_SHARE = 0.75;   // 75 % share
+
+      paidVids.forEach(v => {
+        const views    = Number(v.views) || 0;
+        const price    = Number(v.coinPrice) || 0;
+        const ngnPerView = price * COIN_TO_NGN * CREATOR_SHARE;
+        const rViews   = Math.floor(views / PAID_VIEW_THRESHOLD) * PAID_VIEW_THRESHOLD;
+        const lViews   = views - rViews;
+        computedReleased += rViews * ngnPerView;
+        computedLocked   += lViews * ngnPerView;
+        releasedViews    += rViews;
+        lockedViews      += lViews;
+      });
+
+      const dataTotal     = Number(earningsData?.directRevenue) || 0;
+      const computedTotal = computedReleased + computedLocked;
+      let released = computedReleased, locked = computedLocked;
+
+      if (dataTotal > 0 && computedTotal > 0) {
+        const scale = dataTotal / computedTotal;
+        released = Math.round(computedReleased * scale);
+        locked   = Math.round(computedLocked   * scale);
+      } else if (dataTotal > 0 && computedTotal === 0) {
+        // No view data yet — keep everything locked until 10-view rule met
+        released = 0;
+        locked   = dataTotal;
+      }
+
+      return {
+        total: released + locked,
+        released, locked,
+        releasedViews, lockedViews,
+        videoCount: paidVids.length,
+        threshold: PAID_VIEW_THRESHOLD,
+      };
+    }
+
+    function getReleasedBalance() {
+      return getAdsBreakdown().released + getPaidBreakdown().released;
+    }
+    function getLockedBalance() {
+      return getAdsBreakdown().locked + getPaidBreakdown().locked;
+    }
+
+    /* getTotalBalance now returns ONLY the spendable / withdrawable
+       portion (i.e. after the 1K-views & 10-views rules have been met) */
     function getTotalBalance() {
+      if (!earningsData) return 0;
+      return getReleasedBalance();
+    }
+    function getLifetimeBalance() {
       if (!earningsData) return 0;
       return (Number(earningsData.adsRevenue) || 0) + (Number(earningsData.directRevenue) || 0);
     }
@@ -5729,7 +6484,9 @@ function openWithdrawPopup() {
   const acctNum  = document.getElementById('pmAcctNum').value.trim();
   const acctName = document.getElementById('pmAcctName').value.trim();
   const bankName = document.getElementById('pmBankName').value.trim();
-  const balance  = getTotalBalance();
+  const balance  = getTotalBalance();        // released-only
+  const lifetime = getLifetimeBalance();     // lifetime total
+  const lockedAmt = Math.max(0, lifetime - balance);
   const hasBank  = acctNum.length >= 10 && acctName && bankName;
 
   // Reset amount input
@@ -5737,6 +6494,41 @@ function openWithdrawPopup() {
   amtInput.value = '';
 
   document.getElementById('wdBalance').textContent = '₦' + balance.toLocaleString('en-NG');
+
+  // Inject / update eligibility banner inside the popup
+  let elig = document.getElementById('wdEligBox');
+  if (!elig) {
+    elig = document.createElement('div');
+    elig.id = 'wdEligBox';
+    elig.style.cssText = 'margin:10px 0 12px;border-radius:11px;padding:11px 13px;font-size:11.5px;line-height:1.5;';
+    const balanceRow = document.getElementById('wdBalance')?.parentElement;
+    if (balanceRow && balanceRow.parentElement) {
+      balanceRow.parentElement.insertBefore(elig, balanceRow.nextSibling);
+    }
+  }
+  const ads  = getAdsBreakdown();
+  const paid = getPaidBreakdown();
+  const reasons = [];
+  if (!ads.unlocked && ads.locked > 0) {
+    const need = ADS_VIEW_THRESHOLD - ads.poolViews;
+    reasons.push(`<b>Ads Revenue</b> locked — channel needs <b>${need.toLocaleString('en-NG')}</b> more views (1,000 total) before ₦${Math.round(ads.locked).toLocaleString('en-NG')} can be withdrawn.`);
+  }
+  if (paid.locked > 0) {
+    reasons.push(`<b>Paid Videos</b> have ₦${Math.round(paid.locked).toLocaleString('en-NG')} sitting in the pool — releases every <b>10 views</b> per video.`);
+  }
+  if (lockedAmt > 0) {
+    elig.style.background = '#FFFBEB';
+    elig.style.border     = '1px solid #FDE68A';
+    elig.style.color      = '#92400E';
+    elig.innerHTML =
+      `<div style="font-weight:800;margin-bottom:6px;color:#78350F;">🔒 ₦${Math.round(lockedAmt).toLocaleString('en-NG')} locked in pools</div>` +
+      reasons.map(r => `<div>• ${r}</div>`).join('');
+  } else {
+    elig.style.background = '#ECFDF5';
+    elig.style.border     = '1px solid #A7F3D0';
+    elig.style.color      = '#065F46';
+    elig.innerHTML = '<b>✅ All requirements met.</b> Your full balance is available.';
+  }
 
   // Build quick-select chips
   const chipsEl = document.getElementById('wdQuickChips');
@@ -5867,6 +6659,34 @@ function requestWithdrawal() {
   if (amount > balance) {
     document.getElementById('wdAmountInput').classList.add('uerror');
     setTimeout(() => document.getElementById('wdAmountInput').classList.remove('uerror'), 700);
+    return;
+  }
+
+  // ── Enforce 1K-views (ads) + 10-views (paid) eligibility ──
+  const ads  = getAdsBreakdown();
+  const paid = getPaidBreakdown();
+  const released = ads.released + paid.released;
+  if (amount > released) {
+    document.getElementById('wdAmountInput').classList.add('uerror');
+    setTimeout(() => document.getElementById('wdAmountInput').classList.remove('uerror'), 700);
+    const blockers = [];
+    if (!ads.unlocked && ads.locked > 0) {
+      blockers.push(
+        `• Ads Revenue: channel needs ${(ADS_VIEW_THRESHOLD - ads.poolViews).toLocaleString('en-NG')} more views ` +
+        `(1,000 total) — ₦${Math.round(ads.locked).toLocaleString('en-NG')} is locked.`
+      );
+    }
+    if (paid.locked > 0) {
+      blockers.push(
+        `• Paid Videos: ₦${Math.round(paid.locked).toLocaleString('en-NG')} is locked. ` +
+        `Each paid video releases earnings every 10 views.`
+      );
+    }
+    alert(
+      'Some of your earnings are still locked in the pool.\n\n' +
+      `Available now: ₦${Math.round(released).toLocaleString('en-NG')}\n\n` +
+      blockers.join('\n')
+    );
     return;
   }
 
@@ -6752,6 +7572,8 @@ function setPrice(context, mode) {
   if (mode === 'free') {
     const cp = document.getElementById(prefix + 'CoinPrice');
     if (cp) cp.value = '0';
+  } else {
+    updateCoinSlider(prefix);
   }
 }
 
@@ -6994,11 +7816,28 @@ function scrollTo_(id) {
   _uploadSpeedState.lastLoaded = 0;
 
   updateUploadProgress(0, 'Uploading…', '');
-  const url = await uploadSingleBlob(file, folder, resourceType, (pct, speed) => {
-    if (onProgress) onProgress(pct, 'Uploading…', speed);
-    if (progressId) showProgress(progressId, 'Uploading…', pct);
-  });
-  return { url, chunks: [], isChunked: false };
+
+  const MAX_RETRIES = 3;
+  let lastErr;
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      if (uploadCancelled) throw new Error('Upload cancelled');
+      if (attempt > 1) {
+        updateUploadProgress(0, `Retrying upload… (attempt ${attempt}/${MAX_RETRIES})`, '');
+        await sleep(2000 * attempt);
+      }
+      const url = await uploadSingleBlob(file, folder, resourceType, (pct, speed) => {
+        if (onProgress) onProgress(pct, attempt > 1 ? `Retrying… (${attempt}/${MAX_RETRIES})` : 'Uploading…', speed);
+        if (progressId) showProgress(progressId, 'Uploading…', pct);
+      });
+      return { url, chunks: [], isChunked: false };
+    } catch (e) {
+      lastErr = e;
+      if (uploadCancelled || e.message === 'Upload cancelled') throw e;
+      console.warn(`Upload attempt ${attempt} failed:`, e.message);
+    }
+  }
+  throw lastErr;
 }
 
 
@@ -7054,38 +7893,63 @@ function trackUploadSpeed(loaded, total) {
   return `${mbps} MB/s`;
 }
 
+/* Mirrors the screen4 upload in Posewebapp.html — uses /auto/upload (handles
+   any media size on the free tier), Date.now()-based filename, and a generous
+   timeout. Returns the Cloudinary secure_url. */
 function uploadSingleBlob(blob, folder, resourceType, onProgress) {
   return new Promise((resolve, reject) => {
     const fd = new FormData();
-    fd.append('file', blob);
+    const fileName = `video_${Date.now()}_${blob.name || 'upload'}`;
+    fd.append('file', blob, fileName);
     fd.append('upload_preset', CLOUDINARY_PRESET);
     fd.append('folder', folder);
+    fd.append('tags', 'video_upload');
+    fd.append('resource_type', 'auto');
 
     const xhr = new XMLHttpRequest();
     activeXHR = xhr;
-    xhr.open('POST',
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`);
-    xhr.timeout = 0;
 
+    // Always hit /auto/upload like screen4 — works for video, image, raw
+    xhr.open('POST',
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/auto/upload`);
+
+    // 5-minute hard timeout (matches screen4's 300_000 ms)
+    xhr.timeout = 300000;
+
+    const startTime = Date.now();
     xhr.upload.onprogress = e => {
       if (e.lengthComputable) {
         const pct   = Math.round((e.loaded / e.total) * 100);
-        const speed = trackUploadSpeed(e.loaded, e.total);
-        if (onProgress) onProgress(pct, speed);
+        const elapsed = (Date.now() - startTime) / 1000;
+        const mbps    = elapsed > 0
+          ? ((e.loaded / elapsed) / (1024 * 1024)).toFixed(1) + ' MB/s'
+          : '';
+        if (onProgress) onProgress(pct, mbps);
       }
     };
 
     xhr.onload = () => {
       activeXHR = null;
       if (xhr.status === 200) {
-        resolve(JSON.parse(xhr.responseText).secure_url);
+        try {
+          const r = JSON.parse(xhr.responseText);
+          console.log('✅ Cloudinary upload OK:', r.secure_url);
+          resolve(r.secure_url);
+        } catch (err) {
+          reject(new Error('Invalid Cloudinary response'));
+        }
       } else {
-        reject(new Error(`Upload failed (${xhr.status})`));
+        let msg = `Upload failed (${xhr.status})`;
+        try {
+          const r = JSON.parse(xhr.responseText);
+          if (r.error && r.error.message) msg += ': ' + r.error.message;
+        } catch (_) {}
+        reject(new Error(msg));
       }
     };
-    xhr.onerror   = () => { activeXHR = null; reject(new Error('Network error')); };
-    xhr.ontimeout = () => { activeXHR = null; reject(new Error('Timed out')); };
-    xhr.onabort   = () => { activeXHR = null; reject(new Error('Cancelled')); };
+    xhr.onerror   = () => { activeXHR = null; reject(new Error('Network error during upload')); };
+    xhr.ontimeout = () => { activeXHR = null; reject(new Error('Upload timed out')); };
+    xhr.onabort   = () => { activeXHR = null; reject(new Error('Upload cancelled')); };
     xhr.send(fd);
   });
 }
@@ -7296,9 +8160,11 @@ function calcETA(loaded, total) {
    POST SINGLE VIDEO
 ==================================================== */
 async function postSingleVideo() {
-  const title  = document.getElementById('sTitle').value.trim();
-  const rating = document.getElementById('sRating').value;
-  const btn    = document.getElementById('sPostBtn');
+  const title       = document.getElementById('sTitle').value.trim();
+   const rating      = document.getElementById('sRating').value;
+   const category    = document.getElementById('sCategory').value;
+   const subcategory = document.getElementById('sSubcategory').value;
+   const btn         = document.getElementById('sPostBtn');
 
   // Validate schedule first (before countdown)
   const isScheduled  = document.getElementById('sSchedToggle').checked;
@@ -7323,6 +8189,12 @@ async function postSingleVideo() {
   }
   if (!title) {
     shakeField('sTitle'); if (!hasError) scrollTo_('sTitle'); hasError = true;
+  }
+  if (!category) {
+    shakeField('sCategory'); if (!hasError) scrollTo_('sCategory'); hasError = true;
+  }
+  if (!document.getElementById('sThumbFile').files[0]) {
+    shakeField('sThumbPreview'); if (!hasError) scrollTo_('sThumbPreview'); hasError = true;
   }
   if (!rating) {
     document.getElementById('sRatingPills')
@@ -7424,7 +8296,22 @@ async function postSingleVideo() {
     const priceMode = document.getElementById('sPriceMode').value;
     const coinPrice = Number(document.getElementById('sCoinPrice').value) || 0;
 
-    await videoDocRef.set({
+    // Production & Cast
+    const splitCSV = s => (s || '').split(',').map(x => x.trim()).filter(Boolean);
+    const production = {
+      director:  splitCSV(document.getElementById('sDirector').value),
+      writer:    splitCSV(document.getElementById('sWriter').value),
+      producer:  splitCSV(document.getElementById('sProducer').value),
+      cast:      splitCSV(document.getElementById('sCast').value),
+      studio:    document.getElementById('sStudio').value.trim(),
+      year:      Number(document.getElementById('sYear').value) || null,
+      language:  splitCSV(document.getElementById('sLanguage').value),
+      country:   document.getElementById('sCountry').value.trim(),
+      genres:    splitCSV(document.getElementById('sGenres').value),
+      subtitles: splitCSV(document.getElementById('sSubtitles').value),
+    };
+
+    const videoDoc = {
       title,
       description:  document.getElementById('sDesc').value.trim(),
       ageRating:    rating,
@@ -7438,14 +8325,45 @@ async function postSingleVideo() {
       scheduleDate,
       isScheduled:  !!scheduleDate,
       category,
+      subcategory,
       type:         'single',
+      status,
+      production,
+      director:     production.director,
+      writer:       production.writer,
+      producer:     production.producer,
+      cast:         production.cast,
+      studio:       production.studio,
+      year:         production.year,
+      language:     production.language,
+      country:      production.country,
+      genres:       production.genres,
+      subtitles:    production.subtitles,
       views:        0,
       likes:        0,
       comments:     0,
       revenue:      0,
       channelId:    CHANNEL_UID,
       createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    };
+
+    // Retry Firestore save up to 3 times
+    let saved = false;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await videoDocRef.set(videoDoc);
+        saved = true;
+        break;
+      } catch (saveErr) {
+        console.warn(`Firestore save attempt ${attempt} failed:`, saveErr.message);
+        if (attempt < 3) {
+          updateUploadProgress(95, `Save failed, retrying… (${attempt + 1}/3)`, '');
+          await sleep(2000 * attempt);
+        } else {
+          throw saveErr;
+        }
+      }
+    }
 
     setUploadStep(3, 'done', 'Done ✓');
     updateUploadProgress(100, 'Complete!', '');
@@ -7491,6 +8409,36 @@ async function postSingleVideo() {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
   }
+}
+
+/* ====================================================
+   "Preparing to add episodes…" mini loader
+==================================================== */
+function showPrepEpisodesLoader(){
+  let el = document.getElementById('prepEpisodesLoader');
+  if (!el){
+    el = document.createElement('div');
+    el.id = 'prepEpisodesLoader';
+    el.className = 'prep-ep-loader';
+    el.innerHTML =
+      '<div class="pel-spinner"></div>' +
+      '<div class="pel-text">' +
+        '<div class="pel-title">Preparing to add episodes…</div>' +
+        '<div class="pel-sub">Setting up your episode workspace</div>' +
+      '</div>';
+    /* place it right after the Create Season button */
+    const seaBtn = document.getElementById('seaCreateBtn');
+    (seaBtn?.parentNode || document.body).insertBefore(el, seaBtn ? seaBtn.nextSibling : null);
+  }
+  el.style.display = 'flex';
+  requestAnimationFrame(() => el.classList.add('show'));
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function hidePrepEpisodesLoader(){
+  const el = document.getElementById('prepEpisodesLoader');
+  if (!el) return;
+  el.classList.remove('show');
+  setTimeout(() => { el.style.display = 'none'; }, 250);
 }
 
 /* ====================================================
@@ -7563,6 +8511,21 @@ async function createSeason() {
     const freeEpCount     = priceMode === 'mixed'
       ? Number(document.getElementById('seaFreeEpCount').value) : 0;
 
+    // Season Production & Cast
+    const splitCSV = s => (s || '').split(',').map(x => x.trim()).filter(Boolean);
+    const seaProduction = {
+      director:  splitCSV(document.getElementById('seaDirector').value),
+      writer:    splitCSV(document.getElementById('seaWriter').value),
+      producer:  splitCSV(document.getElementById('seaProducer').value),
+      cast:      splitCSV(document.getElementById('seaCast').value),
+      studio:    document.getElementById('seaStudio').value.trim(),
+      year:      Number(document.getElementById('seaYear').value) || null,
+      language:  splitCSV(document.getElementById('seaLanguage').value),
+      country:   document.getElementById('seaCountry').value.trim(),
+      genres:    splitCSV(document.getElementById('seaGenres').value),
+      subtitles: splitCSV(document.getElementById('seaSubtitles').value),
+    };
+
     await seaRef.set({
       title,
       description:     document.getElementById('seaDesc').value.trim(),
@@ -7577,6 +8540,18 @@ async function createSeason() {
       isScheduled:     !!scheduleDate,
       status,
       category,
+      production:      seaProduction,
+      // Top-level mirrors for searching across seasons
+      director:        seaProduction.director,
+      writer:          seaProduction.writer,
+      producer:        seaProduction.producer,
+      cast:            seaProduction.cast,
+      studio:          seaProduction.studio,
+      year:            seaProduction.year,
+      language:        seaProduction.language,
+      country:         seaProduction.country,
+      genres:          seaProduction.genres,
+      subtitles:       seaProduction.subtitles,
       episodeCount:    0,
       channelId:       CHANNEL_UID,
       createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
@@ -7587,9 +8562,17 @@ async function createSeason() {
     btn.disabled = false;
     btn.style.background = '#059669';
     btn.innerHTML = '<i class="fas fa-check" style="margin-right:8px;"></i>Season Created — Add Episodes Below';
-document.getElementById('episodeBlock').style.display = 'block';
-    document.getElementById('episodeBlock')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // ── Show "Preparing to add episodes…" mini-loader, then reveal episode block ──
+    showPrepEpisodesLoader();
+    setTimeout(() => {
+      hidePrepEpisodesLoader();
+      const epBlock = document.getElementById('episodeBlock');
+      if (epBlock) {
+        epBlock.style.display = 'block';
+        epBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 1400);
 
   } catch (e) {
     console.error('createSeason error:', e);
@@ -7747,6 +8730,9 @@ document.getElementById('episodeBlock').style.display = 'block';
   if (!epTitle) {
     shakeField('epTitle'); if (!hasError) scrollTo_('epTitle'); hasError = true;
   }
+  if (!document.getElementById('epThumbFile').files[0]) {
+    shakeField('epThumbPreview'); if (!hasError) scrollTo_('epThumbPreview'); hasError = true;
+  }
   const epDescWords = epDesc.split(/\s+/).filter(w => w.length > 0);
   if (epDescWords.length < 10) {
     shakeField('epDesc'); if (!hasError) scrollTo_('epDesc'); hasError = true;
@@ -7781,6 +8767,17 @@ document.getElementById('episodeBlock').style.display = 'block';
       .collection('episodes').doc();
     const epId   = epRef.id;
     const folder = `pose/${CHANNEL_UID}/seasons/${currentSeasonId}/ep/${epId}`;
+
+    // Fetch parent season so the episode inherits its category / title / number / production
+    const seaSnapForEp = await db.collection('channels').doc(CHANNEL_UID)
+      .collection('seasons').doc(currentSeasonId).get();
+    const parentSeason     = seaSnapForEp.data() || {};
+    const seasonCategory    = parentSeason.category     || '';
+    const seasonSubcategory = parentSeason.subcategory  || '';
+    const seasonTitle       = parentSeason.title        || '';
+    const seasonNumber      = parentSeason.seasonNumber || 1;
+    const seasonProduction  = parentSeason.production   || {};
+    const seasonAgeRating   = parentSeason.ageRating    || '';
 
     // Step 0 — Episode video
     setUploadStep(0, 'active', 'Uploading…');
@@ -7840,7 +8837,33 @@ document.getElementById('episodeBlock').style.display = 'block';
     const coinPrice = Number(document.getElementById('epCoinPrice').value) || 0;
     const epNumber  = Number(document.getElementById('epNumber').value)    || 1;
 
+    // Episode-specific credits (override season director/writer if provided)
+    const splitCSV = s => (s || '').split(',').map(x => x.trim()).filter(Boolean);
+    const epDirector   = splitCSV(document.getElementById('epDirector').value);
+    const epWriter     = splitCSV(document.getElementById('epWriter').value);
+    const epGuestCast  = splitCSV(document.getElementById('epGuestCast').value);
+
+    // Combined cast = season cast + episode guest cast (deduped, preserves order)
+    const inheritedCast = Array.isArray(seasonProduction.cast) ? seasonProduction.cast : [];
+    const combinedCast  = Array.from(new Set([...inheritedCast, ...epGuestCast]));
+
+    const epProduction = {
+      director:  epDirector.length ? epDirector : (seasonProduction.director || []),
+      writer:    epWriter.length   ? epWriter   : (seasonProduction.writer   || []),
+      producer:  seasonProduction.producer  || [],
+      cast:      combinedCast,
+      guestCast: epGuestCast,
+      studio:    seasonProduction.studio    || '',
+      year:      seasonProduction.year      || null,
+      language:  seasonProduction.language  || [],
+      country:   seasonProduction.country   || '',
+      genres:    seasonProduction.genres    || [],
+      subtitles: seasonProduction.subtitles || [],
+    };
+
     const batch = db.batch();
+    const epStatus = isScheduled ? 'scheduled' : 'live';
+
     batch.set(epRef, {
       episodeNumber: epNumber,
       title:         epTitle,
@@ -7854,10 +8877,30 @@ document.getElementById('episodeBlock').style.display = 'block';
       coinPrice,
       scheduleDate,
       isScheduled:   !!scheduleDate,
+      status:        epStatus,
+      ageRating:     seasonAgeRating,
       views:         0,
       likes:         0,
       comments:      0,
       revenue:       0,
+      type:          'episode',
+      category:      seasonCategory,
+      subcategory:   seasonSubcategory,
+      seasonTitle,
+      seasonNumber,
+      production:    epProduction,
+      // Top-level mirrors for cross-collection search
+      director:      epProduction.director,
+      writer:        epProduction.writer,
+      producer:      epProduction.producer,
+      cast:          epProduction.cast,
+      guestCast:     epProduction.guestCast,
+      studio:        epProduction.studio,
+      year:          epProduction.year,
+      language:      epProduction.language,
+      country:       epProduction.country,
+      genres:        epProduction.genres,
+      subtitles:     epProduction.subtitles,
       seasonId:      currentSeasonId,
       channelId:     CHANNEL_UID,
       createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
@@ -7869,7 +8912,21 @@ document.getElementById('episodeBlock').style.display = 'block';
       episodeCount: firebase.firestore.FieldValue.increment(1),
     });
 
-    await batch.commit();
+    // Retry Firestore save up to 3 times
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await batch.commit();
+        break;
+      } catch (saveErr) {
+        console.warn(`Firestore save attempt ${attempt} failed:`, saveErr.message);
+        if (attempt < 3) {
+          updateUploadProgress(95, `Save failed, retrying… (${attempt + 1}/3)`, '');
+          await sleep(2000 * attempt);
+        } else {
+          throw saveErr;
+        }
+      }
+    }
 
     setUploadStep(3, 'done', 'Done ✓');
     updateUploadProgress(100, 'Complete!', '');
@@ -8119,15 +9176,33 @@ function avTime(v) {
   return v.createdAt.toMillis ? v.createdAt.toMillis() : new Date(v.createdAt).getTime();
 }
 function avFmtDate(v) {
-  if (!v.createdAt) return '—';
-  const d = v.createdAt.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
+  const ts = v.createdAt;
+  if (!ts) return '—';
+  let d;
+  if (ts.toDate) d = ts.toDate();
+  else if (ts.seconds) d = new Date(ts.seconds * 1000);
+  else d = new Date(ts);
+  if (isNaN(d.getTime())) return '—';
   return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
 }
 function avRatingColor(r) {
-  if (r === 'all')    return 'background:#D1FAE5;color:#065F46;';
-  if (r === 'teen')   return 'background:#DBEAFE;color:#1E40AF;';
-  if (r === 'mature') return 'background:#FEF3C7;color:#92400E;';
+  if (r === 'all' || r === '3+' || r === '7+')    return 'background:#D1FAE5;color:#065F46;';
+  if (r === 'teen' || r === '10+' || r === '13+')   return 'background:#DBEAFE;color:#1E40AF;';
+  if (r === 'mature' || r === '16+' || r === '18+' || r === '25+') return 'background:#FEF3C7;color:#92400E;';
   return 'background:var(--gray-100);color:var(--gray-600);';
+}
+function avRatingLabel(r) {
+  if (r === 'all')    return '✔ All Ages';
+  if (r === '3+')     return '✔ 3+';
+  if (r === '7+')     return '✔ 7+';
+  if (r === 'teen')   return '👤 Teen';
+  if (r === '10+')    return '👤 10+';
+  if (r === '13+')    return '👤 13+';
+  if (r === '16+')    return '⚠ 16+';
+  if (r === '18+')    return '⚠ 18+';
+  if (r === 'mature') return '⚠ Mature';
+  if (r === '25+')    return '⚠ 25+';
+  return r || '—';
 }
 function avGradient(i) {
   const g = ['g1','g2','g3','g4','g5','g6','g7'];
@@ -8188,9 +9263,7 @@ function renderAvSingle() {
       : '';
 
     const ratedBadge = v.ageRating
-      ? `<span class="av-badge" style="${avRatingColor(v.ageRating)}">${
-          v.ageRating === 'all' ? '✔ All Ages' :
-          v.ageRating === 'teen' ? '👤 Teen' : '⚠ Mature'}</span>`
+      ? `<span class="av-badge" style="${avRatingColor(v.ageRating)}">${avRatingLabel(v.ageRating)}</span>`
       : '';
 
     const revLine = rev > 0
@@ -8201,7 +9274,7 @@ function renderAvSingle() {
       : '';
 
     return `
-     <div class="av-vcard" onclick="openVideoDetail(${JSON.stringify(v).replace(/"/g, '&quot;')}, 'page-allvideos')" style="cursor:pointer;">
+     <div class="av-vcard" data-vd-id="${v.id}" style="cursor:pointer;">
     <div class="av-vcard-inner">
           <div class="av-vcard-thumb ${v.thumbnailURL ? '' : avGradient(i)}" style="${thumbBg}">
             ${thumbHTML}
@@ -8301,9 +9374,7 @@ function renderAvSeasons() {
             <div class="av-season-sub">Season ${s.seasonNumber || 1} · ${s.episodeCount || 0} episodes</div>
             <div class="av-season-stats">
               <span class="av-badge ${priceBadgeClass}">${priceBadgeText}</span>
-              ${s.ageRating ? `<span class="av-badge" style="${avRatingColor(s.ageRating)}">${
-                s.ageRating === 'all' ? '✔ All Ages' :
-                s.ageRating === 'teen' ? '👤 Teen' : '⚠ Mature'}</span>` : ''}
+              ${s.ageRating ? `<span class="av-badge" style="${avRatingColor(s.ageRating)}">${avRatingLabel(s.ageRating)}</span>` : ''}
             </div>
             ${revLine}
           </div>
@@ -8589,14 +9660,7 @@ function renderVdBody(video) {
        </span>`;
 
   const ratingBadge = video.ageRating
-    ? `<span class="vd-badge" style="${
-        video.ageRating === 'all'    ? 'background:#D1FAE5;color:#065F46;' :
-        video.ageRating === 'teen'   ? 'background:#DBEAFE;color:#1E40AF;' :
-                                       'background:#FEF3C7;color:#92400E;'
-      }">
-        ${video.ageRating === 'all' ? '✔ All Ages' :
-          video.ageRating === 'teen' ? '👤 Teen' : '⚠ Mature'}
-       </span>`
+    ? `<span class="vd-badge" style="${avRatingColor(video.ageRating)}">${avRatingLabel(video.ageRating)}</span>`
     : '';
 
   const typeTag = video.episodeNumber !== undefined
@@ -8606,6 +9670,212 @@ function renderVdBody(video) {
     : `<span class="vd-badge" style="background:var(--gray-100);color:var(--gray-600);">
          <i class="fas fa-film"></i> Single Video
        </span>`;
+
+  // ── Views Pool card ──
+  let poolCardHTML = '';
+  if (!isPaid) {
+    /* FREE / AD-SUPPORTED — channel-wide 1,000-view threshold */
+    const freeVids = (Array.isArray(videosData) ? videosData : [])
+      .filter(v => v && v.priceMode !== 'paid');
+    const poolViews   = freeVids.reduce((s, v) => s + (Number(v.views) || 0), 0);
+    const thisViews   = Number(video.views) || 0;
+    const sharePct    = poolViews > 0 ? Math.min(100, (thisViews / poolViews) * 100) : 0;
+    const otherViews  = Math.max(0, poolViews - thisViews);
+    const otherCount  = Math.max(0, freeVids.length - 1);
+
+    const THRESH      = (typeof ADS_VIEW_THRESHOLD !== 'undefined') ? ADS_VIEW_THRESHOLD : 1000;
+    const unlocked    = poolViews >= THRESH;
+    const progressPct = Math.min(100, (poolViews / THRESH) * 100);
+    const need        = Math.max(0, THRESH - poolViews);
+
+    /* Estimate ad rate per view (matches the per-view rate used elsewhere) */
+    const ngnPerView  = (usdToNgn || 1620) * 0.00208;            // ~₦3.4 mid-rate
+    const thisEarnNGN = thisViews * ngnPerView;                  // this video's contribution
+    const poolEarnNGN = poolViews * ngnPerView;                  // total channel pool
+
+    poolCardHTML = `
+      <div class="vd-pool-card">
+        <div class="vd-pool-header">
+          <div class="vd-pool-icon"><i class="fas fa-chart-pie"></i></div>
+          <div>
+            <div class="vd-pool-title">Views Pool · 1,000-View Payout</div>
+            <div class="vd-pool-sub">How this free video earns you money</div>
+          </div>
+          <span class="vd-pool-badge" style="background:${unlocked?'#D1FAE5':'#FEF3C7'};color:${unlocked?'#065F46':'#92400E'};">
+            ${unlocked ? '✅ UNLOCKED' : '🔒 LOCKED'}
+          </span>
+        </div>
+
+        <div class="vd-pool-notice" style="${unlocked?'background:#ECFDF5;border-color:#A7F3D0;':''}">
+          <i class="fas fa-circle-info"></i>
+          <span>
+            <b>Your ad-supported videos don't earn one-by-one.</b>
+            Every view from every free video on your channel flows into <b>one shared Views Pool</b>.
+            Once the channel hits <b>1,000 pool views</b>, the matching Ads Revenue is released
+            from the pool to your withdrawable Earnings — and another batch is released for every
+            extra <b>1,000</b> views after that. <b>No monthly waiting.</b>
+          </span>
+        </div>
+
+        <!-- 1K threshold progress -->
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--text-main);margin-bottom:6px;">
+          <span><i class="fas fa-bolt" style="color:#F59E0B;margin-right:4px;"></i> Pool unlock progress</span>
+          <span style="color:${unlocked?'#065F46':'#92400E'};">${fmt(poolViews)} / ${THRESH.toLocaleString('en-NG')}${unlocked?' ✅':''}</span>
+        </div>
+        <div class="vd-pool-bar" style="background:#FEF3C7;">
+          <div class="vd-pool-bar-fill" style="width:${progressPct.toFixed(1)}%;background:linear-gradient(90deg,${unlocked?'#10B981,#059669':'#F59E0B,#D97706'});"></div>
+        </div>
+        <div class="vd-pool-bar-legend">
+          ${unlocked
+            ? `<span style="color:#065F46;font-weight:700;">✅ Pool unlocked — earnings flow to your Ads Revenue.</span>`
+            : `<span style="color:#92400E;font-weight:700;">🔒 Need <b>${need.toLocaleString('en-NG')}</b> more view${need===1?'':'s'} to unlock the pool.</span>`}
+        </div>
+
+        <!-- This video's share of pool -->
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray-500);margin:10px 0 4px;">
+          <span><span class="vd-dot vd-dot-this"></span> This video · ${fmt(thisViews)} views (${sharePct.toFixed(1)}%)</span>
+          <span><span class="vd-dot vd-dot-other"></span> ${otherCount} other free video${otherCount===1?'':'s'} · ${fmt(otherViews)} views</span>
+        </div>
+        <div class="vd-pool-bar">
+          <div class="vd-pool-bar-fill" style="width:${sharePct.toFixed(1)}%;"></div>
+        </div>
+
+        <div class="vd-pool-grid" style="margin-top:14px;">
+          <div class="vd-pool-stat">
+            <div class="vd-pool-stat-val">${fmt(thisViews)}</div>
+            <div class="vd-pool-stat-lbl">This video's views</div>
+          </div>
+          <div class="vd-pool-stat">
+            <div class="vd-pool-stat-val">${fmt(poolViews)}</div>
+            <div class="vd-pool-stat-lbl">Total Pool views</div>
+          </div>
+          <div class="vd-pool-stat">
+            <div class="vd-pool-stat-val">${sharePct.toFixed(1)}%</div>
+            <div class="vd-pool-stat-lbl">Your share of pool</div>
+          </div>
+          <div class="vd-pool-stat vd-pool-stat-accent">
+            <div class="vd-pool-stat-val">₦${Math.round(thisEarnNGN).toLocaleString('en-NG')}</div>
+            <div class="vd-pool-stat-lbl">${unlocked?'Adds to Ads Revenue':'Locked until 1K'}</div>
+          </div>
+        </div>
+
+        <div class="vd-pool-flow">
+          <div class="vd-pool-flow-step">👁 Views</div>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
+          <div class="vd-pool-flow-step vd-pool-flow-pool">🏦 Pool (1K)</div>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
+          <div class="vd-pool-flow-step vd-pool-flow-rev">💰 Ads Revenue</div>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
+          <div class="vd-pool-flow-step vd-pool-flow-take">🏠 Withdraw</div>
+        </div>
+
+        <div class="vd-pool-notif">
+          <div class="vd-pool-notif-icon"><i class="fas fa-bell"></i></div>
+          <div class="vd-pool-notif-text">
+            <b>Heads up:</b> Ads Revenue is released to your spendable Earnings every
+            <b>1,000 channel views</b> from ad-supported videos — <b>no monthly schedule</b>.
+            Until then it stays in the pool and can't be withdrawn.
+          </div>
+        </div>
+
+        <button class="vd-pool-cta" type="button"
+          onclick="closeVideoDetail();onMainTab(document.querySelector('.tab-item[data-tab=&quot;earnings&quot;]'),'earnings');">
+          <i class="fas fa-coins"></i> See it in Ads Revenue →
+        </button>
+      </div>`;
+  } else {
+    /* PAID — per-video 10-view threshold; releases in 10-view batches */
+    const PAID_THRESH = (typeof PAID_VIEW_THRESHOLD !== 'undefined') ? PAID_VIEW_THRESHOLD : 10;
+    const thisViews   = Number(video.views) || 0;
+    const releasedV   = Math.floor(thisViews / PAID_THRESH) * PAID_THRESH;
+    const lockedV     = thisViews - releasedV;
+    const need        = PAID_THRESH - lockedV;
+    const ngnPerView  = (Number(video.coinPrice) || 0) * 25 * 0.75;
+    const releasedNGN = releasedV * ngnPerView;
+    const lockedNGN   = lockedV   * ngnPerView;
+    const batchPct    = (lockedV / PAID_THRESH) * 100;
+
+    poolCardHTML = `
+      <div class="vd-pool-card" style="border-left-color:#F59E0B;">
+        <div class="vd-pool-header">
+          <div class="vd-pool-icon" style="background:linear-gradient(135deg,#92400E,#F59E0B);">
+            <i class="fas fa-coins"></i>
+          </div>
+          <div>
+            <div class="vd-pool-title">Paid Pool · 10-View Payout</div>
+            <div class="vd-pool-sub">How this paid video pays out</div>
+          </div>
+          <span class="vd-pool-badge" style="background:${releasedV>0?'#D1FAE5':'#FEF3C7'};color:${releasedV>0?'#065F46':'#92400E'};">
+            ${releasedV>0 ? '✅ EARNING' : '🔒 BUILDING'}
+          </span>
+        </div>
+
+        <div class="vd-pool-notice" style="background:#FFFBEB;border-color:#FDE68A;">
+          <i class="fas fa-circle-info" style="color:#D97706;"></i>
+          <span>
+            Paid videos earn into a <b>per-video pool</b>. For every <b>10 views</b> this video
+            gets, the matching earnings are released from the pool into your
+            withdrawable Earnings — automatically, in batches of 10. Below 10 views the money is
+            <b>locked in the pool</b> and can't be withdrawn yet.
+          </span>
+        </div>
+
+        <!-- 10-view batch progress -->
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--text-main);margin-bottom:6px;">
+          <span><i class="fas fa-bolt" style="color:#F59E0B;margin-right:4px;"></i> Next batch in</span>
+          <span style="color:${need===PAID_THRESH?'#065F46':'#92400E'};">${need===PAID_THRESH?'just released ✅':need + ' view' + (need===1?'':'s')}</span>
+        </div>
+        <div class="vd-pool-bar" style="background:#FEF3C7;">
+          <div class="vd-pool-bar-fill" style="width:${batchPct.toFixed(1)}%;background:linear-gradient(90deg,#F59E0B,#D97706);"></div>
+        </div>
+        <div class="vd-pool-bar-legend">
+          <span style="color:#92400E;font-weight:700;">${lockedV} / ${PAID_THRESH} pending in pool</span>
+          <span style="color:#065F46;font-weight:700;">${releasedV} view${releasedV===1?'':'s'} already released</span>
+        </div>
+
+        <div class="vd-pool-grid" style="margin-top:14px;">
+          <div class="vd-pool-stat">
+            <div class="vd-pool-stat-val">${fmt(thisViews)}</div>
+            <div class="vd-pool-stat-lbl">Total views</div>
+          </div>
+          <div class="vd-pool-stat">
+            <div class="vd-pool-stat-val">${fmt(releasedV)}</div>
+            <div class="vd-pool-stat-lbl">Released views</div>
+          </div>
+          <div class="vd-pool-stat">
+            <div class="vd-pool-stat-val">${fmt(lockedV)}</div>
+            <div class="vd-pool-stat-lbl">Locked in pool</div>
+          </div>
+          <div class="vd-pool-stat vd-pool-stat-accent">
+            <div class="vd-pool-stat-val">₦${Math.round(releasedNGN).toLocaleString('en-NG')}</div>
+            <div class="vd-pool-stat-lbl">Released ₦ (₦${Math.round(lockedNGN).toLocaleString('en-NG')} locked)</div>
+          </div>
+        </div>
+
+        <div class="vd-pool-flow">
+          <div class="vd-pool-flow-step">👁 Views</div>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
+          <div class="vd-pool-flow-step vd-pool-flow-pool" style="background:#FEF3C7;color:#92400E;border-color:#FDE68A;">🏦 Paid Pool (10)</div>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
+          <div class="vd-pool-flow-step vd-pool-flow-rev">💰 Direct Sales</div>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
+          <div class="vd-pool-flow-step vd-pool-flow-take">🏠 Withdraw</div>
+        </div>
+
+        <div class="vd-pool-notif">
+          <div class="vd-pool-notif-icon"><i class="fas fa-bell"></i></div>
+          <div class="vd-pool-notif-text">
+            <b>Heads up:</b> withdrawals only include <b>released</b> earnings.
+            Each paid video must reach <b>10 views</b> per batch before its money leaves the pool.
+          </div>
+        </div>
+
+        <button class="vd-pool-cta" type="button" style="background:linear-gradient(135deg,#92400E,#F59E0B);"
+          onclick="closeVideoDetail();onMainTab(document.querySelector('.tab-item[data-tab=&quot;earnings&quot;]'),'earnings');">
+          <i class="fas fa-coins"></i> See it in Direct Sales →
+        </button>
+      </div>`;
+  }
 
   // Revenue card (only if any earned or paid)
   let revCardHTML = '';
@@ -8695,7 +9965,22 @@ function renderVdBody(video) {
       </div>
     </div>
 
+    <div class="vd-actions">
+      ${isSched ? `
+        <button class="vd-action-btn warn" onclick="rescheduleVideo()">
+          <i class="fas fa-calendar-pen"></i> Reschedule
+        </button>` : ''}
+      <button class="vd-action-btn" onclick="togglePauseVideo()">
+        <i class="fas fa-${video.status === 'paused' ? 'play' : 'pause'}"></i>
+        ${video.status === 'paused' ? 'Unpause' : 'Pause'}
+      </button>
+      <button class="vd-action-btn danger" onclick="confirmDeleteVideo()">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+    </div>
+
     ${revCardHTML}
+    ${poolCardHTML}
 
     <div class="vd-info-card">
       <div class="vd-info-title">
@@ -8720,11 +10005,7 @@ function renderVdBody(video) {
       </div>` : ''}
       <div class="vd-info-row">
         <span class="vd-info-key"><i class="fas fa-shield"></i> Age Rating</span>
-        <span class="vd-info-val">${
-          video.ageRating === 'all'    ? '✔ All Ages' :
-          video.ageRating === 'teen'   ? '👤 Teen (13+)' :
-          video.ageRating === 'mature' ? '⚠ Mature (18+)' : '—'
-        }</span>
+        <span class="vd-info-val">${avRatingLabel(video.ageRating)}</span>
       </div>
       ${isSched ? `
       <div class="vd-info-row">
@@ -8746,6 +10027,34 @@ function renderVdBody(video) {
     </div>
 
     ${descHTML}
+    ${(() => {
+      const p = video.production || {};
+      const rows = [];
+      const addRow = (icon, label, val) => {
+        if (!val || (Array.isArray(val) && !val.length)) return;
+        const display = Array.isArray(val) ? val.join(', ') : val;
+        rows.push(`<div class="vd-info-row">
+          <span class="vd-info-key"><i class="fas fa-${icon}"></i> ${label}</span>
+          <span class="vd-info-val" style="text-align:right;">${display}</span>
+        </div>`);
+      };
+      addRow('megaphone', 'Director', p.director);
+      addRow('pen-fancy', 'Writer', p.writer);
+      addRow('briefcase', 'Producer', p.producer);
+      addRow('users', 'Cast', p.cast);
+      addRow('building', 'Studio', p.studio);
+      addRow('calendar', 'Year', p.year);
+      addRow('language', 'Language', p.language);
+      addRow('globe', 'Country', p.country);
+      addRow('tags', 'Genres', p.genres);
+      addRow('closed-captioning', 'Subtitles', p.subtitles);
+      if (video.guestCast && video.guestCast.length) addRow('user-plus', 'Guest Cast', video.guestCast);
+      if (!rows.length) return '';
+      return `<div class="vd-info-card">
+        <div class="vd-info-title"><i class="fas fa-clapperboard" style="color:var(--purple-main);"></i> Production &amp; Cast</div>
+        ${rows.join('')}
+      </div>`;
+    })()}
     ${trailerHTML}
 
     <div class="vd-comments-card">
@@ -8765,6 +10074,197 @@ function renderVdBody(video) {
         </div>
       </div>
     </div>`;
+}
+
+/* ── Delete Video with 20s countdown ── */
+let _deleteTimer = null;
+let _deleteCountdown = 20;
+
+function confirmDeleteVideo() {
+  if (!vdCurrentVideo) return;
+  _deleteCountdown = 20;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'vd-delete-overlay';
+  overlay.id = 'vdDeleteOverlay';
+  overlay.innerHTML = `
+    <div class="vd-delete-card">
+      <div class="vd-delete-icon"><i class="fas fa-trash"></i></div>
+      <div class="vd-delete-title">Delete this video?</div>
+      <div class="vd-delete-sub">
+        <strong>"${vdCurrentVideo.title || 'Untitled'}"</strong> will be permanently deleted.
+        This cannot be undone. All views, likes, comments, and revenue data will be lost.
+      </div>
+      <div class="vd-delete-countdown" id="vdDeleteCountNum">${_deleteCountdown}</div>
+      <div class="vd-delete-progress">
+        <div class="vd-delete-progress-fill" id="vdDeleteProgFill" style="width:100%;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--gray-400);margin-bottom:14px;">
+        You can cancel within <span id="vdDeleteCountText">${_deleteCountdown}</span> seconds
+      </div>
+      <div class="vd-delete-btns">
+        <button class="vd-delete-cancel-btn" onclick="cancelDeleteVideo()">
+          <i class="fas fa-times" style="margin-right:6px;"></i>Cancel
+        </button>
+        <button class="vd-delete-confirm-btn" id="vdDeleteConfirmBtn" onclick="executeDeleteVideo()">
+          <i class="fas fa-trash" style="margin-right:6px;"></i>Delete Now
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  _deleteTimer = setInterval(() => {
+    _deleteCountdown--;
+    const numEl = document.getElementById('vdDeleteCountNum');
+    const txtEl = document.getElementById('vdDeleteCountText');
+    const fillEl = document.getElementById('vdDeleteProgFill');
+    const confirmBtn = document.getElementById('vdDeleteConfirmBtn');
+
+    if (numEl) numEl.textContent = _deleteCountdown;
+    if (txtEl) txtEl.textContent = _deleteCountdown;
+    if (fillEl) fillEl.style.width = ((_deleteCountdown / 20) * 100) + '%';
+
+    if (_deleteCountdown <= 0) {
+      clearInterval(_deleteTimer);
+      _deleteTimer = null;
+      if (numEl) numEl.textContent = '0';
+      if (confirmBtn) {
+        confirmBtn.classList.add('enabled');
+        confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
+      }
+    }
+  }, 1000);
+}
+
+function cancelDeleteVideo() {
+  if (_deleteTimer) { clearInterval(_deleteTimer); _deleteTimer = null; }
+  const overlay = document.getElementById('vdDeleteOverlay');
+  if (overlay) overlay.remove();
+}
+
+async function executeDeleteVideo() {
+  if (_deleteCountdown > 0 || !vdCurrentVideo) return;
+  const overlay = document.getElementById('vdDeleteOverlay');
+  const confirmBtn = document.getElementById('vdDeleteConfirmBtn');
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Deleting…';
+  }
+
+  try {
+    if (vdCurrentVideo.seasonId) {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(vdCurrentVideo.seasonId)
+        .collection('episodes').doc(vdCurrentVideo.id).delete();
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(vdCurrentVideo.seasonId)
+        .update({ episodeCount: firebase.firestore.FieldValue.increment(-1) });
+    } else {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos').doc(vdCurrentVideo.id).delete();
+    }
+
+    if (overlay) overlay.remove();
+    closeVideoDetail();
+  } catch (e) {
+    console.error('Delete video error:', e);
+    alert('Failed to delete: ' + e.message);
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
+    }
+  }
+}
+
+/* ── Pause / Unpause Video ── */
+async function togglePauseVideo() {
+  if (!vdCurrentVideo) return;
+  const newStatus = vdCurrentVideo.status === 'paused' ? 'live' : 'paused';
+
+  try {
+    if (vdCurrentVideo.seasonId) {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(vdCurrentVideo.seasonId)
+        .collection('episodes').doc(vdCurrentVideo.id)
+        .update({ status: newStatus });
+    } else {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos').doc(vdCurrentVideo.id)
+        .update({ status: newStatus });
+    }
+
+    vdCurrentVideo.status = newStatus;
+    renderVdBody(vdCurrentVideo);
+  } catch (e) {
+    console.error('Pause toggle error:', e);
+    alert('Failed to update: ' + e.message);
+  }
+}
+
+/* ── Reschedule Video ── */
+function rescheduleVideo() {
+  if (!vdCurrentVideo) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'vd-resched-overlay';
+  overlay.id = 'vdReschedOverlay';
+
+  let currentDT = '';
+  if (vdCurrentVideo.scheduleDate) {
+    const d = vdCurrentVideo.scheduleDate.toDate
+      ? vdCurrentVideo.scheduleDate.toDate()
+      : new Date(vdCurrentVideo.scheduleDate);
+    if (!isNaN(d.getTime())) currentDT = d.toISOString().slice(0, 16);
+  }
+
+  overlay.innerHTML = `
+    <div class="vd-resched-card">
+      <div class="vd-resched-title">Reschedule Video</div>
+      <div class="vd-resched-sub">Pick a new date &amp; time for "${vdCurrentVideo.title || 'Untitled'}"</div>
+      <input type="datetime-local" class="vd-resched-input" id="vdReschedDT" value="${currentDT}">
+      <div style="display:flex;gap:10px;">
+        <button class="vd-delete-cancel-btn" onclick="closeReschedule()" style="flex:1;">Cancel</button>
+        <button class="btn btn-purple btn-lg" onclick="saveReschedule()" style="flex:1;">
+          <i class="fas fa-calendar-check" style="margin-right:6px;"></i>Save
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function closeReschedule() {
+  const overlay = document.getElementById('vdReschedOverlay');
+  if (overlay) overlay.remove();
+}
+
+async function saveReschedule() {
+  const dtVal = document.getElementById('vdReschedDT').value;
+  if (!dtVal) { alert('Please pick a date and time.'); return; }
+
+  const newDate = new Date(dtVal);
+  if (newDate <= new Date()) { alert('Schedule date must be in the future.'); return; }
+
+  const newTimestamp = firebase.firestore.Timestamp.fromDate(newDate);
+
+  try {
+    if (vdCurrentVideo.seasonId) {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(vdCurrentVideo.seasonId)
+        .collection('episodes').doc(vdCurrentVideo.id)
+        .update({ scheduleDate: newTimestamp });
+    } else {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos').doc(vdCurrentVideo.id)
+        .update({ scheduleDate: newTimestamp });
+    }
+
+    vdCurrentVideo.scheduleDate = newTimestamp;
+    renderVdBody(vdCurrentVideo);
+    closeReschedule();
+  } catch (e) {
+    console.error('Reschedule error:', e);
+    alert('Failed to reschedule: ' + e.message);
+  }
 }
 
 function toggleVdDesc() {
@@ -9596,6 +11096,76 @@ async function executeDeleteAccount(btn) {
   }
 }
   </script>
+
+  <!-- ─── Subcategory map (mirrors event-page.html sub-filters) ─── -->
+  <script>
+  /* Each main category maps to its sub-filters / sub-tabs. Keep in sync with event-page.html */
+  const SUBCATEGORIES = {
+    comedy:        ['Skits','Stand-Up','Reactions','Pranks','Memes','Naija Comedy'],
+    funny:         ['Skits','Stand-Up','Reactions','Pranks','Memes','Naija Comedy'],
+    dance:         ['Afro Dance','Hip-Hop','Choreography','Tutorials','Dance Challenge','Cultural'],
+    music:         ['Afrobeats','Afropop','Highlife','Hip-Hop','R&B','Gospel','Amapiano','Reggae','Pop'],
+    'music-video': ['Afrobeats','Afropop','Hip-Hop','R&B','Gospel','Amapiano','Pop','Lyric Video','Live Performance'],
+    afrobeats:     ['New Releases','Afropop','Amapiano','Alté','Street Pop','Collaborations','Live'],
+    highlife:      ['Classic','Modern','Juju','Fuji','Live Performance','Instrumental'],
+    gospel:        ['Worship','Praise','Sermons','Choir','Live Service','Spoken Word'],
+    movies:        ['Action','Drama','Comedy','Sci-Fi','Thriller','Romance','Horror','Nollywood','New Releases'],
+    tvshows:       ['Drama','Comedy','Reality','Crime','Fantasy','Soap Opera','New Season'],
+    anime:         ['Shonen','Shojo','Isekai','Action','Romance','Horror','New Season','Classics'],
+    nollywood:     ['Latest','Movies','TV Series','Skits','Yoruba','Igbo','Hausa','Pidgin','Classics'],
+    documentary:   ['Nature','History','Crime','Science','Society','Africa','Biography','Space'],
+    documentaries: ['Nature','History','Crime','Science','Society','Africa','Biography','Space'],
+    education:     ['WAEC/JAMB','University','Tech Skills','Finance','History','Science','Languages','Personal Dev'],
+    lifestyle:     ['Daily Vlog','Routine','Home','Productivity','Minimalism','Self-Care','Family Life'],
+    fashion:       ['Fashion','Beauty','Makeup','Hairstyles','Skincare','Trends','Lookbook','Culture'],
+    food:          ['Nigerian Cuisine','West African','Street Food','Recipes','Restaurants','Travel','Vlog'],
+    sports:        ['⚽ Football','🏀 Basketball','🥊 Boxing','🏃 Athletics','🏊 Swimming','🎾 Tennis','🏈 NFL','CAF','EPL'],
+    gaming:        ["Let's Play",'Reviews','Esports','Tutorials','News','Mobile','PC','Console'],
+    tech:          ['Reviews','Tutorials','Coding','AI','Gadgets','Mobile','Startups','News'],
+    news:          ['Nigeria','Africa','World','Politics','Business','Technology','Sports','Entertainment'],
+    travel:        ['Africa','Nigeria','International','Adventure','Food Travel','Vlog','Culture','Tips'],
+    kids:          ['Ages 2-5','Ages 6-10','Ages 11-14','Cartoons','Educational','Movies','African Stories'],
+    romance:       ['Movies','TV Series','K-Drama','Nollywood','Short Films'],
+    thriller:      ['Psychological','Horror','Crime Thriller','Supernatural','Action Thriller','Mystery'],
+    scifi:         ['Space Opera','Cyberpunk','Time Travel','Fantasy','Dystopia','AI & Robots'],
+    health:        ['Fitness','Nutrition','Mental Health','Yoga','Medical','Sleep','Skincare'],
+    motivation:    ['Self-Help','Mindset','Success Stories','Discipline','Spirituality','Productivity','Speeches']
+  };
+
+  function populateSubcategory(catId, subId){
+    const catSel = document.getElementById(catId);
+    const subSel = document.getElementById(subId);
+    if (!catSel || !subSel) return;
+    const wrap = document.getElementById(subId + 'Wrap');
+    const list = SUBCATEGORIES[catSel.value] || [];
+
+    /* reset */
+    subSel.innerHTML = '<option value="">— Select a subcategory —</option>';
+
+    if (!list.length){
+      if (wrap) wrap.style.display = 'none';
+      return;
+    }
+
+    list.forEach(name => {
+      const opt = document.createElement('option');
+      /* slugify: lowercase, replace non-alnum with '-' */
+      opt.value = name.toLowerCase().replace(/[^\w]+/g,'-').replace(/^-|-$/g,'');
+      opt.textContent = name;
+      subSel.appendChild(opt);
+    });
+
+    if (wrap) wrap.style.display = '';
+  }
+  </script>
+
+</body>
+</html>
+  </script>
+
+</body>
+</html>
+ </script>
 
 </body>
 </html>
