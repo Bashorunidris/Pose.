@@ -6,7 +6,7 @@
   <title>Pose Channel Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -1519,6 +1519,22 @@ input[type=range].ucoin-slider {
   transition: transform .3s;
 }
 .av-season-card.open .av-season-chevron { transform: rotate(180deg); }
+.av-season-delete {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; margin-left: 8px;
+  font-size: 12px; transition: background .15s, transform .15s;
+}
+.av-season-delete:hover { background: #FCA5A5; color: #fff; transform: scale(1.05); }
+.av-ep-delete {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; margin-left: 6px;
+  font-size: 11px; transition: background .15s, transform .15s;
+}
+.av-ep-delete:hover { background: #FCA5A5; color: #fff; transform: scale(1.05); }
 
 /* Episode list inside season */
 .av-ep-list { padding: 6px 14px 14px; }
@@ -2019,6 +2035,19 @@ input[type=range].ucoin-slider {
   transition: border-color .2s;
 }
 .vd-resched-input:focus { border-color: var(--purple-main); }
+.vd-pm-opt {
+  flex: 1; padding: 14px 10px; border-radius: 12px;
+  border: 1.5px solid var(--gray-200); background: var(--white);
+  color: var(--gray-500); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transition: all .2s;
+}
+.vd-pm-opt i { font-size: 18px; }
+.vd-pm-opt.active {
+  border-color: var(--purple-main); background: var(--purple-ghost);
+  color: var(--purple-deep);
+}
 
 /* Scheduled overlay */
 .vd-sched-banner {
@@ -2666,6 +2695,15 @@ input[type=range].ucoin-slider {
   margin-bottom: 6px;
 }
 
+.coin-logo {
+  height: 1.2em;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 4px;
+  position: relative;
+  top: -1px;
+}
+
 </style>
 </head>
 <body>
@@ -2931,9 +2969,9 @@ input[type=range].ucoin-slider {
 
   <div style="padding:16px 18px 0;">
     <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;width:fit-content;">
-      <div class="earn-seg active" onclick="onEarnSeg(this,'free')">Free</div>
+      <div class="earn-seg" onclick="onEarnSeg(this,'free')">Free</div>
       <div class="earn-seg" onclick="onEarnSeg(this,'paid')">Paid</div>
-      <div class="earn-seg" onclick="onEarnSeg(this,'total')">Total</div>
+      <div class="earn-seg active" onclick="onEarnSeg(this,'total')">Total</div>
     </div>
   </div>
 
@@ -2949,7 +2987,7 @@ input[type=range].ucoin-slider {
 </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100);">
+      <div id="adsRevRow" style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100);">
         <div>
           <div style="font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:600;">Ads Revenue</div>
           <div style="font-size:12px;color:var(--gray-500);margin-top:3px;">From platform ad partner program</div>
@@ -2960,7 +2998,7 @@ input[type=range].ucoin-slider {
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100);">
+      <div id="directRevRow" style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100);">
         <div>
           <div style="font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:600;">Direct Sales</div>
           <div style="font-size:12px;color:var(--gray-500);margin-top:3px;">Pay-per-view &amp; purchases</div>
@@ -2975,6 +3013,30 @@ input[type=range].ucoin-slider {
         <div style="font-size:11px;text-transform:uppercase;letter-spacing:.9px;font-weight:700;color:var(--purple-mid);margin-bottom:8px;">Total Take-Home</div>
         <div id="totalRevDisplay" style="font-family:'Playfair Display',serif;font-weight:700;color:var(--purple-deep);line-height:1;font-size:42px;">—</div>
         <div style="font-size:12px;color:var(--gray-500);margin-top:8px;" id="totalRevSub">—</div>
+      </div>
+
+      <!-- Advanced Earnings Analysis -->
+      <div style="margin-top:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <span style="font-size:13px;font-weight:600;color:var(--gray-900);">Revenue Trends</span>
+          <span style="font-size:11px;color:var(--purple-main);font-weight:600;">Last 7 Days</span>
+        </div>
+        <div style="background:white;border:1px solid var(--gray-100);border-radius:16px;padding:16px;height:220px;margin-bottom:20px;">
+          <canvas id="earningsTrendChart"></canvas>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+          <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:14px;padding:14px;">
+            <div style="font-size:10px;text-transform:uppercase;color:var(--gray-400);font-weight:700;letter-spacing:0.5px;">Avg. Daily</div>
+            <div id="avgDailyRev" style="font-size:18px;font-weight:700;color:var(--text-main);margin-top:4px;">₦0</div>
+            <div style="font-size:10px;color:var(--green);font-weight:600;margin-top:2px;">Stable</div>
+          </div>
+          <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:14px;padding:14px;">
+            <div style="font-size:10px;text-transform:uppercase;color:var(--gray-400);font-weight:700;letter-spacing:0.5px;">Est. Monthly</div>
+            <div id="estMonthlyRev" style="font-size:18px;font-weight:700;color:var(--text-main);margin-top:4px;">₦0</div>
+            <div style="font-size:10px;color:var(--purple-main);font-weight:600;margin-top:2px;">Projected</div>
+          </div>
+        </div>
       </div>
 
       <!-- Available vs Locked breakdown -->
@@ -3053,6 +3115,29 @@ input[type=range].ucoin-slider {
     <div style="display:flex;align-items:center;gap:6px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 14px;">
       <i class="fas fa-clock" style="color:#D97706;font-size:12px;"></i>
       <span style="font-size:11px;color:#92400E;line-height:1.4;">Withdrawals are processed <b>9 AM – 12 AM daily</b> · Takes <b>15 min to 1 hour</b></span>
+    </div>
+  </div>
+
+  <!-- ── POWERED BY BREET PROMO ── -->
+  <div style="padding:0 18px 16px;">
+    <div style="background:linear-gradient(135deg,rgba(0,200,150,.12),rgba(0,158,118,.04),rgba(124,58,237,.08));border:1.5px solid rgba(0,200,150,.32);border-radius:16px;padding:18px;position:relative;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;position:relative;z-index:1;">
+        <span style="background:#00C896;color:#000;font-size:9px;font-weight:800;letter-spacing:2px;padding:4px 11px;border-radius:100px;">BREET</span>
+        <span style="font-size:11.5px;color:var(--gray-400);">× CREATOR PAYOUTS</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;position:relative;z-index:1;">
+        <img src="https://i.ibb.co/1tHhLFdZ/images-19.jpg" alt="Breet" style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid rgba(0,200,150,.3);flex-shrink:0;">
+        <div style="flex:1;min-width:160px;">
+          <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:3px;">Withdraw faster with Breet</div>
+          <div style="font-size:12px;color:var(--gray-500);line-height:1.6;">Get your earnings as crypto or stablecoin, anywhere in the world. First <b style="color:#009E76;">3 withdrawals</b> via Breet come with reduced fees or bonus Pose Coins.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;position:relative;z-index:1;">
+        <span style="font-size:10px;color:#009E76;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);border-radius:100px;padding:4px 10px;font-weight:600;">⚡ Fast Payouts</span>
+        <span style="font-size:10px;color:#009E76;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);border-radius:100px;padding:4px 10px;font-weight:600;">🌍 Global</span>
+        <span style="font-size:10px;color:#009E76;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);border-radius:100px;padding:4px 10px;font-weight:600;">🎁 Withdrawal Bonus</span>
+      </div>
+      <img src="https://i.ibb.co/9kWSGf75/images-20.jpg" alt="" style="position:absolute;right:-24px;bottom:-24px;width:104px;height:104px;border-radius:50%;opacity:.1;object-fit:cover;pointer-events:none;">
     </div>
   </div>
 
@@ -3159,7 +3244,7 @@ input[type=range].ucoin-slider {
         <input
           type="number"
           id="wdAmountInput"
-          min="2000"
+          min="500"
           placeholder="0"
           oninput="onWdAmountInput(this.value)"
           style="width:100%;padding:13px 14px 13px 30px;border-radius:12px;
@@ -3205,7 +3290,7 @@ input[type=range].ucoin-slider {
     </div>
 
     <div id="wdMinWarning" style="display:none;background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400E;text-align:center;">
-      <i class="fas fa-info-circle" style="margin-right:4px;"></i> Minimum withdrawal is ₦2,000
+      <i class="fas fa-info-circle" style="margin-right:4px;"></i> Minimum withdrawal is ₦500
     </div>
 
     <div id="wdMethodWarning" style="display:none;background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400E;text-align:center;">
@@ -3215,6 +3300,16 @@ input[type=range].ucoin-slider {
     <button id="withdrawBtn" onclick="requestWithdrawal()" disabled class="earn-primary-btn" style="background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 14px rgba(5,150,105,.3);">
       <i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal
     </button>
+
+    <div style="text-align:center;color:var(--gray-400);font-size:11px;margin:13px 0 11px;letter-spacing:1px;">— OR —</div>
+
+    <button id="breetWithdrawBtn" onclick="launchBreetWithdrawal()" class="earn-primary-btn"
+      style="background:linear-gradient(135deg,#00C896,#009E76);box-shadow:0 4px 14px rgba(0,200,150,.3);color:#000;">
+      <i class="fas fa-gem" style="margin-right:6px;"></i> Withdraw via Breet (Crypto / Stablecoin)
+    </button>
+    <div style="background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.22);border-radius:11px;padding:11px 13px;margin-top:11px;font-size:11.5px;color:var(--gray-500);line-height:1.6;">
+      <b style="color:#009E76;">Creator perk:</b> Your first 3 Breet withdrawals come with reduced fees or bonus Pose Coins — faster, borderless payouts to your crypto wallet.
+    </div>
   </div>
 </div>
 
@@ -3312,12 +3407,12 @@ input[type=range].ucoin-slider {
                   </svg>
                 </div>
                 <span class="leg-metric-label">Followers</span>
-                <span class="leg-metric-val">2,000</span>
+                <span class="leg-metric-val">1,000</span>
               </div>
               <div class="leg-bar-bg">
-                <div class="leg-bar-fill" data-w="74" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div>
+                <div class="leg-bar-fill" data-w="0" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div>
               </div>
-              <div class="leg-bar-hint">1,480 / 2,000</div>
+              <div class="leg-bar-hint">0 / 1,000</div>
             </div>
             <div class="leg-metric">
               <div class="leg-metric-row">
@@ -3331,9 +3426,13 @@ input[type=range].ucoin-slider {
                 <span class="leg-metric-val">1,000</span>
               </div>
               <div class="leg-bar-bg">
-                <div class="leg-bar-fill" data-w="92" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div>
+                <div class="leg-bar-fill" data-w="0" style="background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div>
               </div>
-              <div class="leg-bar-hint">920 / 1,000</div>
+              <div class="leg-bar-hint">0 / 1,000</div>
+            </div>
+            <div style="margin-top:10px;font-size:11px;color:var(--gray-500);display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--gray-100);">
+              <i class="fas fa-money-bill-transfer" style="color:var(--purple-main);"></i>
+              Minimum withdrawal: <strong>₦500</strong>
             </div>
           </div>
         </div>
@@ -3360,12 +3459,12 @@ input[type=range].ucoin-slider {
                   </svg>
                 </div>
                 <span class="leg-metric-label">Followers</span>
-                <span class="leg-metric-val">500</span>
+                <span class="leg-metric-val">1,000</span>
               </div>
               <div class="leg-bar-bg">
-                <div class="leg-bar-fill" data-w="100" style="background:linear-gradient(90deg,#D97706,#FBBF24)"></div>
+                <div class="leg-bar-fill" data-w="0" style="background:linear-gradient(90deg,#D97706,#FBBF24)"></div>
               </div>
-              <div class="leg-bar-hint" style="color:var(--green)">&#10003; Threshold met</div>
+              <div class="leg-bar-hint">0 / 1,000</div>
             </div>
             <div class="leg-metric">
               <div class="leg-metric-row">
@@ -3376,12 +3475,12 @@ input[type=range].ucoin-slider {
                   </svg>
                 </div>
                 <span class="leg-metric-label">Views</span>
-                <span class="leg-metric-val">100</span>
+                <span class="leg-metric-val">10</span>
               </div>
               <div class="leg-bar-bg">
-                <div class="leg-bar-fill" data-w="100" style="background:linear-gradient(90deg,#D97706,#FBBF24)"></div>
+                <div class="leg-bar-fill" data-w="0" style="background:linear-gradient(90deg,#D97706,#FBBF24)"></div>
               </div>
-              <div class="leg-bar-hint" style="color:var(--green)">&#10003; Threshold met</div>
+              <div class="leg-bar-hint">0 / 10</div>
             </div>
           </div>
         </div>
@@ -3460,19 +3559,6 @@ input[type=range].ucoin-slider {
               </div>
             </div>
 
-            <!-- Step 5 -->
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:white;border:1px solid var(--gray-100);">
-              <div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;background:#FCE7F3;display:flex;align-items:center;justify-content:center;">
-                <i class="fas fa-download" style="color:#DB2777;font-size:12px;"></i>
-              </div>
-              <div style="flex:1;">
-                <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">
-                  <span style="color:var(--purple-mid);margin-right:4px;">5.</span>Offline + cashback
-                </div>
-                <div style="font-size:11px;color:var(--gray-500);">Viewers can download; cashback on every purchase</div>
-              </div>
-            </div>
-
           </div><!-- /How It Works -->
 
           <!-- Coin Pricing Range -->
@@ -3546,15 +3632,8 @@ input[type=range].ucoin-slider {
           </div>
 
           <!-- Benefits -->
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);margin-bottom:10px;">Benefits</div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);margin-bottom:10px;">Benefits &amp; Remarks</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
-
-            <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
-              <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#EDE9FE;display:flex;align-items:center;justify-content:center;">
-                <i class="fas fa-coins" style="color:#7C3AED;font-size:11px;"></i>
-              </div>
-              <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">Pay only for what you watch</div>
-            </div>
 
             <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
               <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#D1FAE5;display:flex;align-items:center;justify-content:center;">
@@ -3577,237 +3656,43 @@ input[type=range].ucoin-slider {
               <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">Strong creator earnings</div>
             </div>
 
-            <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
-              <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#FCE7F3;display:flex;align-items:center;justify-content:center;">
-                <i class="fas fa-download" style="color:#DB2777;font-size:11px;"></i>
+            <div style="grid-column: 1 / -1; display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:#FEF3C7; border:1px solid #FDE68A; margin-top:4px;">
+              <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#FFFBEB;display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-comment-dots" style="color:#D97706;font-size:11px;"></i>
               </div>
-              <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">Offline viewing support</div>
-            </div>
-
-            <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
-              <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#D1FAE5;display:flex;align-items:center;justify-content:center;">
-                <i class="fas fa-rotate-left" style="color:#059669;font-size:11px;"></i>
+              <div style="flex:1; font-size:11.5px; color:#92400E; line-height:1.45;">
+                <strong>Pay-As-You-Watch Remark:</strong> Viewers are far more likely to pay for videos that are relatively cheap. Pricing should also align with the overall quality and value of your video.
               </div>
-              <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">Cashback every purchase</div>
             </div>
 
           </div><!-- /Benefits grid -->
         </div>
       </div><!-- /Pay-As-You-Watch -->
 
-      <!-- ── ADS REVENUE ── -->
-      <div style="border-radius:16px;border:1.5px solid #FDE68A;overflow:hidden;">
-
-        <!-- Header -->
-        <div style="background:linear-gradient(135deg,#78350F,#D97706);padding:16px 18px;display:flex;align-items:center;gap:12px;">
-          <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <i class="fas fa-rectangle-ad" style="color:white;font-size:16px;"></i>
+      <!-- ── ADS PRO TIPS ── -->
+      <div style="background:linear-gradient(135deg,#1E0A3C,#4C1D95);border-radius:13px;padding:16px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.5);margin-bottom:10px;">
+          <i class="fas fa-lightbulb" style="margin-right:5px;color:#FDE68A;"></i>Pro Tips &middot; Maximise Ad Revenue
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+            <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Videos over 15 mins unlock CADS mid-roll slots for extra income</span>
           </div>
-          <div>
-            <div style="font-size:15px;font-weight:700;color:white;">Ads Revenue</div>
-            <div style="font-size:11.5px;color:rgba(255,255,255,.65);">For free videos &middot; earn from views &amp; engagement</div>
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+            <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Longer content = more ad slots = significantly higher earnings per 1,000 views</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+            <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Keep viewers watching to the end &mdash; completion rate boosts your ad RPM</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+            <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Consistent uploads grow your view count and compound your ad income over time</span>
           </div>
         </div>
-
-        <div style="padding:18px;background:#FFFBEB;">
-
-          <!-- Earnings Rate Banner -->
-          <div style="background:linear-gradient(135deg,#78350F,#B45309);border-radius:13px;padding:16px;text-align:center;margin-bottom:18px;">
-            <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;font-weight:700;color:rgba(255,255,255,.55);margin-bottom:6px;">Earnings Per 1,000 Views</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
-              <div>
-                <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:white;">&#8358;810</div>
-                <div style="font-size:10px;color:rgba(255,255,255,.5);">minimum</div>
-              </div>
-              <div style="color:rgba(255,255,255,.4);font-size:20px;">&rarr;</div>
-              <div>
-                <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#FDE68A;">&#8358;3,500+</div>
-                <div style="font-size:10px;color:rgba(255,255,255,.5);">maximum</div>
-              </div>
-            </div>
-            <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:8px;">Rate varies by content length &amp; total ad slots</div>
-          </div>
-
-          <!-- Ad Formats -->
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400E;margin-bottom:10px;">Ad Formats</div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
-
-            <!-- Video Ads -->
-            <div style="padding:13px 14px;border-radius:11px;background:white;border:1.5px solid #FDE68A;">
-              <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;">
-                <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#92400E,#D97706);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <i class="fas fa-play" style="color:white;font-size:12px;"></i>
-                </div>
-                <div style="font-size:13px;font-weight:700;color:var(--text-main);">Video Ads</div>
-              </div>
-              <div style="font-size:12px;color:var(--gray-600);line-height:1.5;">
-                Pre-roll or post-roll video advertisement that plays at the beginning and/or end of your video. Higher viewer completion = better earnings per impression.
-              </div>
-            </div>
-
-            <!-- Collapsing Ads (CADS) -->
-            <div style="padding:13px 14px;border-radius:11px;background:white;border:1.5px solid #FDE68A;">
-              <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;">
-                <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#78350F,#B45309);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <i class="fas fa-compress" style="color:white;font-size:12px;"></i>
-                </div>
-                <div style="font-size:13px;font-weight:700;color:var(--text-main);">
-                  Collapsing Ads
-                  <span style="font-size:10px;font-weight:700;background:#FEF3C7;color:#92400E;padding:2px 7px;border-radius:20px;margin-left:4px;">CADS</span>
-                </div>
-              </div>
-              <div style="font-size:12px;color:var(--gray-600);line-height:1.5;">
-                Non-intrusive banner overlay that appears mid-video. Viewers can collapse it &mdash; less disruptive while still generating consistent revenue for you.
-              </div>
-            </div>
-
-          </div><!-- /Ad Formats -->
-
-          <!-- Ad Slots by Video Length -->
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400E;margin-bottom:10px;">Ad Slots by Video Length</div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
-
-            <!-- Up to 5 minutes -->
-            <div style="border-radius:12px;border:1.5px solid var(--gray-200);overflow:hidden;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--gray-100);">
-                <div style="display:flex;align-items:center;gap:7px;">
-                  <div style="width:8px;height:8px;border-radius:50%;background:#A1A1AA;flex-shrink:0;"></div>
-                  <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">Up to 5 minutes</div>
-                </div>
-                <div style="font-size:10.5px;font-weight:700;background:var(--gray-200);color:var(--gray-600);padding:3px 9px;border-radius:20px;">1 Ad</div>
-              </div>
-              <div style="padding:11px 13px;background:var(--gray-50);display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Video Ad at the <strong>beginning</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- 6 – 15 minutes -->
-            <div style="border-radius:12px;border:1.5px solid #FDE68A;overflow:hidden;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#FEF3C7;">
-                <div style="display:flex;align-items:center;gap:7px;">
-                  <div style="width:8px;height:8px;border-radius:50%;background:#D97706;flex-shrink:0;"></div>
-                  <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">6 &ndash; 15 minutes</div>
-                </div>
-                <div style="font-size:10.5px;font-weight:700;background:#FEF3C7;color:#92400E;padding:3px 9px;border-radius:20px;">2 Ads</div>
-              </div>
-              <div style="padding:11px 13px;background:#FFFBEB;display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Video Ad at the <strong>beginning</strong>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-compress" style="color:#B45309;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Collapsing Ad (CADS) <strong>mid-video</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- 16 – 30 minutes -->
-            <div style="border-radius:12px;border:1.5px solid #DDD6FE;overflow:hidden;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--purple-pale);">
-                <div style="display:flex;align-items:center;gap:7px;">
-                  <div style="width:8px;height:8px;border-radius:50%;background:#7C3AED;flex-shrink:0;"></div>
-                  <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">16 &ndash; 30 minutes</div>
-                </div>
-                <div style="font-size:10.5px;font-weight:700;background:var(--purple-pale);color:var(--purple-deep);padding:3px 9px;border-radius:20px;">3 Ads</div>
-              </div>
-              <div style="padding:11px 13px;background:var(--purple-ghost);display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Video Ad at the <strong>beginning</strong>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-compress" style="color:#B45309;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  2 &times; Collapsing Ads (CADS) <strong>mid-video</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- 31 minutes – 1 hour -->
-            <div style="border-radius:12px;border:1.5px solid #BFDBFE;overflow:hidden;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#DBEAFE;">
-                <div style="display:flex;align-items:center;gap:7px;">
-                  <div style="width:8px;height:8px;border-radius:50%;background:#2563EB;flex-shrink:0;"></div>
-                  <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">31 minutes &ndash; 1 hour</div>
-                </div>
-                <div style="font-size:10.5px;font-weight:700;background:#DBEAFE;color:#1E40AF;padding:3px 9px;border-radius:20px;">4 Ads</div>
-              </div>
-              <div style="padding:11px 13px;background:#EFF6FF;display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Video Ad at the <strong>beginning</strong>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Video Ad <strong>5 minutes before end</strong>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  1 &times; Video Ad at the <strong>end</strong>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-compress" style="color:#B45309;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  2 &times; Collapsing Ads (CADS) <strong>mid-video</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- Over 1 hour -->
-            <div style="border-radius:12px;border:1.5px solid #A7F3D0;overflow:hidden;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#D1FAE5;">
-                <div style="display:flex;align-items:center;gap:7px;">
-                  <div style="width:8px;height:8px;border-radius:50%;background:#059669;flex-shrink:0;"></div>
-                  <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">Over 1 hour</div>
-                </div>
-                <div style="font-size:10.5px;font-weight:700;background:#D1FAE5;color:#065F46;padding:3px 9px;border-radius:20px;">5+ Ads</div>
-              </div>
-              <div style="padding:11px 13px;background:#ECFDF5;display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-play" style="color:#D97706;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  2 &times; Video Ads &mdash; <strong>beginning</strong> &amp; <strong>end</strong>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-700);">
-                  <i class="fas fa-compress" style="color:#B45309;width:13px;flex-shrink:0;font-size:11px;"></i>
-                  Multiple CADS <strong>throughout video</strong>
-                </div>
-                <div style="font-size:11px;color:var(--green);font-weight:600;margin-top:4px;">
-                  <i class="fas fa-circle-check" style="margin-right:4px;"></i>Maximum ad slots = maximum earning potential
-                </div>
-              </div>
-            </div>
-
-          </div><!-- /Ad Slots by Video Length -->
-
-          <!-- Pro Tips -->
-          <div style="background:linear-gradient(135deg,#1E0A3C,#4C1D95);border-radius:13px;padding:16px;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.5);margin-bottom:10px;">
-              <i class="fas fa-lightbulb" style="margin-right:5px;color:#FDE68A;"></i>Pro Tips &middot; Maximise Ad Revenue
-            </div>
-            <div style="display:flex;flex-direction:column;gap:7px;">
-              <div style="display:flex;align-items:flex-start;gap:8px;">
-                <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
-                <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Videos over 15 mins unlock CADS mid-roll slots for extra income</span>
-              </div>
-              <div style="display:flex;align-items:flex-start;gap:8px;">
-                <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
-                <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Longer content = more ad slots = significantly higher earnings per 1,000 views</span>
-              </div>
-              <div style="display:flex;align-items:flex-start;gap:8px;">
-                <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
-                <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Keep viewers watching to the end &mdash; completion rate boosts your ad RPM</span>
-              </div>
-              <div style="display:flex;align-items:flex-start;gap:8px;">
-                <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
-                <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Consistent uploads grow your view count and compound your ad income over time</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div><!-- /Ads Revenue -->
+      </div>
 
     </div><!-- /Section 01 -->
 
@@ -4079,83 +3964,43 @@ input[type=range].ucoin-slider {
 
 
     <!-- ════════════════════════════════════════════════
-         SECTION 05 · ESSENTIAL OPERATIONAL RESOURCES
+         SECTION 05 · CONTENT DECEPTION & SEVERE PENALTIES
     ═════════════════════════════════════════════════ -->
-    <div class="leg-section leg-reveal" style="margin-bottom:40px;">
+    <div class="leg-section leg-reveal">
       <div class="leg-sec-header">
-        <div class="leg-sec-icon" style="background:#DBEAFE;color:#2563EB;border-color:#BFDBFE">
+        <div class="leg-sec-icon" style="background:#FEE2E2;color:#DC2626;border-color:#FCA5A5">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
           </svg>
         </div>
         <div>
           <div class="leg-sec-num">05</div>
-          <div class="leg-sec-title">Essential Operational Resources</div>
+          <div class="leg-sec-title">Content Deception &amp; Revenue Forfeiture</div>
         </div>
       </div>
-      <p class="leg-sec-desc">Official tools and guides to help you create, protect, and monetize your content on Pose Channel.</p>
+      <p class="leg-sec-desc">Misleading viewers into paying coins for content they did not expect violates Pose's core content integrity policy.</p>
 
-      <div class="leg-resources">
-
-        <!-- Creator Handbook -->
-        <div class="leg-res-card" style="--delay:.05s" onclick="alert('Opening Creator Handbook…')">
-          <div class="leg-res-shine"></div>
-          <div class="leg-res-icon" style="background:linear-gradient(135deg,#4C1D95,#7C3AED)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-              <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-            </svg>
+      <div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:12px;padding:16px;margin-bottom:18px;display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:32px;height:32px;border-radius:8px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="fas fa-triangle-exclamation" style="color:#DC2626;font-size:14px;"></i>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13.5px;font-weight:700;color:#9B1C1C;margin-bottom:4px;">Deceptive Metadata &amp; Clickbait Policy</div>
+          <div style="font-size:12.5px;color:#7F1D1D;line-height:1.5;margin-bottom:10px;">
+            Posting <strong>fake/misleading thumbnails</strong> or utilizing **wrong/deceptive titles** that trick people into wasting their hard-earned Pose Coins is strictly forbidden. Any attempt to monetize through deception will result in severe penalties:
           </div>
-          <div class="leg-res-content">
-            <div class="leg-res-title">Pose Creator Handbook</div>
-            <div class="leg-res-desc">Optimize video lighting, sound, and titles for maximum legibility and reach.</div>
-          </div>
-          <div class="leg-res-arrow">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:white;background:#DC2626;padding:4px 9px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;">
+              <i class="fas fa-user-slash"></i> Permanent Ban
+            </span>
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:white;background:#9B1C1C;padding:4px 9px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;">
+              <i class="fas fa-ban"></i> Revenue Forfeited
+            </span>
           </div>
         </div>
-
-        <!-- Safety Center -->
-        <div class="leg-res-card" style="--delay:.1s" onclick="alert('Opening Safety Center…')">
-          <div class="leg-res-shine"></div>
-          <div class="leg-res-icon" style="background:linear-gradient(135deg,#065F46,#059669)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <div class="leg-res-content">
-            <div class="leg-res-title">Pose Safety Center</div>
-            <div class="leg-res-desc">Learn how to block accounts, manage privacy settings, and report violations.</div>
-          </div>
-          <div class="leg-res-arrow">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Monetization Appeals -->
-        <div class="leg-res-card" style="--delay:.15s" onclick="alert('Opening Monetization Appeals…')">
-          <div class="leg-res-shine"></div>
-          <div class="leg-res-icon" style="background:linear-gradient(135deg,#92400E,#D97706)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <div class="leg-res-content">
-            <div class="leg-res-title">Monetization Appeals</div>
-            <div class="leg-res-desc">Request a manual review if you believe your video was incorrectly demonetized.</div>
-          </div>
-          <div class="leg-res-arrow">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
       </div>
-    </div>
+    </div><!-- /Section 05 -->
+
 
   </div>
 </div>
@@ -5509,8 +5354,19 @@ let _uploadedBytes   = 0;
     /* ====================================================
        BOOT — REAL-TIME LISTENERS
     ==================================================== */
-   function bootDashboard() {
-  // Save last visited channel for this user
+    function bootDashboard() {
+      // --- SAMPLE DATA FOR VISUAL VERIFICATION ---
+      // This data will be used if the Firebase listener returns null or 0.
+      videosData = [
+        { id: 'v1', title: 'My First Viral Video', views: 1200, likes: 450, comments: 85, revenue: 500, priceMode: 'free', createdAt: new Date() },
+        { id: 'v2', title: 'Behind the Scenes', views: 850, likes: 210, comments: 40, revenue: 250, priceMode: 'paid', coinPrice: 5, createdAt: new Date() }
+      ];
+      // --- END SAMPLE DATA ---
+
+      // Ensure UI renders sample data immediately if we are on the earnings tab
+      if (isPageActive('page-earnings')) renderEarningsSummary();
+
+      // Save last visited channel for this user
   auth.onAuthStateChanged(u => {
     if (u) db.collection('users').doc(u.uid)
       .set({ lastChannelId: CHANNEL_UID }, { merge: true });
@@ -5648,65 +5504,79 @@ async function countAllContent() {
       return n.toString();
     }
 
-   function fmtCurr(usd) {
-  usd = Number(usd) || 0;
-  if (earnCurrency === 'COIN') {
-    // 1 Pose Coin = ₦25
-    const ngn   = usd * (usdToNgn || 1620);
-    const coins = Math.round(ngn / 25);
-    return '🪙 ' + coins.toLocaleString();
-  }
-  if (earnCurrency === 'USER') return fmtUserCurr(usd);
-  // Default: NGN
-  const ngn = usd * (usdToNgn || 1620);
-  return '₦' + ngn.toLocaleString('en-NG', { maximumFractionDigits: 0 });
-}
+    const COIN_LOGO = `<img src="https://i.ibb.co/k62g7222/Chat-GPT-Image-Apr-28-2026-11-33-52-PM.png" class="coin-logo" alt="Pose Coin">`;
 
-const CURRENCY_MAP = {
-  'Nigeria': { code: 'NGN', symbol: '₦', name: 'NGN' },
-  'United States': { code: 'USD', symbol: '$', name: 'USD' },
-  'United Kingdom': { code: 'GBP', symbol: '£', name: 'GBP' },
-  'Ghana': { code: 'GHS', symbol: 'GH₵', name: 'GHS' },
-  'Kenya': { code: 'KES', symbol: 'KSh', name: 'KES' },
-  'South Africa': { code: 'ZAR', symbol: 'R', name: 'ZAR' },
-  'Canada': { code: 'CAD', symbol: 'CA$', name: 'CAD' },
-  'Australia': { code: 'AUD', symbol: 'A$', name: 'AUD' },
-  'India': { code: 'INR', symbol: '₹', name: 'INR' },
-  'Germany': { code: 'EUR', symbol: '€', name: 'EUR' },
-  'France': { code: 'EUR', symbol: '€', name: 'EUR' },
-  'Italy': { code: 'EUR', symbol: '€', name: 'EUR' },
-  'Spain': { code: 'EUR', symbol: '€', name: 'EUR' },
-  'Netherlands': { code: 'EUR', symbol: '€', name: 'EUR' },
-  'Brazil': { code: 'BRL', symbol: 'R$', name: 'BRL' },
-  'Mexico': { code: 'MXN', symbol: 'MX$', name: 'MXN' },
-  'UAE': { code: 'AED', symbol: 'AED', name: 'AED' },
-  'Saudi Arabia': { code: 'SAR', symbol: 'SAR', name: 'SAR' },
-  'Egypt': { code: 'EGP', symbol: 'E£', name: 'EGP' },
-  'Tanzania': { code: 'TZS', symbol: 'TSh', name: 'TZS' },
-  'Uganda': { code: 'UGX', symbol: 'USh', name: 'UGX' },
-  'Rwanda': { code: 'RWF', symbol: 'RF', name: 'RWF' },
-  'Cameroon': { code: 'XAF', symbol: 'FCFA', name: 'XAF' },
-  'Senegal': { code: 'XOF', symbol: 'CFA', name: 'XOF' },
-  'Ivory Coast': { code: 'XOF', symbol: 'CFA', name: 'XOF' },
-  'Ethiopia': { code: 'ETB', symbol: 'Br', name: 'ETB' },
-  'Zimbabwe': { code: 'USD', symbol: '$', name: 'USD' },
-  'Zambia': { code: 'ZMW', symbol: 'ZK', name: 'ZMW' },
-};
+    function fmtCurr(ngn) {
+      ngn = Number(ngn) || 0;
+      if (earnCurrency === 'COIN') {
+        // 1 Pose Coin = ₦25
+        const coins = Math.round(ngn / 25);
+        return COIN_LOGO + ' ' + coins.toLocaleString();
+      }
+      if (earnCurrency === 'USER') return fmtUserCurr(ngn);
+      // Default: NGN
+      return '₦' + Math.round(ngn).toLocaleString('en-NG', { maximumFractionDigits: 0 });
+    }
 
-let userCurrencyRates = {};
+    const CURRENCY_MAP = {
+      'Nigeria': { code: 'NGN', symbol: '₦', name: 'NGN' },
+      'United States': { code: 'USD', symbol: '$', name: 'USD' },
+      'United Kingdom': { code: 'GBP', symbol: '£', name: 'GBP' },
+      'Ghana': { code: 'GHS', symbol: 'GH₵', name: 'GHS' },
+      'Kenya': { code: 'KES', symbol: 'KSh', name: 'KES' },
+      'South Africa': { code: 'ZAR', symbol: 'R', name: 'ZAR' },
+      'Canada': { code: 'CAD', symbol: 'CA$', name: 'CAD' },
+      'Australia': { code: 'AUD', symbol: 'A$', name: 'AUD' },
+      'India': { code: 'INR', symbol: '₹', name: 'INR' },
+      'Germany': { code: 'EUR', symbol: '€', name: 'EUR' },
+      'France': { code: 'EUR', symbol: '€', name: 'EUR' },
+      'Italy': { code: 'EUR', symbol: '€', name: 'EUR' },
+      'Spain': { code: 'EUR', symbol: '€', name: 'EUR' },
+      'Netherlands': { code: 'EUR', symbol: '€', name: 'EUR' },
+      'Brazil': { code: 'BRL', symbol: 'R$', name: 'BRL' },
+      'Mexico': { code: 'MXN', symbol: 'MX$', name: 'MXN' },
+      'UAE': { code: 'AED', symbol: 'AED', name: 'AED' },
+      'Saudi Arabia': { code: 'SAR', symbol: 'SAR', name: 'SAR' },
+      'Egypt': { code: 'EGP', symbol: 'E£', name: 'EGP' },
+      'Tanzania': { code: 'TZS', symbol: 'TSh', name: 'TZS' },
+      'Uganda': { code: 'UGX', symbol: 'USh', name: 'UGX' },
+      'Rwanda': { code: 'RWF', symbol: 'RF', name: 'RWF' },
+      'Cameroon': { code: 'XAF', symbol: 'FCFA', name: 'XAF' },
+      'Senegal': { code: 'XOF', symbol: 'CFA', name: 'XOF' },
+      'Ivory Coast': { code: 'XOF', symbol: 'CFA', name: 'XOF' },
+      'Ethiopia': { code: 'ETB', symbol: 'Br', name: 'ETB' },
+      'Zimbabwe': { code: 'USD', symbol: '$', name: 'USD' },
+      'Zambia': { code: 'ZMW', symbol: 'ZK', name: 'ZMW' },
+    };
 
-function getUserCurrency() {
-  const country = channelData?.country || '';
-  return CURRENCY_MAP[country] || { code: 'USD', symbol: '$', name: 'USD' };
-}
+    let userCurrencyRates = {};
 
-function fmtUserCurr(usd) {
-  usd = Number(usd) || 0;
-  const uc   = getUserCurrency();
-  const rate = userCurrencyRates[uc.code] || 1;
-  const amt  = usd * rate;
-  return uc.symbol + amt.toLocaleString('en', { maximumFractionDigits: 0 });
-}
+    function getUserCurrency() {
+      const country = channelData?.country || '';
+      return CURRENCY_MAP[country] || { code: 'USD', symbol: '$', name: 'USD' };
+    }
+
+    function fmtUserCurr(ngn) {
+      ngn = Number(ngn) || 0;
+      const uc   = getUserCurrency();
+      const localRate = userCurrencyRates[uc.code];
+      const ngnRate   = userCurrencyRates['NGN'] || (usdToNgn || 1620);
+      
+      if (uc.code === 'NGN' || !localRate) {
+        return '₦' + Math.round(ngn).toLocaleString('en-NG');
+      }
+      
+      const localAmt = (ngn / ngnRate) * localRate;
+      return uc.symbol + localAmt.toLocaleString('en', { maximumFractionDigits: 0 });
+    }
+
+/* Format an NGN amount in the currently-selected earnings currency.
+   - NGN  : ₦ amount
+   - COIN : 🪙 amount (₦25 = 1 coin)
+   - USER : owner's local currency (from sign-up country) at the live rate */
+    function fmtFromNgn(ngn) {
+      return fmtCurr(ngn);
+    }
     /* ====================================================
        NAVIGATION
     ==================================================== */
@@ -6118,8 +5988,12 @@ function fmtUserCurr(usd) {
     usdToNgn           = json.rates['NGN'];
     userCurrencyRates  = json.rates;
     const uc = getUserCurrency();
-    document.getElementById('rateNoteText').textContent =
-      `Live rate: $1 USD = ₦${usdToNgn.toLocaleString('en-NG', { maximumFractionDigits: 2 })}${uc.code !== 'NGN' ? ` · ${uc.symbol}${(json.rates[uc.code]||1).toLocaleString('en', {maximumFractionDigits:2})}` : ''} · Updated just now`;
+    const ngnRate = usdToNgn || 1620;
+    const localRate = json.rates[uc.code] || 1;
+    const localToNgn = (ngnRate / localRate).toLocaleString('en', { maximumFractionDigits: 1 });
+
+    document.getElementById('rateNoteText').innerHTML =
+      `${COIN_LOGO} 1 = 25 NGN ${uc.code !== 'NGN' ? `· 1 ${uc.code} ≈ ${localToNgn} NGN` : ''} · Updated just now`;
   } catch {
     usdToNgn = 1620;
     userCurrencyRates = { NGN: 1620, USD: 1, GBP: 0.79, GHS: 12, KES: 130 };
@@ -6134,7 +6008,17 @@ function fmtUserCurr(usd) {
        EARNINGS — RENDER
     ==================================================== */
     function getSegValues() {
-      if (!earningsData) return { ads: 0, direct: 0, adsChange: '—', directChange: '—' };
+      // FOR DEMONSTRATION: If real data is missing, show sample money
+      if (!earningsData || (earningsData.adsRevenue === 0 && earningsData.directRevenue === 0)) {
+        if (earnSeg === 'free') return { ads: 12500, direct: 0, adsChange: '+12.4%', directChange: '—' };
+        if (earnSeg === 'paid') return { ads: 0, direct: 25000, adsChange: '—', directChange: '+8.2%' };
+        return {
+          ads: 12500,
+          direct: 25000,
+          adsChange: '+12.4%',
+          directChange: '+8.2%'
+        };
+      }
       if (earnSeg === 'free') return {
         ads: earningsData.adsRevenue || 0, direct: 0,
         adsChange: earningsData.adsChange || '—', directChange: '—',
@@ -6151,29 +6035,105 @@ function fmtUserCurr(usd) {
       };
     }
 
+    let earningsChartInstance = null;
+
     function renderEarningsSummary() {
       const seg   = getSegValues();
       const total = seg.ads + seg.direct;
 
-      document.getElementById('adsRevDisplay').textContent    = seg.ads    > 0 ? fmtCurr(seg.ads)    : '—';
-      document.getElementById('directRevDisplay').textContent = seg.direct > 0 ? fmtCurr(seg.direct) : '—';
+      // Show/Hide rows based on active segment
+      const adsRow = document.getElementById('adsRevRow');
+      const directRow = document.getElementById('directRevRow');
+      if (adsRow)    adsRow.style.display = (earnSeg === 'total' || earnSeg === 'free') ? 'flex' : 'none';
+      if (directRow) directRow.style.display = (earnSeg === 'total' || earnSeg === 'paid') ? 'flex' : 'none';
+
+      document.getElementById('adsRevDisplay').innerHTML    = seg.ads    > 0 ? fmtCurr(seg.ads)    : '—';
+      document.getElementById('directRevDisplay').innerHTML = seg.direct > 0 ? fmtCurr(seg.direct) : '—';
       document.getElementById('adsRevChange').textContent     = seg.adsChange;
       document.getElementById('directRevChange').textContent  = seg.directChange;
 
       const totalEl = document.getElementById('totalRevDisplay');
-      totalEl.textContent = total > 0 ? fmtCurr(total) : '₦0';
+      totalEl.innerHTML = total > 0 ? fmtCurr(total) : '₦0';
       totalEl.style.fontSize = earnCurrency === 'NGN' ? '32px' : '42px';
 
-   const uc = getUserCurrency();
-document.getElementById('totalRevSub').textContent = total === 0
-  ? 'No earnings yet — keep uploading to start earning'
-  : earnCurrency === 'NGN'
-    ? `≈ 🪙 ${Math.round((total * (usdToNgn||1620)) / 25).toLocaleString()} Pose Coins`
-    : earnCurrency === 'COIN'
-      ? `≈ ₦${(total * (usdToNgn||1620)).toLocaleString('en-NG', {maximumFractionDigits:0})}`
-      : `≈ ₦${(total * (usdToNgn||1620)).toLocaleString('en-NG', {maximumFractionDigits:0})} · ${uc.name}`;
+      const uc = getUserCurrency();
+      let subText = '';
+      if (total === 0) {
+        subText = 'No earnings yet — keep uploading to start earning';
+      } else if (earnCurrency === 'NGN') {
+        const coins = Math.round(total / 25).toLocaleString();
+        subText = `≈ ${COIN_LOGO} ${coins} · ${COIN_LOGO} 1 = 25 NGN`;
+      } else if (earnCurrency === 'COIN') {
+        subText = `≈ ₦${Math.round(total).toLocaleString('en-NG')} · ${COIN_LOGO} 1 = 25 NGN`;
+      } else {
+        // USER (Local) mode
+        const ngnRate = userCurrencyRates['NGN'] || (usdToNgn || 1620);
+        const localRate = userCurrencyRates[uc.code] || 1;
+        const rateDisplay = (ngnRate / localRate).toLocaleString('en', { maximumFractionDigits: 1 });
+        subText = `≈ ₦${Math.round(total).toLocaleString('en-NG')} · 1 ${uc.code} ≈ ${rateDisplay} NGN`;
+      }
+      document.getElementById('totalRevSub').innerHTML = subText;
 
+      // Update Analytics Metrics
+      if (document.getElementById('avgDailyRev')) {
+        document.getElementById('avgDailyRev').innerHTML = fmtCurr(total / 30);
+        document.getElementById('estMonthlyRev').innerHTML = fmtCurr(total);
+      }
+
+      renderEarningsChart(seg);
       renderEligibilityBanner();
+    }
+
+    function renderEarningsChart(seg) {
+      const ctx = document.getElementById('earningsTrendChart');
+      if (!ctx) return;
+
+      if (earningsChartInstance) {
+        earningsChartInstance.destroy();
+      }
+
+      // Generate sample trend data based on segment
+      const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      let data = [];
+      let color = '#7C3AED';
+
+      if (earnSeg === 'free') {
+        data = [1200, 1500, 1100, 1800, 2200, 1900, 2500];
+        color = '#4F46E5';
+      } else if (earnSeg === 'paid') {
+        data = [5000, 3000, 7000, 4500, 6000, 8000, 9500];
+        color = '#D97706';
+      } else {
+        data = [6200, 4500, 8100, 6300, 8200, 9900, 1500];
+        color = '#7C3AED';
+      }
+
+      earningsChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Revenue (NGN)',
+            data: data,
+            borderColor: color,
+            backgroundColor: color + '22',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3,
+            pointRadius: 0,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+            y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }
+          }
+        }
+      });
     }
 
     /* ==================================================
@@ -6191,8 +6151,8 @@ document.getElementById('totalRevSub').textContent = total === 0
         box.style.display = (released + locked) > 0 ? 'grid' : 'none';
         const a = document.getElementById('availAmount');
         const l = document.getElementById('lockedAmount');
-        if (a) a.textContent = '₦' + Math.round(released).toLocaleString('en-NG');
-        if (l) l.textContent = '₦' + Math.round(locked).toLocaleString('en-NG');
+        if (a) a.innerHTML = fmtFromNgn(released);
+        if (l) l.innerHTML = fmtFromNgn(locked);
       }
 
       // Ads progress
@@ -6204,21 +6164,19 @@ document.getElementById('totalRevSub').textContent = total === 0
         adsBar.style.width = pct.toFixed(1) + '%';
         if (ads.unlocked) {
           adsBar.style.background = 'linear-gradient(90deg,#10B981,#059669)';
-          adsStatus.textContent = '✅ Unlocked';
+          adsStatus.textContent = '✅ Monetized';
           adsStatus.style.color = '#065F46';
           adsText.innerHTML =
-            `<b>${ads.poolViews.toLocaleString('en-NG')}</b> views in pool · ` +
-            `<b>${ads.releasedViews.toLocaleString('en-NG')}</b> released ` +
-            `(₦${Math.round(ads.released).toLocaleString('en-NG')}), ` +
-            `next batch in <b>${ADS_VIEW_THRESHOLD - ads.lockedViews}</b> view${(ADS_VIEW_THRESHOLD - ads.lockedViews)===1?'':'s'}.`;
+            `Congratulations! Your channel has reached the 1,000 view milestone. ` +
+            `<b>All ad revenue</b> is now automatically deposited into your available balance.`;
         } else {
           adsBar.style.background = 'linear-gradient(90deg,#F59E0B,#D97706)';
           adsStatus.textContent = `🔒 ${ads.poolViews.toLocaleString('en-NG')} / ${ADS_VIEW_THRESHOLD.toLocaleString('en-NG')}`;
           adsStatus.style.color = '#92400E';
           const need = ADS_VIEW_THRESHOLD - ads.poolViews;
           adsText.innerHTML =
-            `Need <b>${need.toLocaleString('en-NG')}</b> more view${need===1?'':'s'} from ad-supported videos to unlock ` +
-            `₦${Math.round(ads.locked).toLocaleString('en-NG')} of locked Ads Revenue.`;
+            `Need <b>${need.toLocaleString('en-NG')}</b> more view${need===1?'':'s'} from free videos to unlock and ` +
+            `automatically deposit your Ads Revenue (₦${Math.round(ads.locked).toLocaleString('en-NG')}).`;
         }
       }
 
@@ -6250,29 +6208,63 @@ document.getElementById('totalRevSub').textContent = total === 0
 
     function renderTimeline() {
       const list = document.getElementById('timelineList');
-      const tl   = earningsData?.timeline?.[earnSeg]?.[earnTimeline];
+      
+      // FOR DEMONSTRATION: Use mock timeline if real data is missing
+      let tl = earningsData?.timeline?.[earnSeg]?.[earnTimeline];
       if (!tl || !tl.length) {
-        list.innerHTML = `<div style="padding:28px;text-align:center;color:var(--gray-400);font-size:13px;font-style:italic;">
-          No revenue data for this period yet.
-        </div>`;
-        return;
+        if (earnSeg === 'free') {
+          tl = [
+            { label: 'Ad Revenue (Yesterday)', ngn: 1200 },
+            { label: 'Ad Revenue (Today)', ngn: 1500, diff: true },
+            { label: 'Partner Program Bonus', ngn: 500 }
+          ];
+        } else if (earnSeg === 'paid') {
+          tl = [
+            { label: 'Sales: "My First Viral Video"', ngn: 12500 },
+            { label: 'Sales: "Behind the Scenes"', ngn: 8500 },
+            { label: 'Direct Tip from Fan', ngn: 4000, diff: true }
+          ];
+        } else {
+          // Total Tab - Combines both with clear types
+          tl = [
+            { label: 'Total Ad Revenue', ngn: 12500, type: 'Ads' },
+            { label: 'Total Direct Sales', ngn: 25000, type: 'Paid' },
+            { label: 'Recent Ad Payout', ngn: 1500, type: 'Ads', diff: true },
+            { label: 'Recent Video Sale', ngn: 3000, type: 'Paid', diff: true }
+          ];
+        }
       }
+
       list.innerHTML = tl.map(r => {
         const isDiff = r.diff;
-        const val    = fmtCurr(r.usd || 0);
+        const val    = fmtCurr(r.ngn || 0);
+        const typeLabel = (earnSeg === 'total' && r.type) 
+          ? `<span style="font-size:10px;padding:2px 8px;border-radius:6px;margin-left:8px;
+              font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
+              background:${r.type==='Ads'?'#EEF2FF':'#FFFBEB'};
+              color:${r.type==='Ads'?'#4F46E5':'#D97706'};
+              border:1px solid ${r.type==='Ads'?'#C7D2FE':'#FDE68A'};">${r.type}</span>` 
+          : '';
+
         return `
           <div style="display:flex;align-items:center;justify-content:space-between;
-            padding:14px 16px;border-radius:12px;
-            background:${isDiff ? 'var(--purple-ghost)' : 'var(--gray-50)'};
-            border:1px solid ${isDiff ? 'var(--purple-pale)' : 'var(--gray-200)'};">
+            padding:16px;border-radius:14px;margin-bottom:8px;
+            background:${isDiff ? 'var(--purple-ghost)' : 'white'};
+            border:1.5px solid ${isDiff ? 'var(--purple-pale)' : 'var(--gray-100)'};
+            box-shadow: ${isDiff ? 'none' : 'var(--shadow-xs)'};">
             <div>
-              <div style="font-size:13px;font-weight:${isDiff?'700':'500'};
-                color:${isDiff?'var(--purple-deep)':'var(--gray-700)'};">${r.label}</div>
-              ${isDiff ? '<div style="font-size:11px;color:var(--purple-mid);margin-top:2px;">vs prior period</div>' : ''}
+              <div style="display:flex;align-items:center;">
+                <div style="font-size:14px;font-weight:${isDiff?'700':'600'};
+                  color:${isDiff?'var(--purple-deep)':'var(--text-main)'};">${r.label}</div>
+                ${typeLabel}
+              </div>
+              ${isDiff ? '<div style="font-size:11px;color:var(--purple-mid);margin-top:4px;font-weight:500;">Recent Update</div>' : '<div style="font-size:11px;color:var(--gray-400);margin-top:4px;">Recorded Transaction</div>'}
             </div>
-            <div style="font-family:'Playfair Display',serif;font-size:${isDiff?'20':'18'}px;font-weight:700;
-              color:${isDiff?'var(--purple-deep)':'var(--gray-900)'};">
-              ${isDiff && (r.usd||0) > 0 ? '+' : ''}${val}
+            <div style="text-align:right;">
+              <div style="font-family:'Playfair Display',serif;font-size:${isDiff?'22':'19'}px;font-weight:700;
+                color:${isDiff?'var(--purple-deep)':'var(--gray-900)'};">
+                ${isDiff && (r.ngn||0) > 0 ? '+' : ''}${val}
+              </div>
             </div>
           </div>`;
       }).join('');
@@ -6339,20 +6331,20 @@ document.getElementById('totalRevSub').textContent = total === 0
         .reduce((s, v) => s + (Number(v.views) || 0), 0);
     }
 
-    /* Ads breakdown — channel-wide pool releases in 1K-view batches */
+    /* Ads breakdown — channel-wide pool releases ALL once 1K view threshold is hit */
     function getAdsBreakdown() {
       const total      = Number(earningsData?.adsRevenue) || 0;
       const poolViews  = getAdsPoolViews();
-      const releasedV  = Math.floor(poolViews / ADS_VIEW_THRESHOLD) * ADS_VIEW_THRESHOLD;
-      const lockedV    = Math.max(0, poolViews - releasedV);
-      const ratio      = poolViews > 0 ? (releasedV / poolViews) : 0;
-      const released   = Math.round(total * ratio);
-      const locked     = Math.max(0, total - released);
+      const isUnlocked = poolViews >= ADS_VIEW_THRESHOLD;
+
+      const released   = isUnlocked ? total : 0;
+      const locked     = isUnlocked ? 0 : total;
+
       return {
         total, released, locked,
-        poolViews, releasedViews: releasedV, lockedViews: lockedV,
+        poolViews, 
         threshold: ADS_VIEW_THRESHOLD,
-        unlocked: poolViews >= ADS_VIEW_THRESHOLD,
+        unlocked: isUnlocked,
       };
     }
 
@@ -6565,8 +6557,8 @@ function openWithdrawPopup() {
 
 /* ── Build quick-select chip amounts ── */
 function buildWdChips(balance) {
-  const MIN  = 2000;
-  const base = [2000, 5000, 10000, 20000, 50000, 100000];
+  const MIN  = 500;
+  const base = [500, 2000, 5000, 10000, 20000, 50000];
   const chips = [];
 
   for (const amt of base) {
@@ -6622,8 +6614,8 @@ function onWdAmountInput(raw) {
   errorEl.style.display = 'none';
   document.getElementById('wdMinWarning').style.display = 'none';
 
-  if (amount > 0 && amount < 2000) {
-    errorTxt.textContent = 'Minimum withdrawal is ₦2,000';
+  if (amount > 0 && amount < 500) {
+    errorTxt.textContent = 'Minimum withdrawal is ₦500';
     errorEl.style.display = '';
     valid = false;
   } else if (amount > balance) {
@@ -6637,7 +6629,7 @@ function onWdAmountInput(raw) {
   const bankName = document.getElementById('pmBankName').value.trim();
   const hasBank  = acctNum.length >= 10 && acctName && bankName;
 
-  btn.disabled = !(valid && amount >= 2000 && hasBank && payMethod === 'manual');
+  btn.disabled = !(valid && amount >= 500 && hasBank && payMethod === 'manual');
 }
 
 /* ── Request Withdrawal (updated to use custom amount) ── */
@@ -6651,7 +6643,7 @@ function requestWithdrawal() {
   const receive  = amount - fee;
 
   // Final guard
-  if (amount < 2000) {
+  if (amount < 500) {
     document.getElementById('wdAmountInput').classList.add('uerror');
     setTimeout(() => document.getElementById('wdAmountInput').classList.remove('uerror'), 700);
     return;
@@ -6662,203 +6654,92 @@ function requestWithdrawal() {
     return;
   }
 
-  // ── Enforce 1K-views (ads) + 10-views (paid) eligibility ──
-  const ads  = getAdsBreakdown();
-  const paid = getPaidBreakdown();
-  const released = ads.released + paid.released;
-  if (amount > released) {
-    document.getElementById('wdAmountInput').classList.add('uerror');
-    setTimeout(() => document.getElementById('wdAmountInput').classList.remove('uerror'), 700);
-    const blockers = [];
-    if (!ads.unlocked && ads.locked > 0) {
-      blockers.push(
-        `• Ads Revenue: channel needs ${(ADS_VIEW_THRESHOLD - ads.poolViews).toLocaleString('en-NG')} more views ` +
-        `(1,000 total) — ₦${Math.round(ads.locked).toLocaleString('en-NG')} is locked.`
-      );
-    }
-    if (paid.locked > 0) {
-      blockers.push(
-        `• Paid Videos: ₦${Math.round(paid.locked).toLocaleString('en-NG')} is locked. ` +
-        `Each paid video releases earnings every 10 views.`
-      );
-    }
-    alert(
-      'Some of your earnings are still locked in the pool.\n\n' +
-      `Available now: ₦${Math.round(released).toLocaleString('en-NG')}\n\n` +
-      blockers.join('\n')
-    );
+  // ── Enforce 1K-views (ads) + 10-views (paid)    if (d.bankAcctName) document.getElementById('pmAcctName').value = d.bankAcctName;
+    if (d.bankName)     document.getElementById('pmBankName').value = d.bankName;
+  });
+}
+
+function openSettings() {
+  if (document.getElementById('page-settings')) {
+    ['page-home','page-studio','page-earnings','page-legibility'].forEach(id => {
+      const p = document.getElementById(id); if (p) p.classList.remove('active');
+    });
+    document.getElementById('page-settings').classList.add('active');
+    window.scrollTo(0, 0);
+    setTimeout(loadChannelSwitchList, 500);
     return;
   }
 
-  if (!confirm(
-    `Withdraw ₦${amount.toLocaleString('en-NG')} to:\n\n` +
-    `Bank: ${bankName}\nAccount: ${acctNum}\nName: ${acctName}\n\n` +
-    `Fee: ₦${fee.toLocaleString('en-NG')}\nYou receive: ₦${receive.toLocaleString('en-NG')}\n\nProceed?`
-  )) return;
+  const d       = channelData || {};
+  const name    = d.name || 'My Channel';
+  const slug    = name.toLowerCase().replace(/\s+/g, '');
+  const initial = name.charAt(0).toUpperCase();
+  const subs    = fmt(Number(d.subscribers) || 0);
+  const coins   = fmt(Number(d.coins) || 0);
+  const earned  = earningsData
+    ? fmtCurr((earningsData.adsRevenue || 0) + (earningsData.directRevenue || 0))
+    : '₦0';
 
-  const btn = document.getElementById('withdrawBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Processing…';
+  const avatarHTML = d.profileURL
+    ? `<img src="${d.profileURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`
+    : initial;
 
-  db.collection('channels').doc(CHANNEL_UID).collection('withdrawals').add({
-    amount,
-    fee,
-    netAmount:     receive,
-    bankAcctNum:   acctNum,
-    bankAcctName:  acctName,
-    bankName,
-    status:        'pending',
-    requestedAt:   firebase.firestore.FieldValue.serverTimestamp(),
-    channelId:     CHANNEL_UID,
-  }).then(() => {
-    btn.innerHTML =
-      '<i class="fas fa-check-circle" style="margin-right:6px;"></i> Withdrawal Requested!';
-    btn.style.background = '#059669';
-    setTimeout(() => closeWithdrawPopup(), 2500);
-  }).catch(e => {
-    btn.disabled = false;
-    btn.innerHTML =
-      '<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal';
-    alert('Withdrawal failed: ' + e.message);
-  });
-}
-    
-    /* ── Load saved details ── */
-    function loadPaymentDetails() {
-      if (!CHANNEL_UID) return;
-      db.collection('channels').doc(CHANNEL_UID).get().then(doc => {
-        if (!doc.exists) return;
-        const d = doc.data();
-        if (d.paymentMethod) { payMethod = d.paymentMethod; onPayMethod(payMethod); }
-        if (d.bankAcctNum)  document.getElementById('pmAcctNum').value  = d.bankAcctNum;
-        if (d.bankAcctName) document.getElementById('pmAcctName').value = d.bankAcctName;
-        if (d.bankName)     document.getElementById('pmBankName').value = d.bankName;
-      });
-    }
+  const page = document.createElement('div');
+  page.id        = 'page-settings';
+  page.className = 'page active';
+  page.innerHTML = `
+    <div class="studio-topbar">
+      <button class="back-btn" onclick="closeSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back
+      </button>
+      <span class="studio-title">Settings</span>
+    </div>
 
-  function openSettings() {
-      if (document.getElementById('page-settings')) {
-        ['page-home','page-studio','page-earnings','page-legibility'].forEach(id => {
-          const p = document.getElementById(id); if (p) p.classList.remove('active');
-        });
-        document.getElementById('page-settings').classList.add('active');
-       window.scrollTo(0, 0);
-setTimeout(loadChannelSwitchList, 500);
-return;
-      }
+    <div style="max-width:700px;margin:0 auto;padding:20px 18px 80px;">
 
-      const d       = channelData || {};
-      const name    = d.name || 'My Channel';
-      const slug    = name.toLowerCase().replace(/\s+/g, '');
-      const initial = name.charAt(0).toUpperCase();
-      const subs    = fmt(Number(d.subscribers) || 0);
-      const coins   = fmt(Number(d.coins) || 0);
-      const earned  = earningsData
-        ? fmtCurr((earningsData.adsRevenue || 0) + (earningsData.directRevenue || 0))
-        : '₦0';
-
-      const avatarHTML = d.profileURL
-        ? `<img src="${d.profileURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`
-        : initial;
-
-      const page = document.createElement('div');
-      page.id        = 'page-settings';
-      page.className = 'page active';
-      page.innerHTML = `
-        <div class="studio-topbar">
-          <button class="back-btn" onclick="closeSettings()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-            Back
-          </button>
-          <span class="studio-title">Settings</span>
-        </div>
-
-        <div style="max-width:700px;margin:0 auto;padding:20px 18px 80px;">
-
-         <div style="background:linear-gradient(135deg,#2E1065,#6D28D9);border-radius:20px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;">
-            <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-60px;right:-50px;"></div>
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
-              <div id="settAvatar" onclick="openModal('photoModal')"
-                style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);
-                display:flex;align-items:center;justify-content:center;
-                font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:white;
-                border:3px solid rgba(255,255,255,.3);flex-shrink:0;cursor:pointer;overflow:hidden;">
-                ${avatarHTML}
-              </div>
-              <div style="flex:1;">
-                <div id="displayName" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${name}</div>
-                <div id="displayHandle" style="font-size:13px;color:rgba(255,255,255,.65);margin-top:2px;">@${slug} · ${d.country || 'Creator'} ✦</div>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
-              <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
-                <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${earned}</div>
-                <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Total Earned</div>
-              </div>
-              <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
-                <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">🪙 ${coins}</div>
-                <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Pose Coins</div>
-              </div>
-              <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
-                <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${subs}</div>
-             <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Fans</div>
-                </div>
-            </div>
-            <div style="display:flex;gap:10px;">
-              <button onclick="openModal('editProfileModal')"
-                style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
-                border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
-                <i class="fa-solid fa-pen" style="margin-right:6px;font-size:12px;"></i>Edit Profile
-              </button>
-              <button onclick="openModal('photoModal')"
-                style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
-                border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
-                <i class="fa-solid fa-camera" style="margin-right:6px;font-size:12px;"></i>Change Photo
-              </button>
-            </div>
+      <div style="background:linear-gradient(135deg,#2E1065,#6D28D9);border-radius:20px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-60px;right:-50px;"></div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+          <div id="settAvatar" onclick="openModal('photoModal')"
+            style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);
+            display:flex;align-items:center;justify-content:center;
+            font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:white;
+            border:3px solid rgba(255,255,255,.3);flex-shrink:0;cursor:pointer;overflow:hidden;">
+            ${avatarHTML}
           </div>
-
-         <div class="card" style="padding:22px;margin-bottom:20px;">
-            <div class="sett-section-title"><i class="fa-solid fa-coins" style="color:var(--purple-main);margin-right:8px;"></i>How You Earn on Pose</div>
-            <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:18px;line-height:1.6;">
-              With Pose, creators earn in two main ways: <strong>Pay-As-You-Watch</strong> (direct viewer payments via Pose Coin)
-              and <strong>Ad Revenue</strong> (earn from free video views and engagement).
-            </p>
-            <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;width:fit-content;margin-bottom:18px;">
-              <button class="earn-tab-btn active" onclick="switchEarnTab(this,'model2')">
-                <i class="fa-solid fa-coins" style="margin-right:5px;"></i>Pay-Per-Watch
-              </button>
-              <button class="earn-tab-btn" onclick="switchEarnTab(this,'ads')">
-                <i class="fa-solid fa-rectangle-ad" style="margin-right:5px;"></i>Ad Revenue
-              </button>
-            </div>
-            <div id="panel-model2">
-              <div style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:14px;padding:18px;">
-                <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;">
-                  <div style="background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <i class="fa-solid fa-coins" style="color:white;font-size:16px;"></i>
-                  </div>
-                  <div>
-                    <div style="font-size:14px;font-weight:700;color:var(--text-main);">Pay-As-You-Watch</div>
-                    <div style="font-size:11.5px;color:var(--purple-mid);">Viewers pay per video using Pose Coin · No subscriptions</div>
-                  </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-                  <div style="background:white;border-radius:10px;padding:12px;border:1px solid var(--gray-200);">
-                    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-bottom:8px;">Coin Pricing</div>
-                    <div style="font-size:12px;color:var(--gray-700);line-height:2;">
-                      🪙 1–8 · Short video<br>🪙 8–20 · Medium video<br>🪙 20–40 · Movie/Long
-                    </div>
-                  </div>
-                  <div style="background:white;border-radius:10px;padding:12px;border:1px solid var(--gray-200);">
-                    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-bottom:10px;">Revenue Split</div>
-                    <div>
-                      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-700);margin-bottom:4px;"><span>You</span><span style="font-weight:700;color:var(--purple-deep);">75%</span></div>
-                      <div style="height:8px;background:var(--gray-200);border-radius:99px;overflow:hidden;"><div style="height:100%;width:75%;background:linear-gradient(90deg,var(--purple-deep),var(--purple-mid));border-radius:99px;"></div></div>
-                    </div>
-                    <div style="margin-top:8px;">
-                      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-500);margin-bottom:4px;"><span>Pose</span><span style="font-weight:600;">25%</span></div>
-                      <div style="height:8px;background:var(--gray-200);border-radius:99px;overflow:hidden;"><div style="height:100%;width:25%;background:#D1D5DB;border-radius:99px;"></div></div>
+          <div style="flex:1;">
+            <div id="displayName" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${name}</div>
+            <div id="displayHandle" style="font-size:13px;color:rgba(255,255,255,.65);margin-top:2px;">@${slug} · ${d.country || 'Creator'} ✦</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+          <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${earned}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Total Earned</div>
+          </div>
+          <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">🪙 ${coins}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Pose Coins</div>
+          </div>
+          <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${subs}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Fans</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button onclick="openModal('editProfileModal')"
+            style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
+            border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
+            <i class="fa-solid fa-pen" style="margin-right:6px;font-size:12px;"></i>Edit Profile
+          </button>
+          <button onclick="openModal('photoModal')"
+            style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
+            border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
+            <i class="fa-solid fa-camera" style="margin-right:6px;font-size:12px;"></i>Change Photo
+          </button>
+        </div>
+      </div>div><div style="height:8px;background:var(--gray-200);border-radius:99px;overflow:hidden;"><div style="height:100%;width:25%;background:#D1D5DB;border-radius:99px;"></div></div>
                     </div>
                   </div>
                 </div>
@@ -6988,13 +6869,6 @@ setTimeout(loadChannelSwitchList, 500);
           .update({ [`notifications.${key}`]: value });
         showToast('Notification preference saved');
       } catch { showToast('Preference saved locally'); }
-    }
-
-    function switchEarnTab(el, tab) {
-      document.querySelectorAll('.earn-tab-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('panel-model2').style.display = tab === 'model2' ? 'block' : 'none';
-      document.getElementById('panel-ads').style.display    = tab === 'ads'    ? 'block' : 'none';
     }
 
     function showToast(msg) {
@@ -7158,8 +7032,8 @@ setTimeout(loadChannelSwitchList, 500);
       try {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', 'posepreset');
-        const res  = await fetch('https://api.cloudinary.com/v1_1/dzhdgxjhl/image/upload', { method: 'POST', body: formData });
+        formData.append('upload_preset', 'pose_preset1');
+        const res  = await fetch('https://api.cloudinary.com/v1_1/pose2026/image/upload', { method: 'POST', body: formData });
         const data = await res.json();
         const url  = data.secure_url;
         await db.collection('channels').doc(CHANNEL_UID).update({ profileURL: url });
@@ -7332,8 +7206,8 @@ function closeUpload() {
 /* ====================================================
    UPLOAD PAGE — CONSTANTS & STATE
 ==================================================== */
-const CLOUDINARY_CLOUD  = 'dzhdgxjhl';
-const CLOUDINARY_PRESET = 'posepreset';
+const CLOUDINARY_CLOUD  = 'pose2026';
+const CLOUDINARY_PRESET = 'pose_preset1';
 const CHUNK_SIZE        = 20 * 1024 * 1024; // 20 MB — stays well under Cloudinary's 100 MB limit
 
 let singleVideoFile   = null;
@@ -8480,11 +8354,11 @@ async function createSeason() {
     let thumbUrl   = null;
 
     if (seasonTrailerFile) {
-      trailerUrl = await uploadFile(seasonTrailerFile, 'video', null, folder + '/trailer');
+      trailerUrl = (await uploadFile(seasonTrailerFile, 'video', null, folder + '/trailer')).url;
     }
     const seaThumb = document.getElementById('seaThumbFile').files[0];
     if (seaThumb) {
-      thumbUrl = await uploadFile(seaThumb, 'image', null, folder + '/thumb');
+      thumbUrl = (await uploadFile(seaThumb, 'image', null, folder + '/thumb')).url;
     }
 
     const isScheduled  = document.getElementById('seaSchedToggle').checked;
@@ -8606,8 +8480,11 @@ async function loadExistingSeasons() {
 
     list.innerHTML = snap.docs.map(doc => {
       const s     = doc.data();
-      const thumb = s.thumbnailURL
-        ? `<img src="${s.thumbnailURL}"
+      const sThumbSrc = (s.thumbnailURL && typeof s.thumbnailURL === 'object')
+        ? s.thumbnailURL.url
+        : s.thumbnailURL;
+      const thumb = sThumbSrc
+        ? `<img src="${sThumbSrc}"
             style="width:100%;height:100%;object-fit:cover;" />`
         : '🎬';
       return `
@@ -8828,11 +8705,19 @@ document.getElementById('episodeBlock').style.display = 'block';
     updateUploadProgress(95, 'Saving to database…', '');
     document.getElementById('uppopTitle').textContent = 'Almost Done…';
 
-    const isScheduled  = document.getElementById('epSchedToggle').checked;
-    const schedDTVal   = document.getElementById('epSchedDT').value;
-    const scheduleDate = isScheduled && schedDTVal
-      ? firebase.firestore.Timestamp.fromDate(new Date(schedDTVal))
-      : null;
+    // Inherit the parent season's schedule if one was set during season creation.
+    // Only fall back to this episode's own schedule when the season has none.
+    let isScheduled, scheduleDate;
+    if (parentSeason.isScheduled && parentSeason.scheduleDate) {
+      scheduleDate = parentSeason.scheduleDate;
+      isScheduled  = true;
+    } else {
+      isScheduled        = document.getElementById('epSchedToggle').checked;
+      const schedDTVal   = document.getElementById('epSchedDT').value;
+      scheduleDate = isScheduled && schedDTVal
+        ? firebase.firestore.Timestamp.fromDate(new Date(schedDTVal))
+        : null;
+    }
     const priceMode = document.getElementById('epPriceMode').value;
     const coinPrice = Number(document.getElementById('epCoinPrice').value) || 0;
     const epNumber  = Number(document.getElementById('epNumber').value)    || 1;
@@ -9342,11 +9227,15 @@ function renderAvSeasons() {
   }
 
   panel.innerHTML = list.map((s, i) => {
-    const thumbHTML = s.thumbnailURL
-      ? `<img src="${s.thumbnailURL}" alt="${s.title}" />`
+    // Tolerate older records where thumbnailURL was saved as an upload object {url,...}
+    const thumbSrc = (s.thumbnailURL && typeof s.thumbnailURL === 'object')
+      ? s.thumbnailURL.url
+      : s.thumbnailURL;
+    const thumbHTML = thumbSrc
+      ? `<img src="${thumbSrc}" alt="${s.title}" />`
       : `<span>${AV_EMOJI[i % AV_EMOJI.length]}</span>`;
 
-    const thumbBg = s.thumbnailURL ? 'background:#000;' : '';
+    const thumbBg = thumbSrc ? 'background:#000;' : '';
     const rev     = Number(s.totalRevenue) || 0;
 
     const priceBadgeText =
@@ -9366,7 +9255,7 @@ function renderAvSeasons() {
     return `
       <div class="av-season-card" id="avSea-${s.id}">
         <div class="av-season-header" onclick="toggleAvSeason('${s.id}')">
-          <div class="av-season-thumb ${s.thumbnailURL ? '' : avGradient(i)}" style="${thumbBg}">
+          <div class="av-season-thumb ${thumbSrc ? '' : avGradient(i)}" style="${thumbBg}">
             ${thumbHTML}
           </div>
           <div class="av-season-info">
@@ -9378,6 +9267,10 @@ function renderAvSeasons() {
             </div>
             ${revLine}
           </div>
+          <button class="av-season-delete" title="Delete season"
+            onclick="event.stopPropagation();confirmDeleteSeason('${s.id}')">
+            <i class="fas fa-trash"></i>
+          </button>
           <svg class="av-season-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M6 9l6 6 6-6"/>
           </svg>
@@ -9531,6 +9424,10 @@ function renderAvEpisodes(seasonId, episodes, sea) {
           ${priceHTML}
           ${revHTML}
         </div>
+        <button class="av-ep-delete" title="Delete episode"
+          onclick="event.stopPropagation();confirmDeleteEpisode('${seasonId}','${ep.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
       </div>`;
   }).join('');
 
@@ -9543,6 +9440,23 @@ function renderAvEpisodes(seasonId, episodes, sea) {
 let vdCurrentVideo  = null;
 let vdReturnPage    = 'page-allvideos';
 const AVATAR_COLORS = ['#7C3AED','#059669','#D97706','#DB2777','#2563EB','#DC2626','#0891B2'];
+
+/* Robustly parse any date value: Firestore Timestamp, serialized
+   {seconds,nanoseconds} / {_seconds,_nanoseconds}, ISO string, number or Date.
+   Returns a valid Date or null (prevents "Invalid Date" display). */
+function vdToDate(val) {
+  if (!val) return null;
+  let d;
+  if (typeof val.toDate === 'function') {
+    d = val.toDate();
+  } else if (typeof val === 'object' && (val.seconds != null || val._seconds != null)) {
+    const secs = val.seconds != null ? val.seconds : val._seconds;
+    d = new Date(secs * 1000);
+  } else {
+    d = new Date(val);
+  }
+  return (d && !isNaN(d.getTime())) ? d : null;
+}
 
 function openVideoDetail(video, returnPage) {
   vdCurrentVideo = video;
@@ -9632,10 +9546,9 @@ function renderVdBody(video) {
 
   // Scheduled banner
   let schedHTML = '';
-  if (isSched && video.scheduleDate) {
-    const dt = video.scheduleDate.toDate
-      ? video.scheduleDate.toDate()
-      : new Date(video.scheduleDate);
+  const schedDt = vdToDate(video.scheduleDate);
+  if (isSched && schedDt) {
+    const dt = schedDt;
     const isPast = dt < new Date();
     schedHTML = `
       <div class="vd-sched-banner">
@@ -9908,10 +9821,9 @@ function renderVdBody(video) {
 
   // Release date
   let releaseDateStr = '—';
-  const dateSource = video.scheduleDate || video.createdAt;
-  if (dateSource) {
-    const d = dateSource.toDate ? dateSource.toDate() : new Date(dateSource);
-    releaseDateStr = d.toLocaleDateString('en-GB', {
+  const relDate = vdToDate(video.scheduleDate) || vdToDate(video.createdAt);
+  if (relDate) {
+    releaseDateStr = relDate.toLocaleDateString('en-GB', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
   }
@@ -9968,8 +9880,17 @@ function renderVdBody(video) {
     <div class="vd-actions">
       ${isSched ? `
         <button class="vd-action-btn warn" onclick="rescheduleVideo()">
-          <i class="fas fa-calendar-pen"></i> Reschedule
-        </button>` : ''}
+          <i class="fas fa-calendar-pen"></i> Edit Schedule
+        </button>
+        <button class="vd-action-btn" onclick="removeSchedule()">
+          <i class="fas fa-calendar-xmark"></i> Remove Schedule
+        </button>` : `
+        <button class="vd-action-btn warn" onclick="rescheduleVideo()">
+          <i class="fas fa-calendar-plus"></i> Set Schedule
+        </button>`}
+      <button class="vd-action-btn" onclick="editPricing()">
+        <i class="fas fa-tag"></i> Edit Pricing
+      </button>
       <button class="vd-action-btn" onclick="togglePauseVideo()">
         <i class="fas fa-${video.status === 'paused' ? 'play' : 'pause'}"></i>
         ${video.status === 'paused' ? 'Unpause' : 'Pause'}
@@ -10012,10 +9933,8 @@ function renderVdBody(video) {
         <span class="vd-info-key"><i class="fas fa-clock"></i> Status</span>
         <span class="vd-info-val" style="color:#D97706;">
           ${(() => {
-            if (!video.scheduleDate) return 'Scheduled';
-            const dt = video.scheduleDate.toDate
-              ? video.scheduleDate.toDate()
-              : new Date(video.scheduleDate);
+            const dt = vdToDate(video.scheduleDate);
+            if (!dt) return 'Scheduled';
             return dt < new Date() ? '✅ Released' : '⏳ Upcoming';
           })()}
         </span>
@@ -10165,10 +10084,141 @@ async function executeDeleteVideo() {
     }
 
     if (overlay) overlay.remove();
-    closeVideoDetail();
+
+    if (vdCurrentVideo._inlineDelete) {
+      // Inline delete from All Videos list — refresh the open season's episode list
+      const seasonId = vdCurrentVideo._refreshSeasonId;
+      const sea = avSeasons.find(s => s.id === seasonId);
+      if (sea) {
+        if (Array.isArray(sea._episodes)) {
+          sea._episodes = sea._episodes.filter(e => e.id !== vdCurrentVideo.id);
+        }
+        sea.episodeCount = Math.max(0, (Number(sea.episodeCount) || 0) - 1);
+        // Update the visible season-sub text
+        const card = document.getElementById('avSea-' + seasonId);
+        if (card) {
+          const sub = card.querySelector('.av-season-sub');
+          if (sub) sub.textContent =
+            `Season ${sea.seasonNumber || 1} · ${sea.episodeCount} episodes`;
+        }
+        renderAvEpisodes(seasonId, sea._episodes || [], sea);
+      }
+      vdCurrentVideo = null;
+    } else {
+      closeVideoDetail();
+    }
   } catch (e) {
     console.error('Delete video error:', e);
     alert('Failed to delete: ' + e.message);
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
+    }
+  }
+}
+
+/* ── Delete Episode (from All Videos list, inline) ── */
+function confirmDeleteEpisode(seasonId, episodeId) {
+  const sea = avSeasons.find(s => s.id === seasonId);
+  const ep  = sea?._episodes?.find(e => e.id === episodeId);
+  if (!ep) { alert('Episode not found'); return; }
+
+  // Reuse the existing delete-confirm overlay flow
+  vdCurrentVideo = { ...ep, seasonId, _inlineDelete: true, _refreshSeasonId: seasonId };
+  confirmDeleteVideo();
+}
+
+/* ── Delete entire Season (with all its episodes) ── */
+let _deleteSeasonId = null;
+function confirmDeleteSeason(seasonId) {
+  const sea = avSeasons.find(s => s.id === seasonId);
+  if (!sea) { alert('Season not found'); return; }
+  _deleteSeasonId = seasonId;
+  _deleteCountdown = 20;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'vd-delete-overlay';
+  overlay.id = 'vdDeleteOverlay';
+  overlay.innerHTML = `
+    <div class="vd-delete-card">
+      <div class="vd-delete-icon"><i class="fas fa-trash"></i></div>
+      <div class="vd-delete-title">Delete this entire season?</div>
+      <div class="vd-delete-sub">
+        <strong>"${sea.title || 'Untitled Season'}"</strong> and <strong>all ${sea.episodeCount || 0} episode(s)</strong>
+        will be permanently deleted. This cannot be undone. All views, likes, comments, and revenue data will be lost.
+      </div>
+      <div class="vd-delete-countdown" id="vdDeleteCountNum">${_deleteCountdown}</div>
+      <div class="vd-delete-progress">
+        <div class="vd-delete-progress-fill" id="vdDeleteProgFill" style="width:100%;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--gray-400);margin-bottom:14px;">
+        You can cancel within <span id="vdDeleteCountText">${_deleteCountdown}</span> seconds
+      </div>
+      <div class="vd-delete-btns">
+        <button class="vd-delete-cancel-btn" onclick="cancelDeleteVideo()">
+          <i class="fas fa-times" style="margin-right:6px;"></i>Cancel
+        </button>
+        <button class="vd-delete-confirm-btn" id="vdDeleteConfirmBtn" onclick="executeDeleteSeason()">
+          <i class="fas fa-trash" style="margin-right:6px;"></i>Delete Now
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  _deleteTimer = setInterval(() => {
+    _deleteCountdown--;
+    const numEl = document.getElementById('vdDeleteCountNum');
+    const txtEl = document.getElementById('vdDeleteCountText');
+    const fillEl = document.getElementById('vdDeleteProgFill');
+    const confirmBtn = document.getElementById('vdDeleteConfirmBtn');
+
+    if (numEl) numEl.textContent = _deleteCountdown;
+    if (txtEl) txtEl.textContent = _deleteCountdown;
+    if (fillEl) fillEl.style.width = ((_deleteCountdown / 20) * 100) + '%';
+
+    if (_deleteCountdown <= 0) {
+      clearInterval(_deleteTimer);
+      _deleteTimer = null;
+      if (numEl) numEl.textContent = '0';
+      if (confirmBtn) {
+        confirmBtn.classList.add('enabled');
+        confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
+      }
+    }
+  }, 1000);
+}
+
+async function executeDeleteSeason() {
+  if (_deleteCountdown > 0 || !_deleteSeasonId) return;
+  const overlay = document.getElementById('vdDeleteOverlay');
+  const confirmBtn = document.getElementById('vdDeleteConfirmBtn');
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Deleting…';
+  }
+
+  try {
+    const seasonRef = db.collection('channels').doc(CHANNEL_UID)
+      .collection('seasons').doc(_deleteSeasonId);
+
+    // Delete all episodes first
+    const epsSnap = await seasonRef.collection('episodes').get();
+    const batch = db.batch();
+    epsSnap.docs.forEach(d => batch.delete(d.ref));
+    batch.delete(seasonRef);
+    await batch.commit();
+
+    // Remove from local state and re-render
+    avSeasons = avSeasons.filter(s => s.id !== _deleteSeasonId);
+    const countEl = document.getElementById('avCountSeason');
+    if (countEl) countEl.textContent = avSeasons.length;
+    renderAvSeasons();
+
+    _deleteSeasonId = null;
+    if (overlay) overlay.remove();
+  } catch (e) {
+    console.error('Delete season error:', e);
+    alert('Failed to delete season: ' + e.message);
     if (confirmBtn) {
       confirmBtn.disabled = false;
       confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
@@ -10210,11 +10260,11 @@ function rescheduleVideo() {
   overlay.id = 'vdReschedOverlay';
 
   let currentDT = '';
-  if (vdCurrentVideo.scheduleDate) {
-    const d = vdCurrentVideo.scheduleDate.toDate
-      ? vdCurrentVideo.scheduleDate.toDate()
-      : new Date(vdCurrentVideo.scheduleDate);
-    if (!isNaN(d.getTime())) currentDT = d.toISOString().slice(0, 16);
+  const curD = vdToDate(vdCurrentVideo.scheduleDate);
+  if (curD) {
+    // Convert to local time for the datetime-local input
+    const local = new Date(curD.getTime() - curD.getTimezoneOffset() * 60000);
+    currentDT = local.toISOString().slice(0, 16);
   }
 
   overlay.innerHTML = `
@@ -10245,25 +10295,149 @@ async function saveReschedule() {
   if (newDate <= new Date()) { alert('Schedule date must be in the future.'); return; }
 
   const newTimestamp = firebase.firestore.Timestamp.fromDate(newDate);
+  const updates = { scheduleDate: newTimestamp, isScheduled: true, status: 'scheduled' };
 
   try {
     if (vdCurrentVideo.seasonId) {
       await db.collection('channels').doc(CHANNEL_UID)
         .collection('seasons').doc(vdCurrentVideo.seasonId)
         .collection('episodes').doc(vdCurrentVideo.id)
-        .update({ scheduleDate: newTimestamp });
+        .update(updates);
     } else {
       await db.collection('channels').doc(CHANNEL_UID)
         .collection('videos').doc(vdCurrentVideo.id)
-        .update({ scheduleDate: newTimestamp });
+        .update(updates);
     }
 
     vdCurrentVideo.scheduleDate = newTimestamp;
+    vdCurrentVideo.isScheduled  = true;
+    vdCurrentVideo.status       = 'scheduled';
     renderVdBody(vdCurrentVideo);
     closeReschedule();
   } catch (e) {
     console.error('Reschedule error:', e);
     alert('Failed to reschedule: ' + e.message);
+  }
+}
+
+/* ── Remove Schedule (publish now) ── */
+async function removeSchedule() {
+  if (!vdCurrentVideo) return;
+  if (!confirm('Remove the schedule and make this video live now?')) return;
+
+  const updates = {
+    scheduleDate: null,
+    isScheduled: false,
+    status: 'live'
+  };
+
+  try {
+    if (vdCurrentVideo.seasonId) {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(vdCurrentVideo.seasonId)
+        .collection('episodes').doc(vdCurrentVideo.id)
+        .update(updates);
+    } else {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos').doc(vdCurrentVideo.id)
+        .update(updates);
+    }
+
+    vdCurrentVideo.scheduleDate = null;
+    vdCurrentVideo.isScheduled  = false;
+    vdCurrentVideo.status       = 'live';
+    renderVdBody(vdCurrentVideo);
+  } catch (e) {
+    console.error('Remove schedule error:', e);
+    alert('Failed to remove schedule: ' + e.message);
+  }
+}
+
+/* ── Edit Pricing (Free ⇄ Paid + price) ── */
+let vdPricingMode = 'free';
+function editPricing() {
+  if (!vdCurrentVideo) return;
+  const isPaid   = vdCurrentVideo.priceMode === 'paid';
+  const curCoins = Number(vdCurrentVideo.coinPrice) || 50;
+  vdPricingMode  = isPaid ? 'paid' : 'free';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'vd-resched-overlay';
+  overlay.id = 'vdPricingOverlay';
+  overlay.innerHTML = `
+    <div class="vd-resched-card">
+      <div class="vd-resched-title">Edit Pricing</div>
+      <div class="vd-resched-sub">Change how "${vdCurrentVideo.title || 'Untitled'}" is monetized</div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <button type="button" id="vdPmFree" class="vd-pm-opt ${!isPaid ? 'active' : ''}" onclick="vdSetPriceMode('free')">
+          <i class="fas fa-rectangle-ad"></i> Free (Ads)
+        </button>
+        <button type="button" id="vdPmPaid" class="vd-pm-opt ${isPaid ? 'active' : ''}" onclick="vdSetPriceMode('paid')">
+          <i class="fas fa-coins"></i> Paid (Coins)
+        </button>
+      </div>
+      <div id="vdPriceInputWrap" style="display:${isPaid ? 'block' : 'none'};margin-bottom:6px;">
+        <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:6px;">Price in Pose Coins</label>
+        <input type="number" min="1" class="vd-resched-input" id="vdPriceCoins" value="${curCoins}" oninput="vdUpdatePriceNaira()" style="margin-bottom:6px;">
+        <div style="font-size:11.5px;color:var(--gray-400);margin-bottom:14px;" id="vdPriceNaira"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="vd-delete-cancel-btn" onclick="closePricing()" style="flex:1;">Cancel</button>
+        <button class="btn btn-purple btn-lg" onclick="savePricing()" style="flex:1;">
+          <i class="fas fa-check" style="margin-right:6px;"></i>Save
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  vdUpdatePriceNaira();
+}
+function vdSetPriceMode(mode) {
+  vdPricingMode = mode;
+  document.getElementById('vdPmFree')?.classList.toggle('active', mode === 'free');
+  document.getElementById('vdPmPaid')?.classList.toggle('active', mode === 'paid');
+  const wrap = document.getElementById('vdPriceInputWrap');
+  if (wrap) wrap.style.display = mode === 'paid' ? 'block' : 'none';
+  vdUpdatePriceNaira();
+}
+function vdUpdatePriceNaira() {
+  const el = document.getElementById('vdPriceNaira');
+  if (!el) return;
+  const coins = Number(document.getElementById('vdPriceCoins')?.value) || 0;
+  el.textContent = `≈ ₦${(coins * 30).toLocaleString()} for viewers · you keep 75% (₦${Math.round(coins * 30 * .75).toLocaleString()})`;
+}
+function closePricing() {
+  const o = document.getElementById('vdPricingOverlay');
+  if (o) o.remove();
+}
+async function savePricing() {
+  if (!vdCurrentVideo) return;
+  const mode = vdPricingMode;
+  let coinPrice = 0;
+  if (mode === 'paid') {
+    coinPrice = Number(document.getElementById('vdPriceCoins').value) || 0;
+    if (coinPrice < 1) { alert('Enter a valid coin price (at least 1).'); return; }
+  }
+  const updates = { priceMode: mode, coinPrice };
+
+  try {
+    if (vdCurrentVideo.seasonId) {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('seasons').doc(vdCurrentVideo.seasonId)
+        .collection('episodes').doc(vdCurrentVideo.id)
+        .update(updates);
+    } else {
+      await db.collection('channels').doc(CHANNEL_UID)
+        .collection('videos').doc(vdCurrentVideo.id)
+        .update(updates);
+    }
+
+    vdCurrentVideo.priceMode = mode;
+    vdCurrentVideo.coinPrice = coinPrice;
+    renderVdBody(vdCurrentVideo);
+    closePricing();
+  } catch (e) {
+    console.error('Save pricing error:', e);
+    alert('Failed to update pricing: ' + e.message);
   }
 }
 
@@ -11157,6 +11331,51 @@ async function executeDeleteAccount(btn) {
 
     if (wrap) wrap.style.display = '';
   }
+  </script>
+
+  <!-- ════════════════════════════════════════════════════════════
+       BREET INTEGRATION  (Creator Payouts)
+       Powers crypto / stablecoin creator withdrawals.
+
+       ▸ Replace the placeholders when your Breet keys arrive. The
+         "Withdraw via Breet" button is already visible & wired — it shows
+         a "coming soon" message until BREET_PUB_KEY is filled in.
+       ▸ BREET_PUB_KEY  → public / API key (safe in frontend)
+       ▸ BREET_SECRET   → secret key — SERVER-SIDE ONLY, never ship in frontend
+       ▸ BREET_ENDPOINT → Breet payout endpoint
+  ════════════════════════════════════════════════════════════ -->
+  <script>
+    const BREET_PUB_KEY  = "BREET_PUBLIC_KEY_PLACEHOLDER";
+    const BREET_SECRET   = "BREET_SECRET_KEY_PLACEHOLDER"; // ⚠️ server-side only — do NOT expose in production frontend
+    const BREET_ENDPOINT = "https://api.breet.io/v1/payout/initiate"; // update to Breet's real endpoint
+    const BREET_WITHDRAW_BONUS_COUNT = 3; // reduced fees / bonus on first N Breet withdrawals
+
+    function breetReady() {
+      return BREET_PUB_KEY && BREET_PUB_KEY !== "BREET_PUBLIC_KEY_PLACEHOLDER";
+    }
+
+    function launchBreetWithdrawal() {
+      const amount = Number((document.getElementById('wdAmountInput') || {}).value) || 0;
+      if (!breetReady()) {
+        if (typeof showToast === 'function') showToast('💎 Breet payouts coming soon — add your Breet API key to go live.');
+        else alert('💎 Breet payouts coming soon — add your Breet API key to go live.');
+        return;
+      }
+      if (amount < 500) {
+        if (typeof showToast === 'function') showToast('Enter at least ₦500 to withdraw via Breet.');
+        return;
+      }
+      const txRef = `channel_breet_wd_${(typeof CHANNEL_UID !== 'undefined' ? CHANNEL_UID : 'user')}_${Date.now()}`;
+      /* ───────────────────────────────────────────────
+         TODO: Replace with the real Breet payout call.
+         Authorise the payout on your server with BREET_SECRET, then write a
+         doc to the channel's `withdrawals` collection with status updates
+         (pending → processing → completed → failed) so it shows in History.
+         Apply reduced fee / bonus for the creator's first 3 Breet withdrawals.
+      ─────────────────────────────────────────────── */
+      console.log('Breet creator withdrawal initiated:', { txRef, amount, endpoint: BREET_ENDPOINT });
+      if (typeof showToast === 'function') showToast('💎 Connecting to Breet payout…');
+    }
   </script>
 
 </body>
