@@ -6654,7 +6654,54 @@ function requestWithdrawal() {
     return;
   }
 
-  // ── Enforce 1K-views (ads) + 10-views (paid)    if (d.bankAcctName) document.getElementById('pmAcctName').value = d.bankAcctName;
+  // ── Require bank details ──
+  if (!(acctNum.length >= 10 && acctName && bankName)) {
+    alert('Please add your bank details before requesting a withdrawal.');
+    return;
+  }
+
+  const btn = document.getElementById('withdrawBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Requesting…';
+  }
+
+  db.collection('channels').doc(CHANNEL_UID)
+    .collection('withdrawals').add({
+      amount:        amount,
+      fee:           fee,
+      netAmount:     receive,
+      bankAcctName:  acctName,
+      bankAcctNum:   acctNum,
+      bankName:      bankName,
+      paymentMethod: payMethod,
+      status:        'pending',
+      requestedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+    })
+    .then(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal';
+      }
+      closeWithdrawPopup();
+      loadWithdrawRequests();
+      alert('Withdrawal request submitted. You will be notified once it is processed.');
+    })
+    .catch(e => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal';
+      }
+      alert('Failed to submit request: ' + e.message);
+    });
+}
+
+/* ── Load saved payment / bank details into the form ── */
+function loadPaymentDetails() {
+  db.collection('channels').doc(CHANNEL_UID).get().then(snap => {
+    const d = snap.exists ? (snap.data() || {}) : {};
+    if (d.bankAcctNum)  document.getElementById('pmAcctNum').value  = d.bankAcctNum;
+    if (d.bankAcctName) document.getElementById('pmAcctName').value = d.bankAcctName;
     if (d.bankName)     document.getElementById('pmBankName').value = d.bankName;
   });
 }
@@ -11377,14 +11424,6 @@ async function executeDeleteAccount(btn) {
       if (typeof showToast === 'function') showToast('💎 Connecting to Breet payout…');
     }
   </script>
-
-</body>
-</html>
-  </script>
-
-</body>
-</html>
- </script>
 
 </body>
 </html>
