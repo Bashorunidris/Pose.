@@ -1,12 +1,2 @@
- {
-       2 +   "version": 2,
-       3 +   "headers": [
-       4 +     {
-       5 +       "source": "/:path*",
-       6 +       "headers": [
-       7 +         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
-       8 +         { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" }
-       9 +       ]
-      10 +     }
-      11 +   ]
-      12 + }
+ {"headers":[{"source":"/(.*)","headers":[{"key":"Cross-Origin-Embedder-Policy","value":"requir
+     e-corp"},{"key":"Cross-Origin-Opener-Policy","value":"same-origin"}]}]}
