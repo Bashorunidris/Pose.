@@ -186,7 +186,7 @@
        CHANNEL BANNER + AVATAR
     ============================== */
     .channel-banner {
-      width: 100%; height: 210px;
+      width: 100%; height: 160px;
       background: linear-gradient(135deg, #2E1065 0%, #6D28D9 55%, #A78BFA 100%);
       position: relative; overflow: hidden;
     }
@@ -253,28 +253,28 @@
        STATS ROW
     ============================== */
     .stats-container {
-      display: grid; grid-template-columns: repeat(3, 1fr);
+      display: grid; grid-template-columns: repeat(4, 1fr);
       width: 100%; margin-top: 18px;
       border-top: 1px solid var(--gray-200);
       border-bottom: 1px solid var(--gray-200);
     }
     .stat-card {
-      padding: 20px 12px; text-align: center;
+      padding: 16px 6px; text-align: center;
       border-right: 1px solid var(--gray-200);
       background: var(--white);
       transition: background .2s ease; cursor: default;
     }
     .stat-card:last-child { border-right: none; }
     .stat-card:hover { background: var(--purple-ghost); }
-    .stat-icon { font-size: 18px; margin-bottom: 4px; }
+    .stat-icon { font-size: 16px; margin-bottom: 4px; color: var(--purple-main); }
     .stat-value {
       font-family: 'Playfair Display', serif;
-      font-size: 26px; font-weight: 700;
+      font-size: 22px; font-weight: 700;
       color: var(--purple-deep); line-height: 1;
     }
     .stat-label {
-      font-size: 10.5px; color: var(--gray-500); margin-top: 5px;
-      text-transform: uppercase; letter-spacing: .6px;
+      font-size: 9.5px; color: var(--gray-500); margin-top: 5px;
+      text-transform: uppercase; letter-spacing: .5px;
     }
 
     /* ==============================
@@ -2775,18 +2775,23 @@ input[type=range].ucoin-slider {
   <div class="stats-container">
     <div class="stat-card">
       <div class="stat-icon"><i class="fas fa-eye"></i></div>
-      <div class="stat-value">—</div>
+      <div class="stat-value" id="statViews">—</div>
       <div class="stat-label">Total Views</div>
     </div>
     <div class="stat-card">
+      <div class="stat-icon" style="color:#f472b6;"><i class="fas fa-thumbs-up"></i></div>
+      <div class="stat-value" id="statLikes">—</div>
+      <div class="stat-label">Total Likes</div>
+    </div>
+    <div class="stat-card">
       <div class="stat-icon"><i class="fas fa-film"></i></div>
-      <div class="stat-value">—</div>
+      <div class="stat-value" id="statVideos">—</div>
       <div class="stat-label">Videos</div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-users"></i></div>
-      <div class="stat-value">—</div>
-  <div class="stat-label">Fans</div>
+      <div class="stat-icon" style="color:#f87171;"><i class="fas fa-heart"></i></div>
+      <div class="stat-value" id="statFans">—</div>
+      <div class="stat-label">Fans</div>
     </div>
   </div>
 
@@ -4111,7 +4116,7 @@ input[type=range].ucoin-slider {
         </div>
         <div class="uhelp">
           <i class="fas fa-circle-info"></i>
-          Files over 100MB are automatically split into chunks for a reliable upload. Do not close this page while uploading.
+          Files up to 4GB are supported. Do not close this page while uploading.
         </div>
       </div>
 
@@ -4810,7 +4815,7 @@ input[type=range].ucoin-slider {
             <div class="uprog-bg"><div class="uprog-fill" id="epVideoProgFill"></div></div>
           </div>
           <div class="uhelp" style="margin-top:10px;">
-            <i class="fas fa-circle-info"></i> Files over 100MB are automatically chunked. Keep this page open during upload.
+            <i class="fas fa-circle-info"></i> Files up to 4GB are supported. Keep this page open during upload.
           </div>
 
           <div class="upload-divider" style="margin:16px 0;"><span>episode trailer</span></div>
@@ -5274,6 +5279,176 @@ input[type=range].ucoin-slider {
 </div>
         
    
+  <!-- FFmpeg WASM v0.11 (Single-Threaded) - No headers required -->
+  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+
+  <script>
+    /**
+     * PoseUploadService - Centralized Media Upload & Processing
+     * v0.11 Single-Threaded Version: Works without SharedArrayBuffer/vercel.json
+     */
+    // ====== CLOUDFLARE R2 STORAGE ======
+    const R2 = {
+      accountId: '3131354777af9717bce9b01295a74335',
+      bucket: 'poseapp2026',
+      accessKeyId: '91b715107815ae4bf2354d080591ac46',
+      secretAccessKey: 'e5c0e6c946d2e838b5845e55f55f41f66f1d018dd9ef4ea272ee5409f72ee492',
+      publicBaseUrl: 'https://pub-e59683fce234421abe2ef8e9b2a42d93.r2.dev',
+      endpoint: 'https://3131354777af9717bce9b01295a74335.r2.cloudflarestorage.com'
+    };
+
+    async function _r2Sha256(data) {
+      const buf = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+      const hash = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    async function _r2Hmac(key, data) {
+      const rawKey = (key instanceof ArrayBuffer || ArrayBuffer.isView(key)) ? key : new TextEncoder().encode(key);
+      const ck = await crypto.subtle.importKey('raw', rawKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+      return crypto.subtle.sign('HMAC', ck, typeof data === 'string' ? new TextEncoder().encode(data) : data);
+    }
+    async function _r2HmacHex(key, data) {
+      return Array.from(new Uint8Array(await _r2Hmac(key, data))).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    async function _r2SigningKey(dateStamp) {
+      const k1 = await _r2Hmac('AWS4' + R2.secretAccessKey, dateStamp);
+      const k2 = await _r2Hmac(k1, 'auto');
+      const k3 = await _r2Hmac(k2, 's3');
+      return _r2Hmac(k3, 'aws4_request');
+    }
+    async function _r2BuildAuthHeaders(method, key, contentType) {
+      const now = new Date();
+      const dateStamp = now.toISOString().slice(0,10).replace(/-/g,'');
+      const amzDate  = now.toISOString().replace(/[:\-]|\.\d{3}/g,'');
+      const host = `${R2.accountId}.r2.cloudflarestorage.com`;
+      const canonicalUri = `/${R2.bucket}/${key}`;
+      const payloadHash = 'UNSIGNED-PAYLOAD';
+      const hdrs = { 'content-type': contentType, 'host': host, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate };
+      const sk = Object.keys(hdrs).sort();
+      const canonicalHeaders = sk.map(k => `${k}:${hdrs[k]}\n`).join('');
+      const signedHeaders = sk.join(';');
+      const canonicalRequest = [method, canonicalUri, '', canonicalHeaders, signedHeaders, payloadHash].join('\n');
+      const credScope = `${dateStamp}/auto/s3/aws4_request`;
+      const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credScope}\n${await _r2Sha256(new TextEncoder().encode(canonicalRequest))}`;
+      const signature = await _r2HmacHex(await _r2SigningKey(dateStamp), stringToSign);
+      return {
+        'Content-Type': contentType,
+        'x-amz-date': amzDate,
+        'x-amz-content-sha256': payloadHash,
+        'Authorization': `AWS4-HMAC-SHA256 Credential=${R2.accessKeyId}/${credScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`
+      };
+    }
+
+    async function uploadToR2(blob, key, contentType, onProgress) {
+      const ct = contentType || blob.type || 'application/octet-stream';
+      const url = `${R2.endpoint}/${R2.bucket}/${key}`;
+      const headers = await _r2BuildAuthHeaders('PUT', key, ct);
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', url, true);
+        for (const [h, v] of Object.entries(headers)) xhr.setRequestHeader(h, v);
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100));
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(`${R2.publicBaseUrl}/${key}`);
+          } else {
+            reject(new Error(`R2 upload failed: ${xhr.status} — ${xhr.responseText}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error('R2 network error'));
+        xhr.send(blob);
+      });
+    }
+
+    window.PoseUploadService = {
+      ffmpeg: null,
+      isLoaded: false,
+
+      async init() {
+        if (this.isLoaded) return;
+        const { createFFmpeg } = FFmpeg;
+        this.ffmpeg = createFFmpeg({
+          log: true,
+          mainName: 'main',
+          corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'
+        });
+
+        try {
+          await this.ffmpeg.load();
+          this.isLoaded = true;
+          console.log('✅ Pose Media Optimizer ready (ST Mode)');
+        } catch (err) {
+          console.error('❌ Failed to load media optimizer:', err);
+        }
+      },
+
+      async compressVideo(file, onProgress) {
+        if (!this.isLoaded) await this.init();
+
+        const { fetchFile } = FFmpeg;
+        const inputName = 'input_' + file.name;
+        const outputName = 'output.mp4';
+
+        this.ffmpeg.FS('writeFile', inputName, await fetchFile(file));
+
+        this.ffmpeg.setProgress(({ ratio }) => {
+          if (onProgress) onProgress(Math.round(ratio * 100));
+        });
+
+        await this.ffmpeg.run(
+          '-i', inputName,
+          '-vf', 'scale=-2:720',
+          '-vcodec', 'libx264',
+          '-crf', '28',
+          '-preset', 'ultrafast',
+          '-acodec', 'aac',
+          '-b:a', '128k',
+          outputName
+        );
+
+        const data = this.ffmpeg.FS('readFile', outputName);
+        return new Blob([data.buffer], { type: 'video/mp4' });
+      },
+
+      async upload(file, options = {}) {
+        const { onProgress, folder = 'general', resourceType = 'auto' } = options;
+        let fileToUpload = file;
+
+        if (file.type.startsWith('video/')) {
+          if (onProgress) onProgress(0, 'Preparing media...');
+          fileToUpload = await this.compressVideo(file, (p) => {
+            if (onProgress) onProgress(p, 'Optimizing for playback...');
+          });
+        }
+
+        return this._uploadToR2(fileToUpload, folder, resourceType, onProgress);
+      },
+
+      async _uploadToR2(file, folder, resourceType, onProgress) {
+        const filename = file.name || `upload_${Date.now()}.mp4`;
+        const contentType = file.type || 'application/octet-stream';
+        const key = `${folder}/${Date.now()}_${filename}`;
+
+        if (onProgress) onProgress(0, 'Uploading...');
+
+        const publicUrl = await uploadToR2(file, key, contentType, (pct) => {
+          if (onProgress) onProgress(pct, 'Uploading...');
+        });
+
+        return {
+          url: publicUrl,
+          secure_url: publicUrl,
+          publicId: key,
+          resourceType: resourceType || (file.type.startsWith('video/') ? 'video' : 'image'),
+          fileName: filename,
+          storagePath: key
+        };
+      }
+    };
+  </script>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -5366,10 +5541,13 @@ let _uploadedBytes   = 0;
       // Ensure UI renders sample data immediately if we are on the earnings tab
       if (isPageActive('page-earnings')) renderEarningsSummary();
 
-      // Save last visited channel for this user
+      // Save channel ID on user profile — enables instant direct lookup in Posewebapp
   auth.onAuthStateChanged(u => {
-    if (u) db.collection('users').doc(u.uid)
-      .set({ lastChannelId: CHANNEL_UID }, { merge: true });
+    if (u) db.collection('users').doc(u.uid).set({
+      lastChannelId: CHANNEL_UID,
+      channelId:     CHANNEL_UID,
+      channelIds:    firebase.firestore.FieldValue.arrayUnion(CHANNEL_UID)
+    }, { merge: true });
   });
 
   db.collection('channels').doc(CHANNEL_UID)
@@ -5422,12 +5600,33 @@ db.collection('channels').doc(CHANNEL_UID)
       if (!channelData) return;
       const d = channelData;
 
+      const banner = document.querySelector('.channel-banner');
+      function _applyBannerGradient() {
+        const uid = d.ownerUid || CHANNEL_UID || 'c';
+        let hash = 0;
+        for (let i = 0; i < uid.length; i++) {
+          const c = uid.charCodeAt(i);
+          hash = ((hash << 5) - hash) + c;
+          hash = hash & hash;
+        }
+        const hue = Math.abs(hash) % 360;
+        const color = `hsl(${hue},75%,40%)`;
+        const dark  = `hsl(${hue},75%,22%)`;
+        banner.style.backgroundImage = '';
+        banner.style.background = `linear-gradient(135deg, ${color} 0%, ${dark} 100%)`;
+      }
       if (d.bannerURL) {
-        const banner = document.querySelector('.channel-banner');
-        banner.style.backgroundImage    = `url('${d.bannerURL}')`;
-        banner.style.backgroundSize     = 'cover';
-        banner.style.backgroundPosition = 'center';
-        banner.style.backgroundRepeat   = 'no-repeat';
+        const probe = new Image();
+        probe.onload = () => {
+          banner.style.backgroundImage    = `url('${d.bannerURL}')`;
+          banner.style.backgroundSize     = 'cover';
+          banner.style.backgroundPosition = 'center';
+          banner.style.backgroundRepeat   = 'no-repeat';
+        };
+        probe.onerror = () => _applyBannerGradient();
+        probe.src = d.bannerURL;
+      } else {
+        _applyBannerGradient();
       }
 
       const avatarWrap = document.querySelector('.channel-avatar-wrap');
@@ -5440,40 +5639,72 @@ db.collection('channels').doc(CHANNEL_UID)
 
       document.querySelector('.channel-name').textContent = d.name || 'My Channel';
       const slug = (d.name || 'channel').toLowerCase().replace(/\s+/g, '');
-     document.querySelector('.channel-handle').textContent = `@${slug} · ${d.country || 'Creator'} · ${fmt(Number(d.subscribers) || 0)} Fans`;
+     document.querySelector('.channel-handle').textContent = `@${slug} · ${d.country || 'Creator'} · ${fmt(Number(d.fans) || Number(d.subscribers) || 0)} Fans`;
       renderHomeStats();
     }
 
    function renderHomeStats() {
-   const totalViews = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
-   const subs       = channelData ? (Number(channelData.subscribers) || 0) : 0;
+     // Views: prefer channel-level aggregate, fall back to summing video docs
+     const videoViews  = videosData.reduce((s, v) => s + (Number(v.views) || 0), 0);
+     const totalViews  = channelData && channelData.totalViews != null
+                           ? Number(channelData.totalViews)
+                           : videoViews;
 
-   const vals = document.querySelectorAll('.stat-value');
-   const lbls = document.querySelectorAll('.stat-label');
-   if (vals[0]) vals[0].textContent = fmt(totalViews);
-   if (vals[2]) vals[2].textContent = fmt(subs);
-   if (lbls[2]) lbls[2].textContent = 'Fans';
+     // Likes: prefer channel-level aggregate, fall back to summing video docs
+     const videoLikes  = videosData.reduce((s, v) => s + (Number(v.likes) || Number(v.likeCount) || 0), 0);
+     const totalLikes  = channelData && channelData.totalLikes != null
+                           ? Number(channelData.totalLikes)
+                           : videoLikes;
 
-   // Count singles + all episodes across all seasons
-   countAllContent().then(total => {
-    if (vals[1]) vals[1].textContent = total;
-   });
+     // Fans: prefer new `fans` field, fall back to `subscribers`
+     const fans = channelData
+       ? (Number(channelData.fans) || Number(channelData.subscribers) || 0)
+       : 0;
 
-   // Update home eligibility strip with live progress
-   const txt = document.getElementById('homeEligText');
-   if (txt && typeof getAdsBreakdown === 'function') {
-    const ads  = getAdsBreakdown();
-    const paid = getPaidBreakdown();
-    const adsLine = ads.unlocked
-      ? `✅ Ads unlocked (${ads.poolViews.toLocaleString('en-NG')} views)`
-      : `🔒 Ads: ${ads.poolViews.toLocaleString('en-NG')} / 1,000 views`;
-    const paidLine = paid.videoCount === 0
-      ? 'No paid videos yet'
-      : (paid.lockedViews > 0
-          ? `🔒 Paid: next batch in ${paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold)} view${(paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold))===1?'':'s'}`
-          : '✅ Paid videos releasing in 10-view batches');
-    txt.innerHTML = `${adsLine} · ${paidLine}`;
-   }
+     const viewsEl  = document.getElementById('statViews');
+     const likesEl  = document.getElementById('statLikes');
+     const videosEl = document.getElementById('statVideos');
+     const fansEl   = document.getElementById('statFans');
+
+     if (viewsEl)  viewsEl.textContent  = fmt(totalViews);
+     if (likesEl)  likesEl.textContent  = fmt(totalLikes);
+     if (fansEl)   fansEl.textContent   = fmt(fans);
+
+     // Also update legacy `.stat-value` selectors used elsewhere
+     const vals = document.querySelectorAll('.stat-value');
+     const lbls = document.querySelectorAll('.stat-label');
+     if (vals[0]) vals[0].textContent = fmt(totalViews);
+     if (vals[3]) vals[3].textContent = fmt(fans);
+     if (lbls[3]) lbls[3].textContent = 'Fans';
+
+     // Count singles + all episodes across all seasons
+     countAllContent().then(total => {
+       if (videosEl) videosEl.textContent = total;
+       if (vals[2])  vals[2].textContent  = total;
+     });
+
+     // Update channel handle with live fan count
+     const handleEl = document.querySelector('.channel-handle');
+     if (handleEl && channelData) {
+       const slug = (channelData.name || 'channel').toLowerCase().replace(/\s+/g, '');
+       handleEl.textContent = `@${slug} · ${channelData.country || 'Creator'} · ${fmt(fans)} Fans`;
+     }
+
+     // Update home eligibility strip with live progress
+     const txt = document.getElementById('homeEligText');
+     if (txt && typeof getAdsBreakdown === 'function') {
+       const ads  = getAdsBreakdown();
+       const paid = getPaidBreakdown();
+       const adsLine = ads.unlocked
+         ? `✅ Ads unlocked (${ads.poolViews.toLocaleString('en-NG')} views)`
+         : `🔒 Ads: ${ads.poolViews.toLocaleString('en-NG')} / 1,000 views`;
+       const paidLine = paid.videoCount === 0
+         ? 'No paid videos yet'
+         : (paid.lockedViews > 0
+             ? `🔒 Paid: next batch in ${paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold)} view${(paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold))===1?'':'s'}`
+             : '✅ Paid videos releasing in 10-view batches');
+       txt.innerHTML = `${adsLine} · ${paidLine}`;
+     }
    }
 
 async function countAllContent() {
@@ -5685,15 +5916,26 @@ async function countAllContent() {
 
     const MONTHS_LABELS = getLast6Months().map(m => m.label);
 
+    function toDateSafeDash(val) {
+      if (!val) return null;
+      if (typeof val.toDate === 'function') return val.toDate();
+      if (val.seconds != null) return new Date(val.seconds * 1000);
+      const d = new Date(val); return isNaN(d) ? null : d;
+    }
+
     function buildMonthlyData(field) {
       const months  = getLast6Months();
       const buckets = {};
       months.forEach(m => buckets[m.key] = 0);
       videosData.forEach(v => {
-        if (!v.createdAt) return;
-        const date = v.createdAt.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
+        const date = toDateSafeDash(v.createdAt);
+        if (!date) return;
         const key  = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-        if (buckets[key] !== undefined) buckets[key] += Number(v[field] || 0);
+        // Support both `likes` and `likeCount` field names
+        const val  = field === 'likes'
+          ? (Number(v.likes) || Number(v.likeCount) || 0)
+          : Number(v[field] || 0);
+        if (buckets[key] !== undefined) buckets[key] += val;
       });
       return months.map(m => buckets[m.key]);
     }
@@ -5703,8 +5945,8 @@ async function countAllContent() {
       const buckets = {};
       months.forEach(m => buckets[m.key] = { total: 0, count: 0 });
       videosData.forEach(v => {
-        if (!v.createdAt || !v.views) return;
-        const date = v.createdAt.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
+        const date = toDateSafeDash(v.createdAt);
+        if (!date || !v.views) return;
         const key  = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         if (buckets[key] !== undefined) {
           const eng = ((Number(v.likes || 0) + Number(v.comments || 0)) / Number(v.views)) * 100;
@@ -5721,7 +5963,7 @@ async function countAllContent() {
     const METRIC_CONFIG = {
       views:      { title: 'Monthly Views',        sub: 'Total views across all content · Last 6 months',             color: '#7C3AED' },
       likes:      { title: 'Monthly Likes',         sub: 'Total likes received across all content · Last 6 months',   color: '#DB2777' },
-      fan:        { title: 'Subscriber Growth',     sub: 'Total subscribers on your channel',                         color: '#059669' },
+      fan:        { title: 'Fan Growth',              sub: 'Total fans on your channel',                               color: '#059669' },
       comments:   { title: 'Monthly Comments',      sub: 'Comments across all content · Last 6 months',               color: '#D97706' },
       engagement: { title: 'Engagement Rate (%)',   sub: 'Average engagement rate across all videos · Last 6 months', color: '#7C3AED' },
     };
@@ -5745,12 +5987,12 @@ async function countAllContent() {
           { l: 'Peak Rate',    v: peak + '%', c: '' },
         ];
       } else if (metric === 'fan') {
-        const subs = channelData ? (Number(channelData.subscribers) || 0) : 0;
-        data = [0, 0, 0, 0, 0, subs];
+        const fans = channelData ? (Number(channelData.fans) || Number(channelData.subscribers) || 0) : 0;
+        data = [0, 0, 0, 0, 0, fans];
         nums = [
-          { l: 'Total Fans',   v: fmt(subs), c: '' },
+          { l: 'Total Fans',   v: fmt(fans), c: '' },
           { l: 'Avg. Monthly', v: '0',       c: '' },
-          { l: 'All-time',     v: fmt(subs), c: '' },
+          { l: 'All-time',     v: fmt(fans), c: '' },
         ];
       } else {
         data = buildMonthlyData(metric);
@@ -7077,11 +7319,10 @@ setTimeout(loadChannelSwitchList, 500);
       if (!file) return;
       showToast('Uploading photo…');
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'pose_preset1');
-        const res  = await fetch('https://api.cloudinary.com/v1_1/pose2026/image/upload', { method: 'POST', body: formData });
-        const data = await res.json();
+        const data = await window.PoseUploadService.upload(file, {
+          folder: 'profile-photos',
+          resourceType: 'image'
+        });
         const url  = data.secure_url;
         await db.collection('channels').doc(CHANNEL_UID).update({ profileURL: url });
         const avatarWrap = document.querySelector('.channel-avatar-wrap');
@@ -7253,9 +7494,7 @@ function closeUpload() {
 /* ====================================================
    UPLOAD PAGE — CONSTANTS & STATE
 ==================================================== */
-const CLOUDINARY_CLOUD  = 'pose2026';
-const CLOUDINARY_PRESET = 'pose_preset1';
-const CHUNK_SIZE        = 20 * 1024 * 1024; // 20 MB — stays well under Cloudinary's 100 MB limit
+// Cloudinary constants removed (Phase 3 & 4 Migration)
 
 let singleVideoFile   = null;
 let singleTrailerFile = null;
@@ -7342,11 +7581,11 @@ function handleDrop(event, fileInputId, previewId, progressId) {
   if (progressId) resetProgress(progressId);
 }
 
-const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
+const MAX_VIDEO_SIZE = 4 * 1024 * 1024 * 1024; // 4 GB
 
 function storeFileRef(inputId, file) {
   if (file && (inputId === 'sVideoFile' || inputId === 'epVideoFile') && file.size > MAX_VIDEO_SIZE) {
-    alert(`Video file is too large (${formatBytes(file.size)}). Maximum allowed is 100 MB.`);
+    alert(`Video file is too large (${formatBytes(file.size)}). Maximum allowed is 4 GB.`);
     const input = document.getElementById(inputId);
     if (input) input.value = '';
     return false;
@@ -7722,13 +7961,6 @@ function scrollTo_(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-/* ====================================================
-   CLOUDINARY — DIRECT UPLOAD (< 100 MB)
-==================================================== */
-/* ====================================================
-   UPLOAD FILE — CHUNKED TO CLOUDINARY
-==================================================== */
-
 
   async function uploadFile(file, resourceType, progressId, folder, onProgress) {
   if (!folder) folder = `pose/${CHANNEL_UID}/${Date.now()}`;
@@ -7814,109 +8046,16 @@ function trackUploadSpeed(loaded, total) {
   return `${mbps} MB/s`;
 }
 
-/* Mirrors the screen4 upload in Posewebapp.html — uses /auto/upload (handles
-   any media size on the free tier), Date.now()-based filename, and a generous
-   timeout. Returns the Cloudinary secure_url. */
+/* Mirrors the screen4 upload in Posewebapp.html — now uses PoseUploadService 
+   for optimized R2 uploads. Returns the public R2 URL. */
 function uploadSingleBlob(blob, folder, resourceType, onProgress) {
-  return new Promise((resolve, reject) => {
-    const fd = new FormData();
-    const fileName = `video_${Date.now()}_${blob.name || 'upload'}`;
-    fd.append('file', blob, fileName);
-    fd.append('upload_preset', CLOUDINARY_PRESET);
-    fd.append('folder', folder);
-    fd.append('tags', 'video_upload');
-    fd.append('resource_type', 'auto');
-
-    const xhr = new XMLHttpRequest();
-    activeXHR = xhr;
-
-    // Always hit /auto/upload like screen4 — works for video, image, raw
-    xhr.open('POST',
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/auto/upload`);
-
-    // 5-minute hard timeout (matches screen4's 300_000 ms)
-    xhr.timeout = 300000;
-
-    const startTime = Date.now();
-    xhr.upload.onprogress = e => {
-      if (e.lengthComputable) {
-        const pct   = Math.round((e.loaded / e.total) * 100);
-        const elapsed = (Date.now() - startTime) / 1000;
-        const mbps    = elapsed > 0
-          ? ((e.loaded / elapsed) / (1024 * 1024)).toFixed(1) + ' MB/s'
-          : '';
-        if (onProgress) onProgress(pct, mbps);
-      }
-    };
-
-    xhr.onload = () => {
-      activeXHR = null;
-      if (xhr.status === 200) {
-        try {
-          const r = JSON.parse(xhr.responseText);
-          console.log('✅ Cloudinary upload OK:', r.secure_url);
-          resolve(r.secure_url);
-        } catch (err) {
-          reject(new Error('Invalid Cloudinary response'));
-        }
-      } else {
-        let msg = `Upload failed (${xhr.status})`;
-        try {
-          const r = JSON.parse(xhr.responseText);
-          if (r.error && r.error.message) msg += ': ' + r.error.message;
-        } catch (_) {}
-        reject(new Error(msg));
-      }
-    };
-    xhr.onerror   = () => { activeXHR = null; reject(new Error('Network error during upload')); };
-    xhr.ontimeout = () => { activeXHR = null; reject(new Error('Upload timed out')); };
-    xhr.onabort   = () => { activeXHR = null; reject(new Error('Upload cancelled')); };
-    xhr.send(fd);
-  });
-}
-
-/* Send one chunk using Cloudinary's chunked upload protocol */
-function uploadChunkToCloudinary(chunkBlob, folder, resourceType, uniqueId, startByte, endByte, totalSize, onProgress) {
-  return new Promise((resolve, reject) => {
-    const fd = new FormData();
-    fd.append('file', chunkBlob);
-    fd.append('upload_preset', CLOUDINARY_PRESET);
-    fd.append('folder', folder);
-
-    const xhr = new XMLHttpRequest();
-    activeXHR = xhr;
-    xhr.open('POST',
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`);
-    xhr.timeout = 0;
-
-    xhr.setRequestHeader('X-Unique-Upload-Id', uniqueId);
-    xhr.setRequestHeader('Content-Range', `bytes ${startByte}-${endByte}/${totalSize}`);
-
-    xhr.upload.onprogress = e => {
-      if (e.lengthComputable) {
-        const pct   = Math.round((e.loaded / e.total) * 100);
-        const speed = trackUploadSpeed(e.loaded, e.total);
-        if (onProgress) onProgress(pct, speed);
-      }
-    };
-
-    xhr.onload = () => {
-      activeXHR = null;
-      if (xhr.status === 200) {
-        const resp = JSON.parse(xhr.responseText);
-        resolve(resp.secure_url || null);
-      } else if (xhr.status === 416) {
-        // Cloudinary returns 416 while waiting for more chunks — not an error
-        resolve(null);
-      } else {
-        reject(new Error(`Chunk upload failed (${xhr.status})`));
-      }
-    };
-    xhr.onerror   = () => { activeXHR = null; reject(new Error('Network error')); };
-    xhr.ontimeout = () => { activeXHR = null; reject(new Error('Timed out')); };
-    xhr.onabort   = () => { activeXHR = null; reject(new Error('Cancelled')); };
-    xhr.send(fd);
-  });
+  return window.PoseUploadService.upload(blob, {
+    folder: folder,
+    resourceType: resourceType,
+    onProgress: (pct, msg) => {
+      if (onProgress) onProgress(pct, msg);
+    }
+  }).then(data => data.url || data.secure_url);
 }
 
 /* ====================================================
