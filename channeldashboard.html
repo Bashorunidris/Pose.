@@ -5555,9 +5555,6 @@ input[type=range].ucoin-slider {
 </div>
         
    
-  <!-- FFmpeg WASM v0.11 (Single-Threaded) - No headers required -->
-  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
-
   <script>
     /**
      * PoseUploadService - Centralized Media Upload & Processing
@@ -5620,13 +5617,15 @@ input[type=range].ucoin-slider {
       const url = `${R2.endpoint}/${R2.bucket}/${key}`;
       const headers = await _r2BuildAuthHeaders('PUT', key, ct);
 
-      // Increase timeout for large files (1MB = 1 second, minimum 30s, maximum 5 minutes)
       const fileSizeMB = blob.size / (1024 * 1024);
-      const timeout = Math.min(Math.max(fileSizeMB * 1000, 30000), 5 * 60 * 1000);
+      // No timeout — large video uploads can take 30+ minutes on slow connections.
+      // XHR progress events confirm the transfer is alive; we don't want the browser
+      // killing a legitimate long upload.
+      const timeout = 0;
 
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.timeout = timeout;
+        xhr.timeout = timeout; // 0 = disabled
 
         xhr.open('PUT', url, true);
         for (const [h, v] of Object.entries(headers)) xhr.setRequestHeader(h, v);
@@ -5777,26 +5776,10 @@ input[type=range].ucoin-slider {
 
       async upload(file, options = {}) {
         const { onProgress, folder = 'general', resourceType = 'auto' } = options;
-        let fileToUpload = file;
-
-        // Skip compression for large files (> 500MB)
-        const MAX_COMPRESS_SIZE = 500 * 1024 * 1024; // 500MB limit for compression
-
-        if (file.type.startsWith('video/') && file.size <= MAX_COMPRESS_SIZE) {
-          try {
-            if (onProgress) onProgress(0, 'Preparing media...');
-            fileToUpload = await this.compressVideo(file, (p) => {
-              if (onProgress) onProgress(p, 'Optimizing for playback...');
-            });
-          } catch (err) {
-            console.warn('⚠ï¸ Compression failed, uploading original:', err.message);
-            fileToUpload = file;
-          }
-        } else if (file.type.startsWith('video/') && file.size > MAX_COMPRESS_SIZE) {
-          console.log('📁 File too large for compression, uploading original (size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB)');
-        }
-
-        return this._uploadToR2(fileToUpload, folder, resourceType, onProgress);
+        // Skip all FFmpeg compression — upload directly to R2.
+        // Channel videos can be 1MB-4GB; WASM transcoding is too slow and
+        // memory-intensive to be useful at these sizes.
+        return this._uploadToR2(file, folder, resourceType, onProgress);
       },
 
       async _uploadToR2(file, folder, resourceType, onProgress) {
