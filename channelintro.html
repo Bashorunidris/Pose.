@@ -402,60 +402,92 @@
   </div>
 
 <script>
-    // ── Firebase Init ──────────────────────────────────────────
-    const firebaseConfig = {
-      apiKey: "AIzaSyDblKdy0tC_pKjWOJK07kxWFheQXrvg1Io",
-      authDomain: "pose-authication.firebaseapp.com",
-      projectId: "pose-authication",
-      storageBucket: "pose-authication.firebasestorage.app",
-      messagingSenderId: "170435406082",
-      appId: "1:170435406082:web:4d5077cf69c37b24e33a1b",
-      measurementId: "G-D137642LTT"
-    };
+  const firebaseConfig = {
+            apiKey: "AIzaSyDW8V2SjNITrA4LcdmeILh944mTbOKnM0c",
+            authDomain: "rewarderhub.firebaseapp.com",
+            projectId: "rewarderhub",
+            storageBucket: "rewarderhub.appspot.com",
+            messagingSenderId: "85965945106",
+            appId: "1:85965945106:web:fa0a57d8968926e1041bcb",
+            measurementId: "G-F2ERB5NGN0"
+        };
     firebase.initializeApp(firebaseConfig);
     const db   = firebase.firestore();
     const auth = firebase.auth();
 
-    // ── Media Storage (R2 Migration) ─────────────────────
-    window.PoseUploadService = {
-        _uploadToR2(file, folder, resourceType, onProgress) {
-            return new Promise((resolve, reject) => {
-                const filename = file.name || 'upload.jpg';
-                const contentType = file.type || 'image/jpeg';
-                
-                fetch('/api/r2-presign', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ filename, contentType, folder })
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error('Failed to get presigned URL');
-                    return res.json();
-                })
-                .then(data => {
-                    const { uploadUrl, publicUrl } = data;
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('PUT', uploadUrl, true);
-                    xhr.setRequestHeader('Content-Type', contentType);
-                    xhr.upload.onprogress = (e) => {
-                        if (e.lengthComputable && onProgress) {
-                            onProgress(Math.round((e.loaded / e.total) * 100));
-                        }
-                    };
-                    xhr.onload = () => {
-                        if (xhr.status === 200 || xhr.status === 201) resolve({ url: publicUrl, secure_url: publicUrl });
-                        else reject(new Error('R2 upload failed'));
-                    };
-                    xhr.onerror = () => reject(new Error('Network error'));
-                    xhr.send(file);
-                })
-                .catch(reject);
-            });
-        },
-        async upload(file, options = {}) {
-            return this._uploadToR2(file, options.folder || 'general', options.resourceType || 'auto', options.onProgress);
-        }
+    // ── Cloudflare R2 Direct Upload (same pipeline as Posewebapp) ─────────────
+    const R2 = {
+        accountId:       '3131354777af9717bce9b01295a74335',
+        bucket:          'poseapp2026',
+        accessKeyId:     '91b715107815ae4bf2354d080591ac46',
+        secretAccessKey: 'e5c0e6c946d2e838b5845e55f55f41f66f1d018dd9ef4ea272ee5409f72ee492',
+        publicBaseUrl:   'https://pub-e59683fce234421abe2ef8e9b2a42d93.r2.dev',
+        endpoint:        'https://3131354777af9717bce9b01295a74335.r2.cloudflarestorage.com'
     };
+
+    async function _r2Sha256(data) {
+        const buf = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+        const hash = await crypto.subtle.digest('SHA-256', buf);
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    async function _r2Hmac(key, data) {
+        const rawKey = (key instanceof ArrayBuffer || ArrayBuffer.isView(key)) ? key : new TextEncoder().encode(key);
+        const ck = await crypto.subtle.importKey('raw', rawKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+        return crypto.subtle.sign('HMAC', ck, typeof data === 'string' ? new TextEncoder().encode(data) : data);
+    }
+    async function _r2HmacHex(key, data) {
+        return Array.from(new Uint8Array(await _r2Hmac(key, data))).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    async function _r2SigningKey(dateStamp) {
+        const k1 = await _r2Hmac('AWS4' + R2.secretAccessKey, dateStamp);
+        const k2 = await _r2Hmac(k1, 'auto');
+        const k3 = await _r2Hmac(k2, 's3');
+        return _r2Hmac(k3, 'aws4_request');
+    }
+    async function _r2BuildAuthHeaders(method, key, contentType) {
+        const now = new Date();
+        const dateStamp = now.toISOString().slice(0,10).replace(/-/g,'');
+        const amzDate  = now.toISOString().replace(/[:\-]|\.\d{3}/g,'');
+        const host = `${R2.accountId}.r2.cloudflarestorage.com`;
+        const canonicalUri = `/${R2.bucket}/${key}`;
+        const payloadHash = 'UNSIGNED-PAYLOAD';
+        const hdrs = { 'content-type': contentType, 'host': host, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate };
+        const sk = Object.keys(hdrs).sort();
+        const canonicalHeaders = sk.map(k => `${k}:${hdrs[k]}\n`).join('');
+        const signedHeaders = sk.join(';');
+        const canonicalRequest = [method, canonicalUri, '', canonicalHeaders, signedHeaders, payloadHash].join('\n');
+        const credScope = `${dateStamp}/auto/s3/aws4_request`;
+        const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credScope}\n${await _r2Sha256(new TextEncoder().encode(canonicalRequest))}`;
+        const signature = await _r2HmacHex(await _r2SigningKey(dateStamp), stringToSign);
+        return {
+            'Content-Type': contentType,
+            'x-amz-date': amzDate,
+            'x-amz-content-sha256': payloadHash,
+            'Authorization': `AWS4-HMAC-SHA256 Credential=${R2.accessKeyId}/${credScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`
+        };
+    }
+    async function uploadToR2(blob, key, contentType, onProgress) {
+        const ct = contentType || blob.type || 'application/octet-stream';
+        const url = `${R2.endpoint}/${R2.bucket}/${key}`;
+        const headers = await _r2BuildAuthHeaders('PUT', key, ct);
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', url, true);
+            for (const [h, v] of Object.entries(headers)) xhr.setRequestHeader(h, v);
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100));
+            };
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(`${R2.publicBaseUrl}/${key}`);
+                } else {
+                    reject(new Error(`R2 upload failed: ${xhr.status} — ${xhr.responseText}`));
+                }
+            };
+            xhr.onerror = () => reject(new Error('R2 network error'));
+            xhr.send(blob);
+        });
+    }
 
     // ── Get email from URL param ───────────────────────────────
     const urlParams   = new URLSearchParams(window.location.search);
@@ -512,12 +544,9 @@
     async function uploadToCloudinary(file) {
       if (!file) return null;
       console.log('🔄 Uploading to R2:', file.name);
-      
-      const response = await window.PoseUploadService.upload(file, {
-        folder: 'channel-profiles'
-      });
-      
-      return response.url || response.secure_url;
+      const ext = (file.name || 'upload.jpg').split('.').pop() || 'jpg';
+      const key = `channel-profiles/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+      return uploadToR2(file, key, file.type || 'image/jpeg');
     }
 
     // ── Create Channel ─────────────────────────────────────────
