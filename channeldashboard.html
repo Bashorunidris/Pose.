@@ -3003,7 +3003,7 @@ Edit banner
 </div>
 
 <!-- Channel-wide payout requirement strip (always visible on home) -->
-<div id="homeEligStrip" onclick="onMainTab(document.querySelector('.tab-item[data-tab="earnings"]'),'earnings');"
+<div id="homeEligStrip" onclick='onMainTab(document.querySelector(".tab-item[data-tab=\"earnings\"]"),"earnings");'
 style="cursor:pointer;margin:0 16px 14px;padding:11px 14px;border-radius:12px;
 background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;
 display:flex;align-items:center;gap:10px;">
@@ -8723,9 +8723,6 @@ async function postSingleVideo() {
   showUploadProgressUI();
   updateStepProgress(1, `Analyzing ${formatFileSize(singleVideoFile.size)}...`, 0, true);
 
-  // Countdown 3-2-1
-  await showCountdown();
-
   // Build step list
   const steps = [
     { icon: 'fa-video',    label: 'Uploading video' },
@@ -8748,65 +8745,63 @@ async function postSingleVideo() {
     const videoId     = videoDocRef.id;
     const folder      = `pose/${CHANNEL_UID}/${videoId}`;
 
-    // Step 0 — Upload main video
-    setUploadStep(0, 'active', 'Uploading…');
-    document.getElementById('uppopTitle').textContent = 'Uploading Video…';
+    // Upload video, trailer, and thumbnail concurrently — none of them depend
+    // on each other, so waiting for each one in turn just adds dead time.
+    const thumbFile = document.getElementById('sThumbFile').files[0];
 
-    const videoResult = await uploadFile(
+    setUploadStep(0, 'active', 'Uploading…');
+    document.getElementById('uppopTitle').textContent = 'Uploading…';
+    updateStepProgress(1, 'Uploading video...', 0, true);
+
+    if (singleTrailerFile) { setUploadStep(1, 'active', 'Uploading…'); updateStepProgress(2, 'Uploading trailer...', 0, true); }
+    else                   { setUploadStep(1, 'done', 'Skipped');      updateStepProgress(2, '✓ Skipped', 100); }
+
+    if (thumbFile) { setUploadStep(2, 'active', 'Uploading…'); updateStepProgress(3, 'Uploading thumbnail...', 0, true); }
+    else            { setUploadStep(2, 'done', 'Skipped');      updateStepProgress(3, '✓ Skipped', 100); }
+
+    let videoPct   = 0;
+    let trailerPct = singleTrailerFile ? 0 : 100;
+    let thumbPct   = thumbFile ? 0 : 100;
+    const renderOverall = (label) => {
+      const overall = videoPct * 0.7 + trailerPct * 0.1 + thumbPct * 0.1;
+      const eta = calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
+      updateUploadProgress(Math.round(overall), label, eta);
+    };
+
+    const videoPromise = uploadFile(
       singleVideoFile, 'video', null, folder + '/main',
-      (pct, label, speed) => {
-        const eta = calcETA(
-          (singleVideoFile.size * pct) / 100,
-          singleVideoFile.size
-        );
-        const speedEta = [speed, eta].filter(Boolean).join(' · ');
-        updateUploadProgress(
-          Math.round(pct * 0.7),
-          label || 'Uploading video…',
-          speedEta
-        );
-      }
-    );
+      (pct) => { videoPct = pct; renderOverall('Uploading video…'); }
+    ).then(r => {
+      setUploadStep(0, 'done', 'Done ✓');
+      updateStepProgress(1, '✓ Video uploaded', 100);
+      return r;
+    });
+
+    const trailerPromise = singleTrailerFile
+      ? uploadFile(singleTrailerFile, 'video', null, folder + '/trailer',
+          (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
+        ).then(r => {
+          setUploadStep(1, 'done', 'Done ✓');
+          updateStepProgress(2, '✓ Trailer uploaded', 100);
+          return r.url;
+        })
+      : Promise.resolve(null);
+
+    const thumbPromise = thumbFile
+      ? uploadFile(thumbFile, 'image', null, folder + '/thumb',
+          (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
+        ).then(r => {
+          setUploadStep(2, 'done', 'Done ✓');
+          updateStepProgress(3, '✓ Thumbnail uploaded', 100);
+          return r.url;
+        })
+      : Promise.resolve(null);
+
+    const [videoResult, trailerUrl, thumbUrl] = await Promise.all([videoPromise, trailerPromise, thumbPromise]);
 
     const videoUrl    = videoResult.url;
     const videoChunks = videoResult.chunks;
     const isChunked   = videoResult.isChunked;
-    setUploadStep(0, 'done', 'Done ✓');
-    updateStepProgress(1, '✓ Video uploaded', 100);
-    updateStepProgress(2, 'Uploading trailer...', 0, true);
-
-    // Step 1 — Trailer
-    let trailerUrl = null;
-    if (singleTrailerFile) {
-      setUploadStep(1, 'active', 'Uploading…');
-      updateUploadProgress(72, 'Uploading trailer…', '');
-      const tResult = await uploadFile(singleTrailerFile, 'video', null, folder + '/trailer',
-        (pct) => updateUploadProgress(70 + Math.round(pct * 0.1), 'Uploading trailer…', '')
-      );
-      trailerUrl = tResult.url;
-      setUploadStep(1, 'done', 'Done ✓');
-      updateStepProgress(2, '✓ Trailer uploaded', 100);
-    } else {
-      setUploadStep(1, 'done', 'Skipped');
-      updateStepProgress(2, '✓ Skipped', 100);
-    }
-
-    // Step 2 — Thumbnail
-    let thumbUrl = null;
-    const thumbFile = document.getElementById('sThumbFile').files[0];
-    if (thumbFile) {
-      setUploadStep(2, 'active', 'Uploading…');
-      updateUploadProgress(82, 'Uploading thumbnail…', '');
-      const thResult = await uploadFile(thumbFile, 'image', null, folder + '/thumb',
-        (pct) => updateUploadProgress(80 + Math.round(pct * 0.1), 'Uploading thumbnail…', '')
-      );
-      thumbUrl = thResult.url;
-      setUploadStep(2, 'done', 'Done ✓');
-      updateStepProgress(3, '✓ Thumbnail uploaded', 100);
-    } else {
-      setUploadStep(2, 'done', 'Skipped');
-      updateStepProgress(3, '✓ Skipped', 100);
-    }
 
     updateStepProgress(3, 'Saving to database...', 0, true);
 
@@ -9306,9 +9301,6 @@ document.getElementById('episodeBlock').style.display = 'block';
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Starting…';
 
-  // Countdown
-  await showCountdown();
-
   const steps = [
     { icon: 'fa-video',        label: 'Uploading episode video' },
     { icon: 'fa-clapperboard', label: 'Uploading trailer'       },
@@ -9331,9 +9323,51 @@ document.getElementById('episodeBlock').style.display = 'block';
     const epId   = epRef.id;
     const folder = `pose/${CHANNEL_UID}/seasons/${currentSeasonId}/ep/${epId}`;
 
-    // Fetch parent season so the episode inherits its category / title / number / production
-    const seaSnapForEp = await db.collection('channels').doc(CHANNEL_UID)
+    const epThumb = document.getElementById('epThumbFile').files[0];
+
+    // Fetch the parent season (needed to build the Firestore doc) concurrently
+    // with the uploads, and upload video/trailer/thumbnail concurrently with
+    // each other too — none of these depend on one another.
+    const seasonFetchPromise = db.collection('channels').doc(CHANNEL_UID)
       .collection('seasons').doc(currentSeasonId).get();
+
+    setUploadStep(0, 'active', 'Uploading…');
+    document.getElementById('uppopTitle').textContent = 'Uploading Episode…';
+    if (epTrailerFile_) setUploadStep(1, 'active', 'Uploading…'); else setUploadStep(1, 'done', 'Skipped');
+    if (epThumb)        setUploadStep(2, 'active', 'Uploading…'); else setUploadStep(2, 'done', 'Skipped');
+
+    let videoPct   = 0;
+    let trailerPct = epTrailerFile_ ? 0 : 100;
+    let thumbPct   = epThumb ? 0 : 100;
+    const renderOverall = (label) => {
+      const overall = videoPct * 0.7 + trailerPct * 0.1 + thumbPct * 0.1;
+      updateUploadProgress(Math.round(overall), label, '');
+    };
+
+    const videoPromise = uploadFile(
+      epVideoFile_, 'video', null, folder + '/main',
+      (pct) => { videoPct = pct; renderOverall('Uploading video…'); }
+    ).then(r => { setUploadStep(0, 'done', 'Done ✓'); return r; });
+
+    const trailerPromise = epTrailerFile_
+      ? uploadFile(epTrailerFile_, 'video', null, folder + '/trailer',
+          (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
+        ).then(r => { setUploadStep(1, 'done', 'Done ✓'); return r.url; })
+      : Promise.resolve(null);
+
+    const thumbPromise = epThumb
+      ? uploadFile(epThumb, 'image', null, folder + '/thumb',
+          (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
+        ).then(r => { setUploadStep(2, 'done', 'Done ✓'); return r.url; })
+      : Promise.resolve(null);
+
+    const [videoResult, trailerUrl, thumbUrl, seaSnapForEp] =
+      await Promise.all([videoPromise, trailerPromise, thumbPromise, seasonFetchPromise]);
+
+    const videoUrl    = videoResult.url;
+    const videoChunks = videoResult.chunks;
+    const isChunked   = videoResult.isChunked;
+
     const parentSeason     = seaSnapForEp.data() || {};
     const seasonCategory    = parentSeason.category     || '';
     const seasonSubcategory = parentSeason.subcategory  || '';
@@ -9341,50 +9375,6 @@ document.getElementById('episodeBlock').style.display = 'block';
     const seasonNumber      = parentSeason.seasonNumber || 1;
     const seasonProduction  = parentSeason.production   || {};
     const seasonAgeRating   = parentSeason.ageRating    || '';
-
-    // Step 0 — Episode video
-    setUploadStep(0, 'active', 'Uploading…');
-    document.getElementById('uppopTitle').textContent = 'Uploading Episode…';
-
-    const videoResult = await uploadFile(
-      epVideoFile_, 'video', null, folder + '/main',
-      (pct, label, speed) => {
-        updateUploadProgress(Math.round(pct * 0.7), label || 'Uploading…', speed);
-      }
-    );
-    const videoUrl    = videoResult.url;
-    const videoChunks = videoResult.chunks;
-    const isChunked   = videoResult.isChunked;
-    setUploadStep(0, 'done', 'Done ✓');
-
-    // Step 1 — Trailer
-    let trailerUrl = null;
-    if (epTrailerFile_) {
-      setUploadStep(1, 'active', 'Uploading…');
-      updateUploadProgress(72, 'Uploading trailer…', '');
-      const tResult = await uploadFile(epTrailerFile_, 'video', null, folder + '/trailer',
-        (pct) => updateUploadProgress(70 + Math.round(pct * 0.1), 'Uploading trailer…', '')
-      );
-      trailerUrl = tResult.url;
-      setUploadStep(1, 'done', 'Done ✓');
-    } else {
-      setUploadStep(1, 'done', 'Skipped');
-    }
-
-    // Step 2 — Thumbnail
-    let thumbUrl = null;
-    const epThumb = document.getElementById('epThumbFile').files[0];
-    if (epThumb) {
-      setUploadStep(2, 'active', 'Uploading…');
-      updateUploadProgress(82, 'Uploading thumbnail…', '');
-      const thResult = await uploadFile(epThumb, 'image', null, folder + '/thumb',
-        (pct) => updateUploadProgress(80 + Math.round(pct * 0.1), 'Uploading thumbnail…', '')
-      );
-      thumbUrl = thResult.url;
-      setUploadStep(2, 'done', 'Done ✓');
-    } else {
-      setUploadStep(2, 'done', 'Skipped');
-    }
 
     // Step 3 — Save to Firestore
     setUploadStep(3, 'active', 'Saving…');
