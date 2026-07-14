@@ -607,6 +607,34 @@
     }
 
     /* ==============================
+       INBOX POPUP
+    ============================== */
+    .inbox-popup-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15, 5, 40, 0.75); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      animation: fadeIn .25s ease both;
+    }
+    .inbox-popup-overlay.hidden { display: none; }
+    .inbox-popup-card {
+      background: var(--white); border-radius: 22px; padding: 22px 20px 26px;
+      max-width: 480px; width: 100%; max-height: 82vh; overflow-y: auto;
+      box-shadow: 0 12px 48px rgba(0,0,0,.3);
+      animation: popIn .3s cubic-bezier(.25,.8,.25,1) both;
+    }
+    .inbox-item {
+      border: 1.5px solid var(--gray-100); border-radius: 14px; padding: 14px;
+      margin-bottom: 10px; cursor: pointer; transition: all .15s;
+    }
+    .inbox-item:hover { border-color: var(--purple-pale); }
+    .inbox-item.unread { border-color: var(--purple-pale); background: var(--purple-ghost); }
+    .inbox-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .inbox-item-subject { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
+    .inbox-item-date { font-size: 10.5px; color: var(--gray-400); white-space: nowrap; }
+    .inbox-item-msg { font-size: 12.5px; color: var(--gray-500); line-height: 1.5; }
+    .inbox-unread-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--purple-main); flex-shrink: 0; }
+
+    /* ==============================
        LEGIBILITY PAGE
     ============================== */
     #page-legibility { background: var(--gray-50); }
@@ -1737,7 +1765,7 @@ input[type=range].ucoin-slider {
   text-transform: uppercase; letter-spacing: .5px;
 }
 
-/* ── Views Pool card (free videos only) ── */
+/* ── Pool card (paid videos only — free videos don't earn) ── */
 .vd-pool-card{
   background:#fff;
   border:1px solid var(--purple-light, rgba(124,58,237,.30));
@@ -2014,14 +2042,14 @@ input[type=range].ucoin-slider {
 .vd-resched-overlay {
   position: fixed; inset: 0; z-index: 9998;
   background: rgba(15, 5, 40, 0.8); backdrop-filter: blur(10px);
-  display: flex; align-items: flex-end; justify-content: center;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
   animation: fadeIn .25s ease both;
 }
 .vd-resched-card {
-  background: #fff; border-radius: 22px 22px 0 0; padding: 24px 22px 36px;
-  max-width: 440px; width: 100%;
-  box-shadow: 0 -8px 36px rgba(0,0,0,.25);
-  animation: slideUp .35s cubic-bezier(.25,.8,.25,1) both;
+  background: #fff; border-radius: 22px; padding: 24px 22px 30px;
+  max-width: 440px; width: 100%; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(0,0,0,.3);
+  animation: popIn .3s cubic-bezier(.25,.8,.25,1) both;
 }
 .vd-resched-title {
   font-family: 'Playfair Display', serif; font-size: 18px;
@@ -2928,6 +2956,11 @@ input[type=range].ucoin-slider {
 <div class="topbar">
 <div class="topbar-brand">Pose <em>Channel</em></div>
 <div class="topbar-actions">
+<button class="btn btn-ghost" style="position:relative;" onclick="openInboxPopup()">
+<i class="fas fa-inbox"></i>
+Inbox
+<span id="inboxBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:#DC2626;color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:99px;align-items:center;justify-content:center;padding:0 4px;">0</span>
+</button>
 <button class="btn btn-ghost" onclick="openSettings()">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -2960,13 +2993,13 @@ Go Back to Pose
 </div>
 
 <div class="channel-banner">
-<div class="banner-upload-hint">
+<div class="banner-upload-hint" onclick="openModal('bannerModal')" style="cursor:pointer;">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
 </svg>
 Edit banner
 </div>
-<div class="channel-avatar-wrap" title="Change channel photo">
+<div class="channel-avatar-wrap" title="Change channel photo" onclick="openModal('photoModal')" style="cursor:pointer;">
 <span class="channel-avatar-initials">P</span>
 </div>
 </div>
@@ -3016,7 +3049,7 @@ display:flex;align-items:center;justify-content:center;flex-shrink:0;">
 Payout Requirements
 </div>
 <div id="homeEligText" style="font-size:11px;color:#92400E;line-height:1.4;margin-top:2px;">
-Paid videos release earnings every <b>10 views</b> · <b id="homeSlotsRemaining">10</b> pricing slots left this month.
+Paid videos need <b>10 views</b> to start earning, then release every <b>5 hours</b> · <b id="homeSlotsRemaining">10</b> pricing slots left this month.
 </div>
 </div>
 <i class="fas fa-chevron-right" style="color:#92400E;font-size:11px;flex-shrink:0;"></i>
@@ -3251,7 +3284,7 @@ Back
 <span style="font-size:12.5px;font-weight:800;color:#78350F;">Withdrawal Requirements</span>
 </div>
 <div style="font-size:11.5px;color:#92400E;line-height:1.55;margin-bottom:8px;">
-<b>Paid Videos:</b> each paid video needs <b>10 views</b> per batch — earnings flow out 10 views at a time.
+<b>Paid Videos:</b> each paid video needs <b>10 total views</b> to start earning — after that, earnings release every <b>5 hours</b> for however many views it got.
 </div>
 
 <!-- Paid progress -->
@@ -3296,28 +3329,6 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 </div>
 </div>
 
-<!-- ── POWERED BY BREET PROMO ── -->
-<div style="padding:0 18px 16px;">
-<div style="background:linear-gradient(135deg,rgba(0,200,150,.12),rgba(0,158,118,.04),rgba(124,58,237,.08));border:1.5px solid rgba(0,200,150,.32);border-radius:16px;padding:18px;position:relative;overflow:hidden;">
-<div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;position:relative;z-index:1;">
-<span style="background:#00C896;color:#000;font-size:9px;font-weight:800;letter-spacing:2px;padding:4px 11px;border-radius:100px;">BREET</span>
-<span style="font-size:11.5px;color:var(--gray-400);">× CREATOR PAYOUTS</span>
-</div>
-<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;position:relative;z-index:1;">
-<img src="https://i.ibb.co/1tHhLFdZ/images-19.jpg" alt="Breet" style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid rgba(0,200,150,.3);flex-shrink:0;">
-<div style="flex:1;min-width:160px;">
-<div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:3px;">Withdraw faster with Breet</div>
-<div style="font-size:12px;color:var(--gray-500);line-height:1.6;">Get your earnings as crypto or stablecoin, anywhere in the world. First <b style="color:#009E76;">3 withdrawals</b> via Breet come with reduced fees or bonus Pose Coins.</div>
-</div>
-</div>
-<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;position:relative;z-index:1;">
-<span style="font-size:10px;color:#009E76;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);border-radius:100px;padding:4px 10px;font-weight:600;">⚡ Fast Payouts</span>
-<span style="font-size:10px;color:#009E76;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);border-radius:100px;padding:4px 10px;font-weight:600;">🌍 Global</span>
-<span style="font-size:10px;color:#009E76;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);border-radius:100px;padding:4px 10px;font-weight:600;">🎁 Withdrawal Bonus</span>
-</div>
-<img src="https://i.ibb.co/9kWSGf75/images-20.jpg" alt="" style="position:absolute;right:-24px;bottom:-24px;width:104px;height:104px;border-radius:50%;opacity:.1;object-fit:cover;pointer-events:none;">
-</div>
-</div>
 
 <div style="padding:0 18px 30px;">
 <div class="card" style="padding:20px;">
@@ -3335,6 +3346,33 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 </div>
 
 </div><!-- /page-earnings -->
+
+<!-- ============ INBOX POPUP ============ -->
+<div id="inboxPopup" class="inbox-popup-overlay hidden" onclick="if(event.target===this)closeInboxPopup();">
+<div class="inbox-popup-card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+<div style="font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--text-main);">
+<i class="fas fa-inbox" style="margin-right:6px;color:var(--purple-main);"></i> Inbox
+</div>
+<button onclick="closeInboxPopup()" style="background:none;border:none;font-size:18px;color:var(--gray-400);cursor:pointer;padding:4px;">
+<i class="fas fa-xmark"></i>
+</button>
+</div>
+<div id="inboxList"></div>
+</div>
+</div>
+
+<!-- ============ GLOBAL MODAL / TOAST CONTAINERS ============
+     Used by openModal()/closeModal()/showToast() — kept at the top level
+     (not inside page-settings) so they exist from first load, letting
+     Edit/Change-photo/Change-banner controls work from any page, not just
+     after Settings has been opened once. -->
+<div id="settModals"></div>
+<div id="settToast"
+  style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--text-main);color:white;padding:10px 22px;border-radius:30px;
+  font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:9999;
+  pointer-events:none;white-space:nowrap;"></div>
 
 <!-- ============ PAYMENT METHOD POPUP ============ -->
 <div id="payMethodPopup" class="earn-popup-overlay hidden">
@@ -3478,16 +3516,6 @@ onblur="this.style.borderColor='var(--gray-200)'"
 <button id="withdrawBtn" onclick="requestWithdrawal()" disabled class="earn-primary-btn" style="background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 14px rgba(5,150,105,.3);">
 <i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal
 </button>
-
-<div style="text-align:center;color:var(--gray-400);font-size:11px;margin:13px 0 11px;letter-spacing:1px;">— OR —</div>
-
-<button id="breetWithdrawBtn" onclick="launchBreetWithdrawal()" class="earn-primary-btn"
-style="background:linear-gradient(135deg,#00C896,#009E76);box-shadow:0 4px 14px rgba(0,200,150,.3);color:#000;">
-<i class="fas fa-gem" style="margin-right:6px;"></i> Withdraw via Breet (Crypto / Stablecoin)
-</button>
-<div style="background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.22);border-radius:11px;padding:11px 13px;margin-top:11px;font-size:11.5px;color:var(--gray-500);line-height:1.6;">
-<b style="color:#009E76;">Creator perk:</b> Your first 3 Breet withdrawals come with reduced fees or bonus Pose Coins — faster, borderless payouts to your crypto wallet.
-</div>
 </div>
 </div>
 
@@ -3613,7 +3641,7 @@ Premium
 </div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray-500);display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--gray-100);">
 <i class="fas fa-circle-info" style="color:#D97706;"></i>
-No follower minimum — earnings release every 10 views per paid video
+No follower minimum — paid videos start earning after 10 views, then release every 5 hours
 </div>
 </div>
 </div>
@@ -5906,6 +5934,15 @@ let uploadCancelled = false;
 let _uploadStartTime = null;
 let _uploadedBytes   = 0;
 
+// Notification-event tracking (session-local baselines, used to detect
+// "new" follower/comment/payout changes rather than firing on first load)
+let _notifFansBaseline     = null;
+let _notifCommentsBaseline = {};
+let _notifWithdrawalStatus = {};
+let _notifMilestoneNGN     = 0;
+
+let inboxMessages = [];
+
     /* ====================================================
        AUTH → BOOT
     ==================================================== */
@@ -5959,16 +5996,7 @@ let _uploadedBytes   = 0;
        BOOT — REAL-TIME LISTENERS
     ==================================================== */
     function bootDashboard() {
-      // --- SAMPLE DATA FOR VISUAL VERIFICATION ---
-      // This data will be used if the Firebase listener returns null or 0.
-      videosData = [
-        { id: 'v1', title: 'My First Viral Video', views: 1200, likes: 450, comments: 85, revenue: 500, priceMode: 'free', createdAt: new Date() },
-        { id: 'v2', title: 'Behind the Scenes', views: 850, likes: 210, comments: 40, revenue: 250, priceMode: 'paid', coinPrice: 5, createdAt: new Date() }
-      ];
-      // --- END SAMPLE DATA ---
-
-      // Ensure UI renders sample data immediately if we are on the earnings tab
-      if (isPageActive('page-earnings')) renderEarningsSummary();
+      videosData = [];
 
       // Save channel ID on user profile — enables instant direct lookup in Posewebapp
   auth.onAuthStateChanged(u => {
@@ -5983,6 +6011,13 @@ let _uploadedBytes   = 0;
   .onSnapshot(snap => {
     if (!snap.exists) { window.location.href = 'channelintro.html?fromDash=1'; return; }
       channelData = snap.data();
+      const fansNow = Number(channelData.fans) || Number(channelData.subscribers) || 0;
+      if (_notifFansBaseline === null) {
+        _notifFansBaseline = fansNow;
+      } else if (fansNow > _notifFansBaseline) {
+        queueNotificationEvent('notif3', 'new_follower', { fans: fansNow, gained: fansNow - _notifFansBaseline });
+        _notifFansBaseline = fansNow;
+      }
           renderHome();
           hideLoader();
         }, err => { console.error('Channel error:', err); hideLoader(); });
@@ -5994,7 +6029,17 @@ let _uploadedBytes   = 0;
           videosData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
           renderHomeStats();
           if (isPageActive('page-studio')) renderStudioData();
+          if (isPageActive('page-earnings')) { renderEarningsSummary(); renderEligibilityBanner(); }
+          flushPaidPoolsIfDue();
+          checkNewComments(videosData);
         }, err => console.error('Videos error:', err));
+
+      // Re-check every 15 min while the dashboard stays open — actual
+      // flushing per video still only happens once POOL_FLUSH_INTERVAL_MS
+      // has elapsed since that video's last flush (see flushPaidPoolsIfDue).
+      if (!window._poolFlushTimer) {
+        window._poolFlushTimer = setInterval(flushPaidPoolsIfDue, 15 * 60 * 1000);
+      }
 db.collection('channels').doc(CHANNEL_UID)
   .collection('seasons')
   .onSnapshot(() => {
@@ -6005,11 +6050,70 @@ db.collection('channels').doc(CHANNEL_UID)
         .collection('earnings').doc('summary')
         .onSnapshot(snap => {
           earningsData = snap.exists ? snap.data() : null;
+          checkEarningsMilestone(Number(earningsData?.directRevenue) || 0);
           if (isPageActive('page-earnings')) {
             renderEarningsSummary();
             renderTimeline();
           }
         }, err => console.error('Earnings error:', err));
+
+      // Notify once when a withdrawal's status changes (e.g. approved/paid) —
+      // skips the very first snapshot so it doesn't fire for old, already-known requests.
+      let _wdFirstSnap = true;
+      db.collection('channels').doc(CHANNEL_UID)
+        .collection('withdrawals')
+        .onSnapshot(snap => {
+          snap.docChanges().forEach(change => {
+            const wd = { id: change.doc.id, ...change.doc.data() };
+            const prevStatus = _notifWithdrawalStatus[wd.id];
+            if (!_wdFirstSnap && wd.status && wd.status !== prevStatus &&
+                ['approved', 'completed', 'paid'].includes(wd.status)) {
+              queueNotificationEvent('notif5', 'payout_processed', {
+                withdrawalId: wd.id, amount: wd.netAmount || wd.amount || 0, status: wd.status,
+              });
+            }
+            _notifWithdrawalStatus[wd.id] = wd.status;
+          });
+          _wdFirstSnap = false;
+        }, err => console.error('Withdrawals watch error:', err));
+
+      // Admin → channel inbox (channels/{id}/inbox). Written from the admin
+      // side (no admin UI yet — build that separately); this only reads/displays.
+      db.collection('channels').doc(CHANNEL_UID)
+        .collection('inbox')
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(snap => {
+          inboxMessages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          updateInboxBadge();
+          if (!document.getElementById('inboxPopup')?.classList.contains('hidden')) renderInboxList();
+        }, err => console.error('Inbox error:', err));
+    }
+
+    function checkEarningsMilestone(totalNGN) {
+      const MILESTONES = [5000, 10000, 50000, 100000, 500000, 1000000];
+      if (_notifMilestoneNGN === 0 && totalNGN > 0) {
+        // First load — establish baseline at the highest milestone already passed, don't notify retroactively.
+        _notifMilestoneNGN = MILESTONES.filter(m => m <= totalNGN).pop() || 0;
+        return;
+      }
+      const nextCrossed = MILESTONES.filter(m => m > _notifMilestoneNGN && totalNGN >= m).pop();
+      if (nextCrossed) {
+        _notifMilestoneNGN = nextCrossed;
+        queueNotificationEvent('notif2', 'earnings_milestone', { milestoneNGN: nextCrossed, totalNGN });
+      }
+    }
+
+    function checkNewComments(videos) {
+      videos.forEach(v => {
+        const count = Number(v.comments) || 0;
+        const prev  = _notifCommentsBaseline[v.id];
+        if (prev === undefined) {
+          _notifCommentsBaseline[v.id] = count;
+        } else if (count > prev) {
+          queueNotificationEvent('notif4', 'new_comment', { videoId: v.id, videoTitle: v.title, newComments: count - prev });
+          _notifCommentsBaseline[v.id] = count;
+        }
+      });
     }
 
     function isPageActive(id) {
@@ -6121,18 +6225,13 @@ db.collection('channels').doc(CHANNEL_UID)
 
      // Update home eligibility strip with live progress
      const txt = document.getElementById('homeEligText');
-     if (txt && typeof getAdsBreakdown === 'function') {
-       const ads  = getAdsBreakdown();
+     if (txt && typeof getPaidBreakdown === 'function') {
        const paid = getPaidBreakdown();
-       const adsLine = ads.unlocked
-         ? `✅ Ads unlocked (${ads.poolViews.toLocaleString('en-NG')} views)`
-         : `🔒 Ads: ${ads.poolViews.toLocaleString('en-NG')} / 1,000 views`;
-       const paidLine = paid.videoCount === 0
-         ? 'No paid videos yet'
+       txt.innerHTML = paid.videoCount === 0
+         ? 'No paid videos yet — free videos don\'t earn.'
          : (paid.lockedViews > 0
-             ? `🔒 Paid: next batch in ${paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold)} view${(paid.threshold - (paid.lockedViews % paid.threshold || paid.threshold))===1?'':'s'}`
-             : '✅ Paid videos releasing in 10-view batches');
-       txt.innerHTML = `${adsLine} · ${paidLine}`;
+             ? `🔒 ${paid.lockedViews.toLocaleString('en-NG')} view${paid.lockedViews===1?'':'s'} still below the 10-view minimum`
+             : '✅ Paid videos earning — releasing every 5 hours');
      }
    }
 
@@ -6164,14 +6263,13 @@ async function countAllContent() {
       return n.toString();
     }
 
-    const COIN_LOGO = `<img src="https://i.ibb.co/k62g7222/Chat-GPT-Image-Apr-28-2026-11-33-52-PM.png" class="coin-logo" alt="Pose Coin">`;
+    const COIN_LOGO = `<img src="https://i.ibb.co/k62g7222/Chat-GPT-Image-Apr-28-2026-11-33-52-PM.png" class="coin-logo" alt="Pose Coin Kobo">`;
 
     function fmtCurr(ngn) {
       ngn = Number(ngn) || 0;
       if (earnCurrency === 'COIN') {
-        // 1 Pose Coin = ₦25
-        const coins = Math.round(ngn / 25);
-        return COIN_LOGO + ' ' + coins.toLocaleString();
+        // 1 PCK (Pose Coin Kobo) = ₦1
+        return COIN_LOGO + ' ' + Math.round(ngn).toLocaleString('en-NG') + ' PCK';
       }
       if (earnCurrency === 'USER') return fmtUserCurr(ngn);
       // Default: NGN
@@ -6664,7 +6762,7 @@ async function countAllContent() {
     const localToNgn = (ngnRate / localRate).toLocaleString('en', { maximumFractionDigits: 1 });
 
     document.getElementById('rateNoteText').innerHTML =
-      `${COIN_LOGO} 1 = 25 NGN ${uc.code !== 'NGN' ? `· 1 ${uc.code} ≈ ${localToNgn} NGN` : ''} · Updated just now`;
+      `${COIN_LOGO} 1 PCK = ₦1 ${uc.code !== 'NGN' ? `· 1 ${uc.code} ≈ ${localToNgn} NGN` : ''} · Updated just now`;
   } catch {
     usdToNgn = 1620;
     userCurrencyRates = { NGN: 1620, USD: 1, GBP: 0.79, GHS: 12, KES: 130 };
@@ -6679,30 +6777,9 @@ async function countAllContent() {
        EARNINGS — RENDER
     ==================================================== */
     function getSegValues() {
-      // FOR DEMONSTRATION: If real data is missing, show sample money
-      if (!earningsData || (earningsData.adsRevenue === 0 && earningsData.directRevenue === 0)) {
-        if (earnSeg === 'free') return { ads: 12500, direct: 0, adsChange: '+12.4%', directChange: '—' };
-        if (earnSeg === 'paid') return { ads: 0, direct: 25000, adsChange: '—', directChange: '+8.2%' };
-        return {
-          ads: 12500,
-          direct: 25000,
-          adsChange: '+12.4%',
-          directChange: '+8.2%'
-        };
-      }
-      if (earnSeg === 'free') return {
-        ads: earningsData.adsRevenue || 0, direct: 0,
-        adsChange: earningsData.adsChange || '—', directChange: '—',
-      };
-      if (earnSeg === 'paid') return {
-        ads: 0, direct: earningsData.directRevenue || 0,
-        adsChange: '—', directChange: earningsData.directChange || '—',
-      };
       return {
-        ads:          earningsData.adsRevenue    || 0,
-        direct:       earningsData.directRevenue || 0,
-        adsChange:    earningsData.adsChange     || '—',
-        directChange: earningsData.directChange  || '—',
+        direct:       earningsData?.directRevenue || 0,
+        directChange: earningsData?.directChange  || '—',
       };
     }
 
@@ -6710,32 +6787,23 @@ async function countAllContent() {
 
     function renderEarningsSummary() {
       const seg   = getSegValues();
-      const total = seg.ads + seg.direct;
+      const total = seg.direct;
 
-      // Show/Hide rows based on active segment
-      const adsRow = document.getElementById('adsRevRow');
-      const directRow = document.getElementById('directRevRow');
-      if (adsRow)    adsRow.style.display = (earnSeg === 'total' || earnSeg === 'free') ? 'flex' : 'none';
-      if (directRow) directRow.style.display = (earnSeg === 'total' || earnSeg === 'paid') ? 'flex' : 'none';
-
-      document.getElementById('adsRevDisplay').innerHTML    = seg.ads    > 0 ? fmtCurr(seg.ads)    : '—';
       document.getElementById('directRevDisplay').innerHTML = seg.direct > 0 ? fmtCurr(seg.direct) : '—';
-      document.getElementById('adsRevChange').textContent     = seg.adsChange;
       document.getElementById('directRevChange').textContent  = seg.directChange;
 
       const totalEl = document.getElementById('totalRevDisplay');
-      totalEl.innerHTML = total > 0 ? fmtCurr(total) : '₦0';
+      totalEl.innerHTML = fmtCurr(total);
       totalEl.style.fontSize = earnCurrency === 'NGN' ? '32px' : '42px';
 
       const uc = getUserCurrency();
       let subText = '';
       if (total === 0) {
-        subText = 'No earnings yet — keep uploading to start earning';
+        subText = 'No earnings yet — keep uploading paid videos to start earning';
       } else if (earnCurrency === 'NGN') {
-        const coins = Math.round(total / 25).toLocaleString();
-        subText = `≈ ${COIN_LOGO} ${coins} · ${COIN_LOGO} 1 = 25 NGN`;
+        subText = `≈ ${COIN_LOGO} ${Math.round(total).toLocaleString('en-NG')} PCK`;
       } else if (earnCurrency === 'COIN') {
-        subText = `≈ ₦${Math.round(total).toLocaleString('en-NG')} · ${COIN_LOGO} 1 = 25 NGN`;
+        subText = `Your total earnings in Pose Coin Kobo`;
       } else {
         // USER (Local) mode
         const ngnRate = userCurrencyRates['NGN'] || (usdToNgn || 1620);
@@ -6763,21 +6831,11 @@ async function countAllContent() {
         earningsChartInstance.destroy();
       }
 
-      // Generate sample trend data based on segment
-      const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      let data = [];
-      let color = '#7C3AED';
-
-      if (earnSeg === 'free') {
-        data = [1200, 1500, 1100, 1800, 2200, 1900, 2500];
-        color = '#4F46E5';
-      } else if (earnSeg === 'paid') {
-        data = [5000, 3000, 7000, 4500, 6000, 8000, 9500];
-        color = '#D97706';
-      } else {
-        data = [6200, 4500, 8100, 6300, 8200, 9900, 1500];
-        color = '#7C3AED';
-      }
+      // Real 7-day trend written by the pool flush — no fabricated numbers.
+      const trend  = Array.isArray(earningsData?.dailyTrend) ? earningsData.dailyTrend : [];
+      const labels = trend.length ? trend.map(d => d.label) : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const data   = trend.length ? trend.map(d => Number(d.ngn) || 0) : [0, 0, 0, 0, 0, 0, 0];
+      const color  = '#7C3AED';
 
       earningsChartInstance = new Chart(ctx, {
         type: 'line',
@@ -6808,13 +6866,12 @@ async function countAllContent() {
     }
 
     /* ==================================================
-       ELIGIBILITY BANNER · 1K ads + 10-view paid rules
+       ELIGIBILITY BANNER · 10-view paid rule (free videos earn nothing)
     ================================================== */
     function renderEligibilityBanner() {
-      const ads     = getAdsBreakdown();
       const paid    = getPaidBreakdown();
-      const released = ads.released + paid.released;
-      const locked   = ads.locked   + paid.locked;
+      const released = paid.released;
+      const locked   = paid.locked;
 
       // Available + Locked tiles
       const box = document.getElementById('availLockBox');
@@ -6824,31 +6881,6 @@ async function countAllContent() {
         const l = document.getElementById('lockedAmount');
         if (a) a.innerHTML = fmtFromNgn(released);
         if (l) l.innerHTML = fmtFromNgn(locked);
-      }
-
-      // Ads progress
-      const adsBar    = document.getElementById('adsEligBar');
-      const adsStatus = document.getElementById('adsEligStatus');
-      const adsText   = document.getElementById('adsEligText');
-      if (adsBar) {
-        const pct  = Math.min(100, (ads.poolViews / ADS_VIEW_THRESHOLD) * 100);
-        adsBar.style.width = pct.toFixed(1) + '%';
-        if (ads.unlocked) {
-          adsBar.style.background = 'linear-gradient(90deg,#10B981,#059669)';
-          adsStatus.textContent = '✅ Monetized';
-          adsStatus.style.color = '#065F46';
-          adsText.innerHTML =
-            `Congratulations! Your channel has reached the 1,000 view milestone. ` +
-            `<b>All ad revenue</b> is now automatically deposited into your available balance.`;
-        } else {
-          adsBar.style.background = 'linear-gradient(90deg,#F59E0B,#D97706)';
-          adsStatus.textContent = `🔒 ${ads.poolViews.toLocaleString('en-NG')} / ${ADS_VIEW_THRESHOLD.toLocaleString('en-NG')}`;
-          adsStatus.style.color = '#92400E';
-          const need = ADS_VIEW_THRESHOLD - ads.poolViews;
-          adsText.innerHTML =
-            `Need <b>${need.toLocaleString('en-NG')}</b> more view${need===1?'':'s'} from free videos to unlock and ` +
-            `automatically deposit your Ads Revenue (₦${Math.round(ads.locked).toLocaleString('en-NG')}).`;
-        }
       }
 
       // Paid progress
@@ -6861,61 +6893,36 @@ async function countAllContent() {
           paidText.textContent =
             'You have no paid videos. Upload one to earn per-view directly.';
         } else if (paid.released > 0 || paid.locked > 0) {
-          paidStatus.textContent =
-            `₦${Math.round(paid.released).toLocaleString('en-NG')} released · ₦${Math.round(paid.locked).toLocaleString('en-NG')} locked`;
+          paidStatus.innerHTML =
+            `${fmtFromNgn(paid.released)} released · ${fmtFromNgn(paid.locked)} locked`;
           paidStatus.style.color = paid.released > 0 ? '#065F46' : '#92400E';
           paidText.innerHTML =
-            `Each paid video releases earnings every <b>10 views</b>. ` +
+            `A video needs <b>10 total views</b> to start earning — after that, every view releases each <b>5-hour</b> cycle. ` +
             `<b>${paid.releasedViews.toLocaleString('en-NG')}</b> view${paid.releasedViews===1?'':'s'} have released so far · ` +
-            `<b>${paid.lockedViews.toLocaleString('en-NG')}</b> view${paid.lockedViews===1?'':'s'} still pending the next 10-view batch.`;
+            `<b>${paid.lockedViews.toLocaleString('en-NG')}</b> view${paid.lockedViews===1?'':'s'} still below the 10-view minimum.`;
         } else {
           paidStatus.textContent = '🔒 0 / 10';
           paidStatus.style.color = '#92400E';
           paidText.innerHTML =
-            'Each paid video releases earnings every <b>10 views</b>. No paid views yet.';
+            'A video needs <b>10 total views</b> to start earning. No paid views yet.';
         }
       }
     }
 
     function renderTimeline() {
       const list = document.getElementById('timelineList');
-      
-      // FOR DEMONSTRATION: Use mock timeline if real data is missing
-      let tl = earningsData?.timeline?.[earnSeg]?.[earnTimeline];
-      if (!tl || !tl.length) {
-        if (earnSeg === 'free') {
-          tl = [
-            { label: 'Ad Revenue (Yesterday)', ngn: 1200 },
-            { label: 'Ad Revenue (Today)', ngn: 1500, diff: true },
-            { label: 'Partner Program Bonus', ngn: 500 }
-          ];
-        } else if (earnSeg === 'paid') {
-          tl = [
-            { label: 'Sales: "My First Viral Video"', ngn: 12500 },
-            { label: 'Sales: "Behind the Scenes"', ngn: 8500 },
-            { label: 'Direct Tip from Fan', ngn: 4000, diff: true }
-          ];
-        } else {
-          // Total Tab - Combines both with clear types
-          tl = [
-            { label: 'Total Ad Revenue', ngn: 12500, type: 'Ads' },
-            { label: 'Total Direct Sales', ngn: 25000, type: 'Paid' },
-            { label: 'Recent Ad Payout', ngn: 1500, type: 'Ads', diff: true },
-            { label: 'Recent Video Sale', ngn: 3000, type: 'Paid', diff: true }
-          ];
-        }
+      const tl = earningsData?.timeline?.[earnTimeline] || [];
+
+      if (!tl.length) {
+        list.innerHTML = `<div style="text-align:center;padding:26px 12px;color:var(--gray-400);font-size:12.5px;">
+          No transactions yet for this period — released pool earnings show up here.
+        </div>`;
+        return;
       }
 
       list.innerHTML = tl.map(r => {
         const isDiff = r.diff;
         const val    = fmtCurr(r.ngn || 0);
-        const typeLabel = (earnSeg === 'total' && r.type) 
-          ? `<span style="font-size:10px;padding:2px 8px;border-radius:6px;margin-left:8px;
-              font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
-              background:${r.type==='Ads'?'#EEF2FF':'#FFFBEB'};
-              color:${r.type==='Ads'?'#4F46E5':'#D97706'};
-              border:1px solid ${r.type==='Ads'?'#C7D2FE':'#FDE68A'};">${r.type}</span>` 
-          : '';
 
         return `
           <div style="display:flex;align-items:center;justify-content:space-between;
@@ -6924,11 +6931,8 @@ async function countAllContent() {
             border:1.5px solid ${isDiff ? 'var(--purple-pale)' : 'var(--gray-100)'};
             box-shadow: ${isDiff ? 'none' : 'var(--shadow-xs)'};">
             <div>
-              <div style="display:flex;align-items:center;">
-                <div style="font-size:14px;font-weight:${isDiff?'700':'600'};
-                  color:${isDiff?'var(--purple-deep)':'var(--text-main)'};">${r.label}</div>
-                ${typeLabel}
-              </div>
+              <div style="font-size:14px;font-weight:${isDiff?'700':'600'};
+                color:${isDiff?'var(--purple-deep)':'var(--text-main)'};">${r.label}</div>
               ${isDiff ? '<div style="font-size:11px;color:var(--purple-mid);margin-top:4px;font-weight:500;">Recent Update</div>' : '<div style="font-size:11px;color:var(--gray-400);margin-top:4px;">Recorded Transaction</div>'}
             </div>
             <div style="text-align:right;">
@@ -6983,77 +6987,42 @@ async function countAllContent() {
     }
 
     /* ====================================================
-       PAYOUT-ELIGIBILITY CONSTANTS
+       PAYOUT-ELIGIBILITY — PAID VIDEOS ONLY
        ────────────────────────────────────────────────────
-       • ADS  → channel-wide 1,000 views (from free, ad-supported videos)
-                must be reached before any Ads Revenue can be withdrawn /
-                released to spendable Earnings.
-       • PAID → per-video. For every batch of 10 views a paid video gets,
-                the matching earnings flow from the paid-pool into the
-                spendable Earnings. Below 10 views the money is locked
-                in that video's pool.
+       Free videos are not monetized — no payment is ever made for a
+       free view, so free videos never get a pool.
+
+       Paid videos: views accumulate live on the video doc, but they are
+       only calculated into money every POOL_FLUSH_INTERVAL_MS (see
+       flushPaidPoolsIfDue below). Each flush diffs new views since the
+       last flush, adds their ₦ value to that video's pool, and releases
+       any completed batch of PAID_VIEW_THRESHOLD views into the channel
+       wallet (channels/{id}/earnings/summary.directRevenue). Views below
+       the next full batch stay locked in the video's pool.
     ==================================================== */
-    const ADS_VIEW_THRESHOLD  = 1000;
-    const PAID_VIEW_THRESHOLD = 10;
+    const PAID_VIEW_THRESHOLD  = 10;    // minimum views before a video starts earning at all
+    const POOL_FLUSH_INTERVAL_MS = 5 * 60 * 60 * 1000; // 5 hours
+    const PCK_TO_NGN     = 1;     // 1 PCK (Pose Coin Kobo) = ₦1 — coinPrice is already stored in PCK
+    const CREATOR_SHARE  = 0.75;  // 75% creator share
 
-    function getAdsPoolViews() {
-      return (Array.isArray(videosData) ? videosData : [])
-        .filter(v => v && v.priceMode !== 'paid')
-        .reduce((s, v) => s + (Number(v.views) || 0), 0);
-    }
-
-    /* Ads breakdown — channel-wide pool releases ALL once 1K view threshold is hit */
-    function getAdsBreakdown() {
-      const total      = Number(earningsData?.adsRevenue) || 0;
-      const poolViews  = getAdsPoolViews();
-      const isUnlocked = poolViews >= ADS_VIEW_THRESHOLD;
-
-      const released   = isUnlocked ? total : 0;
-      const locked     = isUnlocked ? 0 : total;
-
-      return {
-        total, released, locked,
-        poolViews, 
-        threshold: ADS_VIEW_THRESHOLD,
-        unlocked: isUnlocked,
-      };
-    }
-
-    /* Paid breakdown — each paid video releases earnings in 10-view batches */
+    /* Paid breakdown — reads the persisted per-video pool state written by
+       the 5-hour flush. This is the single source of truth for ₦ amounts;
+       nothing here is computed live from views (views only drive the
+       live progress bar in the video-detail pool card). */
     function getPaidBreakdown() {
       const paidVids = (Array.isArray(videosData) ? videosData : [])
         .filter(v => v && v.priceMode === 'paid');
 
-      let computedReleased = 0, computedLocked = 0;
-      let releasedViews = 0, lockedViews = 0;
-      const COIN_TO_NGN = 25;       // 1 Pose Coin = ₦25
-      const CREATOR_SHARE = 0.75;   // 75 % share
+      let released = 0, locked = 0, releasedViews = 0, lockedViews = 0;
 
       paidVids.forEach(v => {
-        const views    = Number(v.views) || 0;
-        const price    = Number(v.coinPrice) || 0;
-        const ngnPerView = price * COIN_TO_NGN * CREATOR_SHARE;
-        const rViews   = Math.floor(views / PAID_VIEW_THRESHOLD) * PAID_VIEW_THRESHOLD;
-        const lViews   = views - rViews;
-        computedReleased += rViews * ngnPerView;
-        computedLocked   += lViews * ngnPerView;
-        releasedViews    += rViews;
-        lockedViews      += lViews;
+        const ngnPerView = (Number(v.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
+        const rViews = Number(v.poolReleasedViews) || 0;
+        released += rViews * ngnPerView;
+        locked   += Number(v.poolBalanceNGN) || 0;
+        releasedViews += rViews;
+        lockedViews   += Number(v.poolPendingViews) || 0;
       });
-
-      const dataTotal     = Number(earningsData?.directRevenue) || 0;
-      const computedTotal = computedReleased + computedLocked;
-      let released = computedReleased, locked = computedLocked;
-
-      if (dataTotal > 0 && computedTotal > 0) {
-        const scale = dataTotal / computedTotal;
-        released = Math.round(computedReleased * scale);
-        locked   = Math.round(computedLocked   * scale);
-      } else if (dataTotal > 0 && computedTotal === 0) {
-        // No view data yet — keep everything locked until 10-view rule met
-        released = 0;
-        locked   = dataTotal;
-      }
 
       return {
         total: released + locked,
@@ -7065,21 +7034,153 @@ async function countAllContent() {
     }
 
     function getReleasedBalance() {
-      return getAdsBreakdown().released + getPaidBreakdown().released;
+      return getPaidBreakdown().released;
     }
     function getLockedBalance() {
-      return getAdsBreakdown().locked + getPaidBreakdown().locked;
+      return getPaidBreakdown().locked;
     }
 
-    /* getTotalBalance now returns ONLY the spendable / withdrawable
-       portion (i.e. after the 1K-views & 10-views rules have been met) */
+    /* getTotalBalance returns ONLY the spendable / withdrawable portion
+       (i.e. after the 10-view rule has been met by a flush) */
     function getTotalBalance() {
       if (!earningsData) return 0;
       return getReleasedBalance();
     }
     function getLifetimeBalance() {
-      if (!earningsData) return 0;
-      return (Number(earningsData.adsRevenue) || 0) + (Number(earningsData.directRevenue) || 0);
+      return Number(earningsData?.directRevenue) || 0;
+    }
+
+    /* ====================================================
+       POOL FLUSH — runs every POOL_FLUSH_INTERVAL_MS while the
+       dashboard is open. Diffs each paid video's views against its
+       last-flush snapshot, adds the delta to that video's pool, and
+       releases any completed 10-view batch into the wallet.
+
+       NOTE: this runs client-side against the Firestore client SDK, so
+       it must be paired with Firestore security rules that only allow a
+       channel owner to write their own channel's pool/earnings fields,
+       and the increments should be validated (e.g. capped per-flush) to
+       avoid a tampered client posting inflated numbers. For real money
+       at scale this is best moved into a scheduled Cloud Function that
+       is the only writer of earnings/summary — the client would then
+       become read-only for balances.
+    ==================================================== */
+    let poolFlushInFlight = false;
+
+    async function flushPaidPoolsIfDue() {
+      if (poolFlushInFlight || !CHANNEL_UID) return;
+      const paidVids = (Array.isArray(videosData) ? videosData : [])
+        .filter(v => v && v.id && v.priceMode === 'paid');
+      if (!paidVids.length) return;
+
+      const now = Date.now();
+      const due = paidVids.filter(v => {
+        const last = v.poolLastFlushAt?.toMillis ? v.poolLastFlushAt.toMillis() : 0;
+        return (now - last) >= POOL_FLUSH_INTERVAL_MS;
+      });
+      if (!due.length) return;
+
+      poolFlushInFlight = true;
+      try {
+        const videosRef = db.collection('channels').doc(CHANNEL_UID).collection('videos');
+        const batch = db.batch();
+        let walletDelta = 0;
+        const timelineEntries = [];
+        const newViewEvents = [];
+
+        due.forEach(v => {
+          const views          = Number(v.views) || 0;
+          const lastViews      = Number(v.poolViewsAtLastFlush) || 0;
+          const newViews       = Math.max(0, views - lastViews);   // diffed once against the last snapshot — never double counted
+          if (newViews > 0) newViewEvents.push({ videoId: v.id, videoTitle: v.title, newViews });
+          const pendingViews   = (Number(v.poolPendingViews) || 0) + newViews;
+          const releasedSoFar  = Number(v.poolReleasedViews) || 0;
+
+          // Unlock rule: a video needs a minimum of PAID_VIEW_THRESHOLD total
+          // views before it earns anything. Once that bar is crossed, this
+          // flush releases ALL pending views at once — there is no fixed
+          // batch size beyond the one-time minimum, so a video that gets
+          // 50 views in a window releases all 50, not just multiples of 10.
+          let releasedViewsNow  = 0;
+          let remainingPending  = pendingViews;
+          if (pendingViews > 0 && (releasedSoFar + pendingViews) >= PAID_VIEW_THRESHOLD) {
+            releasedViewsNow = pendingViews;
+            remainingPending = 0;
+          }
+
+          const ngnPerView  = (Number(v.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
+          const releasedNGN = releasedViewsNow * ngnPerView;
+          const pendingNGN  = remainingPending * ngnPerView;
+
+          batch.update(videosRef.doc(v.id), {
+            poolViewsAtLastFlush: views,
+            poolPendingViews:     remainingPending,
+            poolReleasedViews:    firebase.firestore.FieldValue.increment(releasedViewsNow),
+            poolBalanceNGN:       pendingNGN,
+            poolLastFlushAt:      firebase.firestore.FieldValue.serverTimestamp(),
+          });
+
+          if (releasedNGN > 0) {
+            walletDelta += releasedNGN;
+            timelineEntries.push({ label: `Sales: "${v.title || 'Untitled video'}"`, ngn: Math.round(releasedNGN) });
+
+            const salesRef = db.collection('channels').doc(CHANNEL_UID).collection('salesPayments').doc();
+            batch.set(salesRef, {
+              videoId: v.id,
+              description: `Sales: "${v.title || 'Untitled video'}"`,
+              amount: Math.round(releasedNGN),
+              views: releasedViewsNow,
+              status: 'paid',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          }
+        });
+
+        if (walletDelta > 0) {
+          const summaryRef = db.collection('channels').doc(CHANNEL_UID).collection('earnings').doc('summary');
+          batch.set(summaryRef, {
+            directRevenue: firebase.firestore.FieldValue.increment(Math.round(walletDelta)),
+          }, { merge: true });
+        }
+
+        await batch.commit();
+
+        if (timelineEntries.length) {
+          await appendEarningsTimeline(timelineEntries, walletDelta);
+        }
+        newViewEvents.forEach(ev => queueNotificationEvent('notif1', 'new_view', ev));
+      } catch (e) {
+        console.error('Pool flush failed:', e);
+      } finally {
+        poolFlushInFlight = false;
+      }
+    }
+
+    async function appendEarningsTimeline(entries, walletDelta) {
+      const summaryRef = db.collection('channels').doc(CHANNEL_UID).collection('earnings').doc('summary');
+      await db.runTransaction(async tx => {
+        const snap = await tx.get(summaryRef);
+        const data = snap.exists ? snap.data() : {};
+        const timeline = data.timeline || {};
+
+        ['24h', '72h', '7d', '30d'].forEach(period => {
+          const list = Array.isArray(timeline[period]) ? timeline[period] : [];
+          entries.forEach(e => list.unshift({ ...e, diff: true }));
+          timeline[period] = list.slice(0, 20);
+        });
+
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'short' });
+        const trend = Array.isArray(data.dailyTrend) ? data.dailyTrend.slice() : [];
+        const last  = trend[trend.length - 1];
+        if (last && last.label === today) {
+          last.ngn = (Number(last.ngn) || 0) + walletDelta;
+        } else {
+          trend.push({ label: today, ngn: walletDelta });
+          if (trend.length > 7) trend.shift();
+        }
+
+        tx.set(summaryRef, { timeline, dailyTrend: trend }, { merge: true });
+      });
     }
 
     /* ── Popup open / close ── */
@@ -7169,15 +7270,10 @@ function openWithdrawPopup() {
       balanceRow.parentElement.insertBefore(elig, balanceRow.nextSibling);
     }
   }
-  const ads  = getAdsBreakdown();
   const paid = getPaidBreakdown();
   const reasons = [];
-  if (!ads.unlocked && ads.locked > 0) {
-    const need = ADS_VIEW_THRESHOLD - ads.poolViews;
-    reasons.push(`<b>Ads Revenue</b> locked — channel needs <b>${need.toLocaleString('en-NG')}</b> more views (1,000 total) before ₦${Math.round(ads.locked).toLocaleString('en-NG')} can be withdrawn.`);
-  }
   if (paid.locked > 0) {
-    reasons.push(`<b>Paid Videos</b> have ₦${Math.round(paid.locked).toLocaleString('en-NG')} sitting in the pool — releases every <b>10 views</b> per video.`);
+    reasons.push(`<b>Paid Videos</b> have ₦${Math.round(paid.locked).toLocaleString('en-NG')} sitting in the pool — releases once each video passes <b>10 views</b>, every <b>5 hours</b>.`);
   }
   if (lockedAmt > 0) {
     elig.style.background = '#FFFBEB';
@@ -7394,9 +7490,7 @@ function openSettings() {
   const initial = name.charAt(0).toUpperCase();
   const subs    = fmt(Number(d.subscribers) || 0);
   const coins   = fmt(Number(d.coins) || 0);
-  const earned  = earningsData
-    ? fmtCurr((earningsData.adsRevenue || 0) + (earningsData.directRevenue || 0))
-    : '₦0';
+  const earned  = fmtCurr(earningsData?.directRevenue || 0);
 
   const avatarHTML = d.profileURL
     ? `<img src="${d.profileURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`
@@ -7438,7 +7532,7 @@ function openSettings() {
           </div>
           <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
             <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">🪙 ${coins}</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Pose Coins</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">PCK</div>
           </div>
           <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.15);">
             <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">${subs}</div>
@@ -7456,51 +7550,20 @@ function openSettings() {
             border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
             <i class="fa-solid fa-camera" style="margin-right:6px;font-size:12px;"></i>Change Photo
           </button>
+          <button onclick="openModal('bannerModal')"
+            style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
+            border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
+            <i class="fa-solid fa-image" style="margin-right:6px;font-size:12px;"></i>Change Background
+          </button>
         </div>
-      </div>div><div style="height:8px;background:var(--gray-200);border-radius:99px;overflow:hidden;"><div style="height:100%;width:25%;background:#D1D5DB;border-radius:99px;"></div></div>
-                    </div>
-                  </div>
-                </div>
-                <button onclick="openModal('coinPriceModal')"
-                  style="width:100%;padding:12px;border-radius:11px;background:var(--purple-main);color:white;font-size:13px;font-weight:600;cursor:pointer;border:none;box-shadow:0 4px 14px rgba(124,58,237,.3);">
-                  <i class="fa-solid fa-coins" style="margin-right:6px;"></i>Set Coin Price for Next Upload
-                </button>
-              </div>
-            </div>
-            <div id="panel-ads" style="display:none;">
-              <div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:18px;">
-                <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center;">
-                  <div style="background:linear-gradient(135deg,#92400E,#D97706);width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <i class="fa-solid fa-rectangle-ad" style="color:white;font-size:16px;"></i>
-                  </div>
-                  <div>
-                    <div style="font-size:14px;font-weight:700;color:var(--text-main);">Ad Revenue — Free Videos</div>
-                    <div style="font-size:11.5px;color:#B45309;">Earn from views on your free content</div>
-                  </div>
-                </div>
-                <div style="background:white;border-radius:10px;padding:12px;border:1px solid #FDE68A;margin-bottom:12px;">
-                  <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#FEF3C7;border-radius:9px;">
-                    <i class="fa-solid fa-eye" style="color:#D97706;font-size:18px;"></i>
-                    <div>
-                      <div style="font-size:13px;font-weight:700;color:#92400E;">₦200–₦500 per 1,000 views</div>
-                      <div style="font-size:11.5px;color:#B45309;">Minimum 1,000 free views to unlock payout</div>
-                    </div>
-                  </div>
-                </div>
-                <button onclick="openModal('boostModal')"
-                  style="width:100%;padding:12px;border-radius:11px;background:linear-gradient(135deg,#92400E,#D97706);color:white;font-size:13px;font-weight:600;cursor:pointer;border:none;">
-                  <i class="fa-solid fa-rocket" style="margin-right:6px;"></i>Boost a Video Now
-                </button>
-              </div>
-            </div>
-          </div>
+      </div>
 
-          <!-- NOTIFICATIONS -->
+      <!-- NOTIFICATIONS -->
           <div class="card" style="padding:22px;margin-bottom:20px;">
             <div class="sett-section-title"><i class="fa-solid fa-bell" style="color:var(--purple-main);margin-right:8px;"></i>Notifications</div>
             ${[
               { id:'notif1', label:'New view on paid video',  desc:'Notify when someone buys a view',       on: true  },
-              { id:'notif2', label:'Ad revenue milestone',    desc:'Alert at ₦5K, ₦10K, ₦50K earned',      on: true  },
+              { id:'notif2', label:'Earnings milestone',      desc:'Alert at ₦5K, ₦10K, ₦50K earned',      on: true  },
               { id:'notif3', label:'New follower',            desc:'When someone follows your channel',     on: true  },
               { id:'notif4', label:'Comment on video',        desc:'Get notified on new comments',          on: false },
               { id:'notif5', label:'Payout processed',        desc:'When earnings are sent to your bank',   on: true  },
@@ -7514,7 +7577,7 @@ function openSettings() {
                   </div>
                 </div>
                 <label class="sett-toggle">
-                  <input type="checkbox" ${n.on ? 'checked' : ''} onchange="saveNotifPref('${n.id}', this.checked)">
+                  <input type="checkbox" ${isNotifEnabled(n.id) ? 'checked' : ''} onchange="saveNotifPref('${n.id}', this.checked)">
                   <span class="sett-slider"></span>
                 </label>
               </div>`).join('')}
@@ -7556,13 +7619,6 @@ function openSettings() {
 </div>
 
         </div><!-- /max-width -->
-
-        <div id="settModals"></div>
-        <div id="settToast"
-          style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
-          background:var(--text-main);color:white;padding:10px 22px;border-radius:30px;
-          font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:9999;
-          pointer-events:none;white-space:nowrap;"></div>
       `;
 
       ['page-home','page-studio','page-earnings','page-legibility'].forEach(id => {
@@ -7587,6 +7643,92 @@ setTimeout(loadChannelSwitchList, 500);
           .update({ [`notifications.${key}`]: value });
         showToast('Notification preference saved');
       } catch { showToast('Preference saved locally'); }
+    }
+
+    /* ====================================================
+       NOTIFICATION EVENTS
+       ────────────────────────────────────────────────────
+       This dashboard cannot send email itself — that needs a server
+       holding a secret API key. Instead, each trigger below writes a
+       small doc to channels/{id}/notificationEvents. A Cloud Function
+       (built separately) is meant to watch that collection, send the
+       actual email via a provider, and mark sent:true.
+    ==================================================== */
+    const NOTIF_DEFAULTS = { notif1: true, notif2: true, notif3: true, notif4: false, notif5: true };
+
+    function isNotifEnabled(id) {
+      const saved = channelData?.notifications?.[id];
+      return saved !== undefined ? !!saved : !!NOTIF_DEFAULTS[id];
+    }
+
+    async function queueNotificationEvent(notifId, type, payload) {
+      if (!CHANNEL_UID || !isNotifEnabled(notifId)) return;
+      const email = auth.currentUser?.email || channelData?.email || '';
+      if (!email) return;
+      try {
+        await db.collection('channels').doc(CHANNEL_UID)
+          .collection('notificationEvents').add({
+            notifId, type, email, payload,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            sent: false,
+          });
+      } catch (e) { console.error('Failed to queue notification event:', e); }
+    }
+
+    /* ====================================================
+       INBOX — admin → channel messages (channels/{id}/inbox)
+       Read/display only here; writing happens from the admin side
+       (no admin UI exists yet — build that as a separate page later).
+    ==================================================== */
+    function updateInboxBadge() {
+      const badge = document.getElementById('inboxBadge');
+      if (!badge) return;
+      const unread = inboxMessages.filter(m => !m.read).length;
+      badge.textContent = unread > 9 ? '9+' : String(unread);
+      badge.style.display = unread > 0 ? 'flex' : 'none';
+    }
+
+    function openInboxPopup() {
+      document.getElementById('inboxPopup')?.classList.remove('hidden');
+      renderInboxList();
+    }
+    function closeInboxPopup() {
+      document.getElementById('inboxPopup')?.classList.add('hidden');
+    }
+
+    function renderInboxList() {
+      const list = document.getElementById('inboxList');
+      if (!list) return;
+      if (!inboxMessages.length) {
+        list.innerHTML = `<div style="text-align:center;padding:36px 12px;color:var(--gray-400);font-size:13px;">
+          <i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:10px;opacity:.4;"></i>
+          No messages yet
+        </div>`;
+        return;
+      }
+      list.innerHTML = inboxMessages.map(m => {
+        const dt = m.createdAt?.toDate ? m.createdAt.toDate() : (m.createdAt ? new Date(m.createdAt) : null);
+        const dateStr = dt ? dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
+        return `
+          <div class="inbox-item ${m.read ? '' : 'unread'}" onclick="markInboxRead('${m.id}')">
+            <div class="inbox-item-top">
+              <div style="display:flex;align-items:center;gap:8px;">
+                ${m.read ? '' : '<span class="inbox-unread-dot"></span>'}
+                <span class="inbox-item-subject">${m.subject || 'Message from Pose'}</span>
+              </div>
+              <span class="inbox-item-date">${dateStr}</span>
+            </div>
+            <div class="inbox-item-msg">${m.message || ''}</div>
+          </div>`;
+      }).join('');
+    }
+
+    async function markInboxRead(id) {
+      const msg = inboxMessages.find(m => m.id === id);
+      if (!msg || msg.read) return;
+      try {
+        await db.collection('channels').doc(CHANNEL_UID).collection('inbox').doc(id).update({ read: true });
+      } catch (e) { console.error('Failed to mark inbox message read:', e); }
     }
 
     function showToast(msg) {
@@ -7650,26 +7792,15 @@ setTimeout(loadChannelSwitchList, 500);
           </button>
           <button onclick="closeModal()" style="width:100%;padding:11px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>`,
 
-        coinPriceModal: `
-          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;">Set Coin Price</h3>
-          <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:20px;">Choose how many Pose Coins viewers pay to watch your next upload.</p>
-          <div style="background:var(--purple-ghost);border-radius:14px;padding:16px;margin-bottom:16px;">
-            <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--purple-deep);text-align:center;margin:12px 0 4px;" id="coinVal">🪙 8</div>
-            <div style="font-size:13px;color:var(--gray-500);text-align:center;margin-bottom:16px;" id="coinNaira">₦200 per view · 1 coin = ₦25</div>
-            <input type="range" style="width:100%;margin:10px 0;" min="1" max="40" value="8" id="coinSlider"
-              oninput="const v=+this.value; const ngn=v*25; const lp=getCoinLocalPrice(v); const uc=getUserCurrency(); document.getElementById('coinVal').textContent='🪙 '+v; document.getElementById('coinNaira').textContent= uc.code==='NGN'||!userCurrencyRates[uc.code] ? '₦'+ngn.toLocaleString('en-NG')+' per view · 1 coin = ₦25' : '₦'+ngn.toLocaleString('en-NG')+' · '+lp+' per view · 1 coin = ₦25'; document.getElementById('coinCat').textContent=v<=8?'Short Video':v<=20?'Medium Video':'Movie / Long';">
-            <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--gray-400);margin-top:4px;">
-              <span>🪙1 (₦25)</span><span>🪙40 (₦1,000)</span>
-            </div>
-          </div>
-          <div style="background:white;border-radius:11px;padding:12px 14px;border:1px solid var(--gray-200);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:13px;color:var(--gray-500);">Category</span>
-            <span style="font-size:13px;font-weight:700;color:var(--purple-deep);" id="coinCat">Short Video</span>
-          </div>
-          <div style="display:flex;gap:10px;">
-            <button onclick="saveCoinPrice()" style="flex:1;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;">Confirm Price</button>
-            <button onclick="closeModal()" style="padding:11px 18px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>
-          </div>`,
+        bannerModal: `
+          <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;">Change Channel Banner</h3>
+          <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:16px;">Upload a new background/banner image for your channel.</p>
+          <input type="file" id="newBannerFile" accept="image/*" style="display:none" onchange="uploadNewBanner(this)" />
+          <button onclick="document.getElementById('newBannerFile').click()"
+            style="width:100%;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;">
+            <i class="fa-solid fa-image" style="margin-right:6px;"></i>Choose Banner Image
+          </button>
+          <button onclick="closeModal()" style="width:100%;padding:11px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>`,
 
         boostModal: `
           <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;">Boost a Video</h3>
@@ -7705,11 +7836,11 @@ setTimeout(loadChannelSwitchList, 500);
       container.innerHTML = `
         <div onclick="if(event.target===this)closeModal();"
           style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;
-          display:flex;align-items:flex-end;justify-content:center;padding:0;">
-          <div style="background:white;border-radius:24px 24px 0 0;padding:28px 24px 40px;
-            width:100%;max-width:520px;max-height:85vh;overflow-y:auto;
-            animation:slideUp .3s cubic-bezier(.25,.8,.25,1);">
-            <div style="width:40px;height:4px;background:var(--gray-200);border-radius:99px;margin:0 auto 22px;"></div>
+          display:flex;align-items:center;justify-content:center;padding:20px;">
+          <div style="background:white;border-radius:24px;padding:28px 24px;
+            width:100%;max-width:480px;max-height:85vh;overflow-y:auto;
+            box-shadow:0 12px 48px rgba(0,0,0,.3);
+            animation:popIn .3s cubic-bezier(.25,.8,.25,1);">
             ${content}
           </div>
         </div>`;
@@ -7765,13 +7896,27 @@ setTimeout(loadChannelSwitchList, 500);
       } catch (e) { showToast('Upload failed: ' + e.message); }
     }
 
-    async function saveCoinPrice() {
-      const price = Number(document.getElementById('coinSlider')?.value) || 8;
+    async function uploadNewBanner(input) {
+      const file = input.files[0];
+      if (!file) return;
+      showToast('Uploading banner…');
       try {
-        await db.collection('channels').doc(CHANNEL_UID).update({ defaultCoinPrice: price });
+        const data = await window.PoseUploadService.upload(file, {
+          folder: 'channel-banners',
+          resourceType: 'image'
+        });
+        const url = data.secure_url;
+        await db.collection('channels').doc(CHANNEL_UID).update({ bannerURL: url });
+        const banner = document.querySelector('.channel-banner');
+        if (banner) {
+          banner.style.backgroundImage    = `url('${url}')`;
+          banner.style.backgroundSize     = 'cover';
+          banner.style.backgroundPosition = 'center';
+          banner.style.backgroundRepeat   = 'no-repeat';
+        }
         closeModal();
-        showToast(`Coin price set to 🪙 ${price}`);
-      } catch (e) { showToast('Save failed: ' + e.message); }
+        showToast('Channel banner updated!');
+      } catch (e) { showToast('Upload failed: ' + e.message); }
     }
 
     function closeSettings() {
@@ -9831,12 +9976,11 @@ function renderAvSingle() {
 
     const thumbBg = v.thumbnailURL ? 'background:#000;' : '';
     const coins   = Number(v.coinPrice) || 0;
-    const rev     = Number(v.revenue)   || 0;
     const isPaid  = v.priceMode === 'paid';
     const isSched = v.isScheduled && v.scheduleDate;
 
     const priceBadge = isPaid
-      ? `<span class="av-badge av-badge-paid">🪙 ${coins} Pose Coins</span>`
+      ? `<span class="av-badge av-badge-paid">🪙 ${coins} PCK</span>`
       : `<span class="av-badge av-badge-free"><i class="fas fa-rectangle-ad"></i> Ad-Supported</span>`;
 
     const schedBadge = isSched
@@ -9847,11 +9991,11 @@ function renderAvSingle() {
       ? `<span class="av-badge" style="${avRatingColor(v.ageRating)}">${avRatingLabel(v.ageRating)}</span>`
       : '';
 
-    const revLine = rev > 0
-      ? `<div class="av-vcard-revenue">
-           🪙 ${Math.round(rev * (usdToNgn || 1620) / 30).toLocaleString()} earned
-           &nbsp;·&nbsp; ₦${(rev * (usdToNgn || 1620)).toLocaleString('en-NG', {maximumFractionDigits:0})}
-         </div>`
+    // Real released earnings from the pool flush — not a live/legacy estimate.
+    const releasedViewsL = Number(v.poolReleasedViews) || 0;
+    const releasedPCK    = Math.round(releasedViewsL * coins * PCK_TO_NGN * CREATOR_SHARE);
+    const revLine = isPaid && releasedPCK > 0
+      ? `<div class="av-vcard-revenue">🪙 ${releasedPCK.toLocaleString()} PCK earned</div>`
       : '';
 
     return `
@@ -10234,9 +10378,6 @@ function renderVdPlayer(video) {
 /* ── Body ── */
 function renderVdBody(video) {
   const body  = document.getElementById('vdBody');
-  const rev   = Number(video.revenue)   || 0;
-  const coins = Math.round(rev * (usdToNgn || 1620) / 25);
-  const naira = (rev * (usdToNgn || 1620)).toLocaleString('en-NG', { maximumFractionDigits: 0 });
   const isPaid  = video.priceMode === 'paid';
   const isSched = video.isScheduled;
 
@@ -10262,7 +10403,7 @@ function renderVdBody(video) {
   // Price badge
   const priceBadge = isPaid
     ? `<span class="vd-badge" style="background:var(--purple-pale);color:var(--purple-deep);">
-         🪙 ${video.coinPrice || 0} Pose Coins
+         🪙 ${video.coinPrice || 0} PCK
        </span>`
     : `<span class="vd-badge" style="background:#D1FAE5;color:#065F46;">
          <i class="fas fa-rectangle-ad"></i> Free · Ad-Supported
@@ -10280,129 +10421,47 @@ function renderVdBody(video) {
          <i class="fas fa-film"></i> Single Video
        </span>`;
 
-  // ── Views Pool card ──
+  // ── Pool card — paid videos only; free videos are never monetized ──
   let poolCardHTML = '';
   if (!isPaid) {
-    /* FREE / AD-SUPPORTED — channel-wide 1,000-view threshold */
-    const freeVids = (Array.isArray(videosData) ? videosData : [])
-      .filter(v => v && v.priceMode !== 'paid');
-    const poolViews   = freeVids.reduce((s, v) => s + (Number(v.views) || 0), 0);
-    const thisViews   = Number(video.views) || 0;
-    const sharePct    = poolViews > 0 ? Math.min(100, (thisViews / poolViews) * 100) : 0;
-    const otherViews  = Math.max(0, poolViews - thisViews);
-    const otherCount  = Math.max(0, freeVids.length - 1);
-
-    const THRESH      = (typeof ADS_VIEW_THRESHOLD !== 'undefined') ? ADS_VIEW_THRESHOLD : 1000;
-    const unlocked    = poolViews >= THRESH;
-    const progressPct = Math.min(100, (poolViews / THRESH) * 100);
-    const need        = Math.max(0, THRESH - poolViews);
-
-    /* Estimate ad rate per view (matches the per-view rate used elsewhere) */
-    const ngnPerView  = (usdToNgn || 1620) * 0.00208;            // ~₦3.4 mid-rate
-    const thisEarnNGN = thisViews * ngnPerView;                  // this video's contribution
-    const poolEarnNGN = poolViews * ngnPerView;                  // total channel pool
-
     poolCardHTML = `
       <div class="vd-pool-card">
         <div class="vd-pool-header">
-          <div class="vd-pool-icon"><i class="fas fa-chart-pie"></i></div>
+          <div class="vd-pool-icon"><i class="fas fa-circle-info"></i></div>
           <div>
-            <div class="vd-pool-title">Views Pool · 1,000-View Payout</div>
-            <div class="vd-pool-sub">How this free video earns you money</div>
+            <div class="vd-pool-title">Free Video · No Pool</div>
+            <div class="vd-pool-sub">Free videos don't generate earnings</div>
           </div>
-          <span class="vd-pool-badge" style="background:${unlocked?'#D1FAE5':'#FEF3C7'};color:${unlocked?'#065F46':'#92400E'};">
-            ${unlocked ? '✅ UNLOCKED' : '🔒 LOCKED'}
-          </span>
         </div>
-
-        <div class="vd-pool-notice" style="${unlocked?'background:#ECFDF5;border-color:#A7F3D0;':''}">
+        <div class="vd-pool-notice">
           <i class="fas fa-circle-info"></i>
           <span>
-            <b>Your ad-supported videos don't earn one-by-one.</b>
-            Every view from every free video on your channel flows into <b>one shared Views Pool</b>.
-            Once the channel hits <b>1,000 pool views</b>, the matching Ads Revenue is released
-            from the pool to your withdrawable Earnings — and another batch is released for every
-            extra <b>1,000</b> views after that. <b>No monthly waiting.</b>
+            No payment is made for views on free videos, so there's no pool here —
+            views only build reach and audience. To start earning from this video,
+            set it as a <b>paid video</b>.
           </span>
         </div>
-
-        <!-- 1K threshold progress -->
-        <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--text-main);margin-bottom:6px;">
-          <span><i class="fas fa-bolt" style="color:#F59E0B;margin-right:4px;"></i> Pool unlock progress</span>
-          <span style="color:${unlocked?'#065F46':'#92400E'};">${fmt(poolViews)} / ${THRESH.toLocaleString('en-NG')}${unlocked?' ✅':''}</span>
-        </div>
-        <div class="vd-pool-bar" style="background:#FEF3C7;">
-          <div class="vd-pool-bar-fill" style="width:${progressPct.toFixed(1)}%;background:linear-gradient(90deg,${unlocked?'#10B981,#059669':'#F59E0B,#D97706'});"></div>
-        </div>
-        <div class="vd-pool-bar-legend">
-          ${unlocked
-            ? `<span style="color:#065F46;font-weight:700;">✅ Pool unlocked — earnings flow to your Ads Revenue.</span>`
-            : `<span style="color:#92400E;font-weight:700;">🔒 Need <b>${need.toLocaleString('en-NG')}</b> more view${need===1?'':'s'} to unlock the pool.</span>`}
-        </div>
-
-        <!-- This video's share of pool -->
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray-500);margin:10px 0 4px;">
-          <span><span class="vd-dot vd-dot-this"></span> This video · ${fmt(thisViews)} views (${sharePct.toFixed(1)}%)</span>
-          <span><span class="vd-dot vd-dot-other"></span> ${otherCount} other free video${otherCount===1?'':'s'} · ${fmt(otherViews)} views</span>
-        </div>
-        <div class="vd-pool-bar">
-          <div class="vd-pool-bar-fill" style="width:${sharePct.toFixed(1)}%;"></div>
-        </div>
-
-        <div class="vd-pool-grid" style="margin-top:14px;">
-          <div class="vd-pool-stat">
-            <div class="vd-pool-stat-val">${fmt(thisViews)}</div>
-            <div class="vd-pool-stat-lbl">This video's views</div>
-          </div>
-          <div class="vd-pool-stat">
-            <div class="vd-pool-stat-val">${fmt(poolViews)}</div>
-            <div class="vd-pool-stat-lbl">Total Pool views</div>
-          </div>
-          <div class="vd-pool-stat">
-            <div class="vd-pool-stat-val">${sharePct.toFixed(1)}%</div>
-            <div class="vd-pool-stat-lbl">Your share of pool</div>
-          </div>
-          <div class="vd-pool-stat vd-pool-stat-accent">
-            <div class="vd-pool-stat-val">₦${Math.round(thisEarnNGN).toLocaleString('en-NG')}</div>
-            <div class="vd-pool-stat-lbl">${unlocked?'Adds to Ads Revenue':'Locked until 1K'}</div>
-          </div>
-        </div>
-
-        <div class="vd-pool-flow">
-          <div class="vd-pool-flow-step">👁 Views</div>
-          <i class="fas fa-arrow-right vd-pool-arrow"></i>
-          <div class="vd-pool-flow-step vd-pool-flow-pool">🏦 Pool (1K)</div>
-          <i class="fas fa-arrow-right vd-pool-arrow"></i>
-          <div class="vd-pool-flow-step vd-pool-flow-rev">💰 Ads Revenue</div>
-          <i class="fas fa-arrow-right vd-pool-arrow"></i>
-          <div class="vd-pool-flow-step vd-pool-flow-take">🏠 Withdraw</div>
-        </div>
-
-        <div class="vd-pool-notif">
-          <div class="vd-pool-notif-icon"><i class="fas fa-bell"></i></div>
-          <div class="vd-pool-notif-text">
-            <b>Heads up:</b> Ads Revenue is released to your spendable Earnings every
-            <b>1,000 channel views</b> from ad-supported videos — <b>no monthly schedule</b>.
-            Until then it stays in the pool and can't be withdrawn.
-          </div>
-        </div>
-
-        <button class="vd-pool-cta" type="button"
-          onclick="closeVideoDetail();onMainTab(document.querySelector('.tab-item[data-tab=&quot;earnings&quot;]'),'earnings');">
-          <i class="fas fa-coins"></i> See it in Ads Revenue →
-        </button>
       </div>`;
   } else {
-    /* PAID — per-video 10-view threshold; releases in 10-view batches */
-    const PAID_THRESH = (typeof PAID_VIEW_THRESHOLD !== 'undefined') ? PAID_VIEW_THRESHOLD : 10;
-    const thisViews   = Number(video.views) || 0;
-    const releasedV   = Math.floor(thisViews / PAID_THRESH) * PAID_THRESH;
-    const lockedV     = thisViews - releasedV;
-    const need        = PAID_THRESH - lockedV;
-    const ngnPerView  = (Number(video.coinPrice) || 0) * 25 * 0.75;
-    const releasedNGN = releasedV * ngnPerView;
-    const lockedNGN   = lockedV   * ngnPerView;
-    const batchPct    = (lockedV / PAID_THRESH) * 100;
+    /* PAID — per-video 10-view threshold. Views shown live; ₦ figures come
+       from the persisted pool state written by the 5-hour flush
+       (flushPaidPoolsIfDue) — not computed live from the view count. */
+    const thisViews    = Number(video.views) || 0;                    // live
+    const releasedV    = Number(video.poolReleasedViews) || 0;        // flushed
+    const pendingV      = Number(video.poolPendingViews) || 0;         // flushed, < 10
+    const uncalculatedV = Math.max(0, thisViews - releasedV - pendingV); // seen live, not yet swept into a flush
+    const need          = PAID_VIEW_THRESHOLD - pendingV;
+    const ngnPerView    = (Number(video.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
+    const releasedNGN   = releasedV * ngnPerView;
+    const lockedNGN     = Number(video.poolBalanceNGN) || 0;
+    const batchPct      = (pendingV / PAID_VIEW_THRESHOLD) * 100;
+
+    const lastFlushMs = video.poolLastFlushAt?.toMillis ? video.poolLastFlushAt.toMillis() : 0;
+    let lastFlushLabel = 'not calculated yet';
+    if (lastFlushMs) {
+      const mins = Math.round((Date.now() - lastFlushMs) / 60000);
+      lastFlushLabel = mins < 60 ? `${mins}m ago` : `${Math.round(mins / 60)}h ago`;
+    }
 
     poolCardHTML = `
       <div class="vd-pool-card" style="border-left-color:#F59E0B;">
@@ -10411,7 +10470,7 @@ function renderVdBody(video) {
             <i class="fas fa-coins"></i>
           </div>
           <div>
-            <div class="vd-pool-title">Paid Pool · 10-View Payout</div>
+            <div class="vd-pool-title">Paid Pool · 10-View Minimum</div>
             <div class="vd-pool-sub">How this paid video pays out</div>
           </div>
           <span class="vd-pool-badge" style="background:${releasedV>0?'#D1FAE5':'#FEF3C7'};color:${releasedV>0?'#065F46':'#92400E'};">
@@ -10422,37 +10481,40 @@ function renderVdBody(video) {
         <div class="vd-pool-notice" style="background:#FFFBEB;border-color:#FDE68A;">
           <i class="fas fa-circle-info" style="color:#D97706;"></i>
           <span>
-            Paid videos earn into a <b>per-video pool</b>. For every <b>10 views</b> this video
-            gets, the matching earnings are released from the pool into your
-            withdrawable Earnings — automatically, in batches of 10. Below 10 views the money is
-            <b>locked in the pool</b> and can't be withdrawn yet.
+            Views are calculated into this video's pool every <b>5 hours</b>. A video needs
+            at least <b>10 total views</b> to start earning — once that's crossed, every
+            view calculated each cycle releases straight to your withdrawable Earnings,
+            however many the video gets in that window. Last calculated <b>${lastFlushLabel}</b>.
           </span>
         </div>
 
-        <!-- 10-view batch progress -->
+        ${releasedV > 0 ? `
+        <div class="vd-pool-bar-legend" style="margin-top:2px;">
+          <span style="color:#065F46;font-weight:700;">✅ Earning on every view</span>
+          <span style="color:#92400E;font-weight:700;">${pendingV > 0 ? fmt(pendingV) + ' pending this cycle' : 'releases every 5h'}</span>
+        </div>
+        ` : `
         <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--text-main);margin-bottom:6px;">
-          <span><i class="fas fa-bolt" style="color:#F59E0B;margin-right:4px;"></i> Next batch in</span>
-          <span style="color:${need===PAID_THRESH?'#065F46':'#92400E'};">${need===PAID_THRESH?'just released ✅':need + ' view' + (need===1?'':'s')}</span>
+          <span><i class="fas fa-bolt" style="color:#F59E0B;margin-right:4px;"></i> Unlock progress</span>
+          <span style="color:#92400E;">${need} more view${need===1?'':'s'} to start earning</span>
         </div>
         <div class="vd-pool-bar" style="background:#FEF3C7;">
           <div class="vd-pool-bar-fill" style="width:${batchPct.toFixed(1)}%;background:linear-gradient(90deg,#F59E0B,#D97706);"></div>
         </div>
-        <div class="vd-pool-bar-legend">
-          <span style="color:#92400E;font-weight:700;">${lockedV} / ${PAID_THRESH} pending in pool</span>
-          <span style="color:#065F46;font-weight:700;">${releasedV} view${releasedV===1?'':'s'} already released</span>
-        </div>
+        `}
+        ${uncalculatedV > 0 ? `<div style="font-size:10.5px;color:var(--gray-400);margin-top:6px;">${fmt(uncalculatedV)} view${uncalculatedV===1?'':'s'} seen live, not yet swept into the pool — next flush in ≤5h.</div>` : ''}
 
         <div class="vd-pool-grid" style="margin-top:14px;">
           <div class="vd-pool-stat">
             <div class="vd-pool-stat-val">${fmt(thisViews)}</div>
-            <div class="vd-pool-stat-lbl">Total views</div>
+            <div class="vd-pool-stat-lbl">Total views (live)</div>
           </div>
           <div class="vd-pool-stat">
             <div class="vd-pool-stat-val">${fmt(releasedV)}</div>
             <div class="vd-pool-stat-lbl">Released views</div>
           </div>
           <div class="vd-pool-stat">
-            <div class="vd-pool-stat-val">${fmt(lockedV)}</div>
+            <div class="vd-pool-stat-val">${fmt(pendingV)}</div>
             <div class="vd-pool-stat-lbl">Locked in pool</div>
           </div>
           <div class="vd-pool-stat vd-pool-stat-accent">
@@ -10464,7 +10526,7 @@ function renderVdBody(video) {
         <div class="vd-pool-flow">
           <div class="vd-pool-flow-step">👁 Views</div>
           <i class="fas fa-arrow-right vd-pool-arrow"></i>
-          <div class="vd-pool-flow-step vd-pool-flow-pool" style="background:#FEF3C7;color:#92400E;border-color:#FDE68A;">🏦 Paid Pool (10)</div>
+          <div class="vd-pool-flow-step vd-pool-flow-pool" style="background:#FEF3C7;color:#92400E;border-color:#FDE68A;">🏦 Pool (releases every 5h)</div>
           <i class="fas fa-arrow-right vd-pool-arrow"></i>
           <div class="vd-pool-flow-step vd-pool-flow-rev">💰 Direct Sales</div>
           <i class="fas fa-arrow-right vd-pool-arrow"></i>
@@ -10475,7 +10537,8 @@ function renderVdBody(video) {
           <div class="vd-pool-notif-icon"><i class="fas fa-bell"></i></div>
           <div class="vd-pool-notif-text">
             <b>Heads up:</b> withdrawals only include <b>released</b> earnings.
-            Each paid video must reach <b>10 views</b> per batch before its money leaves the pool.
+            A video must reach <b>10 total calculated views</b> before it earns anything —
+            after that every view releases each 5-hour cycle, no batching.
           </div>
         </div>
 
@@ -10486,26 +10549,30 @@ function renderVdBody(video) {
       </div>`;
   }
 
-  // Revenue card (only if any earned or paid)
+  // Revenue card — paid videos only; free videos earn nothing.
+  // Sourced from the same pool state as the Paid Pool card above (real
+  // released earnings from flushPaidPoolsIfDue), not a live/legacy estimate.
   let revCardHTML = '';
-  if (rev > 0 || isPaid) {
-    const perView = isPaid
-      ? `₦${((video.coinPrice || 0) * 30 * .75).toLocaleString('en-NG')} per view (75% share)`
-      : `₦${((usdToNgn || 1620) * 0.00081).toFixed(0)}–₦${((usdToNgn || 1620) * 0.0035).toFixed(0)} per view via ads`;
+  if (isPaid) {
+    const releasedViewsR = Number(video.poolReleasedViews) || 0;
+    const ngnPerViewR    = (Number(video.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
+    const totalPCK       = Math.round(releasedViewsR * ngnPerViewR);
+    const totalNaira     = totalPCK.toLocaleString('en-NG');
+    const perView        = `${((video.coinPrice || 0) * CREATOR_SHARE).toLocaleString('en-NG')} PCK per view (75% share)`;
 
     revCardHTML = `
       <div class="vd-rev-card">
         <div class="vd-rev-lbl"><i class="fas fa-coins" style="margin-right:5px;"></i>Revenue</div>
-        <div class="vd-rev-main">🪙 ${coins.toLocaleString()}</div>
-        <div class="vd-rev-naira">₦${naira} total earned</div>
+        <div class="vd-rev-main">🪙 ${totalPCK.toLocaleString()} PCK</div>
+        <div class="vd-rev-naira">₦${totalNaira} total earned (released)</div>
         <div class="vd-rev-row">
           <div class="vd-rev-mini">
-            <div class="vd-rev-mini-val">₦${naira}</div>
+            <div class="vd-rev-mini-val">₦${totalNaira}</div>
             <div class="vd-rev-mini-lbl">In Naira</div>
           </div>
           <div class="vd-rev-mini">
-            <div class="vd-rev-mini-val">🪙 ${coins.toLocaleString()}</div>
-            <div class="vd-rev-mini-lbl">Pose Coins</div>
+            <div class="vd-rev-mini-val">🪙 ${totalPCK.toLocaleString()}</div>
+            <div class="vd-rev-mini-lbl">Pose Coin Kobo</div>
           </div>
           <div class="vd-rev-mini">
             <div class="vd-rev-mini-val" style="font-size:11px;">${perView}</div>
@@ -10610,14 +10677,14 @@ function renderVdBody(video) {
       <div class="vd-info-row">
         <span class="vd-info-key"><i class="fas fa-coins"></i> Pricing</span>
         <span class="vd-info-val">${isPaid
-          ? `🪙 ${video.coinPrice || 0} Pose Coins = ₦${((video.coinPrice || 0) * 30).toLocaleString()}`
+          ? `🪙 ${video.coinPrice || 0} PCK = ₦${((video.coinPrice || 0) * PCK_TO_NGN).toLocaleString()}`
           : 'Free · Ad-Supported'}</span>
       </div>
       ${isPaid ? `
       <div class="vd-info-row">
         <span class="vd-info-key"><i class="fas fa-handshake"></i> Your Cut</span>
         <span class="vd-info-val" style="color:var(--green);">
-          75% · 🪙 ${Math.round((video.coinPrice || 0) * .75)} per view
+          75% · 🪙 ${Math.round((video.coinPrice || 0) * CREATOR_SHARE)} PCK per view
         </span>
       </div>` : ''}
       <div class="vd-info-row">
@@ -11069,11 +11136,11 @@ function editPricing() {
           <i class="fas fa-rectangle-ad"></i> Free (Ads)
         </button>
         <button type="button" id="vdPmPaid" class="vd-pm-opt ${isPaid ? 'active' : ''}" onclick="vdSetPriceMode('paid')">
-          <i class="fas fa-coins"></i> Paid (Coins)
+          <i class="fas fa-coins"></i> Paid (PCK)
         </button>
       </div>
       <div id="vdPriceInputWrap" style="display:${isPaid ? 'block' : 'none'};margin-bottom:6px;">
-        <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:6px;">Price in Pose Coins</label>
+        <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:6px;">Price in Pose Coin Kobo (PCK)</label>
         <input type="number" min="1" class="vd-resched-input" id="vdPriceCoins" value="${curCoins}" oninput="vdUpdatePriceNaira()" style="margin-bottom:6px;">
         <div style="font-size:11.5px;color:var(--gray-400);margin-bottom:14px;" id="vdPriceNaira"></div>
       </div>
@@ -11099,7 +11166,7 @@ function vdUpdatePriceNaira() {
   const el = document.getElementById('vdPriceNaira');
   if (!el) return;
   const coins = Number(document.getElementById('vdPriceCoins')?.value) || 0;
-  el.textContent = `≈ ₦${(coins * 30).toLocaleString()} for viewers · you keep 75% (₦${Math.round(coins * 30 * .75).toLocaleString()})`;
+  el.textContent = `≈ ₦${(coins * PCK_TO_NGN).toLocaleString()} for viewers · you keep 75% (₦${Math.round(coins * PCK_TO_NGN * CREATOR_SHARE).toLocaleString()})`;
 }
 function closePricing() {
   const o = document.getElementById('vdPricingOverlay');
@@ -11304,19 +11371,7 @@ async function loadTransactions() {
       id: d.id, ...d.data(), _type: 'payout',
     }));
 
-    /* ad payments (may not exist yet) */
-    let adsEntries = [];
-    try {
-      const snap = await db.collection('channels').doc(CHANNEL_UID)
-        .collection('adPayments')
-        .orderBy('createdAt', 'desc')
-        .limit(30).get();
-      adsEntries = snap.docs.map(d => ({
-        id: d.id, ...d.data(), _type: 'ads',
-      }));
-    } catch (_) {}
-
-    /* direct sales payments (may not exist yet) */
+    /* direct sales payments — written by each pool flush (flushPaidPoolsIfDue) */
     let salesEntries = [];
     try {
       const snap = await db.collection('channels').doc(CHANNEL_UID)
@@ -11328,14 +11383,9 @@ async function loadTransactions() {
       }));
     } catch (_) {}
 
-    /* merge and sort newest first */
-    allTransactions = [...withdrawals, ...adsEntries, ...salesEntries]
+    /* merge and sort newest first — real data only, no demo fallback */
+    allTransactions = [...withdrawals, ...salesEntries]
       .sort((a, b) => txnTimestamp(b) - txnTimestamp(a));
-
-    /* show demo data if nothing stored yet */
-    if (!allTransactions.length) {
-      allTransactions = buildDemoTransactions();
-    }
 
     renderTransactions();
   } catch (e) {
@@ -11347,32 +11397,6 @@ function txnTimestamp(t) {
   const src = t.requestedAt || t.createdAt || t.paidAt;
   if (!src) return 0;
   return src.toMillis ? src.toMillis() : new Date(src).getTime();
-}
-
-function buildDemoTransactions() {
-  const now = Date.now();
-  return [
-    {
-      id: 'demo1', _type: 'ads',
-      description: 'Ad revenue — Apr 2025',
-      amount: 3240, status: 'paid',
-      requestedAt: { toMillis: () => now - 86400000 * 2 },
-    },
-    {
-      id: 'demo2', _type: 'sales',
-      description: 'Pay-per-watch sales',
-      amount: 8750, status: 'paid',
-      requestedAt: { toMillis: () => now - 86400000 * 5 },
-    },
-    {
-      id: 'demo3', _type: 'payout',
-      description: 'Withdrawal to Access Bank',
-      amount: 10000, fee: 100, netAmount: 9900,
-      bankAcctName: 'John Doe', bankName: 'Access Bank',
-      status: 'approved',
-      requestedAt: { toMillis: () => now - 86400000 * 8 },
-    },
-  ];
 }
 
 function renderTransactions() {
@@ -12027,51 +12051,6 @@ async function executeDeleteAccount(btn) {
 
     if (wrap) wrap.style.display = '';
   }
-  </script>
-
-  <!-- ════════════════════════════════════════════════════════════
-       BREET INTEGRATION  (Creator Payouts)
-       Powers crypto / stablecoin creator withdrawals.
-
-       ▸ Replace the placeholders when your Breet keys arrive. The
-         "Withdraw via Breet" button is already visible & wired — it shows
-         a "coming soon" message until BREET_PUB_KEY is filled in.
-       ▸ BREET_PUB_KEY  → public / API key (safe in frontend)
-       ▸ BREET_SECRET   → secret key — SERVER-SIDE ONLY, never ship in frontend
-       ▸ BREET_ENDPOINT → Breet payout endpoint
-  ════════════════════════════════════════════════════════════ -->
-  <script>
-    const BREET_PUB_KEY  = "BREET_PUBLIC_KEY_PLACEHOLDER";
-    const BREET_SECRET   = "BREET_SECRET_KEY_PLACEHOLDER"; // ⚠ï¸ server-side only — do NOT expose in production frontend
-    const BREET_ENDPOINT = "https://api.breet.io/v1/payout/initiate"; // update to Breet's real endpoint
-    const BREET_WITHDRAW_BONUS_COUNT = 3; // reduced fees / bonus on first N Breet withdrawals
-
-    function breetReady() {
-      return BREET_PUB_KEY && BREET_PUB_KEY !== "BREET_PUBLIC_KEY_PLACEHOLDER";
-    }
-
-    function launchBreetWithdrawal() {
-      const amount = Number((document.getElementById('wdAmountInput') || {}).value) || 0;
-      if (!breetReady()) {
-        if (typeof showToast === 'function') showToast('💎 Breet payouts coming soon — add your Breet API key to go live.');
-        else alert('💎 Breet payouts coming soon — add your Breet API key to go live.');
-        return;
-      }
-      if (amount < 500) {
-        if (typeof showToast === 'function') showToast('Enter at least ₦500 to withdraw via Breet.');
-        return;
-      }
-      const txRef = `channel_breet_wd_${(typeof CHANNEL_UID !== 'undefined' ? CHANNEL_UID : 'user')}_${Date.now()}`;
-      /* ───────────────────────────────────────────────
-         TODO: Replace with the real Breet payout call.
-         Authorise the payout on your server with BREET_SECRET, then write a
-         doc to the channel's `withdrawals` collection with status updates
-         (pending → processing → completed → failed) so it shows in History.
-         Apply reduced fee / bonus for the creator's first 3 Breet withdrawals.
-      ─────────────────────────────────────────────── */
-      console.log('Breet creator withdrawal initiated:', { txRef, amount, endpoint: BREET_ENDPOINT });
-      if (typeof showToast === 'function') showToast('💎 Connecting to Breet payout…');
-    }
   </script>
 </body>
   </html>
