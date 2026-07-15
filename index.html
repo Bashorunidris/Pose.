@@ -1875,7 +1875,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 1;
+            /* Hidden by default. toggleV2EditPlay()/toggleScreen4Play() add the .visible
+               class only while the video is paused — but this base rule was `opacity: 1`,
+               so the center play icon sat on top of the video permanently, playing or not.
+               pointer-events stays enabled so the invisible layer can still be tapped to
+               pause, matching the click handler wired to the button inside it. */
+            opacity: 0;
+            pointer-events: auto;
             transition: opacity 0.2s ease;
             z-index: 10;
         }
@@ -2716,7 +2722,7 @@
             letter-spacing: 1px;
             font-family: 'Courier New', monospace;
             min-width: 50px;
-            text-align: right;
+            text-align: center;
         }
 
         /* Button Container */
@@ -8549,13 +8555,15 @@
         .profile-icon {
             position: relative;
             flex-shrink: 0;
-            font-size: 22px;
+            font-size: clamp(20px, 5.5vw, 26px);
             background: rgba(76, 29, 149, 0.8);
             border-radius: 50%;
             padding: 8px;
             cursor: pointer;
-            width: 40px;
-            height: 40px;
+            /* Scales with viewport width instead of a single fixed px, so the
+               navbar icons stay proportional across phone/tablet screen sizes. */
+            width: clamp(38px, 10vw, 48px);
+            height: clamp(38px, 10vw, 48px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -8765,19 +8773,10 @@
                 padding: 6px 4px;
             }
 
-            .profile-icon {
-                width: 36px;
-                height: 36px;
-                padding: 6px;
-                font-size: 18px;
-            }
-
-            .search-icon {
-                width: 36px;
-                height: 36px;
-                padding: 6px;
-                font-size: 16px;
-            }
+            /* .profile-icon / .search-icon sizing now comes entirely from their
+               base clamp()-based rules, which already scale down smoothly at this
+               width — the fixed 36px overrides that used to live here fought with
+               that scaling instead of complementing it. */
         }
 
         @media (max-width: 480px) {
@@ -8800,19 +8799,8 @@
                 padding: 5px 3px;
             }
 
-            .profile-icon {
-                width: 32px;
-                height: 32px;
-                padding: 5px;
-                font-size: 16px;
-            }
-
-            .search-icon {
-                width: 32px;
-                height: 32px;
-                padding: 5px;
-                font-size: 14px;
-            }
+            /* .profile-icon / .search-icon sizing comes from their base
+               clamp()-based rules (see note above) — no override needed here. */
         }
 
         /* ===== POSETAB STYLES ===== */
@@ -10481,8 +10469,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: clamp(38px, 10vw, 48px);
+            height: clamp(38px, 10vw, 48px);
         }
 
         /* High-specificity override so other later .search-icon rules
@@ -10498,14 +10486,16 @@
             background: #fff !important;
             border-radius: 50% !important;
             padding: 8px !important;
-            font-size: 18px !important;
+            font-size: clamp(18px, 4.5vw, 22px) !important;
             color: #000 !important;
             cursor: pointer !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            width: 40px !important;
-            height: 40px !important;
+            /* Matches .profile-icon's scaling so both header icons stay proportional
+               together across phone/tablet screen sizes. */
+            width: clamp(38px, 10vw, 48px) !important;
+            height: clamp(38px, 10vw, 48px) !important;
             pointer-events: auto !important;
             z-index: 1100 !important;
             user-select: none;
@@ -10535,8 +10525,8 @@
 
         /* ===== FORYOU FEED STYLES ===== */
 
-        /* Multi-photo carousel (swipeable, TikTok/Instagram-style) */
-        .foryou-photo-track { scrollbar-width: none; }
+        /* Multi-photo carousel (swipeable, vertical — tap or swipe down for next photo) */
+        .foryou-photo-track { scrollbar-width: none; overscroll-behavior-y: contain; }
         .foryou-photo-track::-webkit-scrollbar { display: none; }
         .foryou-photo-dot {
             width: 6px;
@@ -10549,6 +10539,24 @@
             background: #fff;
             width: 16px;
             border-radius: 3px;
+        }
+        .foryou-photo-counter {
+            position: absolute;
+            /* Was top:12px, which sat directly under the fixed header's search icon
+               (#searchIconBtn, right:20px, z-index:1100) and got covered by it. The
+               header icon now scales up to 48px tall (clamp-based), so this needs to
+               clear a header height of up to ~78px (15px padding + 48px icon + 15px). */
+            top: 82px;
+            right: 12px;
+            z-index: 6;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 12px;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
         }
 
         .forYou-overlay {
@@ -10936,7 +10944,10 @@
             }
 
             .forYou-profile-section {
-                bottom: 295px !important;
+                /* Was bottom:295px, which read as noticeably high above the caption/ad
+                   cluster. Pulled down so profile row + caption + banner ad form one
+                   tight, modest group near the bottom instead of spanning the screen. */
+                bottom: 271px !important;
                 left: 20px !important;
                 max-width: 400px !important;
                 gap: 16px !important;
@@ -10949,7 +10960,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 200px !important;
+                bottom: 180px !important;
             }
 
             .forYou-profile-pic {
@@ -10971,13 +10982,16 @@
             }
 
             .forYou-caption {
-                bottom: 225px !important;
+                /* Must clear the banner ad's top edge (bottom:105px + height:100px =
+                   205px) — this used to be 165px, which sat UNDER the ad and got
+                   covered by it. */
+                bottom: 213px !important;
                 left: 16px !important;
                 right: 14px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 225px !important;
+                bottom: 130px !important;
             }
 
             .caption-text {
@@ -10991,34 +11005,28 @@
             }
 
             .forYou-banner-ad {
-                bottom: 118px !important;
+                bottom: 105px !important;
                 left: 20px !important;
                 width: 180px !important;
                 height: 100px !important;
             }
 
             .interaction-buttons {
+                /* Ends just above the spinning audio disc (bottom:80px, 50px tall
+                   here → its top edge is at 130px), which itself must clear the
+                   fixed bottom nav bar (.bottom-nav, height:68px). This is as low
+                   as the column can go without the disc sliding back under the
+                   nav bar. */
                 right: 20px !important;
-                bottom: 220px !important;
+                bottom: 138px !important;
                 gap: 12px !important;
-            }
-
-            .btn-icon {
-                width: 48px !important;
-                height: 48px !important;
-                font-size: 20px !important;
-                margin-bottom: 6px !important;
-            }
-
-            .interaction-count {
-                font-size: 13px !important;
             }
         }
 
         /* Large Tablets (992px to 1199px) */
         @media (min-width: 992px) and (max-width: 1199px) {
             .forYou-profile-section {
-                bottom: 315px !important;
+                bottom: 264px !important;
                 left: 16px !important;
                 max-width: 380px !important;
                 gap: 14px !important;
@@ -11045,13 +11053,14 @@
             }
 
             .forYou-caption {
-                bottom: 221px !important;
+                /* Clears the banner ad top edge (bottom:100px + height:98px = 198px) */
+                bottom: 206px !important;
                 left: 15px !important;
                 right: 13px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 221px !important;
+                bottom: 125px !important;
             }
 
             .caption-text {
@@ -11065,7 +11074,7 @@
             }
 
             .forYou-banner-ad {
-                bottom: 115px !important;
+                bottom: 100px !important;
                 left: 16px !important;
                 width: 175px !important;
                 height: 98px !important;
@@ -11073,20 +11082,15 @@
 
             .interaction-buttons {
                 right: 16px !important;
+                bottom: 138px !important;
                 gap: 10px !important;
-            }
-
-            .btn-icon {
-                width: 44px !important;
-                height: 44px !important;
-                font-size: 19px !important;
             }
         }
 
         /* Tablets (768px to 991px) */
         @media (min-width: 768px) and (max-width: 991px) {
             .forYou-profile-section {
-                bottom: 295px !important;
+                bottom: 256px !important;
                 left: 14px !important;
                 max-width: 340px !important;
                 gap: 12px !important;
@@ -11099,7 +11103,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 190px !important;
+                bottom: 168px !important;
             }
 
             .forYou-profile-pic {
@@ -11121,13 +11125,14 @@
             }
 
             .forYou-caption {
-                bottom: 218px !important;
+                /* Clears the banner ad top edge (bottom:95px + height:95px = 190px) */
+                bottom: 198px !important;
                 left: 14px !important;
                 right: 12px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 218px !important;
+                bottom: 120px !important;
             }
 
             .caption-text {
@@ -11141,7 +11146,7 @@
             }
 
             .forYou-banner-ad {
-                bottom: 108px !important;
+                bottom: 95px !important;
                 left: 14px !important;
                 width: 170px !important;
                 height: 95px !important;
@@ -11149,25 +11154,15 @@
 
             .interaction-buttons {
                 right: 14px !important;
-                bottom: 200px !important;
+                bottom: 134px !important;
                 gap: 8px !important;
-            }
-
-            .btn-icon {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 17px !important;
-            }
-
-            .interaction-count {
-                font-size: 11px !important;
             }
         }
 
         /* Small Phones (480px to 767px) */
         @media (max-width: 767px) {
             .forYou-profile-section {
-                bottom: 285px !important;
+                bottom: 244px !important;
                 left: 10px !important;
                 max-width: 320px !important;
                 gap: 10px !important;
@@ -11180,7 +11175,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 150px !important;
+                bottom: 158px !important;
             }
 
             .forYou-profile-pic {
@@ -11202,13 +11197,14 @@
             }
 
             .forYou-caption {
-                bottom: 215px !important;
+                /* Clears the banner ad top edge (bottom:90px + height:88px = 178px) */
+                bottom: 186px !important;
                 left: 12px !important;
                 right: 12px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 215px !important;
+                bottom: 110px !important;
             }
 
             .caption-text {
@@ -11222,7 +11218,7 @@
             }
 
             .forYou-banner-ad {
-                bottom: 105px !important;
+                bottom: 90px !important;
                 left: 10px !important;
                 width: 155px !important;
                 height: 88px !important;
@@ -11230,24 +11226,14 @@
 
             .interaction-buttons {
                 right: 10px !important;
-                bottom: 190px !important;
-            }
-
-            .btn-icon {
-                width: 38px !important;
-                height: 38px !important;
-                font-size: 16px !important;
-            }
-
-            .interaction-count {
-                font-size: 10px !important;
+                bottom: 132px !important;
             }
         }
 
         /* Extra Small Phones (up to 480px) */
         @media (max-width: 480px) {
             .forYou-profile-section {
-                bottom: 250px !important;
+                bottom: 226px !important;
                 left: 8px !important;
                 max-width: 280px !important;
                 gap: 8px !important;
@@ -11261,7 +11247,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 220px !important;
+                bottom: 140px !important;
             }
 
             .forYou-profile-pic {
@@ -11299,13 +11285,14 @@
             }
 
             .forYou-caption {
-                bottom: 210px !important;
+                /* Clears the banner ad top edge (bottom:80px + height:80px = 160px) */
+                bottom: 168px !important;
                 left: 10px !important;
                 right: 10px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 210px !important;
+                bottom: 95px !important;
             }
 
             .caption-text {
@@ -11316,13 +11303,13 @@
             .see-more-btn {
                 font-size: 9px !important;
                 padding: 4px 7px !important;
-                bottom: 210px !important;
+                bottom: 168px !important;
                 left: 10px !important;
                 right: 10px !important;
             }
 
             .forYou-banner-ad {
-                bottom: 100px !important;
+                bottom: 80px !important;
                 left: 8px !important;
                 width: 140px !important;
                 height: 80px !important;
@@ -11338,19 +11325,8 @@
 
             .interaction-buttons {
                 right: 8px !important;
-                bottom: 180px !important;
+                bottom: 126px !important;
                 gap: 6px !important;
-            }
-
-            .btn-icon {
-                width: 36px !important;
-                height: 36px !important;
-                font-size: 15px !important;
-                margin-bottom: 3px !important;
-            }
-
-            .interaction-count {
-                font-size: 9px !important;
             }
 
             .subscribe {
@@ -11361,7 +11337,7 @@
         /* Very Small Phones (360px and below) */
         @media (max-width: 360px) {
             .forYou-profile-section {
-                bottom: 240px !important;
+                bottom: 211px !important;
                 left: 6px !important;
                 max-width: 250px !important;
                 gap: 6px !important;
@@ -11374,7 +11350,7 @@
             }
 
             .forYou-profile-section.ad-closed {
-                bottom: 200px !important;
+                bottom: 125px !important;
             }
 
             .forYou-profile-pic {
@@ -11396,13 +11372,14 @@
             }
 
             .forYou-caption {
-                bottom: 170px !important;
+                /* Clears the banner ad top edge (bottom:75px + height:70px = 145px) */
+                bottom: 153px !important;
                 left: 8px !important;
                 right: 10px !important;
             }
 
             .forYou-caption.ad-closed {
-                bottom: 170px !important;
+                bottom: 85px !important;
             }
 
             .caption-text {
@@ -11416,7 +11393,7 @@
             }
 
             .forYou-banner-ad {
-                bottom: 98px !important;
+                bottom: 75px !important;
                 left: 6px !important;
                 width: 120px !important;
                 height: 70px !important;
@@ -11424,19 +11401,8 @@
 
             .interaction-buttons {
                 right: 6px !important;
-                bottom: 170px !important;
+                bottom: 120px !important;
                 gap: 5px !important;
-            }
-
-            .btn-icon {
-                width: 32px !important;
-                height: 32px !important;
-                font-size: 13px !important;
-                margin-bottom: 2px !important;
-            }
-
-            .interaction-count {
-                font-size: 8px !important;
             }
 
             .subscribe {
@@ -11479,20 +11445,22 @@
         }
 
         .btn-icon {
-            width: 40px !important;
-            height: 40px !important;
+            /* Scales with viewport width instead of a single fixed px, so it stays
+               proportional whether this opens on a small phone or a large tablet. */
+            width: clamp(40px, 10vw, 52px) !important;
+            height: clamp(40px, 10vw, 52px) !important;
             border-radius: 50% !important;
             background-color: rgba(0, 0, 0, 0.5) !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            font-size: 18px !important;
+            font-size: clamp(18px, 4.5vw, 24px) !important;
             margin-bottom: 4px !important;
             transition: all 0.2s ease !important;
         }
 
         .interaction-count {
-            font-size: 12px !important;
+            font-size: clamp(12px, 2.8vw, 14px) !important;
             color: white !important;
             font-weight: 500 !important;
         }
@@ -12874,88 +12842,14 @@
             font-size: 14px;
         }
 
-        /* ===== RESPONSIVE INTERACTION BUTTONS ===== */
-        /* Tablets (768px and below) */
-        @media (max-width: 768px) {
-            .interaction-buttons {
-                right: 12px !important;
-                bottom: 210px !important;
-                gap: 7px !important;
-            }
-
-            .btn-icon {
-                width: 36px !important;
-                height: 36px !important;
-                font-size: 16px !important;
-            }
-
-            .interaction-count {
-                font-size: 11px !important;
-            }
-        }
-
-        /* Large Phones (480px - 767px) */
-        @media (max-width: 767px) {
-            .interaction-buttons {
-                right: 8px !important;
-                bottom: 200px !important;
-                gap: 6px !important;
-            }
-
-            .btn-icon {
-                width: 38px !important;
-                height: 38px !important;
-                font-size: 18px !important;
-                margin-bottom: 3px !important;
-            }
-
-            .interaction-count,
-            .subscribe {
-                font-size: 10px !important;
-            }
-        }
-
-        /* Mobile Phones (480px and below) */
-        @media (max-width: 480px) {
-            .interaction-buttons {
-                right: 8px !important;
-                bottom: 215px !important;
-                gap: 6px !important;
-            }
-
-            .btn-icon {
-                width: 42px !important;
-                height: 42px !important;
-                font-size: 20px !important;
-                margin-bottom: 4px !important;
-            }
-
-            .interaction-count,
-            .subscribe {
-                font-size: 11px !important;
-            }
-        }
-
-        /* Extra Small Phones (360px and below) */
-        @media (max-width: 360px) {
-            .interaction-buttons {
-                right: 7px !important;
-                bottom: 210px !important;
-                gap: 5px !important;
-            }
-
-            .btn-icon {
-                width: 38px !important;
-                height: 38px !important;
-                font-size: 17px !important;
-                margin-bottom: 3px !important;
-            }
-
-            .interaction-count,
-            .subscribe {
-                font-size: 9px !important;
-            }
-        }
+        /* NOTE: a second, duplicate "RESPONSIVE INTERACTION BUTTONS" block used to
+           live here, redefining .interaction-buttons/.btn-icon for the same
+           breakpoints (max-width:768/767/480/360) already handled up in the
+           "ForYou Feed Sidebar" section below. Because it came later in the
+           cascade, it silently won over the first (better-designed) set, so the
+           actual rendered icon size was whichever of the two blocks happened to
+           be last — not a deliberate choice. Removed; the sizing now lives in one
+           place (see .btn-icon rules near .forYou-profile-section). */
 
         /* ===== FOR YOU AUDIO INTERFACE (Right Bottom) ===== */
 
@@ -12976,7 +12870,13 @@
             animation: spin-disk 4s linear infinite;
             flex-shrink: 0;
             position: absolute;
-            bottom: 140px;
+            /* TikTok-style: the disc is the lowest item of the right-side icon
+               column, sitting just under .interaction-buttons. Must clear the
+               persistent bottom nav bar (.bottom-nav: fixed, height:68px,
+               z-index:1000) — a previous pass set bottom:41-64px here, ALL less
+               than 68px, so the disc rendered partially behind that bar. 80px
+               keeps a 12px margin above it at every breakpoint. */
+            bottom: 80px;
             right: 10px;
             z-index: 10;
             cursor: pointer;
@@ -12988,7 +12888,7 @@
             .forYou-spinning-disk-vinyl {
                 width: 46px;
                 height: 46px;
-                bottom: 130px;
+                bottom: 80px;
                 right: 9px;
             }
         }
@@ -12998,7 +12898,7 @@
             .forYou-spinning-disk-vinyl {
                 width: 44px;
                 height: 44px;
-                bottom: 115px;
+                bottom: 80px;
                 right: 8px;
             }
         }
@@ -13008,7 +12908,7 @@
             .forYou-spinning-disk-vinyl {
                 width: 40px;
                 height: 40px;
-                bottom: 145px;
+                bottom: 78px;
                 right: 8px;
             }
         }
@@ -13018,7 +12918,7 @@
             .forYou-spinning-disk-vinyl {
                 width: 36px;
                 height: 36px;
-                bottom: 150px;
+                bottom: 76px;
                 right: 7px;
             }
         }
@@ -18395,7 +18295,12 @@
             right: 0;
             bottom: 0;
             background: #000000;
-            z-index: 3000;
+            /* Must outrank every full-screen surface that can request a PIN while it's open —
+               the PoseTab video player (#tnPlayerPage, z-index 9999) and its dynamically
+               injected "Pay & Watch Now" sheet (#tnpPayModal, z-index 200001) in particular.
+               Previously this was 3000, so the PIN prompt rendered invisibly behind both,
+               making paid PoseTab purchases look like they skipped PIN verification entirely. */
+            z-index: 300000;
             width: 100%;
             height: 100vh;
             overflow-y: auto;
@@ -18857,16 +18762,20 @@
 
         /* Recording Status Bar */
         .v2-record-status-bar {
+            /* Was left:16px/right:16px (full-width bar) with the timer pushed to
+               the far right via margin-left:auto on .v2-record-timer — that's the
+               big empty gap between "Recording..." and the time. Switched to a
+               compact, centered pill (matches the screen1 recording timer). */
             position: absolute;
             top: 16px;
-            left: 16px;
-            right: 16px;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
-            padding: 12px 16px;
+            padding: 10px 18px;
             border-radius: 20px;
             display: none;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-size: 14px;
             font-weight: 600;
             z-index: 10;
@@ -18957,18 +18866,17 @@
             transform: scale(0.95);
         }
 
-        /* Timer Display */
+        /* Timer Display — lives inline inside .v2-record-status-bar (top pill),
+           next to the recording dot, instead of floating dead-center over the
+           frame where it blocked the shot. The "Recording..." label that used to
+           sit between them was removed along with margin-left:auto (which had
+           pushed the time to the far edge of a full-width bar) now that the pill
+           is compact and centered — dot + time sit naturally together. */
         .v2-record-timer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 56px;
+            font-size: 14px;
             font-weight: 700;
             font-family: 'Courier New', monospace;
             color: #FF0050;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            z-index: 5;
             display: none;
         }
 
@@ -18976,62 +18884,9 @@
             display: block;
         }
 
-        @media (max-width: 768px) {
-            .v2-record-timer {
-                font-size: 48px;
-            }
-        }
-
         @media (max-width: 480px) {
             .v2-record-timer {
-                font-size: 40px;
-            }
-        }
-
-        /* Settings Display Panel */
-        .v2-record-settings-panel {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 12px 16px;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            display: flex;
-            gap: 20px;
-            font-size: 12px;
-            pointer-events: auto;
-        }
-
-        .v2-setting-item {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .v2-setting-label {
-            color: #aaa;
-            font-weight: 600;
-        }
-
-        .v2-setting-value {
-            color: #FF0050;
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .v2-record-settings-panel {
-                flex-direction: column;
-                gap: 8px;
-                padding: 10px 12px;
-                top: 10px;
-                left: 10px;
-                font-size: 11px;
-            }
-
-            .v2-setting-item {
-                gap: 4px;
+                font-size: 13px;
             }
         }
 
@@ -19402,7 +19257,19 @@
         .v2-edit-video-wrapper {
             position: relative;
             width: 100%;
+            /* max-width:500px alone let this get taller than the viewport on any
+               screen where (viewport width * 16/9) exceeds the visible height —
+               e.g. a phone with browser chrome eating into vh, or a wide-but-short
+               window. Since .v2-edit-screen centers this wrapper vertically
+               (justify-content:center) inside a position:fixed, non-scrollable
+               ancestor, the overflow pushed the top bar (position:absolute;top:0
+               inside this wrapper) above the visible viewport — "in the DOM, but
+               nothing wrong with its own CSS" is exactly what that looks like.
+               56.25vh is the width that produces exactly 100vh at a 9:16 ratio
+               (9/16 = 0.5625), so capping max-width to whichever is smaller keeps
+               the aspect-ratio-derived height from ever exceeding the viewport. */
             max-width: 500px;
+            max-width: min(500px, 56.25vh);
             aspect-ratio: 9/16;
             background: #000;
             display: flex;
@@ -19525,49 +19392,6 @@
             font-weight: 600;
             z-index: 5;
             color: #fff;
-        }
-
-        /* Edit Metadata Display */
-        .v2-edit-metadata {
-            position: absolute;
-            top: 60px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 14px;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            z-index: 50;
-            display: flex;
-            gap: 16px;
-            font-size: 11px;
-            pointer-events: auto;
-        }
-
-        .v2-meta-item {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .v2-meta-label {
-            color: #aaa;
-            font-weight: 600;
-        }
-
-        .v2-meta-value {
-            color: #FF0050;
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .v2-edit-metadata {
-                flex-direction: column;
-                gap: 6px;
-                padding: 8px 10px;
-                top: 55px;
-                right: 10px;
-                font-size: 10px;
-            }
         }
 
         /* Edit Bottom Sheet */
@@ -20272,10 +20096,6 @@
             .v2-record-btn.recording .v2-record-inner {
                 width: 35px;
                 height: 35px;
-            }
-
-            .v2-record-timer {
-                font-size: 40px;
             }
         }
 
@@ -21924,6 +21744,26 @@
 }
 .tn-strip-thumb:hover { opacity: 1; transform: scale(1.06); }
 .tn-strip-thumb.tn-strip-active { opacity: 1; border-color: #e50914; }
+
+/* ── Creator CTA banner ── */
+.tn-creator-cta {
+  display: flex; align-items: center; gap: 14px;
+  margin: 18px 16px 8px; padding: 14px 18px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, rgba(229,9,20,.16), rgba(245,197,24,.08));
+  border: 1px solid rgba(229,9,20,.3);
+}
+.tn-creator-cta-icon {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(229,9,20,.22); color: #f5c518; font-size: 16px;
+}
+.tn-creator-cta-title { color: #fff; font-size: 14px; font-weight: 800; }
+.tn-creator-cta-sub { color: #999; font-size: 12px; margin-top: 2px; line-height: 1.4; }
+@media (max-width: 480px) {
+  .tn-creator-cta { padding: 12px 14px; gap: 10px; }
+  .tn-creator-cta-sub { font-size: 11px; }
+}
 
 /* ── Rows Container ── */
 .tn-rows { padding: 4px 16px 60px; }
@@ -24714,7 +24554,6 @@
             <div class="rec-recording-status" id="recRecordingStatus" style="display: none;">
                 <div class="rec-status-content">
                     <div class="rec-status-indicator"><i class="fas fa-circle"></i></div>
-                    <div class="rec-status-text">Recording</div>
                     <div class="rec-timer-display" id="recTimerDisplay">0:00</div>
                 </div>
             </div>
@@ -24954,9 +24793,9 @@
                <button class="rec-icon-btn" onclick="switchPhotoCamera()"><i class="fa-solid fa-sync"></i></button>
            </div>
             <div class="rec-left-menu" id="recPhotoLeftMenu">
-                <div class="rec-menu-item" onclick="togglePhotoTimer()"><i class="fa-solid fa-stopwatch"></i> Timer</div>
-                <div class="rec-menu-item" onclick="togglePhotoFilters()"><i class="fa-solid fa-palette"></i> Filters</div>
-                <div class="rec-menu-item" onclick="togglePhotoRatio()"><i class="fa-solid fa-ruler-combined"></i> Ratio</div>
+                <div class="rec-menu-item" id="recPhotoMenuTimer" onclick="togglePhotoTimer()"><i class="fa-solid fa-stopwatch"></i> Timer</div>
+                <div class="rec-menu-item" id="recPhotoMenuFilters" onclick="togglePhotoFilters()"><i class="fa-solid fa-palette"></i> Filters</div>
+                <div class="rec-menu-item" id="recPhotoMenuRatio" onclick="togglePhotoRatio()"><i class="fa-solid fa-ruler-combined"></i> Ratio</div>
             </div>
             <div class="rec-effects-bar">
 
@@ -25990,7 +25829,7 @@
                                 maxlength="500" style="width: 100%; font-size: 16px; min-height: 100px;"></textarea>
 
                             <div class="media-upload-section" style="margin-top: 15px;">
-                                <label class="media-label">Attach Media (Optional)</label>
+                                <label class="media-label">Attach Media (Required)</label>
                                 <div class="media-buttons">
                                     <input type="file" id="buzzImage" accept="image/*" style="display: none;"
                                         onchange="handleBuzzMediaChange(this, 'image')">
@@ -26902,58 +26741,19 @@
     <div class="tn-strip" id="tnStrip"></div>
   </div>
 
-  <!-- Rows -->
-  <div class="tn-rows" id="tnRows">
-
-    <div class="tn-row">
-      <div class="tn-row-head">
-        <h2><span class="tn-red"><i class="fas fa-fire" style="color:#ff4500;"></i></span> Top 10 Today</h2>
-        <span id="tnCountTop10" class="tn-row-count"></span>
-      </div>
-      <div class="tn-row-scroll" id="tnTop10"></div>
+  <!-- Creator CTA — Blink is the paid showcase, so pitch creators on releasing here first -->
+  <div class="tn-creator-cta">
+    <div class="tn-creator-cta-icon"><i class="fas fa-clapperboard"></i></div>
+    <div class="tn-creator-cta-text">
+      <div class="tn-creator-cta-title">Release a blockbuster.</div>
+      <div class="tn-creator-cta-sub">Get your videos out there before they drop elsewhere — premiere your next paid release on POSE BLINK.</div>
     </div>
-
-    <div class="tn-row">
-      <div class="tn-row-head">
-        <h2><span class="tn-green">FREE</span> Watch Now</h2>
-        <span id="tnCountFree" class="tn-row-count"></span>
-      </div>
-      <div class="tn-row-scroll" id="tnFree"></div>
-    </div>
-
-    <div class="tn-row">
-      <div class="tn-row-head">
-        <h2><span class="tn-gold"><i class="fas fa-star" style="color:#f5c518;"></i></span> Premium</h2>
-        <span id="tnCountPremium" class="tn-row-count"></span>
-      </div>
-      <div class="tn-row-scroll" id="tnPremium"></div>
-    </div>
-
-    <div class="tn-row">
-      <div class="tn-row-head">
-        <h2>Trending Now</h2>
-        <span id="tnCountTrending" class="tn-row-count"></span>
-      </div>
-      <div class="tn-row-scroll" id="tnTrending"></div>
-    </div>
-
-    <div class="tn-row">
-      <div class="tn-row-head">
-        <h2>Recommended</h2>
-        <span id="tnCountRec" class="tn-row-count"></span>
-      </div>
-      <div class="tn-row-scroll" id="tnRec"></div>
-    </div>
-
-    <div class="tn-row">
-      <div class="tn-row-head">
-        <h2>All Channels</h2>
-        <span id="tnCountAll" class="tn-row-count"></span>
-      </div>
-      <div class="tn-row-scroll" id="tnAll"></div>
-    </div>
-
   </div>
+
+  <!-- Rows — fully data-driven now (see tnRender in the JS below): New Releases (Paid),
+       one row per category, This Week, This Month, the same four for Seasons, then
+       Recommended rails for both. Populated by tnRender()/tnShowSkeletons(). -->
+  <div class="tn-rows" id="tnRows"></div>
 
   <!-- Info Modal -->
   <div class="tn-modal-bg" id="tnModalBg" style="display:none;" onclick="tnCloseModal(event)">
@@ -28337,6 +28137,8 @@
         let exclusiveVideoFileName = null;
         let buzzMediaUrl = null;
         let buzzMediaFileName = null;
+        let buzzMediaType = null; // 'image' | 'video' — set explicitly at pick time so the
+                                   // feed renderer never has to guess from the URL string
         let buzzAudioUrl = null;
         let buzzAudioFile = null;
         let buzzAudioName = null;
@@ -30363,7 +30165,9 @@
                  allUserVideos = [];
                  videosSnapshot.forEach(doc => {
                      const videoData = doc.data();
-                     if (!videoData.type || videoData.type !== 'story') {
+                     // Feed tab is videos-only — also exclude photos (type === 'photo'),
+                     // same fix as loadProfileFeed().
+                     if ((!videoData.type || videoData.type !== 'story') && videoData.type !== 'photo') {
                          allUserVideos.push({
                              ...videoData,
                              id: doc.id
@@ -30967,6 +30771,23 @@
              });
          })();
 
+         // Cached items store createdAt as {__ts: millis} (Firestore Timestamps don't survive
+         // JSON.stringify — see the safeStringify() replacer below where the cache is written).
+         // Rebuild a Timestamp-shaped stand-in (.seconds / .toMillis() / .toDate()) so every
+         // existing consumer (year display, "Recent" sort, etc.) keeps working unmodified
+         // whether it received a live Firestore doc or a rehydrated cached one.
+         function _ptRehydrateTimestamps(arr) {
+             if (!Array.isArray(arr)) return arr;
+             arr.forEach(item => {
+                 if (item && item.createdAt && typeof item.createdAt === 'object' && item.createdAt.__ts != null) {
+                     const ms = item.createdAt.__ts;
+                     item.createdAt = { seconds: Math.floor(ms / 1000), toMillis: () => ms, toDate: () => new Date(ms) };
+                 }
+                 if (item && Array.isArray(item.episodes)) _ptRehydrateTimestamps(item.episodes);
+             });
+             return arr;
+         }
+
          // ===== LOAD FROM channels/{uid}/videos + channels/{uid}/seasons/{sid}/episodes =====
          async function loadPoseTabPosts(opts) {
              opts = opts || {};
@@ -30979,9 +30800,8 @@
 
              if (!gridContainer) { console.error('Grid not found'); return; }
 
-             // ── FAST PATH: in-memory session cache only (never read from localStorage).
-             // Always fetch fresh from Firestore on first page load.
-             // Only re-render from memory when user switches tabs mid-session.
+             // ── FAST PATH: in-memory session cache — reopening/switching tabs mid-session
+             // just re-renders, no network round-trip.
              const cachedVideos  = window._ptAllVideos  || [];
              const cachedSeasons = window._ptAllSeasons || [];
              const haveCache = cachedVideos.length > 0 || cachedSeasons.length > 0;
@@ -30992,8 +30812,28 @@
                  return;
              }
 
-             // Show POSE-branded loader (For You style) only when we have no cache
-             if (!opts.silent) {
+             // ── CROSS-SESSION FAST PATH: paint instantly from the last saved localStorage
+             // snapshot (if still within a few minutes old) while a real fetch runs below —
+             // a fresh fetch always still happens after this, so the page never stays stuck
+             // on stale data, it's just not staring at a blank loader while waiting.
+             let renderedFromLocalCache = false;
+             if (!opts.forceFresh) {
+                 try {
+                     const lsVideos  = _ptRehydrateTimestamps(JSON.parse(localStorage.getItem('poseTabVideosCache')  || 'null'));
+                     const lsSeasons = _ptRehydrateTimestamps(JSON.parse(localStorage.getItem('poseTabSeasonsCache') || 'null'));
+                     const lsTime    = parseInt(localStorage.getItem('poseTabCacheTime') || '0', 10);
+                     if (lsVideos && lsVideos.length && (Date.now() - lsTime) < 3 * 60 * 1000) {
+                         window._ptAllVideos  = lsVideos;
+                         window._ptAllSeasons = lsSeasons || [];
+                         renderPoseTabFromCache(lsVideos, lsSeasons || []); // also refreshes the hero banner internally
+                         populateCategoryTabs(lsVideos);
+                         renderedFromLocalCache = true;
+                     }
+                 } catch (e) { console.warn('PoseTab local cache read failed:', e); }
+             }
+
+             // Show POSE-branded loader (For You style) only when we have no cache at all
+             if (!opts.silent && !renderedFromLocalCache) {
                  showPoseTabLoader(gridContainer);
                  if (seasonsContainer) showPoseTabLoader(seasonsContainer);
                  if (grid2) grid2.innerHTML = '';
@@ -32475,8 +32315,13 @@
                       </div>
                   `;
              } else if (buzz.mediaUrl) {
-                  // Image or Video
-                  const isVideo = buzz.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+                  // Image or Video — prefer the explicit mediaType saved at post time
+                  // (handleBuzzMediaChange knows for certain which button the user
+                  // pressed). Cloud-hosted URLs (Cloudinary/R2) frequently don't end in
+                  // a plain .mp4/.jpg extension, so guessing from the URL string alone
+                  // silently misrendered videos as a broken <img> for any older post
+                  // that predates mediaType being saved — kept as a fallback for those.
+                  const isVideo = buzz.mediaType ? buzz.mediaType === 'video' : !!buzz.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
                   if (isVideo) {
                       mediaHTML = `
                           <div class="post-media" style="border-radius: 8px; overflow: hidden; cursor: pointer; position: relative;">
@@ -32608,7 +32453,7 @@
                                      console.log('🎯 CLICK DETECTED on buzz media!');
                                      console.log('📝 Buzz object:', buzz);
                                      
-                                     const isVideo = buzz.mediaUrl && buzz.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+                                     const isVideo = buzz.mediaType ? buzz.mediaType === 'video' : !!(buzz.mediaUrl && buzz.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i));
                                      console.log('🎬 Buzz media clicked:', buzz.id, '| Type:', isVideo ? 'VIDEO' : 'PHOTO');
                                      console.log('📹 Media URL:', buzz.mediaUrl);
                                      
@@ -36121,8 +35966,9 @@
                     const videosArray = [];
                     videosSnap.forEach(doc => {
                         const videoData = doc.data();
-                        // Filter OUT stories - only show regular videos
-                        if (!videoData.type || videoData.type !== 'story') {
+                        // Filter OUT stories AND photos - this feed is videos-only
+                        // (photos have their own tab in the ForYou profile view too).
+                        if ((!videoData.type || videoData.type !== 'story') && videoData.type !== 'photo') {
                             // Enrich with data from user document if available
                             const userVideoData = userVideos.find(v => v.id === doc.id);
                             const enrichedData = {
@@ -36842,8 +36688,12 @@
                     allUserVideos = [];
                     videosSnapshot.forEach(doc => {
                         const videoData = doc.data();
-                        // Filter OUT stories - only show regular videos (type !== 'story')
-                        if (!videoData.type || videoData.type !== 'story') {
+                        // Filter OUT stories AND photos - the Feed tab is videos-only.
+                        // Photos are saved into this same `videos` collection with
+                        // type === 'photo' (see videoFormatPhotoData) and have their own
+                        // Photos tab (loadProfilePhotos) — without this check they leaked
+                        // into the video Feed grid too.
+                        if ((!videoData.type || videoData.type !== 'story') && videoData.type !== 'photo') {
                             allUserVideos.push({
                                 ...videoData,
                                 id: doc.id
@@ -37277,6 +37127,10 @@
                 const photoData = {
                     videoUrl: data.imageUrl,  // Use imageUrl as the media
                     url: data.imageUrl,
+                    // Full multi-photo carousel — without this, createForYouVideoPost
+                    // falls back to a single image (videoUrl) and every multi-photo
+                    // post from another creator's profile showed only the first photo.
+                    images: Array.isArray(data.images) && data.images.length ? data.images : undefined,
                     id: photoId,
                     userId: currentForYouCreatorData?.userId || 'unknown',
                     userName: currentForYouCreatorData?.displayName || 'Creator',
@@ -38444,7 +38298,10 @@
                         </div>
                     </div>`;
             } else if (data.mediaUrl) {
-                const isVideo = data.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+                // Prefer the explicit mediaType saved at post time — see the matching
+                // note in createBuzzPostElement for why the URL-extension guess alone
+                // isn't reliable for cloud-hosted (Cloudinary/R2) URLs.
+                const isVideo = data.mediaType ? data.mediaType === 'video' : !!data.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
                 mediaHTML = isVideo
                     ? `<div class="post-media" style="border-radius:8px; overflow:hidden; cursor:pointer; position:relative;">
                            <video class="buzz-media" style="width:100%; height:auto; max-height:250px; object-fit:cover; display:block;" muted><source src="${data.mediaUrl}" type="video/mp4"></video>
@@ -38537,7 +38394,7 @@
                         mediaElement.addEventListener('click', (e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            const isVideo = data.mediaUrl && data.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+                            const isVideo = data.mediaType ? data.mediaType === 'video' : !!(data.mediaUrl && data.mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i));
                             if (currentUser && currentUser.uid) viewsTracker.recordView('buzz', data.id, currentUser.uid);
                             if (typeof openBuzzFullscreen === 'function') openBuzzFullscreen(data, isVideo);
                         });
@@ -40037,6 +39894,8 @@
              // Fix: Add null check for username to avoid "undefined" in logs
              const userName = data.userName || data.displayName || data.name || 'Creator';
              console.log('🎥 Creating For You post:', index, 'From:', userName, 'ProfilePic:', data.userProfilePic, 'isPhoto:', isPhoto, 'photoCount:', photoUrls.length);
+             // Caption + hashtags + tags combined for display (see buildForYouCaptionText)
+             const forYouCaptionFullText = buildForYouCaptionText(data) || 'Discover great content';
 
             // Determine if this is a recorded or uploaded video
             const isUploadedFile = data.isUploadedFile || false;
@@ -40046,7 +39905,10 @@
             const optimizedVideoUrl = cldVideo(videoUrl, { variant: 'fullscreen' });
             let mediaHtml;
             if (isPhoto && photoUrls.length > 1) {
-                // Swipeable side-by-side carousel for multi-photo posts
+                // Swipeable vertical carousel for multi-photo posts — swipe or tap
+                // (advances downward to the next photo, same axis as the outer feed's
+                // post-to-post swipe, but overscroll-behavior on the track keeps the
+                // gesture from bleeding into the outer feed).
                 const slides = photoUrls.map((url, i) =>
                     `<img src="${cldImage(url, { variant: 'fullscreen' })}" srcset="${cldSrcset(url, [360, 720, 1080, 1440])}" sizes="100vw" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" style="flex:0 0 100%; width:100%; height:100%; object-fit:cover; scroll-snap-align:center;" alt="Photo ${i + 1} of ${photoUrls.length}"/>`
                 ).join('');
@@ -40054,8 +39916,9 @@
                     `<span class="foryou-photo-dot${i === 0 ? ' active' : ''}"></span>`
                 ).join('');
                 mediaHtml = `<div class="foryou-photo-carousel" data-photo-id="${data.id || ''}" style="position:absolute; inset:0; width:100%; height:100%;">
-                    <div class="foryou-photo-track" style="display:flex; width:100%; height:100%; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;">${slides}</div>
-                    <div class="foryou-photo-dots" style="position:absolute; top:12px; left:50%; transform:translateX(-50%); display:flex; gap:5px; z-index:5; pointer-events:none;">${dots}</div>
+                    <div class="foryou-photo-track" style="display:flex; flex-direction:column; width:100%; height:100%; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch;">${slides}</div>
+                    <div class="foryou-photo-dots" style="position:absolute; bottom:65px; left:10px; width:160px; display:flex; justify-content:center; gap:5px; z-index:5; pointer-events:none;">${dots}</div>
+                    <div class="foryou-photo-counter">1/${photoUrls.length}</div>
                 </div>`;
             } else if (isPhoto) {
                 const optimizedPhotoUrl = cldImage(photoUrls[0] || videoUrl, { variant: 'fullscreen' });
@@ -40088,9 +39951,9 @@
                      </div>
                     <div class="forYou-caption" id="caption-${index}">
                          <div class="caption-text" id="caption-text-${index}">
-                             <b>${truncateCaption(data.caption || 'Discover great content', 7)}</b>
+                             <b>${highlightCaptionTags(truncateCaption(forYouCaptionFullText, 7))}</b>
                          </div>
-                         ${(data.caption || 'Discover great content').split(' ').length > 7 ? `<button class="see-more-btn" data-caption-btn="${index}" onclick="handleSeeMoreClick(event, ${index}, this)">See more >></button>` : ''}
+                         ${forYouCaptionFullText.split(' ').length > 7 ? `<button class="see-more-btn" data-caption-btn="${index}" onclick="handleSeeMoreClick(event, ${index}, this)">See more >></button>` : ''}
                      </div>
                     <div class="forYou-banner-ad">
                          <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='130'><rect width='250' height='130' fill='%234ecdc4'/><text x='125' y='70' text-anchor='middle' fill='white' font-size='18' font-family='Arial'>✨ Discover</text></svg>" alt="banner">
@@ -40154,23 +40017,41 @@
             const pauseIcon = postDiv.querySelector('.pause-icon');
             let isPlaying = true;
 
-            // Multi-photo carousel: keep the dot indicator in sync as the user swipes
+            // Multi-photo carousel: keep the dot/counter indicators in sync as the user
+            // swipes (vertically — same axis as scrolling to the next photo), and let a
+            // tap anywhere on the photo smooth-scroll down to the next one.
             if (isPhoto && photoUrls.length > 1) {
                 const track = postDiv.querySelector('.foryou-photo-track');
                 const dots  = postDiv.querySelectorAll('.foryou-photo-dot');
-                if (track && dots.length) {
+                const counter = postDiv.querySelector('.foryou-photo-counter');
+                const updatePhotoIndicators = () => {
+                    if (!track) return 0;
+                    const h = track.clientHeight || 1;
+                    const active = Math.max(0, Math.min(photoUrls.length - 1, Math.round(track.scrollTop / h)));
+                    dots.forEach((d, i) => d.classList.toggle('active', i === active));
+                    if (counter) counter.textContent = `${active + 1}/${photoUrls.length}`;
+                    return active;
+                };
+                if (track) {
                     let scrollTimer = null;
                     track.addEventListener('scroll', () => {
                         if (scrollTimer) clearTimeout(scrollTimer);
-                        scrollTimer = setTimeout(() => {
-                            const w = track.clientWidth || 1;
-                            const active = Math.round(track.scrollLeft / w);
-                            dots.forEach((d, i) => d.classList.toggle('active', i === active));
-                        }, 80);
+                        scrollTimer = setTimeout(updatePhotoIndicators, 80);
                     }, { passive: true });
                 }
-                // Swiping the carousel shouldn't also trigger play/pause tap handling
-                postDiv.querySelector('.foryou-photo-carousel')?.addEventListener('click', (e) => e.stopPropagation());
+                // Tap the photo to auto-scroll down to the next one; swiping (native
+                // vertical scroll-snap on the track) works as an alternative to tapping.
+                // stopPropagation so this never also triggers the post's play/pause tap.
+                postDiv.querySelector('.foryou-photo-carousel')?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!track) return;
+                    const h = track.clientHeight || 1;
+                    const current = Math.round(track.scrollTop / h);
+                    const next = current + 1;
+                    if (next < photoUrls.length) {
+                        track.scrollTo({ top: next * h, behavior: 'smooth' });
+                    }
+                });
             }
 
             // ── PAYWALL: lock paid videos the user hasn't purchased ──
@@ -46820,11 +46701,20 @@ For more help, visit: help.pose.app
                 recordingState.recordingCanvas.height = 720;
                 recordingState.recordingCanvas.style.display = 'none';
                 document.body.appendChild(recordingState.recordingCanvas);
-                // Enable high-quality rendering context
-                recordingState.canvasContext = recordingState.recordingCanvas.getContext('2d', { willReadFrequently: true });
+                // Enable high-quality rendering context.
+                // NOTE: deliberately no `willReadFrequently: true` here — this canvas is only
+                // ever drawn to (drawImage) and streamed out via captureStream() for the
+                // MediaRecorder; renderCanvasForRecording() below never calls getImageData, so
+                // there's nothing that benefits from the CPU-backed surface that flag forces.
+                // `willReadFrequently` was left over from an older version of this canvas and
+                // disabled GPU compositing, forcing every drawImage() in the up-to-60fps render
+                // loop onto the CPU — the actual cause of the recording preview lag/stutter and
+                // the blurry/smeared look of the resulting clip in the v2 edit screen. The v2
+                // recording path (v2SetupCanvasRecording) already avoids this same trap.
+                recordingState.canvasContext = recordingState.recordingCanvas.getContext('2d');
                 recordingState.canvasContext.imageSmoothingEnabled = true;
                 recordingState.canvasContext.imageSmoothingQuality = 'high';
-                console.log('📊 Recording canvas created (1280x720, high-quality rendering)');
+                console.log('📊 Recording canvas created (1280x720, GPU-composited, high-quality rendering)');
             }
 
             // Start canvas rendering loop
@@ -48579,15 +48469,6 @@ For more help, visit: help.pose.app
                 const layout = recordingState.layout || recordingState.aspectRatio || 'full';
                 const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
 
-                const layoutNames = {
-                    'full': 'Full',
-                    '16:9': '16:9',
-                    '1:1': '1:1'
-                };
-
-                document.getElementById('v2EditMetaLayout').textContent = layoutNames[layout] || layout;
-                document.getElementById('v2EditMetaSpeed').textContent = `${speed}x`;
-
                 // Apply layout constraint to V2 Edit wrapper
                 const v2EditWrapper = document.querySelector('.v2-edit-video-wrapper');
                 if (v2EditWrapper) {
@@ -49619,6 +49500,8 @@ For more help, visit: help.pose.app
             const file = fileInput.files[0];
             if (!file) return;
 
+            buzzMediaType = mediaType; // 'image' | 'video', known for certain right now
+
             // Clear audio if image/video is selected
             buzzAudioUrl = null;
             buzzAudioFile = null;
@@ -49653,9 +49536,17 @@ For more help, visit: help.pose.app
             const file = fileInput.files[0];
             if (!file) return;
 
-            // Clear image/video if audio is selected
+            // Clear image/video if audio is selected. (There is no #buzzMedia element —
+            // the actual inputs are #buzzImage and #buzzVideo — so this used to throw
+            // "Cannot set property 'value' of null" immediately and abort the rest of
+            // this function, meaning the preview never rendered and
+            // uploadBuzzAudioToCloudinary() never even ran for any audio pick.)
             buzzMediaUrl = null;
-            document.getElementById('buzzMedia').value = '';
+            buzzMediaType = null;
+            const buzzImageInput = document.getElementById('buzzImage');
+            if (buzzImageInput) buzzImageInput.value = '';
+            const buzzVideoInput = document.getElementById('buzzVideo');
+            if (buzzVideoInput) buzzVideoInput.value = '';
             buzzAudioFile = file;
             
             // Show audio name input
@@ -49757,6 +49648,15 @@ For more help, visit: help.pose.app
                 return;
             }
 
+            // Media is required — checked up front so the user isn't left waiting
+            // through the 5-second publish countdown just to be told afterward that
+            // they needed to attach something (postBuzzToFirebase already had this
+            // exact check, but only after the countdown played out).
+            if (!buzzMediaUrl && !buzzAudioUrl) {
+                alert('⚠️ Please attach a photo, video, or audio before posting');
+                return;
+            }
+
             try {
                 // Show TikTok-style countdown
                 showTiktokCountdown(5, async () => {
@@ -49814,6 +49714,7 @@ For more help, visit: help.pose.app
                      text: text,
                      hashtags: document.getElementById('buzzHashtags').value.trim(),
                      mediaUrl: mediaUrl, // Image or Video
+                     mediaType: mediaUrl ? buzzMediaType : null, // 'image' | 'video' — lets the feed render it correctly without guessing from the URL
                      audioUrl: audioUrl, // Audio (new field)
                      audioName: audioName, // Audio name (new field)
                      allowAds: document.getElementById('buzzAllowAds').checked,
@@ -49859,6 +49760,9 @@ For more help, visit: help.pose.app
                     text: text,
                     hashtags: document.getElementById('buzzHashtags').value.trim(),
                     mediaUrl: mediaUrl,
+                    mediaType: mediaUrl ? buzzMediaType : null,
+                    audioUrl: audioUrl,
+                    audioName: audioName,
                     allowAds: document.getElementById('buzzAllowAds').checked,
                     allowComments: document.getElementById('buzzAllowComments').checked,
                     allowSave: document.getElementById('buzzAllowSave').checked,
@@ -50534,6 +50438,17 @@ For more help, visit: help.pose.app
                 // Carry over sound from video (screen1) to photo (screen5)
                 syncSoundToPhotoMode();
 
+                // Release the video tab's camera BEFORE requesting the photo camera.
+                // Most devices only let one getUserMedia() stream hold the camera at
+                // a time. showScreen('screen5') normally releases screen1's camera via
+                // stopVideoCamera() when leaving screen1 — but that only ran AFTER
+                // initializePhotoMode() below, as a "pre-warm for instant availability"
+                // optimization, so the photo camera request raced against screen1's
+                // still-open camera and intermittently failed with
+                // NotReadableError ("Camera in use"). Stopping it explicitly here keeps
+                // the pre-warm behavior while fixing the race.
+                stopVideoCamera();
+
                 // Pre-initialize camera BEFORE showing screen for instant availability
                 console.log('Initializing camera before showing Screen 5...');
                 initializePhotoMode().then(() => {
@@ -50948,32 +50863,39 @@ For more help, visit: help.pose.app
 
                 console.log('🎥 Requesting camera access...');
 
-                const basePhotoConstraints = {
-                    video: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                };
-
-                let photoConstraints = {
-                    ...basePhotoConstraints,
-                    video: {
-                        ...basePhotoConstraints.video,
-                        facingMode: { exact: photoState.cameraFacingMode }
-                    }
-                };
-
+                // Simple, no constraints - just ask for video and audio.
+                // The previous version opened with an exact-facingMode + resolution
+                // request first (facingMode: { exact: ... }, width/height ideal), which
+                // many devices reject outright with OverconstrainedError if that exact
+                // camera/resolution combination isn't available — on the very FIRST
+                // camera open, before the user has even had a chance to hit the flip
+                // button. Asking for a plain camera up front is far more reliable; the
+                // flip button (switchPhotoCamera) still applies facingMode with its own
+                // exact → ideal → any fallback chain when the user actually wants the
+                // other camera.
                 try {
-                    photoState.photoStream = await navigator.mediaDevices.getUserMedia(photoConstraints);
-                } catch (strictError) {
-                    console.warn('⚠️ Exact facingMode failed, retrying with ideal constraint...', strictError.message);
-                    photoConstraints.video.facingMode = photoState.cameraFacingMode;
-                    try {
-                        photoState.photoStream = await navigator.mediaDevices.getUserMedia(photoConstraints);
-                    } catch (idealError) {
-                        console.warn('⚠️ Ideal facingMode failed, requesting any available camera...', idealError.message);
-                        photoState.photoStream = await navigator.mediaDevices.getUserMedia(basePhotoConstraints);
+                    photoState.photoStream = await navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: true
+                    });
+                } catch (firstAttemptError) {
+                    // A stream just stopped elsewhere (e.g. switchRecMode('photo') calling
+                    // stopVideoCamera() right before this) can still be tearing down at the
+                    // OS/driver level even though track.stop() already returned — some webcam
+                    // drivers (notably on Windows) don't release the hardware instantly. Racing
+                    // straight into getUserMedia() then throws NotReadableError ("camera in
+                    // use"), which read to the user as the camera "crashing". One short retry
+                    // after letting the previous stream finish releasing fixes the vast
+                    // majority of these without needing a user-visible error.
+                    if (firstAttemptError.name === 'NotReadableError') {
+                        console.warn('⚠️ Camera busy on first attempt, retrying shortly...', firstAttemptError.message);
+                        await new Promise(resolve => setTimeout(resolve, 350));
+                        photoState.photoStream = await navigator.mediaDevices.getUserMedia({
+                            video: true,
+                            audio: true
+                        });
+                    } else {
+                        throw firstAttemptError;
                     }
                 }
 
@@ -50988,6 +50910,18 @@ For more help, visit: help.pose.app
                         frameRate: settings.frameRate + 'fps',
                         facingMode: settings.facingMode
                     });
+
+                    // This request has no facingMode constraint, so whichever camera the
+                    // browser/OS hands back may not match photoState.cameraFacingMode's
+                    // hardcoded default of 'environment' — on laptops/desktops (the only
+                    // camera is front-facing) it never is. Without syncing this, the mirror
+                    // logic in ensureVideoElement()/capturePhoto() assumes "back camera, don't
+                    // mirror" for what is actually a front camera, so the preview isn't
+                    // mirrored and (before the capture-time fix) the saved photo could still
+                    // end up flipped the wrong way. Most browsers report settings.facingMode
+                    // reliably; when they don't (common on desktop), default to 'user' since a
+                    // single built-in camera is virtually always front-facing.
+                    photoState.cameraFacingMode = settings.facingMode === 'environment' ? 'environment' : 'user';
                 }
 
                 // Ensure video element exists and is properly set up
@@ -51066,18 +51000,29 @@ For more help, visit: help.pose.app
                     perspective: 1000px;
                 `;
 
-                const mirror = photoState.cameraFacingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
-                video.style.transform = mirror;
-                video.style.webkitTransform = mirror;
-                video.style.mozTransform = mirror;
-
-                // Clear any text content from container before adding video
-                container.innerHTML = '';
+                // Insert the video as the FIRST child instead of wiping the container —
+                // .photo-preview-wrapper's static markup also contains #ratioGuide (the
+                // composition frame overlay), and `container.innerHTML = ''` was deleting
+                // it from the DOM the first time the camera opened. Every later call to
+                // updateRatioGuide() (e.g. from the Ratio menu) then threw
+                // "Cannot set properties of null" trying to style an element that no
+                // longer existed.
                 container.style.background = '#000';  // Black background
-                container.appendChild(video);
+                container.prepend(video);
 
                 console.log('✅ Professional video element created');
             }
+
+            // Mirror only the front camera — and re-apply this every call, not just when
+            // the <video> element is first created. switchPhotoCamera() reuses the same
+            // element on every flip (only recreates it if missing), so this used to only
+            // ever run once for whichever camera opened first; flipping to the back
+            // camera afterward left the mirror transform stuck from the front camera,
+            // permanently mirroring a preview that should never be mirrored.
+            const mirror = photoState.cameraFacingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+            video.style.transform = mirror;
+            video.style.webkitTransform = mirror;
+            video.style.mozTransform = mirror;
 
             // Assign stream to video
             console.log('📹 Video element srcObject before:', video.srcObject ? 'has stream' : 'no stream');
@@ -51138,25 +51083,6 @@ For more help, visit: help.pose.app
             const currentIdx = flashModes.indexOf(current);
             photoState.photoSettings.flash = flashModes[(currentIdx + 1) % flashModes.length];
 
-            // Update menu if exists
-            const menu = document.getElementById('recPhotoLeftMenu');
-            if (menu) {
-                const flashItem = menu.querySelector('.rec-menu-item:nth-child(1)');
-                if (flashItem) {
-                    let flashText = '⚡ Flash';
-                    if (photoState.photoSettings.flash === 'on') {
-                        flashItem.style.color = '#FFD700';
-                        flashText = '⚡ Flash (ON)';
-                    } else if (photoState.photoSettings.flash === 'auto') {
-                        flashItem.style.color = '#FFA500';
-                        flashText = '⚡ Flash (AUTO)';
-                    } else {
-                        flashItem.style.color = 'white';
-                    }
-                    flashItem.textContent = flashText;
-                }
-            }
-
             // Update bottom button state
             updatePhotoFlashButtonState();
 
@@ -51168,7 +51094,7 @@ For more help, visit: help.pose.app
             }
 
             showToastRecording(message, 'info', '⚡');
-            if (menu) closePhotoLeftMenu();
+            closePhotoLeftMenu();
         }
 
         function updatePhotoFlashButtonState() {
@@ -51285,8 +51211,8 @@ For more help, visit: help.pose.app
             const video = document.getElementById('photoPreviewVideo');
             const guide = document.getElementById('ratioGuide');
 
-            if (!video || !video.videoWidth) {
-                console.log('Video not ready yet');
+            if (!video || !video.videoWidth || !guide) {
+                console.log('Video or ratio guide not ready yet');
                 return;
             }
 
@@ -51336,17 +51262,15 @@ For more help, visit: help.pose.app
             const nextIndex = (timers.indexOf(currentTimer) + 1) % timers.length;
             photoState.photoSettings.timer = timers[nextIndex];
 
-            // Update menu if exists
-            const menu = document.getElementById('recPhotoLeftMenu');
-            if (menu) {
-                const timerItem = menu.querySelector('.rec-menu-item:nth-child(2)');
-                if (timerItem) {
-                    if (photoState.photoSettings.timer === 0) {
-                        timerItem.textContent = '⏱ Timer';
-                    } else {
-                        timerItem.textContent = `⏱ ${photoState.photoSettings.timer}s`;
-                    }
-                }
+            // Update its own menu label directly by ID — was previously
+            // ":nth-child(2)", which actually pointed at the "Filters" row (this menu
+            // only has 3 items: Timer, Filters, Ratio), so toggling the timer was
+            // overwriting the Filters row's text with "⏱ Timer" / "⏱ 3s" etc.
+            const timerItem = document.getElementById('recPhotoMenuTimer');
+            if (timerItem) {
+                timerItem.innerHTML = photoState.photoSettings.timer === 0
+                    ? '<i class="fa-solid fa-stopwatch"></i> Timer'
+                    : `<i class="fa-solid fa-stopwatch"></i> ${photoState.photoSettings.timer}s`;
             }
 
             // Update bottom button state
@@ -51356,7 +51280,7 @@ For more help, visit: help.pose.app
                 ? 'Timer OFF'
                 : `⏱ Timer: ${photoState.photoSettings.timer}s`;
             showToastRecording(message, 'info', '⏱');
-            if (menu) closePhotoLeftMenu();
+            closePhotoLeftMenu();
         }
 
         function updatePhotoTimerButtonState() {
@@ -53310,15 +53234,14 @@ For more help, visit: help.pose.app
         }
 
         function togglePhotoGrid() {
+            // Note: there is no "Grid" row in #recPhotoLeftMenu (it only has Timer,
+            // Filters, Ratio) — this previously tried to style ".rec-menu-item:nth-child(4)",
+            // which doesn't exist in that menu, and would throw on the very first call.
             photoState.photoSettings.grid = !photoState.photoSettings.grid;
-            const menu = document.getElementById('recPhotoLeftMenu');
-            const gridItem = menu.querySelector('.rec-menu-item:nth-child(4)');
 
             if (photoState.photoSettings.grid) {
-                gridItem.style.color = '#FFD700';
                 showGridOverlay('grid-overlay-photo');
             } else {
-                gridItem.style.color = 'white';
                 hideGridOverlay();
             }
 
@@ -53331,9 +53254,14 @@ For more help, visit: help.pose.app
             const currentIdx = ratios.indexOf(photoState.photoSettings.ratio);
             photoState.photoSettings.ratio = ratios[(currentIdx + 1) % ratios.length];
 
-            const menu = document.getElementById('recPhotoLeftMenu');
-            const ratioItem = menu.querySelector('.rec-menu-item:nth-child(5)');
-            ratioItem.textContent = `📐 ${photoState.photoSettings.ratio}`;
+            // Update its own menu label directly by ID — this was previously
+            // ":nth-child(5)", which doesn't exist in this 3-item menu (Timer, Filters,
+            // Ratio) and threw "Cannot set properties of null" on every single click of
+            // "Ratio", before updateRatioGuide() or the toast ever ran.
+            const ratioItem = document.getElementById('recPhotoMenuRatio');
+            if (ratioItem) {
+                ratioItem.innerHTML = `<i class="fa-solid fa-ruler-combined"></i> ${photoState.photoSettings.ratio}`;
+            }
 
             // Update live ratio guide frame in preview
             updateRatioGuide();
@@ -53719,9 +53647,21 @@ For more help, visit: help.pose.app
                 }
 
                 // STEP 5: Draw video frame at NATIVE resolution with proper cropping for aspect ratio
-                // DON'T flip in code - let CSS handle it (Screen 5 video already has CSS scaleX(-1))
-                // Draw as-is from the video element
+                // IMPORTANT: CSS transform: scaleX(-1) on the <video> element only flips how
+                // the preview is PAINTED on screen — it never touches the underlying pixel data,
+                // so ctx.drawImage(video, ...) always reads the raw, un-mirrored sensor frame no
+                // matter what the preview looked like. For the front camera the preview is
+                // mirrored (mirror-like, matches user expectation), so we must mirror the canvas
+                // draw here too, otherwise the saved photo comes out flipped left/right relative
+                // to what the user framed. The back camera preview is never mirrored, so it needs
+                // no flip here.
+                photoState.ctx.setTransform(1, 0, 0, 1, 0, 0); // reset any transform from a previous capture on this reused canvas
+                if (photoState.cameraFacingMode === 'user') {
+                    photoState.ctx.translate(canvasWidth, 0);
+                    photoState.ctx.scale(-1, 1);
+                }
                 photoState.ctx.drawImage(video, offsetX, offsetY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+                photoState.ctx.setTransform(1, 0, 0, 1, 0, 0); // don't let the flip leak into STEP 6's flash overlay
 
                 // STEP 6: Apply flash effect if enabled (brightness boost to capture)
                 if (photoState.photoSettings.flash) {
@@ -53806,17 +53746,15 @@ For more help, visit: help.pose.app
                 photoImg.src = photoUrl;
                 photoImg.style.display = 'block';
 
-                // Apply mirror transform only for camera photos, NOT for gallery photos
-                if (photo.isGalleryPhoto) {
-                    photoImg.style.transform = 'none';
-                    photoImg.style.webkitTransform = 'none';
-                    photoImg.style.mozTransform = 'none';
-                } else {
-                    // Camera photos get mirrored
-                    photoImg.style.transform = 'scaleX(-1)';
-                    photoImg.style.webkitTransform = 'scaleX(-1)';
-                    photoImg.style.mozTransform = 'scaleX(-1)';
-                }
+                // No mirror transform here: capturePhoto() now bakes the correct left/right
+                // orientation into the pixel data itself (mirrored for front camera, matching
+                // what the user saw while framing the shot; untouched for back camera and
+                // gallery photos), so the stored blob is already correct everywhere it's used
+                // (screen6, screen7, and the final post). Re-mirroring the <img> here would
+                // just flip a photo that's already right.
+                photoImg.style.transform = 'none';
+                photoImg.style.webkitTransform = 'none';
+                photoImg.style.mozTransform = 'none';
 
                 // Hide placeholder
                 if (placeholder) {
@@ -61436,29 +61374,24 @@ For more help, visit: help.pose.app
             }
         });
 
-        // Close camera if page loses focus
+        // Pause playback on blur (but do NOT kill camera streams here — see below)
         window.addEventListener('blur', () => {
-            console.log('⚠️ Window blurred - Turning off cameras');
+            // NOTE: this used to also call stopVideoCamera()/stopPhotoMode()/v2TurnOffCamera()
+            // on blur. That was wrong: `blur` fires any time the OS-level window focus moves
+            // away, which includes the browser's own camera-permission prompt stealing focus
+            // the instant getUserMedia() is called. Since there's no matching `focus` listener
+            // to restart the stream, that killed the just-opened camera within seconds of
+            // opening screen 5, every time — the tab was still fully visible the whole time.
+            // `document.addEventListener('visibilitychange', ...)` above already handles the
+            // case that actually matters (tab switched away / minimized, via document.hidden),
+            // so camera teardown belongs there, not here.
+            console.log('⚠️ Window blurred - pausing playback only (cameras stay on)');
 
             // Pause v2 edit video if playing
             const v2EditVideo = document.getElementById('v2EditVideo');
             if (v2EditVideo && !v2EditVideo.paused) {
                 v2EditVideo.pause();
                 console.log('⏸️ V2 Edit video paused - window blurred');
-            }
-
-            // Turn off V2 camera when window loses focus
-            if (v2MediaStream || (recordingState && recordingState.stream)) {
-                v2TurnOffCamera();
-                console.log('📵 V2 Camera turned off - window blurred');
-            }
-
-            // Stop other cameras
-            if (recordingState.stream) {
-                stopVideoCamera();
-            }
-            if (photoState.photoStream) {
-                stopPhotoMode();
             }
         });
 
@@ -63266,7 +63199,7 @@ For more help, visit: help.pose.app
                 const postData = postDoc.exists ? postDoc.data() : {};
                 const title = postData.title || postData.caption || 'Premium Video';
 
-                window.pendingPurchase = { postId: videoId, creatorId, price, title, userBalance: bal };
+                pendingPurchase = { postId: videoId, creatorId, price, title, userBalance: bal };
                 document.getElementById('purchaseTitle').textContent = title;
                 document.getElementById('purchaseTitle2').textContent = title;
                 document.getElementById('purchaseBalance').textContent = bal + ' pCoin';
@@ -63577,13 +63510,15 @@ For more help, visit: help.pose.app
                     statusDiv.className = 'pin-status success';
                     statusDiv.textContent = '✅ PIN verified successfully!';
 
+                    // Short flash of the checkmark only — the caller (e.g. paid-video
+                    // playback) is waiting on this callback to proceed, so don't sit here.
                     setTimeout(() => {
                         closePinModal();
                         // Call callback if exists
                         if (window.pinVerificationCallback) {
                             window.pinVerificationCallback();
                         }
-                    }, 1000);
+                    }, 250);
                 }
             } catch (error) {
                 console.error('PIN operation error:', error);
@@ -64785,6 +64720,36 @@ For more help, visit: help.pose.app
                 return words.slice(0, wordLimit).join(' ') + '...';
             }
             return text;
+        }
+
+        // Screen7's "Add hashtags" / "Tag people" inputs are saved as separate
+        // free-text fields (data.hashtags / data.tags) on the post doc — they were
+        // never folded back into the caption shown under the video/photo, so posted
+        // hashtags and tags silently disappeared from the feed. This combines them
+        // into one string for display, normalizing each token to start with # or @
+        // (the user may or may not have typed the symbol themselves).
+        function buildForYouCaptionText(data) {
+            const base = (data && data.caption) || '';
+            const normalize = (raw, prefix) => {
+                if (!raw) return '';
+                return String(raw)
+                    .split(/[,\s]+/)
+                    .map(t => t.trim())
+                    .filter(Boolean)
+                    .map(t => (t.startsWith(prefix) ? t : prefix + t))
+                    .join(' ');
+            };
+            const hashtagsText = normalize(data && data.hashtags, '#');
+            const tagsText = normalize(data && data.tags, '@');
+            return [base, hashtagsText, tagsText].filter(Boolean).join(' ').trim();
+        }
+
+        // Highlight #hashtags and @tags within already-built caption text (matches
+        // the existing hashtag styling used in the caption "See more" popup).
+        function highlightCaptionTags(text) {
+            return (text || '')
+                .replace(/#(\w+)/g, '<span class="hashtag-tag">#$1</span>')
+                .replace(/@(\w+)/g, '<span class="hashtag-tag">@$1</span>');
         }
 
         // Close caption modal
@@ -73159,17 +73124,7 @@ For more help, visit: help.pose.app
 
             <div class="v2-record-status-bar" id="v2RecordStatusBar">
                 <div class="v2-record-dot"></div>
-                <span>Recording...</span>
-            </div>
-
-            <div class="v2-record-timer" id="v2RecordTimer">0:00</div>
-
-            <!-- Settings Display Panel -->
-            <div class="v2-record-settings-panel" id="v2RecordSettingsPanel">
-                <div class="v2-setting-item">
-                    <span class="v2-setting-label">Layout:</span>
-                    <span class="v2-setting-value" id="v2DisplayLayout">Full</span>
-                </div>
+                <div class="v2-record-timer" id="v2RecordTimer">0:00</div>
             </div>
 
             <!-- Sound Display Panel (Top Center) -->
@@ -73312,29 +73267,17 @@ For more help, visit: help.pose.app
                 <button class="v2-top-next-btn" onclick="continuetoscreen4()">✓</button>
             </div>
 
-            <div class="video-container" id="v2EditVideoContainer" style="width: 100%; height: 100%;">
+            <div class="video-container" id="v2EditVideoContainer" style="width: 100%; height: 100%;" onclick="toggleV2EditPlay(event)">
                 <video id="v2EditVideo" playsinline preload="auto" autoplay muted
                     style="width: 100%; height: 100%; background: #000;"></video>
                 <div class="video-overlay" id="v2EditVideoOverlay">
-                    <button class="play-btn" id="v2EditPlayBtn" onclick="toggleV2EditPlay(event)">
+                    <button class="play-btn" id="v2EditPlayBtn">
                         <i class="fas fa-play"></i>
                     </button>
                 </div>
-                <button class="pause-btn" id="v2EditPauseBtn" onclick="toggleV2EditPlay(event)">
+                <button class="pause-btn" id="v2EditPauseBtn">
                     <i class="fas fa-pause"></i>
                 </button>
-            </div>
-
-            <!-- Recording Metadata Display -->
-            <div class="v2-edit-metadata" id="v2EditMetadata">
-                <div class="v2-meta-item">
-                    <span class="v2-meta-label">Layout:</span>
-                    <span class="v2-meta-value" id="v2EditMetaLayout">Full</span>
-                </div>
-                <div class="v2-meta-item">
-                    <span class="v2-meta-label">Speed:</span>
-                    <span class="v2-meta-value" id="v2EditMetaSpeed">1x</span>
-                </div>
             </div>
 
             <div class="v2-time-indicator" id="v2TimeIndicator">0:00</div>
@@ -73727,14 +73670,6 @@ For more help, visit: help.pose.app
             const duration = recordingState.selectedDuration || recordingState.maxDuration || 30;
             const sound = recordingState.selectedSound;
 
-            // Display settings in V2 Record
-            const layoutNames = {
-                'full': 'Full',
-                '16:9': '16:9',
-                '1:1': '1:1'
-            };
-
-            document.getElementById('v2DisplayLayout').textContent = layoutNames[layout] || layout;
             // Speed and duration customization removed from recording screen
             // Users will customize these in the edit screen
 
@@ -73849,7 +73784,10 @@ For more help, visit: help.pose.app
         function v2SetupCanvasRecording() {
             const canvas = document.getElementById('v2RecordCanvas');
             const video = document.getElementById('v2RecordVideo');
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            // No willReadFrequently here — renderFilteredFrame() below never calls
+            // getImageData/putImageData, so leaving this unset keeps the canvas
+            // GPU-composited instead of forcing a slow CPU-backed surface.
+            const ctx = canvas.getContext('2d');
 
             // Use actual video dimensions for proper recording
             const recordingWidth = video.videoWidth || 1280;
@@ -73879,9 +73817,6 @@ For more help, visit: help.pose.app
             const hasEffects = recordingState.selectedEffects && recordingState.selectedEffects.length > 0;
 
             function renderFilteredFrame() {
-                // Draw video frame to canvas with high-quality scaling
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
                 // Determine which filter to apply
                 let filterToApply = recordingState.currentFilter;
 
@@ -73892,23 +73827,17 @@ For more help, visit: help.pose.app
                     // Clear filter if 'none' was selected during pause
                     filterToApply = 'none';
                 }
-
-                // Apply filter using optimized method
                 const shouldApplyFilter = filterToApply && filterToApply !== 'none';
-                if (shouldApplyFilter && !hasEffects) {
-                    // Use faster CSS filter simulation instead of pixel-by-pixel
-                    const filterCSS = getCanvasFilterString(filterToApply);
-                    if (filterCSS && filterCSS !== 'none') {
-                        // For performance-critical recording, use faster lookup-table based filters
-                        if (filterToApply === 'bw' || filterToApply === 'grayscale') {
-                            applyCanvasFilterEffectFast(ctx, canvas.width, canvas.height, filterToApply);
-                        } else {
-                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                            applyCanvasFilterEffect(imageData, filterToApply);
-                            ctx.putImageData(imageData, 0, 0);
-                        }
-                    }
-                }
+
+                // Apply the filter via the canvas's native `filter` property BEFORE drawing —
+                // this is GPU-composited by the browser, same as the CSS filter used for the
+                // live preview. The old code drew the frame first, then ran a manual
+                // getImageData/putImageData pixel loop over the FULL native-resolution frame
+                // on every single animation frame — that per-frame CPU readback was the
+                // actual cause of dropped frames / stutter during recording.
+                ctx.filter = (shouldApplyFilter && !hasEffects) ? (getCanvasFilterString(filterToApply) || 'none') : 'none';
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.filter = 'none';
 
                 // Composite effects canvas on top (if effects active)
                 if (hasEffects && !hasFilter) {
@@ -73923,72 +73852,6 @@ For more help, visit: help.pose.app
 
             renderFilteredFrame();
             return recordingStream;
-        }
-
-        // Helper function to apply filter effects to canvas pixels
-        function applyCanvasFilterEffect(imageData, filterName) {
-            const data = imageData.data;
-
-            switch (filterName) {
-                case 'sepia':
-                    for (let i = 0; i < data.length; i += 4) {
-                        const r = data[i], g = data[i + 1], b = data[i + 2];
-                        data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
-                        data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
-                        data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
-                    }
-                    break;
-                case 'grayscale':
-                    for (let i = 0; i < data.length; i += 4) {
-                        const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
-                        data[i] = data[i + 1] = data[i + 2] = gray;
-                    }
-                    break;
-                case 'invert':
-                    for (let i = 0; i < data.length; i += 4) {
-                        data[i] = 255 - data[i];
-                        data[i + 1] = 255 - data[i + 1];
-                        data[i + 2] = 255 - data[i + 2];
-                    }
-                    break;
-                case 'cold':
-                    for (let i = 0; i < data.length; i += 4) {
-                        data[i] = Math.max(0, data[i] - 20);
-                        data[i + 2] = Math.min(255, data[i + 2] + 30);
-                    }
-                    break;
-                case 'warm':
-                    for (let i = 0; i < data.length; i += 4) {
-                        data[i] = Math.min(255, data[i] + 30);
-                        data[i + 2] = Math.max(0, data[i + 2] - 20);
-                    }
-                    break;
-                case 'vivid':
-                    for (let i = 0; i < data.length; i += 4) {
-                        data[i] = Math.min(255, data[i] * 1.2);
-                        data[i + 1] = Math.min(255, data[i + 1] * 1.2);
-                        data[i + 2] = Math.min(255, data[i + 2] * 1.2);
-                    }
-                    break;
-            }
-        }
-
-        // Fast filter using canvas filter property (optimized for recording)
-        function applyCanvasFilterEffectFast(ctx, width, height, filterName) {
-            // Save current state
-            const savedCompositeOperation = ctx.globalCompositeOperation;
-
-            // Apply CSS filter string directly to canvas rendering
-            switch (filterName) {
-                case 'bw':
-                case 'grayscale':
-                    ctx.filter = 'grayscale(100%)';
-                    break;
-            }
-
-            // The filter is now applied to subsequent drawing operations
-            // Reset for next frame
-            ctx.filter = 'none';
         }
 
         // Toggle recording
@@ -74799,15 +74662,6 @@ For more help, visit: help.pose.app
             // Display recording metadata in edit screen
             const layout = recordingState.layout || recordingState.aspectRatio || 'full';
             const speed = recordingState.currentSpeed || recordingState.playbackSpeed || 1;
-
-            const layoutNames = {
-                'full': 'Full',
-                '16:9': '16:9',
-                '1:1': '1:1'
-            };
-
-            document.getElementById('v2EditMetaLayout').textContent = layoutNames[layout] || layout;
-            document.getElementById('v2EditMetaSpeed').textContent = `${speed}x`;
 
             // Apply layout constraint to V2 Edit wrapper
             const v2EditWrapper = document.querySelector('.v2-edit-video-wrapper');
@@ -78750,12 +78604,42 @@ For more help, visit: help.pose.app
              
              const isUploadedFile = video.isUploadedFile || false;
              const mirrorStyle = isUploadedFile ? 'none' : 'scaleX(-1)';
+             // Caption + hashtags + tags combined for display (see buildForYouCaptionText)
+             const trendCaptionFullText = buildForYouCaptionText(video) || 'Trending content';
              // Match For You: fall back to uploadedBy when userId isn't set,
              // so the follow badge can correctly resolve the creator's UID.
              const ownerUid = video.userId || video.uploadedBy || '';
 
+             // This modal used to unconditionally render a <video> tag for every trend
+             // item, even photo posts (video.videoUrl for a photo doc is just its first
+             // image URL) — so tapping a trending photo showed a broken/blank player.
+             // Mirror createForYouVideoPost's isPhoto + multi-image handling so photos
+             // (including multi-photo posts) render as a swipeable image carousel here too.
+             const isPhoto = video.isPhoto || video.type === 'photo' || false;
+             const photoUrls = isPhoto && Array.isArray(video.images) && video.images.length
+                 ? video.images
+                 : (isPhoto ? [video.videoUrl] : []);
+             let trendMediaHtml;
+             if (isPhoto && photoUrls.length > 1) {
+                 const slides = photoUrls.map((url, i) =>
+                     `<img src="${cldImage(url, { variant: 'fullscreen' })}" srcset="${cldSrcset(url, [360, 720, 1080, 1440])}" sizes="100vw" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" style="flex:0 0 100%; width:100%; height:100%; object-fit:cover; scroll-snap-align:center;" alt="Photo ${i + 1} of ${photoUrls.length}"/>`
+                 ).join('');
+                 const dots = photoUrls.map((_, i) =>
+                     `<span class="foryou-photo-dot${i === 0 ? ' active' : ''}"></span>`
+                 ).join('');
+                 trendMediaHtml = `<div class="foryou-photo-carousel" style="position:absolute; inset:0; width:100%; height:100%;">
+                     <div class="foryou-photo-track" style="display:flex; flex-direction:column; width:100%; height:100%; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch;">${slides}</div>
+                     <div class="foryou-photo-dots" style="position:absolute; bottom:65px; left:10px; width:160px; display:flex; justify-content:center; gap:5px; z-index:5; pointer-events:none;">${dots}</div>
+                     <div class="foryou-photo-counter">1/${photoUrls.length}</div>
+                 </div>`;
+             } else if (isPhoto) {
+                 trendMediaHtml = `<img src="${cldImage(photoUrls[0] || video.videoUrl, { variant: 'fullscreen' })}" srcset="${cldSrcset(photoUrls[0] || video.videoUrl, [360, 720, 1080, 1440])}" sizes="100vw" loading="eager" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Photo"/>`;
+             } else {
+                 trendMediaHtml = `<video src="${cldVideo(video.videoUrl, { variant: 'fullscreen' })}" preload="auto" loop style="width: 100%; height: 100%; object-fit: cover; transform: ${mirrorStyle};" playsinline webkit-playsinline></video>`;
+             }
+
              videoContainer.innerHTML = `
-                 <video src="${cldVideo(video.videoUrl, { variant: 'fullscreen' })}" preload="auto" loop style="width: 100%; height: 100%; object-fit: cover; transform: ${mirrorStyle};" playsinline webkit-playsinline></video>
+                 ${trendMediaHtml}
                  <div class="play-pause-overlay">
                      <svg class="play-icon" viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: white;">
                          <path d="M8 5v14l11-7z" />
@@ -78777,9 +78661,9 @@ For more help, visit: help.pose.app
                       </div>
                      <div class="forYou-caption" id="trendCaption">
                           <div class="caption-text">
-                              <b>${truncateCaption(video.caption || 'Trending content', 7)}</b>
+                              <b>${highlightCaptionTags(truncateCaption(trendCaptionFullText, 7))}</b>
                           </div>
-                          ${(video.caption || 'Trending content').split(' ').length > 7 ? `<button class="see-more-btn" onclick="handleSeeMoreClick(event, 0, \`${(video.caption || 'Trending content').replace(/`/g, '\\`')}\`)">See more >></button>` : ''}
+                          ${trendCaptionFullText.split(' ').length > 7 ? `<button class="see-more-btn" onclick="handleSeeMoreClick(event, 0, \`${trendCaptionFullText.replace(/`/g, '\\`')}\`)">See more >></button>` : ''}
                           </div>
                           ${video.allowAds === false ? '' : `
                           <div class="forYou-banner-ad">
@@ -78835,11 +78719,44 @@ For more help, visit: help.pose.app
                               </div>
                               `;
 
-             // Setup video controls
-             setupTrendVideoControls();
+             // Multi-photo carousel: keep the dot/counter indicators in sync as the user
+             // swipes vertically, and let a tap smooth-scroll down to the next photo
+             // (same wiring as the For You feed's own carousel).
+             if (isPhoto && photoUrls.length > 1) {
+                 const track = videoContainer.querySelector('.foryou-photo-track');
+                 const dots = videoContainer.querySelectorAll('.foryou-photo-dot');
+                 const counter = videoContainer.querySelector('.foryou-photo-counter');
+                 if (track) {
+                     let scrollTimer = null;
+                     const updateTrendPhotoIndicators = () => {
+                         const h = track.clientHeight || 1;
+                         const active = Math.max(0, Math.min(photoUrls.length - 1, Math.round(track.scrollTop / h)));
+                         dots.forEach((d, i) => d.classList.toggle('active', i === active));
+                         if (counter) counter.textContent = `${active + 1}/${photoUrls.length}`;
+                     };
+                     track.addEventListener('scroll', () => {
+                         if (scrollTimer) clearTimeout(scrollTimer);
+                         scrollTimer = setTimeout(updateTrendPhotoIndicators, 80);
+                     }, { passive: true });
+                 }
+                 videoContainer.querySelector('.foryou-photo-carousel')?.addEventListener('click', (e) => {
+                     e.stopPropagation();
+                     if (!track) return;
+                     const h = track.clientHeight || 1;
+                     const current = Math.round(track.scrollTop / h);
+                     const next = current + 1;
+                     if (next < photoUrls.length) {
+                         track.scrollTo({ top: next * h, behavior: 'smooth' });
+                     }
+                 });
+             }
 
-             // Wire up custom seek bar (timeline scrubber) for fast-forward / rewind
-             attachVideoSeekBar(videoContainer);
+             // Setup video controls (no-op for photo posts — there's no <video> element)
+             if (!isPhoto) {
+                 setupTrendVideoControls();
+                 // Wire up custom seek bar (timeline scrubber) for fast-forward / rewind
+                 attachVideoSeekBar(videoContainer);
+             }
 
              // 💜 Double-tap to like (TikTok-style) for the trend fullscreen video
              // Single-tap toggles play/pause via deferred handler so it never
@@ -79280,7 +79197,9 @@ For more help, visit: help.pose.app
         function _rerenderEmptySearch(tab) {
             if (tab === 'pose') renderPoseSearch('');
             else if (tab === 'buzz') renderBuzzSearch('');
-            else if (tab === 'forYou' && typeof loadTrendingTab === 'function') loadTrendingTab();
+            // Recent Searches lives on the "Recent" tab (loadRecentTab), not Trends —
+            // re-render that same tab so it reflects the now-cleared history immediately.
+            else if (tab === 'forYou' && typeof loadRecentTab === 'function') loadRecentTab();
         }
         function clearRecentSearches(tab) {
             SearchHistory.clear(tab);
@@ -79848,6 +79767,13 @@ For more help, visit: help.pose.app
             }
         }
 
+        // Debounced auto-save: SearchHistory.add() was previously only called when the
+        // user pressed Enter or tapped a suggestion pill — anyone who just typed a query
+        // and read the live results (the common case, since results update on every
+        // keystroke already) never got saved to Recent Searches at all, so the Recent
+        // tab stayed empty and getRecommendedSearches() (which needs history to work
+        // from) never had anything to recommend either.
+        let _searchHistorySaveTimer = null;
         async function updateSearchQuery(query) {
             searchState.searchQuery = query;
             const clearBtn = document.getElementById('searchClearBtn');
@@ -79858,6 +79784,12 @@ For more help, visit: help.pose.app
             await renderSearchContent();
             if (searchState.activeTab === 'trends') {
                 startAutoScroll();
+            }
+
+            clearTimeout(_searchHistorySaveTimer);
+            const q = (query || '').trim();
+            if (q.length >= 2) {
+                _searchHistorySaveTimer = setTimeout(() => { SearchHistory.add('forYou', q); }, 1200);
             }
         }
 
@@ -79871,6 +79803,24 @@ For more help, visit: help.pose.app
             renderSearchContent();
         }
 
+        // Safely pull a list of hashtag strings off a post regardless of whether
+        // hashtags/tags was saved as a comma/space/#-separated string (most upload
+        // flows) or already as an array (a couple of flows write it that way, e.g.
+        // getSearchData's shape) — the old code assumed it was always a string and
+        // called .split() unconditionally, which throws on an array. Since that call
+        // sat inside a bare forEach with no try/catch, ONE post with array-shaped
+        // hashtags anywhere in the first 300 videos was enough to throw, reject the
+        // whole suggestions-cache promise, and permanently break "auto suggest" for
+        // the rest of the session (the cache variable never gets set, so every
+        // keystroke re-triggers and re-fails the same way).
+        function _extractHashtags(post) {
+            try {
+                const raw = post && (post.hashtags || post.tags);
+                const list = Array.isArray(raw) ? raw : (typeof raw === 'string' ? raw.split(/[\s,#]+/) : []);
+                return list.map(t => String(t).trim()).filter(Boolean);
+            } catch (e) { return []; }
+        }
+
         // ── Live keyword suggestions (shown under the search bar while typing) ──
         let _searchSuggestionsCache = null;
         async function _ensureSearchSuggestionsCache() {
@@ -79878,12 +79828,12 @@ For more help, visit: help.pose.app
             const posts = await queryAllPosts();
             const tagFreq = {};
             posts.forEach(post => {
-                const tags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(Boolean);
-                tags.forEach(tag => { tagFreq[tag] = (tagFreq[tag] || 0) + 1; });
+                _extractHashtags(post).forEach(tag => { tagFreq[tag] = (tagFreq[tag] || 0) + 1; });
             });
-            _searchSuggestionsCache = Object.entries(tagFreq)
-                .map(([tag, count]) => ({ tag, count }))
-                .sort((a, b) => b.count - a.count);
+            _searchSuggestionsCache = {
+                tags: Object.entries(tagFreq).map(([tag, count]) => ({ tag, count })).sort((a, b) => b.count - a.count),
+                posts, // kept so caption/title text can also be suggested, not just hashtags
+            };
             return _searchSuggestionsCache;
         }
 
@@ -79908,23 +79858,49 @@ For more help, visit: help.pose.app
                 return;
             }
 
-            const tags = await _ensureSearchSuggestionsCache();
+            let cache;
+            try {
+                cache = await _ensureSearchSuggestionsCache();
+            } catch (e) {
+                console.warn('Search suggestions failed to load:', e);
+                dropdown.classList.remove('active'); dropdown.innerHTML = '';
+                return;
+            }
             // Stale guard: bail if the input changed again while we were awaiting the cache.
             const liveInput = document.getElementById('searchInterfaceInput');
             if (liveInput && (liveInput.value || '').trim().toLowerCase() !== q) return;
 
-            const matches = tags.filter(t => t.tag.toLowerCase().includes(q)).slice(0, 8);
+            const tagMatches = cache.tags.filter(t => t.tag.toLowerCase().includes(q)).slice(0, 5)
+                .map(m => ({ label: m.tag, icon: '#', meta: `${formatCount(m.count)} posts` }));
+
+            // Also suggest matching video titles/captions — most people search by what
+            // a video is actually about, not by an exact hashtag, and plenty of posts
+            // are never tagged with hashtags at all.
+            const seen = new Set(tagMatches.map(m => m.label.toLowerCase()));
+            const textMatches = [];
+            const maxText = 8 - tagMatches.length;
+            for (const post of cache.posts) {
+                if (textMatches.length >= maxText) break;
+                const title = ((post.caption || post.title || '') + '').trim();
+                const key = title.toLowerCase();
+                if (title && key.includes(q) && !seen.has(key)) {
+                    seen.add(key);
+                    textMatches.push({ label: title, icon: '<i class="fas fa-search"></i>', meta: 'Video' });
+                }
+            }
+
+            const matches = [...tagMatches, ...textMatches];
             if (!matches.length) { dropdown.classList.remove('active'); dropdown.innerHTML = ''; return; }
             dropdown.innerHTML = matches.map(m => {
-                const safe = m.tag.replace(/'/g, "\\'").replace(/</g, '&lt;');
-                const idx = m.tag.toLowerCase().indexOf(q);
+                const safe = m.label.replace(/'/g, "\\'").replace(/</g, '&lt;');
+                const idx = m.label.toLowerCase().indexOf(q);
                 const highlighted = idx >= 0
-                    ? m.tag.slice(0, idx) + '<b>' + m.tag.slice(idx, idx + q.length) + '</b>' + m.tag.slice(idx + q.length)
-                    : m.tag;
+                    ? m.label.slice(0, idx) + '<b>' + m.label.slice(idx, idx + q.length) + '</b>' + m.label.slice(idx + q.length)
+                    : m.label;
                 return `<div class="search-suggestion-item" onmousedown="event.preventDefault();commitSearchSuggestion('${safe}')">
-                    <span class="search-suggestion-icon">#</span>
+                    <span class="search-suggestion-icon">${m.icon}</span>
                     <span class="search-suggestion-text">${highlighted}</span>
-                    <span class="search-suggestion-meta">${formatCount(m.count)} posts</span>
+                    <span class="search-suggestion-meta">${m.meta}</span>
                 </div>`;
             }).join('');
             dropdown.classList.add('active');
@@ -80564,17 +80540,32 @@ For more help, visit: help.pose.app
         // recommendation that needs no extra network calls or backend ML.
         function getRecommendedSearches(tab, posts) {
             const history = SearchHistory.get(tab);
-            if (!history.length || !posts || !posts.length) return [];
+            if (!posts || !posts.length) return [];
+
+            // No search history yet (e.g. first visit) — fall back to the most popular
+            // hashtags overall so the Recent tab still has something to recommend
+            // instead of sitting empty until the user has searched a few times.
+            if (!history.length) {
+                const popularFreq = {};
+                posts.forEach(post => {
+                    _extractHashtags(post).forEach(tag => { popularFreq[tag] = (popularFreq[tag] || 0) + 1; });
+                });
+                return Object.entries(popularFreq)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 6)
+                    .map(([tag, count]) => ({ tag, posts: typeof formatCount === 'function' ? formatCount(count) : count }));
+            }
+
             const historyLower = new Set(history.map(h => h.toLowerCase()));
             const tagFreq = {};
             history.forEach(term => {
                 const q = term.toLowerCase();
                 posts.forEach(post => {
                     const caption = (post.caption || post.title || '').toLowerCase();
-                    const tagsStr = (post.hashtags || post.tags || '').toLowerCase();
+                    const postTags = _extractHashtags(post);
+                    const tagsStr = postTags.join(' ').toLowerCase();
                     if (!caption.includes(q) && !tagsStr.includes(q)) return;
-                    const tags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(Boolean);
-                    tags.forEach(tag => {
+                    postTags.forEach(tag => {
                         if (historyLower.has(tag.toLowerCase())) return; // already searched
                         tagFreq[tag] = (tagFreq[tag] || 0) + 1;
                     });
@@ -80594,7 +80585,7 @@ For more help, visit: help.pose.app
                     const allPosts = await queryAllPosts();
                     const filteredPosts = allPosts.filter(post => {
                         const content = (post.caption || post.title || '').toLowerCase();
-                        const hashtags = (post.hashtags || post.tags || '').toLowerCase();
+                        const hashtags = _extractHashtags(post).join(' ').toLowerCase();
                         return content.includes(searchState.searchQuery.toLowerCase()) ||
                             hashtags.includes(searchState.searchQuery.toLowerCase());
                     });
@@ -80941,7 +80932,7 @@ For more help, visit: help.pose.app
             const engagementMap = {};
 
             posts.forEach(post => {
-                const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                const hashtags = _extractHashtags(post);
                 hashtags.forEach(tag => {
                     if (tag && tag.length > 0) {
                         hashtagMap[tag] = (hashtagMap[tag] || 0) + 1;
@@ -81000,7 +80991,7 @@ For more help, visit: help.pose.app
             const hashtagMap = {};
 
             posts.forEach(post => {
-                const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                const hashtags = _extractHashtags(post);
                 hashtags.forEach(tag => {
                     if (tag && tag.length > 0) {
                         hashtagMap[tag] = (hashtagMap[tag] || 0) + 1;
@@ -81049,7 +81040,7 @@ For more help, visit: help.pose.app
                     allPosts.push(post);
 
                     // Extract and count hashtags
-                    const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                    const hashtags = _extractHashtags(post);
                     hashtags.forEach(tag => {
                         if (tag && tag.length > 0) {
                             hashtagMap[tag] = (hashtagMap[tag] || 0) + 1;
@@ -81099,7 +81090,7 @@ For more help, visit: help.pose.app
                 // 4. Build trending by engagement
                 const engagementMap = {};
                 allPosts.forEach(post => {
-                    const hashtags = (post.hashtags || post.tags || '').split(/[\s,#]+/).filter(h => h);
+                    const hashtags = _extractHashtags(post);
                     hashtags.forEach(tag => {
                         if (tag && tag.length > 0) {
                             if (!engagementMap[tag]) {
@@ -86278,6 +86269,15 @@ function openTrendingPage() {
   document.body.style.overflow = 'hidden';
   tnLoad();
 }
+
+// How long a Blink catalogue snapshot is considered fresh enough to skip a refetch.
+const TN_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
+function tnCacheReplacer(k, v) {
+  // Firestore Timestamps don't survive JSON.stringify — flatten to millis so
+  // tnToDate() can rebuild a real Date from the cached copy on next load.
+  if (v && typeof v === 'object' && typeof v.toMillis === 'function') return { __ts: v.toMillis() };
+  return v;
+}
 function closeTrendingPage() {
   document.getElementById('trendingPage').style.display = 'none';
   document.body.style.overflow = '';
@@ -86288,13 +86288,44 @@ function closeTrendingPage() {
   });
 }
 
-/* ── Fetch using your exact pattern ── */
+/* ── Fetch using your exact pattern (now pulls seasons + their episodes too) ──
+   Loads instantly from cache (in-memory this session, or localStorage across
+   sessions) whenever a cached snapshot is still within TN_CACHE_TTL, then always
+   refetches in the background so the cache never goes stale for long. ── */
 async function tnLoad() {
-  tnShowSkeletons();
+  // In-session cache: reopening Blink without navigating away just re-renders —
+  // no network round-trip, no skeleton flash.
+  const memAge = Date.now() - (window._tnCachedAt || 0);
+  if (window._tnAll && window._tnAll.length && memAge < TN_CACHE_TTL) {
+    tnRender(window._tnAll, window._tnAllSeasons || []);
+    return;
+  }
+
+  // Cross-session cache: show the last saved snapshot immediately (if still fresh
+  // enough to be useful) while a fresh fetch runs underneath — first paint is instant
+  // instead of sitting on a skeleton every time the page is opened cold.
+  let renderedFromCache = false;
+  try {
+    const cachedVideos  = JSON.parse(localStorage.getItem('tnBlinkVideosCache')  || 'null');
+    const cachedSeasons = JSON.parse(localStorage.getItem('tnBlinkSeasonsCache') || 'null');
+    const cacheTime     = parseInt(localStorage.getItem('tnBlinkCacheTime') || '0', 10);
+    if (cachedVideos && cachedVideos.length && (Date.now() - cacheTime) < TN_CACHE_TTL * 4) {
+      window._tnAll = cachedVideos;
+      window._tnAllSeasons = cachedSeasons || [];
+      window._tnFiltered = cachedVideos;
+      window._tnFilteredSeasons = cachedSeasons || [];
+      tnRender(cachedVideos, cachedSeasons || []);
+      renderedFromCache = true;
+    }
+  } catch (e) { /* corrupt/unavailable cache — fall through to a normal fetch */ }
+
+  if (!renderedFromCache) tnShowSkeletons();
+
   try {
     const channelsSnap = await db.collection('channels').get();
     const fetches = [];
     const singleVideos = [];
+    const allSeasons = [];
 
     channelsSnap.forEach(chDoc => {
       const ch = chDoc.data();
@@ -86311,83 +86342,189 @@ async function tnLoad() {
           });
         })
       );
+
+      // Same shape/pattern as the PoseTab "New Seasons" fetch: channels/{uid}/seasons,
+      // with each season's episodes pulled in so paid-episode gating still works.
+      fetches.push(
+        db.collection('channels').doc(chDoc.id).collection('seasons').get().then(async seaSnap => {
+          for (const seaDoc of seaSnap.docs) {
+            const sea = seaDoc.data();
+            const epSnap = await db.collection('channels').doc(chDoc.id)
+              .collection('seasons').doc(seaDoc.id)
+              .collection('episodes').orderBy('episodeNumber', 'asc').get();
+            const episodes = [];
+            epSnap.forEach(epDoc => episodes.push({ id: epDoc.id, ...epDoc.data() }));
+            allSeasons.push({ id: seaDoc.id, channelId: chDoc.id, channel: ch, ...sea, episodes });
+          }
+        })
+      );
     });
 
     await Promise.all(fetches);
-    window._tnAll = singleVideos;
-    window._tnFiltered = singleVideos;
-    tnRender(singleVideos);
+    // Blink is a paid-catalogue showcase — free content never appears here (it already
+    // has a home on the normal PoseTab rows). Filter once here so search/filter and every
+    // rail below stay paid-only without each one having to re-check it.
+    const paidVideos  = singleVideos.filter(tnIsPaidItem);
+    const paidSeasons = allSeasons.filter(tnIsPaidItem);
+    window._tnAll = paidVideos;
+    window._tnAllSeasons = paidSeasons;
+    window._tnFiltered = paidVideos;
+    window._tnFilteredSeasons = paidSeasons;
+    window._tnCachedAt = Date.now();
+    tnRender(paidVideos, paidSeasons);
+
+    try {
+      localStorage.setItem('tnBlinkVideosCache',  JSON.stringify(paidVideos,  tnCacheReplacer));
+      localStorage.setItem('tnBlinkSeasonsCache', JSON.stringify(paidSeasons, tnCacheReplacer));
+      localStorage.setItem('tnBlinkCacheTime', String(Date.now()));
+    } catch (e) { console.warn('Blink cache save failed:', e); }
   } catch (e) {
     console.error('TrendingPage fetch error:', e);
-    document.getElementById('tnRows').innerHTML =
-      '<p style="color:#555;padding:40px 20px;font-size:13px;">Could not load videos. Check your Firebase rules.</p>';
+    // If we already have a cached snapshot on screen, leave it up rather than
+    // replacing a working page with an error — this was just a background refresh.
+    if (!renderedFromCache) {
+      document.getElementById('tnRows').innerHTML =
+        '<p style="color:#555;padding:40px 20px;font-size:13px;">Could not load videos. Check your Firebase rules.</p>';
+    }
   }
 }
 
-/* ── Main render ── */
-function tnRender(videos) {
-  if (!videos.length) {
+/* ── Curated-rail helpers ── */
+function tnToDate(v) {
+  const c = v && v.createdAt;
+  if (!c) return null;
+  if (typeof c.toDate === 'function') return c.toDate();
+  if (typeof c.toMillis === 'function') return new Date(c.toMillis());
+  if (c.__ts != null) return new Date(c.__ts); // flattened by tnCacheReplacer for localStorage
+  if (c.seconds != null) return new Date(c.seconds * 1000);
+  const d = new Date(c);
+  return isNaN(d.getTime()) ? null : d;
+}
+function tnPopScore(v) {
+  return (v.views || v.viewCount || 0) + (v.likes || v.likeCount || 0);
+}
+// Works for both single videos (priceMode/price/coinPrice) and seasons
+// (priceMode 'paid' | 'full-season' | 'mixed' | 'free' + fullSeasonCoins).
+function tnIsPaidItem(v) {
+  if (v.priceMode === 'free') return false;
+  if (v.priceMode === 'paid' || v.priceMode === 'full-season' || v.priceMode === 'mixed') return true;
+  return Number(v.coinPrice || v.price || v.fullSeasonCoins || 0) > 0;
+}
+function tnByPopularity(list) {
+  return [...list].sort((a, b) => tnPopScore(b) - tnPopScore(a));
+}
+function tnTopNewPaid(list, n) {
+  return list.filter(tnIsPaidItem)
+    .filter(v => tnToDate(v))
+    .sort((a, b) => tnToDate(b) - tnToDate(a))
+    .slice(0, n);
+}
+function tnTopThisWindow(list, days, n) {
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  return tnByPopularity(list.filter(v => { const d = tnToDate(v); return d && d.getTime() >= cutoff; })).slice(0, n);
+}
+function tnGroupByCategory(list, n) {
+  const groups = {};
+  list.forEach(v => {
+    const raw = (v.category || (v.channel && v.channel.category) || '').toString().trim();
+    if (!raw) return;
+    const key = raw.toLowerCase();
+    if (!groups[key]) groups[key] = { label: raw.charAt(0).toUpperCase() + raw.slice(1), items: [] };
+    groups[key].items.push(v);
+  });
+  return Object.values(groups)
+    .map(g => ({ label: g.label, items: tnByPopularity(g.items).slice(0, n) }))
+    .filter(g => g.items.length > 0)
+    .sort((a, b) => b.items.length - a.items.length);
+}
+// No personalization data to key off, so "recommended" is a popularity+rating blend —
+// same honest proxy the rest of the app uses (see fyUnlockVideo / For You paywall).
+function tnRecommended(list, n) {
+  return [...list].sort((a, b) => {
+    const scoreA = tnPopScore(a) + (parseFloat(a.rating || a.stars || 0) * 200);
+    const scoreB = tnPopScore(b) + (parseFloat(b.rating || b.stars || 0) * 200);
+    return scoreB - scoreA;
+  }).slice(0, n);
+}
+function tnSlug(str) {
+  return (str || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'x';
+}
+
+/* ── Main render — builds the curated rail set:
+     New Releases (Paid) → one row per category → This Week → This Month,
+     then the same four rails for Seasons, then Recommended (videos + seasons). ── */
+function tnRender(videos, seasons) {
+  seasons = seasons || window._tnAllSeasons || [];
+  if (!videos.length && !seasons.length) {
     document.getElementById('tnRows').innerHTML =
       '<p class="tn-empty" style="padding:40px 20px;">No videos found.</p>';
     return;
   }
 
-  document.getElementById('tnTotalBadge').textContent = `${videos.length} videos`;
+  document.getElementById('tnTotalBadge').textContent = `${videos.length} videos · ${seasons.length} seasons`;
 
-  // Sort by views+likes for ranking
-  const byPop = [...videos].sort((a, b) =>
-    ((b.views||b.viewCount||0) + (b.likes||b.likeCount||0)) -
-    ((a.views||a.viewCount||0) + (a.likes||a.likeCount||0))
-  );
+  // ── Hero + strip (top videos by popularity) ──
+  const byPop = tnByPopularity(videos);
+  if (byPop.length) {
+    window._tnHeroIdx = 0;
+    tnSetHero(byPop[0]);
+    tnBuildStrip(byPop.slice(0, 14));
+    tnStartHeroTimer(byPop);
+  }
 
-  // ── Hero + strip ──
-  window._tnHeroIdx = 0;
-  tnSetHero(byPop[0]);
-  tnBuildStrip(byPop.slice(0, 14));
-  tnStartHeroTimer(byPop);
+  const sections = [];
 
-  // ── Top 10 ──
-  const top10 = byPop.slice(0, 10);
-  tnFillRow('tnTop10', top10, { ranked: true });
-  document.getElementById('tnCountTop10').textContent = `${top10.length} titles`;
+  sections.push({ id: 'tnNewPaid', icon: '🆕', title: 'New Releases · Paid', items: tnTopNewPaid(videos, 10), ranked: true });
 
-  // ── Free ──
-  const free = videos.filter(v => !v.price || parseFloat(v.price) === 0 || v.isFree === true);
-  tnFillRow('tnFree', free);
-  document.getElementById('tnCountFree').textContent = `${free.length} titles`;
+  tnGroupByCategory(videos, 10).forEach(g => {
+    sections.push({ id: 'tnCat_' + tnSlug(g.label), title: g.label, items: g.items });
+  });
 
-  // ── Premium ──
-  const premium = videos.filter(v => v.price && parseFloat(v.price) > 0 && !v.isFree);
-  tnFillRow('tnPremium', premium);
-  document.getElementById('tnCountPremium').textContent = `${premium.length} titles`;
+  sections.push({ id: 'tnWeek',  icon: '📅', title: 'Top 10 This Week',  items: tnTopThisWindow(videos, 7, 10),  ranked: true });
+  sections.push({ id: 'tnMonth', icon: '📆', title: 'Top 10 This Month', items: tnTopThisWindow(videos, 30, 10), ranked: true });
 
-  // ── Trending (top 25 shuffled slightly) ──
-  const trending = byPop.slice(0, 25).sort(() => Math.random() - 0.3);
-  tnFillRow('tnTrending', trending);
-  document.getElementById('tnCountTrending').textContent = `${trending.length} titles`;
+  sections.push({ id: 'tnSeaNewPaid', icon: '🆕', title: 'New Seasons · Paid', items: tnTopNewPaid(seasons, 10), ranked: true, isSeason: true });
 
-  // ── Recommended (random sample) ──
-  const rec = [...videos].sort(() => Math.random() - 0.5).slice(0, 20);
-  tnFillRow('tnRec', rec);
-  document.getElementById('tnCountRec').textContent = `${rec.length} titles`;
+  tnGroupByCategory(seasons, 10).forEach(g => {
+    sections.push({ id: 'tnCatSea_' + tnSlug(g.label), title: g.label + ' Series', items: g.items, isSeason: true });
+  });
 
-  
- // ── All ──
-  tnFillRow('tnAll', videos);
-  document.getElementById('tnCountAll').textContent = `${videos.length} titles`;
+  sections.push({ id: 'tnSeaWeek',  icon: '📅', title: 'Top Seasons This Week',  items: tnTopThisWindow(seasons, 7, 10),  ranked: true, isSeason: true });
+  sections.push({ id: 'tnSeaMonth', icon: '📆', title: 'Top Seasons This Month', items: tnTopThisWindow(seasons, 30, 10), ranked: true, isSeason: true });
 
-  tnWireCardsToPlayer(); // ← ADD THIS LINE
+  sections.push({ id: 'tnRecVideos',  icon: '★', title: 'Recommended For You',        items: tnRecommended(videos, 20) });
+  sections.push({ id: 'tnRecSeasons', icon: '★', title: 'Recommended Series For You', items: tnRecommended(seasons, 20), isSeason: true });
 
+  const visible = sections.filter(s => s.items.length > 0);
+  if (!visible.length) {
+    document.getElementById('tnRows').innerHTML =
+      '<p class="tn-empty" style="padding:40px 20px;">No videos found.</p>';
+    return;
+  }
 
-}
+  document.getElementById('tnRows').innerHTML = visible.map(s => `
+    <div class="tn-row">
+      <div class="tn-row-head">
+        <h2>${s.icon ? `<span class="tn-red">${s.icon}</span> ` : ''}${s.title}</h2>
+        <span class="tn-row-count">${s.items.length} title${s.items.length === 1 ? '' : 's'}</span>
+      </div>
+      <div class="tn-row-scroll" id="${s.id}"></div>
+    </div>
+  `).join('');
 
-/* ── Build one row of cards ── */
-function tnFillRow(containerId, videos, opts = {}) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  if (!videos.length) { el.innerHTML = '<p class="tn-empty">Nothing here yet.</p>'; return; }
+  visible.forEach(s => {
+    const el = document.getElementById(s.id);
+    if (!el) return;
+    el.innerHTML = s.isSeason
+      ? s.items.map((v, i) => tnSeasonCardHTML(v, i, { ranked: s.ranked })).join('')
+      : s.items.map((v, i) => tnCardHTML(v, i, { ranked: s.ranked })).join('');
+  });
 
-  el.innerHTML = videos.map((v, i) => tnCardHTML(v, i, opts)).join('');
+  // Video cards first (clones/wires anything with data-video), THEN season cards
+  // (clones/wires anything with data-season) — order matters since wiring clones
+  // each node, which would otherwise strip a listener attached before it ran.
+  tnWireCardsToPlayer();
+  tnWireSeasonCards();
 }
 
 /* ── Card HTML ── */
@@ -86431,6 +86568,70 @@ function tnCardHTML(v, i, opts = {}) {
         </div>
       </div>
     </div>`;
+}
+
+/* ── Season card (Top Seasons rails) — same visuals as tnCardHTML but keyed off
+   a channels/{id}/seasons doc instead of a single video. ── */
+function tnSeasonCardHTML(season, i, opts = {}) {
+  const thumb   = season.thumbnailURL || season.thumbnailUrl || season.thumbnail || season.coverImage || '';
+  const title   = season.title || ('Season ' + (season.seasonNumber || 1));
+  const rating  = parseFloat(season.rating || season.stars || 0);
+  const stars   = tnStars(rating);
+  const epCount = (season.episodes && season.episodes.length) || season.episodeCount || 0;
+  const paid    = tnIsPaidItem(season);
+  const priceLbl = !paid
+    ? 'FREE'
+    : season.priceMode === 'full-season'
+      ? `🪙${Number(season.fullSeasonCoins || 0).toLocaleString()} season`
+      : season.priceMode === 'mixed'
+        ? 'MIXED'
+        : `🪙${Number(season.coinPrice || 0).toLocaleString()}`;
+  const priceClass  = paid ? 'paid' : 'free';
+  const channelName = (season.channel && season.channel.name) || season.channelName || '';
+  const safeId      = (season.id || i).toString().replace(/[^a-zA-Z0-9_-]/g, '_');
+
+  const rankHTML = opts.ranked ? `<div class="tn-rank">${i + 1}</div>` : '';
+
+  return `
+    <div class="tn-card" data-season='${JSON.stringify(season).replace(/'/g,"&#39;")}' id="tnseacard_${safeId}">
+  <div class="tn-card-img-wrap">
+        <img class="tn-thumb" src="${thumb}" alt="${title}" loading="lazy"
+          onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22118%22%3E%3Crect%20width%3D%22200%22%20height%3D%22118%22%20fill%3D%22%231a1a1a%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2255%25%22%20fill%3D%22%23444%22%20font-family%3D%22Arial%22%20font-size%3D%2214%22%20text-anchor%3D%22middle%22%3ENo%20Image%3C%2Ftext%3E%3C%2Fsvg%3E'">
+        <span class="tn-card-price ${priceClass}">${priceLbl}</span>
+        ${rating ? `<span class="tn-card-rating">${stars}</span>` : ''}
+      </div>
+      ${rankHTML}
+      <div class="tn-card-panel">
+        <div class="tn-card-panel-title">${title}</div>
+        <div class="tn-card-panel-row">
+          ${channelName ? `<span>${channelName}</span>` : ''}
+          <span class="tn-card-vid-count">${epCount} Ep${epCount === 1 ? '' : 's'}</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Wire season cards → open the same payment-gated player as videos, via the
+   proven { isSeason:true, seasons:[season] } wrapping already used by
+   createSeasonScrollItem() on the PoseTab "New Seasons" row. ── */
+function tnWireSeasonCards() {
+  document.querySelectorAll('.tn-card[data-season]').forEach(card => {
+    const clone = card.cloneNode(true);
+    card.parentNode.replaceChild(clone, card);
+    clone.addEventListener('click', () => {
+      let season;
+      try { season = JSON.parse(clone.getAttribute('data-season')); } catch (e) { return; }
+      openTnPlayer({
+        ...season,
+        title:       season.title || 'Season ' + (season.seasonNumber || 1),
+        videoUrl:    season.trailerUrl || season.videoUrl || '',
+        thumbnail:   season.thumbnailURL || season.thumbnailUrl || '',
+        description: season.description || '',
+        isSeason:    true,
+        seasons:     [season],
+      });
+    });
+  });
 }
 
 /* ── Hover: load preview video lazily ── */
@@ -86601,27 +86802,32 @@ function tnCloseModal(e) {
   }
 }
 
-/* ── Search/filter ── */
+/* ── Search/filter (matches both videos and seasons, re-renders all rails) ── */
 function tnFilter(query) {
   const q = query.toLowerCase().trim();
-  const filtered = q
-    ? window._tnAll.filter(v =>
-        (v.title||'').toLowerCase().includes(q) ||
-        (v.description||'').toLowerCase().includes(q) ||
-        (v.channel?.name||'').toLowerCase().includes(q) ||
-        (v.category||'').toLowerCase().includes(q))
-    : window._tnAll;
-  window._tnFiltered = filtered;
-  tnRender(filtered);
+  const matches = v =>
+    (v.title||'').toLowerCase().includes(q) ||
+    (v.description||'').toLowerCase().includes(q) ||
+    (v.channel?.name||'').toLowerCase().includes(q) ||
+    (v.category||'').toLowerCase().includes(q);
+
+  const filteredVideos  = q ? window._tnAll.filter(matches) : window._tnAll;
+  const filteredSeasons = q ? (window._tnAllSeasons||[]).filter(matches) : (window._tnAllSeasons||[]);
+  window._tnFiltered = filteredVideos;
+  window._tnFilteredSeasons = filteredSeasons;
+  tnRender(filteredVideos, filteredSeasons);
 }
 
-/* ── Skeletons while loading ── */
+/* ── Skeletons while loading — rows are fully dynamic now, so show a few
+   placeholder rails directly inside #tnRows rather than filling fixed IDs. ── */
 function tnShowSkeletons() {
-  const skels = Array(8).fill('<div class="tn-skel"></div>').join('');
-  ['tnTop10','tnFree','tnPremium','tnTrending','tnRec','tnAll'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = skels;
-  });
+  const skelRow = `
+    <div class="tn-row">
+      <div class="tn-row-head"><h2>&nbsp;</h2></div>
+      <div class="tn-row-scroll">${Array(6).fill('<div class="tn-skel"></div>').join('')}</div>
+    </div>`;
+  const rows = document.getElementById('tnRows');
+  if (rows) rows.innerHTML = skelRow.repeat(4);
   document.getElementById('tnHeroTitle').textContent = 'Loading...';
   document.getElementById('tnHeroDesc').textContent = '';
   document.getElementById('tnStrip').innerHTML = '';
@@ -86885,6 +87091,24 @@ if (previewSrc) {
     } else {
         // Trailer → just loop the whole trailer
         vid.loop = true;
+    }
+}
+
+// Pre-warm the browser's HTTP cache for the FULL video while the trailer preview is
+// playing, so hitting Play doesn't show a blank/frozen frame while a cold fetch of the
+// real file starts from zero. Free content only — a paid, unpurchased video shouldn't
+// be downloaded into cache in the background before the user has actually paid for it.
+if (videoUrl && trailerUrl && videoUrl !== trailerUrl && isFree) {
+    if (!window._tnpPreloadVideo) {
+        window._tnpPreloadVideo = document.createElement('video');
+        window._tnpPreloadVideo.muted = true;
+        window._tnpPreloadVideo.preload = 'auto';
+        window._tnpPreloadVideo.style.cssText = 'position:absolute;width:0;height:0;opacity:0;pointer-events:none;';
+        document.body.appendChild(window._tnpPreloadVideo);
+    }
+    if (window._tnpPreloadVideo.src !== videoUrl) {
+        window._tnpPreloadVideo.src = videoUrl;
+        window._tnpPreloadVideo.load();
     }
 }
 
@@ -87280,7 +87504,22 @@ function tnpStartPlayback(v) {
         vid.muted = false;
         vid.currentTime = 0;
     }
-    vid.play().catch(function() {});
+    // By the time payment + PIN verification resolve, several async hops (Firestore
+    // round-trips, setTimeouts) have passed since the last real tap — some browsers
+    // (notably iOS Safari) then refuse unmuted play() as "not user-initiated" and
+    // reject the promise silently, leaving the screen looking frozen with no feedback.
+    // Fall back to a visible tap-to-play state instead of swallowing that failure.
+    vid.play().then(function() {
+        var _pi2 = document.getElementById('tnpPlayPauseIcon');
+        if (_pi2) _pi2.className = 'fas fa-pause';
+    }).catch(function() {
+        if (poster) poster.classList.remove('tnp-hide');
+        var _pi2 = document.getElementById('tnpPlayPauseIcon');
+        if (_pi2) _pi2.className = 'fas fa-play';
+        var _ov2 = document.getElementById('tnpControlsOverlay');
+        if (_ov2) { _ov2.classList.add('visible'); window._tnpControlsVisible = true; }
+        if (typeof showToast === 'function') showToast('Tap play to start watching', 'info');
+    });
     vid.oncanplay = function() { if (poster) poster.classList.add('tnp-hide'); };
 
     var _ov = document.getElementById('tnpControlsOverlay');
@@ -87292,8 +87531,6 @@ function tnpStartPlayback(v) {
             if (!window._tnpLocked) { _ov.classList.remove('visible'); window._tnpControlsVisible = false; }
         }, 3000);
     }
-    var _pi = document.getElementById('tnpPlayPauseIcon');
-    if (_pi) _pi.className = 'fas fa-pause';
 }
 
 /* Mobile: request fullscreen on the player page + lock orientation to landscape.
@@ -87868,6 +88105,30 @@ async function tnpRecordChannelView(v) {
    PAID VIDEO PURCHASE GATE
    ════════════════════════════════════════════════════ */
 
+window._tnpReplayedThisSession = window._tnpReplayedThisSession || new Set();
+
+// Re-watching content the user already paid for shouldn't inflate "views" (that
+// stat is meant to reflect new paying audience for the pool/earnings math in
+// channeldashboard.html) — but it also shouldn't just vanish. Record it as a
+// separate "replay" so creators can see repeat watches apart from fresh views.
+async function tnpRecordReplay(v) {
+  const channelId = v.channelId || (v.channel && v.channel.id) || '';
+  const videoId   = v.id || '';
+  if (!channelId || !videoId) return;
+
+  const sessionKey = `${channelId}_${videoId}`;
+  if (window._tnpReplayedThisSession.has(sessionKey)) return;
+  window._tnpReplayedThisSession.add(sessionKey);
+
+  try {
+    const videoRef = db.collection('channels').doc(channelId).collection('videos').doc(videoId);
+    await videoRef.set({
+      replays:        firebase.firestore.FieldValue.increment(1),
+      lastReplayedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch(e) { console.warn('tnpRecordReplay:', e); }
+}
+
 // 1. Entry point — check Firestore for an existing purchase, then either
 //    play immediately (already paid) or show the payment modal.
 async function tnpHandlePaidPlayback(v, price) {
@@ -87884,7 +88145,9 @@ async function tnpHandlePaidPlayback(v, price) {
   try {
     const snap = await db.collection('users').doc(uid).collection('purchases').doc(purchaseKey).get();
     if (snap.exists) {
-      // Already purchased — play for free, don't count as a new view
+      // Already purchased — play for free. Don't count as a new view; count it as
+      // a replay instead (see tnpRecordReplay).
+      tnpRecordReplay(v);
       tnpStartPlayback({ ...v, _alreadyPaid: true, _skipView: true });
       return;
     }
@@ -87972,7 +88235,11 @@ function tnpShowPaymentModal(v, price, purchaseKey, channelId, contentId) {
 
   const confirmBtn = document.getElementById('tnpPayConfirmBtn');
   if (confirmBtn) {
-    confirmBtn.addEventListener('click', () => tnpProcessPayment(v, price, purchaseKey, channelId, contentId));
+    confirmBtn.addEventListener('click', () => {
+      const proceed = () => tnpProcessPayment(v, price, purchaseKey, channelId, contentId);
+      if (typeof requirePaymentPin === 'function') requirePaymentPin(proceed);
+      else proceed();
+    });
   }
 }
 
@@ -88000,41 +88267,76 @@ async function tnpProcessPayment(v, price, purchaseKey, channelId, contentId) {
     const chRef     = db.collection('channels').doc(channelId);
     const now       = firebase.firestore.FieldValue.serverTimestamp();
 
-    // 1. Deduct coins from buyer's wallet
-    await userRef.update({ pCoinBalance: firebase.firestore.FieldValue.increment(-price) });
+    // Split the payment right now, at the moment of purchase — no pool, no batching,
+    // no view-threshold to clear first. 70% goes straight to the creator's withdrawable
+    // balance, 30% to the platform's paid-video revenue ledger.
+    const creatorShare  = Math.round(price * 0.7);
+    const platformShare = price - creatorShare; // remainder-safe: creatorShare + platformShare === price exactly
 
-    // 2. Record the purchase so the user never pays again for this content
-    await db.collection('users').doc(uid).collection('purchases').doc(purchaseKey).set({
-      purchasedAt:  now,
-      videoId:      contentId,     // series id or standalone video id
-      episodeId:    v._seriesId ? videoId : null,
-      channelId:    channelId,
-      videoTitle:   v.title || '',
-      coinsPaid:    price,
-      type:         v._seriesId ? 'series' : 'video',
-    });
+    // 1 & 2. Deduct coins and record the purchase in parallel (both independent writes) —
+    // run together instead of sequentially so the video isn't stuck waiting on two
+    // round-trips back-to-back before playback can start.
+    await Promise.all([
+      userRef.update({ pCoinBalance: firebase.firestore.FieldValue.increment(-price) }),
+      db.collection('users').doc(uid).collection('purchases').doc(purchaseKey).set({
+        purchasedAt:  now,
+        videoId:      contentId,     // series id or standalone video id
+        episodeId:    v._seriesId ? videoId : null,
+        channelId:    channelId,
+        videoTitle:   v.title || '',
+        coinsPaid:    price,
+        type:         v._seriesId ? 'series' : 'video',
+      })
+    ]);
 
-    // 3. Credit channel: increment paid views + earnings pool visible in channeldashboard
+    // 3. Credit channel-level stats (views + gross earnings, for reference)
     chRef.set({
       totalPaidViews:    firebase.firestore.FieldValue.increment(1),
       totalPaidEarnings: firebase.firestore.FieldValue.increment(price),
       totalViews:        firebase.firestore.FieldValue.increment(1),
     }, { merge: true }).catch(() => {});
 
-    // 4. Update the specific video's view + paid-view pool (channeldashboard reads this)
+    // 4. Credit the creator's WITHDRAWABLE balance immediately — same field the
+    // channeldashboard.html Earnings tab already reads, so this needs no separate
+    // "release" step to become spendable.
+    db.collection('channels').doc(channelId).collection('earnings').doc('summary').set({
+      directRevenue: firebase.firestore.FieldValue.increment(creatorShare),
+    }, { merge: true }).catch(() => {});
+
+    // 5. Log this payment as a transaction (channeldashboard.html's Transactions tab
+    // reads channels/{id}/salesPayments directly) so it appears in the history right away.
+    db.collection('channels').doc(channelId).collection('salesPayments').add({
+      videoId:     videoId,
+      description: `Sales: "${v.title || 'Untitled video'}"`,
+      amount:      creatorShare,
+      views:       1,
+      status:      'paid',
+      createdAt:   now,
+    }).catch(() => {});
+
+    // 6. Platform's 30% cut — a single running-total doc, not per-purchase, so the
+    // dashboard/admin tooling can read one document instead of summing a collection.
+    db.collection('posepaidvideorevenue').doc('summary').set({
+      totalRevenue:  firebase.firestore.FieldValue.increment(platformShare),
+      lastUpdatedAt: now,
+    }, { merge: true }).catch(() => {});
+
+    // 7. Update the specific video's live view + revenue (channeldashboard reads this
+    // directly now — no pool/threshold gating).
     videoRef.set({
-      views:        firebase.firestore.FieldValue.increment(1),
-      paidViews:    firebase.firestore.FieldValue.increment(1),
-      paidEarnings: firebase.firestore.FieldValue.increment(price),
-      viewedBy:     firebase.firestore.FieldValue.arrayUnion(uid),
-      lastViewedAt: now,
+      views:         firebase.firestore.FieldValue.increment(1),
+      paidViews:     firebase.firestore.FieldValue.increment(1),
+      paidEarnings:  firebase.firestore.FieldValue.increment(price),          // gross, for reference
+      revenueEarned: firebase.firestore.FieldValue.increment(creatorShare),   // creator's live take, in PCK
+      viewedBy:      firebase.firestore.FieldValue.arrayUnion(uid),
+      lastViewedAt:  now,
     }, { merge: true }).catch(() => {});
 
     // Session dedup so tnpRecordChannelView doesn't double-count this view
     if (!window._tnpViewedThisSession) window._tnpViewedThisSession = new Set();
     window._tnpViewedThisSession.add(channelId + '_' + videoId + '_' + uid);
 
-    // 5. Global purchase log for admin/analytics
+    // 8. Global purchase log for admin/analytics
     db.collection('posepurchases').add({
       purchasedAt:  now,
       buyerId:      uid,
@@ -88045,10 +88347,12 @@ async function tnpProcessPayment(v, price, purchaseKey, channelId, contentId) {
       channelName:  (v.channel && v.channel.name) || v.channelName || '',
       category:     v.category || '',
       coinsPaid:    price,
+      creatorShare: creatorShare,
+      platformShare: platformShare,
       type:         v._seriesId ? 'series' : 'video',
     }).catch(() => {});
 
-    // 6. Close modal and start playback (skip view recording — counted above)
+    // 9. Close modal and start playback (skip view recording — counted above)
     const modal = document.getElementById('tnpPayModal');
     if (modal) modal.remove();
 
@@ -88510,8 +88814,10 @@ function tnpRenderEpisodeList(eps, listEl, channelId, videoId) {
     if (seasonMode === 'free') {
       isPaid = false;
     } else if (seasonMode === 'full-season') {
-      // Whole season unlocks via single purchase — episodes not individually locked
-      isPaid = false;
+      // Whole season unlocks via a single purchase, but each episode still needs the
+      // lock badge shown until that purchase happens — otherwise every episode looked
+      // (and, before the tnpPlayEpisode fix, actually played) free.
+      isPaid = fullSeaCoins > 0;
       priceLabel = `<span style="color:#f5c518">🪙 ${fullSeaCoins} season</span>`;
     } else if (seasonMode === 'mixed') {
       isPaid = epNum > freeEpCount;
@@ -88618,6 +88924,30 @@ function tnpPlayEpisode(ep, parentVideo) {
   // Store the parent series so the back button can return to it
   window._tnpParentData = parentVideo;
 
+  // Effective price/mode for THIS episode — mirrors the exact same logic
+  // tnpRenderEpisodeList uses to decide whether to show the lock badge, so the icon
+  // and the actual payment gate never disagree. Without this, `merged` below inherited
+  // the season doc's own (irrelevant) coinPrice/priceMode fields, which meant
+  // full-season and mixed-mode paid episodes carried a price of 0 into tnpStartPlayback
+  // and played for free with no lock and no paywall at all.
+  const seasonMode   = parentVideo.priceMode || '';
+  const fullSeaCoins = Number(parentVideo.fullSeasonCoins) || 0;
+  const freeEpCount  = Number(parentVideo.freeEpisodeCount) || 0;
+  const epNum        = ep.episodeNumber || 1;
+
+  let effectivePrice     = Number(ep.coinPrice) || 0;
+  let effectivePriceMode = ep.priceMode || seasonMode || '';
+  if (seasonMode === 'free') {
+    effectivePrice = 0;
+    effectivePriceMode = 'free';
+  } else if (seasonMode === 'full-season') {
+    effectivePrice = fullSeaCoins;
+    effectivePriceMode = fullSeaCoins > 0 ? 'paid' : 'free';
+  } else if (seasonMode === 'mixed') {
+    effectivePrice = epNum > freeEpCount ? (Number(ep.coinPrice) || 0) : 0;
+    effectivePriceMode = epNum > freeEpCount ? 'paid' : 'free';
+  }
+
   const merged = {
     ...parentVideo,
     id:          ep.id || parentVideo.id,
@@ -88631,6 +88961,8 @@ function tnpPlayEpisode(ep, parentVideo) {
     seasons:     null,
     _autoPlay:   true,
     _seriesId:   parentVideo.id, // preserved so the purchase check uses the SERIES key, not episode key
+    coinPrice:   effectivePrice,
+    priceMode:   effectivePriceMode,
   };
   openTnPlayer(merged);
 }
@@ -88673,7 +89005,9 @@ async function tnpLoadMore(v) {
    so clicking any card opens the player
    ════════════════ */
 function tnWireCardsToPlayer() {
-  document.querySelectorAll('.tn-card').forEach(card => {
+  // Scoped to [data-video] only — season cards (data-season) are wired separately
+  // by tnWireSeasonCards() so the two never fight over the same click handler.
+  document.querySelectorAll('.tn-card[data-video]').forEach(card => {
     // Remove existing listener to avoid doubles
     const clone = card.cloneNode(true);
     card.parentNode.replaceChild(clone, card);
@@ -88879,6 +89213,8 @@ function blinkOpenVideo(el) {
     _gpoPinUpdateDots();
     var st = document.getElementById('gpoPinStatus');
     if (st) st.textContent = '';
+    // Respect the wallet's PIN payment mode (always / every 5 min / never)
+    if (typeof _pinModeIsSkip === 'function' && _pinModeIsSkip()) { callback(); return; }
     // Check if the user even has a PIN set; if not, skip straight through
     if (!window.currentUser || !window.db) { callback(); return; }
     window.db.collection('users').doc(window.currentUser.uid).get().then(function (doc) {
@@ -88932,6 +89268,7 @@ function blinkOpenVideo(el) {
       var entered = btoa(pin); // matches the btoa() used when saving PIN
       if (!stored || entered === stored) {
         if (st) st.textContent = '';
+        window._pinLastVerifiedAt = Date.now();
         gpoPinClose();
         _gpoPinCb && _gpoPinCb();
       } else {
