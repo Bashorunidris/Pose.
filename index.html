@@ -28443,6 +28443,18 @@
             });
         }
 
+        // Best-effort delete of an R2 object given its public URL (returns
+        // quietly on failure — an orphaned file is harmless, so nothing that
+        // calls this should block on it or surface its errors to the user).
+        async function deleteFromR2(url) {
+            try {
+                if (!url || !url.startsWith(R2.publicBaseUrl + '/')) return;
+                const key = url.slice(R2.publicBaseUrl.length + 1);
+                const headers = await _r2BuildAuthHeaders('DELETE', key, 'application/octet-stream');
+                await fetch(`${R2.endpoint}/${R2.bucket}/${key}`, { method: 'DELETE', headers });
+            } catch (e) { /* best-effort cleanup only */ }
+        }
+
         // ====== DIRECT FIREBASE UPLOAD (Replaces Cloudinary) ======
         function poseResourceType(file) {
             const t = (file && file.type) || '';
@@ -86118,6 +86130,9 @@ function pmusicRenderCatalogue(){
           <i class="fas fa-cut"></i> Edit
         </button>
         <button class="pmusic-btn-small pmusic-btn-analytics" onclick="pmusicShowAnalytics('${song.id}')"><i class="fas fa-chart-line"></i></button>
+        <button class="pmusic-btn-small" onclick="pmusicDeleteSong('${song.id}')" style="background:rgba(232,65,75,.12);color:var(--pm-red,#e8414b);border:1px solid rgba(232,65,75,.3);" title="Delete track">
+          <i class="fas fa-trash"></i>
+        </button>
       </div>`;
     if(grid)grid.appendChild(card);
   });
@@ -86564,6 +86579,22 @@ async function pmusicConfirmDelete(){
     const signout=document.getElementById('pmusic-drawerSignoutRow');if(signout)signout.style.display='none';
     pmusicShowView('search');pmusicShowToast('Account permanently deleted.','success');
   }catch(e){pmusicShowToast('Could not delete account. Try again.','error');}
+}
+
+async function pmusicDeleteSong(songId){
+  const song=pmusicAllSongs.find(s=>s.id===songId);if(!song||!pmusicCurrentArtist||!pmusicDB)return;
+  if(!confirm(`Delete "${song.title}"?\n\nThis removes it from your catalogue and takes it down everywhere it's used. This cannot be undone.`))return;
+  try{
+    await pmusicDB.collection(PMUSIC_SONGS).doc(songId).delete();
+    [pmusicAllSongs,pmusicUserSongs].forEach(arr=>{const i=arr.findIndex(x=>x.id===songId);if(i>-1)arr.splice(i,1);});
+    pmusicShowToast(`"${song.title}" deleted.`,'success');
+    pmusicRenderCatalogue();
+    if(typeof pmusicRenderDashboard==='function')pmusicRenderDashboard();
+    // Best-effort — the Firestore doc above is the source of truth for
+    // what's deleted; a failure here just leaves an orphaned R2 file.
+    deleteFromR2(song.audioUrl);
+    if(song.coverUrl)deleteFromR2(song.coverUrl);
+  }catch(e){console.error('[Pose] Delete song:',e);pmusicShowToast('Could not delete track. Try again.','error');}
 }
 
 // ── Trim / Edit Modal ─────────────────────────────────
