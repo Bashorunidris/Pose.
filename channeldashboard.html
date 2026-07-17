@@ -2224,6 +2224,8 @@ input[type=range].ucoin-slider {
   padding: 10px 24px 36px;
   animation: slideDown .4s cubic-bezier(.25,.8,.25,1) both;
   box-shadow: 0 12px 48px rgba(76,29,149,.25);
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, var(--purple-deep), var(--purple-mid), var(--purple-light)) 1;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -2398,6 +2400,41 @@ input[type=range].ucoin-slider {
   text-align: center; margin-top: 8px;
   font-weight: 500;
 }
+
+/* Size/network disclaimer */
+.uppop-note {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 11.5px; color: var(--gray-500);
+  background: var(--gray-50); border: 1px solid var(--gray-200);
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 14px;
+  line-height: 1.5;
+}
+.uppop-note i { color: var(--purple-main); margin-top: 2px; flex-shrink: 0; }
+
+/* Rotating motivational tip */
+.uppop-tip {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12.5px; font-weight: 600; color: var(--purple-deep);
+  background: linear-gradient(135deg, var(--purple-ghost), #FDF4FF);
+  border: 1.5px solid var(--purple-pale);
+  border-radius: 14px; padding: 12px 14px; margin-bottom: 20px;
+  min-height: 18px;
+  transition: opacity .35s ease;
+}
+.uppop-tip.uppop-tip-fade { opacity: 0; }
+.uppop-tip i { color: #F59E0B; font-size: 15px; flex-shrink: 0; }
+
+/* Manual retry (shown only if a network issue exhausts auto-retry) */
+.uppop-retry-btn {
+  width: 100%; padding: 14px; border-radius: 13px; margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--purple-deep), var(--purple-main));
+  color: white; font-size: 14px; font-weight: 700; cursor: pointer;
+  border: none; font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 4px 14px rgba(124,58,237,.3);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s ease;
+}
+.uppop-retry-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
 /* Buttons Row */
 .uppop-btn-row {
@@ -4135,6 +4172,12 @@ onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
 <i class="fas fa-circle-info"></i>
 Files up to 4GB are supported. Do not close this page while uploading.
 </div>
+<div style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;">
+<i class="fas fa-triangle-exclamation" style="color:#D97706;font-size:13px;margin-top:1px;flex-shrink:0;"></i>
+<div style="font-size:11.5px;color:#92400E;line-height:1.5;">
+<strong>No watermarks.</strong> Don't upload content carrying another platform's logo or watermark (TikTok, Instagram, YouTube, Snapchat, CapCut, etc.). Watermarked uploads may be removed and can affect your channel's standing.
+</div>
+</div>
 </div>
 
 <!-- Trailer (optional) -->
@@ -4862,6 +4905,12 @@ onchange="handleFileSelect(this,'epVideoPreview','epVideoProgress')">
 <div class="uhelp" style="margin-top:10px;">
 <i class="fas fa-circle-info"></i> Files up to 4GB are supported. Keep this page open during upload.
 </div>
+<div style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;">
+<i class="fas fa-triangle-exclamation" style="color:#D97706;font-size:13px;margin-top:1px;flex-shrink:0;"></i>
+<div style="font-size:11.5px;color:#92400E;line-height:1.5;">
+<strong>No watermarks.</strong> Don't upload content carrying another platform's logo or watermark (TikTok, Instagram, YouTube, Snapchat, CapCut, etc.). Watermarked uploads may be removed and can affect your channel's standing.
+</div>
+</div>
 
 <div class="upload-divider" style="margin:16px 0;"><span>episode trailer</span></div>
 
@@ -5123,6 +5172,20 @@ Back
 </div>
 <div class="uppop-speed" id="uppopSpeed"></div>
 </div>
+
+<div class="uppop-note">
+<i class="fas fa-circle-info"></i>
+<span>Upload time depends on your video's file size and your internet speed — bigger files and slower networks naturally take longer. Keep this page open.</span>
+</div>
+
+<div class="uppop-tip" id="uppopTip">
+<i class="fas fa-lightbulb"></i>
+<span id="uppopTipText"></span>
+</div>
+
+<button class="uppop-retry-btn" id="uppopRetryBtn" style="display:none;">
+<i class="fas fa-rotate-right" style="margin-right:6px;"></i>Retry Upload
+</button>
 <div style="display:flex;gap:10px;">
 <button class="uppop-cancel-btn" id="uppopMinBtn" onclick="minimiseUploadPopup()"
 style="flex:1;background:var(--purple-ghost);color:var(--purple-main);border-color:var(--purple-pale);">
@@ -9018,10 +9081,13 @@ function scrollTo_(id) {
 
 /* Uploads a single R2 multipart part with auto-retry (network errors get
    MAX_PART_RETRIES attempts with backoff), waiting out actual offline
-   periods for free (doesn't burn a retry), and flagging the chunk row
-   "network slow" if progress stalls for more than a few seconds without
-   failing outright. Returns the ETag, or throws (ETAG_UNAVAILABLE / Upload
-   cancelled / the last network error once auto-retries are exhausted). */
+   periods for free (doesn't burn a retry), and flagging "network slow" if
+   progress stalls for more than a few seconds without failing outright.
+   Chunking is purely an internal reliability mechanism — none of the
+   labels here ever mention parts/chunks to the user, just "uploading
+   video" framing, per how this is meant to read from the outside.
+   Returns the ETag, or throws (ETAG_UNAVAILABLE / Upload cancelled / the
+   last network error once auto-retries are exhausted). */
 async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType, i, CHUNK_COUNT, onProgress, progressId) {
   const MAX_PART_RETRIES = 3;
   let lastErr = null;
@@ -9029,7 +9095,6 @@ async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType
     if (uploadCancelled) throw new Error('Upload cancelled');
 
     if (!navigator.onLine) {
-      setChunkRowState(i, 'active', 'Waiting for network…');
       const waitLabel = 'No internet connection — will resume automatically…';
       if (onProgress) onProgress(Math.round((i / CHUNK_COUNT) * 100), waitLabel);
       else updateUploadProgress(Math.round((i / CHUNK_COUNT) * 100), waitLabel, '');
@@ -9042,9 +9107,8 @@ async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType
     const stallTimer = setInterval(() => {
       if (!slowShown && Date.now() - lastChangeAt > STALL_MS) {
         slowShown = true;
-        setChunkRowState(i, 'active', 'Network slow…');
         const overall = Math.round(((i + Math.max(lastPct, 0) / 100) / CHUNK_COUNT) * 100);
-        const label = `Uploading part ${partNumber} of ${CHUNK_COUNT}… network is slow`;
+        const label = 'Uploading video… your network seems slow';
         if (onProgress) onProgress(overall, label);
         else updateUploadProgress(overall, label, '');
       }
@@ -9053,10 +9117,9 @@ async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType
     try {
       const etag = await _r2UploadPart(key, uploadId, partNumber, blob, contentType, (pct) => {
         if (pct !== lastPct) { lastPct = pct; lastChangeAt = Date.now(); slowShown = false; }
-        setChunkRowState(i, 'active', pct + '%');
         const overall = Math.round(((i + pct / 100) / CHUNK_COUNT) * 100);
-        if (onProgress) onProgress(overall, `Uploading part ${partNumber} of ${CHUNK_COUNT}…`);
-        else updateUploadProgress(overall, `Uploading part ${partNumber} of ${CHUNK_COUNT}…`, '');
+        if (onProgress) onProgress(overall, 'Uploading video…');
+        else updateUploadProgress(overall, 'Uploading video…', '');
         if (progressId) showProgress(progressId, 'Uploading…', overall);
       });
       clearInterval(stallTimer);
@@ -9068,8 +9131,7 @@ async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType
       if (uploadCancelled || e.message === 'Upload cancelled') throw e;
       if (e.message === 'ETAG_UNAVAILABLE') throw e;
       if (attempt < MAX_PART_RETRIES) {
-        const label = `Network error — retrying part ${partNumber} of ${CHUNK_COUNT} (${attempt}/${MAX_PART_RETRIES})…`;
-        setChunkRowState(i, 'active', `Retrying (${attempt}/${MAX_PART_RETRIES})`);
+        const label = `Network error — retrying… (${attempt}/${MAX_PART_RETRIES})`;
         if (onProgress) onProgress(Math.round((i / CHUNK_COUNT) * 100), label);
         else updateUploadProgress(Math.round((i / CHUNK_COUNT) * 100), label, '');
         await sleep(1500 * attempt);
@@ -9085,6 +9147,12 @@ async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType
    multipart path doesn't work (e.g. the bucket doesn't expose ETag over
    CORS), it throws ETAG_UNAVAILABLE and uploadFile() falls back to the
    plain single-blob upload.
+
+   Chunking is an internal reliability detail — this never touches
+   #uppopSteps (the video/trailer/thumbnail/database step list stays
+   visible and untouched the whole time) and never surfaces "part X of Y"
+   anywhere; progress is reported purely as a single overall percentage via
+   onProgress, same as a plain upload would.
 
    resumeCtx (optional) lets a previously-interrupted upload continue
    instead of starting over:
@@ -9114,29 +9182,11 @@ async function uploadFileChunked(file, folder, contentTypeOverride, progressId, 
     CHUNK_COUNT = slices.length;
   }
 
-  // The popup's #uppopSteps container is shared with the video/trailer/
-  // thumbnail/database step list (trailer+thumbnail upload concurrently
-  // with this) — snapshot it so it can be put back exactly as it was
-  // once chunking is done, instead of being clobbered permanently.
-  const stepsEl = document.getElementById('uppopSteps');
-  const savedStepsHtml = stepsEl ? stepsEl.innerHTML : null;
-
   let uploadId = resuming ? resumeCtx.uploadId : null;
   const doneParts = new Map(((resuming && resumeCtx.uploadedParts) || []).map(p => [p.partNumber, p.etag]));
 
   try {
     if (!resuming) {
-      if (preSlices && preSlices.length) {
-        setUploadPopupPhase('splitting', CHUNK_COUNT);
-        updateSplitProgress(CHUNK_COUNT, CHUNK_COUNT, 100);
-      } else {
-        setUploadPopupPhase('splitting', CHUNK_COUNT);
-        for (let i = 0; i < CHUNK_COUNT; i++) {
-          updateSplitProgress(i + 1, CHUNK_COUNT, Math.round(((i + 1) / CHUNK_COUNT) * 100));
-          await sleep(120);
-        }
-      }
-
       console.log(`[chunked upload] initiating multipart upload for ${CHUNK_COUNT} parts…`);
       try {
         uploadId = await _r2InitiateMultipart(key, contentType);
@@ -9169,21 +9219,20 @@ async function uploadFileChunked(file, folder, contentTypeOverride, progressId, 
       });
     }
 
-    setUploadPopupPhase('uploading', CHUNK_COUNT);
+    const startPct = Math.round((doneParts.size / CHUNK_COUNT) * 100);
+    if (onProgress) onProgress(startPct, 'Uploading video…');
+    else updateUploadProgress(startPct, 'Uploading video…', '');
+
     const parts = [];
     for (let i = 0; i < CHUNK_COUNT; i++) {
       const partNumber = i + 1;
 
       if (doneParts.has(partNumber)) {
-        setChunkRowState(i, 'done', '100%');
         parts.push({ partNumber, etag: doneParts.get(partNumber) });
         continue;
       }
 
-      setChunkRowState(i, 'active', 'Uploading');
-
       let etag = null;
-      let retriedManually = false;
       while (etag === null) {
         if (uploadCancelled) throw new Error('Upload cancelled');
         try {
@@ -9192,23 +9241,15 @@ async function uploadFileChunked(file, folder, contentTypeOverride, progressId, 
           if (uploadCancelled || e.message === 'Upload cancelled') throw e;
           if (e.message === 'ETAG_UNAVAILABLE') throw e;
           // Auto-retries exhausted — this part (and everything before it)
-          // is already safely persisted via saveResumeState below, so the
-          // user can walk away here and pick up later instead of being
+          // is already safely persisted via saveResumeProgress below, so
+          // the user can walk away here and pick up later instead of being
           // forced to sit and watch a manual retry.
           console.error(`[chunked upload] part ${partNumber}/${CHUNK_COUNT} exhausted auto-retries, waiting for manual retry:`, e);
-          setChunkRowState(i, 'error', 'Failed — tap Retry');
-          await showChunkRetryPrompt(i, CHUNK_COUNT);
-          retriedManually = true;
+          await showChunkRetryPrompt();
         }
-      }
-      if (retriedManually) {
-        document.getElementById('uppopTitle').textContent = 'Uploading Parts…';
-        document.getElementById('uppopSub').textContent   =
-          `Uploading ${CHUNK_COUNT} part${CHUNK_COUNT > 1 ? 's' : ''} · Keep this page open`;
       }
 
       parts.push({ partNumber, etag });
-      setChunkRowState(i, 'done', '100%');
 
       if (resumeCtx && resumeCtx.resumeId) {
         // Lightweight — no blobs in here, safe to write after every part.
@@ -9224,7 +9265,7 @@ async function uploadFileChunked(file, folder, contentTypeOverride, progressId, 
     console.log('[chunked upload] all parts uploaded, completing multipart upload…');
     const url = await _r2CompleteMultipart(key, uploadId, parts);
     console.log('[chunked upload] complete:', url);
-    updateUploadProgress(100, 'Upload complete', '');
+    if (onProgress) onProgress(100, 'Video uploaded'); else updateUploadProgress(100, 'Video uploaded', '');
     return url;
   } catch (e) {
     if (e.message === 'ETAG_UNAVAILABLE') {
@@ -9248,43 +9289,36 @@ async function uploadFileChunked(file, folder, contentTypeOverride, progressId, 
     }
     throw e;
   } finally {
-    if (stepsEl && savedStepsHtml !== null) stepsEl.innerHTML = savedStepsHtml;
     if (window._activeUploadHandle && window._activeUploadHandle.uploadId === uploadId) {
       window._activeUploadHandle = null;
     }
   }
 }
 
-
-
-function showChunkRetryPrompt(chunkIndex, total) {
+// A network issue exhausted auto-retry on the part currently uploading.
+// Rather than a per-chunk row (chunking is never shown to the user), this
+// surfaces a single popup-level Retry button — the upload is paused, not
+// failed, and everything uploaded so far is already safely persisted.
+// cancelUpload() resolves this early (via _pendingChunkRetryResolve) if the
+// user cancels while it's waiting, so the upload loop can unwind instead of
+// hanging on a button that will never be clicked.
+let _pendingChunkRetryResolve = null;
+function showChunkRetryPrompt() {
   return new Promise(resolve => {
-    const row = document.getElementById('uppop-chunk-' + chunkIndex);
-    if (!row) { resolve(); return; }
-
-    // Inject retry button into the row
-    const existing = row.querySelector('.chunk-retry-btn');
-    if (existing) existing.remove();
-
-    const btn = document.createElement('button');
-    btn.className = 'chunk-retry-btn';
-    btn.style.cssText = `
-      padding:5px 12px; border-radius:8px;
-      background:var(--purple-main); color:white;
-      font-size:11px; font-weight:700;
-      border:none; cursor:pointer; flex-shrink:0;
-    `;
-    btn.innerHTML = '<i class="fas fa-rotate-right" style="margin-right:4px;"></i>Retry';
-    btn.onclick = () => {
-      btn.remove();
-      resolve();
+    const done = () => { _pendingChunkRetryResolve = null; resolve(); };
+    _pendingChunkRetryResolve = done;
+    const retryBtn = document.getElementById('uppopRetryBtn');
+    document.getElementById('uppopTitle').textContent = 'Upload Paused';
+    document.getElementById('uppopSub').textContent   =
+      'A network issue interrupted your upload. Your progress is saved — tap Retry to continue.';
+    if (!retryBtn) { done(); return; }
+    retryBtn.style.display = 'flex';
+    retryBtn.onclick = () => {
+      retryBtn.style.display = 'none';
+      document.getElementById('uppopTitle').textContent = 'Uploading…';
+      document.getElementById('uppopSub').textContent   = 'Please keep this page open';
+      done();
     };
-    row.appendChild(btn);
-
-    // Also update title
-    document.getElementById('uppopTitle').textContent = 'Part Failed — Retry?';
-    document.getElementById('uppopSub').textContent =
-      `Part ${chunkIndex + 1} of ${total} failed. Tap Retry to continue.`;
   });
 }
 function sleep(ms) {
@@ -9318,79 +9352,6 @@ function uploadSingleBlob(blob, folder, resourceType, onProgress) {
       if (onProgress) onProgress(pct, msg);
     }
   }).then(data => data.url || data.secure_url);
-}
-
-/* ====================================================
-   UPLOAD POPUP PHASE HELPERS
-==================================================== */
-function setUploadPopupPhase(phase, totalChunks) {
-  const stepsEl = document.getElementById('uppopSteps');
-
-  if (phase === 'splitting') {
-    document.getElementById('uppopTitle').textContent = 'Preparing Video…';
-    document.getElementById('uppopSub').textContent   = 'Splitting into parts for reliable upload';
-    stepsEl.innerHTML = `
-      <div class="uppop-step active" id="uppop-split-row">
-        <div class="uppop-step-icon">
-          <i class="fas fa-scissors fa-spin"></i>
-        </div>
-        <div style="flex:1;">
-          <div class="uppop-step-label">Splitting video into parts</div>
-          <div style="margin-top:6px;">
-            <div class="uppop-prog-bg" style="height:6px;">
-              <div class="uppop-prog-fill" id="uppop-split-fill" style="height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--purple-deep),var(--purple-mid));transition:width .3s;"></div>
-            </div>
-          </div>
-          <div style="font-size:11px;color:var(--gray-500);margin-top:4px;" id="uppop-split-label">
-            Preparing part 0 of ${totalChunks}…
-          </div>
-        </div>
-        <div class="uppop-step-status" id="uppop-split-status">Working</div>
-      </div>`;
-  }
-
-  if (phase === 'uploading') {
-    document.getElementById('uppopTitle').textContent = 'Uploading Parts…';
-    document.getElementById('uppopSub').textContent   =
-      `Uploading ${totalChunks} part${totalChunks > 1 ? 's' : ''} · Keep this page open`;
-
-    // Build a row per chunk
-    let rows = '';
-    for (let i = 0; i < totalChunks; i++) {
-      rows += `
-        <div class="uppop-step" id="uppop-chunk-${i}">
-          <div class="uppop-step-icon"><i class="fas fa-cloud-arrow-up"></i></div>
-          <div class="uppop-step-label">Part ${i + 1} of ${totalChunks}</div>
-          <div class="uppop-step-status" id="uppop-chunk-status-${i}">Waiting</div>
-        </div>`;
-    }
-    stepsEl.innerHTML = rows;
-  }
-}
-
-function updateSplitProgress(current, total, pct) {
-  const fill  = document.getElementById('uppop-split-fill');
-  const label = document.getElementById('uppop-split-label');
-  const status = document.getElementById('uppop-split-status');
-  if (fill)  fill.style.width      = pct + '%';
-  
-  if (label) label.textContent     = `Preparing part ${current} of ${total}…`;
-  if (status) status.textContent   = pct + '%';
-  updateUploadProgress(pct, `Splitting part ${current} of ${total}…`, '');
-}
-
-function setChunkRowState(index, state, statusText) {
-  const row    = document.getElementById('uppop-chunk-' + index);
-  const status = document.getElementById('uppop-chunk-status-' + index);
-  if (!row) return;
-  row.className = 'uppop-step ' + state;
-  if (status) status.textContent = statusText;
-  const icon = row.querySelector('.uppop-step-icon i');
-  if (icon) {
-    if (state === 'active') icon.className = 'fas fa-spinner fa-spin';
-    if (state === 'done')   icon.className = 'fas fa-check';
-    if (state === 'error')  icon.className = 'fas fa-times';
-  }
 }
 
 let _uppopCurrentPct = 0;
@@ -10601,6 +10562,43 @@ function setUploadStep(index, state, statusText) {
 }
 
 
+/* ====================================================
+   ROTATING TIPS — shown in the upload popup while the
+   creator waits, instead of leaving that space empty.
+==================================================== */
+const UPPOP_TIPS = [
+  "Tip: Higher quality videos paired with competitive pricing tend to earn more views.",
+  "Tip: List your movies first on Pose — full-length movies tend to boost revenue fastest.",
+  "Tip: A free trailer under 2 minutes can boost views significantly, even on paid content.",
+  "Did you know? Accurate categories and tags help the right audience discover your content faster.",
+  "Tip: Consistent uploads build audience trust and grow your channel faster over time.",
+  "Reminder: Only upload content you fully own — 100% rights ownership unlocks Pose Coin pricing.",
+  "Tip: A clear, honest title outperforms clickbait — viewers who feel misled rarely come back.",
+];
+let _uppopTipTimer = null, _uppopTipIndex = -1;
+function startUppopTips() {
+  stopUppopTips();
+  _uppopTipIndex = Math.floor(Math.random() * UPPOP_TIPS.length);
+  renderUppopTip();
+  _uppopTipTimer = setInterval(() => {
+    const el = document.getElementById('uppopTip');
+    if (!el) return;
+    el.classList.add('uppop-tip-fade');
+    setTimeout(() => {
+      _uppopTipIndex = (_uppopTipIndex + 1) % UPPOP_TIPS.length;
+      renderUppopTip();
+      el.classList.remove('uppop-tip-fade');
+    }, 350);
+  }, 6000);
+}
+function renderUppopTip() {
+  const textEl = document.getElementById('uppopTipText');
+  if (textEl) textEl.textContent = UPPOP_TIPS[_uppopTipIndex];
+}
+function stopUppopTips() {
+  if (_uppopTipTimer) { clearInterval(_uppopTipTimer); _uppopTipTimer = null; }
+}
+
 function showUploadPopup(fileName, fileSize, steps) {
   const popup = document.getElementById('uploadProgressPopup');
   _uppopCurrentPct = 0;
@@ -10621,6 +10619,8 @@ function showUploadPopup(fileName, fileSize, steps) {
     cancelBtn.style.display     = '';
     cancelBtn.onclick = cancelUpload;
   }
+  const retryBtn = document.getElementById('uppopRetryBtn');
+  if (retryBtn) { retryBtn.style.display = 'none'; retryBtn.onclick = null; }
 
   const stepsEl = document.getElementById('uppopSteps');
   stepsEl.innerHTML = steps.map((s, i) => `
@@ -10630,6 +10630,7 @@ function showUploadPopup(fileName, fileSize, steps) {
       <div class="uppop-step-status" id="uppop-step-status-${i}">Waiting</div>
     </div>`).join('');
 
+  startUppopTips();
   popup.classList.remove('hidden');
 }
 
@@ -12173,6 +12174,14 @@ function cancelUpload() {
     activeXHR.abort();
     activeXHR = null;
   }
+  // If the upload was paused waiting on the manual retry button, resolve
+  // that wait now so the upload loop notices uploadCancelled and unwinds
+  // instead of sitting there forever waiting for a click that won't come.
+  if (_pendingChunkRetryResolve) {
+    const done = _pendingChunkRetryResolve;
+    _pendingChunkRetryResolve = null;
+    done();
+  }
 
   // Explicit cancel means this upload should never be offered back — abort
   // the multipart upload on R2 (frees the parts already stored there) and
@@ -12202,6 +12211,7 @@ function hideUploadPopup() {
   const countdownEl = document.getElementById('recordingCountdownOverlay');
   if (countdownEl) countdownEl.remove();
   document.getElementById('uppopMiniBar').classList.remove('visible');
+  stopUppopTips();
 }
 
 /* ============================================================
