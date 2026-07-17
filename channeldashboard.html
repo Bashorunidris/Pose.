@@ -189,6 +189,7 @@
       width: 100%; height: 160px;
       background: linear-gradient(135deg, #2E1065 0%, #6D28D9 55%, #A78BFA 100%);
       position: relative; overflow: hidden;
+      cursor: pointer;
     }
     .channel-banner::after {
       content: '';
@@ -228,6 +229,57 @@
       font-family: 'Playfair Display', serif;
       font-size: 36px; font-weight: 700; color: white;
     }
+    .avatar-edit-btn {
+      position: absolute;
+      bottom: -8px; left: calc(50% + 26px);
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--purple-main);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      border: 2px solid white;
+      box-shadow: var(--shadow-md);
+      cursor: pointer; z-index: 4;
+      transition: transform .15s ease;
+    }
+    .avatar-edit-btn:hover { transform: scale(1.08); }
+
+    /* ==============================
+       IMAGE VIEWER (banner/avatar lightbox)
+    ============================== */
+    .image-viewer-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,.82);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      animation: fadeIn .2s ease;
+    }
+    .image-viewer-close {
+      position: absolute; top: 18px; right: 22px;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer; border: none;
+      transition: background .15s ease;
+    }
+    .image-viewer-close:hover { background: rgba(255,255,255,.22); }
+    .image-viewer-content {
+      max-width: min(90vw, 720px); max-height: 85vh;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .image-viewer-content img {
+      max-width: 100%; max-height: 78vh;
+      border-radius: 14px;
+      box-shadow: 0 12px 48px rgba(0,0,0,.4);
+      object-fit: contain;
+    }
+    .image-viewer-title {
+      color: rgba(255,255,255,.85);
+      font-size: 13px; font-weight: 500;
+      letter-spacing: .02em;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* ==============================
        CHANNEL INFO
@@ -1110,6 +1162,10 @@ select.ufield-input { cursor: pointer; }
   background: linear-gradient(90deg, var(--purple-deep), var(--purple-mid));
   transition: width .3s ease;
 }
+.uprog-wrap.uprog-done .uprog-fill  { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+.uprog-wrap.uprog-done .uprog-label { color: #27ae60; }
+.uprog-wrap.uprog-error .uprog-fill  { background: var(--red, #e74c3c); }
+.uprog-wrap.uprog-error .uprog-label { color: var(--red, #e74c3c); }
 
 /* Thumbnail Preview */
 .uthumb-preview {
@@ -1158,6 +1214,19 @@ select.ufield-input { cursor: pointer; }
   display: flex; align-items: center; gap: 6px;
 }
 .uprice-opt.active { background: var(--purple-main); color: white; box-shadow: 0 2px 8px rgba(124,58,237,.3); }
+
+/* Category multi-select (seasons — pick as many as apply) */
+.ucat-multi { display: flex; flex-wrap: wrap; gap: 8px; }
+.ucat-chip {
+  padding: 8px 16px; border-radius: 20px;
+  border: 1.5px solid var(--gray-200);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  color: var(--gray-500); transition: all .15s; user-select: none;
+}
+.ucat-chip:hover { border-color: var(--purple-light); }
+.ucat-chip.selected { background: var(--purple-main); border-color: var(--purple-main); color: white; box-shadow: 0 2px 8px rgba(124,58,237,.3); }
+.ucat-multi.uerror { animation: ushake .35s ease; }
+.ucat-multi.uerror .ucat-chip { border-color: var(--red); }
 
 /* Coin Slider */
 .ucoin-wrap {
@@ -2737,211 +2806,6 @@ input[type=range].ucoin-slider {
   top: -1px;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SMOOTH UPLOAD PROGRESS UI
-   ═══════════════════════════════════════════════════════════ */
-
-.upload-progress-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 320px;
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  border: 1px solid var(--border);
-}
-
-.upload-progress-container.active {
-  display: block !important;
-  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInUp {
-  from {
-    transform: translateY(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.upload-progress-header {
-  margin-bottom: 16px;
-}
-
-.upload-progress-header h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-main);
-  margin: 0 0 8px 0;
-}
-
-.upload-overall-progress {
-  width: 100%;
-  height: 4px;
-  background: #f0f0f0;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.overall-progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--purple-deep), var(--purple-mid));
-  width: 0%;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.upload-progress-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.upload-step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.step-icon {
-  min-width: 32px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 12px;
-  color: var(--purple-main);
-  flex-shrink: 0;
-}
-
-.step-content {
-  flex: 1;
-}
-
-.step-label {
-  font-size: 12px;
-  color: var(--text-main);
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.step-progress {
-  width: 100%;
-  height: 3px;
-  background: #f0f0f0;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--purple-deep), var(--purple-mid));
-  width: 0%;
-  transition: width 0.2s linear;
-}
-
-.step-status {
-  min-width: 20px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--purple-main);
-  font-weight: 600;
-}
-
-/* Upload Result Modal */
-.upload-result-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1001;
-  backdrop-filter: blur(4px);
-}
-
-.upload-result-modal.active {
-  display: flex;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.upload-result-content {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  text-align: center;
-  max-width: 400px;
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.upload-result-thumbnail {
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto 20px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100px;
-}
-
-.upload-result-thumbnail img,
-.upload-result-thumbnail video {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.upload-result-content h4 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-main);
-  margin: 0 0 8px 0;
-}
-
-.upload-result-content p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin: 0 0 20px 0;
-}
-
-#mediaPreviewContainer {
-  text-align: center;
-}
-
-#mediaPreviewContainer img,
-#mediaPreviewContainer video {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 8px;
-}
 
 </style>
 </head><body>
@@ -2992,15 +2856,18 @@ Go Back to Pose
 </div>
 </div>
 
-<div class="channel-banner">
-<div class="banner-upload-hint" onclick="openModal('bannerModal')" style="cursor:pointer;">
+<div class="channel-banner" onclick="viewFullImage(channelData && channelData.bannerURL, 'Channel Banner')">
+<div class="banner-upload-hint" onclick="event.stopPropagation(); openModal('bannerModal')" style="cursor:pointer;">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
 </svg>
 Edit banner
 </div>
-<div class="channel-avatar-wrap" title="Change channel photo" onclick="openModal('photoModal')" style="cursor:pointer;">
+<div class="channel-avatar-wrap" title="View channel photo" onclick="event.stopPropagation(); viewFullImage(channelData && channelData.profileURL, 'Channel Photo')" style="cursor:pointer;">
 <span class="channel-avatar-initials">P</span>
+</div>
+<div class="avatar-edit-btn" title="Change channel photo" onclick="event.stopPropagation(); openModal('photoModal')">
+<i class="fa-solid fa-camera"></i>
 </div>
 </div>
 
@@ -3049,7 +2916,7 @@ display:flex;align-items:center;justify-content:center;flex-shrink:0;">
 Payout Requirements
 </div>
 <div id="homeEligText" style="font-size:11px;color:#92400E;line-height:1.4;margin-top:2px;">
-Paid videos need <b>10 views</b> to start earning, then release every <b>5 hours</b> · <b id="homeSlotsRemaining">10</b> pricing slots left this month.
+Paid videos need <b>10 views</b> to start earning, then release every <b>5 hours</b> · <b id="homeSlotsRemaining">5</b> pricing slots left this month.
 </div>
 </div>
 <i class="fas fa-chevron-right" style="color:#92400E;font-size:11px;flex-shrink:0;"></i>
@@ -3734,8 +3601,8 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <div style="font-size:11px;color:var(--gray-500);">Up to ~15 mins</div>
 </div>
 <div style="text-align:right;">
-<div style="font-size:13px;font-weight:700;color:var(--purple-deep);">4–50 PCK</div>
-<div style="font-size:10.5px;color:var(--gray-400);">25 PCK = 1 Pose Coin</div>
+<div style="font-size:13px;font-weight:700;color:var(--purple-deep);">4–100 PCK</div>
+<div style="font-size:10.5px;color:var(--gray-400);">₦1–6 per PCK by region</div>
 </div>
 </div>
 
@@ -3747,7 +3614,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <div style="font-size:11px;color:var(--gray-500);">15–60 mins</div>
 </div>
 <div style="text-align:right;">
-<div style="font-size:13px;font-weight:700;color:#92400E;">50–125 PCK</div>
+<div style="font-size:13px;font-weight:700;color:#92400E;">101–500 PCK</div>
 <div style="font-size:10.5px;color:var(--gray-400);">Priced per minute of runtime</div>
 </div>
 </div>
@@ -3760,8 +3627,8 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <div style="font-size:11px;color:var(--gray-500);">1 hour and above</div>
 </div>
 <div style="text-align:right;">
-<div style="font-size:13px;font-weight:700;color:#6B21A8;">125–200 PCK</div>
-<div style="font-size:10.5px;color:var(--gray-400);">25 PCK = 1 Pose Coin</div>
+<div style="font-size:13px;font-weight:700;color:#6B21A8;">501–2,000 PCK</div>
+<div style="font-size:10.5px;color:var(--gray-400);">₦1–6 per PCK by region</div>
 </div>
 </div>
 
@@ -3850,7 +3717,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 </div>
 <div style="display:flex;align-items:flex-start;gap:8px;">
 <i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
-<span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Consistent uploads grow your total views and unlock more monthly pricing slots at higher tiers</span>
+<span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Every creator gets 5 custom-price slots for movies and another 5 for seasons each month — once a season is priced, every episode inside it can be priced too</span>
 </div>
 </div>
 </div>
@@ -4161,71 +4028,6 @@ Posting <strong>fake/misleading thumbnails</strong> or utilizing wrong/deceptive
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-UPLOAD PROGRESS UI (Smooth Flow)
-═══════════════════════════════════════════════════════════ -->
-<div id="uploadProgressContainer" class="upload-progress-container" style="display: none;">
-<div class="upload-progress-header">
-<h3 id="uploadProgressTitle">Uploading your content...</h3>
-<div class="upload-overall-progress">
-<div id="overallBarFill" class="overall-progress-bar"></div>
-</div>
-</div>
-
-<div class="upload-progress-body">
-<!-- Step 1: Analyzing -->
-<div class="upload-step" data-step="1">
-<div class="step-icon">1</div>
-<div class="step-content">
-<div class="step-label" id="step1Label">Analyzing...</div>
-<div class="step-progress">
-<div class="progress-bar" id="step1Progress"></div>
-</div>
-</div>
-<div class="step-status" id="step1Status"></div>
-</div>
-
-<!-- Step 2: Optimizing -->
-<div class="upload-step" data-step="2">
-<div class="step-icon">2</div>
-<div class="step-content">
-<div class="step-label" id="step2Label">Optimizing...</div>
-<div class="step-progress">
-<div class="progress-bar" id="step2Progress"></div>
-</div>
-</div>
-<div class="step-status" id="step2Status"></div>
-</div>
-
-<!-- Step 3: Uploading -->
-<div class="upload-step" data-step="3">
-<div class="step-icon">3</div>
-<div class="step-content">
-<div class="step-label" id="step3Label">Uploading...</div>
-<div class="step-progress">
-<div class="progress-bar" id="step3Progress"></div>
-</div>
-</div>
-<div class="step-status" id="step3Status"></div>
-</div>
-</div>
-</div>
-
-<!-- Upload Result Modal -->
-<div id="uploadResultModal" class="upload-result-modal" style="display: none;">
-<div class="upload-result-content">
-<div class="upload-result-thumbnail" id="uploadResultThumbnail">
-<img src="" alt="Uploaded content" />
-</div>
-<h4 id="uploadResultTitle">Upload Successful</h4>
-<p id="uploadResultMessage">Your content is ready to share</p>
-<button onclick="closeUploadResultModal()" style="background: var(--purple-main); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Continue</button>
-</div>
-</div>
-
-<!-- Media Preview Container -->
-<div id="mediaPreviewContainer" style="display: none; padding: 20px; background: white; border-radius: 12px; margin: 20px 0;"></div>
-
 <div id="page-upload" class="page">
 
 <div class="studio-topbar">
@@ -4384,22 +4186,16 @@ placeholder="Give your video a clear, searchable title…">
 <!-- Category -->
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Category</div>
-<select class="ufield-input" id="sCategory" onchange="populateSubcategory('sCategory','sSubcategory')">
+<select class="ufield-input" id="sCategory" onchange="populateSubcategory('sCategory','sSubcategory');if(document.getElementById('sPriceMode')?.value==='paid')refreshAutoPriceUI('s');">
 <option value="">— Select a category —</option>
 <option value="comedy">😂 Comedy</option>
-<option value="funny">🤣 Funny / Skits</option>
 <option value="dance">💃 Dance</option>
 <option value="music">🎵 Music</option>
-<option value="music-video">🎶 Music Video</option>
-<option value="afrobeats">🥁 Afrobeats / Afropop</option>
-<option value="highlife">🎷 Highlife / Juju</option>
-<option value="gospel">🙏 Gospel / Worship</option>
 <option value="movies">🎥 Movies</option>
 <option value="tvshows">📺 TV Shows</option>
 <option value="anime">🎌 Anime</option>
 <option value="nollywood">🎬 Nollywood / Drama</option>
 <option value="documentary">🎙 Documentary</option>
-<option value="documentaries">🌍 Documentaries</option>
 <option value="education">📚 Education / Tutorial</option>
 <option value="lifestyle">✨ Lifestyle / Vlog</option>
 <option value="fashion">👗 Fashion / Beauty</option>
@@ -4410,9 +4206,6 @@ placeholder="Give your video a clear, searchable title…">
 <option value="news">📰 News / Politics</option>
 <option value="travel">✈ï¸ Travel / Adventure</option>
 <option value="kids">🧒 Kids / Family</option>
-<option value="romance">❤ï¸ Romance / Relationships</option>
-<option value="thriller">👁ï¸ Thriller</option>
-<option value="scifi">🌌 Sci-Fi</option>
 <option value="health">🧘 Health</option>
 <option value="motivation">🔥 Motivation / Self-Help</option>
 </select>
@@ -4576,6 +4369,9 @@ Scheduling a release and sharing your trailer first is a great way to build hype
 <div class="uprice-opt" id="sPaidBtn" onclick="setPrice('single','paid')">
 <i class="fas fa-coins"></i> Paid (Pose Coin)
 </div>
+<div class="uprice-opt" id="sWtcBtn" onclick="setPrice('single','wtc')" title="Let WTC set the price automatically from category, length and your channel's views">
+<i class="fas fa-wand-magic-sparkles"></i> WTC
+</div>
 </div>
 
 <!-- Free Info -->
@@ -4589,26 +4385,37 @@ Scheduling a release and sharing your trailer first is a great way to build hype
 
 <!-- Paid Coin Slider -->
 <div id="sCoinWrap" class="ucoin-wrap" style="display:none;">
-<div class="ucoin-display" id="sCoinVal"><input type="number" class="ucoin-num-input" id="sCoinInput" min="4" max="200" value="8" oninput="updateCoinFromInput('s')"> PCK</div>
-<div class="ucoin-naira" id="sCoinNaira">Price in Pose Coin Kobo (25 PCK = 1 Pose Coin)</div>
+<div class="ucoin-display" id="sCoinVal"><input type="number" class="ucoin-num-input" id="sCoinInput" min="4" max="2000" value="8" oninput="updateCoinFromInput('s')"> PCK</div>
+<div class="ucoin-naira" id="sCoinNaira">Price in Pose Coin Kobo (1 PCK = ₦1)</div>
 <div class="ucoin-cat short" id="sCoinCat">Short Video</div>
 <input type="range" class="ucoin-slider" id="sCoinSlider"
-min="4" max="200" value="8"
+min="4" max="2000" value="8"
 oninput="updateCoinSlider('s')">
 <div class="ucoin-range-labels">
-<span id="sCoinMinLbl">4 PCK minimum</span><span id="sCoinMaxLbl">200 PCK</span>
+<span id="sCoinMinLbl">4 PCK minimum</span><span id="sCoinMaxLbl">2,000 PCK</span>
 </div>
 <div id="sSlotsNotice" class="uhelp" style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 10px;">
 <i class="fas fa-circle-info" style="color:#D97706;"></i>
-You can set custom prices on <strong id="sSlotsRemaining">10</strong> movies this month (drops permanently to <strong>5/month</strong> after your channel passes 100,000 total views).
+You've used <strong id="sSlotsRemaining">0/5</strong> custom-price slots on movies this month.
 </div>
 <div class="uhelp" style="margin-top:8px;">
 <i class="fas fa-circle-info"></i>
-1 Pose Coin = 25 PCK. Conversion rate to your local currency depends on your region (Nigeria, other Africa, or international).
+1 PCK = ₦1 in Nigeria · ₦3 in other African countries · ₦6 internationally. Also converted to your local currency below.
 </div>
+</div>
+
+<!-- Auto-Priced (shown when WTC is picked, or once monthly movie slots are used up) -->
+<div id="sAutoPriceLocked" class="ucoin-wrap" style="display:none;">
+<div class="ucoin-display" id="sAutoPriceVal">— PCK</div>
+<div class="uhelp" style="margin-top:6px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;" id="sAutoPriceReason">
+<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
+This video's price is auto-calculated from its category, length and your channel's current total views.
+</div>
+<div class="uhelp" style="margin-top:8px;" id="sAutoPriceBreakdown"></div>
 </div>
 <input type="hidden" id="sPriceMode" value="free">
 <input type="hidden" id="sCoinPrice" value="0">
+<input type="hidden" id="sPricingChoice" value="manual">
 </div>
 
 <!-- Post Button -->
@@ -4656,42 +4463,37 @@ placeholder="e.g. The Lagos Chronicles — Season 1">
 <div class="uhelp"><i class="fas fa-circle-info"></i> Auto-filled based on your existing seasons. Edit if needed.</div>
 </div>
 
-<!-- Season Category -->
+<!-- Planned Episode Count -->
 <div class="ufield">
-<div class="ufield-label"><span class="ureq-dot"></span> Category</div>
-<select class="ufield-input" id="seaCategory" onchange="populateSubcategory('seaCategory','seaSubcategory')">
-<option value="">— Select a category —</option>
-<option value="comedy">😂 Comedy</option>
-<option value="funny">🤣 Funny / Skits</option>
-<option value="dance">💃 Dance</option>
-<option value="music">🎵 Music</option>
-<option value="music-video">🎶 Music Video</option>
-<option value="afrobeats">🥁 Afrobeats / Afropop</option>
-<option value="highlife">🎷 Highlife / Juju</option>
-<option value="gospel">🙏 Gospel / Worship</option>
-<option value="movies">🎥 Movies</option>
-<option value="tvshows">📺 TV Shows</option>
-<option value="anime">🎌 Anime</option>
-<option value="nollywood">🎬 Nollywood / Drama</option>
-<option value="documentary">🎙 Documentary</option>
-<option value="documentaries">🌍 Documentaries</option>
-<option value="education">📚 Education / Tutorial</option>
-<option value="lifestyle">✨ Lifestyle / Vlog</option>
-<option value="fashion">👗 Fashion / Beauty</option>
-<option value="food">🍲 Food / Cooking</option>
-<option value="sports">⚽ Sports / Fitness</option>
-<option value="gaming">🎮 Gaming</option>
-<option value="tech">💻 Tech</option>
-<option value="news">📰 News / Politics</option>
-<option value="travel">✈ï¸ Travel / Adventure</option>
-<option value="kids">🧒 Kids / Family</option>
-<option value="romance">❤ï¸ Romance / Relationships</option>
-<option value="thriller">👁ï¸ Thriller</option>
-<option value="scifi">🌌 Sci-Fi</option>
-<option value="health">🧘 Health</option>
-<option value="motivation">🔥 Motivation / Self-Help</option>
-</select>
-<div class="uhelp"><i class="fas fa-circle-info"></i> Category applies to the entire season and all its episodes.</div>
+<div class="ufield-label">Episodes Planned for This Season</div>
+<input class="ufield-input" type="number" id="seaPlannedEpisodes" min="1" placeholder="e.g. 8">
+<div class="uhelp"><i class="fas fa-circle-info"></i> Optional — how many episodes you plan to release under this season. You don't have to upload them all now; viewers will see "X of Y episodes released" as you add more over time.</div>
+</div>
+
+<!-- Season Category — multi-select (Music, Dance, News/Politics and Lifestyle
+     dropped from seasons; those stay single-video-only categories) -->
+<div class="ufield">
+<div class="ufield-label"><span class="ureq-dot"></span> Categories</div>
+<div class="ucat-multi" id="seaCategoryChips">
+<div class="ucat-chip" data-cat="comedy" onclick="toggleSeaCategory(this,'comedy')">😂 Comedy</div>
+<div class="ucat-chip" data-cat="movies" onclick="toggleSeaCategory(this,'movies')">🎥 Movies</div>
+<div class="ucat-chip" data-cat="tvshows" onclick="toggleSeaCategory(this,'tvshows')">📺 TV Shows</div>
+<div class="ucat-chip" data-cat="anime" onclick="toggleSeaCategory(this,'anime')">🎌 Anime</div>
+<div class="ucat-chip" data-cat="nollywood" onclick="toggleSeaCategory(this,'nollywood')">🎬 Nollywood / Drama</div>
+<div class="ucat-chip" data-cat="documentary" onclick="toggleSeaCategory(this,'documentary')">🎙 Documentary</div>
+<div class="ucat-chip" data-cat="education" onclick="toggleSeaCategory(this,'education')">📚 Education / Tutorial</div>
+<div class="ucat-chip" data-cat="fashion" onclick="toggleSeaCategory(this,'fashion')">👗 Fashion / Beauty</div>
+<div class="ucat-chip" data-cat="food" onclick="toggleSeaCategory(this,'food')">🍲 Food / Cooking</div>
+<div class="ucat-chip" data-cat="sports" onclick="toggleSeaCategory(this,'sports')">⚽ Sports / Fitness</div>
+<div class="ucat-chip" data-cat="gaming" onclick="toggleSeaCategory(this,'gaming')">🎮 Gaming</div>
+<div class="ucat-chip" data-cat="tech" onclick="toggleSeaCategory(this,'tech')">💻 Tech</div>
+<div class="ucat-chip" data-cat="travel" onclick="toggleSeaCategory(this,'travel')">✈️ Travel / Adventure</div>
+<div class="ucat-chip" data-cat="kids" onclick="toggleSeaCategory(this,'kids')">🧒 Kids / Family</div>
+<div class="ucat-chip" data-cat="health" onclick="toggleSeaCategory(this,'health')">🧘 Health</div>
+<div class="ucat-chip" data-cat="motivation" onclick="toggleSeaCategory(this,'motivation')">🔥 Motivation / Self-Help</div>
+</div>
+<input type="hidden" id="seaCategory" value="">
+<div class="uhelp"><i class="fas fa-circle-info"></i> Select all categories that apply — this applies to the entire season and all its episodes. Picking more categories raises the WTC auto-price.</div>
 </div>
 
 <!-- Season Subcategory (dynamic — depends on main category) -->
@@ -4882,20 +4684,40 @@ Choose how viewers pay for this season. You can change per-episode pricing later
 <input type="hidden" id="seaPriceMode" value="free">
 
 <!-- Full Season Coin Price -->
+<div id="seaFullPriceToggle" class="uprice-toggle" style="display:none;">
+<div class="uprice-opt active" id="seaFullManualBtn" onclick="setSeasonFullPricingMode('manual')">
+<i class="fas fa-sliders"></i> Manual
+</div>
+<div class="uprice-opt" id="seaFullWtcBtn" onclick="setSeasonFullPricingMode('wtc')" title="WTC prices the full season at double this category's single-video auto-price">
+<i class="fas fa-wand-magic-sparkles"></i> WTC
+</div>
+</div>
 <div id="seaFullCoinWrap" class="ucoin-wrap" style="display:none;margin-top:14px;">
 <div class="ucoin-display" id="seaFullCoinVal">100 PCK</div>
 <div class="ucoin-naira" id="seaFullCoinNaira">for full season</div>
 <input type="range" class="ucoin-slider" id="seaFullCoinSlider"
-min="20" max="500" value="100"
+min="100" max="10000" value="100"
 oninput="updateSeasonCoinSlider()">
 <div class="ucoin-range-labels">
-<span>20 PCK</span><span>500 PCK</span>
+<span>100 PCK</span><span>10,000 PCK</span>
 </div>
 <div class="uhelp" style="margin-top:10px;">
 <i class="fas fa-circle-info"></i>
 Full-season pricing rewards binge-watchers and gives you predictable income per fan.
 </div>
 </div>
+
+<!-- Full Season — WTC auto price (double the single-video WTC price for this category) -->
+<div id="seaFullAutoPriceLocked" class="ucoin-wrap" style="display:none;margin-top:14px;">
+<div class="ucoin-display" id="seaFullAutoPriceVal">— PCK</div>
+<div class="uhelp" style="margin-top:6px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;">
+<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
+WTC prices the full season at double what a single video in this category would auto-price at.
+</div>
+<div class="uhelp" style="margin-top:8px;" id="seaFullAutoPriceBreakdown"></div>
+</div>
+<input type="hidden" id="seaFullPricingChoice" value="manual">
+<input type="hidden" id="seaFullAutoCoinPrice" value="0">
 
 <!-- Mixed — free episode count -->
 <div id="seaMixedWrap" style="display:none;margin-top:14px;">
@@ -4969,6 +4791,12 @@ Select the season you want to add an episode to. Episode number is auto-filled.
 
 <!-- ── EPISODE FORM (shown after season selected/created) ── -->
 <div id="episodeBlock" style="display:none;">
+<!-- Draft-until-2-episodes progress — see createSeason()/postEpisode() -->
+<div id="seasonDraftNotice" class="uhelp" style="margin-bottom:14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px;">
+<i class="fas fa-circle-info" style="color:#D97706;"></i>
+This season stays a private draft — invisible everywhere on Pose — until it has at least
+<strong>2 episodes</strong>. Currently <strong id="seasonDraftEpCount">0</strong>/2 added.
+</div>
 <div class="upload-card">
 <div class="upload-card-title"><i class="fas fa-play-circle"></i> Episode Details</div>
 <div class="ufield">
@@ -5128,6 +4956,9 @@ You can make episode 1 free to attract viewers, then charge for the rest.
 <div class="uprice-opt" id="epPaidBtn" onclick="setPrice('episode','paid')">
 <i class="fas fa-coins"></i> Paid
 </div>
+<div class="uprice-opt" id="epWtcBtn" onclick="setPrice('episode','wtc')" title="Let WTC set the price automatically from category, length and your channel's views">
+<i class="fas fa-wand-magic-sparkles"></i> WTC
+</div>
 </div>
 
 <div id="epFreeInfo" class="ufree-badge">
@@ -5139,26 +4970,37 @@ You can make episode 1 free to attract viewers, then charge for the rest.
 </div>
 
 <div id="epCoinWrap" class="ucoin-wrap" style="display:none;">
-<div class="ucoin-display" id="epCoinVal"><input type="number" class="ucoin-num-input" id="epCoinInput" min="4" max="200" value="8" oninput="updateCoinFromInput('ep')"> PCK</div>
-<div class="ucoin-naira" id="epCoinNaira">Price in Pose Coin Kobo (25 PCK = 1 Pose Coin)</div>
+<div class="ucoin-display" id="epCoinVal"><input type="number" class="ucoin-num-input" id="epCoinInput" min="4" max="2000" value="8" oninput="updateCoinFromInput('ep')"> PCK</div>
+<div class="ucoin-naira" id="epCoinNaira">Price in Pose Coin Kobo (1 PCK = ₦1)</div>
 <div class="ucoin-cat short" id="epCoinCat">Short Episode</div>
 <input type="range" class="ucoin-slider" id="epCoinSlider"
-min="4" max="200" value="8"
+min="4" max="2000" value="8"
 oninput="updateCoinSlider('ep')">
 <div class="ucoin-range-labels">
-<span id="epCoinMinLbl">4 PCK minimum</span><span id="epCoinMaxLbl">200 PCK</span>
+<span id="epCoinMinLbl">4 PCK minimum</span><span id="epCoinMaxLbl">2,000 PCK</span>
 </div>
 <div id="epSlotsNotice" class="uhelp" style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 10px;">
 <i class="fas fa-circle-info" style="color:#D97706;"></i>
-Custom-priced episodes count toward your <strong id="epSlotsRemaining">10</strong>-per-month limit (5/month once your channel passes 100,000 total views).
+Pricing this season uses 1 of your monthly season slots — <strong id="epSlotsRemaining">0/5</strong> used this month. Once a season is priced, you can price as many episodes inside it as you like.
 </div>
 <div class="uhelp" style="margin-top:8px;">
 <i class="fas fa-circle-info"></i>
 Viewers can also buy the full season if that option is set.
 </div>
 </div>
+
+<!-- Auto-Priced (shown when WTC is picked for this episode, or once all 5 monthly season slots are used up) -->
+<div id="epAutoPriceLocked" class="ucoin-wrap" style="display:none;">
+<div class="ucoin-display" id="epAutoPriceVal">— PCK</div>
+<div class="uhelp" style="margin-top:6px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;" id="epAutoPriceReason">
+<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
+This episode's price is auto-calculated from its category, length and your channel's current total views.
+</div>
+<div class="uhelp" style="margin-top:8px;" id="epAutoPriceBreakdown"></div>
+</div>
 <input type="hidden" id="epPriceMode" value="free">
 <input type="hidden" id="epCoinPrice" value="0">
+<input type="hidden" id="epPricingChoice" value="manual">
 </div>
 
 <!-- Post Episode Button -->
@@ -5498,6 +5340,14 @@ padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
       endpoint: 'https://3131354777af9717bce9b01295a74335.r2.cloudflarestorage.com'
     };
 
+    // Multipart (chunked) upload needs the R2 bucket's CORS policy to allow
+    // POST/DELETE and expose the ETag header. If that isn't set up on the
+    // bucket, every chunked attempt fails with ETAG_UNAVAILABLE and
+    // uploadFile() transparently falls back to the plain single-PUT path —
+    // so turning this on is safe even before the CORS policy is added, it
+    // just won't get chunk-by-chunk resumable uploads until then.
+    const R2_MULTIPART_ENABLED = true;
+
     async function _r2Sha256(data) {
       const buf = typeof data === 'string' ? new TextEncoder().encode(data) : data;
       const hash = await crypto.subtle.digest('SHA-256', buf);
@@ -5517,18 +5367,28 @@ padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
       const k3 = await _r2Hmac(k2, 's3');
       return _r2Hmac(k3, 'aws4_request');
     }
-    async function _r2BuildAuthHeaders(method, key, contentType) {
+    function _r2CanonicalQuery(queryParams) {
+      if (!queryParams) return '';
+      return Object.keys(queryParams).sort()
+        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(queryParams[k])}`)
+        .join('&');
+    }
+    function _r2Url(key, qs) {
+      return `${R2.endpoint}/${R2.bucket}/${key}` + (qs ? `?${qs}` : '');
+    }
+    async function _r2BuildAuthHeaders(method, key, contentType, queryParams) {
       const now = new Date();
       const dateStamp = now.toISOString().slice(0,10).replace(/-/g,'');
       const amzDate  = now.toISOString().replace(/[:\-]|\.\d{3}/g,'');
       const host = `${R2.accountId}.r2.cloudflarestorage.com`;
       const canonicalUri = `/${R2.bucket}/${key}`;
+      const canonicalQueryString = _r2CanonicalQuery(queryParams);
       const payloadHash = 'UNSIGNED-PAYLOAD';
       const hdrs = { 'content-type': contentType, 'host': host, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate };
       const sk = Object.keys(hdrs).sort();
       const canonicalHeaders = sk.map(k => `${k}:${hdrs[k]}\n`).join('');
       const signedHeaders = sk.join(';');
-      const canonicalRequest = [method, canonicalUri, '', canonicalHeaders, signedHeaders, payloadHash].join('\n');
+      const canonicalRequest = [method, canonicalUri, canonicalQueryString, canonicalHeaders, signedHeaders, payloadHash].join('\n');
       const credScope = `${dateStamp}/auto/s3/aws4_request`;
       const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credScope}\n${await _r2Sha256(new TextEncoder().encode(canonicalRequest))}`;
       const signature = await _r2HmacHex(await _r2SigningKey(dateStamp), stringToSign);
@@ -5588,6 +5448,220 @@ padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
           console.error('❌ Failed to send file:', err);
           reject(new Error('Failed to read file: ' + err.message));
         }
+      });
+    }
+
+    /* ====== R2 MULTIPART UPLOAD (chunked upload for large videos) ======
+       Uploads a file as several independently-retryable parts, which R2
+       reassembles server-side into ONE ordinary object at `key` — the final
+       videoUrl is a normal single URL, no different from a non-chunked
+       upload, so nothing on the playback side needs to know or care. */
+    async function _r2InitiateMultipart(key, contentType) {
+      const queryParams = { uploads: '' };
+      const qs = _r2CanonicalQuery(queryParams);
+      const headers = await _r2BuildAuthHeaders('POST', key, contentType, queryParams);
+      let res;
+      try {
+        res = await fetch(_r2Url(key, qs), { method: 'POST', headers });
+      } catch (err) {
+        console.error('[r2 multipart] initiate request itself failed (network/CORS):', err);
+        throw new Error('Multipart initiate: request failed — ' + err.message);
+      }
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        console.error('[r2 multipart] initiate failed:', res.status, body);
+        throw new Error(`Multipart initiate failed: ${res.status}`);
+      }
+      const text = await res.text();
+      const m = /<UploadId>([^<]+)<\/UploadId>/.exec(text);
+      if (!m) {
+        console.error('[r2 multipart] initiate response had no UploadId:', text);
+        throw new Error('Multipart initiate: no UploadId in response');
+      }
+      return m[1];
+    }
+
+    function _r2UploadPart(key, uploadId, partNumber, blob, contentType, onProgress) {
+      return new Promise((resolve, reject) => {
+        (async () => {
+          const queryParams = { partNumber: String(partNumber), uploadId };
+          const qs = _r2CanonicalQuery(queryParams);
+          const headers = await _r2BuildAuthHeaders('PUT', key, contentType, queryParams);
+          const xhr = new XMLHttpRequest();
+          xhr.timeout = 0;
+          xhr.open('PUT', _r2Url(key, qs), true);
+          for (const [h, v] of Object.entries(headers)) xhr.setRequestHeader(h, v);
+
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100));
+          };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              const etag = xhr.getResponseHeader('ETag') || xhr.getResponseHeader('etag');
+              if (!etag) {
+                console.error(`[r2 multipart] part ${partNumber} uploaded (status ${xhr.status}) but no ETag header was readable — likely blocked by the bucket's CORS Expose-Headers config. All response headers: `, xhr.getAllResponseHeaders());
+                reject(new Error('ETAG_UNAVAILABLE'));
+                return;
+              }
+              resolve(etag);
+            } else {
+              console.error(`[r2 multipart] part ${partNumber} upload failed:`, xhr.status, xhr.responseText);
+              reject(new Error(`Part ${partNumber} upload failed: ${xhr.status}`));
+            }
+          };
+          xhr.onerror = () => {
+            console.error(`[r2 multipart] part ${partNumber} network/CORS error`);
+            reject(new Error(`Part ${partNumber} network error`));
+          };
+          try {
+            xhr.send(blob);
+          } catch (err) {
+            reject(new Error('Failed to send part: ' + err.message));
+          }
+        })().catch(reject);
+      });
+    }
+
+    async function _r2CompleteMultipart(key, uploadId, parts) {
+      const queryParams = { uploadId };
+      const qs = _r2CanonicalQuery(queryParams);
+      const bodyXml = '<CompleteMultipartUpload>' +
+        parts.map(p => `<Part><PartNumber>${p.partNumber}</PartNumber><ETag>${p.etag}</ETag></Part>`).join('') +
+        '</CompleteMultipartUpload>';
+      const headers = await _r2BuildAuthHeaders('POST', key, 'application/xml', queryParams);
+      let res;
+      try {
+        res = await fetch(_r2Url(key, qs), { method: 'POST', headers, body: bodyXml });
+      } catch (err) {
+        console.error('[r2 multipart] complete request itself failed (network/CORS):', err);
+        throw new Error('Multipart complete: request failed — ' + err.message);
+      }
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        console.error('[r2 multipart] complete failed:', res.status, body);
+        throw new Error(`Multipart complete failed: ${res.status} — ${body}`);
+      }
+      return `${R2.publicBaseUrl}/${key}`;
+    }
+
+    async function _r2AbortMultipart(key, uploadId) {
+      try {
+        const queryParams = { uploadId };
+        const qs = _r2CanonicalQuery(queryParams);
+        const headers = await _r2BuildAuthHeaders('DELETE', key, 'application/octet-stream', queryParams);
+        await fetch(_r2Url(key, qs), { method: 'DELETE', headers });
+      } catch (e) { /* best-effort cleanup only */ }
+    }
+
+    /* ====== RESUMABLE UPLOAD STATE (IndexedDB) ======
+       Persists in-progress chunked video uploads — the file itself, the R2
+       multipart uploadId/key, which parts have already landed, and enough
+       of the post form to rebuild it — so that if the user closes the tab
+       or loses their connection mid-upload, reopening the dashboard can
+       offer to continue exactly where it left off instead of restarting a
+       multi-GB upload from byte zero. Cancelling an upload deletes its
+       record so it's never offered back. IndexedDB (not localStorage)
+       because it can store the actual File/Blob, not just strings. */
+    const RESUME_DB_NAME = 'pose_upload_resume';
+    const RESUME_STORE    = 'uploads';
+
+    function _resumeDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(RESUME_DB_NAME, 1);
+        req.onupgradeneeded = () => {
+          if (!req.result.objectStoreNames.contains(RESUME_STORE)) {
+            req.result.createObjectStore(RESUME_STORE, { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror   = () => reject(req.error);
+      });
+    }
+
+    // Full checkpoint: written ONCE per upload (id) — it's the only record
+    // that carries the actual File/Blob data. Re-`put()`ing a record that
+    // contains a multi-GB Blob is expensive (the browser re-persists the
+    // blob bytes on every call), so per-part progress must never go
+    // through this — see saveResumeProgress below.
+    async function saveResumeState(id, data) {
+      try {
+        const db = await _resumeDB();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(RESUME_STORE, 'readwrite');
+          tx.objectStore(RESUME_STORE).put({ id, ...data, updatedAt: Date.now() });
+          tx.oncomplete = resolve;
+          tx.onerror    = () => reject(tx.error);
+        });
+      } catch (e) { console.warn('[resume] save failed:', e); }
+    }
+
+    // Lightweight, safe-to-call-after-every-chunk progress update — small
+    // JSON only (part numbers + ETags), stored under a separate key so it
+    // never touches the blob-carrying checkpoint record.
+    async function saveResumeProgress(id, progress) {
+      try {
+        const db = await _resumeDB();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(RESUME_STORE, 'readwrite');
+          tx.objectStore(RESUME_STORE).put({ id: id + '::progress', ...progress, updatedAt: Date.now() });
+          tx.oncomplete = resolve;
+          tx.onerror    = () => reject(tx.error);
+        });
+      } catch (e) { console.warn('[resume] save progress failed:', e); }
+    }
+
+    function _resumeGet(db, key) {
+      return new Promise((resolve, reject) => {
+        const tx  = db.transaction(RESUME_STORE, 'readonly');
+        const req = tx.objectStore(RESUME_STORE).get(key);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror   = () => reject(req.error);
+      });
+    }
+
+    // Merges the checkpoint (file + form snapshot) with the latest progress
+    // (which parts are done) into one record for callers to use.
+    async function loadResumeState(id) {
+      try {
+        const db = await _resumeDB();
+        const base = await _resumeGet(db, id);
+        if (!base) return null;
+        const progress = await _resumeGet(db, id + '::progress');
+        return progress ? { ...base, ...progress, id } : base;
+      } catch (e) { console.warn('[resume] load failed:', e); return null; }
+    }
+
+    async function deleteResumeState(id) {
+      try {
+        const db = await _resumeDB();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(RESUME_STORE, 'readwrite');
+          tx.objectStore(RESUME_STORE).delete(id);
+          tx.objectStore(RESUME_STORE).delete(id + '::progress');
+          tx.oncomplete = resolve;
+          tx.onerror    = () => reject(tx.error);
+        });
+      } catch (e) { console.warn('[resume] delete failed:', e); }
+    }
+
+    /* ====== NETWORK STATUS ======
+       Global online/offline + slow-connection awareness used by the chunk
+       upload loop below. `_uploadNetworkStatus` is read from inside the
+       retry loop; the listeners just keep it current and toast the user. */
+    let _uploadNetworkStatus = navigator.onLine ? 'online' : 'offline';
+    window.addEventListener('offline', () => {
+      _uploadNetworkStatus = 'offline';
+      if (window._activeUploadInFlight) showToast('⚠ Network connection lost — will resume automatically');
+    });
+    window.addEventListener('online', () => {
+      _uploadNetworkStatus = 'online';
+      if (window._activeUploadInFlight) showToast('✅ Back online — resuming upload');
+    });
+    function waitForOnline() {
+      if (navigator.onLine) return Promise.resolve();
+      return new Promise(resolve => {
+        const onOnline = () => { window.removeEventListener('online', onOnline); resolve(); };
+        window.addEventListener('online', onOnline);
       });
     }
 
@@ -5738,133 +5812,11 @@ padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script src="pose-cache-service.js"></script>
   <script src="pose-loading-service.js"></script>
+  <script src="category-pricing.js"></script>
 
 
 
   <script>
-    // ═══════════════════════════════════════════════════════════
-    // SMOOTH UPLOAD FLOW FUNCTIONS
-    // ═══════════════════════════════════════════════════════════
-
-    function showUploadProgressUI() {
-      const container = document.getElementById('uploadProgressContainer');
-      container.style.display = 'block';
-      container.classList.add('active');
-      document.getElementById('uploadResultModal').style.display = 'none';
-    }
-
-    function hideUploadProgressUI() {
-      const container = document.getElementById('uploadProgressContainer');
-      container.classList.remove('active');
-      setTimeout(() => {
-        container.style.display = 'none';
-      }, 300);
-    }
-
-    function updateStepProgress(stepNum, label, progress, isActive = false) {
-      // Update label
-      const labelEl = document.getElementById(`step${stepNum}Label`);
-      if (labelEl) labelEl.textContent = label;
-
-      // Update progress bar
-      const progressBar = document.getElementById(`step${stepNum}Progress`);
-      if (progressBar) {
-        progressBar.style.width = `${Math.min(progress, 100)}%`;
-      }
-
-      // Update status icon
-      const statusEl = document.getElementById(`step${stepNum}Status`);
-      if (statusEl) {
-        if (isActive) {
-          statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        } else if (progress === 100) {
-          statusEl.innerHTML = '<i class="fas fa-check" style="color: #4CAF50;"></i>';
-        } else {
-          statusEl.innerHTML = '';
-        }
-      }
-
-      // Update overall progress (3 steps: 0-33%, 33-66%, 66-100%)
-      const stepProgress = (stepNum - 1) * 33.33;
-      const currentStepProgress = (progress / 100) * 33.33;
-      const overallProgress = stepProgress + currentStepProgress;
-      const overallBar = document.getElementById('overallBarFill');
-      if (overallBar) {
-        overallBar.style.width = `${Math.min(overallProgress, 100)}%`;
-      }
-    }
-
-    function showMediaPreview(url, fileType) {
-      const container = document.getElementById('mediaPreviewContainer');
-      container.innerHTML = '';
-
-      if (fileType.startsWith('image')) {
-        const img = document.createElement('img');
-        img.src = url;
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '8px';
-        container.appendChild(img);
-      } else if (fileType.startsWith('video')) {
-        const video = document.createElement('video');
-        video.src = url;
-        video.controls = true;
-        video.style.maxWidth = '100%';
-        video.style.borderRadius = '8px';
-        video.style.maxHeight = '300px';
-        container.appendChild(video);
-      }
-
-      container.style.display = 'block';
-    }
-
-    function showUploadResultModal(data) {
-      const modal = document.getElementById('uploadResultModal');
-      const thumbnail = document.getElementById('uploadResultThumbnail');
-
-      thumbnail.innerHTML = '';
-      if (data.thumbnail) {
-        const img = document.createElement('img');
-        img.src = data.thumbnail;
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '8px';
-        thumbnail.appendChild(img);
-      }
-
-      document.getElementById('uploadResultTitle').textContent = data.title || 'Upload Successful';
-      document.getElementById('uploadResultMessage').textContent = data.message || 'Your content is ready to share';
-
-      modal.classList.add('active');
-      modal.style.display = 'flex';
-    }
-
-    function closeUploadResultModal() {
-      const modal = document.getElementById('uploadResultModal');
-      modal.classList.remove('active');
-      setTimeout(() => {
-        modal.style.display = 'none';
-      }, 300);
-    }
-
-    function formatFileSize(bytes) {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-    }
-
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function showUploadError(message) {
-      alert('❌ ' + message);
-    }
-
-    function showUploadSuccess(message) {
-      console.log('✅ ' + message);
-    }
-
     // ═══════════════════════════════════════════════════════════
     // FIREBASE INIT
     // ═══════════════════════════════════════════════════════════
@@ -6011,6 +5963,7 @@ let inboxMessages = [];
   .onSnapshot(snap => {
     if (!snap.exists) { window.location.href = 'channelintro.html?fromDash=1'; return; }
       channelData = snap.data();
+      updatePckToNgnRate();
       const fansNow = Number(channelData.fans) || Number(channelData.subscribers) || 0;
       if (_notifFansBaseline === null) {
         _notifFansBaseline = fansNow;
@@ -6087,6 +6040,11 @@ db.collection('channels').doc(CHANNEL_UID)
           updateInboxBadge();
           if (!document.getElementById('inboxPopup')?.classList.contains('hidden')) renderInboxList();
         }, err => console.error('Inbox error:', err));
+
+      // If a chunked video upload got interrupted last time (tab closed,
+      // connection dropped) and wasn't explicitly cancelled, offer to pick
+      // it back up instead of silently losing the progress.
+      checkForResumableUpload();
     }
 
     function checkEarningsMilestone(totalNGN) {
@@ -6232,6 +6190,16 @@ db.collection('channels').doc(CHANNEL_UID)
          : (paid.lockedViews > 0
              ? `🔒 ${paid.lockedViews.toLocaleString('en-NG')} view${paid.lockedViews===1?'':'s'} still below the 10-view minimum`
              : '✅ Paid videos earning — releasing every 5 hours');
+
+       // Append the live "used/total" custom-price slot counts for this month —
+       // singles and seasons each have their own separate 5-slot pool.
+       if (typeof getMonthlyPricingSlotsUsed === 'function') {
+         getMonthlyPricingSlotsUsed().then(({ singles, seasons }) => {
+           if (document.getElementById('homeEligText') === txt) {
+             txt.innerHTML += ` · <b id="homeSlotsRemaining">${singles}/${MONTHLY_PRICING_SLOTS}</b> movie · <b>${seasons}/${MONTHLY_PRICING_SLOTS}</b> season pricing slots used this month`;
+           }
+         }).catch(() => {});
+       }
      }
    }
 
@@ -6762,7 +6730,7 @@ async function countAllContent() {
     const localToNgn = (ngnRate / localRate).toLocaleString('en', { maximumFractionDigits: 1 });
 
     document.getElementById('rateNoteText').innerHTML =
-      `${COIN_LOGO} 1 PCK = ₦1 ${uc.code !== 'NGN' ? `· 1 ${uc.code} ≈ ${localToNgn} NGN` : ''} · Updated just now`;
+      `${COIN_LOGO} 1 PCK = ₦${PCK_TO_NGN} ${uc.code !== 'NGN' ? `· 1 ${uc.code} ≈ ${localToNgn} NGN` : ''} · Updated just now`;
   } catch {
     usdToNgn = 1620;
     userCurrencyRates = { NGN: 1620, USD: 1, GBP: 0.79, GHS: 12, KES: 130 };
@@ -7000,34 +6968,240 @@ async function countAllContent() {
        wallet (channels/{id}/earnings/summary.directRevenue). Views below
        the next full batch stay locked in the video's pool.
     ==================================================== */
-    const PAID_VIEW_THRESHOLD  = 10;    // minimum views before a video starts earning at all
+    const PAID_VIEW_THRESHOLD  = 1;    // minimum views before a video starts earning at all
     const POOL_FLUSH_INTERVAL_MS = 5 * 60 * 60 * 1000; // 5 hours
-    const PCK_TO_NGN     = 1;     // 1 PCK (Pose Coin Kobo) = ₦1 — coinPrice is already stored in PCK
-    const CREATOR_SHARE  = 0.75;  // 75% creator share
+    const CREATOR_SHARE  = 0.7;   // 70% creator share, 30% to posepaidvideorevenue (see tnpProcessPayment in index.html)
+    const MONTHLY_PRICING_SLOTS = 5; // custom-price slots per calendar month — singles and seasons each get their OWN separate pool of 5
 
-    /* Paid breakdown — reads the persisted per-video pool state written by
-       the 5-hour flush. This is the single source of truth for ₦ amounts;
-       nothing here is computed live from views (views only drive the
-       live progress bar in the video-detail pool card). */
+    // PCK→₦ rate tiers by the CREATOR's channel country: Nigeria pays out 1:1,
+    // other African countries at 3x, everywhere else (international) at 6x.
+    // Drives both the price-setting preview AND the real earnings/payout math
+    // below, so a creator's region changes how much ₦ their PCK converts to.
+    const OTHER_AFRICA_COUNTRIES = [
+      'Ghana','Kenya','South Africa','Tanzania','Uganda','Rwanda',
+      'Cameroon','Senegal','Ivory Coast','Ethiopia','Zimbabwe','Zambia','Egypt'
+    ];
+    function getPckToNgnRate() {
+      const country = channelData?.country || '';
+      if (country === 'Nigeria') return 1;
+      if (OTHER_AFRICA_COUNTRIES.includes(country)) return 3;
+      return 6; // international (also the default while channelData hasn't loaded yet)
+    }
+    let PCK_TO_NGN = 1; // 1 PCK (Pose Coin Kobo) = ₦PCK_TO_NGN — kept in sync with the creator's region, see updatePckToNgnRate()
+    function updatePckToNgnRate() {
+      PCK_TO_NGN = getPckToNgnRate();
+    }
+
+    /* Counts how many singles / paid seasons were created THIS calendar month.
+       Singles come straight from the already-loaded videosData (no extra read).
+       The slot is spent by the SEASON, not each episode — once a season is priced
+       (full-season, per-episode, or mixed) it uses one of the 5 season slots for
+       the month, and every episode inside it can be priced with no further limit. */
+    async function getMonthlyPricingSlotsUsed() {
+      const monthStart = new Date();
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+      const monthStartMs = monthStart.getTime();
+
+      const createdThisMonth = (doc) => {
+        const ts = doc && doc.createdAt;
+        if (!ts) return false;
+        const ms = ts.toMillis ? ts.toMillis() : (ts.seconds ? ts.seconds * 1000 : new Date(ts).getTime());
+        return Number.isFinite(ms) && ms >= monthStartMs;
+      };
+
+      // WTC-priced singles don't burn a manual slot — that's the whole point of
+      // picking WTC instead of typing in a price (see pricingSource on videoDoc).
+      const singles = (Array.isArray(videosData) ? videosData : [])
+        .filter(v => v && v.priceMode === 'paid' && v.pricingSource !== 'wtc' && createdThisMonth(v)).length;
+
+      // Same WTC exemption as singles — only meaningfully applies to full-season
+      // pricing here, since that's the only mode where the season doc itself
+      // (rather than its individual episodes) carries a real wtc/manual choice.
+      let seasons = 0;
+      try {
+        const seasonsSnap = await db.collection('channels').doc(CHANNEL_UID).collection('seasons').get();
+        seasonsSnap.docs.forEach(sDoc => {
+          const s = sDoc.data();
+          if (s && s.priceMode && s.priceMode !== 'free' && s.pricingSource !== 'wtc' && createdThisMonth(s)) seasons++;
+        });
+      } catch (e) {
+        console.warn('getMonthlyPricingSlotsUsed: season count failed:', e);
+      }
+
+      return { singles, seasons };
+    }
+
+    // Refresh the "X/5 used this month" notice shown when a creator switches a
+    // video to Paid, or picks a paid pricing mode for a season, in the upload form.
+    // Singles and seasons are tracked against their own separate 5-slot pool.
+    async function refreshPricingSlotsNotice(prefix) {
+      const el = document.getElementById(prefix === 's' ? 'sSlotsRemaining' : 'epSlotsRemaining');
+      if (!el) return;
+      try {
+        const { singles, seasons } = await getMonthlyPricingSlotsUsed();
+        const used = prefix === 's' ? singles : seasons;
+        el.textContent = `${used}/${MONTHLY_PRICING_SLOTS}`;
+      } catch (e) {
+        console.warn('refreshPricingSlotsNotice failed:', e);
+      }
+    }
+
+    /* ====================================================
+       AUTO-PRICING — once a creator has used all 5 of this month's
+       slots (movies or seasons), further paid content can no longer
+       be priced manually. Instead the price is computed as:
+         category PCK (category-pricing.js) + duration-band PCK + views-bonus PCK
+       See category-pricing.js for the CATEGORY_PRICING / DURATION_PRICING /
+       VIEWS_BONUS tables this reads from.
+    ==================================================== */
+    let singleVideoDurationSec = 0; // measured from the MAIN video file, not the trailer
+    let epVideoDurationSec     = 0; // measured from the current episode's MAIN video file
+    let seasonOverSlotLimit    = false; // set by setSeasonPriceMode() once season slots run out this month
+
+    function measureVideoDuration(file, callback) {
+      if (!file) { callback(0); return; }
+      try {
+        const url = URL.createObjectURL(file);
+        const v = document.createElement('video');
+        v.preload = 'metadata';
+        v.onloadedmetadata = () => { URL.revokeObjectURL(url); callback(v.duration || 0); };
+        v.onerror = () => { URL.revokeObjectURL(url); callback(0); };
+        v.src = url;
+      } catch (e) {
+        console.warn('measureVideoDuration failed:', e);
+        callback(0);
+      }
+    }
+
+    function getChannelTotalViews() {
+      const videoViews = (Array.isArray(videosData) ? videosData : [])
+        .reduce((s, v) => s + (Number(v.views) || 0), 0);
+      return (channelData && channelData.totalViews != null) ? Number(channelData.totalViews) : videoViews;
+    }
+
+    // category can be a single key ("comedy") or, for seasons (multi-select),
+    // a comma-joined list ("comedy,movies") — sums each matched category's pck
+    // so picking more categories can only raise the auto-price, never lower it.
+    function getCategoryPck(category) {
+      if (typeof CATEGORY_PRICING === 'undefined') return 0;
+      return (category || '').split(',').map(c => c.trim()).filter(Boolean)
+        .reduce((sum, c) => {
+          const resolved = typeof resolveCategory === 'function' ? resolveCategory(c) : c;
+          return sum + (CATEGORY_PRICING[resolved] ? (Number(CATEGORY_PRICING[resolved].pck) || 0) : 0);
+        }, 0);
+    }
+    // Season pricing uses its own table (CATEGORY_PRICING_SEASON) — season
+    // categories and single-video categories are priced independently, per
+    // worksheet 1 (singles/episodes) vs worksheet 2 (seasons).
+    function getSeasonCategoryPck(category) {
+      if (typeof CATEGORY_PRICING_SEASON === 'undefined') return 0;
+      return (category || '').split(',').map(c => c.trim()).filter(Boolean)
+        .reduce((sum, c) => sum + (CATEGORY_PRICING_SEASON[c] ? (Number(CATEGORY_PRICING_SEASON[c].pck) || 0) : 0), 0);
+    }
+    function getDurationPck(durationSec) {
+      const minutes = Math.max(1, Math.ceil((durationSec || 0) / 60));
+      if (typeof DURATION_PRICING === 'undefined') return 0;
+      const band = DURATION_PRICING.find(b => minutes >= b.minMinutes && (b.maxMinutes === null || minutes <= b.maxMinutes));
+      return band ? band.pck : 0;
+    }
+    function getViewsBonusPck(totalViews) {
+      if (typeof VIEWS_BONUS === 'undefined') return 0;
+      const band = VIEWS_BONUS.find(b => totalViews >= b.minViews && (b.maxViews === null || totalViews < b.maxViews));
+      return band ? band.pck : 0;
+    }
+    function computeAutoPrice(category, durationSec) {
+      const cat  = getCategoryPck(category);
+      const dur  = getDurationPck(durationSec);
+      const view = getViewsBonusPck(getChannelTotalViews());
+      return { total: cat + dur + view, cat, dur, view };
+    }
+
+    // Swaps the manual price slider for the locked auto-price display (or back)
+    // depending on whether this month's slots are used up, and — when locked —
+    // computes and writes the auto-price straight into the hidden price field
+    // that the publish/draft functions already read from.
+    async function refreshAutoPriceUI(prefix) {
+      const isSingle    = prefix === 's';
+      const coinWrap     = document.getElementById(prefix + 'CoinWrap');
+      const lockedWrap    = document.getElementById(prefix + 'AutoPriceLocked');
+      const priceModeEl  = document.getElementById(prefix + 'PriceMode');
+      const coinPriceEl  = document.getElementById(prefix + 'CoinPrice');
+      const choiceEl     = document.getElementById(prefix + 'PricingChoice');
+      if (!coinWrap || !lockedWrap) return;
+
+      // Explicitly picking WTC always forces auto-pricing, independent of whether
+      // this month's manual-price slots are used up.
+      const isWtcChoice = choiceEl?.value === 'wtc';
+      let overLimit = isWtcChoice;
+      if (!overLimit) {
+        if (isSingle) {
+          try {
+            const { singles } = await getMonthlyPricingSlotsUsed();
+            overLimit = singles >= MONTHLY_PRICING_SLOTS;
+          } catch (e) { overLimit = false; }
+        } else {
+          overLimit = seasonOverSlotLimit;
+        }
+      }
+
+      if (!overLimit) {
+        lockedWrap.style.display = 'none';
+        coinWrap.style.display   = 'block';
+        return;
+      }
+
+      coinWrap.style.display   = 'none';
+      lockedWrap.style.display = 'block';
+
+      // Explain WHY it's auto-priced — picked WTC vs. ran out of manual slots —
+      // instead of always showing the slot-exhaustion copy.
+      const reasonEl = document.getElementById(prefix + 'AutoPriceReason');
+      if (reasonEl) {
+        reasonEl.innerHTML = isWtcChoice
+          ? `<i class="fas fa-circle-info" style="color:#6B21A8;"></i> WTC is set to auto-price this ${isSingle ? 'video' : 'episode'} from its category, length and your channel's current total views.`
+          : `<i class="fas fa-circle-info" style="color:#6B21A8;"></i> You've used all <strong>${MONTHLY_PRICING_SLOTS}/${MONTHLY_PRICING_SLOTS}</strong> ${isSingle ? 'movie' : 'season'} pricing slots this month, so this ${isSingle ? "video's" : "episode's"} price is auto-calculated from its category, length and your channel's current total views — it can't be set manually until your slots reset next month.`;
+      }
+
+      const category    = isSingle
+        ? (document.getElementById('sCategory')?.value || '')
+        : (document.getElementById('seaCategory')?.value || '');
+      const durationSec = isSingle ? singleVideoDurationSec : epVideoDurationSec;
+      const { total, cat, dur, view } = computeAutoPrice(category, durationSec);
+
+      const valEl = document.getElementById(prefix + 'AutoPriceVal');
+      if (valEl) valEl.textContent = `🪙 ${total} PCK`;
+      const bdEl = document.getElementById(prefix + 'AutoPriceBreakdown');
+      if (bdEl) {
+        bdEl.innerHTML = `<i class="fas fa-circle-info"></i> ${cat} PCK (category) + ${dur} PCK (length) + ${view} PCK (channel views) = <b>${total} PCK</b>`;
+      }
+      if (priceModeEl) priceModeEl.value = 'paid';
+      if (coinPriceEl) coinPriceEl.value = total;
+    }
+
+    /* Paid breakdown — released is read straight from earnings/summary.directRevenue,
+       which tnpProcessPayment (index.html) now credits INSTANTLY on every paid view
+       (no pool, no batching). "locked" here only ever refers to a genuine LEGACY
+       balance still sitting in the old pool system on videos that predate instant
+       payouts (poolBalanceNGN) — new purchases never touch that field, so this will
+       be 0 for any video bought after the instant-payout switch. */
     function getPaidBreakdown() {
       const paidVids = (Array.isArray(videosData) ? videosData : [])
         .filter(v => v && v.priceMode === 'paid');
 
-      let released = 0, locked = 0, releasedViews = 0, lockedViews = 0;
-
+      let legacyLocked = 0, legacyLockedViews = 0, liveViews = 0;
       paidVids.forEach(v => {
-        const ngnPerView = (Number(v.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
-        const rViews = Number(v.poolReleasedViews) || 0;
-        released += rViews * ngnPerView;
-        locked   += Number(v.poolBalanceNGN) || 0;
-        releasedViews += rViews;
-        lockedViews   += Number(v.poolPendingViews) || 0;
+        legacyLocked      += Number(v.poolBalanceNGN) || 0;
+        legacyLockedViews += Number(v.poolPendingViews) || 0;
+        liveViews         += Number(v.views) || 0;
       });
 
+      const released = Number(earningsData?.directRevenue) || 0;
+
       return {
-        total: released + locked,
-        released, locked,
-        releasedViews, lockedViews,
+        total: released + legacyLocked,
+        released, locked: legacyLocked,
+        releasedViews: liveViews, lockedViews: legacyLockedViews,
         videoCount: paidVids.length,
         threshold: PAID_VIEW_THRESHOLD,
       };
@@ -7040,8 +7214,8 @@ async function countAllContent() {
       return getPaidBreakdown().locked;
     }
 
-    /* getTotalBalance returns ONLY the spendable / withdrawable portion
-       (i.e. after the 10-view rule has been met by a flush) */
+    /* Withdrawable balance — with instant payouts this is simply the running
+       directRevenue total; nothing needs to wait on a flush anymore. */
     function getTotalBalance() {
       if (!earningsData) return 0;
       return getReleasedBalance();
@@ -7076,7 +7250,18 @@ async function countAllContent() {
       const now = Date.now();
       const due = paidVids.filter(v => {
         const last = v.poolLastFlushAt?.toMillis ? v.poolLastFlushAt.toMillis() : 0;
-        return (now - last) >= POOL_FLUSH_INTERVAL_MS;
+        const intervalDue = (now - last) >= POOL_FLUSH_INTERVAL_MS;
+        // A video can be sitting on pending views that already clear the current
+        // PAID_VIEW_THRESHOLD but never got released — e.g. it was flushed once
+        // under a HIGHER threshold (this pool used to require 10 views; a video
+        // with 1 pending view got locked and stamped with poolLastFlushAt, so it
+        // wouldn't be looked at again for another 5 hours even after the threshold
+        // was lowered to 1). Release those immediately instead of making them wait
+        // out the rest of that stale cycle.
+        const pendingViews    = Number(v.poolPendingViews) || 0;
+        const releasedSoFar   = Number(v.poolReleasedViews) || 0;
+        const alreadyEligible = pendingViews > 0 && (releasedSoFar + pendingViews) >= PAID_VIEW_THRESHOLD;
+        return intervalDue || alreadyEligible;
       });
       if (!due.length) return;
 
@@ -7248,9 +7433,9 @@ function openWithdrawPopup() {
   const acctNum  = document.getElementById('pmAcctNum').value.trim();
   const acctName = document.getElementById('pmAcctName').value.trim();
   const bankName = document.getElementById('pmBankName').value.trim();
-  const balance  = getTotalBalance();        // released-only
+  const balance  = getTotalBalance();        // released-only (withdrawable now)
   const lifetime = getLifetimeBalance();     // lifetime total
-  const lockedAmt = Math.max(0, lifetime - balance);
+  const lockedAmt = getLockedBalance();      // any genuine legacy pool balance only — NOT lifetime-balance, since those are now the same figure with instant payouts
   const hasBank  = acctNum.length >= 10 && acctName && bankName;
 
   // Reset amount input
@@ -7273,7 +7458,7 @@ function openWithdrawPopup() {
   const paid = getPaidBreakdown();
   const reasons = [];
   if (paid.locked > 0) {
-    reasons.push(`<b>Paid Videos</b> have ₦${Math.round(paid.locked).toLocaleString('en-NG')} sitting in the pool — releases once each video passes <b>10 views</b>, every <b>5 hours</b>.`);
+    reasons.push(`<b>Paid Videos</b> have ₦${Math.round(paid.locked).toLocaleString('en-NG')} sitting in the pool — releases once each video passes <b>${PAID_VIEW_THRESHOLD} view${PAID_VIEW_THRESHOLD===1?'':'s'}</b>, every <b>5 hours</b>.`);
   }
   if (lockedAmt > 0) {
     elig.style.background = '#FFFBEB';
@@ -7851,6 +8036,21 @@ setTimeout(loadChannelSwitchList, 500);
       if (c) c.innerHTML = '';
     }
 
+    function viewFullImage(url, label) {
+      if (!url) { showToast('No image uploaded yet'); return; }
+      const container = document.getElementById('settModals');
+      container.innerHTML = `
+        <div class="image-viewer-overlay" onclick="if(event.target===this)closeModal();">
+          <button class="image-viewer-close" onclick="closeModal()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="image-viewer-content">
+            <img src="${url}" alt="${label || 'Image'}" />
+            ${label ? `<div class="image-viewer-title">${label}</div>` : ''}
+          </div>
+        </div>`;
+    }
+
     async function saveProfile() {
       const name = document.getElementById('editName')?.value.trim();
       const desc = document.getElementById('editDesc')?.value.trim();
@@ -8078,6 +8278,15 @@ let epTrailerFile_    = null;
 let currentSeasonId   = null;
 let seasonMode        = 'new';
 
+// Set only while restoring a resumed upload (see resumeSavedUpload()) — the
+// thumbnail can't be programmatically re-attached to the <input type=file>
+// for security reasons, so this stands in for it until the user picks a new
+// one (handleThumb() below clears it as soon as they do).
+let singleThumbFileOverride = null;
+function getSingleThumbFile() {
+  return singleThumbFileOverride || document.getElementById('sThumbFile').files[0];
+}
+
 /* ====================================================
    OPEN / CLOSE UPLOAD
 ==================================================== */
@@ -8140,9 +8349,9 @@ function switchUploadTab(el, tab) {
 function handleFileSelect(input, previewId, progressId) {
   const file = input.files[0];
   if (!file) return;
+  if (progressId) resetProgress(progressId);
   if (storeFileRef(input.id, file) === false) { input.value = ''; return; }
   showFilePreview(file, previewId);
-  if (progressId) resetProgress(progressId);
 }
 
 function handleDrop(event, fileInputId, previewId, progressId) {
@@ -8150,12 +8359,74 @@ function handleDrop(event, fileInputId, previewId, progressId) {
   event.currentTarget.classList.remove('dragover');
   const file = event.dataTransfer.files[0];
   if (!file) return;
+  if (progressId) resetProgress(progressId);
   if (storeFileRef(fileInputId, file) === false) return;
   showFilePreview(file, previewId);
-  if (progressId) resetProgress(progressId);
 }
 
 const MAX_VIDEO_SIZE = 4 * 1024 * 1024 * 1024; // 4 GB
+
+/* ====================================================
+   EAGER (CUT-ON-SELECT) VIDEO CHUNKING
+   The moment a video over 100MB is picked in the Video File field (single
+   video or episode), the device cuts it into 4-5 parts right away — with
+   its own progress bar right in the form — WITHOUT uploading anything yet.
+   Slicing a Blob is just marking byte ranges (no data is read/sent), so
+   this is fast and free. When Post is actually clicked, uploadFileChunked
+   reuses these pre-cut parts instead of cutting again, and only THEN does
+   any network upload happen.
+==================================================== */
+const _preSlicedVideo = { s: null, ep: null };
+const _preSliceGen    = { s: 0,    ep: 0    };
+const CHUNK_THRESHOLD_BYTES = 50 * 1024 * 1024; // 50MB — files at or under this go up as one plain PUT
+const CHUNK_SIZE_BYTES      = 50 * 1024 * 1024; // 50MB per part — Cloudflare's recommended R2 multipart part size
+
+// Cuts a file into fixed 50MB parts (the last part gets whatever remains,
+// which can be smaller — R2/S3 multipart allows that for the final part).
+function sliceFileIntoChunks(file) {
+  const slices = [];
+  let offset = 0;
+  while (offset < file.size) {
+    const end = Math.min(offset + CHUNK_SIZE_BYTES, file.size);
+    slices.push(file.slice(offset, end));
+    offset = end;
+  }
+  return slices;
+}
+
+function startEagerChunking(prefix, file) {
+  const progressId = prefix === 's' ? 'sVideoProgress' : 'epVideoProgress';
+  const gen = ++_preSliceGen[prefix];
+  _preSlicedVideo[prefix] = null;
+
+  const wrap = document.getElementById(progressId);
+  if (wrap) wrap.classList.remove('uprog-done', 'uprog-error');
+
+  const isVideo = file && ((file.type || '').startsWith('video/') || /\.(mp4|mov|avi|mkv|webm)$/i.test(file.name || ''));
+  if (!R2_MULTIPART_ENABLED || !file || !isVideo || file.size <= CHUNK_THRESHOLD_BYTES) {
+    resetProgress(progressId);
+    return;
+  }
+
+  const allSlices = sliceFileIntoChunks(file);
+  const CHUNK_COUNT = allSlices.length;
+  showProgress(progressId, `Cutting into ${CHUNK_COUNT} parts…`, 0);
+
+  (async () => {
+    const slices = [];
+    for (let i = 0; i < CHUNK_COUNT; i++) {
+      if (_preSliceGen[prefix] !== gen) return; // superseded by a newer file selection
+      slices.push(allSlices[i]);
+      const pct = Math.round(((i + 1) / CHUNK_COUNT) * 100);
+      showProgress(progressId, `Cutting part ${i + 1} of ${CHUNK_COUNT}…`, pct);
+      await sleep(150);
+    }
+    if (_preSliceGen[prefix] !== gen) return;
+    _preSlicedVideo[prefix] = { file, slices };
+    showProgress(progressId, `Ready — cut into ${CHUNK_COUNT} parts for upload`, 100);
+    if (wrap) wrap.classList.add('uprog-done');
+  })();
+}
 
 function storeFileRef(inputId, file) {
   if (file && (inputId === 'sVideoFile' || inputId === 'epVideoFile') && file.size > MAX_VIDEO_SIZE) {
@@ -8164,10 +8435,24 @@ function storeFileRef(inputId, file) {
     if (input) input.value = '';
     return false;
   }
-  if (inputId === 'sVideoFile')    singleVideoFile   = file;
+  if (inputId === 'sVideoFile') {
+    singleVideoFile = file;
+    measureVideoDuration(file, sec => {
+      singleVideoDurationSec = sec;
+      if (document.getElementById('sPriceMode')?.value === 'paid') refreshAutoPriceUI('s');
+    });
+    startEagerChunking('s', file);
+  }
   if (inputId === 'sTrailerFile')  singleTrailerFile = file;
   if (inputId === 'seaTrailerFile') seasonTrailerFile = file;
-  if (inputId === 'epVideoFile')   epVideoFile_      = file;
+  if (inputId === 'epVideoFile') {
+    epVideoFile_ = file;
+    measureVideoDuration(file, sec => {
+      epVideoDurationSec = sec;
+      if (document.getElementById('epPriceMode')?.value === 'paid') refreshAutoPriceUI('ep');
+    });
+    startEagerChunking('ep', file);
+  }
   if (inputId === 'epTrailerFile') epTrailerFile_    = file;
 }
 
@@ -8194,6 +8479,7 @@ function removeFile(fileInputId, previewId, progressId) {
 function handleThumb(input, previewId) {
   const file = input.files[0];
   if (!file) return;
+  if (previewId === 'sThumbPreview') singleThumbFileOverride = null;
   const reader = new FileReader();
   reader.onload = e => {
     const wrap = document.getElementById(previewId);
@@ -8234,7 +8520,7 @@ function showProgress(progressId, label, pct) {
 function resetProgress(progressId) {
   const wrap = document.getElementById(progressId);
   if (wrap) {
-    wrap.classList.remove('visible');
+    wrap.classList.remove('visible', 'uprog-done', 'uprog-error');
     const base = progressId.replace('Progress', 'Prog');
     const fill = document.getElementById(base + 'Fill');
     if (fill) fill.style.width = '0%';
@@ -8295,24 +8581,113 @@ function setPrice(context, mode) {
   const prefix = context === 'single' ? 's' : 'ep';
   document.getElementById(prefix + 'FreeBtn')?.classList.toggle('active', mode === 'free');
   document.getElementById(prefix + 'PaidBtn')?.classList.toggle('active', mode === 'paid');
+  document.getElementById(prefix + 'WtcBtn')?.classList.toggle('active', mode === 'wtc');
 
-  const freeInfo = document.getElementById(prefix + 'FreeInfo');
-  const coinWrap = document.getElementById(prefix + 'CoinWrap');
+  const freeInfo   = document.getElementById(prefix + 'FreeInfo');
+  const coinWrap   = document.getElementById(prefix + 'CoinWrap');
+  const lockedWrap = document.getElementById(prefix + 'AutoPriceLocked');
   if (freeInfo) freeInfo.style.display = mode === 'free' ? 'flex'  : 'none';
+  // WTC also hides the manual slider — refreshAutoPriceUI below shows the locked/auto view instead.
   if (coinWrap) coinWrap.style.display = mode === 'paid' ? 'block' : 'none';
+  if (lockedWrap && mode === 'free') lockedWrap.style.display = 'none';
+
+  // Tracks whether WTC (auto-pricing) was explicitly picked, separately from
+  // priceMode (which only ever ends up 'free' or 'paid' for saving/filtering
+  // elsewhere in the app — WTC-priced content is still sold as 'paid', just
+  // auto-priced instead of set by hand).
+  const choiceEl = document.getElementById(prefix + 'PricingChoice');
+  if (choiceEl) choiceEl.value = (mode === 'wtc') ? 'wtc' : 'manual';
 
   const hidden = document.getElementById(prefix + 'PriceMode');
-  if (hidden) hidden.value = mode;
+  if (hidden) hidden.value = (mode === 'wtc') ? 'paid' : mode;
   if (mode === 'free') {
     const cp = document.getElementById(prefix + 'CoinPrice');
     if (cp) cp.value = '0';
   } else {
     updateCoinSlider(prefix);
+    refreshPricingSlotsNotice(prefix);
+    refreshAutoPriceUI(prefix); // may hide the slider again and lock in an auto-computed price
   }
 }
 
+// Full-Season lump-sum pricing: Manual (slider) or WTC (auto). Separate from
+// setPrice() since Full-Season isn't a Free/Paid/WTC choice — that's decided
+// one level up by setSeasonPriceMode('full-season') — this only toggles HOW
+// the lump price itself gets set.
+// Season categories are multi-select — clicking a chip toggles it in/out of
+// the comma-joined list stored in the hidden #seaCategory input, which every
+// other bit of code (populateSubcategory, refreshAutoPriceUI, postSeason's
+// validation/save) still just reads as a plain .value string.
+function toggleSeaCategory(el, cat) {
+  el.classList.toggle('selected');
+  const hidden = document.getElementById('seaCategory');
+  let cats = hidden.value ? hidden.value.split(',').filter(Boolean) : [];
+  if (el.classList.contains('selected')) {
+    if (!cats.includes(cat)) cats.push(cat);
+  } else {
+    cats = cats.filter(c => c !== cat);
+  }
+  hidden.value = cats.join(',');
+  document.getElementById('seaCategoryChips')?.classList.remove('uerror');
+
+  populateSubcategory('seaCategory', 'seaSubcategory');
+  if (document.getElementById('epPriceMode')?.value === 'paid') refreshAutoPriceUI('ep');
+  if (document.getElementById('seaFullPricingChoice')?.value === 'wtc') refreshSeasonFullAutoPriceUI();
+}
+
+function setSeasonFullPricingMode(mode) {
+  document.getElementById('seaFullManualBtn')?.classList.toggle('active', mode === 'manual');
+  document.getElementById('seaFullWtcBtn')?.classList.toggle('active', mode === 'wtc');
+  document.getElementById('seaFullPricingChoice').value = mode;
+
+  const coinWrap   = document.getElementById('seaFullCoinWrap');
+  const lockedWrap = document.getElementById('seaFullAutoPriceLocked');
+  if (mode === 'wtc') {
+    coinWrap.style.display   = 'none';
+    lockedWrap.style.display = 'block';
+    refreshSeasonFullAutoPriceUI();
+  } else {
+    coinWrap.style.display   = 'block';
+    lockedWrap.style.display = 'none';
+    updateSeasonCoinSlider(); // restore the manual value into the display/naira line
+  }
+}
+
+// Season pricing uses its OWN category table (CATEGORY_PRICING_SEASON —
+// worksheet 2), not the single-video one, and has no duration component
+// (a season's total runtime isn't known yet when it's created). Picking
+// multiple categories sums each one's season-pck (see getSeasonCategoryPck),
+// so more categories only ever raises this. Formula: (category + views) × 2,
+// floored at 100 PCK — if that's short of 100, a markup tops it up exactly
+// to the floor so a season never auto-prices below it.
+const SEASON_WTC_MIN_PCK = 100;
+function refreshSeasonFullAutoPriceUI() {
+  const category = document.getElementById('seaCategory')?.value || '';
+  const cat  = getSeasonCategoryPck(category);
+  const view = getViewsBonusPck(getChannelTotalViews());
+  const base = cat + view;
+  const rawSeasonTotal = base * 2;
+  const markup = Math.max(0, SEASON_WTC_MIN_PCK - rawSeasonTotal);
+  const seasonTotal = rawSeasonTotal + markup;
+
+  const valEl = document.getElementById('seaFullAutoPriceVal');
+  if (valEl) valEl.textContent = `🪙 ${seasonTotal} PCK`;
+  const bdEl = document.getElementById('seaFullAutoPriceBreakdown');
+  if (bdEl) {
+    bdEl.innerHTML = markup > 0
+      ? `<i class="fas fa-circle-info"></i> (${cat} PCK category + ${view} PCK channel views = ${base} PCK) × 2 = ${rawSeasonTotal} PCK + ${markup} PCK markup (${SEASON_WTC_MIN_PCK} PCK season minimum) = <b>${seasonTotal} PCK</b>`
+      : `<i class="fas fa-circle-info"></i> (${cat} PCK category + ${view} PCK channel views = ${base} PCK) × 2 = <b>${seasonTotal} PCK</b>`;
+  }
+  // Written to a dedicated hidden field, NOT seaFullCoinSlider — a native range
+  // input silently clamps .value to its min/max (100–10000) when set from JS,
+  // which would corrupt any WTC total outside that band instead of storing it.
+  // postSeason() reads this field instead of the slider whenever WTC is active.
+  const autoEl = document.getElementById('seaFullAutoCoinPrice');
+  if (autoEl) autoEl.value = seasonTotal;
+}
+
 function getCoinLocalPrice(coins) {
-  const ngn = coins * 25;
+  const ngn = coins * PCK_TO_NGN; // 1 PCK = ₦1 — coinPrice is stored directly in PCK, no 25x scaling
   const uc  = getUserCurrency();
   const rate = userCurrencyRates[uc.code];
   // Convert NGN → local currency: local = ngn * (localRate / ngnRate)
@@ -8331,9 +8706,9 @@ function updateCoinSlider(prefix) {
   const slider = document.getElementById(prefix + 'CoinSlider');
   if (!slider) return;
   let v = Number(slider.value);
-  if (!Number.isFinite(v) || v < 1) v = 1;
-  if (v > 80) v = 80;
-  const ngn = v * 25;
+  if (!Number.isFinite(v) || v < 4) v = 4;
+  if (v > 2000) v = 2000;
+  const ngn = v * PCK_TO_NGN; // 1 PCK = ₦1 — coinPrice is stored directly in PCK, no 25x scaling
   const localPrice = getCoinLocalPrice(v);
   const uc  = getUserCurrency();
 
@@ -8344,9 +8719,9 @@ function updateCoinSlider(prefix) {
   const nairaEl = document.getElementById(prefix + 'CoinNaira');
   if (nairaEl) {
     if (uc.code === 'NGN' || !userCurrencyRates[uc.code]) {
-      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} per view  ·  1 coin = ₦25`;
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} per view  ·  1 PCK = ₦${PCK_TO_NGN}`;
     } else {
-      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} · ${localPrice} per view  ·  1 coin = ₦25 / ${getCoinLocalPrice(1)}`;
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} · ${localPrice} per view  ·  1 PCK = ₦${PCK_TO_NGN} / ${getCoinLocalPrice(1)}`;
     }
   }
 
@@ -8355,21 +8730,21 @@ function updateCoinSlider(prefix) {
   const maxLbl = document.getElementById(prefix + 'CoinMaxLbl');
   if (minLbl) {
     minLbl.textContent = (uc.code === 'NGN' || !userCurrencyRates[uc.code])
-      ? '🪙 1 (₦25)'
-      : `🪙 1 (₦25 · ${getCoinLocalPrice(1)})`;
+      ? `🪙 4 (₦${4 * PCK_TO_NGN})`
+      : `🪙 4 (₦${4 * PCK_TO_NGN} · ${getCoinLocalPrice(4)})`;
   }
   if (maxLbl) {
     maxLbl.textContent = (uc.code === 'NGN' || !userCurrencyRates[uc.code])
-      ? '🪙 80 (₦2,000)'
-      : `🪙 80 (₦2,000 · ${getCoinLocalPrice(80)})`;
+      ? `🪙 2,000 (₦${(2000 * PCK_TO_NGN).toLocaleString()})`
+      : `🪙 2,000 (₦${(2000 * PCK_TO_NGN).toLocaleString()} · ${getCoinLocalPrice(2000)})`;
   }
 
   const catEl = document.getElementById(prefix + 'CoinCat');
   if (catEl) {
     catEl.className = 'ucoin-cat';
-    if      (v <= 8)  { catEl.classList.add('short');  catEl.textContent = 'Short Video (🪙1–8)'; }
-    else if (v <= 30) { catEl.classList.add('medium'); catEl.textContent = 'Medium Video (🪙9–30)'; }
-    else              { catEl.classList.add('long');   catEl.textContent = 'Movie / Long (🪙31–80)'; }
+    if      (v <= 100)  { catEl.classList.add('short');  catEl.textContent = 'Short Video (🪙4–100)'; }
+    else if (v <= 500)  { catEl.classList.add('medium'); catEl.textContent = 'Medium Video (🪙101–500)'; }
+    else                { catEl.classList.add('long');   catEl.textContent = 'Movie / Long (🪙501–2,000)'; }
   }
 
   const cp = document.getElementById(prefix === 's' ? 'sCoinPrice' : 'epCoinPrice');
@@ -8382,8 +8757,8 @@ function updateCoinFromInput(prefix) {
   if (!input || !slider) return;
   let v = parseInt(input.value, 10);
   if (!Number.isFinite(v)) return; // allow user to clear field temporarily
-  if (v < 1)  v = 1;
-  if (v > 80) v = 80;
+  if (v < 4)    v = 4;
+  if (v > 2000) v = 2000;
   slider.value = v;
   updateCoinSlider(prefix);
 }
@@ -8392,7 +8767,7 @@ function updateSeasonCoinSlider() {
   const slider = document.getElementById('seaFullCoinSlider');
   if (!slider) return;
   const v         = Number(slider.value);
-  const ngn       = v * 25;
+  const ngn       = v * PCK_TO_NGN; // 1 PCK = ₦1 — coinPrice is stored directly in PCK, no 25x scaling
   const localPrice = getCoinLocalPrice(v);
   const uc        = getUserCurrency();
 
@@ -8401,9 +8776,9 @@ function updateSeasonCoinSlider() {
   const nairaEl = document.getElementById('seaFullCoinNaira');
   if (nairaEl) {
     if (uc.code === 'NGN' || !userCurrencyRates[uc.code]) {
-      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} for full season  ·  1 coin = ₦25`;
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} for full season  ·  1 PCK = ₦${PCK_TO_NGN}`;
     } else {
-      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} · ${localPrice} for full season  ·  1 coin = ₦25 / ${getCoinLocalPrice(1)}`;
+      nairaEl.textContent = `₦${ngn.toLocaleString('en-NG')} · ${localPrice} for full season  ·  1 PCK = ₦${PCK_TO_NGN} / ${getCoinLocalPrice(1)}`;
     }
   }
 }
@@ -8419,8 +8794,14 @@ function setSeasonPriceMode(mode) {
     document.getElementById(id)?.classList.toggle('selected', m === mode);
   });
   document.getElementById('seaPriceMode').value = mode;
-  document.getElementById('seaFullCoinWrap').style.display =
-    mode === 'full-season' ? 'block' : 'none';
+  document.getElementById('seaFullPriceToggle').style.display =
+    mode === 'full-season' ? 'flex' : 'none';
+  if (mode === 'full-season') {
+    setSeasonFullPricingMode('manual'); // reset to manual each time this mode is (re)selected
+  } else {
+    document.getElementById('seaFullCoinWrap').style.display = 'none';
+    document.getElementById('seaFullAutoPriceLocked').style.display = 'none';
+  }
   document.getElementById('seaMixedWrap').style.display =
     mode === 'mixed' ? 'block' : 'none';
 
@@ -8430,9 +8811,10 @@ function setSeasonPriceMode(mode) {
     ?.querySelector('#epFreeBtn')?.closest('.upload-card');
 
   if (mode === 'free') {
-    // Season is free — force episode to free, hide paid option
+    // Season is free — force episode to free, hide paid AND wtc options
     setPrice('episode', 'free');
     document.getElementById('epPaidBtn').style.display  = 'none';
+    document.getElementById('epWtcBtn').style.display   = 'none';
     document.getElementById('epFreeBtn').style.pointerEvents = 'none';
     document.getElementById('epFreeBtn').style.opacity  = '0.6';
 
@@ -8452,6 +8834,7 @@ function setSeasonPriceMode(mode) {
     // Full season buy — episodes are unlocked via season purchase, free individually
     setPrice('episode', 'free');
     document.getElementById('epPaidBtn').style.display  = 'none';
+    document.getElementById('epWtcBtn').style.display   = 'none';
     document.getElementById('epFreeBtn').style.pointerEvents = 'none';
     document.getElementById('epFreeBtn').style.opacity  = '0.6';
 
@@ -8471,6 +8854,7 @@ function setSeasonPriceMode(mode) {
   } else if (mode === 'per-episode') {
     // Per episode — episode pricing fully unlocked
     document.getElementById('epPaidBtn').style.display  = 'flex';
+    document.getElementById('epWtcBtn').style.display   = 'flex';
     document.getElementById('epFreeBtn').style.pointerEvents = 'auto';
     document.getElementById('epFreeBtn').style.opacity  = '1';
 
@@ -8481,13 +8865,17 @@ function setSeasonPriceMode(mode) {
     hintEl.className = 'uhelp';
     hintEl.style.marginBottom = '10px';
     hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
-      <strong>Pay per episode</strong> — set a coin price for each episode individually below.`;
+      <strong>Pay per episode</strong> — set a coin price for each episode individually below.
+      Pricing this season uses 1 of your monthly season slots — every episode inside it
+      can be priced with no extra limit.`;
     document.getElementById('epFreeBtn').closest('.uprice-toggle')
       .insertAdjacentElement('beforebegin', hintEl);
+    refreshPricingSlotsNotice('ep');
 
   } else if (mode === 'mixed') {
     // Mixed — episodes are individually free or paid
     document.getElementById('epPaidBtn').style.display  = 'flex';
+    document.getElementById('epWtcBtn').style.display   = 'flex';
     document.getElementById('epFreeBtn').style.pointerEvents = 'auto';
     document.getElementById('epFreeBtn').style.opacity  = '1';
 
@@ -8510,6 +8898,44 @@ function setSeasonPriceMode(mode) {
     // Auto-suggest free if within free count
     if (epNum <= freeCount) setPrice('episode', 'free');
     else setPrice('episode', 'paid');
+    refreshPricingSlotsNotice('ep');
+  }
+
+  // ── Enforce the season slot limit ──
+  // Once all 5 monthly season slots are used, full-season and mixed pricing
+  // aren't available for a NEW season — it's forced to per-episode, and each
+  // episode gets auto-priced (see refreshAutoPriceUI) instead of manually.
+  if (mode !== 'free') {
+    getMonthlyPricingSlotsUsed().then(({ seasons }) => {
+      seasonOverSlotLimit = seasons >= MONTHLY_PRICING_SLOTS;
+      if (seasonOverSlotLimit) {
+        document.getElementById('seaPriceMode').value = 'per-episode';
+        document.getElementById('spFullOpt')?.classList.remove('selected');
+        document.getElementById('spMixedOpt')?.classList.remove('selected');
+        document.getElementById('spPerEpOpt')?.classList.add('selected');
+        document.getElementById('seaFullCoinWrap').style.display = 'none';
+        document.getElementById('seaMixedWrap').style.display    = 'none';
+        document.getElementById('epPaidBtn').style.display       = 'flex';
+        document.getElementById('epWtcBtn').style.display        = 'flex';
+        document.getElementById('epFreeBtn').style.pointerEvents = 'auto';
+        document.getElementById('epFreeBtn').style.opacity       = '1';
+
+        const hint = document.getElementById('epPriceHint');
+        if (hint) hint.remove();
+        const hintEl = document.createElement('div');
+        hintEl.id = 'epPriceHint';
+        hintEl.className = 'uhelp';
+        hintEl.style.cssText = 'margin-bottom:10px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;';
+        hintEl.innerHTML = `<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
+          You've used all <strong>5/5</strong> season pricing slots this month — full-season and
+          mixed pricing aren't available. This season auto-prices each episode individually
+          (category + length + your channel's current views) as you upload them.`;
+        document.getElementById('epFreeBtn').closest('.uprice-toggle')
+          .insertAdjacentElement('beforebegin', hintEl);
+      }
+      // Refresh the manual/locked pricing UI for whichever state the episode toggle is in
+      if (document.getElementById('epPriceMode')?.value === 'paid') refreshAutoPriceUI('ep');
+    }).catch(() => {});
   }
 }
 function setSeasonMode(mode) {
@@ -8536,13 +8962,36 @@ function scrollTo_(id) {
 }
 
 
-  async function uploadFile(file, resourceType, progressId, folder, onProgress) {
+  async function uploadFile(file, resourceType, progressId, folder, onProgress, preSlices, resumeCtx) {
   if (!folder) folder = `pose/${CHANNEL_UID}/${Date.now()}`;
   _uploadStartTime = Date.now();
   _uploadSpeedState.lastTime = 0;
   _uploadSpeedState.lastLoaded = 0;
 
   updateUploadProgress(0, 'Uploading…', '');
+
+  const isVideoFile = resourceType === 'video' || (file.type || '').startsWith('video/');
+  if (R2_MULTIPART_ENABLED && isVideoFile && file.size > CHUNK_THRESHOLD_BYTES) {
+    try {
+      window._activeUploadInFlight = true;
+      const url = await uploadFileChunked(file, folder, file.type, progressId, onProgress, preSlices, resumeCtx);
+      return { url, chunks: [], isChunked: true };
+    } catch (e) {
+      if (uploadCancelled || e.message === 'Upload cancelled') throw e;
+      // Falling back to a plain single PUT is only safe when nothing has
+      // been persisted yet (multipart couldn't even start, or the bucket
+      // doesn't support it at all — see canFallbackToPlain in
+      // uploadFileChunked). Once even one part has landed, the resume
+      // record is valid and worth keeping — falling back here would
+      // silently abandon the parts already uploaded and the ability to
+      // pick this back up later.
+      if (!e.canFallbackToPlain) throw e;
+      console.error('Chunked upload unusable on this bucket — falling back to a normal single-file upload:', e);
+      updateUploadProgress(0, 'Uploading…', '');
+    } finally {
+      window._activeUploadInFlight = false;
+    }
+  }
 
   const MAX_RETRIES = 3;
   let lastErr;
@@ -8565,6 +9014,245 @@ function scrollTo_(id) {
     }
   }
   throw lastErr;
+}
+
+/* Uploads a single R2 multipart part with auto-retry (network errors get
+   MAX_PART_RETRIES attempts with backoff), waiting out actual offline
+   periods for free (doesn't burn a retry), and flagging the chunk row
+   "network slow" if progress stalls for more than a few seconds without
+   failing outright. Returns the ETag, or throws (ETAG_UNAVAILABLE / Upload
+   cancelled / the last network error once auto-retries are exhausted). */
+async function _uploadPartAutoRetry(key, uploadId, partNumber, blob, contentType, i, CHUNK_COUNT, onProgress, progressId) {
+  const MAX_PART_RETRIES = 3;
+  let lastErr = null;
+  for (let attempt = 1; attempt <= MAX_PART_RETRIES; attempt++) {
+    if (uploadCancelled) throw new Error('Upload cancelled');
+
+    if (!navigator.onLine) {
+      setChunkRowState(i, 'active', 'Waiting for network…');
+      const waitLabel = 'No internet connection — will resume automatically…';
+      if (onProgress) onProgress(Math.round((i / CHUNK_COUNT) * 100), waitLabel);
+      else updateUploadProgress(Math.round((i / CHUNK_COUNT) * 100), waitLabel, '');
+      await waitForOnline();
+      if (uploadCancelled) throw new Error('Upload cancelled');
+    }
+
+    let lastPct = -1, lastChangeAt = Date.now(), slowShown = false;
+    const STALL_MS = 8000;
+    const stallTimer = setInterval(() => {
+      if (!slowShown && Date.now() - lastChangeAt > STALL_MS) {
+        slowShown = true;
+        setChunkRowState(i, 'active', 'Network slow…');
+        const overall = Math.round(((i + Math.max(lastPct, 0) / 100) / CHUNK_COUNT) * 100);
+        const label = `Uploading part ${partNumber} of ${CHUNK_COUNT}… network is slow`;
+        if (onProgress) onProgress(overall, label);
+        else updateUploadProgress(overall, label, '');
+      }
+    }, 2000);
+
+    try {
+      const etag = await _r2UploadPart(key, uploadId, partNumber, blob, contentType, (pct) => {
+        if (pct !== lastPct) { lastPct = pct; lastChangeAt = Date.now(); slowShown = false; }
+        setChunkRowState(i, 'active', pct + '%');
+        const overall = Math.round(((i + pct / 100) / CHUNK_COUNT) * 100);
+        if (onProgress) onProgress(overall, `Uploading part ${partNumber} of ${CHUNK_COUNT}…`);
+        else updateUploadProgress(overall, `Uploading part ${partNumber} of ${CHUNK_COUNT}…`, '');
+        if (progressId) showProgress(progressId, 'Uploading…', overall);
+      });
+      clearInterval(stallTimer);
+      return etag;
+    } catch (e) {
+      clearInterval(stallTimer);
+      lastErr = e;
+      console.warn(`[chunked upload] part ${partNumber}/${CHUNK_COUNT} attempt ${attempt}/${MAX_PART_RETRIES} failed:`, e.message);
+      if (uploadCancelled || e.message === 'Upload cancelled') throw e;
+      if (e.message === 'ETAG_UNAVAILABLE') throw e;
+      if (attempt < MAX_PART_RETRIES) {
+        const label = `Network error — retrying part ${partNumber} of ${CHUNK_COUNT} (${attempt}/${MAX_PART_RETRIES})…`;
+        setChunkRowState(i, 'active', `Retrying (${attempt}/${MAX_PART_RETRIES})`);
+        if (onProgress) onProgress(Math.round((i / CHUNK_COUNT) * 100), label);
+        else updateUploadProgress(Math.round((i / CHUNK_COUNT) * 100), label, '');
+        await sleep(1500 * attempt);
+      }
+    }
+  }
+  throw lastErr;
+}
+
+/* Splits a large video into 50MB parts and uploads each one as a separate,
+   independently-retryable R2 multipart part BEFORE assembling them
+   server-side into the final single object. If anything about the
+   multipart path doesn't work (e.g. the bucket doesn't expose ETag over
+   CORS), it throws ETAG_UNAVAILABLE and uploadFile() falls back to the
+   plain single-blob upload.
+
+   resumeCtx (optional) lets a previously-interrupted upload continue
+   instead of starting over:
+     { resumeId, key, uploadId, uploadedParts: [{partNumber, etag}], persistBase }
+   When given with an existing key/uploadId, already-uploaded parts are
+   skipped and the multipart upload already open on R2 is reused. After
+   every part succeeds, progress is written to IndexedDB (see
+   saveResumeState) under resumeCtx.resumeId so a reload/close mid-upload
+   can pick back up from the last completed part — unless the user
+   explicitly cancels, which deletes that record (see cancelUpload). */
+async function uploadFileChunked(file, folder, contentTypeOverride, progressId, onProgress, preSlices, resumeCtx) {
+  const filename = file.name || `upload_${Date.now()}.mp4`;
+  const contentType = contentTypeOverride || file.type || 'application/octet-stream';
+
+  const resuming = !!(resumeCtx && resumeCtx.key && resumeCtx.uploadId);
+  const key = resuming ? resumeCtx.key : `${folder}/${Date.now()}_${filename}`;
+
+  // If the video was already cut into parts on the device when it was
+  // selected (see startEagerChunking), reuse those slices and skip
+  // straight to uploading — no need to cut it again.
+  let slices, CHUNK_COUNT;
+  if (preSlices && preSlices.length) {
+    slices = preSlices;
+    CHUNK_COUNT = preSlices.length;
+  } else {
+    slices = sliceFileIntoChunks(file);
+    CHUNK_COUNT = slices.length;
+  }
+
+  // The popup's #uppopSteps container is shared with the video/trailer/
+  // thumbnail/database step list (trailer+thumbnail upload concurrently
+  // with this) — snapshot it so it can be put back exactly as it was
+  // once chunking is done, instead of being clobbered permanently.
+  const stepsEl = document.getElementById('uppopSteps');
+  const savedStepsHtml = stepsEl ? stepsEl.innerHTML : null;
+
+  let uploadId = resuming ? resumeCtx.uploadId : null;
+  const doneParts = new Map(((resuming && resumeCtx.uploadedParts) || []).map(p => [p.partNumber, p.etag]));
+
+  try {
+    if (!resuming) {
+      if (preSlices && preSlices.length) {
+        setUploadPopupPhase('splitting', CHUNK_COUNT);
+        updateSplitProgress(CHUNK_COUNT, CHUNK_COUNT, 100);
+      } else {
+        setUploadPopupPhase('splitting', CHUNK_COUNT);
+        for (let i = 0; i < CHUNK_COUNT; i++) {
+          updateSplitProgress(i + 1, CHUNK_COUNT, Math.round(((i + 1) / CHUNK_COUNT) * 100));
+          await sleep(120);
+        }
+      }
+
+      console.log(`[chunked upload] initiating multipart upload for ${CHUNK_COUNT} parts…`);
+      try {
+        uploadId = await _r2InitiateMultipart(key, contentType);
+      } catch (e) {
+        // Nothing has been persisted yet at this point — always safe to
+        // fall straight back to a plain single-PUT upload.
+        e.canFallbackToPlain = true;
+        throw e;
+      }
+      console.log(`[chunked upload] got uploadId=${uploadId}`);
+    } else {
+      console.log(`[chunked upload] resuming multipart upload ${uploadId} — ${doneParts.size}/${CHUNK_COUNT} parts already done`);
+    }
+
+    // Lets cancelUpload() (which has no other way to reach this closure)
+    // abort the right multipart upload and delete the right resume record.
+    window._activeUploadHandle = { key, uploadId, resumeId: resumeCtx && resumeCtx.resumeId };
+
+    // One-time checkpoint carrying the actual file/thumb/trailer blobs +
+    // form snapshot — only written for a brand-new upload. A resumed one
+    // already has this checkpoint sitting in IndexedDB from before; nothing
+    // in this function should ever rewrite it (see saveResumeProgress).
+    if (!resuming && resumeCtx && resumeCtx.resumeId) {
+      await saveResumeState(resumeCtx.resumeId, {
+        ...(resumeCtx.persistBase || {}),
+        key, uploadId,
+        uploadedParts: [],
+        totalChunks: CHUNK_COUNT,
+        status: 'in-progress',
+      });
+    }
+
+    setUploadPopupPhase('uploading', CHUNK_COUNT);
+    const parts = [];
+    for (let i = 0; i < CHUNK_COUNT; i++) {
+      const partNumber = i + 1;
+
+      if (doneParts.has(partNumber)) {
+        setChunkRowState(i, 'done', '100%');
+        parts.push({ partNumber, etag: doneParts.get(partNumber) });
+        continue;
+      }
+
+      setChunkRowState(i, 'active', 'Uploading');
+
+      let etag = null;
+      let retriedManually = false;
+      while (etag === null) {
+        if (uploadCancelled) throw new Error('Upload cancelled');
+        try {
+          etag = await _uploadPartAutoRetry(key, uploadId, partNumber, slices[i], contentType, i, CHUNK_COUNT, onProgress, progressId);
+        } catch (e) {
+          if (uploadCancelled || e.message === 'Upload cancelled') throw e;
+          if (e.message === 'ETAG_UNAVAILABLE') throw e;
+          // Auto-retries exhausted — this part (and everything before it)
+          // is already safely persisted via saveResumeState below, so the
+          // user can walk away here and pick up later instead of being
+          // forced to sit and watch a manual retry.
+          console.error(`[chunked upload] part ${partNumber}/${CHUNK_COUNT} exhausted auto-retries, waiting for manual retry:`, e);
+          setChunkRowState(i, 'error', 'Failed — tap Retry');
+          await showChunkRetryPrompt(i, CHUNK_COUNT);
+          retriedManually = true;
+        }
+      }
+      if (retriedManually) {
+        document.getElementById('uppopTitle').textContent = 'Uploading Parts…';
+        document.getElementById('uppopSub').textContent   =
+          `Uploading ${CHUNK_COUNT} part${CHUNK_COUNT > 1 ? 's' : ''} · Keep this page open`;
+      }
+
+      parts.push({ partNumber, etag });
+      setChunkRowState(i, 'done', '100%');
+
+      if (resumeCtx && resumeCtx.resumeId) {
+        // Lightweight — no blobs in here, safe to write after every part.
+        await saveResumeProgress(resumeCtx.resumeId, {
+          key, uploadId,
+          uploadedParts: parts.slice(),
+          totalChunks: CHUNK_COUNT,
+          status: 'in-progress',
+        });
+      }
+    }
+
+    console.log('[chunked upload] all parts uploaded, completing multipart upload…');
+    const url = await _r2CompleteMultipart(key, uploadId, parts);
+    console.log('[chunked upload] complete:', url);
+    updateUploadProgress(100, 'Upload complete', '');
+    return url;
+  } catch (e) {
+    if (e.message === 'ETAG_UNAVAILABLE') {
+      console.error('[chunked upload] bucket does not support multipart (no ETag over CORS) — falling back to single-blob upload:', e);
+      e.canFallbackToPlain = true;
+      if (uploadId) _r2AbortMultipart(key, uploadId);
+      // The chunked path can never work on this bucket, so there's nothing
+      // for a persisted record to usefully resume — drop it rather than
+      // resurrecting a dead multipart upload next time the page loads.
+      if (resumeCtx && resumeCtx.resumeId) deleteResumeState(resumeCtx.resumeId);
+    } else if (uploadCancelled || e.message === 'Upload cancelled') {
+      console.log('[chunked upload] cancelled by user.');
+      // Aborting the multipart + deleting the resume record is handled by
+      // cancelUpload() itself, since it knows which upload is active.
+    } else {
+      // Some other unexpected failure — deliberately do NOT abort the
+      // multipart or touch the resume record here: whatever parts already
+      // succeeded stay valid on R2, and the persisted state lets this
+      // resume from the same point next time instead of restarting.
+      console.error('[chunked upload] failed unexpectedly — progress has been saved and can be resumed:', e);
+    }
+    throw e;
+  } finally {
+    if (stepsEl && savedStepsHtml !== null) stepsEl.innerHTML = savedStepsHtml;
+    if (window._activeUploadHandle && window._activeUploadHandle.uploadId === uploadId) {
+      window._activeUploadHandle = null;
+    }
+  }
 }
 
 
@@ -8813,9 +9501,59 @@ function calcETA(loaded, total) {
 }
 
 /* ====================================================
+   SINGLE-VIDEO FORM SNAPSHOT (for resumable uploads)
+   Captures/restores exactly the fields postSingleVideo() reads to build
+   the Firestore doc, so a resumed upload can just call postSingleVideo()
+   again against a form that looks like the user never left.
+==================================================== */
+const SINGLE_FORM_FIELD_IDS = [
+  'sTitle', 'sDesc', 'sCategory', 'sSubcategory', 'sRating',
+  'sSchedToggle', 'sSchedDT',
+  'sPriceMode', 'sCoinPrice', 'sPricingChoice',
+  'sDirector', 'sWriter', 'sProducer', 'sCast', 'sStudio',
+  'sYear', 'sLanguage', 'sCountry', 'sGenres', 'sSubtitles',
+];
+
+function captureSingleFormSnapshot() {
+  const snap = {};
+  SINGLE_FORM_FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    snap[id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  return snap;
+}
+
+function restoreSingleFormSnapshot(snap) {
+  if (!snap) return;
+  // Category has to be restored (and its change event fired) first — it's
+  // what populates sSubcategory's <option> list before sSubcategory's own
+  // saved value can stick.
+  const catEl = document.getElementById('sCategory');
+  if (catEl && snap.sCategory !== undefined) {
+    catEl.value = snap.sCategory;
+    catEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  SINGLE_FORM_FIELD_IDS.forEach(id => {
+    if (id === 'sCategory' || snap[id] === undefined) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'checkbox') el.checked = snap[id];
+    else el.value = snap[id];
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  if (snap.sRating) {
+    const pill = Array.from(document.querySelectorAll('#sRatingPills .urating-pill'))
+      .find(p => p.textContent.trim() === snap.sRating);
+    if (pill) selectRating('single', snap.sRating, pill);
+  }
+}
+
+/* ====================================================
    POST SINGLE VIDEO
 ==================================================== */
-async function postSingleVideo() {
+async function postSingleVideo(resumeRecord) {
   const title       = document.getElementById('sTitle').value.trim();
    const rating      = document.getElementById('sRating').value;
    const category    = document.getElementById('sCategory').value;
@@ -8849,7 +9587,7 @@ async function postSingleVideo() {
   if (!category) {
     shakeField('sCategory'); if (!hasError) scrollTo_('sCategory'); hasError = true;
   }
-  if (!document.getElementById('sThumbFile').files[0]) {
+  if (!getSingleThumbFile()) {
     shakeField('sThumbPreview'); if (!hasError) scrollTo_('sThumbPreview'); hasError = true;
   }
   if (!rating) {
@@ -8864,10 +9602,6 @@ async function postSingleVideo() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Starting…';
 
-  // Show smooth upload UI
-  showUploadProgressUI();
-  updateStepProgress(1, `Analyzing ${formatFileSize(singleVideoFile.size)}...`, 0, true);
-
   // Build step list
   const steps = [
     { icon: 'fa-video',    label: 'Uploading video' },
@@ -8875,8 +9609,8 @@ async function postSingleVideo() {
     { icon: 'fa-image',    label: 'Uploading thumbnail' },
     { icon: 'fa-database', label: 'Saving to database' },
   ];
-  if (!singleTrailerFile)                                   steps[1].label = 'Trailer (skipped)';
-  if (!document.getElementById('sThumbFile').files[0])      steps[2].label = 'Thumbnail (skipped)';
+  if (!singleTrailerFile)  steps[1].label = 'Trailer (skipped)';
+  if (!getSingleThumbFile()) steps[2].label = 'Thumbnail (skipped)';
 
   showUploadPopup(
     singleVideoFile.name,
@@ -8886,23 +9620,31 @@ async function postSingleVideo() {
 
   try {
     uploadCancelled = false;
-    const videoDocRef = db.collection('channels').doc(CHANNEL_UID).collection('videos').doc();
+    const resuming    = !!(resumeRecord && resumeRecord.videoDocId);
+    const videoDocRef = resuming
+      ? db.collection('channels').doc(CHANNEL_UID).collection('videos').doc(resumeRecord.videoDocId)
+      : db.collection('channels').doc(CHANNEL_UID).collection('videos').doc();
     const videoId     = videoDocRef.id;
-    const folder      = `pose/${CHANNEL_UID}/${videoId}`;
+    const folder      = resuming ? resumeRecord.folder : `pose/${CHANNEL_UID}/${videoId}`;
+    const preS = (_preSlicedVideo.s && _preSlicedVideo.s.file === singleVideoFile) ? _preSlicedVideo.s.slices : null;
+
+    const resumeId = `${CHANNEL_UID}_single`;
+    window._activeUploadResumeId = resumeId;
+    // Everything postSingleVideo needs to rebuild the Firestore doc lives in
+    // the DOM fields it already reads below — snapshotting them here (rather
+    // than duplicating that field list) is what lets a reload restore the
+    // form and just call postSingleVideo() again.
+    const formSnapshot = resuming ? resumeRecord.formSnapshot : captureSingleFormSnapshot();
 
     // Upload video, trailer, and thumbnail concurrently — none of them depend
     // on each other, so waiting for each one in turn just adds dead time.
-    const thumbFile = document.getElementById('sThumbFile').files[0];
+    const thumbFile = getSingleThumbFile();
 
     setUploadStep(0, 'active', 'Uploading…');
     document.getElementById('uppopTitle').textContent = 'Uploading…';
-    updateStepProgress(1, 'Uploading video...', 0, true);
 
-    if (singleTrailerFile) { setUploadStep(1, 'active', 'Uploading…'); updateStepProgress(2, 'Uploading trailer...', 0, true); }
-    else                   { setUploadStep(1, 'done', 'Skipped');      updateStepProgress(2, '✓ Skipped', 100); }
-
-    if (thumbFile) { setUploadStep(2, 'active', 'Uploading…'); updateStepProgress(3, 'Uploading thumbnail...', 0, true); }
-    else            { setUploadStep(2, 'done', 'Skipped');      updateStepProgress(3, '✓ Skipped', 100); }
+    if (singleTrailerFile) setUploadStep(1, 'active', 'Uploading…'); else setUploadStep(1, 'done', 'Skipped');
+    if (thumbFile)          setUploadStep(2, 'active', 'Uploading…'); else setUploadStep(2, 'done', 'Skipped');
 
     let videoPct   = 0;
     let trailerPct = singleTrailerFile ? 0 : 100;
@@ -8913,12 +9655,32 @@ async function postSingleVideo() {
       updateUploadProgress(Math.round(overall), label, eta);
     };
 
+    const persistBase = {
+      kind:        'single',
+      videoDocId:  videoId,
+      folder,
+      fileName:    singleVideoFile.name,
+      fileSize:    singleVideoFile.size,
+      contentType: singleVideoFile.type,
+      file:        singleVideoFile,
+      thumbFile:   thumbFile || null,
+      trailerFile: singleTrailerFile || null,
+      formSnapshot,
+    };
+    const chunkResumeCtx = {
+      resumeId,
+      key:           resuming ? resumeRecord.key           : undefined,
+      uploadId:      resuming ? resumeRecord.uploadId       : undefined,
+      uploadedParts: resuming ? resumeRecord.uploadedParts  : undefined,
+      persistBase,
+    };
+
     const videoPromise = uploadFile(
       singleVideoFile, 'video', null, folder + '/main',
-      (pct) => { videoPct = pct; renderOverall('Uploading video…'); }
+      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
+      preS, chunkResumeCtx
     ).then(r => {
       setUploadStep(0, 'done', 'Done ✓');
-      updateStepProgress(1, '✓ Video uploaded', 100);
       return r;
     });
 
@@ -8927,7 +9689,6 @@ async function postSingleVideo() {
           (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
         ).then(r => {
           setUploadStep(1, 'done', 'Done ✓');
-          updateStepProgress(2, '✓ Trailer uploaded', 100);
           return r.url;
         })
       : Promise.resolve(null);
@@ -8937,7 +9698,6 @@ async function postSingleVideo() {
           (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
         ).then(r => {
           setUploadStep(2, 'done', 'Done ✓');
-          updateStepProgress(3, '✓ Thumbnail uploaded', 100);
           return r.url;
         })
       : Promise.resolve(null);
@@ -8948,8 +9708,6 @@ async function postSingleVideo() {
     const videoChunks = videoResult.chunks;
     const isChunked   = videoResult.isChunked;
 
-    updateStepProgress(3, 'Saving to database...', 0, true);
-
     // Step 3 — Save to Firestore
     setUploadStep(3, 'active', 'Saving…');
     updateUploadProgress(95, 'Saving to database…', '');
@@ -8958,6 +9716,10 @@ async function postSingleVideo() {
     const status = isScheduled ? 'scheduled' : 'live';
     const priceMode = document.getElementById('sPriceMode').value;
     const coinPrice = Number(document.getElementById('sCoinPrice').value) || 0;
+    // 'wtc' if this video's price was auto-set by WTC rather than typed in by hand —
+    // read by getMonthlyPricingSlotsUsed() so choosing WTC doesn't also burn one of
+    // the 5 manual slots (that would defeat the point of picking it).
+    const pricingSource = document.getElementById('sPricingChoice')?.value === 'wtc' ? 'wtc' : 'manual';
 
     // Production & Cast
     const splitCSV = s => (s || '').split(',').map(x => x.trim()).filter(Boolean);
@@ -8985,6 +9747,7 @@ async function postSingleVideo() {
       thumbnailURL: thumbUrl,
       priceMode,
       coinPrice,
+      pricingSource,
       scheduleDate,
       isScheduled:  !!scheduleDate,
       category,
@@ -9028,6 +9791,12 @@ async function postSingleVideo() {
       }
     }
 
+    // Upload is fully saved — the resumable-upload record has served its
+    // purpose and would otherwise sit around in IndexedDB claiming there's
+    // unfinished work.
+    deleteResumeState(resumeId);
+    window._activeUploadResumeId = null;
+
     setUploadStep(3, 'done', 'Done ✓');
     updateUploadProgress(100, 'Complete!', '');
     document.getElementById('uppopTitle').textContent = 'Upload Complete! 🎉';
@@ -9051,40 +9820,26 @@ async function postSingleVideo() {
       showSuccessScreen('Video Posted! 🎉', `"${title}" is live and ready for your viewers.`);
     };
 
-    // Update smooth upload UI to show completion
-    updateStepProgress(3, '✓ Saved successfully', 100);
-    document.getElementById('overallBarFill').style.width = '100%';
-    document.getElementById('uploadProgressTitle').textContent = 'Complete!';
-
-    // Show upload result modal with thumbnail
-    setTimeout(() => {
-      showUploadResultModal({
-        thumbnail: thumbUrl || videoUrl,
-        title: isScheduled ? 'Video Scheduled!' : 'Video Posted!',
-        message: isScheduled ? `Will go live on ${new Date(schedDTVal).toLocaleDateString()}` : 'Your video is live and ready!'
-      });
-    }, 1500);
-
-    // Auto-hide upload progress UI
-    setTimeout(() => {
-      hideUploadProgressUI();
-    }, 1000);
-
     if (doneBtn) doneBtn.onclick = () => { hideUploadPopup(); successFn(); };
+    // NOTE: previously also opened a second "Upload Successful" thumbnail
+    // modal (showUploadResultModal) here, overlapping with the popup above
+    // right before it closed. Dropped — the popup's own "Upload Complete!"
+    // state plus the success screen below already covers this.
     setTimeout(() => { hideUploadPopup(); successFn(); }, 2000);
 
   } catch (e) {
+    window._activeUploadResumeId = null;
     if (uploadCancelled) return;
     console.error('postSingleVideo error:', e);
 
-    // Update smooth UI to show error
-    updateStepProgress(3, '❌ Upload failed', 0);
-    document.getElementById('uploadProgressTitle').textContent = 'Upload Failed';
+    // Deliberately NOT calling deleteResumeState here — whatever chunks
+    // already made it up are still safely recorded, so reopening this page
+    // will offer to pick the upload back up instead of starting over.
+    const resumeNote = ' Reopen this page — it will offer to resume from where it left off.';
 
     // Show error after 1 second
     setTimeout(() => {
-      hideUploadProgressUI();
-      alert('❌ Upload failed: ' + e.message);
+      alert('❌ Upload failed: ' + e.message + resumeNote);
     }, 1000);
 
     document.querySelectorAll('.uppop-step.active').forEach(s => {
@@ -9096,7 +9851,7 @@ async function postSingleVideo() {
     });
 
     document.getElementById('uppopTitle').textContent = 'Upload Failed';
-    document.getElementById('uppopSub').textContent   = e.message;
+    document.getElementById('uppopSub').textContent   = e.message + resumeNote;
 
     const cancelBtn = document.getElementById('uppopCancelBtn');
     if (cancelBtn) {
@@ -9109,6 +9864,99 @@ async function postSingleVideo() {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
   }
+}
+
+/* ====================================================
+   RESUME UNFINISHED UPLOAD (after reload / reopen)
+   Checked once on dashboard boot. Anything found here survived because the
+   user neither finished nor explicitly cancelled it last time — cancelling
+   deletes the record (see cancelUpload), and a successful post deletes it
+   too (see postSingleVideo's success path).
+==================================================== */
+async function checkForResumableUpload() {
+  if (!CHANNEL_UID) return;
+  try {
+    const resumeId = `${CHANNEL_UID}_single`;
+    const record = await loadResumeState(resumeId);
+    if (!record || !record.file) return;
+    showResumeUploadBanner(resumeId, record);
+  } catch (e) {
+    console.warn('[resume] check failed:', e);
+  }
+}
+
+function showResumeUploadBanner(resumeId, record) {
+  document.getElementById('uploadResumeBanner')?.remove();
+  const uploaded = (record.uploadedParts || []).length;
+  const total    = record.totalChunks || 1;
+  const pct      = Math.round((uploaded / total) * 100);
+  const title    = (record.formSnapshot && record.formSnapshot.sTitle) || record.fileName || 'your video';
+
+  const el = document.createElement('div');
+  el.id = 'uploadResumeBanner';
+  el.style.cssText = `
+    position:fixed; top:14px; left:50%; transform:translateX(-50%);
+    z-index:10000; max-width:92vw; width:420px;
+    background:var(--bg-card, #fff); color:var(--text-main, #111);
+    border:1.5px solid var(--purple-main,#7C3AED); border-radius:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.18); padding:14px 16px;
+    font-family:'DM Sans',sans-serif;`;
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="font-size:20px;"><i class="fas fa-cloud-arrow-up" style="color:var(--purple-main,#7C3AED);"></i></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:13.5px;">Unfinished video upload</div>
+        <div style="font-size:12px;color:var(--gray-500,#666);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          "${title}" — ${pct}% uploaded (${uploaded}/${total} parts)
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button id="resumeUploadBtn"  style="flex:1;padding:8px 10px;border:none;border-radius:9px;background:var(--purple-main,#7C3AED);color:#fff;font-weight:700;font-size:12.5px;cursor:pointer;">Resume Upload</button>
+      <button id="discardUploadBtn" style="padding:8px 12px;border:1.5px solid var(--gray-200,#ddd);border-radius:9px;background:transparent;color:var(--gray-500,#666);font-weight:600;font-size:12.5px;cursor:pointer;">Discard</button>
+    </div>`;
+  document.body.appendChild(el);
+
+  document.getElementById('resumeUploadBtn').onclick  = () => resumeSavedUpload(resumeId, record);
+  document.getElementById('discardUploadBtn').onclick = async () => {
+    await deleteResumeState(resumeId);
+    el.remove();
+    showToast('Unfinished upload discarded');
+  };
+}
+
+async function resumeSavedUpload(resumeId, record) {
+  document.getElementById('uploadResumeBanner')?.remove();
+  showToast('Resuming your previous upload…');
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-upload').classList.add('active');
+  openUpload();
+
+  restoreSingleFormSnapshot(record.formSnapshot);
+
+  storeFileRef('sVideoFile', record.file);
+  showFilePreview(record.file, 'sVideoPreview');
+
+  if (record.trailerFile) {
+    singleTrailerFile = record.trailerFile;
+    showFilePreview(record.trailerFile, 'sTrailerPreview');
+  }
+
+  if (record.thumbFile) {
+    singleThumbFileOverride = record.thumbFile;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const wrap = document.getElementById('sThumbPreview');
+      if (!wrap) return;
+      wrap.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;" />
+        <div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Change</div>`;
+    };
+    reader.readAsDataURL(record.thumbFile);
+  }
+
+  window.scrollTo(0, 0);
+  postSingleVideo(record);
 }
 
 /* ====================================================
@@ -9153,7 +10001,7 @@ async function createSeason() {
 
   let hasError = false;
   if (!title)    { shakeField('seaTitle');    scrollTo_('seaTitle');    hasError = true; }
-  if (!category) { shakeField('seaCategory'); if (!hasError) scrollTo_('seaCategory'); hasError = true; }
+  if (!category) { shakeField('seaCategoryChips'); if (!hasError) scrollTo_('seaCategoryChips'); hasError = true; }
   const descWords = desc.split(/\s+/).filter(w => w.length > 0);
   if (descWords.length < 10) {
     shakeField('seaDesc'); if (!hasError) scrollTo_('seaDesc'); hasError = true;
@@ -9203,11 +10051,21 @@ async function createSeason() {
       }
       scheduleDate = firebase.firestore.Timestamp.fromDate(schedTime);
     }
-    const status = isScheduled ? 'scheduled' : 'live';
+    // A season always starts as a draft — it isn't visible anywhere (Blink,
+    // Pose tab, channel page — see the status!=='draft' filters) until at
+    // least 2 episodes have been added. pendingStatus remembers what the
+    // creator actually chose (live/scheduled) so postEpisode() can flip it
+    // over automatically the moment the 2-episode minimum is met.
+    const pendingStatus = isScheduled ? 'scheduled' : 'live';
+    const status = 'draft';
 
     const priceMode       = document.getElementById('seaPriceMode').value;
+    const isFullSeasonWtc = priceMode === 'full-season' && document.getElementById('seaFullPricingChoice')?.value === 'wtc';
     const fullSeasonCoins = priceMode === 'full-season'
-      ? Number(document.getElementById('seaFullCoinSlider').value) : 0;
+      ? (isFullSeasonWtc
+          ? Number(document.getElementById('seaFullAutoCoinPrice').value) || 0
+          : Number(document.getElementById('seaFullCoinSlider').value))
+      : 0;
     const freeEpCount     = priceMode === 'mixed'
       ? Number(document.getElementById('seaFreeEpCount').value) : 0;
 
@@ -9230,15 +10088,19 @@ async function createSeason() {
       title,
       description:     document.getElementById('seaDesc').value.trim(),
       seasonNumber:    Number(document.getElementById('seaNumber').value) || 1,
+      plannedEpisodeCount: Number(document.getElementById('seaPlannedEpisodes')?.value) || 0, // informational only — not tied to pricing
       ageRating:       rating,
       trailerUrl,
       thumbnailURL:    thumbUrl,
       priceMode,
       fullSeasonCoins,
+      pricingSource:   isFullSeasonWtc ? 'wtc' : 'manual',
       freeEpCount,
+      pricingAutoOnly: priceMode !== 'free' && !!seasonOverSlotLimit, // fixed at creation — carried forward to episodes added later
       scheduleDate,
       isScheduled:     !!scheduleDate,
       status,
+      pendingStatus,
       category,
       production:      seaProduction,
       // Top-level mirrors for searching across seasons
@@ -9323,8 +10185,9 @@ async function loadExistingSeasons() {
             </div>
             <div class="season-info-sub">
               Season ${s.seasonNumber || 1}
-              · ${s.episodeCount || 0} episodes
+              · ${s.episodeCount || 0}${s.plannedEpisodeCount ? ` of ${s.plannedEpisodeCount}` : ''} episodes
               · ${s.ageRating || '—'}
+              ${s.status === 'draft' ? ` · <span style="color:#D97706;font-weight:700;">DRAFT — needs ${Math.max(0, 2 - (Number(s.episodeCount)||0))} more ep.</span>` : ''}
             </div>
           </div>
           <div class="season-radio" id="sea-radio-${doc.id}"></div>
@@ -9351,6 +10214,10 @@ document.getElementById('episodeBlock').style.display = 'block';
     const seaSnap = await db.collection('channels').doc(CHANNEL_UID)
       .collection('seasons').doc(seasonId).get();
     const s = seaSnap.data() || {};
+
+    // This season's own auto-pricing status was fixed at creation time — carry it
+    // forward so episodes added to it later stay consistent (see setSeasonPriceMode).
+    seasonOverSlotLimit = !!s.pricingAutoOnly;
 
     const infoDiv = document.getElementById('selectedSeasonInfo');
     const infoContent = document.getElementById('selectedSeasonInfoContent');
@@ -9467,6 +10334,7 @@ document.getElementById('episodeBlock').style.display = 'block';
       .collection('episodes').doc();
     const epId   = epRef.id;
     const folder = `pose/${CHANNEL_UID}/seasons/${currentSeasonId}/ep/${epId}`;
+    const preEp = (_preSlicedVideo.ep && _preSlicedVideo.ep.file === epVideoFile_) ? _preSlicedVideo.ep.slices : null;
 
     const epThumb = document.getElementById('epThumbFile').files[0];
 
@@ -9491,7 +10359,8 @@ document.getElementById('episodeBlock').style.display = 'block';
 
     const videoPromise = uploadFile(
       epVideoFile_, 'video', null, folder + '/main',
-      (pct) => { videoPct = pct; renderOverall('Uploading video…'); }
+      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
+      preEp
     ).then(r => { setUploadStep(0, 'done', 'Done ✓'); return r; });
 
     const trailerPromise = epTrailerFile_
@@ -9520,6 +10389,12 @@ document.getElementById('episodeBlock').style.display = 'block';
     const seasonNumber      = parentSeason.seasonNumber || 1;
     const seasonProduction  = parentSeason.production   || {};
     const seasonAgeRating   = parentSeason.ageRating    || '';
+    // Draft-until-2-episodes gate (see createSeason()) — episodeCount here is
+    // the count BEFORE this episode is added.
+    const seasonWasDraft         = parentSeason.status === 'draft';
+    const seasonPendingStatus    = parentSeason.pendingStatus || 'live';
+    const seasonEpisodeCountPre  = Number(parentSeason.episodeCount) || 0;
+    const seasonWillPublishNow   = seasonWasDraft && (seasonEpisodeCountPre + 1) >= 2;
 
     // Step 3 — Save to Firestore
     setUploadStep(3, 'active', 'Saving…');
@@ -9541,6 +10416,7 @@ document.getElementById('episodeBlock').style.display = 'block';
     }
     const priceMode = document.getElementById('epPriceMode').value;
     const coinPrice = Number(document.getElementById('epCoinPrice').value) || 0;
+    const pricingSource = document.getElementById('epPricingChoice')?.value === 'wtc' ? 'wtc' : 'manual';
     const epNumber  = Number(document.getElementById('epNumber').value)    || 1;
 
     // Episode-specific credits (override season director/writer if provided)
@@ -9581,6 +10457,7 @@ document.getElementById('episodeBlock').style.display = 'block';
       trailerUrl,
       priceMode,
       coinPrice,
+      pricingSource,
       scheduleDate,
       isScheduled:   !!scheduleDate,
       status:        epStatus,
@@ -9614,9 +10491,11 @@ document.getElementById('episodeBlock').style.display = 'block';
 
     const seaRef = db.collection('channels').doc(CHANNEL_UID)
       .collection('seasons').doc(currentSeasonId);
-    batch.update(seaRef, {
-      episodeCount: firebase.firestore.FieldValue.increment(1),
-    });
+    const seaUpdate = { episodeCount: firebase.firestore.FieldValue.increment(1) };
+    // Publish the season the moment it hits 2 episodes — same batch, so the
+    // episode and the season going live commit atomically together.
+    if (seasonWillPublishNow) seaUpdate.status = seasonPendingStatus;
+    batch.update(seaRef, seaUpdate);
 
     // Retry Firestore save up to 3 times
     for (let attempt = 1; attempt <= 3; attempt++) {
@@ -9636,8 +10515,27 @@ document.getElementById('episodeBlock').style.display = 'block';
 
     setUploadStep(3, 'done', 'Done ✓');
     updateUploadProgress(100, 'Complete!', '');
-    document.getElementById('uppopTitle').textContent = 'Episode Live! 🎬';
-    document.getElementById('uppopSub').textContent   = 'Your episode has been saved';
+
+    // Season is still short of its 2-episode publish minimum — say so honestly
+    // instead of claiming "Live" for a season nobody can actually see yet.
+    const stillDraft = seasonWasDraft && !seasonWillPublishNow;
+    document.getElementById('uppopTitle').textContent = stillDraft
+      ? 'Episode Saved 📥' : 'Episode Live! 🎬';
+    document.getElementById('uppopSub').textContent = stillDraft
+      ? `Add ${2 - (seasonEpisodeCountPre + 1)} more episode(s) to publish this season.`
+      : 'Your episode has been saved';
+
+    // Update the draft-progress banner in the episode form for whichever
+    // episode gets added next.
+    const draftCountEl = document.getElementById('seasonDraftEpCount');
+    if (draftCountEl) draftCountEl.textContent = String(seasonEpisodeCountPre + 1);
+    const draftNoticeEl = document.getElementById('seasonDraftNotice');
+    if (draftNoticeEl && seasonWillPublishNow) {
+      draftNoticeEl.style.background = '#D1FAE5';
+      draftNoticeEl.style.borderColor = '#A7F3D0';
+      draftNoticeEl.innerHTML = '<i class="fas fa-circle-check" style="color:#059669;"></i> ' +
+        'This season just hit 2 episodes and is now published — visible on Pose.';
+    }
 
     const epDoneBtn = document.getElementById('uppopCancelBtn');
     if (epDoneBtn) {
@@ -9649,8 +10547,10 @@ document.getElementById('episodeBlock').style.display = 'block';
     }
 
     const epSuccessFn = () => showSuccessScreen(
-      'Episode Posted! 🎬',
-      `Episode ${epNumber}: "${epTitle}" is live and ready for viewers.`
+      stillDraft ? 'Episode Saved 📥' : 'Episode Posted! 🎬',
+      stillDraft
+        ? `Episode ${epNumber}: "${epTitle}" saved. Add ${2 - (seasonEpisodeCountPre + 1)} more episode(s) to publish this season.`
+        : `Episode ${epNumber}: "${epTitle}" is live and ready for viewers.`
     );
 
     if (epDoneBtn) epDoneBtn.onclick = () => { hideUploadPopup(); epSuccessFn(); };
@@ -9761,6 +10661,7 @@ function resetUploadPage() {
   currentSeasonId = null;
   uploadCancelled = false;
   activeXHR       = null;
+  _preSlicedVideo.s = _preSlicedVideo.ep = null;
 
   ['sVideoFile','sTrailerFile','seaTrailerFile',
    'epVideoFile','epTrailerFile',
@@ -9787,6 +10688,12 @@ function resetUploadPage() {
   setPrice('single',  'free');
   setPrice('episode', 'free');
   setSeasonPriceMode('free');
+
+  // Clear season category chip selection (multi-select — see toggleSeaCategory)
+  document.getElementById('seaCategoryChips')?.querySelectorAll('.ucat-chip.selected')
+    .forEach(chip => chip.classList.remove('selected'));
+  const seaCatEl = document.getElementById('seaCategory');
+  if (seaCatEl) seaCatEl.value = '';
 
   ['sSchedToggle','seaSchedToggle','epSchedToggle'].forEach(id => {
     const cb = document.getElementById(id); if (cb) cb.checked = false;
@@ -10010,6 +10917,7 @@ function renderAvSingle() {
               <span class="av-vmeta-item"><i class="fas fa-eye"></i> ${fmt(v.views || 0)}</span>
               <span class="av-vmeta-item"><i class="fas fa-heart"></i> ${fmt(v.likes || 0)}</span>
               <span class="av-vmeta-item"><i class="fas fa-comment"></i> ${fmt(v.comments || 0)}</span>
+              ${isPaid ? `<span class="av-vmeta-item"><i class="fas fa-rotate"></i> ${fmt(v.replays || 0)}</span>` : ''}
             </div>
             <div class="av-vcard-badges">
               ${priceBadge}${schedBadge}${ratedBadge}
@@ -10100,8 +11008,9 @@ function renderAvSeasons() {
           </div>
           <div class="av-season-info">
             <div class="av-season-title">${s.title || 'Untitled Season'}</div>
-            <div class="av-season-sub">Season ${s.seasonNumber || 1} · ${s.episodeCount || 0} episodes</div>
+            <div class="av-season-sub">Season ${s.seasonNumber || 1} · ${s.episodeCount || 0}${s.plannedEpisodeCount ? ` of ${s.plannedEpisodeCount}` : ''} episodes</div>
             <div class="av-season-stats">
+              ${s.status === 'draft' ? `<span class="av-badge" style="background:#FEF3C7;color:#92400E;"><i class="fas fa-eye-slash"></i> Draft — needs ${Math.max(0, 2 - (Number(s.episodeCount)||0))} more ep.</span>` : ''}
               <span class="av-badge ${priceBadgeClass}">${priceBadgeText}</span>
               ${s.ageRating ? `<span class="av-badge" style="${avRatingColor(s.ageRating)}">${avRatingLabel(s.ageRating)}</span>` : ''}
             </div>
@@ -10257,6 +11166,8 @@ function renderAvEpisodes(seasonId, episodes, sea) {
               <i class="fas fa-heart"></i> ${fmt(ep.likes || 0)}</span>
             <span class="av-vmeta-item" style="font-size:10.5px;">
               <i class="fas fa-comment"></i> ${fmt(ep.comments || 0)}</span>
+            ${isPaid ? `<span class="av-vmeta-item" style="font-size:10.5px;">
+              <i class="fas fa-rotate"></i> ${fmt(ep.replays || 0)}</span>` : ''}
             ${schedHTML}
           </div>
         </div>
@@ -10443,25 +11354,15 @@ function renderVdBody(video) {
         </div>
       </div>`;
   } else {
-    /* PAID — per-video 10-view threshold. Views shown live; ₦ figures come
-       from the persisted pool state written by the 5-hour flush
-       (flushPaidPoolsIfDue) — not computed live from the view count. */
-    const thisViews    = Number(video.views) || 0;                    // live
-    const releasedV    = Number(video.poolReleasedViews) || 0;        // flushed
-    const pendingV      = Number(video.poolPendingViews) || 0;         // flushed, < 10
-    const uncalculatedV = Math.max(0, thisViews - releasedV - pendingV); // seen live, not yet swept into a flush
-    const need          = PAID_VIEW_THRESHOLD - pendingV;
-    const ngnPerView    = (Number(video.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
-    const releasedNGN   = releasedV * ngnPerView;
-    const lockedNGN     = Number(video.poolBalanceNGN) || 0;
-    const batchPct      = (pendingV / PAID_VIEW_THRESHOLD) * 100;
-
-    const lastFlushMs = video.poolLastFlushAt?.toMillis ? video.poolLastFlushAt.toMillis() : 0;
-    let lastFlushLabel = 'not calculated yet';
-    if (lastFlushMs) {
-      const mins = Math.round((Date.now() - lastFlushMs) / 60000);
-      lastFlushLabel = mins < 60 ? `${mins}m ago` : `${Math.round(mins / 60)}h ago`;
-    }
+    /* PAID — instant payout. Every paid view is split 70/30 the moment the payment
+       is made (see tnpProcessPayment in index.html) and credited straight to
+       channels/{id}/earnings/summary.directRevenue — no pool, no batching, no
+       minimum-view threshold to clear first. video.revenueEarned is the creator's
+       live running total for this video specifically, in PCK. */
+    const thisViews    = Number(video.views) || 0;
+    const thisReplays  = Number(video.replays) || 0;
+    const earnedPCK     = Math.round(Number(video.revenueEarned) || 0);
+    const legacyLockedNGN = Number(video.poolBalanceNGN) || 0; // any balance still sitting in the old pool system, if this video predates instant payouts
 
     poolCardHTML = `
       <div class="vd-pool-card" style="border-left-color:#F59E0B;">
@@ -10470,39 +11371,23 @@ function renderVdBody(video) {
             <i class="fas fa-coins"></i>
           </div>
           <div>
-            <div class="vd-pool-title">Paid Pool · 10-View Minimum</div>
+            <div class="vd-pool-title">Paid Video · Instant Payout</div>
             <div class="vd-pool-sub">How this paid video pays out</div>
           </div>
-          <span class="vd-pool-badge" style="background:${releasedV>0?'#D1FAE5':'#FEF3C7'};color:${releasedV>0?'#065F46':'#92400E'};">
-            ${releasedV>0 ? '✅ EARNING' : '🔒 BUILDING'}
+          <span class="vd-pool-badge" style="background:${earnedPCK>0?'#D1FAE5':'#FEF3C7'};color:${earnedPCK>0?'#065F46':'#92400E'};">
+            ${earnedPCK>0 ? '✅ EARNING' : '⏳ AWAITING FIRST VIEW'}
           </span>
         </div>
 
         <div class="vd-pool-notice" style="background:#FFFBEB;border-color:#FDE68A;">
           <i class="fas fa-circle-info" style="color:#D97706;"></i>
           <span>
-            Views are calculated into this video's pool every <b>5 hours</b>. A video needs
-            at least <b>10 total views</b> to start earning — once that's crossed, every
-            view calculated each cycle releases straight to your withdrawable Earnings,
-            however many the video gets in that window. Last calculated <b>${lastFlushLabel}</b>.
+            Every paid view splits <b>${Math.round(CREATOR_SHARE*100)}% to you</b> and
+            <b>${Math.round((1-CREATOR_SHARE)*100)}% to POSE</b> the instant it's paid for —
+            no minimum view count, no waiting for a batch. Your share lands directly in your
+            withdrawable Earnings balance right away.
           </span>
         </div>
-
-        ${releasedV > 0 ? `
-        <div class="vd-pool-bar-legend" style="margin-top:2px;">
-          <span style="color:#065F46;font-weight:700;">✅ Earning on every view</span>
-          <span style="color:#92400E;font-weight:700;">${pendingV > 0 ? fmt(pendingV) + ' pending this cycle' : 'releases every 5h'}</span>
-        </div>
-        ` : `
-        <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--text-main);margin-bottom:6px;">
-          <span><i class="fas fa-bolt" style="color:#F59E0B;margin-right:4px;"></i> Unlock progress</span>
-          <span style="color:#92400E;">${need} more view${need===1?'':'s'} to start earning</span>
-        </div>
-        <div class="vd-pool-bar" style="background:#FEF3C7;">
-          <div class="vd-pool-bar-fill" style="width:${batchPct.toFixed(1)}%;background:linear-gradient(90deg,#F59E0B,#D97706);"></div>
-        </div>
-        `}
-        ${uncalculatedV > 0 ? `<div style="font-size:10.5px;color:var(--gray-400);margin-top:6px;">${fmt(uncalculatedV)} view${uncalculatedV===1?'':'s'} seen live, not yet swept into the pool — next flush in ≤5h.</div>` : ''}
 
         <div class="vd-pool-grid" style="margin-top:14px;">
           <div class="vd-pool-stat">
@@ -10510,37 +11395,31 @@ function renderVdBody(video) {
             <div class="vd-pool-stat-lbl">Total views (live)</div>
           </div>
           <div class="vd-pool-stat">
-            <div class="vd-pool-stat-val">${fmt(releasedV)}</div>
-            <div class="vd-pool-stat-lbl">Released views</div>
-          </div>
-          <div class="vd-pool-stat">
-            <div class="vd-pool-stat-val">${fmt(pendingV)}</div>
-            <div class="vd-pool-stat-lbl">Locked in pool</div>
+            <div class="vd-pool-stat-val">${fmt(thisReplays)}</div>
+            <div class="vd-pool-stat-lbl">Replays (already paid)</div>
           </div>
           <div class="vd-pool-stat vd-pool-stat-accent">
-            <div class="vd-pool-stat-val">₦${Math.round(releasedNGN).toLocaleString('en-NG')}</div>
-            <div class="vd-pool-stat-lbl">Released ₦ (₦${Math.round(lockedNGN).toLocaleString('en-NG')} locked)</div>
+            <div class="vd-pool-stat-val">🪙 ${fmt(earnedPCK)}</div>
+            <div class="vd-pool-stat-lbl">Revenue earned (PCK)</div>
           </div>
         </div>
 
         <div class="vd-pool-flow">
-          <div class="vd-pool-flow-step">👁 Views</div>
+          <div class="vd-pool-flow-step">👁 Paid View</div>
           <i class="fas fa-arrow-right vd-pool-arrow"></i>
-          <div class="vd-pool-flow-step vd-pool-flow-pool" style="background:#FEF3C7;color:#92400E;border-color:#FDE68A;">🏦 Pool (releases every 5h)</div>
-          <i class="fas fa-arrow-right vd-pool-arrow"></i>
-          <div class="vd-pool-flow-step vd-pool-flow-rev">💰 Direct Sales</div>
+          <div class="vd-pool-flow-step vd-pool-flow-rev">💰 ${Math.round(CREATOR_SHARE*100)}% → You (instant)</div>
           <i class="fas fa-arrow-right vd-pool-arrow"></i>
           <div class="vd-pool-flow-step vd-pool-flow-take">🏠 Withdraw</div>
         </div>
 
+        ${legacyLockedNGN > 0 ? `
         <div class="vd-pool-notif">
           <div class="vd-pool-notif-icon"><i class="fas fa-bell"></i></div>
           <div class="vd-pool-notif-text">
-            <b>Heads up:</b> withdrawals only include <b>released</b> earnings.
-            A video must reach <b>10 total calculated views</b> before it earns anything —
-            after that every view releases each 5-hour cycle, no batching.
+            <b>Legacy balance:</b> ₦${Math.round(legacyLockedNGN).toLocaleString('en-NG')} earned
+            before instant payouts is still sitting in the old pool and will release automatically.
           </div>
-        </div>
+        </div>` : ''}
 
         <button class="vd-pool-cta" type="button" style="background:linear-gradient(135deg,#92400E,#F59E0B);"
           onclick="closeVideoDetail();onMainTab(document.querySelector('.tab-item[data-tab=&quot;earnings&quot;]'),'earnings');">
@@ -10550,21 +11429,19 @@ function renderVdBody(video) {
   }
 
   // Revenue card — paid videos only; free videos earn nothing.
-  // Sourced from the same pool state as the Paid Pool card above (real
-  // released earnings from flushPaidPoolsIfDue), not a live/legacy estimate.
+  // Sourced from video.revenueEarned, the creator's live 70% cut credited instantly
+  // per paid view by tnpProcessPayment (index.html) — not a batched/pool estimate.
   let revCardHTML = '';
   if (isPaid) {
-    const releasedViewsR = Number(video.poolReleasedViews) || 0;
-    const ngnPerViewR    = (Number(video.coinPrice) || 0) * PCK_TO_NGN * CREATOR_SHARE;
-    const totalPCK       = Math.round(releasedViewsR * ngnPerViewR);
-    const totalNaira     = totalPCK.toLocaleString('en-NG');
-    const perView        = `${((video.coinPrice || 0) * CREATOR_SHARE).toLocaleString('en-NG')} PCK per view (75% share)`;
+    const totalPCK       = Math.round(Number(video.revenueEarned) || 0);
+    const totalNaira     = totalPCK.toLocaleString('en-NG'); // 1 PCK = ₦1 (PCK_TO_NGN)
+    const perView        = `${Math.round((video.coinPrice || 0) * CREATOR_SHARE).toLocaleString('en-NG')} PCK per view (${Math.round(CREATOR_SHARE*100)}% share)`;
 
     revCardHTML = `
       <div class="vd-rev-card">
         <div class="vd-rev-lbl"><i class="fas fa-coins" style="margin-right:5px;"></i>Revenue</div>
         <div class="vd-rev-main">🪙 ${totalPCK.toLocaleString()} PCK</div>
-        <div class="vd-rev-naira">₦${totalNaira} total earned (released)</div>
+        <div class="vd-rev-naira">₦${totalNaira} total earned</div>
         <div class="vd-rev-row">
           <div class="vd-rev-mini">
             <div class="vd-rev-mini-val">₦${totalNaira}</div>
@@ -11140,8 +12017,8 @@ function editPricing() {
         </button>
       </div>
       <div id="vdPriceInputWrap" style="display:${isPaid ? 'block' : 'none'};margin-bottom:6px;">
-        <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:6px;">Price in Pose Coin Kobo (PCK)</label>
-        <input type="number" min="1" class="vd-resched-input" id="vdPriceCoins" value="${curCoins}" oninput="vdUpdatePriceNaira()" style="margin-bottom:6px;">
+        <label style="font-size:12px;font-weight:600;color:var(--gray-500);display:block;margin-bottom:6px;">Price in Pose Coin Kobo (PCK) — 4 to 2,000</label>
+        <input type="number" min="4" max="2000" class="vd-resched-input" id="vdPriceCoins" value="${curCoins}" oninput="vdUpdatePriceNaira()" style="margin-bottom:6px;">
         <div style="font-size:11.5px;color:var(--gray-400);margin-bottom:14px;" id="vdPriceNaira"></div>
       </div>
       <div style="display:flex;gap:10px;">
@@ -11178,7 +12055,7 @@ async function savePricing() {
   let coinPrice = 0;
   if (mode === 'paid') {
     coinPrice = Number(document.getElementById('vdPriceCoins').value) || 0;
-    if (coinPrice < 1) { alert('Enter a valid coin price (at least 1).'); return; }
+    if (coinPrice < 4 || coinPrice > 2000) { alert('Enter a valid coin price between 4 and 2,000 PCK.'); return; }
   }
   const updates = { priceMode: mode, coinPrice };
 
@@ -11296,6 +12173,22 @@ function cancelUpload() {
     activeXHR.abort();
     activeXHR = null;
   }
+
+  // Explicit cancel means this upload should never be offered back — abort
+  // the multipart upload on R2 (frees the parts already stored there) and
+  // delete its resume record so a reload won't resurrect it.
+  const handle = window._activeUploadHandle;
+  if (handle) {
+    _r2AbortMultipart(handle.key, handle.uploadId);
+    if (handle.resumeId) deleteResumeState(handle.resumeId);
+    window._activeUploadHandle = null;
+  }
+  if (window._activeUploadResumeId) {
+    deleteResumeState(window._activeUploadResumeId);
+    window._activeUploadResumeId = null;
+  }
+  window._activeUploadInFlight = false;
+
   hideUploadPopup();
   const sBtn = document.getElementById('sPostBtn');
   const eBtn = document.getElementById('epPostBtn');
@@ -11996,20 +12889,14 @@ async function executeDeleteAccount(btn) {
   /* Each main category maps to its sub-filters / sub-tabs. Keep in sync with event-page.html */
   const SUBCATEGORIES = {
     comedy:        ['Skits','Stand-Up','Reactions','Pranks','Memes','Naija Comedy'],
-    funny:         ['Skits','Stand-Up','Reactions','Pranks','Memes','Naija Comedy'],
     dance:         ['Afro Dance','Hip-Hop','Choreography','Tutorials','Dance Challenge','Cultural'],
-    music:         ['Afrobeats','Afropop','Highlife','Hip-Hop','R&B','Gospel','Amapiano','Reggae','Pop'],
-    'music-video': ['Afrobeats','Afropop','Hip-Hop','R&B','Gospel','Amapiano','Pop','Lyric Video','Live Performance'],
-    afrobeats:     ['New Releases','Afropop','Amapiano','Alté','Street Pop','Collaborations','Live'],
-    highlife:      ['Classic','Modern','Juju','Fuji','Live Performance','Instrumental'],
-    gospel:        ['Worship','Praise','Sermons','Choir','Live Service','Spoken Word'],
+    music:         ['Afrobeats','Afropop','Highlife','Hip-Hop','R&B','Gospel','Amapiano','Reggae','Pop','Music Video','Lyric Video','Live Performance'],
     movies:        ['Action','Drama','Comedy','Sci-Fi','Thriller','Romance','Horror','Nollywood','New Releases'],
     tvshows:       ['Drama','Comedy','Reality','Crime','Fantasy','Soap Opera','New Season'],
     anime:         ['Shonen','Shojo','Isekai','Action','Romance','Horror','New Season','Classics'],
     nollywood:     ['Latest','Movies','TV Series','Skits','Yoruba','Igbo','Hausa','Pidgin','Classics'],
     documentary:   ['Nature','History','Crime','Science','Society','Africa','Biography','Space'],
-    documentaries: ['Nature','History','Crime','Science','Society','Africa','Biography','Space'],
-    education:     ['WAEC/JAMB','University','Tech Skills','Finance','History','Science','Languages','Personal Dev'],
+    education:     ['WAEC/JAMB','University','Tech Skills','Finance','History','Science','Languages','Personal Dev','Sci-Fi','Space Opera','AI & Robots'],
     lifestyle:     ['Daily Vlog','Routine','Home','Productivity','Minimalism','Self-Care','Family Life'],
     fashion:       ['Fashion','Beauty','Makeup','Hairstyles','Skincare','Trends','Lookbook','Culture'],
     food:          ['Nigerian Cuisine','West African','Street Food','Recipes','Restaurants','Travel','Vlog'],
@@ -12019,9 +12906,6 @@ async function executeDeleteAccount(btn) {
     news:          ['Nigeria','Africa','World','Politics','Business','Technology','Sports','Entertainment'],
     travel:        ['Africa','Nigeria','International','Adventure','Food Travel','Vlog','Culture','Tips'],
     kids:          ['Ages 2-5','Ages 6-10','Ages 11-14','Cartoons','Educational','Movies','African Stories'],
-    romance:       ['Movies','TV Series','K-Drama','Nollywood','Short Films'],
-    thriller:      ['Psychological','Horror','Crime Thriller','Supernatural','Action Thriller','Mystery'],
-    scifi:         ['Space Opera','Cyberpunk','Time Travel','Fantasy','Dystopia','AI & Robots'],
     health:        ['Fitness','Nutrition','Mental Health','Yoga','Medical','Sleep','Skincare'],
     motivation:    ['Self-Help','Mindset','Success Stories','Discipline','Spirituality','Productivity','Speeches']
   };
