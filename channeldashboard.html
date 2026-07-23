@@ -79,7 +79,76 @@
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+/* Firebase URL Display Container */
+.firebase-url-container {
+  margin: 16px 0;
+  padding: 14px 16px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+}
 
+.firebase-url-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+.firebase-url-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0d0d0d;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.firebase-url-text {
+  flex: 1;
+  font-size: 13px;
+  color: #eee;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  font-family: 'Courier New', monospace;
+}
+
+.firebase-url-text::-webkit-scrollbar {
+  display: none;
+}
+
+.firebase-url-copy-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: #d4af37;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.firebase-url-copy-btn:hover {
+  background: #e6c34d;
+}
+
+.firebase-url-copy-btn:active {
+  transform: scale(0.96);
+}
+
+.firebase-url-copy-btn.copied {
+  background: #4caf50;
+  color: #fff;
+}
     /* ==============================
        TOP BAR
     ============================== */
