@@ -1,0 +1,164 @@
+
+<!-- URL Display Section (Add this where episodes/videos are uploaded) -->
+<style>
+  /* ─ Firebase URL Display ─ */
+  .firebase-url-container {
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(124,58,237,0.04));
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    display: none;
+  }
+  .firebase-url-container.visible { display: block; animation: slideInUp 0.3s ease; }
+  
+  @keyframes slideInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .firebase-url-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  .firebase-url-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(124,58,237,0.15);
+    border-radius: 8px;
+    padding: 12px;
+    overflow: hidden;
+  }
+  
+  .firebase-url-text {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--text-main);
+    word-break: break-all;
+    line-height: 1.4;
+    overflow-y: auto;
+    max-height: 80px;
+  }
+  
+  .firebase-url-copy-btn {
+    flex-shrink: 0;
+    background: var(--purple-main);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  
+  .firebase-url-copy-btn:hover {
+    background: var(--purple-deep);
+    transform: translateY(-1px);
+  }
+  
+  .firebase-url-copy-btn.copied {
+    background: var(--green);
+  }
+</style>
+
+<!-- JavaScript for Firebase Storage Upload -->
+<script>
+  // Firebase Storage Upload Function
+  async function uploadToFirebaseStorage(file, path) {
+    if (!file) return null;
+    try {
+      console.log('📤 Uploading to Firebase Storage:', file.name);
+      const storageRef = firebase.storage().ref(path);
+      const snapshot = await storageRef.put(file);
+      const downloadUrl = await snapshot.ref.getDownloadURL();
+      console.log('✅ Upload complete. URL:', downloadUrl);
+      return downloadUrl;
+    } catch (error) {
+      console.error('❌ Firebase Storage upload error:', error);
+      showToast('Upload failed: ' + error.message, 'error');
+      throw error;
+    }
+  }
+
+  // Display and copy Firebase URL
+  function displayFirebaseUrl(url, containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+      const textElement = container.querySelector('.firebase-url-text');
+      if (textElement) {
+        textElement.innerText = url;
+        container.classList.add('visible');
+      }
+    }
+  }
+
+  // Copy URL to clipboard
+  function copyFirebaseUrlToClipboard(buttonElement) {
+    const container = buttonElement.closest('.firebase-url-container');
+    const textElement = container.querySelector('.firebase-url-text');
+    const urlText = textElement.innerText;
+    
+    navigator.clipboard.writeText(urlText).then(() => {
+      const originalText = buttonElement.innerText;
+      buttonElement.innerText = '✓ Copied!';
+      buttonElement.classList.add('copied');
+      
+      setTimeout(() => {
+        buttonElement.innerText = originalText;
+        buttonElement.classList.remove('copied');
+      }, 2000);
+    }).catch(err => {
+      console.error('Copy failed:', err);
+      showToast('Failed to copy URL', 'error');
+    });
+  }
+
+  // Upload episode/video with URL display
+  async function uploadEpisodeWithFirebase(file, episodeName) {
+    if (!file) return null;
+    
+    try {
+      const timestamp = Date.now();
+      const fileExt = file.name.split('.').pop();
+      const path = `episodes/${timestamp}_${episodeName}.${fileExt}`;
+      
+      // Show loading
+      showToast('Uploading episode...', 'info');
+      
+      // Upload to Firebase
+      const uploadUrl = await uploadToFirebaseStorage(file, path);
+      
+      // Display the URL
+      displayFirebaseUrl(uploadUrl, 'episode-url-container');
+      showToast('Episode uploaded! URL ready to copy.', 'success');
+      
+      return uploadUrl;
+    } catch (error) {
+      console.error('Upload failed:', error);
+      return null;
+    }
+  }
+</script>
+
+<!-- HTML Template for Episode Upload with URL Display -->
+<div id="episode-url-container" class="firebase-url-container">
+  <label class="firebase-url-label">📎 Episode URL</label>
+  <div class="firebase-url-display">
+    <div class="firebase-url-text"></div>
+    <button class="firebase-url-copy-btn" onclick="copyFirebaseUrlToClipboard(this)">
+      <i class="fas fa-copy" style="margin-right: 4px;"></i>Copy
+    </button>
+  </div>
+</div>
