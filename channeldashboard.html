@@ -4909,9 +4909,21 @@ onchange="handleThumb(this,'epThumbPreview')">
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
 ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
-<div class="uprice-opt" id="epSrcUrlBtn" onclick="setVideoSourceMode('ep','url')">
-    <i class="fas fa-link"></i> Add via URL
+<!-- Add container for URL display -->
+<div id="episode-url-container" class="firebase-url-container">
+  <label class="firebase-url-label">📎 Episode URL</label>
+  <div class="firebase-url-display">
+    <div class="firebase-url-text"></div>
+    <button class="firebase-url-copy-btn" onclick="copyFirebaseUrlToClipboard(this)">
+      <i class="fas fa-copy"></i>Copy
+    </button>
   </div>
+</div>
+
+<!-- When user uploads -->
+<script>
+  const fileUrl = await uploadEpisodeWithFirebase(videoFile, 'my-episode');
+</script>
 <input type="file" id="epVideoFile" accept="video/*"
 onchange="handleFileSelect(this,'epVideoPreview','epVideoProgress')">
 <div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
