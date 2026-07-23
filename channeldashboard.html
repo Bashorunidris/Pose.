@@ -4138,9 +4138,23 @@ TAB 1 — SINGLE VIDEO
 <!-- Video File -->
 <div class="upload-card">
 <div class="upload-card-title">
-<i class="fas fa-video"></i> Video File
+<i class="fas fa-video"></i> Video Source
 <span class="ureq-dot" style="margin-left:2px;"></span>
 </div>
+
+<!-- Source mode toggle -->
+<div class="uprice-toggle" style="margin-bottom:14px;">
+  <div class="uprice-opt active" id="sSrcFileBtn" onclick="setVideoSourceMode('s','file')">
+    <i class="fas fa-cloud-arrow-up"></i> Upload File
+  </div>
+  <div class="uprice-opt" id="sSrcUrlBtn" onclick="setVideoSourceMode('s','url')">
+    <i class="fas fa-link"></i> Add via URL
+  </div>
+</div>
+<input type="hidden" id="sVideoSourceMode" value="file">
+
+<!-- File upload mode (existing dropzone) -->
+<div id="sVideoFileWrap">
 <div class="udrop" id="sVideoDrop"
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
@@ -4149,7 +4163,7 @@ ondrop="handleDrop(event,'sVideoFile','sVideoPreview','sVideoProgress')">
 onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
 <div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
 <div class="udrop-label">Tap or drag your video here</div>
-<div class="udrop-sub">MP4 · MOV · AVI  ·  Up to 6 hours</div>
+<div class="udrop-sub">MP4 · MOV · AVI  ·  Up to 6 hours</div>
 </div>
 <div class="ufile-preview" id="sVideoPreview" style="display:none;">
 <i class="fas fa-file-video"></i>
@@ -4168,6 +4182,23 @@ onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
 </div>
 <div class="uprog-bg"><div class="uprog-fill" id="sVideoProgFill"></div></div>
 </div>
+</div>
+
+<!-- URL mode -->
+<div id="sVideoUrlWrap" style="display:none;">
+  <input class="ufield-input" type="url" id="sVideoUrlInput"
+    placeholder="Paste a YouTube, Vimeo, or direct .mp4 URL…"
+    oninput="onVideoUrlInput('s')">
+  <div class="uhelp" style="margin-top:8px;">
+    <i class="fas fa-circle-info"></i>
+    YouTube/Vimeo links play in an embedded player. Direct file links (.mp4, .m3u8) play natively — fastest option, skips upload entirely.
+  </div>
+  <div id="sVideoUrlPreview" style="display:none;margin-top:10px;padding:10px 12px;background:var(--purple-ghost);border:1px solid var(--purple-pale);border-radius:10px;font-size:12.5px;color:var(--purple-deep);">
+    <i class="fas fa-circle-check" style="margin-right:6px;color:#059669;"></i>
+    <span id="sVideoUrlPreviewText">Valid link detected</span>
+  </div>
+</div>
+
 <div class="uhelp">
 <i class="fas fa-circle-info"></i>
 Files up to 4GB are supported. Do not close this page while uploading.
@@ -4179,7 +4210,6 @@ Files up to 4GB are supported. Do not close this page while uploading.
 </div>
 </div>
 </div>
-
 <!-- Trailer (optional) -->
 <div class="upload-card">
 <div class="upload-card-title">
@@ -4879,6 +4909,9 @@ onchange="handleThumb(this,'epThumbPreview')">
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
 ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
+<div class="uprice-opt" id="epSrcUrlBtn" onclick="setVideoSourceMode('ep','url')">
+    <i class="fas fa-link"></i> Add via URL
+  </div>
 <input type="file" id="epVideoFile" accept="video/*"
 onchange="handleFileSelect(this,'epVideoPreview','epVideoProgress')">
 <div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
@@ -5868,9 +5901,7 @@ padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
         };
       }
     };
-  </script>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  </script><script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script src="pose-cache-service.js"></script>
@@ -6146,7 +6177,65 @@ db.collection('channels').doc(CHANNEL_UID)
       const l = document.getElementById('dashLoader');
       if (l) l.classList.add('hidden');
     }
+/* ====================================================
+   VIDEO SOURCE MODE — File Upload vs URL
+==================================================== */
+const videoUrlValue = { s: '', ep: '' };
 
+function detectUrlType(url) {
+  if (/youtu\.?be/.test(url)) return 'youtube';
+  if (/vimeo\.com/.test(url)) return 'vimeo';
+  if (/\.(mp4|webm|mov|m3u8)(\?|$)/i.test(url)) return 'direct';
+  return 'unknown';
+}
+
+function extractYouTubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+function extractVimeoId(url) {
+  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return m ? m[1] : null;
+}
+
+function setVideoSourceMode(prefix, mode) {
+  document.getElementById(prefix + 'SrcFileBtn')?.classList.toggle('active', mode === 'file');
+  document.getElementById(prefix + 'SrcUrlBtn')?.classList.toggle('active', mode === 'url');
+  document.getElementById(prefix + 'VideoFileWrap').style.display = mode === 'file' ? 'block' : 'none';
+  document.getElementById(prefix + 'VideoUrlWrap').style.display  = mode === 'url'  ? 'block' : 'none';
+  document.getElementById(prefix + 'VideoSourceMode').value = mode;
+
+  // Clear whichever mode isn't active so validation doesn't see stale data
+  if (mode === 'url') {
+    if (prefix === 's') storeFileRef('sVideoFile', null);
+    else { epVideoFile_ = null; }
+    document.getElementById(prefix + 'VideoPreview').style.display = 'none';
+  } else {
+    videoUrlValue[prefix] = '';
+    document.getElementById(prefix + 'VideoUrlInput').value = '';
+    document.getElementById(prefix + 'VideoUrlPreview').style.display = 'none';
+  }
+}
+
+function onVideoUrlInput(prefix) {
+  const input = document.getElementById(prefix + 'VideoUrlInput');
+  const url = input.value.trim();
+  videoUrlValue[prefix] = url;
+
+  const previewWrap = document.getElementById(prefix + 'VideoUrlPreview');
+  const previewText = document.getElementById(prefix + 'VideoUrlPreviewText');
+  if (!url) { previewWrap.style.display = 'none'; return; }
+
+  const type = detectUrlType(url);
+  const labels = {
+    youtube: '✔ YouTube link detected — will embed in player',
+    vimeo:   '✔ Vimeo link detected — will embed in player',
+    direct:  '✔ Direct video file link — plays natively',
+    unknown: '⚠ Link format not recognized — will attempt to embed anyway',
+  };
+  previewText.textContent = labels[type];
+  previewWrap.style.display = 'block';
+}
     /* ====================================================
        HOME PAGE
     ==================================================== */
@@ -9539,8 +9628,12 @@ async function postSingleVideo(resumeRecord) {
 
   // Validate fields
   let hasError = false;
-  if (!singleVideoFile) {
+  const sSrcMode = document.getElementById('sVideoSourceMode').value;
+  if (sSrcMode === 'file' && !singleVideoFile) {
     shakeField('sVideoDrop'); scrollTo_('sVideoDrop'); hasError = true;
+  }
+  if (sSrcMode === 'url' && !videoUrlValue.s) {
+    shakeField('sVideoUrlInput'); scrollTo_('sVideoUrlInput'); hasError = true;
   }
   if (!title) {
     shakeField('sTitle'); if (!hasError) scrollTo_('sTitle'); hasError = true;
@@ -9573,9 +9666,19 @@ async function postSingleVideo(resumeRecord) {
   if (!singleTrailerFile)  steps[1].label = 'Trailer (skipped)';
   if (!getSingleThumbFile()) steps[2].label = 'Thumbnail (skipped)';
 
+  const sSrcModeForPopup = document.getElementById('sVideoSourceMode').value;
+  if (sSrcModeForPopup === 'url') steps[0].label = 'Linking video';
+
   showUploadPopup(
-    singleVideoFile.name,
-    formatBytes(singleVideoFile.size),
+    sSrcModeForPopup === 'url' ? 'Video URL' : singleVideoFile.name,
+    sSrcModeForPopup === 'url' ? videoUrlValue.s : formatBytes(singleVideoFile.size),
+    steps
+  );
+  
+   document.getElementById('sVideoSourceMode').value;
+  showUploadPopup(
+    sSrcModeForPopup === 'url' ? 'Video URL' : singleVideoFile.name,
+    sSrcModeForPopup === 'url' ? videoUrlValue.s : formatBytes(singleVideoFile.size),
     steps
   );
 
@@ -9607,12 +9710,15 @@ async function postSingleVideo(resumeRecord) {
     if (singleTrailerFile) setUploadStep(1, 'active', 'Uploading…'); else setUploadStep(1, 'done', 'Skipped');
     if (thumbFile)          setUploadStep(2, 'active', 'Uploading…'); else setUploadStep(2, 'done', 'Skipped');
 
-    let videoPct   = 0;
+    const sSrcMode = document.getElementById('sVideoSourceMode').value;
+    const isUrlMode = sSrcMode === 'url';
+
+    let videoPct   = isUrlMode ? 100 : 0;
     let trailerPct = singleTrailerFile ? 0 : 100;
     let thumbPct   = thumbFile ? 0 : 100;
     const renderOverall = (label) => {
       const overall = videoPct * 0.7 + trailerPct * 0.1 + thumbPct * 0.1;
-      const eta = calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
+      const eta = isUrlMode ? '' : calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
       updateUploadProgress(Math.round(overall), label, eta);
     };
 
@@ -9636,14 +9742,26 @@ async function postSingleVideo(resumeRecord) {
       persistBase,
     };
 
-    const videoPromise = uploadFile(
-      singleVideoFile, 'video', null, folder + '/main',
-      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
-      preS, chunkResumeCtx
-    ).then(r => {
-      setUploadStep(0, 'done', 'Done ✓');
-      return r;
-    });
+    const videoPromise = isUrlMode
+      ? Promise.resolve({
+          url: videoUrlValue.s,
+          chunks: [],
+          isChunked: false,
+          isExternal: true,
+          sourceType: detectUrlType(videoUrlValue.s),
+        }).then(r => {
+          setUploadStep(0, 'done', 'Linked ✓');
+          renderOverall('Video linked');
+          return r;
+        })
+      : uploadFile(
+          singleVideoFile, 'video', null, folder + '/main',
+          (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
+          preS, chunkResumeCtx
+        ).then(r => {
+          setUploadStep(0, 'done', 'Done ✓');
+          return r;
+        });
 
     const trailerPromise = singleTrailerFile
       ? uploadFile(singleTrailerFile, 'video', null, folder + '/trailer',
@@ -9665,10 +9783,12 @@ async function postSingleVideo(resumeRecord) {
 
     const [videoResult, trailerUrl, thumbUrl] = await Promise.all([videoPromise, trailerPromise, thumbPromise]);
 
-    const videoUrl    = videoResult.url;
-    const videoChunks = videoResult.chunks;
-    const isChunked   = videoResult.isChunked;
-
+    const videoUrl      = videoResult.url;
+    const videoChunks   = videoResult.chunks;
+    const isChunked     = videoResult.isChunked;
+    const isExternalUrl = videoResult.isExternal || false;
+    const videoSourceType = videoResult.sourceType || 'direct';
+    
     // Step 3 — Save to Firestore
     setUploadStep(3, 'active', 'Saving…');
     updateUploadProgress(95, 'Saving to database…', '');
@@ -12946,5 +13066,7 @@ async function executeDeleteAccount(btn) {
     if (wrap) wrap.style.display = '';
   }
   </script>
+
+  
 </body>
   </html>
