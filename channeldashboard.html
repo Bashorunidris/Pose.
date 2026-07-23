@@ -100,7 +100,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #0d0d0d;
+  background: #ffffff;
   border: 1px solid #444;
   border-radius: 8px;
   padding: 8px 10px;
@@ -109,7 +109,7 @@
 .firebase-url-text {
   flex: 1;
   font-size: 13px;
-  color: #eee;
+  color: #800080;
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
@@ -4970,14 +4970,6 @@ placeholder="What happens in this episode? (at least 10 words required)"></texta
 onchange="handleThumb(this,'epThumbPreview')">
 </div>
 </div>
-
-<!-- Episode Video + Trailer -->
-<div class="upload-card">
-<div class="upload-card-title"><i class="fas fa-video"></i> Episode Video File <span class="ureq-dot" style="margin-left:2px;"></span></div>
-<div class="udrop" id="epVideoDrop"
-ondragover="event.preventDefault();this.classList.add('dragover')"
-ondragleave="this.classList.remove('dragover')"
-ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
 <!-- Add container for URL display -->
 <div id="episode-url-container" class="firebase-url-container">
   <label class="firebase-url-label">📎 Episode URL</label>
@@ -4988,6 +4980,14 @@ ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
     </button>
   </div>
 </div>
+<!-- Episode Video + Trailer -->
+<div class="upload-card">
+<div class="upload-card-title"><i class="fas fa-video"></i> Episode Video File <span class="ureq-dot" style="margin-left:2px;"></span></div>
+<div class="udrop" id="epVideoDrop"
+ondragover="event.preventDefault();this.classList.add('dragover')"
+ondragleave="this.classList.remove('dragover')"
+ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
+
 
 <!-- When user uploads -->
 <script>
