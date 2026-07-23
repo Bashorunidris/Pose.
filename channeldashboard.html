@@ -4373,7 +4373,28 @@ placeholder="Tell viewers what this video is about… (at least 10 words require
 
 <!-- Thumbnail -->
 <div class="ufield">
-<div class="ufield-label">Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
+<div class="ufield-label">Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(A MUST )</span></div>
+<div class="uprice-toggle" style="margin-bottom:10px;">
+  <div class="uprice-opt active" id="sThumbSrcFileBtn" onclick="setThumbSourceMode('s','file')">
+    <i class="fas fa-cloud-arrow-up"></i> Upload File
+  </div>
+  <div class="uprice-opt" id="sThumbSrcUrlBtn" onclick="setThumbSourceMode('s','url')">
+    <i class="fas fa-link"></i> Add via URL
+  </div>
+</div>
+<input type="hidden" id="sThumbSourceMode" value="file">
+
+<div id="sThumbFileWrap">
+  <!-- existing sThumbPreview block goes here unchanged -->
+</div>
+
+<div id="sThumbUrlWrap" style="display:none;">
+  <input class="ufield-input" type="url" id="sThumbUrlInput"
+    placeholder="Paste an image URL…" oninput="onThumbUrlInput('s')">
+  <div id="sThumbUrlPreviewWrap" style="display:none;margin-top:10px;">
+    <img id="sThumbUrlPreviewImg" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
+  </div>
+</div>
 <div class="uthumb-preview" id="sThumbPreview" onclick="document.getElementById('sThumbFile').click()">
 <div class="uthumb-placeholder">🎬</div>
 <div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Choose Image</div>
@@ -4970,29 +4991,41 @@ placeholder="What happens in this episode? (at least 10 words required)"></texta
 onchange="handleThumb(this,'epThumbPreview')">
 </div>
 </div>
-<!-- Add container for URL display -->
-<div id="episode-url-container" class="firebase-url-container">
-  <label class="firebase-url-label">📎 Episode URL</label>
-  <div class="firebase-url-display">
-    <div class="firebase-url-text"></div>
-    <button class="firebase-url-copy-btn" onclick="copyFirebaseUrlToClipboard(this)">
-      <i class="fas fa-copy"></i>Copy
-    </button>
-  </div>
-</div>
+
 <!-- Episode Video + Trailer -->
 <div class="upload-card">
 <div class="upload-card-title"><i class="fas fa-video"></i> Episode Video File <span class="ureq-dot" style="margin-left:2px;"></span></div>
+<div class="uprice-toggle" style="margin-bottom:14px;">
+  <div class="uprice-opt active" id="epSrcFileBtn" onclick="setVideoSourceMode('ep','file')">
+    <i class="fas fa-cloud-arrow-up"></i> Upload File
+  </div>
+  <div class="uprice-opt" id="epSrcUrlBtn" onclick="setVideoSourceMode('ep','url')">
+    <i class="fas fa-link"></i> Add via URL
+  </div>
+</div>
+<input type="hidden" id="epVideoSourceMode" value="file">
+
+<div id="epVideoFileWrap">
+  <!-- existing epVideoDrop block goes here unchanged -->
+</div>
+
+<div id="epVideoUrlWrap" style="display:none;">
+  <input class="ufield-input" type="url" id="epVideoUrlInput"
+    placeholder="Paste a YouTube, Vimeo, or direct .mp4 URL…"
+    oninput="onVideoUrlInput('ep')">
+  <div class="uhelp" style="margin-top:8px;">
+    <i class="fas fa-circle-info"></i>
+    YouTube/Vimeo links play in an embedded player. Direct file links (.mp4, .m3u8) play natively.
+  </div>
+  <div id="epVideoUrlPreview" style="display:none;margin-top:10px;padding:10px 12px;background:var(--purple-ghost);border:1px solid var(--purple-pale);border-radius:10px;font-size:12.5px;color:var(--purple-deep);">
+    <i class="fas fa-circle-check" style="margin-right:6px;color:#059669;"></i>
+    <span id="epVideoUrlPreviewText">Valid link detected</span>
+  </div>
+</div>
 <div class="udrop" id="epVideoDrop"
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
 ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
-
-
-<!-- When user uploads -->
-<script>
-  const fileUrl = await uploadEpisodeWithFirebase(videoFile, 'my-episode');
-</script>
 <input type="file" id="epVideoFile" accept="video/*"
 onchange="handleFileSelect(this,'epVideoPreview','epVideoProgress')">
 <div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
@@ -9722,8 +9755,7 @@ async function postSingleVideo(resumeRecord) {
   if (!category) {
     shakeField('sCategory'); if (!hasError) scrollTo_('sCategory'); hasError = true;
   }
-  if (!getSingleThumbFile()) {
-    shakeField('sThumbPreview'); if (!hasError) scrollTo_('sThumbPreview'); hasError = true;
+  if (!getSingleThumbFile() && !thumbUrlValue.s) if (!hasError) scrollTo_('sThumbPreview'); hasError = true;
   }
   if (!rating) {
     document.getElementById('sRatingPills')
@@ -9823,45 +9855,26 @@ async function postSingleVideo(resumeRecord) {
       persistBase,
     };
 
-    const videoPromise = isUrlMode
-      ? Promise.resolve({
-          url: videoUrlValue.s,
-          chunks: [],
-          isChunked: false,
-          isExternal: true,
-          sourceType: detectUrlType(videoUrlValue.s),
-        }).then(r => {
-          setUploadStep(0, 'done', 'Linked ✓');
-          renderOverall('Video linked');
-          return r;
-        })
-      : uploadFile(
-          singleVideoFile, 'video', null, folder + '/main',
-          (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
-          preS, chunkResumeCtx
-        ).then(r => {
-          setUploadStep(0, 'done', 'Done ✓');
-          return r;
-        });
+    
+ 
+const videoPromise = isUrlMode
+  ? Promise.resolve({ url: videoUrlValue.s, chunks: [], isChunked: false, isExternal: true, sourceType: detectUrlType(videoUrlValue.s) })
+      .then(r => { setUploadStep(0, 'done', 'Linked ✓'); renderOverall('Video linked'); return r; })
+  : uploadFile(singleVideoFile, 'video', null, folder + '/main',
+      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); }, preS, chunkResumeCtx
+    ).then(r => { setUploadStep(0, 'done', 'Done ✓'); return r; });
 
-    const trailerPromise = singleTrailerFile
-      ? uploadFile(singleTrailerFile, 'video', null, folder + '/trailer',
-          (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
-        ).then(r => {
-          setUploadStep(1, 'done', 'Done ✓');
-          return r.url;
-        })
-      : Promise.resolve(null);
+const trailerPromise = resolveMediaSource(
+  singleTrailerFile, trailerUrlValue.s, folder + '/trailer', 'video',
+  (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
+).then(r => { setUploadStep(1, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
 
-    const thumbPromise = thumbFile
-      ? uploadFile(thumbFile, 'image', null, folder + '/thumb',
-          (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
-        ).then(r => {
-          setUploadStep(2, 'done', 'Done ✓');
-          return r.url;
-        })
-      : Promise.resolve(null);
-
+const thumbPromise = resolveMediaSource(
+  getSingleThumbFile(), thumbUrlValue.s, folder + '/thumb', 'image',
+  (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
+).then(r => { setUploadStep(2, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
+         
+       
     const [videoResult, trailerUrl, thumbUrl] = await Promise.all([videoPromise, trailerPromise, thumbPromise]);
 
     const videoUrl      = videoResult.url;
@@ -9933,6 +9946,8 @@ async function postSingleVideo(resumeRecord) {
       revenue:      0,
       channelId:    CHANNEL_UID,
       createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+      isExternalVideo: videoResult.isExternal || false,
+videoSourceType: videoResult.sourceType || 'direct',
     };
 
     // Retry Firestore save up to 3 times
@@ -10026,7 +10041,7 @@ async function postSingleVideo(resumeRecord) {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
   }
-}
+
 
 /* ====================================================
    RESUME UNFINISHED UPLOAD (after reload / reopen)
@@ -10456,9 +10471,10 @@ document.getElementById('episodeBlock').style.display = 'block';
     alert('Please create or select a season first.');
     return;
   }
-  if (!epVideoFile_) {
-    shakeField('epVideoDrop'); scrollTo_('epVideoDrop'); hasError = true;
-  }
+  const epSrcMode = document.getElementById('epVideoSourceMode').value;
+if (epSrcMode === 'file' && !epVideoFile_) { shakeField('epVideoDrop'); scrollTo_('epVideoDrop'); hasError = true; }
+if (epSrcMode === 'url'  && !videoUrlValue.ep) { shakeField('epVideoUrlInput'); scrollTo_('epVideoUrlInput'); hasError = true; }
+if (!document.getElementById('epThumbFile').files[0] && !thumbUrlValue.ep) { shakeField('epThumbPreview'); if (!hasError) scrollTo_('epThumbPreview'); hasError = true; }
   if (!epTitle) {
     shakeField('epTitle'); if (!hasError) scrollTo_('epTitle'); hasError = true;
   }
@@ -10519,23 +10535,26 @@ document.getElementById('episodeBlock').style.display = 'block';
       updateUploadProgress(Math.round(overall), label, '');
     };
 
-    const videoPromise = uploadFile(
-      epVideoFile_, 'video', null, folder + '/main',
-      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
-      preEp
+   
+
+   const isEpUrlMode = document.getElementById('epVideoSourceMode').value === 'url';
+
+const videoPromise = isEpUrlMode
+  ? Promise.resolve({ url: videoUrlValue.ep, chunks: [], isChunked: false, isExternal: true, sourceType: detectUrlType(videoUrlValue.ep) })
+      .then(r => { setUploadStep(0, 'done', 'Linked ✓'); return r; })
+  : uploadFile(epVideoFile_, 'video', null, folder + '/main',
+      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); }, preEp
     ).then(r => { setUploadStep(0, 'done', 'Done ✓'); return r; });
 
-    const trailerPromise = epTrailerFile_
-      ? uploadFile(epTrailerFile_, 'video', null, folder + '/trailer',
-          (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
-        ).then(r => { setUploadStep(1, 'done', 'Done ✓'); return r.url; })
-      : Promise.resolve(null);
+const trailerPromise = resolveMediaSource(
+  epTrailerFile_, trailerUrlValue.ep, folder + '/trailer', 'video',
+  (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
+).then(r => { setUploadStep(1, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
 
-    const thumbPromise = epThumb
-      ? uploadFile(epThumb, 'image', null, folder + '/thumb',
-          (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
-        ).then(r => { setUploadStep(2, 'done', 'Done ✓'); return r.url; })
-      : Promise.resolve(null);
+const thumbPromise = resolveMediaSource(
+  document.getElementById('epThumbFile').files[0], thumbUrlValue.ep, folder + '/thumb', 'image',
+  (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
+).then(r => { setUploadStep(2, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
 
     const [videoResult, trailerUrl, thumbUrl, seaSnapForEp] =
       await Promise.all([videoPromise, trailerPromise, thumbPromise, seasonFetchPromise]);
@@ -10609,6 +10628,8 @@ document.getElementById('episodeBlock').style.display = 'block';
     const epStatus = isScheduled ? 'scheduled' : 'live';
 
     batch.set(epRef, {
+      isExternalVideo: videoResult.isExternal || false,
+videoSourceType: videoResult.sourceType || 'direct',
       episodeNumber: epNumber,
       title:         epTitle,
       description:   document.getElementById('epDesc').value.trim(),
@@ -13092,6 +13113,63 @@ async function executeDeleteAccount(btn) {
       alert('Delete failed: ' + e.message);
     }
   }
+}
+
+const thumbUrlValue   = { s: '', sea: '', ep: '' };
+const trailerUrlValue = { s: '', sea: '', ep: '' };
+
+function setThumbSourceMode(prefix, mode) {
+  document.getElementById(prefix + 'ThumbSrcFileBtn')?.classList.toggle('active', mode === 'file');
+  document.getElementById(prefix + 'ThumbSrcUrlBtn')?.classList.toggle('active', mode === 'url');
+  document.getElementById(prefix + 'ThumbFileWrap').style.display = mode === 'file' ? 'block' : 'none';
+  document.getElementById(prefix + 'ThumbUrlWrap').style.display  = mode === 'url'  ? 'block' : 'none';
+  document.getElementById(prefix + 'ThumbSourceMode').value = mode;
+  if (mode === 'file') {
+    thumbUrlValue[prefix] = '';
+    document.getElementById(prefix + 'ThumbUrlInput').value = '';
+  } else {
+    if (prefix === 's') singleThumbFileOverride = null;
+    const input = document.getElementById(prefix + 'ThumbFile');
+    if (input) input.value = '';
+  }
+}
+
+function onThumbUrlInput(prefix) {
+  const url = document.getElementById(prefix + 'ThumbUrlInput').value.trim();
+  thumbUrlValue[prefix] = url;
+  const preview = document.getElementById(prefix + 'ThumbUrlPreviewImg');
+  const wrap    = document.getElementById(prefix + 'ThumbUrlPreviewWrap');
+  if (!url) { if (wrap) wrap.style.display = 'none'; return; }
+  if (preview) preview.src = url;
+  if (wrap) wrap.style.display = 'block';
+}
+
+function getSingleThumbUrl() { return thumbUrlValue.s || null; }
+
+function setTrailerSourceMode(prefix, mode) {
+  document.getElementById(prefix + 'TrlSrcFileBtn')?.classList.toggle('active', mode === 'file');
+  document.getElementById(prefix + 'TrlSrcUrlBtn')?.classList.toggle('active', mode === 'url');
+  document.getElementById(prefix + 'TrailerFileWrap').style.display = mode === 'file' ? 'block' : 'none';
+  document.getElementById(prefix + 'TrailerUrlWrap').style.display  = mode === 'url'  ? 'block' : 'none';
+  document.getElementById(prefix + 'TrailerSourceMode').value = mode;
+  if (mode === 'file') {
+    trailerUrlValue[prefix] = '';
+    document.getElementById(prefix + 'TrailerUrlInput').value = '';
+  } else {
+    if (prefix === 's') singleTrailerFile = null;
+    if (prefix === 'sea') seasonTrailerFile = null;
+    if (prefix === 'ep') epTrailerFile_ = null;
+  }
+}
+
+function onTrailerUrlInput(prefix) {
+  trailerUrlValue[prefix] = document.getElementById(prefix + 'TrailerUrlInput').value.trim();
+}
+
+async function resolveMediaSource(file, urlValue, folder, resourceType, onProgress) {
+  if (urlValue) return { url: urlValue, isExternal: true, chunks: [], isChunked: false };
+  if (!file) return { url: null, chunks: [], isChunked: false };
+  return uploadFile(file, resourceType, null, folder, onProgress);
 }
   </script>
 
