@@ -1313,7 +1313,7 @@ select.ufield-input { cursor: pointer; }
   width: 110px; text-align: center;
   background: #fff; border: 1.5px solid var(--purple-pale);
   border-radius: 10px; padding: 2px 6px; outline: none;
-  -moz-appearance: textfield;
+  moz-appearance: textfield;
 }
 .ucoin-num-input:focus { border-color: var(--purple-main); box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
 .ucoin-num-input::-webkit-outer-spin-button,
@@ -4675,7 +4675,22 @@ placeholder="e.g. The Lagos Chronicles — Season 1">
 placeholder="What is this season about? (at least 10 words required)"></textarea>
 <div class="uhelp"><i class="fas fa-circle-info"></i> Minimum 10 words required. Helps viewers understand what the season covers.</div>
 </div>
-
+<div class="uprice-toggle" style="margin-bottom:10px;">
+  <div class="uprice-opt active" id="seaThumbSrcFileBtn" onclick="setThumbSourceMode('sea','file')">
+    <i class="fas fa-cloud-arrow-up"></i> Upload File
+  </div>
+  <div class="uprice-opt" id="seaThumbSrcUrlBtn" onclick="setThumbSourceMode('sea','url')">
+    <i class="fas fa-link"></i> Add via URL
+  </div>
+</div>
+<input type="hidden" id="seaThumbSourceMode" value="file">
+<div id="seaThumbFileWrap"></div>
+<div id="seaThumbUrlWrap" style="display:none;">
+  <input class="ufield-input" type="url" id="seaThumbUrlInput" placeholder="Paste an image URL…" oninput="onThumbUrlInput('sea')">
+  <div id="seaThumbUrlPreviewWrap" style="display:none;margin-top:10px;">
+    <img id="seaThumbUrlPreviewImg" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
+  </div>
+</div>
 <!-- Season Thumbnail -->
 <div class="ufield">
 <div class="ufield-label">Season Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
@@ -4715,7 +4730,19 @@ onchange="handleFileSelect(this,'seaTrailerPreview',null)">
 </div>
 <div class="uhelp"><i class="fas fa-circle-info"></i> Trailers go live immediately regardless of episode schedules.</div>
 </div>
-
+<div class="uprice-toggle" style="margin-bottom:10px;">
+  <div class="uprice-opt active" id="seaTrlSrcFileBtn" onclick="setTrailerSourceMode('sea','file')">
+    <i class="fas fa-cloud-arrow-up"></i> Upload File
+  </div>
+  <div class="uprice-opt" id="seaTrlSrcUrlBtn" onclick="setTrailerSourceMode('sea','url')">
+    <i class="fas fa-link"></i> Add via URL
+  </div>
+</div>
+<input type="hidden" id="seaTrailerSourceMode" value="file">
+<div id="seaTrailerFileWrap"></div>
+<div id="seaTrailerUrlWrap" style="display:none;">
+  <input class="ufield-input" type="url" id="seaTrailerUrlInput" placeholder="Paste a trailer video URL…" oninput="onTrailerUrlInput('sea')">
+</div>
 <!-- Season Age Rating -->
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Age Rating (applies to all episodes)</div>
@@ -9755,8 +9782,8 @@ async function postSingleVideo(resumeRecord) {
   if (!category) {
     shakeField('sCategory'); if (!hasError) scrollTo_('sCategory'); hasError = true;
   }
-  if (!getSingleThumbFile() && !thumbUrlValue.s) if (!hasError) scrollTo_('sThumbPreview'); hasError = true;
-  }
+
+
   if (!rating) {
     document.getElementById('sRatingPills')
       .querySelectorAll('.urating-pill')
@@ -10038,9 +10065,10 @@ videoSourceType: videoResult.sourceType || 'direct',
       cancelBtn.style.borderColor = '#FECACA';
     }
 
-    btn.disabled = false;
+   btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
   }
+}
 
 
 /* ====================================================
@@ -10204,13 +10232,9 @@ async function createSeason() {
     let trailerUrl = null;
     let thumbUrl   = null;
 
-    if (seasonTrailerFile) {
-      trailerUrl = (await uploadFile(seasonTrailerFile, 'video', null, folder + '/trailer')).url;
-    }
-    const seaThumb = document.getElementById('seaThumbFile').files[0];
-    if (seaThumb) {
-      thumbUrl = (await uploadFile(seaThumb, 'image', null, folder + '/thumb')).url;
-    }
+   const seaThumb = document.getElementById('seaThumbFile').files[0];
+trailerUrl = (await resolveMediaSource(seasonTrailerFile, trailerUrlValue.sea, folder + '/trailer', 'video')).url;
+thumbUrl   = (await resolveMediaSource(seaThumb, thumbUrlValue.sea, folder + '/thumb', 'image')).url;
 
     const isScheduled  = document.getElementById('seaSchedToggle').checked;
     const schedDTVal   = document.getElementById('seaSchedDT').value;
