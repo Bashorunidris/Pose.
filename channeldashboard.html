@@ -9858,7 +9858,7 @@ async function postSingleVideo(resumeRecord) {
     let thumbPct   = thumbFile ? 0 : 100;
     const renderOverall = (label) => {
       const overall = videoPct * 0.7 + trailerPct * 0.1 + thumbPct * 0.1;
-      const eta = isUrlMode ? '' : calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
+      const eta = (isUrlMode || !singleVideoFile) ? '' : calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
       updateUploadProgress(Math.round(overall), label, eta);
     };
 
@@ -9866,10 +9866,10 @@ async function postSingleVideo(resumeRecord) {
       kind:        'single',
       videoDocId:  videoId,
       folder,
-      fileName:    singleVideoFile.name,
-      fileSize:    singleVideoFile.size,
-      contentType: singleVideoFile.type,
-      file:        singleVideoFile,
+      fileName:    isUrlMode ? (videoUrlValue.s || '') : singleVideoFile.name,
+      fileSize:    isUrlMode ? 0 : singleVideoFile.size,
+      contentType: isUrlMode ? 'external/url' : singleVideoFile.type,
+      file:        isUrlMode ? null : singleVideoFile,
       thumbFile:   thumbFile || null,
       trailerFile: singleTrailerFile || null,
       formSnapshot,
