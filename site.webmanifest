@@ -1,0 +1,25 @@
+{
+  "name": "Pose — African Creator Platform",
+  "short_name": "Pose",
+  "description": "Create, go live, earn, and grow on Pose — the African creator platform for videos, music, and live streaming.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#4C1D95",
+  "theme_color": "#4C1D95",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

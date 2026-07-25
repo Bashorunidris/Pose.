@@ -1,0 +1,18 @@
+# Pose — robots.txt
+# Replace poseweb.site with your live domain before deploying.
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /posemusic.html
+Allow: /poselivevisual.html
+
+# Private / auth / utility pages — do not index
+Disallow: /channeldashboard.html
+Disallow: /channelintro.html
+Disallow: /firebase-upload-module.html
+Disallow: /poselivechat.html
+Disallow: /zoho-domain-verification.html
+Disallow: /functions/
+
+Sitemap: https://poseweb.site/sitemap.xml
