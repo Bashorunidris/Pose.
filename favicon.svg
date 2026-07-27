@@ -1,13 +1,23 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Main body -->
-  <path d="M40 30C20 30 10 40 10 60V160C10 180 20 190 40 190H160C180 190 190 180 190 160V60C190 40 180 30 160 30H40Z" fill="#5D3FD3" rx="20"/>
+  <!-- Main camera body with notch at top -->
+  <g>
+    <!-- Bottom rounded rectangle -->
+    <rect x="20" y="50" width="160" height="130" rx="25" fill="#6B3FE0"/>
+    
+    <!-- Top notch section -->
+    <path d="M 60 50 L 70 20 Q 100 10 130 20 L 140 50 Z" fill="#6B3FE0"/>
+    
+    <!-- Top curve connecting notch -->
+    <path d="M 60 50 Q 50 40 50 50 L 50 70" fill="#6B3FE0"/>
+    <path d="M 140 50 Q 150 40 150 50 L 150 70" fill="#6B3FE0"/>
+  </g>
   
-  <!-- Flash -->
-  <rect x="140" y="45" width="20" height="20" rx="5" fill="white" opacity="0.6"/>
+  <!-- Outer white lens ring -->
+  <circle cx="100" cy="105" r="45" fill="none" stroke="white" stroke-width="16"/>
   
-  <!-- Lens outer ring -->
-  <circle cx="100" cy="110" r="55" fill="none" stroke="white" stroke-width="12"/>
+  <!-- Inner purple lens circle -->
+  <circle cx="100" cy="105" r="22" fill="#6B3FE0"/>
   
-  <!-- Lens inner circle -->
-  <circle cx="100" cy="110" r="30" fill="#5D3FD3"/>
+  <!-- Flash light (optional small detail) -->
+  <rect x="130" y="35" width="12" height="12" rx="2" fill="white" opacity="0.5"/>
 </svg>
