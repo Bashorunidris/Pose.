@@ -1,1 +1,13 @@
-https://i.ibb.co/vCS2tHtb/1000356465-removebg-preview.png
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rounded square -->
+  <path d="M256 48C312 48 360 48 384 72C408 96 408 144 408 200V312C408 368 408 416 384 440C360 464 312 464 256 464C200 464 152 464 128 440C104 416 104 368 104 312V200C104 144 104 96 128 72C152 48 200 48 256 48Z" fill="#5D3FD3"/>
+  
+  <!-- Camera lens - outer white ring -->
+  <circle cx="256" cy="256" r="100" fill="none" stroke="white" stroke-width="24"/>
+  
+  <!-- Camera lens - inner purple circle -->
+  <circle cx="256" cy="256" r="50" fill="#5D3FD3"/>
+  
+  <!-- Flash indicator - top right -->
+  <rect x="340" y="100" width="30" height="30" rx="8" fill="white" opacity="0.4"/>
+</svg>
