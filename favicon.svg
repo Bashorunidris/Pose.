@@ -1,13 +1,13 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background rounded square -->
-  <path d="M256 48C312 48 360 48 384 72C408 96 408 144 408 200V312C408 368 408 416 384 440C360 464 312 464 256 464C200 464 152 464 128 440C104 416 104 368 104 312V200C104 144 104 96 128 72C152 48 200 48 256 48Z" fill="#5D3FD3"/>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main body -->
+  <path d="M40 30C20 30 10 40 10 60V160C10 180 20 190 40 190H160C180 190 190 180 190 160V60C190 40 180 30 160 30H40Z" fill="#5D3FD3" rx="20"/>
   
-  <!-- Camera lens - outer white ring -->
-  <circle cx="256" cy="256" r="100" fill="none" stroke="white" stroke-width="24"/>
+  <!-- Flash -->
+  <rect x="140" y="45" width="20" height="20" rx="5" fill="white" opacity="0.6"/>
   
-  <!-- Camera lens - inner purple circle -->
-  <circle cx="256" cy="256" r="50" fill="#5D3FD3"/>
+  <!-- Lens outer ring -->
+  <circle cx="100" cy="110" r="55" fill="none" stroke="white" stroke-width="12"/>
   
-  <!-- Flash indicator - top right -->
-  <rect x="340" y="100" width="30" height="30" rx="8" fill="white" opacity="0.4"/>
+  <!-- Lens inner circle -->
+  <circle cx="100" cy="110" r="30" fill="#5D3FD3"/>
 </svg>
