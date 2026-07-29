@@ -8446,6 +8446,90 @@
             background: #000;
         }
 
+        /* Desktop / laptop: show the app in a centered mobile-sized phone shell */
+        @media (min-width: 768px) {
+            :root {
+                --pose-shell-w: 420px;
+                --pose-shell-h: min(100dvh - 32px, 860px);
+            }
+
+            body {
+                background: #0c0c0f !important;
+            }
+
+            .navbar {
+                position: fixed !important;
+                top: calc(50% - (var(--pose-shell-h) / 2)) !important;
+                left: 50% !important;
+                right: auto !important;
+                width: var(--pose-shell-w) !important;
+                max-width: calc(100vw - 24px);
+                transform: translateX(-50%);
+                z-index: 1100;
+                box-sizing: border-box;
+                border-radius: 20px 20px 0 0;
+                background: transparent;
+            }
+
+            .bottom-nav {
+                left: 50% !important;
+                right: auto !important;
+                width: var(--pose-shell-w) !important;
+                max-width: calc(100vw - 24px);
+                transform: translateX(-50%);
+                bottom: calc(50% - (var(--pose-shell-h) / 2)) !important;
+                border-radius: 0 0 20px 20px;
+                box-sizing: border-box;
+            }
+
+            .tab-content {
+                left: 50% !important;
+                right: auto !important;
+                width: var(--pose-shell-w) !important;
+                max-width: calc(100vw - 24px);
+                top: calc(50% - (var(--pose-shell-h) / 2)) !important;
+                bottom: auto !important;
+                height: var(--pose-shell-h) !important;
+                transform: translateX(-50%);
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow:
+                    0 0 0 1px rgba(255, 255, 255, 0.08),
+                    0 24px 80px rgba(0, 0, 0, 0.55);
+                box-sizing: border-box;
+            }
+
+            .video-feed {
+                height: 100% !important;
+                width: 100% !important;
+            }
+
+            .video-post {
+                height: 100% !important;
+                min-height: 100%;
+                width: 100%;
+            }
+
+            /* Trend fullscreen player also stays phone-sized */
+            #trendFullscreenModal {
+                background: rgba(0, 0, 0, 0.72) !important;
+            }
+
+            #trendFullscreenVideoContainer.video-post {
+                left: 50% !important;
+                top: 50% !important;
+                right: auto !important;
+                bottom: auto !important;
+                width: var(--pose-shell-w) !important;
+                max-width: calc(100vw - 24px);
+                height: var(--pose-shell-h) !important;
+                transform: translate(-50%, -50%);
+                border-radius: 20px;
+                overflow: hidden;
+                position: fixed !important;
+            }
+        }
+
         /* Custom video seek bar (timeline) for For You / Trend / etc. */
         .video-seek-bar {
             position: absolute;
@@ -40259,7 +40343,7 @@
                 // post-to-post swipe, but overscroll-behavior on the track keeps the
                 // gesture from bleeding into the outer feed).
                 const slides = photoUrls.map((url, i) =>
-                    `<img src="${cldImage(url, { variant: 'fullscreen' })}" srcset="${cldSrcset(url, [360, 720, 1080, 1440])}" sizes="100vw" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" style="flex:0 0 100%; width:100%; height:100%; object-fit:cover; scroll-snap-align:center;" alt="Photo ${i + 1} of ${photoUrls.length}"/>`
+                    `<img src="${cldImage(url, { variant: 'fullscreen' })}" srcset="${cldSrcset(url, [360, 720, 1080, 1440])}" sizes="100vw" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" style="flex:0 0 100%; width:100%; height:100%; object-fit:contain; background:#000; scroll-snap-align:center;" alt="Photo ${i + 1} of ${photoUrls.length}"/>`
                 ).join('');
                 const dots = photoUrls.map((_, i) =>
                     `<span class="foryou-photo-dot${i === 0 ? ' active' : ''}"></span>`
@@ -40274,9 +40358,9 @@
             } else if (isPhoto) {
                 const optimizedPhotoUrl = cldImage(photoUrls[0] || videoUrl, { variant: 'fullscreen' });
                 const optimizedPhotoSrcset = cldSrcset(photoUrls[0] || videoUrl, [360, 720, 1080, 1440]);
-                mediaHtml = `<img src="${optimizedPhotoUrl}" srcset="${optimizedPhotoSrcset}" sizes="100vw" loading="lazy" decoding="async" data-photo-id="${data.id || ''}" style="width: 100%; height: 100%; object-fit: cover;" alt="Photo"/>`;
+                mediaHtml = `<img src="${optimizedPhotoUrl}" srcset="${optimizedPhotoSrcset}" sizes="100vw" loading="lazy" decoding="async" data-photo-id="${data.id || ''}" style="width: 100%; height: 100%; object-fit: contain; background: #000;" alt="Photo"/>`;
             } else {
-                mediaHtml = `<video src="${optimizedVideoUrl}" data-video-id="${data.id || ''}" preload="auto" loop style="width: 100%; height: 100%; object-fit: cover; transform: ${mirrorStyle}; -webkit-transform: ${mirrorStyle}; -moz-transform: ${mirrorStyle};" playsinline webkit-playsinline></video>`;
+                mediaHtml = `<video src="${optimizedVideoUrl}" data-video-id="${data.id || ''}" preload="auto" loop style="width: 100%; height: 100%; object-fit: contain; background: #000; transform: ${mirrorStyle}; -webkit-transform: ${mirrorStyle}; -moz-transform: ${mirrorStyle};" playsinline webkit-playsinline></video>`;
             }
 
             postDiv.innerHTML = `
@@ -78884,7 +78968,7 @@ For more help, visit: help.pose.app
              let trendMediaHtml;
              if (isPhoto && photoUrls.length > 1) {
                  const slides = photoUrls.map((url, i) =>
-                     `<img src="${cldImage(url, { variant: 'fullscreen' })}" srcset="${cldSrcset(url, [360, 720, 1080, 1440])}" sizes="100vw" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" style="flex:0 0 100%; width:100%; height:100%; object-fit:cover; scroll-snap-align:center;" alt="Photo ${i + 1} of ${photoUrls.length}"/>`
+                     `<img src="${cldImage(url, { variant: 'fullscreen' })}" srcset="${cldSrcset(url, [360, 720, 1080, 1440])}" sizes="100vw" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" style="flex:0 0 100%; width:100%; height:100%; object-fit:contain; background:#000; scroll-snap-align:center;" alt="Photo ${i + 1} of ${photoUrls.length}"/>`
                  ).join('');
                  const dots = photoUrls.map((_, i) =>
                      `<span class="foryou-photo-dot${i === 0 ? ' active' : ''}"></span>`
@@ -78897,9 +78981,9 @@ For more help, visit: help.pose.app
                      <div class="foryou-photo-counter">1/${photoUrls.length}</div>
                  </div>`;
              } else if (isPhoto) {
-                 trendMediaHtml = `<img src="${cldImage(photoUrls[0] || video.videoUrl, { variant: 'fullscreen' })}" srcset="${cldSrcset(photoUrls[0] || video.videoUrl, [360, 720, 1080, 1440])}" sizes="100vw" loading="eager" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Photo"/>`;
+                 trendMediaHtml = `<img src="${cldImage(photoUrls[0] || video.videoUrl, { variant: 'fullscreen' })}" srcset="${cldSrcset(photoUrls[0] || video.videoUrl, [360, 720, 1080, 1440])}" sizes="100vw" loading="eager" decoding="async" style="width: 100%; height: 100%; object-fit: contain; background: #000;" alt="Photo"/>`;
              } else {
-                 trendMediaHtml = `<video src="${cldVideo(video.videoUrl, { variant: 'fullscreen' })}" preload="auto" loop style="width: 100%; height: 100%; object-fit: cover; transform: ${mirrorStyle};" playsinline webkit-playsinline></video>`;
+                 trendMediaHtml = `<video src="${cldVideo(video.videoUrl, { variant: 'fullscreen' })}" preload="auto" loop style="width: 100%; height: 100%; object-fit: contain; background: #000; transform: ${mirrorStyle};" playsinline webkit-playsinline></video>`;
              }
 
              videoContainer.innerHTML = `
