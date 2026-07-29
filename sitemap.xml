@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Replace poseweb.site with your live domain before deploying. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://poseweb.site/</loc>
+    <loc>https://www.poseweb.site/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://poseweb.site/index.html</loc>
+    <loc>https://www.poseweb.site/index.html</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://poseweb.site/posemusic.html</loc>
+    <loc>https://www.poseweb.site/posemusic.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://poseweb.site/poselivevisual.html</loc>
+    <loc>https://www.poseweb.site/poselivevisual.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>

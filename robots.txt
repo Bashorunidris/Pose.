@@ -1,6 +1,3 @@
-# Pose — robots.txt
-# Replace poseweb.site with your live domain before deploying.
-
 User-agent: *
 Allow: /
 Allow: /index.html
@@ -15,4 +12,4 @@ Disallow: /poselivechat.html
 Disallow: /zoho-domain-verification.html
 Disallow: /functions/
 
-Sitemap: https://poseweb.site/sitemap.xml
+Sitemap: https://www.poseweb.site/sitemap.xml
