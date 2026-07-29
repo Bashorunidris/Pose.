@@ -4,10 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pose Channel Dashboard</title>
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Private Pose channel dashboard for creators.">
-  <meta name="theme-color" content="#4C1D95">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -83,76 +79,7 @@
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-/* Firebase URL Display Container */
-.firebase-url-container {
-  margin: 16px 0;
-  padding: 14px 16px;
-  background: #800080;
-  border: 1px solid #333;
-  border-radius: 10px;
-}
 
-.firebase-url-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #ccc;
-  margin-bottom: 8px;
-}
-
-.firebase-url-display {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #ffffff;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 8px 10px;
-}
-
-.firebase-url-text {
-  flex: 1;
-  font-size: 13px;
-  color: #800080;
-  white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  font-family: 'Courier New', monospace;
-}
-
-.firebase-url-text::-webkit-scrollbar {
-  display: none;
-}
-
-.firebase-url-copy-btn {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  background: #d4af37;
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.firebase-url-copy-btn:hover {
-  background: #e6c34d;
-}
-
-.firebase-url-copy-btn:active {
-  transform: scale(0.96);
-}
-
-.firebase-url-copy-btn.copied {
-  background: #4caf50;
-  color: #fff;
-}
     /* ==============================
        TOP BAR
     ============================== */
@@ -1317,7 +1244,7 @@ select.ufield-input { cursor: pointer; }
   width: 110px; text-align: center;
   background: #fff; border: 1.5px solid var(--purple-pale);
   border-radius: 10px; padding: 2px 6px; outline: none;
-  moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 .ucoin-num-input:focus { border-color: var(--purple-main); box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
 .ucoin-num-input::-webkit-outer-spin-button,
@@ -1649,16 +1576,7 @@ input[type=range].ucoin-slider {
   margin-top: 4px;
 }
 .av-vcard-date { font-size: 10.5px; color: var(--gray-400); margin-top: 3px; }
-.av-season-analytics-btn {
-  background: var(--purple-ghost);
-  color: var(--purple-deep);
-  border: none;
-  border-radius: 8px;
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  margin-right: 6px;
-}
+
 /* Season card */
 .av-season-card {
   background: var(--white); border-radius: 16px;
@@ -4220,23 +4138,9 @@ TAB 1 — SINGLE VIDEO
 <!-- Video File -->
 <div class="upload-card">
 <div class="upload-card-title">
-<i class="fas fa-video"></i> Video Source
+<i class="fas fa-video"></i> Video File
 <span class="ureq-dot" style="margin-left:2px;"></span>
 </div>
-
-<!-- Source mode toggle -->
-<div class="uprice-toggle" style="margin-bottom:14px;">
-  <div class="uprice-opt active" id="sSrcFileBtn" onclick="setVideoSourceMode('s','file')">
-    <i class="fas fa-cloud-arrow-up"></i> Upload File
-  </div>
-  <div class="uprice-opt" id="sSrcUrlBtn" onclick="setVideoSourceMode('s','url')">
-    <i class="fas fa-link"></i> Add via URL
-  </div>
-</div>
-<input type="hidden" id="sVideoSourceMode" value="file">
-
-<!-- File upload mode (existing dropzone) -->
-<div id="sVideoFileWrap">
 <div class="udrop" id="sVideoDrop"
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
@@ -4245,7 +4149,7 @@ ondrop="handleDrop(event,'sVideoFile','sVideoPreview','sVideoProgress')">
 onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
 <div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
 <div class="udrop-label">Tap or drag your video here</div>
-<div class="udrop-sub">MP4 · MOV · AVI  ·  Up to 6 hours</div>
+<div class="udrop-sub">MP4 · MOV · AVI  ·  Up to 6 hours</div>
 </div>
 <div class="ufile-preview" id="sVideoPreview" style="display:none;">
 <i class="fas fa-file-video"></i>
@@ -4264,23 +4168,6 @@ onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
 </div>
 <div class="uprog-bg"><div class="uprog-fill" id="sVideoProgFill"></div></div>
 </div>
-</div>
-
-<!-- URL mode -->
-<div id="sVideoUrlWrap" style="display:none;">
-  <input class="ufield-input" type="url" id="sVideoUrlInput"
-    placeholder="Paste a YouTube, Vimeo, or direct .mp4 URL…"
-    oninput="onVideoUrlInput('s')">
-  <div class="uhelp" style="margin-top:8px;">
-    <i class="fas fa-circle-info"></i>
-    YouTube/Vimeo links play in an embedded player. Direct file links (.mp4, .m3u8) play natively — fastest option, skips upload entirely.
-  </div>
-  <div id="sVideoUrlPreview" style="display:none;margin-top:10px;padding:10px 12px;background:var(--purple-ghost);border:1px solid var(--purple-pale);border-radius:10px;font-size:12.5px;color:var(--purple-deep);">
-    <i class="fas fa-circle-check" style="margin-right:6px;color:#059669;"></i>
-    <span id="sVideoUrlPreviewText">Valid link detected</span>
-  </div>
-</div>
-
 <div class="uhelp">
 <i class="fas fa-circle-info"></i>
 Files up to 4GB are supported. Do not close this page while uploading.
@@ -4292,6 +4179,7 @@ Files up to 4GB are supported. Do not close this page while uploading.
 </div>
 </div>
 </div>
+
 <!-- Trailer (optional) -->
 <div class="upload-card">
 <div class="upload-card-title">
@@ -4386,28 +4274,7 @@ placeholder="Tell viewers what this video is about… (at least 10 words require
 
 <!-- Thumbnail -->
 <div class="ufield">
-<div class="ufield-label">Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(A MUST )</span></div>
-<div class="uprice-toggle" style="margin-bottom:10px;">
-  <div class="uprice-opt active" id="sThumbSrcFileBtn" onclick="setThumbSourceMode('s','file')">
-    <i class="fas fa-cloud-arrow-up"></i> Upload File
-  </div>
-  <div class="uprice-opt" id="sThumbSrcUrlBtn" onclick="setThumbSourceMode('s','url')">
-    <i class="fas fa-link"></i> Add via URL
-  </div>
-</div>
-<input type="hidden" id="sThumbSourceMode" value="file">
-
-<div id="sThumbFileWrap">
-  <!-- existing sThumbPreview block goes here unchanged -->
-</div>
-
-<div id="sThumbUrlWrap" style="display:none;">
-  <input class="ufield-input" type="url" id="sThumbUrlInput"
-    placeholder="Paste an image URL…" oninput="onThumbUrlInput('s')">
-  <div id="sThumbUrlPreviewWrap" style="display:none;margin-top:10px;">
-    <img id="sThumbUrlPreviewImg" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
-  </div>
-</div>
+<div class="ufield-label">Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
 <div class="uthumb-preview" id="sThumbPreview" onclick="document.getElementById('sThumbFile').click()">
 <div class="uthumb-placeholder">🎬</div>
 <div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Choose Image</div>
@@ -4688,22 +4555,7 @@ placeholder="e.g. The Lagos Chronicles — Season 1">
 placeholder="What is this season about? (at least 10 words required)"></textarea>
 <div class="uhelp"><i class="fas fa-circle-info"></i> Minimum 10 words required. Helps viewers understand what the season covers.</div>
 </div>
-<div class="uprice-toggle" style="margin-bottom:10px;">
-  <div class="uprice-opt active" id="seaThumbSrcFileBtn" onclick="setThumbSourceMode('sea','file')">
-    <i class="fas fa-cloud-arrow-up"></i> Upload File
-  </div>
-  <div class="uprice-opt" id="seaThumbSrcUrlBtn" onclick="setThumbSourceMode('sea','url')">
-    <i class="fas fa-link"></i> Add via URL
-  </div>
-</div>
-<input type="hidden" id="seaThumbSourceMode" value="file">
-<div id="seaThumbFileWrap"></div>
-<div id="seaThumbUrlWrap" style="display:none;">
-  <input class="ufield-input" type="url" id="seaThumbUrlInput" placeholder="Paste an image URL…" oninput="onThumbUrlInput('sea')">
-  <div id="seaThumbUrlPreviewWrap" style="display:none;margin-top:10px;">
-    <img id="seaThumbUrlPreviewImg" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
-  </div>
-</div>
+
 <!-- Season Thumbnail -->
 <div class="ufield">
 <div class="ufield-label">Season Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
@@ -4743,19 +4595,7 @@ onchange="handleFileSelect(this,'seaTrailerPreview',null)">
 </div>
 <div class="uhelp"><i class="fas fa-circle-info"></i> Trailers go live immediately regardless of episode schedules.</div>
 </div>
-<div class="uprice-toggle" style="margin-bottom:10px;">
-  <div class="uprice-opt active" id="seaTrlSrcFileBtn" onclick="setTrailerSourceMode('sea','file')">
-    <i class="fas fa-cloud-arrow-up"></i> Upload File
-  </div>
-  <div class="uprice-opt" id="seaTrlSrcUrlBtn" onclick="setTrailerSourceMode('sea','url')">
-    <i class="fas fa-link"></i> Add via URL
-  </div>
-</div>
-<input type="hidden" id="seaTrailerSourceMode" value="file">
-<div id="seaTrailerFileWrap"></div>
-<div id="seaTrailerUrlWrap" style="display:none;">
-  <input class="ufield-input" type="url" id="seaTrailerUrlInput" placeholder="Paste a trailer video URL…" oninput="onTrailerUrlInput('sea')">
-</div>
+
 <!-- Season Age Rating -->
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Age Rating (applies to all episodes)</div>
@@ -5035,33 +4875,6 @@ onchange="handleThumb(this,'epThumbPreview')">
 <!-- Episode Video + Trailer -->
 <div class="upload-card">
 <div class="upload-card-title"><i class="fas fa-video"></i> Episode Video File <span class="ureq-dot" style="margin-left:2px;"></span></div>
-<div class="uprice-toggle" style="margin-bottom:14px;">
-  <div class="uprice-opt active" id="epSrcFileBtn" onclick="setVideoSourceMode('ep','file')">
-    <i class="fas fa-cloud-arrow-up"></i> Upload File
-  </div>
-  <div class="uprice-opt" id="epSrcUrlBtn" onclick="setVideoSourceMode('ep','url')">
-    <i class="fas fa-link"></i> Add via URL
-  </div>
-</div>
-<input type="hidden" id="epVideoSourceMode" value="file">
-
-<div id="epVideoFileWrap">
-  <!-- existing epVideoDrop block goes here unchanged -->
-</div>
-
-<div id="epVideoUrlWrap" style="display:none;">
-  <input class="ufield-input" type="url" id="epVideoUrlInput"
-    placeholder="Paste a YouTube, Vimeo, or direct .mp4 URL…"
-    oninput="onVideoUrlInput('ep')">
-  <div class="uhelp" style="margin-top:8px;">
-    <i class="fas fa-circle-info"></i>
-    YouTube/Vimeo links play in an embedded player. Direct file links (.mp4, .m3u8) play natively.
-  </div>
-  <div id="epVideoUrlPreview" style="display:none;margin-top:10px;padding:10px 12px;background:var(--purple-ghost);border:1px solid var(--purple-pale);border-radius:10px;font-size:12.5px;color:var(--purple-deep);">
-    <i class="fas fa-circle-check" style="margin-right:6px;color:#059669;"></i>
-    <span id="epVideoUrlPreviewText">Valid link detected</span>
-  </div>
-</div>
 <div class="udrop" id="epVideoDrop"
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
@@ -6055,7 +5868,9 @@ padding:2px 8px;border-radius:20px;background:var(--red);color:white;">
         };
       }
     };
-  </script><script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script src="pose-cache-service.js"></script>
@@ -6331,65 +6146,7 @@ db.collection('channels').doc(CHANNEL_UID)
       const l = document.getElementById('dashLoader');
       if (l) l.classList.add('hidden');
     }
-/* ====================================================
-   VIDEO SOURCE MODE — File Upload vs URL
-==================================================== */
-const videoUrlValue = { s: '', ep: '' };
 
-function detectUrlType(url) {
-  if (/youtu\.?be/.test(url)) return 'youtube';
-  if (/vimeo\.com/.test(url)) return 'vimeo';
-  if (/\.(mp4|webm|mov|m3u8)(\?|$)/i.test(url)) return 'direct';
-  return 'unknown';
-}
-
-function extractYouTubeId(url) {
-  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
-function extractVimeoId(url) {
-  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  return m ? m[1] : null;
-}
-
-function setVideoSourceMode(prefix, mode) {
-  document.getElementById(prefix + 'SrcFileBtn')?.classList.toggle('active', mode === 'file');
-  document.getElementById(prefix + 'SrcUrlBtn')?.classList.toggle('active', mode === 'url');
-  document.getElementById(prefix + 'VideoFileWrap').style.display = mode === 'file' ? 'block' : 'none';
-  document.getElementById(prefix + 'VideoUrlWrap').style.display  = mode === 'url'  ? 'block' : 'none';
-  document.getElementById(prefix + 'VideoSourceMode').value = mode;
-
-  // Clear whichever mode isn't active so validation doesn't see stale data
-  if (mode === 'url') {
-    if (prefix === 's') storeFileRef('sVideoFile', null);
-    else { epVideoFile_ = null; }
-    document.getElementById(prefix + 'VideoPreview').style.display = 'none';
-  } else {
-    videoUrlValue[prefix] = '';
-    document.getElementById(prefix + 'VideoUrlInput').value = '';
-    document.getElementById(prefix + 'VideoUrlPreview').style.display = 'none';
-  }
-}
-
-function onVideoUrlInput(prefix) {
-  const input = document.getElementById(prefix + 'VideoUrlInput');
-  const url = input.value.trim();
-  videoUrlValue[prefix] = url;
-
-  const previewWrap = document.getElementById(prefix + 'VideoUrlPreview');
-  const previewText = document.getElementById(prefix + 'VideoUrlPreviewText');
-  if (!url) { previewWrap.style.display = 'none'; return; }
-
-  const type = detectUrlType(url);
-  const labels = {
-    youtube: '✔ YouTube link detected — will embed in player',
-    vimeo:   '✔ Vimeo link detected — will embed in player',
-    direct:  '✔ Direct video file link — plays natively',
-    unknown: '⚠ Link format not recognized — will attempt to embed anyway',
-  };
-  previewText.textContent = labels[type];
-  previewWrap.style.display = 'block';
-}
     /* ====================================================
        HOME PAGE
     ==================================================== */
@@ -9782,12 +9539,8 @@ async function postSingleVideo(resumeRecord) {
 
   // Validate fields
   let hasError = false;
-  const sSrcMode = document.getElementById('sVideoSourceMode').value;
-  if (sSrcMode === 'file' && !singleVideoFile) {
+  if (!singleVideoFile) {
     shakeField('sVideoDrop'); scrollTo_('sVideoDrop'); hasError = true;
-  }
-  if (sSrcMode === 'url' && !videoUrlValue.s) {
-    shakeField('sVideoUrlInput'); scrollTo_('sVideoUrlInput'); hasError = true;
   }
   if (!title) {
     shakeField('sTitle'); if (!hasError) scrollTo_('sTitle'); hasError = true;
@@ -9795,8 +9548,9 @@ async function postSingleVideo(resumeRecord) {
   if (!category) {
     shakeField('sCategory'); if (!hasError) scrollTo_('sCategory'); hasError = true;
   }
-
-
+  if (!getSingleThumbFile()) {
+    shakeField('sThumbPreview'); if (!hasError) scrollTo_('sThumbPreview'); hasError = true;
+  }
   if (!rating) {
     document.getElementById('sRatingPills')
       .querySelectorAll('.urating-pill')
@@ -9819,19 +9573,9 @@ async function postSingleVideo(resumeRecord) {
   if (!singleTrailerFile)  steps[1].label = 'Trailer (skipped)';
   if (!getSingleThumbFile()) steps[2].label = 'Thumbnail (skipped)';
 
-  const sSrcModeForPopup = document.getElementById('sVideoSourceMode').value;
-  if (sSrcModeForPopup === 'url') steps[0].label = 'Linking video';
-
   showUploadPopup(
-    sSrcModeForPopup === 'url' ? 'Video URL' : singleVideoFile.name,
-    sSrcModeForPopup === 'url' ? videoUrlValue.s : formatBytes(singleVideoFile.size),
-    steps
-  );
-  
-   document.getElementById('sVideoSourceMode').value;
-  showUploadPopup(
-    sSrcModeForPopup === 'url' ? 'Video URL' : singleVideoFile.name,
-    sSrcModeForPopup === 'url' ? videoUrlValue.s : formatBytes(singleVideoFile.size),
+    singleVideoFile.name,
+    formatBytes(singleVideoFile.size),
     steps
   );
 
@@ -9863,15 +9607,12 @@ async function postSingleVideo(resumeRecord) {
     if (singleTrailerFile) setUploadStep(1, 'active', 'Uploading…'); else setUploadStep(1, 'done', 'Skipped');
     if (thumbFile)          setUploadStep(2, 'active', 'Uploading…'); else setUploadStep(2, 'done', 'Skipped');
 
-    const sSrcMode = document.getElementById('sVideoSourceMode').value;
-    const isUrlMode = sSrcMode === 'url';
-
-    let videoPct   = isUrlMode ? 100 : 0;
+    let videoPct   = 0;
     let trailerPct = singleTrailerFile ? 0 : 100;
     let thumbPct   = thumbFile ? 0 : 100;
     const renderOverall = (label) => {
       const overall = videoPct * 0.7 + trailerPct * 0.1 + thumbPct * 0.1;
-      const eta = (isUrlMode || !singleVideoFile) ? '' : calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
+      const eta = calcETA((singleVideoFile.size * videoPct) / 100, singleVideoFile.size);
       updateUploadProgress(Math.round(overall), label, eta);
     };
 
@@ -9879,10 +9620,10 @@ async function postSingleVideo(resumeRecord) {
       kind:        'single',
       videoDocId:  videoId,
       folder,
-      fileName:    isUrlMode ? (videoUrlValue.s || '') : singleVideoFile.name,
-      fileSize:    isUrlMode ? 0 : singleVideoFile.size,
-      contentType: isUrlMode ? 'external/url' : singleVideoFile.type,
-      file:        isUrlMode ? null : singleVideoFile,
+      fileName:    singleVideoFile.name,
+      fileSize:    singleVideoFile.size,
+      contentType: singleVideoFile.type,
+      file:        singleVideoFile,
       thumbFile:   thumbFile || null,
       trailerFile: singleTrailerFile || null,
       formSnapshot,
@@ -9895,34 +9636,39 @@ async function postSingleVideo(resumeRecord) {
       persistBase,
     };
 
-    
- 
-const videoPromise = isUrlMode
-  ? Promise.resolve({ url: videoUrlValue.s, chunks: [], isChunked: false, isExternal: true, sourceType: detectUrlType(videoUrlValue.s) })
-      .then(r => { setUploadStep(0, 'done', 'Linked ✓'); renderOverall('Video linked'); return r; })
-  : uploadFile(singleVideoFile, 'video', null, folder + '/main',
-      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); }, preS, chunkResumeCtx
-    ).then(r => { setUploadStep(0, 'done', 'Done ✓'); return r; });
+    const videoPromise = uploadFile(
+      singleVideoFile, 'video', null, folder + '/main',
+      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
+      preS, chunkResumeCtx
+    ).then(r => {
+      setUploadStep(0, 'done', 'Done ✓');
+      return r;
+    });
 
-const trailerPromise = resolveMediaSource(
-  singleTrailerFile, trailerUrlValue.s, folder + '/trailer', 'video',
-  (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
-).then(r => { setUploadStep(1, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
+    const trailerPromise = singleTrailerFile
+      ? uploadFile(singleTrailerFile, 'video', null, folder + '/trailer',
+          (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
+        ).then(r => {
+          setUploadStep(1, 'done', 'Done ✓');
+          return r.url;
+        })
+      : Promise.resolve(null);
 
-const thumbPromise = resolveMediaSource(
-  getSingleThumbFile(), thumbUrlValue.s, folder + '/thumb', 'image',
-  (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
-).then(r => { setUploadStep(2, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
-         
-       
+    const thumbPromise = thumbFile
+      ? uploadFile(thumbFile, 'image', null, folder + '/thumb',
+          (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
+        ).then(r => {
+          setUploadStep(2, 'done', 'Done ✓');
+          return r.url;
+        })
+      : Promise.resolve(null);
+
     const [videoResult, trailerUrl, thumbUrl] = await Promise.all([videoPromise, trailerPromise, thumbPromise]);
 
-    const videoUrl      = videoResult.url;
-    const videoChunks   = videoResult.chunks;
-    const isChunked     = videoResult.isChunked;
-    const isExternalUrl = videoResult.isExternal || false;
-    const videoSourceType = videoResult.sourceType || 'direct';
-    
+    const videoUrl    = videoResult.url;
+    const videoChunks = videoResult.chunks;
+    const isChunked   = videoResult.isChunked;
+
     // Step 3 — Save to Firestore
     setUploadStep(3, 'active', 'Saving…');
     updateUploadProgress(95, 'Saving to database…', '');
@@ -9986,8 +9732,6 @@ const thumbPromise = resolveMediaSource(
       revenue:      0,
       channelId:    CHANNEL_UID,
       createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
-      isExternalVideo: videoResult.isExternal || false,
-videoSourceType: videoResult.sourceType || 'direct',
     };
 
     // Retry Firestore save up to 3 times
@@ -10078,11 +9822,10 @@ videoSourceType: videoResult.sourceType || 'direct',
       cancelBtn.style.borderColor = '#FECACA';
     }
 
-   btn.disabled = false;
+    btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
   }
 }
-
 
 /* ====================================================
    RESUME UNFINISHED UPLOAD (after reload / reopen)
@@ -10245,9 +9988,13 @@ async function createSeason() {
     let trailerUrl = null;
     let thumbUrl   = null;
 
-   const seaThumb = document.getElementById('seaThumbFile').files[0];
-trailerUrl = (await resolveMediaSource(seasonTrailerFile, trailerUrlValue.sea, folder + '/trailer', 'video')).url;
-thumbUrl   = (await resolveMediaSource(seaThumb, thumbUrlValue.sea, folder + '/thumb', 'image')).url;
+    if (seasonTrailerFile) {
+      trailerUrl = (await uploadFile(seasonTrailerFile, 'video', null, folder + '/trailer')).url;
+    }
+    const seaThumb = document.getElementById('seaThumbFile').files[0];
+    if (seaThumb) {
+      thumbUrl = (await uploadFile(seaThumb, 'image', null, folder + '/thumb')).url;
+    }
 
     const isScheduled  = document.getElementById('seaSchedToggle').checked;
     const schedDTVal   = document.getElementById('seaSchedDT').value;
@@ -10508,10 +10255,9 @@ document.getElementById('episodeBlock').style.display = 'block';
     alert('Please create or select a season first.');
     return;
   }
-  const epSrcMode = document.getElementById('epVideoSourceMode').value;
-if (epSrcMode === 'file' && !epVideoFile_) { shakeField('epVideoDrop'); scrollTo_('epVideoDrop'); hasError = true; }
-if (epSrcMode === 'url'  && !videoUrlValue.ep) { shakeField('epVideoUrlInput'); scrollTo_('epVideoUrlInput'); hasError = true; }
-if (!document.getElementById('epThumbFile').files[0] && !thumbUrlValue.ep) { shakeField('epThumbPreview'); if (!hasError) scrollTo_('epThumbPreview'); hasError = true; }
+  if (!epVideoFile_) {
+    shakeField('epVideoDrop'); scrollTo_('epVideoDrop'); hasError = true;
+  }
   if (!epTitle) {
     shakeField('epTitle'); if (!hasError) scrollTo_('epTitle'); hasError = true;
   }
@@ -10536,10 +10282,10 @@ if (!document.getElementById('epThumbFile').files[0] && !thumbUrlValue.ep) { sha
   ];
   if (!epTrailerFile_) steps[1].label = 'Trailer (skipped)';
   if (!document.getElementById('epThumbFile').files[0]) steps[2].label = 'Thumbnail (skipped)';
-const isEpUrlModeEarly = document.getElementById('epVideoSourceMode').value === 'url';
+
   showUploadPopup(
-    isEpUrlModeEarly ? 'Video URL' : epVideoFile_.name,
-    isEpUrlModeEarly ? videoUrlValue.ep : formatBytes(epVideoFile_.size),
+    epVideoFile_.name,
+    formatBytes(epVideoFile_.size),
     steps
   );
 
@@ -10572,26 +10318,23 @@ const isEpUrlModeEarly = document.getElementById('epVideoSourceMode').value === 
       updateUploadProgress(Math.round(overall), label, '');
     };
 
-   
-
-   const isEpUrlMode = document.getElementById('epVideoSourceMode').value === 'url';
-
-const videoPromise = isEpUrlMode
-  ? Promise.resolve({ url: videoUrlValue.ep, chunks: [], isChunked: false, isExternal: true, sourceType: detectUrlType(videoUrlValue.ep) })
-      .then(r => { setUploadStep(0, 'done', 'Linked ✓'); return r; })
-  : uploadFile(epVideoFile_, 'video', null, folder + '/main',
-      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); }, preEp
+    const videoPromise = uploadFile(
+      epVideoFile_, 'video', null, folder + '/main',
+      (pct, label) => { videoPct = pct; renderOverall(label || 'Uploading video…'); },
+      preEp
     ).then(r => { setUploadStep(0, 'done', 'Done ✓'); return r; });
 
-const trailerPromise = resolveMediaSource(
-  epTrailerFile_, trailerUrlValue.ep, folder + '/trailer', 'video',
-  (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
-).then(r => { setUploadStep(1, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
+    const trailerPromise = epTrailerFile_
+      ? uploadFile(epTrailerFile_, 'video', null, folder + '/trailer',
+          (pct) => { trailerPct = pct; renderOverall('Uploading trailer…'); }
+        ).then(r => { setUploadStep(1, 'done', 'Done ✓'); return r.url; })
+      : Promise.resolve(null);
 
-const thumbPromise = resolveMediaSource(
-  document.getElementById('epThumbFile').files[0], thumbUrlValue.ep, folder + '/thumb', 'image',
-  (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
-).then(r => { setUploadStep(2, 'done', r.isExternal ? 'Linked ✓' : 'Done ✓'); return r.url; });
+    const thumbPromise = epThumb
+      ? uploadFile(epThumb, 'image', null, folder + '/thumb',
+          (pct) => { thumbPct = pct; renderOverall('Uploading thumbnail…'); }
+        ).then(r => { setUploadStep(2, 'done', 'Done ✓'); return r.url; })
+      : Promise.resolve(null);
 
     const [videoResult, trailerUrl, thumbUrl, seaSnapForEp] =
       await Promise.all([videoPromise, trailerPromise, thumbPromise, seasonFetchPromise]);
@@ -10665,8 +10408,6 @@ const thumbPromise = resolveMediaSource(
     const epStatus = isScheduled ? 'scheduled' : 'live';
 
     batch.set(epRef, {
-      isExternalVideo: videoResult.isExternal || false,
-videoSourceType: videoResult.sourceType || 'direct',
       episodeNumber: epNumber,
       title:         epTitle,
       description:   document.getElementById('epDesc').value.trim(),
@@ -11280,10 +11021,6 @@ function renderAvSeasons() {
             onclick="event.stopPropagation();confirmDeleteSeason('${s.id}')">
             <i class="fas fa-trash"></i>
           </button>
-          <button class="av-season-analytics-btn" title="View season analytics"
-  onclick="event.stopPropagation();openSeasonAnalytics('${s.id}')">
-  <i class="fas fa-chart-line"></i>
-</button>
           <svg class="av-season-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M6 9l6 6 6-6"/>
           </svg>
@@ -11292,43 +11029,6 @@ function renderAvSeasons() {
       </div>`;
   }).join('');
 }
-
-async function openSeasonAnalytics(seasonId) {
-  const sea = avSeasons.find(s => s.id === seasonId);
-  if (!sea) return;
-
-  let episodes = sea._episodes;
-  if (!episodes) {
-    const snap = await db.collection('channels').doc(CHANNEL_UID)
-      .collection('seasons').doc(seasonId)
-      .collection('episodes').orderBy('episodeNumber').get();
-    episodes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    sea._episodes = episodes;
-  }
-
-  const totalViews    = episodes.reduce((sum, e) => sum + (Number(e.views) || 0), 0);
-  const totalReplays  = episodes.reduce((sum, e) => sum + (Number(e.replays) || 0), 0);
-  const totalRevenue  = episodes.reduce((sum, e) => sum + (Number(e.revenueEarned) || 0), 0);
-  const totalWatchSec = episodes.reduce((sum, e) => sum + (Number(e.totalWatchSeconds) || 0), 0);
-
-  const seasonVideo = {
-    id: seasonId,
-    title: sea.title || 'Untitled Season',
-    priceMode: sea.priceMode === 'free' ? 'free' : 'paid',
-    coinPrice: sea.fullSeasonCoins || 0,
-    views: totalViews,
-    replays: totalReplays,
-    revenueEarned: totalRevenue,
-    totalWatchSeconds: totalWatchSec,
-    ageRating: sea.ageRating,
-    thumbnailURL: sea.thumbnailURL,
-    isSeasonAggregate: true,
-    episodes,
-  };
-
-  openVideoDetail(seasonVideo, 'page-allvideos');
-}
-
 
 async function toggleAvSeason(seasonId) {
   const card    = document.getElementById('avSea-' + seasonId);
@@ -11917,23 +11617,6 @@ function renderVdBody(video) {
     })()}
     ${trailerHTML}
 
-    ${video.isSeasonAggregate ? `
-    <div class="vd-info-card">
-      <div class="vd-info-title"><i class="fas fa-stopwatch" style="color:var(--purple-main);"></i> Season Watch Time</div>
-      <div class="vd-info-row">
-        <span class="vd-info-key">Total Watch Time</span>
-        <span class="vd-info-val">${Math.round((video.totalWatchSeconds || 0) / 3600)} hrs</span>
-      </div>
-    </div>
-    <div class="vd-info-card">
-      <div class="vd-info-title"><i class="fas fa-list" style="color:var(--purple-main);"></i> Episodes (${video.episodes.length})</div>
-      ${video.episodes.map(ep => `
-        <div class="vd-info-row" style="cursor:pointer;" onclick="openVideoDetail(${JSON.stringify(ep).replace(/"/g, '&quot;')}, 'page-allvideos')">
-          <span class="vd-info-key">Ep ${ep.episodeNumber || '?'} · ${ep.title || 'Untitled'}</span>
-          <span class="vd-info-val">👁 ${fmt(ep.views || 0)} · 🪙 ${Math.round(Number(ep.revenueEarned) || 0)}</span>
-        </div>`).join('')}
-    </div>
-    ` : ''}
     <div class="vd-comments-card">
       <div class="vd-comments-header">
         <div class="vd-comments-title">
@@ -13209,63 +12892,6 @@ async function executeDeleteAccount(btn) {
     }
   }
 }
-
-const thumbUrlValue   = { s: '', sea: '', ep: '' };
-const trailerUrlValue = { s: '', sea: '', ep: '' };
-
-function setThumbSourceMode(prefix, mode) {
-  document.getElementById(prefix + 'ThumbSrcFileBtn')?.classList.toggle('active', mode === 'file');
-  document.getElementById(prefix + 'ThumbSrcUrlBtn')?.classList.toggle('active', mode === 'url');
-  document.getElementById(prefix + 'ThumbFileWrap').style.display = mode === 'file' ? 'block' : 'none';
-  document.getElementById(prefix + 'ThumbUrlWrap').style.display  = mode === 'url'  ? 'block' : 'none';
-  document.getElementById(prefix + 'ThumbSourceMode').value = mode;
-  if (mode === 'file') {
-    thumbUrlValue[prefix] = '';
-    document.getElementById(prefix + 'ThumbUrlInput').value = '';
-  } else {
-    if (prefix === 's') singleThumbFileOverride = null;
-    const input = document.getElementById(prefix + 'ThumbFile');
-    if (input) input.value = '';
-  }
-}
-
-function onThumbUrlInput(prefix) {
-  const url = document.getElementById(prefix + 'ThumbUrlInput').value.trim();
-  thumbUrlValue[prefix] = url;
-  const preview = document.getElementById(prefix + 'ThumbUrlPreviewImg');
-  const wrap    = document.getElementById(prefix + 'ThumbUrlPreviewWrap');
-  if (!url) { if (wrap) wrap.style.display = 'none'; return; }
-  if (preview) preview.src = url;
-  if (wrap) wrap.style.display = 'block';
-}
-
-function getSingleThumbUrl() { return thumbUrlValue.s || null; }
-
-function setTrailerSourceMode(prefix, mode) {
-  document.getElementById(prefix + 'TrlSrcFileBtn')?.classList.toggle('active', mode === 'file');
-  document.getElementById(prefix + 'TrlSrcUrlBtn')?.classList.toggle('active', mode === 'url');
-  document.getElementById(prefix + 'TrailerFileWrap').style.display = mode === 'file' ? 'block' : 'none';
-  document.getElementById(prefix + 'TrailerUrlWrap').style.display  = mode === 'url'  ? 'block' : 'none';
-  document.getElementById(prefix + 'TrailerSourceMode').value = mode;
-  if (mode === 'file') {
-    trailerUrlValue[prefix] = '';
-    document.getElementById(prefix + 'TrailerUrlInput').value = '';
-  } else {
-    if (prefix === 's') singleTrailerFile = null;
-    if (prefix === 'sea') seasonTrailerFile = null;
-    if (prefix === 'ep') epTrailerFile_ = null;
-  }
-}
-
-function onTrailerUrlInput(prefix) {
-  trailerUrlValue[prefix] = document.getElementById(prefix + 'TrailerUrlInput').value.trim();
-}
-
-async function resolveMediaSource(file, urlValue, folder, resourceType, onProgress) {
-  if (urlValue) return { url: urlValue, isExternal: true, chunks: [], isChunked: false };
-  if (!file) return { url: null, chunks: [], isChunked: false };
-  return uploadFile(file, resourceType, null, folder, onProgress);
-}
   </script>
 
   <!-- ─── Subcategory map (mirrors event-page.html sub-filters) ─── -->
@@ -13320,7 +12946,5 @@ async function resolveMediaSource(file, urlValue, folder, resourceType, onProgre
     if (wrap) wrap.style.display = '';
   }
   </script>
-
-  
 </body>
   </html>
