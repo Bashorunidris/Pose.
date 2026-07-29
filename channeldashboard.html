@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pose Channel Dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -2855,7 +2858,10 @@ input[type=range].ucoin-slider {
 <div id="page-home" class="page active">
 
 <div class="topbar">
-<div class="topbar-brand">Pose <em>Channel</em></div>
+<div class="topbar-brand" style="display:flex;align-items:center;gap:10px;">
+  <img src="/logo.png" alt="Pose" width="32" height="32" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;">
+  <span>Pose <em>Channel</em></span>
+</div>
 <div class="topbar-actions">
 <button class="btn btn-ghost" style="position:relative;" onclick="openInboxPopup()">
 <i class="fas fa-inbox"></i>

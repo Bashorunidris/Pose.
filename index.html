@@ -17,8 +17,9 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#4C1D95">
     <link rel="canonical" href="https://www.poseweb.site/">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/logo.png" type="image/png" sizes="512x512">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
     <link rel="manifest" href="/site.webmanifest">
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -27,13 +28,13 @@
     <meta property="og:url" content="https://www.poseweb.site/">
     <meta property="og:title" content="Pose - African Creator Platform">
     <meta property="og:description" content="Create, go live, and earn on Pose — short video, music, and live streaming built for African creators.">
-    <meta property="og:image" content="https://www.poseweb.site/og-image.png">
+    <meta property="og:image" content="https://www.poseweb.site/logo-512.png">
     <meta property="og:image:alt" content="Pose — African Creator Platform">
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Pose - African Creator Platform">
     <meta name="twitter:description" content="Create, go live, and earn on Pose — short video, music, and live streaming built for African creators.">
-    <meta name="twitter:image" content="https://www.poseweb.site/og-image.png">
+    <meta name="twitter:image" content="https://www.poseweb.site/logo-512.png">
     <!-- Structured data -->
     <script type="application/ld+json">
     {
@@ -23866,6 +23867,13 @@
     <!-- Auth Screen (NEW PREMIUM UI) -->
     <div id="auth-screen" style="display: none;">
         <div class="auth-container">
+            <div class="auth-brand" style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;">
+                <img src="/logo.png" alt="Pose" class="auth-logo" width="72" height="72" style="width:72px;height:72px;border-radius:18px;object-fit:cover;display:block;">
+                <div style="text-align:center;">
+                    <div style="font-size:22px;font-weight:800;letter-spacing:-0.3px;color:#fff;">Pose</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px;">African Creator Platform</div>
+                </div>
+            </div>
             <div class="auth-tabs">
                 <button class="tab-btn active" data-tab="personal">Personal</button>
                 <button class="tab-btn guest-btn" data-tab="guest">
@@ -26470,7 +26478,7 @@
     <div class="pmusic-topbar">
       <button onclick="closePmusicApp()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;padding:6px 10px;margin-right:4px;" title="Back"><i class="fas fa-chevron-left"></i></button>
       <div class="pmusic-topbar-logo" onclick="pmusicShowView('search')" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-        <div style="width:30px;height:30px;background:#4C1D95;;border-radius:50%;display:grid;place-items:center;font-size:13px;color:#fff;flex-shrink:0;"><i class="fas fa-wave-square"></i></div>
+        <img src="/logo.png" alt="Pose" width="30" height="30" style="width:30px;height:30px;border-radius:8px;object-fit:cover;flex-shrink:0;display:block;">
         <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.3px;">Pose</span>
       </div>
       <div class="pmusic-search-container">

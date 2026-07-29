@@ -9,18 +9,19 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#7C3AED">
 <link rel="canonical" href="https://www.poseweb.site/poselivevisual.html">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pose">
 <meta property="og:url" content="https://www.poseweb.site/poselivevisual.html">
 <meta property="og:title" content="Pose Live — Go Live & Watch Creators">
 <meta property="og:description" content="Watch live creators and go live on Pose. Live streaming built for African creators.">
-<meta property="og:image" content="https://www.poseweb.site/og-image.png">
+<meta property="og:image" content="https://www.poseweb.site/logo-512.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pose Live — Go Live & Watch Creators">
 <meta name="twitter:description" content="Watch live creators and go live on Pose. Live streaming built for African creators.">
-<meta name="twitter:image" content="https://www.poseweb.site/og-image.png">
+<meta name="twitter:image" content="https://www.poseweb.site/logo-512.png">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -1062,8 +1063,13 @@ html, body {
     <!-- Top bar -->
     <div id="feed-topbar">
       <div class="feed-brand">
-        <h1>Live Now 🔥</h1>
-        <p id="feed-subtitle">Loading streams…</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="/logo.png" alt="Pose" width="36" height="36" style="width:36px;height:36px;border-radius:10px;object-fit:cover;flex-shrink:0;">
+          <div>
+            <h1 style="margin:0;">Live Now 🔥</h1>
+            <p id="feed-subtitle">Loading streams…</p>
+          </div>
+        </div>
       </div>
       <div class="live-indicator">
         <div class="pulse-dot"></div>
