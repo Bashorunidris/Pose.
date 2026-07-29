@@ -8437,10 +8437,13 @@
             cursor: pointer;
         }
 
-        .video-post video {
+        .video-post video,
+        .video-post > img,
+        .video-post .foryou-photo-track img {
             height: 100%;
             width: 100%;
-            object-fit: cover;
+            object-fit: contain; /* keep natural aspect — no forced crop/fullscreen fill */
+            background: #000;
         }
 
         /* Custom video seek bar (timeline) for For You / Trend / etc. */
