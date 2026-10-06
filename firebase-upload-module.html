@@ -71,7 +71,24 @@
   .firebase-url-copy-btn.copied {
     background: var(--green);
   }
-</style>
+
+        /* Hugeicons helpers */
+        .hgi, .hgi-stroke {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            speak: never;
+        }
+        .hgi-spin {
+            display: inline-block;
+            animation: pose-hgi-spin 0.9s linear infinite;
+        }
+        @keyframes pose-hgi-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        </style>
 
 <!-- JavaScript for Firebase Storage Upload -->
 <script>
@@ -158,7 +175,7 @@
   <div class="firebase-url-display">
     <div class="firebase-url-text"></div>
     <button class="firebase-url-copy-btn" onclick="copyFirebaseUrlToClipboard(this)">
-      <i class="fas fa-copy" style="margin-right: 4px;"></i>Copy
+      <i class="hgi hgi-stroke hgi-copy-01" style="margin-right: 4px;"></i>Copy
     </button>
   </div>
 </div>

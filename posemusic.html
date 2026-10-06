@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pose Music — Sound for Creators</title>
@@ -25,7 +26,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
   --bg-base:#0a0a0a; --bg-elevated:#111; --bg-surface:#1a1a1a; --bg-card:#1e1e1e; --bg-hover:#2a2a2a;
@@ -359,7 +359,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .drawer-btn:hover{background:var(--bg-surface);color:var(--text-primary);}
 .drawer-btn.active{background:var(--bg-surface);color:var(--text-primary);}
 .drawer-btn.active i{color:var(--accent);}
-</style>
+
+        /* Hugeicons helpers */
+        .hgi, .hgi-stroke {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            speak: never;
+        }
+        .hgi-spin {
+            display: inline-block;
+            animation: pose-hgi-spin 0.9s linear infinite;
+        }
+        @keyframes pose-hgi-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        </style>
 </head>
 <body>
 
@@ -370,21 +387,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 <main class="main-area">
 
   <div class="topbar">
-  <button class="player-btn" style="font-size:14px;" onclick="window.location.href='poseappdash.html'" title="Back"><i class="fas fa-chevron-left"></i></button>
+  <button class="player-btn" style="font-size:14px;" onclick="window.location.href='poseappdash.html'" title="Back"><i class="hgi hgi-stroke hgi-arrow-left-01"></i></button>
   <div class="topbar-logo" onclick="showView('search')" style="display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;color:inherit;">
     <img src="/logo.png" alt="Pose" width="30" height="30" style="width:30px;height:30px;border-radius:8px;object-fit:cover;flex-shrink:0;display:block;">
     <span style="font-family:var(--font-display);font-weight:800;font-size:17px;letter-spacing:-.3px;">Pose</span>
   </div>
   <div class="search-container" style="flex:1;">
-    <i class="fas fa-search search-icon"></i>
+    <i class="hgi hgi-stroke hgi-search-01 search-icon"></i>
     <input type="text" class="search-input" placeholder="Search sounds, artists…" id="searchInput">
   </div>
   <!-- Menu button top right -->
   <div style="position:relative;">
     <button id="menuToggleBtn" onclick="toggleMenuDrawer()" style="display:flex;align-items:center;gap:7px;background:var(--bg-surface);border:1px solid var(--border-bright);color:var(--text-primary);padding:7px 13px;border-radius:40px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:600;transition:var(--tr);" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='var(--bg-surface)'">
-      <div id="menuAvatarSmall" style="width:24px;height:24px;background:var(--bg-hover);border-radius:50%;display:grid;place-items:center;font-size:10px;color:var(--text-muted);flex-shrink:0;font-family:var(--font-display);font-weight:800;transition:var(--tr);"><i class="fas fa-user" style="font-size:10px;"></i></div>
+      <div id="menuAvatarSmall" style="width:24px;height:24px;background:var(--bg-hover);border-radius:50%;display:grid;place-items:center;font-size:10px;color:var(--text-muted);flex-shrink:0;font-family:var(--font-display);font-weight:800;transition:var(--tr);"><i class="hgi hgi-stroke hgi-user" style="font-size:10px;"></i></div>
       <span id="menuBtnLabel">Menu</span>
-      <i class="fas fa-bars" style="font-size:12px;color:var(--text-muted);"></i>
+      <i class="hgi hgi-stroke hgi-menu-01" style="font-size:12px;color:var(--text-muted);"></i>
     </button>
   </div>
 </div>
@@ -398,10 +415,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
   <!-- Drawer header -->
   <div style="padding:18px 16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
     <div style="display:flex;align-items:center;gap:9px;">
-      <div style="width:30px;height:30px;background:var(--accent);border-radius:50%;display:grid;place-items:center;font-size:13px;color:#000;"><i class="fas fa-wave-square"></i></div>
+      <div style="width:30px;height:30px;background:var(--accent);border-radius:50%;display:grid;place-items:center;font-size:13px;color:#000;"><i class="hgi hgi-stroke hgi-information-circle"></i></div>
       <span style="font-family:var(--font-display);font-weight:800;font-size:16px;">Pose</span>
     </div>
-    <button onclick="closeMenuDrawer()" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);width:30px;height:30px;border-radius:50%;cursor:pointer;display:grid;place-items:center;font-size:14px;transition:var(--tr);" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'"><i class="fas fa-times"></i></button>
+    <button onclick="closeMenuDrawer()" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);width:30px;height:30px;border-radius:50%;cursor:pointer;display:grid;place-items:center;font-size:14px;transition:var(--tr);" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'"><i class="hgi hgi-stroke hgi-cancel-01"></i></button>
   </div>
 
   <!-- Artist card — shown when logged in -->
@@ -421,7 +438,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 
     <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:8px 10px 4px;">Discover</div>
     <button class="drawer-btn" onclick="closeMenuDrawer();showView('search')">
-      <i class="fas fa-home" style="color:var(--accent);width:18px;"></i> Browse Music
+      <i class="hgi hgi-stroke hgi-home-01" style="color:var(--accent);width:18px;"></i> Browse Music
     </button>
 
     <!-- Creator section — always visible -->
@@ -429,21 +446,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
     
     <!-- Shown when NOT logged in -->
     <button class="drawer-btn" id="drawerSignupBtn" onclick="closeMenuDrawer();showView('signup')">
-      <i class="fas fa-star" style="color:var(--accent-amber);width:18px;"></i> Become a Creator
+      <i class="hgi hgi-stroke hgi-star" style="color:var(--accent-amber);width:18px;"></i> Become a Creator
     </button>
 
     <!-- Shown when logged in -->
     <button class="drawer-btn hidden" id="drawerDashBtn" onclick="closeMenuDrawer();showView('dashboard')">
-      <i class="fas fa-chart-line" style="color:var(--accent);width:18px;"></i> Dashboard
+      <i class="hgi hgi-stroke hgi-chart-line-data-01" style="color:var(--accent);width:18px;"></i> Dashboard
     </button>
     <button class="drawer-btn hidden" id="drawerUploadBtn" onclick="closeMenuDrawer();showView('upload')">
-      <i class="fas fa-upload" style="color:var(--accent);width:18px;"></i> Upload Music
+      <i class="hgi hgi-stroke hgi-upload-01" style="color:var(--accent);width:18px;"></i> Upload Music
     </button>
     <button class="drawer-btn hidden" id="drawerCatalogueBtn" onclick="closeMenuDrawer();showView('catalogue')">
-      <i class="fas fa-folder-open" style="color:var(--accent);width:18px;"></i> My Catalogue
+      <i class="hgi hgi-stroke hgi-folder-02" style="color:var(--accent);width:18px;"></i> My Catalogue
     </button>
     <button class="drawer-btn hidden" id="drawerProfileBtn" onclick="closeMenuDrawer();showView('profile')">
-      <i class="fas fa-user-circle" style="color:var(--accent);width:18px;"></i> Edit Profile
+      <i class="hgi hgi-stroke hgi-user" style="color:var(--accent);width:18px;"></i> Edit Profile
     </button>
 
     <!-- Promo box -->
@@ -457,7 +474,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
   <!-- Sign out footer — shown when logged in -->
   <div id="drawerSignoutRow" style="display:none;padding:12px 16px;border-top:1px solid var(--border);">
     <button onclick="closeMenuDrawer();signOutArtist()" style="width:100%;display:flex;align-items:center;gap:9px;padding:9px 12px;background:rgba(232,65,75,.08);border:1px solid rgba(232,65,75,.18);color:#e8414b;cursor:pointer;border-radius:var(--radius-sm);font-family:var(--font-body);font-size:13px;font-weight:600;transition:var(--tr);" onmouseover="this.style.background='rgba(232,65,75,.18)'" onmouseout="this.style.background='rgba(232,65,75,.08)'">
-      <i class="fas fa-sign-out-alt"></i> Sign Out
+      <i class="hgi hgi-stroke hgi-logout-01"></i> Sign Out
     </button>
   </div>
 </div>
@@ -466,7 +483,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
   <div class="filters-section" id="filtersSection">
     <div class="filters-content">
       <div>
-        <span class="filter-label"><i class="fas fa-music" style="margin-right:5px;"></i>Genre</span>
+        <span class="filter-label"><i class="hgi hgi-stroke hgi-music-note-01" style="margin-right:5px;"></i>Genre</span>
         <div class="genre-tabs">
           <button class="genre-tab active" onclick="filterByGenre('All')">All</button>
           <button class="genre-tab" onclick="filterByGenre('Pop')">Pop</button>
@@ -481,7 +498,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
         </div>
       </div>
       <div>
-        <span class="filter-label"><i class="fas fa-globe" style="margin-right:5px;"></i>Country</span>
+        <span class="filter-label"><i class="hgi hgi-stroke hgi-globe-02" style="margin-right:5px;"></i>Country</span>
         <select class="country-select" id="countryFilter" onchange="filterByCountry()">
           <option value="All">All Countries</option>
           <option value="USA">United States</option>
@@ -510,7 +527,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
       <span class="section-link">See All</span>
     </div>
     <div class="songs-grid" id="songsGrid"></div>
-    <div class="loading hidden" id="loadingIndicator"><i class="fas fa-spinner"></i> Loading more…</div>
+    <div class="loading hidden" id="loadingIndicator"><i class="hgi hgi-stroke hgi-loading-03 hgi-spin"></i> Loading more…</div>
     <div class="banner-ad green" style="margin-top:22px;">
       <div class="banner-ad-content">
         <span class="sponsored-badge">POSE CREATORS</span>
@@ -545,7 +562,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
           <div class="form-group"><label>Apple Music URL</label><input type="url" id="appleMusicUrl" placeholder="https://music.apple.com/…"></div>
           <div class="form-group full"><label>Monthly Streams (approx.)</label><input type="number" id="monthlyStreams" placeholder="e.g. 50000" min="0"></div>
         </div>
-        <button id="becomeCreatorBtn" onclick="createArtistAccount()"><i class="fas fa-rocket"></i> Become a Creator</button>
+        <button id="becomeCreatorBtn" onclick="createArtistAccount()"><i class="hgi hgi-stroke hgi-rocket-01"></i> Become a Creator</button>
       </div>
     </div>
   </div>
@@ -555,7 +572,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
   <div style="max-width:560px;margin:0 auto;">
 
     <div class="section-header" style="margin-bottom:22px;">
-      <h2 class="section-title"><i class="fas fa-user-circle" style="color:var(--accent);margin-right:9px;"></i>Edit Profile</h2>
+      <h2 class="section-title"><i class="hgi hgi-stroke hgi-user" style="color:var(--accent);margin-right:9px;"></i>Edit Profile</h2>
     </div>
 
     <!-- Identity card -->
@@ -571,17 +588,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 
       <!-- Stats row -->
       <div class="stats-grid" style="margin-bottom:0;">
-        <div class="stat-card"><h4>Tracks <i class="fas fa-music"></i></h4><p id="profileStatTracks">0</p></div>
-        <div class="stat-card"><h4>Uses <i class="fas fa-film"></i></h4><p id="profileStatUses">0</p></div>
-        <div class="stat-card"><h4>Revenue <i class="fas fa-dollar-sign"></i></h4><p id="profileStatRevenue">$0</p></div>
-        <div class="stat-card"><h4>Streams <i class="fas fa-chart-bar"></i></h4><p id="profileStatStreams">0</p></div>
+        <div class="stat-card"><h4>Tracks <i class="hgi hgi-stroke hgi-music-note-01"></i></h4><p id="profileStatTracks">0</p></div>
+        <div class="stat-card"><h4>Uses <i class="hgi hgi-stroke hgi-film-01"></i></h4><p id="profileStatUses">0</p></div>
+        <div class="stat-card"><h4>Revenue <i class="hgi hgi-stroke hgi-information-circle"></i></h4><p id="profileStatRevenue">$0</p></div>
+        <div class="stat-card"><h4>Streams <i class="hgi hgi-stroke hgi-chart-histogram"></i></h4><p id="profileStatStreams">0</p></div>
       </div>
     </div>
 
     <!-- Edit form -->
     <div class="dashboard-card" style="margin-bottom:14px;">
       <h3 style="font-family:var(--font-display);font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;">
-        <i class="fas fa-edit" style="color:var(--accent);"></i> Artist Information
+        <i class="hgi hgi-stroke hgi-pencil-edit-01" style="color:var(--accent);"></i> Artist Information
       </h3>
       <div class="form-grid">
         <div class="form-group full">
@@ -626,21 +643,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
         </div>
       </div>
       <button class="btn-submit" style="margin-top:6px;" onclick="saveProfileEdits()">
-        <i class="fas fa-save"></i> Save Changes
+        <i class="hgi hgi-stroke hgi-floppy-disk"></i> Save Changes
       </button>
     </div>
 
     <!-- Account section -->
     <div class="dashboard-card">
       <h3 style="font-family:var(--font-display);font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
-        <i class="fas fa-shield-alt" style="color:var(--accent-red);"></i> Account
+        <i class="hgi hgi-stroke hgi-shield-01" style="color:var(--accent-red);"></i> Account
       </h3>
       <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;gap:7px;">
-        <i class="fas fa-envelope" style="color:var(--text-muted);"></i>
+        <i class="hgi hgi-stroke hgi-mail-01" style="color:var(--text-muted);"></i>
         <span id="profileEmail">—</span>
       </p>
       <button onclick="signOutArtist()" style="display:flex;align-items:center;gap:8px;padding:9px 18px;background:rgba(232,65,75,.08);border:1px solid rgba(232,65,75,.18);color:#e8414b;cursor:pointer;border-radius:var(--radius-sm);font-family:var(--font-body);font-size:13px;font-weight:600;transition:var(--tr);" onmouseover="this.style.background='rgba(232,65,75,.18)'" onmouseout="this.style.background='rgba(232,65,75,.08)'">
-        <i class="fas fa-sign-out-alt"></i> Sign Out
+        <i class="hgi hgi-stroke hgi-logout-01"></i> Sign Out
       </button>
     </div>
 
@@ -649,9 +666,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
   <!-- Upload View -->
   <div id="uploadView" class="page-content hidden">
     <div class="upload-container">
-      <div class="section-header" style="margin-bottom:22px;"><h2 class="section-title"><i class="fas fa-upload" style="color:var(--accent);margin-right:9px;"></i>Upload New Music</h2></div>
+      <div class="section-header" style="margin-bottom:22px;"><h2 class="section-title"><i class="hgi hgi-stroke hgi-upload-01" style="color:var(--accent);margin-right:9px;"></i>Upload New Music</h2></div>
       <div class="upload-card">
-        <h3><i class="fas fa-music"></i> Track Information</h3>
+        <h3><i class="hgi hgi-stroke hgi-music-note-01"></i> Track Information</h3>
         <div class="form-grid">
           <div class="form-group full"><label>Track Title *</label><input type="text" id="trackTitle" placeholder="Enter track title"></div>
           <div class="form-group"><label>Genre *</label><select id="trackGenre"><option value="">Select Genre</option><option value="Pop">Pop</option><option value="Hip Hop">Hip Hop</option><option value="Rock">Rock</option><option value="Electronic">Electronic</option><option value="R&B">R&amp;B</option><option value="Jazz">Jazz</option><option value="Country">Country</option><option value="Latin">Latin</option><option value="Afrobeats">Afrobeats</option></select></div>
@@ -659,30 +676,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
         </div>
       </div>
       <div class="upload-card">
-        <h3><i class="fas fa-file-audio"></i> Upload Files</h3>
-        <div class="file-upload-area" id="audioUploadArea"><i class="fas fa-cloud-upload-alt"></i><p>Drag &amp; drop your audio file here</p><p style="color:var(--text-muted);font-size:11.5px;margin-top:4px;">MP3, WAV, FLAC — Max 100MB</p><input type="file" id="audioFile" accept=".mp3,.wav,.flac" style="display:none;"></div>
+        <h3><i class="hgi hgi-stroke hgi-file-audio"></i> Upload Files</h3>
+        <div class="file-upload-area" id="audioUploadArea"><i class="hgi hgi-stroke hgi-cloud-upload"></i><p>Drag &amp; drop your audio file here</p><p style="color:var(--text-muted);font-size:11.5px;margin-top:4px;">MP3, WAV, FLAC — Max 100MB</p><input type="file" id="audioFile" accept=".mp3,.wav,.flac" style="display:none;"></div>
         <div id="audioFileDisplay"></div>
-        <div class="file-upload-area" id="coverUploadArea" style="margin-top:14px;"><i class="fas fa-image"></i><p>Upload cover art</p><p style="color:var(--text-muted);font-size:11.5px;margin-top:4px;">PNG, JPG — Min 1000×1000px</p><input type="file" id="coverFile" accept=".png,.jpg,.jpeg" style="display:none;"></div>
+        <div class="file-upload-area" id="coverUploadArea" style="margin-top:14px;"><i class="hgi hgi-stroke hgi-image-01"></i><p>Upload cover art</p><p style="color:var(--text-muted);font-size:11.5px;margin-top:4px;">PNG, JPG — Min 1000×1000px</p><input type="file" id="coverFile" accept=".png,.jpg,.jpeg" style="display:none;"></div>
         <div id="coverFileDisplay"></div>
       </div>
       <div class="upload-card">
-        <h3><i class="fas fa-users"></i> Collaborators &amp; Revenue Split</h3>
+        <h3><i class="hgi hgi-stroke hgi-user-multiple-02"></i> Collaborators &amp; Revenue Split</h3>
         <p style="color:var(--text-muted);font-size:12px;margin-bottom:13px;">Add collaborators and specify revenue split. Total must equal 100%.</p>
         <div id="collaboratorsList">
           <div class="collaborator-item"><input type="text" placeholder="Your name (Owner)" id="ownerName" readonly style="opacity:.6;"><input type="number" placeholder="%" id="ownerSplit" value="100" min="0" max="100"><span>%</span></div>
         </div>
-        <button class="btn-add" onclick="addCollaborator()"><i class="fas fa-plus"></i> Add Collaborator</button>
+        <button class="btn-add" onclick="addCollaborator()"><i class="hgi hgi-stroke hgi-add-01"></i> Add Collaborator</button>
         <div class="split-info"><strong>Total Split:</strong> <span id="totalSplit">100</span>%</div>
       </div>
-      <button class="btn-submit" onclick="uploadTrack()"><i class="fas fa-check"></i> Upload Track</button>
+      <button class="btn-submit" onclick="uploadTrack()"><i class="hgi hgi-stroke hgi-tick-02"></i> Upload Track</button>
     </div>
   </div>
 
   <!-- Catalogue View -->
   <div id="catalogueView" class="page-content hidden">
     <div class="catalogue-header">
-      <h2 class="section-title"><i class="fas fa-folder-open" style="color:var(--accent);margin-right:9px;"></i>My Catalogue</h2>
-      <div class="catalogue-search"><i class="fas fa-search"></i><input type="text" id="catalogueSearch" placeholder="Search your tracks…"></div>
+      <h2 class="section-title"><i class="hgi hgi-stroke hgi-folder-02" style="color:var(--accent);margin-right:9px;"></i>My Catalogue</h2>
+      <div class="catalogue-search"><i class="hgi hgi-stroke hgi-search-01"></i><input type="text" id="catalogueSearch" placeholder="Search your tracks…"></div>
     </div>
     <div class="catalogue-stats">
       <div class="catalogue-stat"><h4>Total Tracks</h4><p id="totalTracks">0</p></div>
@@ -691,10 +708,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
     </div>
     <div class="catalogue-grid" id="catalogueGrid"></div>
     <div id="emptyState" class="hidden" style="text-align:center;padding:70px 20px;">
-      <i class="fas fa-music" style="font-size:52px;color:var(--text-muted);margin-bottom:14px;display:block;"></i>
+      <i class="hgi hgi-stroke hgi-music-note-01" style="font-size:52px;color:var(--text-muted);margin-bottom:14px;display:block;"></i>
       <h3 style="font-family:var(--font-display);margin-bottom:7px;">No tracks yet</h3>
       <p style="color:var(--text-secondary);margin-bottom:18px;">Upload your first track to get started</p>
-      <button class="btn-submit" style="width:auto;padding:11px 22px;" onclick="showView('upload')"><i class="fas fa-upload"></i> Upload Your First Track</button>
+      <button class="btn-submit" style="width:auto;padding:11px 22px;" onclick="showView('upload')"><i class="hgi hgi-stroke hgi-upload-01"></i> Upload Your First Track</button>
     </div>
   </div>
 
@@ -710,17 +727,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
     </div>
     <div class="dashboard-card">
       <div class="profile-header">
-        <div class="profile-avatar"><i class="fas fa-user"></i></div>
+        <div class="profile-avatar"><i class="hgi hgi-stroke hgi-user"></i></div>
         <div class="profile-info"><h2 id="profileName"></h2><p id="profileType"></p></div>
       </div>
       <div class="stats-grid">
-        <div class="stat-card"><h4>Monthly Streams <i class="fas fa-chart-bar"></i></h4><p id="statStreams">0</p></div>
-        <div class="stat-card"><h4>Total Songs <i class="fas fa-music"></i></h4><p id="statSongs">0</p></div>
-        <div class="stat-card"><h4>Total Uses <i class="fas fa-film"></i></h4><p id="statUses">0</p></div>
-        <div class="stat-card"><h4>Est. Revenue <i class="fas fa-dollar-sign"></i></h4><p id="statRevenue">$0</p></div>
+        <div class="stat-card"><h4>Monthly Streams <i class="hgi hgi-stroke hgi-chart-histogram"></i></h4><p id="statStreams">0</p></div>
+        <div class="stat-card"><h4>Total Songs <i class="hgi hgi-stroke hgi-music-note-01"></i></h4><p id="statSongs">0</p></div>
+        <div class="stat-card"><h4>Total Uses <i class="hgi hgi-stroke hgi-film-01"></i></h4><p id="statUses">0</p></div>
+        <div class="stat-card"><h4>Est. Revenue <i class="hgi hgi-stroke hgi-information-circle"></i></h4><p id="statRevenue">$0</p></div>
       </div>
       <div class="platform-links" id="platformLinks"></div>
-      <div class="artist-songs"><h3><i class="fas fa-list" style="color:var(--accent);margin-right:7px;"></i>Your Songs</h3><div id="artistSongsList"></div></div>
+      <div class="artist-songs"><h3><i class="hgi hgi-stroke hgi-menu-01" style="color:var(--accent);margin-right:7px;"></i>Your Songs</h3><div id="artistSongsList"></div></div>
     </div>
   </div>
 
@@ -734,15 +751,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
       <div class="player-title" id="playerTitle">—</div>
       <div class="player-artist" id="playerArtist">Select a sound</div>
     </div>
-    <button class="player-like" id="playerLikeBtn" onclick="toggleLike()"><i class="far fa-heart"></i></button>
+    <button class="player-like" id="playerLikeBtn" onclick="toggleLike()"><i class="hgi hgi-stroke hgi-favourite"></i></button>
   </div>
   <div class="player-controls">
     <div class="player-btns">
-      <button class="player-btn"><i class="fas fa-random"></i></button>
-      <button class="player-btn"><i class="fas fa-step-backward"></i></button>
-      <button class="player-btn main" id="mainPlayBtn" onclick="mainPlayToggle()"><i class="fas fa-play"></i></button>
-      <button class="player-btn"><i class="fas fa-step-forward"></i></button>
-      <button class="player-btn"><i class="fas fa-redo"></i></button>
+      <button class="player-btn"><i class="hgi hgi-stroke hgi-information-circle"></i></button>
+      <button class="player-btn"><i class="hgi hgi-stroke hgi-information-circle"></i></button>
+      <button class="player-btn main" id="mainPlayBtn" onclick="mainPlayToggle()"><i class="hgi hgi-stroke hgi-play"></i></button>
+      <button class="player-btn"><i class="hgi hgi-stroke hgi-information-circle"></i></button>
+      <button class="player-btn"><i class="hgi hgi-stroke hgi-reload"></i></button>
     </div>
     <div class="player-progress">
       <span class="player-time" id="playerCurrentTime">0:00</span>
@@ -751,8 +768,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
     </div>
   </div>
   <div class="player-right">
-    <button class="effects-open-btn" onclick="toggleEffectsPanel()"><i class="fas fa-sliders-h"></i> Effects</button>
-    <i class="fas fa-volume-up player-vol-icon"></i>
+    <button class="effects-open-btn" onclick="toggleEffectsPanel()"><i class="hgi hgi-stroke hgi-sliders-horizontal"></i> Effects</button>
+    <i class="hgi hgi-stroke hgi-volume-high player-vol-icon"></i>
     <input type="range" class="player-volume" id="playerVolume" min="0" max="1" step="0.01" value="1">
   </div>
 </div>
@@ -760,8 +777,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 <!-- ── Effects Panel ───────────────────────── -->
 <div class="effects-panel" id="effectsPanel">
   <div class="effects-header">
-    <h3><i class="fas fa-sliders-h" style="color:var(--accent);margin-right:7px;"></i>Sound Effects</h3>
-    <button class="effects-close" onclick="toggleEffectsPanel()"><i class="fas fa-times"></i></button>
+    <h3><i class="hgi hgi-stroke hgi-sliders-horizontal" style="color:var(--accent);margin-right:7px;"></i>Sound Effects</h3>
+    <button class="effects-close" onclick="toggleEffectsPanel()"><i class="hgi hgi-stroke hgi-cancel-01"></i></button>
   </div>
   <div class="effects-song-info">
     <img id="effectsCover" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&h=100&fit=crop">
@@ -808,26 +825,26 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
       <div class="effect-toggle-row"><div class="etg-info"><div class="etg-name">Night Core</div><div class="etg-desc">Faster + higher pitch</div></div><label class="toggle-switch"><input type="checkbox" id="fxNightcore" onchange="applyNightcore(this.checked)"><span class="toggle-slider"></span></label></div>
     </div>
     <button onclick="resetEffects()" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body);font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;transition:var(--tr);width:100%;justify-content:center;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-secondary)'">
-      <i class="fas fa-undo"></i> Reset All Effects
+      <i class="hgi hgi-stroke hgi-arrow-turn-backward"></i> Reset All Effects
     </button>
   </div>
-  <button class="effects-use-btn" onclick="useCurrentSong()"><i class="fas fa-film"></i> Use in Video / Photo</button>
+  <button class="effects-use-btn" onclick="useCurrentSong()"><i class="hgi hgi-stroke hgi-film-01"></i> Use in Video / Photo</button>
 </div>
 
 <!-- Analytics Modal -->
 <div class="modal" id="analyticsModal">
   <div class="modal-content">
-    <div class="modal-header"><h2><i class="fas fa-chart-line" style="color:var(--accent);"></i> <span id="modalSongTitle">Analytics</span></h2><button class="modal-close" onclick="closeAnalytics()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-header"><h2><i class="hgi hgi-stroke hgi-chart-line-data-01" style="color:var(--accent);"></i> <span id="modalSongTitle">Analytics</span></h2><button class="modal-close" onclick="closeAnalytics()"><i class="hgi hgi-stroke hgi-cancel-01"></i></button></div>
     <div class="analytics-grid">
       <div class="analytics-card"><h5>Total Streams</h5><p id="modalStreams">0</p></div>
       <div class="analytics-card"><h5>Total Uses</h5><p id="modalUses">0</p></div>
       <div class="analytics-card"><h5>Revenue</h5><p id="modalRevenue" style="color:var(--accent)">$0</p></div>
       <div class="analytics-card"><h5>Engagement</h5><p id="modalEngagement">0%</p></div>
     </div>
-    <div class="analytics-section"><h4><i class="fas fa-chart-area"></i> Performance Over Time</h4><div class="chart-placeholder"><i class="fas fa-chart-line"></i><p>Streams and uses chart</p></div></div>
-    <div class="analytics-section"><h4><i class="fas fa-globe"></i> Geographic Distribution</h4><div class="chart-placeholder"><i class="fas fa-map-marked-alt"></i><p>Geographic breakdown</p></div></div>
-    <div class="analytics-section"><h4><i class="fas fa-users"></i> Collaborators &amp; Revenue Split</h4><div class="collaborators-list" id="modalCollaborators"><p style="color:var(--text-secondary)">No collaborators on this track</p></div></div>
-    <div class="analytics-section"><h4><i class="fas fa-info-circle"></i> Track Details</h4>
+    <div class="analytics-section"><h4><i class="hgi hgi-stroke hgi-information-circle"></i> Performance Over Time</h4><div class="chart-placeholder"><i class="hgi hgi-stroke hgi-chart-line-data-01"></i><p>Streams and uses chart</p></div></div>
+    <div class="analytics-section"><h4><i class="hgi hgi-stroke hgi-globe-02"></i> Geographic Distribution</h4><div class="chart-placeholder"><i class="hgi hgi-stroke hgi-information-circle"></i><p>Geographic breakdown</p></div></div>
+    <div class="analytics-section"><h4><i class="hgi hgi-stroke hgi-user-multiple-02"></i> Collaborators &amp; Revenue Split</h4><div class="collaborators-list" id="modalCollaborators"><p style="color:var(--text-secondary)">No collaborators on this track</p></div></div>
+    <div class="analytics-section"><h4><i class="hgi hgi-stroke hgi-information-circle"></i> Track Details</h4>
       <div style="background:var(--bg-surface);padding:16px;border-radius:var(--radius);display:grid;grid-template-columns:repeat(2,1fr);gap:13px;font-size:13px;">
         <div><p style="color:var(--text-muted);font-size:10.5px;margin-bottom:3px;">Genre</p><p id="modalGenre">—</p></div>
         <div><p style="color:var(--text-muted);font-size:10.5px;margin-bottom:3px;">Duration</p><p id="modalDuration">—</p></div>
@@ -964,14 +981,14 @@ function useCurrentSong(){if(!currentPlayingSong){showToast('Select a sound firs
 function updatePlayerBar(s){document.getElementById('playerCover').src=s.coverUrl||'';document.getElementById('playerTitle').textContent=s.title;document.getElementById('playerArtist').textContent=s.artist;}
 function mainPlayToggle(){
   if(!playingId){showToast('Select a sound to play','error');return;}
-  if(audioPlayer.paused){audioPlayer.play().catch(()=>{});document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';animateEQ();}
-  else{audioPlayer.pause();document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+  if(audioPlayer.paused){audioPlayer.play().catch(()=>{});document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-pause"></i>';animateEQ();}
+  else{audioPlayer.pause();document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-play"></i>';stopEQAnim();}
 }
 function toggleLike(){
   if(!playingId)return;
   const btn=document.getElementById('playerLikeBtn');
-  if(likedSongs.has(playingId)){likedSongs.delete(playingId);btn.innerHTML='<i class="far fa-heart"></i>';btn.classList.remove('liked');}
-  else{likedSongs.add(playingId);btn.innerHTML='<i class="fas fa-heart"></i>';btn.classList.add('liked');showToast('Added to liked sounds','success');}
+  if(likedSongs.has(playingId)){likedSongs.delete(playingId);btn.innerHTML='<i class="hgi hgi-stroke hgi-favourite"></i>';btn.classList.remove('liked');}
+  else{likedSongs.add(playingId);btn.innerHTML='<i class="hgi hgi-stroke hgi-favourite"></i>';btn.classList.add('liked');showToast('Added to liked sounds','success');}
 }
 
 document.getElementById('playerVolume').addEventListener('input',function(){applyVolume(this.value);document.getElementById('fxVolume').value=this.value;});
@@ -1010,15 +1027,15 @@ function renderSongs(){
     card.innerHTML=`
       <div class="song-cover-wrap">
         <img src="${song.coverUrl}" alt="${song.title}" class="song-cover" onerror="this.src='https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop'">
-        <div class="song-cover-overlay"><button class="play-btn-overlay" onclick="togglePlay('${song.id}','${song.audioUrl}')"><i class="fas fa-play" id="playIcon-${song.id}"></i></button></div>
+        <div class="song-cover-overlay"><button class="play-btn-overlay" onclick="togglePlay('${song.id}','${song.audioUrl}')"><i class="hgi hgi-stroke hgi-play" id="playIcon-${song.id}"></i></button></div>
       </div>
       <div class="song-info"><h3>${song.title}</h3><p>${song.artist}</p>
-        <div class="song-meta"><span class="meta-tag">${song.genre}</span><span class="meta-tag">${song.country}</span><span class="meta-tag"><i class="fas fa-clock"></i> ${formatDuration(song.duration)}</span></div>
+        <div class="song-meta"><span class="meta-tag">${song.genre}</span><span class="meta-tag">${song.country}</span><span class="meta-tag"><i class="hgi hgi-stroke hgi-clock-01"></i> ${formatDuration(song.duration)}</span></div>
       </div>
-      <div class="song-stats"><span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span><span><i class="fas fa-film"></i> ${formatNumber(song.useCount)}</span></div>
+      <div class="song-stats"><span><i class="hgi hgi-stroke hgi-play-circle"></i> ${formatNumber(song.streamCount)}</span><span><i class="hgi hgi-stroke hgi-film-01"></i> ${formatNumber(song.useCount)}</span></div>
       <div class="song-actions">
-        <button class="btn btn-play" id="playBtn-${song.id}" onclick="togglePlay('${song.id}','${song.audioUrl}')"><i class="fas fa-play"></i> Preview</button>
-        <button class="btn btn-use" onclick="openEffectsForSong('${song.id}')"><i class="fas fa-sliders-h"></i> Use</button>
+        <button class="btn btn-play" id="playBtn-${song.id}" onclick="togglePlay('${song.id}','${song.audioUrl}')"><i class="hgi hgi-stroke hgi-play"></i> Preview</button>
+        <button class="btn btn-use" onclick="openEffectsForSong('${song.id}')"><i class="hgi hgi-stroke hgi-sliders-horizontal"></i> Use</button>
       </div>
       <div id="progress-${song.id}" class="hidden"><div class="progress-bar"><div class="progress-fill" id="progressFill-${song.id}"></div></div><div class="progress-text" id="progressText-${song.id}"></div></div>`;
     grid.appendChild(card);
@@ -1033,7 +1050,7 @@ function openEffectsForSong(songId){
     audioPlayer.play().catch(()=>{});
     playingId=songId;currentPlayingSong=song;
     updatePlayerBar(song);updateEffectsSong(song);
-    document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';
+    document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-pause"></i>';
     animateEQ();song.streamCount++;updateSongStats(songId);
     persistSongStat(songId,'streamCount',song.streamCount);
     updatePlayButton(songId,true);
@@ -1045,8 +1062,8 @@ function openEffectsForSong(songId){
 
 function togglePlay(songId,audioUrl){
   if(playingId===songId){
-    if(audioPlayer.paused){audioPlayer.play().catch(()=>{});updatePlayButton(songId,true);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';animateEQ();}
-    else{audioPlayer.pause();updatePlayButton(songId,false);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+    if(audioPlayer.paused){audioPlayer.play().catch(()=>{});updatePlayButton(songId,true);document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-pause"></i>';animateEQ();}
+    else{audioPlayer.pause();updatePlayButton(songId,false);document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-play"></i>';stopEQAnim();}
     return;
   }
   if(playingId!==null)updatePlayButton(playingId,false);
@@ -1056,20 +1073,20 @@ function togglePlay(songId,audioUrl){
   const song=allSongs.find(s=>s.id===songId);
   if(song){song.streamCount++;updateSongStats(songId);persistSongStat(songId,'streamCount',song.streamCount);currentPlayingSong=song;updatePlayerBar(song);updateEffectsSong(song);}
   document.getElementById(`progress-${songId}`)?.classList.remove('hidden');
-  updatePlayButton(songId,true);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-pause"></i>';animateEQ();
+  updatePlayButton(songId,true);document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-pause"></i>';animateEQ();
   if(audioCtx)connectAudioSource();
 }
 
 function updatePlayButton(songId,playing){
   const btn=document.getElementById(`playBtn-${songId}`);
   const icon=document.getElementById(`playIcon-${songId}`);
-  if(btn){btn.innerHTML=playing?'<i class="fas fa-pause"></i> Pause':'<i class="fas fa-play"></i> Preview';btn.classList.toggle('playing',playing);}
+  if(btn){btn.innerHTML=playing?'<i class="hgi hgi-stroke hgi-pause"></i> Pause':'<i class="hgi hgi-stroke hgi-play"></i> Preview';btn.classList.toggle('playing',playing);}
   if(icon)icon.className=playing?'fas fa-pause':'fas fa-play';
 }
 function updateSongStats(songId){
   const song=allSongs.find(s=>s.id===songId);
   const card=document.getElementById(`song-card-${songId}`);
-  if(card&&song){const st=card.querySelector('.song-stats');if(st)st.innerHTML=`<span><i class="fas fa-play-circle"></i> ${formatNumber(song.streamCount)}</span><span><i class="fas fa-film"></i> ${formatNumber(song.useCount)}</span>`;}
+  if(card&&song){const st=card.querySelector('.song-stats');if(st)st.innerHTML=`<span><i class="hgi hgi-stroke hgi-play-circle"></i> ${formatNumber(song.streamCount)}</span><span><i class="hgi hgi-stroke hgi-film-01"></i> ${formatNumber(song.useCount)}</span>`;}
 }
 function useSong(songId){
   const song=allSongs.find(s=>s.id===songId);if(!song)return;
@@ -1089,9 +1106,9 @@ audioPlayer.addEventListener('timeupdate',()=>{
   if(txt)txt.textContent=`${Math.floor(t)}s / 30s preview`;
   document.getElementById('playerCurrentTime').textContent=formatDuration(Math.floor(t));
   document.getElementById('playerSeek').value=t;
-  if(t>=30){audioPlayer.pause();const old=playingId;playingId=null;currentPlayingSong=null;updatePlayButton(old,false);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}
+  if(t>=30){audioPlayer.pause();const old=playingId;playingId=null;currentPlayingSong=null;updatePlayButton(old,false);document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-play"></i>';stopEQAnim();}
 });
-audioPlayer.addEventListener('ended',()=>{if(playingId){const old=playingId;playingId=null;currentPlayingSong=null;updatePlayButton(old,false);document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';stopEQAnim();}});
+audioPlayer.addEventListener('ended',()=>{if(playingId){const old=playingId;playingId=null;currentPlayingSong=null;updatePlayButton(old,false);document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-play"></i>';stopEQAnim();}});
 
 /* Infinite scroll */
 document.querySelector('.main-area').addEventListener('scroll',function(){
@@ -1125,7 +1142,7 @@ function showView(view){
     updatePlayButton(playingId,false);
     playingId=null;
     currentPlayingSong=null;
-    document.getElementById('mainPlayBtn').innerHTML='<i class="fas fa-play"></i>';
+    document.getElementById('mainPlayBtn').innerHTML='<i class="hgi hgi-stroke hgi-play"></i>';
     stopEQAnim();
   }
 
@@ -1200,17 +1217,17 @@ function handleAudioFile(file){
   const ok=['audio/mpeg','audio/wav','audio/flac','audio/x-flac'];
   if(!ok.includes(file.type)&&!file.name.match(/\.(mp3|wav|flac)$/i)){showToast('Please upload MP3, WAV or FLAC','error');return;}
   if(file.size>100*1024*1024){showToast('Audio file must be under 100MB','error');return;}
-  document.getElementById('audioFileDisplay').innerHTML=`<div class="uploaded-file"><i class="fas fa-file-audio"></i><div style="flex:1"><p style="font-weight:600">${file.name}</p><p style="font-size:11.5px;color:var(--text-muted)">${(file.size/1024/1024).toFixed(2)} MB</p></div><i class="fas fa-check-circle check"></i></div>`;
+  document.getElementById('audioFileDisplay').innerHTML=`<div class="uploaded-file"><i class="hgi hgi-stroke hgi-file-audio"></i><div style="flex:1"><p style="font-weight:600">${file.name}</p><p style="font-size:11.5px;color:var(--text-muted)">${(file.size/1024/1024).toFixed(2)} MB</p></div><i class="hgi hgi-stroke hgi-checkmark-circle-02 check"></i></div>`;
 }
 function handleCoverFile(file){
   if(!file.type.startsWith('image/')){showToast('Please upload an image file','error');return;}
-  document.getElementById('coverFileDisplay').innerHTML=`<div class="uploaded-file"><i class="fas fa-image"></i><div style="flex:1"><p style="font-weight:600">${file.name}</p><p style="font-size:11.5px;color:var(--text-muted)">${(file.size/1024/1024).toFixed(2)} MB</p></div><i class="fas fa-check-circle check"></i></div>`;
+  document.getElementById('coverFileDisplay').innerHTML=`<div class="uploaded-file"><i class="hgi hgi-stroke hgi-image-01"></i><div style="flex:1"><p style="font-weight:600">${file.name}</p><p style="font-size:11.5px;color:var(--text-muted)">${(file.size/1024/1024).toFixed(2)} MB</p></div><i class="hgi hgi-stroke hgi-checkmark-circle-02 check"></i></div>`;
 }
 function addCollaborator(){
   collaboratorCount++;
   const list=document.getElementById('collaboratorsList');
   const div=document.createElement('div');div.className='collaborator-item';div.id=`collab-${collaboratorCount}`;
-  div.innerHTML=`<input type="text" placeholder="Collaborator name" class="collab-name"><input type="number" placeholder="%" class="collab-split" value="0" min="0" max="100" oninput="updateTotalSplit()"><span>%</span><button class="btn-remove" onclick="removeCollaborator(${collaboratorCount})"><i class="fas fa-times"></i></button>`;
+  div.innerHTML=`<input type="text" placeholder="Collaborator name" class="collab-name"><input type="number" placeholder="%" class="collab-split" value="0" min="0" max="100" oninput="updateTotalSplit()"><span>%</span><button class="btn-remove" onclick="removeCollaborator(${collaboratorCount})"><i class="hgi hgi-stroke hgi-cancel-01"></i></button>`;
   list.appendChild(div);updateTotalSplit();
 }
 function removeCollaborator(id){document.getElementById(`collab-${id}`)?.remove();updateTotalSplit();}
@@ -1238,10 +1255,10 @@ function renderCatalogue(){
   filtered.forEach(song=>{
     const rev=formatCurrency((song.useCount||0)*0.05,currentArtist.country);
     const card=document.createElement('div');card.className=`catalogue-song-card${song.pinned?' pinned':''}`;
-    card.innerHTML=`${song.pinned?'<div class="pin-badge"><i class="fas fa-thumbtack"></i> PINNED</div>':''}
-      <div class="catalogue-song-header"><img src="${song.coverUrl}" class="catalogue-song-cover" onerror="this.src='https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop'"><div class="catalogue-song-info"><h4>${song.title}</h4><p>${song.genre}</p><p style="font-size:11px;margin-top:3px;color:var(--text-muted)">${song.collaborators?.length>1?`<i class="fas fa-users"></i> ${song.collaborators.length} collaborators`:'Solo track'}</p></div></div>
+    card.innerHTML=`${song.pinned?'<div class="pin-badge"><i class="hgi hgi-stroke hgi-information-circle"></i> PINNED</div>':''}
+      <div class="catalogue-song-header"><img src="${song.coverUrl}" class="catalogue-song-cover" onerror="this.src='https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop'"><div class="catalogue-song-info"><h4>${song.title}</h4><p>${song.genre}</p><p style="font-size:11px;margin-top:3px;color:var(--text-muted)">${song.collaborators?.length>1?`<i class="hgi hgi-stroke hgi-user-multiple-02"></i> ${song.collaborators.length} collaborators`:'Solo track'}</p></div></div>
       <div class="catalogue-song-stats"><div><div>Streams</div><div>${formatNumber(song.streamCount||0)}</div></div><div><div>Uses</div><div>${formatNumber(song.useCount||0)}</div></div><div><div>Revenue</div><div style="color:var(--accent)">${rev}</div></div></div>
-      <div class="catalogue-song-actions"><button class="btn-small btn-pin${song.pinned?' active':''}" onclick="togglePin('${song.id}')"><i class="fas fa-thumbtack"></i> ${song.pinned?'Unpin':'Pin'}</button><button class="btn-small btn-analytics" onclick="showAnalytics('${song.id}')"><i class="fas fa-chart-line"></i> Analytics</button></div>`;
+      <div class="catalogue-song-actions"><button class="btn-small btn-pin${song.pinned?' active':''}" onclick="togglePin('${song.id}')"><i class="hgi hgi-stroke hgi-information-circle"></i> ${song.pinned?'Unpin':'Pin'}</button><button class="btn-small btn-analytics" onclick="showAnalytics('${song.id}')"><i class="hgi hgi-stroke hgi-chart-line-data-01"></i> Analytics</button></div>`;
     grid.appendChild(card);
   });
 }
@@ -1279,9 +1296,9 @@ function renderDashboard(){
   document.getElementById('statUses').textContent=formatNumber(uses);
   document.getElementById('statRevenue').textContent=formatCurrency(uses*0.05,currentArtist.country);
   const links=document.getElementById('platformLinks');
-  links.innerHTML='<h3><i class="fas fa-link" style="color:var(--accent);margin-right:7px;"></i>Platform Links</h3>';
-  if(currentArtist.spotifyUrl)links.innerHTML+=`<a href="${currentArtist.spotifyUrl}" target="_blank" class="platform-link"><i class="fab fa-spotify"></i> Spotify Profile</a>`;
-  if(currentArtist.appleMusicUrl)links.innerHTML+=`<a href="${currentArtist.appleMusicUrl}" target="_blank" class="platform-link apple"><i class="fab fa-apple"></i> Apple Music Profile</a>`;
+  links.innerHTML='<h3><i class="hgi hgi-stroke hgi-link-01" style="color:var(--accent);margin-right:7px;"></i>Platform Links</h3>';
+  if(currentArtist.spotifyUrl)links.innerHTML+=`<a href="${currentArtist.spotifyUrl}" target="_blank" class="platform-link"><i class="hgi hgi-stroke hgi-spotify"></i> Spotify Profile</a>`;
+  if(currentArtist.appleMusicUrl)links.innerHTML+=`<a href="${currentArtist.appleMusicUrl}" target="_blank" class="platform-link apple"><i class="hgi hgi-stroke hgi-apple"></i> Apple Music Profile</a>`;
   const list=document.getElementById('artistSongsList');
   list.innerHTML=!songs.length?'<p style="color:var(--text-muted);font-size:13px;">No songs uploaded yet.</p>':songs.map(s=>`<div class="artist-song-item"><img src="${s.coverUrl}" onerror="this.src='https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop'"><div class="artist-song-info"><h4>${s.title}</h4><p>${formatNumber(s.streamCount||0)} streams · ${formatNumber(s.useCount||0)} uses</p></div><p style="font-weight:700;color:var(--accent);font-size:13.5px;">${formatCurrency((s.useCount||0)*0.05,currentArtist.country)}</p></div>`).join('');
 }
@@ -1317,7 +1334,7 @@ async function createArtistAccount(){
     await poseDB.collection(POSE_CREATORS).doc(user.uid).set(profile);
     currentArtist={id:user.uid,...profile};showCreatorNavButtons(true);updateSidebarUser();
     showToast(`Welcome, ${name}! 🎶`,'success');showView('dashboard');
-  }catch(e){console.error('[Pose] Creator:',e);showToast('Setup failed. Please try again.','error');_setBtnLoading(btn,false,'<i class="fas fa-rocket"></i> Become a Creator');}
+  }catch(e){console.error('[Pose] Creator:',e);showToast('Setup failed. Please try again.','error');_setBtnLoading(btn,false,'<i class="hgi hgi-stroke hgi-rocket-01"></i> Become a Creator');}
 }
 async function uploadTrack(){
   const user=poseAuth?.currentUser;if(!user||!currentArtist){showToast('Set up your creator profile first','error');return;}
@@ -1349,7 +1366,7 @@ async function uploadTrack(){
   }catch(e){
     console.error('[Pose] Upload:',e);
     showToast(e.code==='storage/unauthorized'?'Permission denied — check Firebase Storage rules.':`Upload failed: ${e.message}`,'error');
-  }finally{_setBtnLoading(btn,false,'<i class="fas fa-check"></i> Upload Track');}
+  }finally{_setBtnLoading(btn,false,'<i class="hgi hgi-stroke hgi-tick-02"></i> Upload Track');}
 }
 async function loadUserSongsFromFirestore(uid){
   try{
@@ -1450,7 +1467,7 @@ document.addEventListener('click',e=>{
 
 
 
-function _setBtnLoading(btn,loading,label){if(!btn)return;btn.disabled=loading;btn.innerHTML=loading?`<i class="fas fa-spinner fa-spin"></i> ${label}`:label;}
+function _setBtnLoading(btn,loading,label){if(!btn)return;btn.disabled=loading;btn.innerHTML=loading?`<i class="hgi hgi-stroke hgi-loading-03 hgi-spin"></i> ${label}`:label;}
 function _resetUploadForm(){
   ['trackTitle','trackGenre','trackDescription','audioFile','coverFile'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['audioFileDisplay','coverFileDisplay'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
@@ -1551,7 +1568,7 @@ async function saveProfileEdits(){
     console.error('[Pose] Profile save:',e);
     showToast('Could not save changes','error');
   } finally{
-    _setBtnLoading(btn, false, '<i class="fas fa-save"></i> Save Changes');
+    _setBtnLoading(btn, false, '<i class="hgi hgi-stroke hgi-floppy-disk"></i> Save Changes');
   }
 }
 
@@ -1564,7 +1581,7 @@ function signOutArtist(){
     const drawerSignout = document.getElementById('drawerSignoutRow');
     if(drawerSignout) drawerSignout.style.display = 'none';
     const ma = document.getElementById('menuAvatarSmall');
-    if(ma){ ma.innerHTML='<i class="fas fa-user" style="font-size:10px;"></i>'; ma.style.background='var(--bg-hover)'; ma.style.color='var(--text-muted)';}
+    if(ma){ ma.innerHTML='<i class="hgi hgi-stroke hgi-user" style="font-size:10px;"></i>'; ma.style.background='var(--bg-hover)'; ma.style.color='var(--text-muted)';}
     const ml = document.getElementById('menuBtnLabel');
     if(ml) ml.textContent = 'Menu';
     showView('search');

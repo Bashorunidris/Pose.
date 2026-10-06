@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create a Pose Channel</title>
@@ -271,7 +272,24 @@
       color: var(--sub);
       font-weight: 500;
     }
-  </style>
+  
+        /* Hugeicons helpers */
+        .hgi, .hgi-stroke {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            speak: never;
+        }
+        .hgi-spin {
+            display: inline-block;
+            animation: pose-hgi-spin 0.9s linear infinite;
+        }
+        @keyframes pose-hgi-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        </style>
 </head>
 <body>
 
