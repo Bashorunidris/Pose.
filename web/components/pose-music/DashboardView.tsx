@@ -16,7 +16,7 @@ function StatCard({ label, icon, value }: { label: string; icon: string; value: 
     <div className={`bg-music-surface rounded-music p-[16px] ${TR} hover:bg-music-hover hover:-translate-y-[2px]`}>
       <h4 className="text-music-ink-muted text-[10.5px] uppercase tracking-[.7px] mb-[7px] flex justify-between items-center">
         {label}
-        <i className={`hgi hgi-stroke hgi-${icon} text-music-green`} />
+        <i className={`fas fa-${icon} text-music-green`} />
       </h4>
       <p className="text-[26px] font-bold font-display">{value}</p>
     </div>
@@ -52,7 +52,7 @@ export function DashboardView({ artist, songs }: Props) {
             className="w-[64px] h-[64px] rounded-full grid place-items-center text-[26px] text-black shrink-0"
             style={{ background: GRADIENT }}
           >
-            <i className="hgi hgi-stroke hgi-user" />
+            <i className="fas fa-user" />
           </div>
           <div>
             <h2 className="font-display text-[24px] font-extrabold mb-[2px]">{artist.name}</h2>
@@ -61,15 +61,15 @@ export function DashboardView({ artist, songs }: Props) {
         </div>
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-[11px] mb-[26px]">
-          <StatCard label="Monthly Streams" icon="chart-histogram" value={formatNumber(artist.monthlyStreams || 0)} />
-          <StatCard label="Total Songs" icon="music-note-01" value={`${songs.length}`} />
-          <StatCard label="Total Uses" icon="film-01" value={formatNumber(uses)} />
-          <StatCard label="Est. Revenue" icon="information-circle" value={formatCurrency(uses * REVENUE_PER_USE_USD, artist.country)} />
+          <StatCard label="Monthly Streams" icon="chart-bar" value={formatNumber(artist.monthlyStreams || 0)} />
+          <StatCard label="Total Songs" icon="music" value={`${songs.length}`} />
+          <StatCard label="Total Uses" icon="film" value={formatNumber(uses)} />
+          <StatCard label="Est. Revenue" icon="dollar-sign" value={formatCurrency(uses * REVENUE_PER_USE_USD, artist.country)} />
         </div>
 
         <div className="mb-[22px]">
           <h3 className="text-[14.5px] font-semibold mb-[11px]">
-            <i className="hgi hgi-stroke hgi-link-01 text-music-green mr-[7px]" />
+            <i className="fas fa-link text-music-green mr-[7px]" />
             Platform Links
           </h3>
           {links.map((link) => (
@@ -84,7 +84,7 @@ export function DashboardView({ artist, songs }: Props) {
                   : 'bg-[rgba(29,185,84,.09)] border-[rgba(29,185,84,.13)] hover:bg-[rgba(29,185,84,.16)]'
               } hover:translate-x-[4px]`}
             >
-              <i className={`hgi hgi-stroke hgi-${link.icon}`} />
+              <i className={`fab fa-${link.icon}`} />
               {link.label}
             </a>
           ))}
@@ -92,7 +92,7 @@ export function DashboardView({ artist, songs }: Props) {
 
         <div>
           <h3 className="text-[14.5px] font-semibold mb-[11px]">
-            <i className="hgi hgi-stroke hgi-menu-01 text-music-green mr-[7px]" />
+            <i className="fas fa-list text-music-green mr-[7px]" />
             Your Songs
           </h3>
           {songs.length === 0 ? (

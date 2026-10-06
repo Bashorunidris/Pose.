@@ -158,7 +158,7 @@ export default function PoseMusicPage() {
   const addSongToVideo = useCallback(
     (song: Song) => {
       bumpCount(song.id, 'useCount');
-      showToast(`"${song.title}" added to your video! 🎬`, 'success');
+      showToast(`"${song.title}" added to your video!`, 'success');
     },
     [bumpCount, showToast],
   );
@@ -288,7 +288,7 @@ export default function PoseMusicPage() {
     try {
       const record = await createProfile({ ...draft, email: user.email ?? undefined, isCreator: true });
       setArtist(record);
-      showToast(`Welcome, ${record.name}! 🎶`, 'success');
+      showToast(`Welcome, ${record.name}!`, 'success');
       showView('dashboard');
     } catch (error) {
       console.error('[Pose] Creator:', error);
@@ -312,7 +312,7 @@ export default function PoseMusicPage() {
     try {
       await updateProfile(artist.id, edits);
       setArtist({ ...artist, ...edits });
-      showToast('Profile updated ✅', 'success');
+      showToast('Profile updated', 'success');
     } catch (error) {
       console.error('[Pose] Profile save:', error);
       showToast('Could not save changes', 'error');
@@ -382,7 +382,7 @@ export default function PoseMusicPage() {
       };
       await setDoc(songDoc, data);
       addLocal({ ...data, id: songDoc.id, uploadDate: new Date().toISOString() } as Song);
-      showToast(`"${payload.title}" uploaded! 🎵`, 'success');
+      showToast(`"${payload.title}" uploaded!`, 'success');
       setTimeout(() => showView('catalogue'), CATALOGUE_REFRESH_DELAY_MS);
     } catch (error) {
       const failure = error as { code?: string; message?: string };

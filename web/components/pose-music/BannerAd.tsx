@@ -1,10 +1,11 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { SPONSORED_BADGE, TR } from './styles';
 
 type Props = {
   badge: string;
-  title: string;
+  title: ReactNode;
   description: string;
   action: string;
   onAction: () => void;

@@ -51,7 +51,7 @@ export function SignupView({ onSubmit }: Props) {
   return (
     <div className="max-w-[540px] mx-auto">
       <div className="text-center mb-[28px]">
-        <div className="text-[48px] mb-[10px]">🎙️</div>
+        <div className="text-[48px] mb-[10px]"><i className="fas fa-microphone" /></div>
         <h2 className="font-display text-[32px] font-extrabold mb-[7px]">Become a Creator</h2>
         <p className="text-music-ink-soft text-[14px]">Set up your artist profile to start uploading and earning</p>
       </div>
@@ -140,11 +140,11 @@ export function SignupView({ onSubmit }: Props) {
         >
           {busy ? (
             <>
-              <i className="hgi hgi-stroke hgi-loading-03 animate-hgi-spin" /> Setting up…
+              <i className="fas fa-spinner fa-spin" /> Setting up…
             </>
           ) : (
             <>
-              <i className="hgi hgi-stroke hgi-rocket-01" /> Become a Creator
+              <i className="fas fa-rocket" /> Become a Creator
             </>
           )}
         </button>

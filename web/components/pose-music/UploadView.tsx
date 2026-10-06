@@ -28,12 +28,12 @@ const MAX_AUDIO_BYTES = 100 * 1024 * 1024;
 function FileChip({ file, icon }: { file: File; icon: string }) {
   return (
     <div className="flex items-center gap-[11px] py-[11px] px-[14px] bg-[rgba(29,185,84,.07)] border border-[rgba(29,185,84,.18)] rounded-music-sm mt-[10px] text-[12.5px]">
-      <i className={`hgi hgi-stroke hgi-${icon} text-music-green text-[17px]`} />
+      <i className={`fas fa-${icon} text-music-green text-[17px]`} />
       <div className="flex-1">
         <p className="font-semibold">{file.name}</p>
         <p className="text-[11.5px] text-music-ink-muted">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
       </div>
-      <i className="hgi hgi-stroke hgi-checkmark-circle-02 text-music-green ml-auto" />
+      <i className="fas fa-check-circle text-music-green ml-auto" />
     </div>
   );
 }
@@ -72,7 +72,7 @@ function DropZone({
         }}
         className={`${DROP_ZONE} ${dragging ? '!border-music-green !bg-[rgba(29,185,84,.04)]' : ''}`}
       >
-        <i className={`hgi hgi-stroke hgi-${icon} text-[34px] text-music-ink-muted mb-[10px] block`} />
+        <i className={`fas fa-${icon} text-[34px] text-music-ink-muted mb-[10px] block`} />
         <p className="text-[13px] text-music-ink font-semibold">{label}</p>
         <p className="text-[11.5px] text-music-ink-muted mt-[4px]">{hint}</p>
         <input
@@ -165,14 +165,14 @@ export function UploadView({
     <div className="max-w-[680px] mx-auto max-[600px]:px-0">
       <div className="flex items-baseline justify-between mb-[22px]">
         <h2 className="font-display text-[21px] font-bold max-[600px]:text-[17px]">
-          <i className="hgi hgi-stroke hgi-upload-01 text-music-green mr-[9px]" />
+          <i className="fas fa-upload text-music-green mr-[9px]" />
           Upload New Music
         </h2>
       </div>
 
       <div className={UPLOAD_CARD}>
         <h3 className={CARD_HEADING}>
-          <i className="hgi hgi-stroke hgi-music-note-01" /> Track Information
+          <i className="fas fa-music" /> Track Information
         </h3>
         <div className="grid grid-cols-2 gap-[14px] max-[600px]:grid-cols-1">
           <label className="flex flex-col gap-[5px] [grid-column:1/-1]">
@@ -197,12 +197,12 @@ export function UploadView({
 
       <div className={UPLOAD_CARD}>
         <h3 className={CARD_HEADING}>
-          <i className="hgi hgi-stroke hgi-file-audio" /> Upload Files
+          <i className="fas fa-file-audio" /> Upload Files
         </h3>
         <DropZone
           label="Drag & drop your audio file here"
           hint="MP3, WAV, FLAC — Max 100MB"
-          icon="cloud-upload"
+          icon="cloud-upload-alt"
           accept=".mp3,.wav,.flac"
           file={audioFile}
           fileIcon="file-audio"
@@ -212,10 +212,10 @@ export function UploadView({
           <DropZone
             label="Upload cover art"
             hint="PNG, JPG — Min 1000×1000px"
-            icon="image-01"
+            icon="image"
             accept=".png,.jpg,.jpeg"
             file={coverFile}
-            fileIcon="image-01"
+            fileIcon="image"
             onPick={pickCover}
           />
         </div>
@@ -223,7 +223,7 @@ export function UploadView({
 
       <div className={UPLOAD_CARD}>
         <h3 className={CARD_HEADING}>
-          <i className="hgi hgi-stroke hgi-user-multiple-02" /> Collaborators &amp; Revenue Split
+          <i className="fas fa-users" /> Collaborators &amp; Revenue Split
         </h3>
         <p className="text-music-ink-muted text-[12px] mb-[13px]">
           Add collaborators and specify revenue split. Total must equal 100%.
@@ -271,7 +271,7 @@ export function UploadView({
               onClick={() => setCollaborators((prev) => prev.filter((_, i) => i !== index))}
               className={`bg-[rgba(232,65,75,.1)] text-music-red border border-[rgba(232,65,75,.18)] py-[6px] px-[10px] rounded-[6px] cursor-pointer ${TR} hover:bg-[rgba(232,65,75,.2)]`}
             >
-              <i className="hgi hgi-stroke hgi-cancel-01" />
+              <i className="fas fa-times" />
             </button>
           </div>
         ))}
@@ -281,7 +281,7 @@ export function UploadView({
           onClick={addCollaborator}
           className={`bg-[rgba(29,185,84,.1)] text-music-green border border-[rgba(29,185,84,.22)] py-[8px] px-[14px] rounded-music-sm cursor-pointer font-body text-[12.5px] font-semibold inline-flex items-center gap-[5px] ${TR} hover:bg-[rgba(29,185,84,.18)]`}
         >
-          <i className="hgi hgi-stroke hgi-add-01" /> Add Collaborator
+          <i className="fas fa-plus" /> Add Collaborator
         </button>
 
         <div className="py-[11px] px-[14px] bg-[rgba(61,139,255,.07)] border border-[rgba(61,139,255,.14)] rounded-music-sm text-[12.5px] mt-[11px]">
@@ -298,11 +298,11 @@ export function UploadView({
       >
         {busy ? (
           <>
-            <i className="hgi hgi-stroke hgi-loading-03 animate-hgi-spin" /> Uploading…
+            <i className="fas fa-spinner fa-spin" /> Uploading…
           </>
         ) : (
           <>
-            <i className="hgi hgi-stroke hgi-tick-02" /> Upload Track
+            <i className="fas fa-check" /> Upload Track
           </>
         )}
       </button>

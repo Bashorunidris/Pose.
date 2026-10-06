@@ -22,8 +22,8 @@ export function Toast({ toast }: { toast: ToastState }) {
       style={toast.leaving ? { animation: 'toast-in .25s ease-out reverse' } : undefined}
     >
       <i
-        className={`hgi hgi-stroke text-[14px] ${ICON_COLOR_BY_TYPE[toast.type]} ${
-          toast.type === 'success' ? 'hgi-checkmark-circle-02' : 'hgi-cancel-01'
+        className={`fas text-[14px] ${ICON_COLOR_BY_TYPE[toast.type]} ${
+          toast.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'
         }`}
       />
       <span>{toast.message}</span>

@@ -19,7 +19,7 @@ function StatCard({ label, value, accent = false }: { label: string; value: stri
 function Placeholder({ icon, text }: { icon: string; text: string }) {
   return (
     <div className="bg-music-surface border border-music-hair rounded-music p-[36px] text-center text-music-ink-muted text-[12.5px]">
-      <i className={`hgi hgi-stroke hgi-${icon} text-[34px] mb-[11px] block`} />
+      <i className={`fas fa-${icon} text-[34px] mb-[11px] block`} />
       <p>{text}</p>
     </div>
   );
@@ -47,7 +47,7 @@ export function AnalyticsModal({ song, artist, open, onClose }: Props) {
       <div className="bg-music-elevated border border-music-hair-bright rounded-music-lg p-[26px] max-w-[840px] w-[90%] max-h-[88vh] overflow-y-auto animate-modal-in">
         <div className="flex justify-between items-center mb-[18px]">
           <h2 className="font-display text-[19px] font-bold flex items-center gap-[9px]">
-            <i className="hgi hgi-stroke hgi-chart-line-data-01 text-music-green" />
+            <i className="fas fa-chart-line text-music-green" />
             <span>{song.title}</span>
           </h2>
           <button
@@ -56,7 +56,7 @@ export function AnalyticsModal({ song, artist, open, onClose }: Props) {
             aria-label="Close analytics"
             className={`bg-transparent border-none text-music-ink-muted text-[19px] cursor-pointer p-[3px] ${TR} hover:text-music-ink`}
           >
-            <i className="hgi hgi-stroke hgi-cancel-01" />
+            <i className="fas fa-times" />
           </button>
         </div>
 
@@ -69,21 +69,21 @@ export function AnalyticsModal({ song, artist, open, onClose }: Props) {
 
         <div className="mb-[22px]">
           <h4 className={SECTION_TITLE}>
-            <i className="hgi hgi-stroke hgi-information-circle" /> Performance Over Time
+            <i className="fas fa-chart-area" /> Performance Over Time
           </h4>
-          <Placeholder icon="chart-line-data-01" text="Streams and uses chart" />
+          <Placeholder icon="chart-line" text="Streams and uses chart" />
         </div>
 
         <div className="mb-[22px]">
           <h4 className={SECTION_TITLE}>
-            <i className="hgi hgi-stroke hgi-globe-02" /> Geographic Distribution
+            <i className="fas fa-globe" /> Geographic Distribution
           </h4>
-          <Placeholder icon="information-circle" text="Geographic breakdown" />
+          <Placeholder icon="map-marked-alt" text="Geographic breakdown" />
         </div>
 
         <div className="mb-[22px]">
           <h4 className={SECTION_TITLE}>
-            <i className="hgi hgi-stroke hgi-user-multiple-02" /> Collaborators &amp; Revenue Split
+            <i className="fas fa-users" /> Collaborators &amp; Revenue Split
           </h4>
           <div>
             {collaborators.length > 0 ? (
@@ -109,7 +109,7 @@ export function AnalyticsModal({ song, artist, open, onClose }: Props) {
 
         <div>
           <h4 className={SECTION_TITLE}>
-            <i className="hgi hgi-stroke hgi-information-circle" /> Track Details
+            <i className="fas fa-info-circle" /> Track Details
           </h4>
           <div className="bg-music-surface p-[16px] rounded-music grid grid-cols-2 gap-[13px] text-[13px]">
             <div>

@@ -19,7 +19,7 @@ export function Filters({ genre, country, onGenre, onCountry }: Props) {
       <div className="flex flex-col gap-[11px]">
         <div>
           <span className={LABEL}>
-            <i className="hgi hgi-stroke hgi-music-note-01 mr-[5px]" />
+            <i className="fas fa-music mr-[5px]" />
             Genre
           </span>
           <div className="flex gap-[7px] flex-wrap">
@@ -42,7 +42,7 @@ export function Filters({ genre, country, onGenre, onCountry }: Props) {
 
         <div>
           <span className={LABEL}>
-            <i className="hgi hgi-stroke hgi-globe-02 mr-[5px]" />
+            <i className="fas fa-globe mr-[5px]" />
             Country
           </span>
           <select

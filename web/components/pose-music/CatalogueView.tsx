@@ -28,11 +28,11 @@ export function CatalogueView({ artist, songs, query, onQueryChange, onPin, onAn
     <>
       <div className="flex items-center justify-between mb-[22px] flex-wrap gap-[11px]">
         <h2 className="font-display text-[21px] font-bold max-[600px]:text-[17px]">
-          <i className="hgi hgi-stroke hgi-folder-02 text-music-green mr-[9px]" />
+          <i className="fas fa-folder-open text-music-green mr-[9px]" />
           My Catalogue
         </h2>
         <div className="relative min-w-[240px]">
-          <i className="hgi hgi-stroke hgi-search-01 absolute left-[10px] top-1/2 -translate-y-1/2 text-music-ink-muted text-[12px]" />
+          <i className="fas fa-search absolute left-[10px] top-1/2 -translate-y-1/2 text-music-ink-muted text-[12px]" />
           <input
             type="text"
             value={query}
@@ -60,7 +60,7 @@ export function CatalogueView({ artist, songs, query, onQueryChange, onPin, onAn
 
       {songs.length === 0 ? (
         <div className="text-center pt-[70px] pb-[70px] px-[20px]">
-          <i className="hgi hgi-stroke hgi-music-note-01 text-[52px] text-music-ink-muted mb-[14px] block" />
+          <i className="fas fa-music text-[52px] text-music-ink-muted mb-[14px] block" />
           <h3 className="font-display mb-[7px]">No tracks yet</h3>
           <p className="text-music-ink-soft mb-[18px]">Upload your first track to get started</p>
           <button
@@ -68,7 +68,7 @@ export function CatalogueView({ artist, songs, query, onQueryChange, onPin, onAn
             onClick={onUpload}
             className={`${SUBMIT_BTN} py-[11px] px-[22px] mt-[18px]`}
           >
-            <i className="hgi hgi-stroke hgi-upload-01" /> Upload Your First Track
+            <i className="fas fa-upload" /> Upload Your First Track
           </button>
         </div>
       ) : (
@@ -87,7 +87,7 @@ export function CatalogueView({ artist, songs, query, onQueryChange, onPin, onAn
               >
                 {song.pinned ? (
                   <div className="absolute top-[10px] right-[10px] bg-music-amber text-black py-[2px] px-[7px] rounded-[4px] text-[9.5px] font-bold">
-                    <i className="hgi hgi-stroke hgi-information-circle" /> PINNED
+                    <i className="fas fa-thumbtack" /> PINNED
                   </div>
                 ) : null}
 
@@ -105,7 +105,7 @@ export function CatalogueView({ artist, songs, query, onQueryChange, onPin, onAn
                     <p className="text-[11px] mt-[3px] text-music-ink-muted">
                       {collaborators.length > 1 ? (
                         <>
-                          <i className="hgi hgi-stroke hgi-user-multiple-02" /> {collaborators.length} collaborators
+                          <i className="fas fa-users" /> {collaborators.length} collaborators
                         </>
                       ) : (
                         'Solo track'
@@ -139,14 +139,14 @@ export function CatalogueView({ artist, songs, query, onQueryChange, onPin, onAn
                         : 'bg-[rgba(245,158,11,.1)] text-music-amber border border-[rgba(245,158,11,.18)] hover:bg-[rgba(245,158,11,.2)]'
                     }`}
                   >
-                    <i className="hgi hgi-stroke hgi-information-circle" /> {song.pinned ? 'Unpin' : 'Pin'}
+                    <i className="fas fa-thumbtack" /> {song.pinned ? 'Unpin' : 'Pin'}
                   </button>
                   <button
                     type="button"
                     onClick={() => onAnalytics(song)}
                     className={`${SMALL_BUTTON} bg-[rgba(61,139,255,.1)] text-music-blue border border-[rgba(61,139,255,.18)] hover:bg-[rgba(61,139,255,.2)]`}
                   >
-                    <i className="hgi hgi-stroke hgi-chart-line-data-01" /> Analytics
+                    <i className="fas fa-chart-line" /> Analytics
                   </button>
                 </div>
               </div>

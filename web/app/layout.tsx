@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Pose",
   description:
     "Create, go live, earn, and grow on Pose — the African creator platform for videos, music, and live streaming.",
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <link
           rel="stylesheet"
-          href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         />
       </head>
       <body className="font-body">{children}</body>

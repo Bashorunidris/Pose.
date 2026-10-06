@@ -44,7 +44,7 @@ export function SearchView({
             {index > 0 && index % AD_EVERY_SONGS === 0 ? (
               <BannerAd
                 badge="POSE PLATFORM"
-                title="💎 Premium sound, premium creator pay"
+                title={<><i className="far fa-gem" /> Premium sound, premium creator pay</>}
                 description="3–5× higher royalties per use — upload your music today"
                 action="Upload Music"
                 onAction={onSignup}
@@ -65,13 +65,13 @@ export function SearchView({
 
       {loadingMore ? (
         <div className="text-center p-[36px] text-[13.5px] text-music-ink-muted">
-          <i className="hgi hgi-stroke hgi-loading-03 animate-spin" /> Loading more…
+          <i className="fas fa-spinner fa-spin" /> Loading more…
         </div>
       ) : null}
 
       <BannerAd
         badge="POSE CREATORS"
-        title="🚀 Your music, your earnings — amplified on Pose"
+        title={<><i className="fas fa-rocket" /> Your music, your earnings — amplified on Pose</>}
         description="Every use pays creators directly. Earn 3–5× more than traditional platforms"
         action="Start Earning More"
         onAction={onSignup}

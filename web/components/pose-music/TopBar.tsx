@@ -26,7 +26,7 @@ export function TopBar({ query, artist, onQueryChange, onOpenDrawer, onLogoClick
         onClick={onBack}
         className={`bg-transparent border-none text-music-ink-soft cursor-pointer py-[5px] px-[9px] rounded-full text-[14px] ${TR} hover:text-music-ink hover:bg-white/[.07]`}
       >
-        <i className="hgi hgi-stroke hgi-arrow-left-01" />
+        <i className="fas fa-chevron-left" />
       </button>
 
       <div
@@ -39,7 +39,7 @@ export function TopBar({ query, artist, onQueryChange, onOpenDrawer, onLogoClick
       </div>
 
       <div className="flex-1 relative max-w-[340px]">
-        <i className="hgi hgi-stroke hgi-search-01 absolute left-[13px] top-1/2 -translate-y-1/2 text-music-ink-muted text-[13px] pointer-events-none" />
+        <i className="fas fa-search absolute left-[13px] top-1/2 -translate-y-1/2 text-music-ink-muted text-[13px] pointer-events-none" />
         <input
           type="text"
           value={query}
@@ -63,10 +63,10 @@ export function TopBar({ query, artist, onQueryChange, onOpenDrawer, onLogoClick
                 : { background: 'var(--color-music-hover)', color: 'var(--color-music-ink-muted)' }
             }
           >
-            {artist ? initials : <i className="hgi hgi-stroke hgi-user text-[10px]" />}
+            {artist ? initials : <i className="fas fa-user text-[10px]" />}
           </span>
           <span>{artist ? artist.name.split(' ')[0] : 'Menu'}</span>
-          <i className="hgi hgi-stroke hgi-menu-01 text-[12px] text-music-ink-muted" />
+          <i className="fas fa-bars text-[12px] text-music-ink-muted" />
         </button>
       </div>
     </header>

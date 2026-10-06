@@ -106,7 +106,7 @@ export function EffectsPanel({ open, song, playing, engine, onClose, onUse, onRe
     >
       <div className="pt-[22px] pb-[14px] px-[18px] border-b border-music-hair flex items-center justify-between">
         <h3 className="font-display text-[16px] font-bold">
-          <i className="hgi hgi-stroke hgi-sliders-horizontal text-music-green mr-[7px]" />
+          <i className="fas fa-sliders-h text-music-green mr-[7px]" />
           Sound Effects
         </h3>
         <button
@@ -115,7 +115,7 @@ export function EffectsPanel({ open, song, playing, engine, onClose, onUse, onRe
           aria-label="Close effects"
           className={`bg-transparent border-none text-music-ink-muted text-[17px] cursor-pointer p-[4px] ${TR} hover:text-music-ink`}
         >
-          <i className="hgi hgi-stroke hgi-cancel-01" />
+          <i className="fas fa-times" />
         </button>
       </div>
 
@@ -231,7 +231,7 @@ export function EffectsPanel({ open, song, playing, engine, onClose, onUse, onRe
           onClick={onReset}
           className={`bg-music-surface border border-music-hair text-music-ink-soft py-[8px] px-[14px] rounded-music-sm cursor-pointer font-body text-[12.5px] font-semibold inline-flex items-center justify-center gap-[5px] w-full ${TR} hover:text-white`}
         >
-          <i className="hgi hgi-stroke hgi-arrow-turn-backward" /> Reset All Effects
+          <i className="fas fa-undo" /> Reset All Effects
         </button>
       </div>
 
@@ -240,7 +240,7 @@ export function EffectsPanel({ open, song, playing, engine, onClose, onUse, onRe
         onClick={onUse}
         className={`mx-[18px] mb-[18px] p-[12px] bg-music-green text-black border-none rounded-music text-[13.5px] font-bold cursor-pointer font-body inline-flex items-center justify-center gap-[7px] ${TR} hover:bg-music-green-bright hover:scale-[1.02]`}
       >
-        <i className="hgi hgi-stroke hgi-film-01" /> Use in Video / Photo
+        <i className="fas fa-film" /> Use in Video / Photo
       </button>
     </aside>
   );

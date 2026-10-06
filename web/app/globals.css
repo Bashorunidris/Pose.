@@ -70,16 +70,9 @@
   --radius-music-sm: 8px;
   --radius-music-lg: 18px;
 
-  --animate-hgi-spin: hgi-spin 0.9s linear infinite;
   --animate-fade-up: fade-up 0.35s ease-out backwards;
   --animate-modal-in: modal-in 0.25s ease-out;
   --animate-toast-in: toast-in 0.25s ease-out;
-
-  @keyframes hgi-spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
 
   @keyframes fade-up {
     from {
@@ -164,18 +157,4 @@ body {
 .music-select-option {
   background: #1a1a1a;
   color: #fff;
-}
-
-/*
- * The Hugeicons CDN stylesheet ships the glyph font and `content` rules only; the
- * legacy pages added this alignment layer themselves so icons sit on the text
- * baseline inside flex rows.
- */
-.hgi,
-.hgi-stroke {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  speak: never;
 }

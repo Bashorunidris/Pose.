@@ -55,7 +55,7 @@ export function SongCard({
             onClick={() => onTogglePlay(song)}
             className="w-[42px] h-[42px] bg-music-green rounded-full grid place-items-center text-black text-[15px] border-none cursor-pointer scale-[.85] translate-y-[6px] shadow-[0_4px_18px_rgba(29,185,84,.5)] transition-all duration-[220ms] group-hover:scale-100 group-hover:translate-y-0 hover:!scale-[1.08]"
           >
-            <i className={`hgi hgi-stroke hgi-${playing ? 'pause' : 'play'}`} />
+            <i className={`fas fa-${playing ? 'pause' : 'play'}`} />
           </button>
         </div>
       </div>
@@ -71,17 +71,17 @@ export function SongCard({
           <span className={META_TAG}>{song.genre}</span>
           <span className={META_TAG}>{song.country}</span>
           <span className={META_TAG}>
-            <i className="hgi hgi-stroke hgi-clock-01" /> {formatDuration(song.duration)}
+            <i className="fas fa-clock" /> {formatDuration(song.duration)}
           </span>
         </div>
       </div>
 
       <div className="flex justify-between mt-[9px] text-[11px] text-music-ink-muted">
         <span className="inline-flex items-center gap-[3px]">
-          <i className="hgi hgi-stroke hgi-play-circle" /> {formatNumber(song.streamCount)}
+          <i className="fas fa-play-circle" /> {formatNumber(song.streamCount)}
         </span>
         <span className="inline-flex items-center gap-[3px]">
-          <i className="hgi hgi-stroke hgi-film-01" /> {formatNumber(song.useCount)}
+          <i className="fas fa-film" /> {formatNumber(song.useCount)}
         </span>
       </div>
 
@@ -95,7 +95,7 @@ export function SongCard({
               : 'bg-music-surface text-music-ink border border-music-hair hover:bg-music-hover hover:border-music-hair-bright'
           }`}
         >
-          <i className={`hgi hgi-stroke hgi-${playing ? 'pause' : 'play'}`} />
+          <i className={`fas fa-${playing ? 'pause' : 'play'}`} />
           {' '}
           {playing ? 'Pause' : 'Preview'}
         </button>
@@ -104,7 +104,7 @@ export function SongCard({
           onClick={() => onOpenEffects(song)}
           className={`${BTN} flex-1 py-[8px] px-[10px] text-[11.5px] bg-music-green text-black hover:bg-music-green-bright hover:scale-[1.03]`}
         >
-          <i className="hgi hgi-stroke hgi-sliders-horizontal" /> Use
+          <i className="fas fa-sliders-h" /> Use
         </button>
       </div>
 

@@ -58,17 +58,17 @@ export function PlayerBar({
             liked ? 'text-music-green' : 'text-music-ink-muted'
           }`}
         >
-          <i className="hgi hgi-stroke hgi-favourite" />
+          <i className="far fa-heart" />
         </button>
       </div>
 
       <div className="flex flex-col items-center gap-[7px]">
         <div className="flex items-center gap-[4px]">
           <button type="button" className={PLAYER_BUTTON} aria-hidden="true" tabIndex={-1}>
-            <i className="hgi hgi-stroke hgi-information-circle" />
+            <i className="fas fa-random" />
           </button>
           <button type="button" className={PLAYER_BUTTON} aria-hidden="true" tabIndex={-1}>
-            <i className="hgi hgi-stroke hgi-information-circle" />
+            <i className="fas fa-step-backward" />
           </button>
           <button
             type="button"
@@ -76,13 +76,13 @@ export function PlayerBar({
             aria-label={playing ? 'Pause' : 'Play'}
             className={`${PLAYER_BUTTON} !text-[20px] text-music-ink py-[7px]`}
           >
-            <i className={`hgi hgi-stroke hgi-${playing ? 'pause' : 'play'}`} />
+            <i className={`fas fa-${playing ? 'pause' : 'play'}`} />
           </button>
           <button type="button" className={PLAYER_BUTTON} aria-hidden="true" tabIndex={-1}>
-            <i className="hgi hgi-stroke hgi-information-circle" />
+            <i className="fas fa-step-forward" />
           </button>
           <button type="button" className={PLAYER_BUTTON} aria-hidden="true" tabIndex={-1}>
-            <i className="hgi hgi-stroke hgi-reload" />
+            <i className="fas fa-redo" />
           </button>
         </div>
         <div className="flex items-center gap-[7px] w-full max-w-[380px]">
@@ -111,9 +111,9 @@ export function PlayerBar({
           onClick={onOpenEffects}
           className={`inline-flex items-center gap-[5px] bg-[rgba(29,185,84,.1)] border border-[rgba(29,185,84,.22)] text-music-green py-[6px] px-[13px] rounded-[20px] text-[11.5px] font-semibold cursor-pointer font-body ${TR} hover:bg-[rgba(29,185,84,.2)]`}
         >
-          <i className="hgi hgi-stroke hgi-sliders-horizontal" /> Effects
+          <i className="fas fa-sliders-h" /> Effects
         </button>
-        <i className="hgi hgi-stroke hgi-volume-high text-music-ink-muted text-[13px]" />
+        <i className="fas fa-volume-up text-music-ink-muted text-[13px]" />
         <input
           type="range"
           className="music-range w-[75px]"
