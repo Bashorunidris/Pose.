@@ -3,6 +3,7 @@
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage, type FirebaseStorage } from 'firebase/storage';
 
 /**
  * Replaces the legacy CDN compat SDK (`firebase-*-compat.js` 9.22.0 loaded as
@@ -10,7 +11,12 @@ import { getFirestore, type Firestore } from 'firebase/firestore';
  * run under the App Router because it touches `window` at module scope.
  */
 
-type PoseFirebase = { app: FirebaseApp; auth: Auth; db: Firestore };
+type PoseFirebase = {
+  app: FirebaseApp;
+  auth: Auth;
+  db: Firestore;
+  storage: FirebaseStorage;
+};
 
 let cached: PoseFirebase | undefined;
 
@@ -35,8 +41,16 @@ export function getPoseFirebase(): PoseFirebase {
       storageBucket,
       appId,
     });
-    cached = { app, auth: getAuth(app), db: getFirestore(app) };
+    cached = {
+      app,
+      auth: getAuth(app),
+      db: getFirestore(app),
+      storage: getStorage(app),
+    };
   }
 
   return cached;
 }
+
+export const POSE_CREATORS_COLLECTION = 'pose_creators';
+export const POSE_SONGS_COLLECTION = 'pose_songs';

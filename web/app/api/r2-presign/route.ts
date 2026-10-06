@@ -82,13 +82,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { filename, contentType, folder } = body;
+  const { filename, folder } = body;
   if (typeof filename !== 'string' || filename.length === 0) {
     return NextResponse.json({ error: 'Missing filename' }, { status: 400 });
   }
 
-  const resolvedContentType =
-    typeof contentType === 'string' && contentType.length > 0 ? contentType : 'application/octet-stream';
   const resolvedFolder =
     typeof folder === 'string' && folder.length > 0 ? folder : 'general';
 
