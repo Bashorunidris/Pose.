@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pose Channel Dashboard</title>
@@ -9,9 +8,12 @@
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
     /* ==============================
        CSS VARIABLES
     ============================== */
@@ -2845,24 +2847,7 @@ input[type=range].ucoin-slider {
 }
 
 
-
-        /* Hugeicons helpers */
-        .hgi, .hgi-stroke {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            speak: never;
-        }
-        .hgi-spin {
-            display: inline-block;
-            animation: pose-hgi-spin 0.9s linear infinite;
-        }
-        @keyframes pose-hgi-spin {
-            to { transform: rotate(360deg); }
-        }
-
-        </style>
+</style>
 </head><body>
 
 <div id="dashLoader">
@@ -2879,7 +2864,7 @@ input[type=range].ucoin-slider {
 </div>
 <div class="topbar-actions">
 <button class="btn btn-ghost" style="position:relative;" onclick="openInboxPopup()">
-<i class="hgi hgi-stroke hgi-inbox"></i>
+<i class="fas fa-inbox"></i>
 Inbox
 <span id="inboxBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:#DC2626;color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:99px;align-items:center;justify-content:center;padding:0 4px;">0</span>
 </button>
@@ -2901,16 +2886,16 @@ Go Back to Pose
 
 <div class="tabs-bar">
 <div class="tab-item active" data-tab="home" onclick="onMainTab(this,'home')">
-<i class="hgi hgi-stroke hgi-home-01"></i> Home
+<i class="fas fa-house"></i> Home
 </div>
 <div class="tab-item" data-tab="studio" onclick="onMainTab(this,'studio')">
-<i class="hgi hgi-stroke hgi-film-01"></i> Studio
+<i class="fas fa-film"></i> Studio
 </div>
 <div class="tab-item" data-tab="earnings" onclick="onMainTab(this,'earnings')">
-<i class="hgi hgi-stroke hgi-coins-01"></i> Earnings
+<i class="fas fa-coins"></i> Earnings
 </div>
 <div class="tab-item" data-tab="legibility" onclick="onMainTab(this,'legibility')">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Legibility
+<i class="fas fa-clipboard-list"></i> Legibility
 </div>
 </div>
 
@@ -2925,7 +2910,7 @@ Edit banner
 <span class="channel-avatar-initials">P</span>
 </div>
 <div class="avatar-edit-btn" title="Change channel photo" onclick="event.stopPropagation(); openModal('photoModal')">
-<i class="hgi hgi-stroke hgi-camera-01"></i>
+<i class="fa-solid fa-camera"></i>
 </div>
 </div>
 
@@ -2933,28 +2918,28 @@ Edit banner
 <div class="channel-name">Pose Channel</div>
 <div class="channel-handle">@posechannel  ·  Creator</div>
 <span class="channel-badge">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02"></i> Verified Creator
+<i class="fas fa-circle-check"></i> Verified Creator
 </span>
 </div>
 
 <div class="stats-container">
 <div class="stat-card">
-<div class="stat-icon"><i class="hgi hgi-stroke hgi-view"></i></div>
+<div class="stat-icon"><i class="fas fa-eye"></i></div>
 <div class="stat-value" id="statViews">—</div>
 <div class="stat-label">Total Views</div>
 </div>
 <div class="stat-card">
-<div class="stat-icon" style="color:#f472b6;"><i class="hgi hgi-stroke hgi-thumbs-up"></i></div>
+<div class="stat-icon" style="color:#f472b6;"><i class="fas fa-thumbs-up"></i></div>
 <div class="stat-value" id="statLikes">—</div>
 <div class="stat-label">Total Likes</div>
 </div>
 <div class="stat-card">
-<div class="stat-icon"><i class="hgi hgi-stroke hgi-film-01"></i></div>
+<div class="stat-icon"><i class="fas fa-film"></i></div>
 <div class="stat-value" id="statVideos">—</div>
 <div class="stat-label">Videos</div>
 </div>
 <div class="stat-card">
-<div class="stat-icon" style="color:#f87171;"><i class="hgi hgi-stroke hgi-favourite"></i></div>
+<div class="stat-icon" style="color:#f87171;"><i class="fas fa-heart"></i></div>
 <div class="stat-value" id="statFans">—</div>
 <div class="stat-label">Fans</div>
 </div>
@@ -2967,7 +2952,7 @@ background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;
 display:flex;align-items:center;gap:10px;">
 <div style="width:32px;height:32px;border-radius:50%;background:#F59E0B;color:#fff;
 display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-<i class="hgi hgi-stroke hgi-shield-01"></i>
+<i class="fas fa-shield-halved"></i>
 </div>
 <div style="flex:1;min-width:0;">
 <div style="font-size:12.5px;font-weight:800;color:#78350F;line-height:1.3;">
@@ -2977,7 +2962,7 @@ Payout Requirements
 Paid videos need <b>10 views</b> to start earning, then release every <b>5 hours</b> · <b id="homeSlotsRemaining">5</b> pricing slots left this month.
 </div>
 </div>
-<i class="hgi hgi-stroke hgi-arrow-right-01" style="color:#92400E;font-size:11px;flex-shrink:0;"></i>
+<i class="fas fa-chevron-right" style="color:#92400E;font-size:11px;flex-shrink:0;"></i>
 </div>
 
 <div class="cta-row">
@@ -3063,7 +3048,7 @@ Back
 
 <div class="card banner-section">
 <div class="banner-title">
-<i class="hgi hgi-stroke hgi-fire"></i> Most Watched Videos
+<i class="fas fa-fire"></i> Most Watched Videos
 <span class="banner-badge">Top 10</span>
 </div>
 <div class="banner-scroll" id="banner-watched"></div>
@@ -3071,7 +3056,7 @@ Back
 
 <div class="card banner-section">
 <div class="banner-title">
-<i class="hgi hgi-stroke hgi-coins-01"></i> Most Paid Videos
+<i class="fas fa-coins"></i> Most Paid Videos
 <span class="banner-badge">Top Earners</span>
 </div>
 <div class="banner-scroll" id="banner-paid"></div>
@@ -3080,13 +3065,13 @@ Back
 <div class="two-col-banners">
 <div class="card banner-section">
 <div class="banner-title">
-<i class="hgi hgi-stroke hgi-favourite"></i> Most Liked
+<i class="fas fa-heart"></i> Most Liked
 </div>
 <div class="banner-scroll" id="banner-liked"></div>
 </div>
 <div class="card banner-section">
 <div class="banner-title">
-<i class="hgi hgi-stroke hgi-flash"></i> Most Engaged
+<i class="fas fa-bolt"></i> Most Engaged
 </div>
 <div class="banner-scroll" id="banner-engaged"></div>
 </div>
@@ -3105,10 +3090,10 @@ Back
 <thead>
 <tr>
 <th>Video</th>
-<th class="c"><i class="hgi hgi-stroke hgi-view"></i> Views</th>
-<th class="c"><i class="hgi hgi-stroke hgi-favourite"></i> Likes</th>
-<th class="c"><i class="hgi hgi-stroke hgi-comment-01"></i> Comments</th>
-<th class="c"><i class="hgi hgi-stroke hgi-coins-01"></i> Coins</th>
+<th class="c"><i class="fas fa-eye"></i> Views</th>
+<th class="c"><i class="fas fa-heart"></i> Likes</th>
+<th class="c"><i class="fas fa-comment"></i> Comments</th>
+<th class="c"><i class="fas fa-coins"></i> Coins</th>
 </tr>
 </thead>
 <tbody id="perfBody"></tbody>
@@ -3205,7 +3190,7 @@ Back
 <!-- Eligibility / threshold banner -->
 <div id="eligibilityBanner" style="margin-top:14px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-<i class="hgi hgi-stroke hgi-shield-01" style="color:#D97706;"></i>
+<i class="fas fa-shield-halved" style="color:#D97706;"></i>
 <span style="font-size:12.5px;font-weight:800;color:#78350F;">Withdrawal Requirements</span>
 </div>
 <div style="font-size:11.5px;color:#92400E;line-height:1.55;margin-bottom:8px;">
@@ -3215,7 +3200,7 @@ Back
 <!-- Paid progress -->
 <div id="paidEligibilityRow" style="background:#fff;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;">
 <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:#78350F;margin-bottom:4px;">
-<span><i class="hgi hgi-stroke hgi-coins-01" style="margin-right:4px;"></i> Paid Video Pool</span>
+<span><i class="fas fa-coins" style="margin-right:4px;"></i> Paid Video Pool</span>
 <span id="paidEligStatus">—</span>
 </div>
 <div id="paidEligText" style="font-size:10.5px;color:#92400E;margin-top:2px;line-height:1.5;">—</div>
@@ -3235,21 +3220,21 @@ Back
 <div style="padding:0 18px 12px;display:flex;gap:8px;">
 <button onclick="openPayMethodPopup()"
 style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;gap:6px;">
-<i class="hgi hgi-stroke hgi-bank"></i> Payment
+<i class="fas fa-building-columns"></i> Payment
 </button>
 <button onclick="openWithdrawPopup()"
 style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135deg,#059669,#10B981);color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(5,150,105,.3);display:flex;align-items:center;justify-content:center;gap:6px;">
-<i class="hgi hgi-stroke hgi-wallet-01"></i> Withdraw
+<i class="fas fa-wallet"></i> Withdraw
 </button>
 <button onclick="openHistoryPopup()"
 style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135deg,#1E40AF,#3B82F6);color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;gap:6px;">
-<i class="hgi hgi-stroke hgi-reload"></i> History
+<i class="fas fa-clock-rotate-left"></i> History
 </button>
 </div>
 
 <div style="padding:0 18px 16px;">
 <div style="display:flex;align-items:center;gap:6px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 14px;">
-<i class="hgi hgi-stroke hgi-clock-01" style="color:#D97706;font-size:12px;"></i>
+<i class="fas fa-clock" style="color:#D97706;font-size:12px;"></i>
 <span style="font-size:11px;color:#92400E;line-height:1.4;">Withdrawals are processed <b>9 AM – 12 AM daily</b> · Takes <b>15 min to 1 hour</b></span>
 </div>
 </div>
@@ -3258,7 +3243,7 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 <div style="padding:0 18px 30px;">
 <div class="card" style="padding:20px;">
 <div style="font-family:'Playfair Display',serif;font-size:15.5px;font-weight:700;color:var(--text-main);margin-bottom:16px;">
-<i class="hgi hgi-stroke hgi-calendar-03" style="margin-right:6px;"></i> Revenue Timeline
+<i class="fas fa-calendar-days" style="margin-right:6px;"></i> Revenue Timeline
 </div>
 <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;">
 <div class="tl-pill active" onclick="onTimeline(this,'24h')">24 hrs</div>
@@ -3277,10 +3262,10 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 <div class="inbox-popup-card">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
 <div style="font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--text-main);">
-<i class="hgi hgi-stroke hgi-inbox" style="margin-right:6px;color:var(--purple-main);"></i> Inbox
+<i class="fas fa-inbox" style="margin-right:6px;color:var(--purple-main);"></i> Inbox
 </div>
 <button onclick="closeInboxPopup()" style="background:none;border:none;font-size:18px;color:var(--gray-400);cursor:pointer;padding:4px;">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-xmark"></i>
 </button>
 </div>
 <div id="inboxList"></div>
@@ -3305,31 +3290,31 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 <div class="uppop-handle"></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
 <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-main);">
-<i class="hgi hgi-stroke hgi-bank" style="margin-right:6px;color:var(--purple-main);"></i> Payment Method
+<i class="fas fa-building-columns" style="margin-right:6px;color:var(--purple-main);"></i> Payment Method
 </div>
-<button onclick="closePayMethodPopup()" style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;"><i class="hgi hgi-stroke hgi-cancel-01"></i></button>
+<button onclick="closePayMethodPopup()" style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;"><i class="fas fa-times"></i></button>
 </div>
 <div style="font-size:12px;color:var(--gray-400);margin-bottom:18px;">Choose how you receive your earnings</div>
 <div id="pmDateWarning" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:12px 14px;margin-bottom:16px;">
-<div style="font-size:12px;font-weight:600;color:#DC2626;"><i class="hgi hgi-stroke hgi-square-lock-01" style="margin-right:4px;"></i> Payment method changes are locked</div>
+<div style="font-size:12px;font-weight:600;color:#DC2626;"><i class="fas fa-lock" style="margin-right:4px;"></i> Payment method changes are locked</div>
 <div style="font-size:11px;color:#991B1B;margin-top:4px;">You can only change your payment method between the <b>1st and 25th</b> of each month.</div>
 </div>
 
 <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;margin-bottom:20px;">
 <div class="pay-method-tab active" id="pmAuto" onclick="onPayMethod('auto')">
-<i class="hgi hgi-stroke hgi-clock-01" style="margin-right:5px;"></i>Auto Monthly
+<i class="fas fa-clock" style="margin-right:5px;"></i>Auto Monthly
 </div>
 <div class="pay-method-tab" id="pmManual" onclick="onPayMethod('manual')">
-<i class="hgi hgi-stroke hgi-information-circle" style="margin-right:5px;"></i>Manual Request
+<i class="fas fa-hand-holding-dollar" style="margin-right:5px;"></i>Manual Request
 </div>
 </div>
 
 <div id="pmAutoDesc" style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:12px;padding:14px 16px;margin-bottom:18px;">
-<div style="font-size:13px;font-weight:600;color:var(--purple-deep);margin-bottom:4px;"><i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;"></i> Automatic Transfer</div>
+<div style="font-size:13px;font-weight:600;color:var(--purple-deep);margin-bottom:4px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i> Automatic Transfer</div>
 <div style="font-size:12px;color:var(--gray-500);line-height:1.5;">Your earnings are automatically sent to your bank on the <b>25th of every month</b>. Minimum payout: ₦5,000.</div>
 </div>
 <div id="pmManualDesc" style="background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:18px;display:none;">
-<div style="font-size:13px;font-weight:600;color:#92400E;margin-bottom:4px;"><i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;"></i> Manual Request</div>
+<div style="font-size:13px;font-weight:600;color:#92400E;margin-bottom:4px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i> Manual Request</div>
 <div style="font-size:12px;color:var(--gray-500);line-height:1.5;">Withdraw anytime using the <b>Withdraw</b> button. Minimum: ₦2,000. Fees apply.</div>
 </div>
 
@@ -3349,11 +3334,11 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 </div>
 
 <button id="pmSaveBtn" onclick="savePaymentMethod()" class="earn-primary-btn" style="margin-top:18px;">
-<i class="hgi hgi-stroke hgi-floppy-disk" style="margin-right:6px;"></i> Save Payment Details
+<i class="fas fa-save" style="margin-right:6px;"></i> Save Payment Details
 </button>
 <div id="pmSavedBadge" style="display:none;margin-top:12px;text-align:center;">
 <span style="display:inline-flex;align-items:center;gap:6px;background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;padding:7px 16px;border-radius:20px;border:1px solid #A7F3D0;">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02"></i> Payment details saved
+<i class="fas fa-check-circle"></i> Payment details saved
 </span>
 </div>
 </div>
@@ -3365,9 +3350,9 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 <div class="uppop-handle"></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
 <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-main);">
-<i class="hgi hgi-stroke hgi-wallet-01" style="margin-right:6px;color:#059669;"></i> Withdraw Earnings
+<i class="fas fa-wallet" style="margin-right:6px;color:#059669;"></i> Withdraw Earnings
 </div>
-<button onclick="closeWithdrawPopup()" style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;"><i class="hgi hgi-stroke hgi-cancel-01"></i></button>
+<button onclick="closeWithdrawPopup()" style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;"><i class="fas fa-times"></i></button>
 </div>
 
 <div style="margin:16px 0;background:linear-gradient(135deg,var(--purple-deep),var(--purple-main));border-radius:16px;padding:20px;text-align:center;color:white;">
@@ -3378,7 +3363,7 @@ style="flex:1;padding:13px 8px;border-radius:13px;background:linear-gradient(135
 <!-- Amount Input -->
 <div style="margin-bottom:16px;">
 <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gray-500);display:block;margin-bottom:8px;">
-<i class="hgi hgi-stroke hgi-coins-01" style="margin-right:5px;color:var(--purple-main);"></i>Amount to Withdraw
+<i class="fas fa-coins" style="margin-right:5px;color:var(--purple-main);"></i>Amount to Withdraw
 </label>
 <div style="position:relative;">
 <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:700;color:var(--gray-400);">₦</span>
@@ -3399,7 +3384,7 @@ onblur="this.style.borderColor='var(--gray-200)'"
 <!-- Quick amount chips -->
 <div id="wdQuickChips" style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;"></div>
 <div id="wdAmountError" style="display:none;font-size:11.5px;color:var(--red);margin-top:6px;font-weight:600;">
-<i class="hgi hgi-stroke hgi-alert-02" style="margin-right:4px;"></i><span id="wdAmountErrorText"></span>
+<i class="fas fa-triangle-exclamation" style="margin-right:4px;"></i><span id="wdAmountErrorText"></span>
 </div>
 </div>
 
@@ -3413,12 +3398,12 @@ onblur="this.style.borderColor='var(--gray-200)'"
 </div>
 
 <div id="wdNoBankMsg" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;">
-<div style="font-size:13px;font-weight:600;color:#DC2626;margin-bottom:4px;"><i class="hgi hgi-stroke hgi-alert-02" style="margin-right:4px;"></i> No bank account set up</div>
+<div style="font-size:13px;font-weight:600;color:#DC2626;margin-bottom:4px;"><i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i> No bank account set up</div>
 <div style="font-size:12px;color:#991B1B;">Go to <b>Payment Method</b> to add your bank details first.</div>
 </div>
 
 <div id="wdFeeBreakdown" style="background:var(--purple-ghost);border:1.5px solid var(--purple-pale);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
-<div style="font-size:12px;font-weight:600;color:var(--purple-deep);margin-bottom:8px;"><i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;"></i> Fee Breakdown</div>
+<div style="font-size:12px;font-weight:600;color:var(--purple-deep);margin-bottom:8px;"><i class="fas fa-receipt" style="margin-right:4px;"></i> Fee Breakdown</div>
 <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray-600);margin-bottom:4px;">
 <span>Withdrawal Amount</span><span id="wdAmountDisplay">₦0</span>
 </div>
@@ -3431,15 +3416,15 @@ onblur="this.style.borderColor='var(--gray-200)'"
 </div>
 
 <div id="wdMinWarning" style="display:none;background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400E;text-align:center;">
-<i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;"></i> Minimum withdrawal is ₦500
+<i class="fas fa-info-circle" style="margin-right:4px;"></i> Minimum withdrawal is ₦500
 </div>
 
 <div id="wdMethodWarning" style="display:none;background:#FEF3C7;border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400E;text-align:center;">
-<i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;"></i> Switch payment method to "Manual Request" to withdraw
+<i class="fas fa-info-circle" style="margin-right:4px;"></i> Switch payment method to "Manual Request" to withdraw
 </div>
 
 <button id="withdrawBtn" onclick="requestWithdrawal()" disabled class="earn-primary-btn" style="background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 14px rgba(5,150,105,.3);">
-<i class="hgi hgi-stroke hgi-sent" style="margin-right:6px;"></i> Request Withdrawal
+<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal
 </button>
 </div>
 </div>
@@ -3529,7 +3514,7 @@ Standard
 No requirements — free content is always available to upload
 </div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray-500);display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--gray-100);">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:var(--purple-main);"></i>
+<i class="fas fa-circle-info" style="color:var(--purple-main);"></i>
 No direct revenue — builds reach toward Pose Coin pricing eligibility
 </div>
 </div>
@@ -3565,7 +3550,7 @@ Premium
 <div class="leg-bar-hint">0 / 10</div>
 </div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray-500);display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--gray-100);">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#D97706;"></i>
+<i class="fas fa-circle-info" style="color:#D97706;"></i>
 No follower minimum — paid videos start earning after 10 views, then release every 5 hours
 </div>
 </div>
@@ -3579,7 +3564,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <!-- Header -->
 <div style="background:linear-gradient(135deg,#4C1D95,#7C3AED);padding:16px 18px;display:flex;align-items:center;gap:12px;">
 <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-<i class="hgi hgi-stroke hgi-coins-01" style="color:white;font-size:16px;"></i>
+<i class="fas fa-coins" style="color:white;font-size:16px;"></i>
 </div>
 <div>
 <div style="font-size:15px;font-weight:700;color:white;">Pay-As-You-Watch</div>
@@ -3596,7 +3581,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <!-- Step 1 -->
 <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:white;border:1px solid var(--gray-100);">
 <div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;background:#EDE9FE;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-upload-01" style="color:#7C3AED;font-size:12px;"></i>
+<i class="fas fa-upload" style="color:#7C3AED;font-size:12px;"></i>
 </div>
 <div style="flex:1;">
 <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">
@@ -3609,7 +3594,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <!-- Step 2 -->
 <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:white;border:1px solid var(--gray-100);">
 <div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;background:#FEF3C7;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-coins-01" style="color:#D97706;font-size:12px;"></i>
+<i class="fas fa-coins" style="color:#D97706;font-size:12px;"></i>
 </div>
 <div style="flex:1;">
 <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">
@@ -3622,7 +3607,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <!-- Step 3 -->
 <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:white;border:1px solid var(--gray-100);">
 <div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;background:#DBEAFE;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-wallet-01" style="color:#2563EB;font-size:12px;"></i>
+<i class="fas fa-wallet" style="color:#2563EB;font-size:12px;"></i>
 </div>
 <div style="flex:1;">
 <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">
@@ -3635,7 +3620,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <!-- Step 4 -->
 <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:white;border:1px solid var(--gray-100);">
 <div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;background:#D1FAE5;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-flash" style="color:#059669;font-size:12px;"></i>
+<i class="fas fa-bolt" style="color:#059669;font-size:12px;"></i>
 </div>
 <div style="flex:1;">
 <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">
@@ -3698,7 +3683,7 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <div style="margin-bottom:10px;">
 <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
 <span style="font-size:12.5px;font-weight:600;color:var(--text-main);">
-<i class="hgi hgi-stroke hgi-user" style="color:var(--purple-main);margin-right:5px;"></i>You (Creator)
+<i class="fas fa-user" style="color:var(--purple-main);margin-right:5px;"></i>You (Creator)
 </span>
 <span style="font-size:14px;font-weight:800;color:var(--purple-deep);">75%</span>
 </div>
@@ -3723,28 +3708,28 @@ No follower minimum — paid videos start earning after 10 views, then release e
 
 <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
 <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#D1FAE5;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-unavailable" style="color:#059669;font-size:11px;"></i>
+<i class="fas fa-ban" style="color:#059669;font-size:11px;"></i>
 </div>
 <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">No subscriptions</div>
 </div>
 
 <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
 <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#DBEAFE;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#2563EB;font-size:11px;"></i>
+<i class="fas fa-sliders" style="color:#2563EB;font-size:11px;"></i>
 </div>
 <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">Flexible coin pricing</div>
 </div>
 
 <div style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;background:white;border:1px solid var(--gray-100);">
 <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#FEF3C7;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-chart-line-data-01" style="color:#D97706;font-size:11px;"></i>
+<i class="fas fa-chart-line" style="color:#D97706;font-size:11px;"></i>
 </div>
 <div style="font-size:11.5px;font-weight:600;color:var(--text-main);line-height:1.3;">Strong creator earnings</div>
 </div>
 
 <div style="grid-column: 1 / -1; display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:#FEF3C7; border:1px solid #FDE68A; margin-top:4px;">
 <div style="width:28px;height:28px;border-radius:8px;flex-shrink:0;background:#FFFBEB;display:flex;align-items:center;justify-content:center;">
-<i class="hgi hgi-stroke hgi-message-01" style="color:#D97706;font-size:11px;"></i>
+<i class="fas fa-comment-dots" style="color:#D97706;font-size:11px;"></i>
 </div>
 <div style="flex:1; font-size:11.5px; color:#92400E; line-height:1.45;">
 <strong>Pay-As-You-Watch Remark:</strong> Viewers are far more likely to pay for videos that are relatively cheap. Pricing should also align with the overall quality and value of your video.
@@ -3758,23 +3743,23 @@ No follower minimum — paid videos start earning after 10 views, then release e
 <!-- ── PRICING PRO TIPS ── -->
 <div style="background:linear-gradient(135deg,#1E0A3C,#4C1D95);border-radius:13px;padding:16px;">
 <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.5);margin-bottom:10px;">
-<i class="hgi hgi-stroke hgi-idea-01" style="margin-right:5px;color:#FDE68A;"></i>Pro Tips · Maximise Pose Coin Earnings
+<i class="fas fa-lightbulb" style="margin-right:5px;color:#FDE68A;"></i>Pro Tips · Maximise Pose Coin Earnings
 </div>
 <div style="display:flex;flex-direction:column;gap:7px;">
 <div style="display:flex;align-items:flex-start;gap:8px;">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+<i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
 <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Lower-priced videos convert more often — cheap and consistent beats rare and expensive</span>
 </div>
 <div style="display:flex;align-items:flex-start;gap:8px;">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+<i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
 <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Use your monthly pricing slots on your strongest content — they're limited, so spend them wisely</span>
 </div>
 <div style="display:flex;align-items:flex-start;gap:8px;">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+<i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
 <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">A strong free trailer converts viewers into paying customers for the full video</span>
 </div>
 <div style="display:flex;align-items:flex-start;gap:8px;">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
+<i class="fas fa-circle-check" style="color:#A78BFA;font-size:11px;margin-top:2px;flex-shrink:0;"></i>
 <span style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;">Every creator gets 5 custom-price slots for movies and another 5 for seasons each month — once a season is priced, every episode inside it can be priced too</span>
 </div>
 </div>
@@ -3993,7 +3978,7 @@ SECTION 04 · RULES OF GOOD CONDUCT
 <div class="leg-conduct-title">User Safety</div>
 <div class="leg-conduct-body">Content that promotes bullying, harassment, or doxing of other users will result in a <strong>permanent ban</strong>.</div>
 <div class="leg-conduct-footer danger-footer">
-<i class="hgi hgi-stroke hgi-flash"></i> Permanent Ban
+<i class="fas fa-bolt"></i> Permanent Ban
 </div>
 </div>
 
@@ -4009,7 +3994,7 @@ SECTION 04 · RULES OF GOOD CONDUCT
 <div class="leg-conduct-title">Zero Hate Tolerance</div>
 <div class="leg-conduct-body">No content promoting hatred or discrimination based on race, religion, gender, or orientation.</div>
 <div class="leg-conduct-footer danger-footer">
-<i class="hgi hgi-stroke hgi-unavailable"></i> Zero Tolerance
+<i class="fas fa-ban"></i> Zero Tolerance
 </div>
 </div>
 
@@ -4024,7 +4009,7 @@ SECTION 04 · RULES OF GOOD CONDUCT
 <div class="leg-conduct-title">No Deceptive Behaviour</div>
 <div class="leg-conduct-body">Clickbait thumbnails are prohibited. Titles, metadata, and tags must accurately represent the video content.</div>
 <div class="leg-conduct-footer warn-footer">
-<i class="hgi hgi-stroke hgi-alert-02"></i> Policy Violation
+<i class="fas fa-triangle-exclamation"></i> Policy Violation
 </div>
 </div>
 
@@ -4038,7 +4023,7 @@ SECTION 04 · RULES OF GOOD CONDUCT
 <div class="leg-conduct-title">Interactive Safety</div>
 <div class="leg-conduct-body">Users can report any video. Pose Channel moderators review <strong>all reports within 24 hours</strong> of submission.</div>
 <div class="leg-conduct-footer safe-footer">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02"></i> 24hr Review
+<i class="fas fa-circle-check"></i> 24hr Review
 </div>
 </div>
 
@@ -4064,7 +4049,7 @@ SECTION 05 · CONTENT DECEPTION & SEVERE PENALTIES
 
 <div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:12px;padding:16px;margin-bottom:18px;display:flex;gap:12px;align-items:flex-start;">
 <div style="width:32px;height:32px;border-radius:8px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-<i class="hgi hgi-stroke hgi-alert-02" style="color:#DC2626;font-size:14px;"></i>
+<i class="fas fa-triangle-exclamation" style="color:#DC2626;font-size:14px;"></i>
 </div>
 <div style="flex:1;">
 <div style="font-size:13.5px;font-weight:700;color:#9B1C1C;margin-bottom:4px;">Deceptive Metadata & Clickbait Policy</div>
@@ -4073,10 +4058,10 @@ Posting <strong>fake/misleading thumbnails</strong> or utilizing wrong/deceptive
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:8px;">
 <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:white;background:#DC2626;padding:4px 9px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Permanent Ban
+<i class="fas fa-user-slash"></i> Permanent Ban
 </span>
 <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:white;background:#9B1C1C;padding:4px 9px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;">
-<i class="hgi hgi-stroke hgi-unavailable"></i> Revenue Forfeited
+<i class="fas fa-ban"></i> Revenue Forfeited
 </span>
 </div>
 </div>
@@ -4111,7 +4096,7 @@ style="font-size:12px;font-weight:600;color:var(--purple-deep);">My Channel</spa
 
 <!-- ── INFO BANNER ── -->
 <div class="upload-info-banner" id="uploadInfoBanner">
-<div class="uib-icon"><i class="hgi hgi-stroke hgi-rocket-01"></i></div>
+<div class="uib-icon"><i class="fas fa-rocket"></i></div>
 <div class="uib-text">
 <div class="uib-title">Fill every detail — it pays you back 💰</div>
 <div class="uib-sub">
@@ -4121,17 +4106,17 @@ boost watch-time, unlock <b>monetization</b> faster and grow your <b>earnings</b
 </div>
 <button class="uib-close" type="button" aria-label="Dismiss"
 onclick="document.getElementById('uploadInfoBanner').style.display='none'">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
 
 <!-- Upload Tabs -->
 <div class="upload-tabs">
 <div class="upload-tab-btn active" onclick="switchUploadTab(this,'single')">
-<i class="hgi hgi-stroke hgi-film-01"></i> Single Video
+<i class="fas fa-film"></i> Single Video
 </div>
 <div class="upload-tab-btn" onclick="switchUploadTab(this,'season')">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Seasons & Episodes
+<i class="fas fa-layer-group"></i> Seasons & Episodes
 </div>
 </div>
 
@@ -4142,10 +4127,10 @@ onclick="document.getElementById('uploadInfoBanner').style.display='none'">
 <div class="usuccess-sub" id="uSuccessSub">Your content is live and ready for viewers.</div>
 <div class="usuccess-actions">
 <button class="usuccess-again" onclick="resetUploadPage()">
-<i class="hgi hgi-stroke hgi-add-01" style="margin-right:6px;"></i>Upload Another
+<i class="fas fa-plus" style="margin-right:6px;"></i>Upload Another
 </button>
 <button class="usuccess-studio" onclick="closeUpload()">
-<i class="hgi hgi-stroke hgi-chart-histogram" style="margin-right:6px;"></i>Go to Studio
+<i class="fas fa-chart-bar" style="margin-right:6px;"></i>Go to Studio
 </button>
 </div>
 </div>
@@ -4159,7 +4144,7 @@ TAB 1 — SINGLE VIDEO
 <!-- Video File -->
 <div class="upload-card">
 <div class="upload-card-title">
-<i class="hgi hgi-stroke hgi-video-01"></i> Video File
+<i class="fas fa-video"></i> Video File
 <span class="ureq-dot" style="margin-left:2px;"></span>
 </div>
 <div class="udrop" id="sVideoDrop"
@@ -4168,18 +4153,18 @@ ondragleave="this.classList.remove('dragover')"
 ondrop="handleDrop(event,'sVideoFile','sVideoPreview','sVideoProgress')">
 <input type="file" id="sVideoFile" accept="video/*"
 onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
-<div class="udrop-icon"><i class="hgi hgi-stroke hgi-information-circle"></i></div>
+<div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
 <div class="udrop-label">Tap or drag your video here</div>
 <div class="udrop-sub">MP4 · MOV · AVI  ·  Up to 6 hours</div>
 </div>
 <div class="ufile-preview" id="sVideoPreview" style="display:none;">
-<i class="hgi hgi-stroke hgi-file-video"></i>
+<i class="fas fa-file-video"></i>
 <div>
 <div class="ufile-name" id="sVideoName">—</div>
 <div class="ufile-size" id="sVideoSize">—</div>
 </div>
 <button class="ufile-remove" onclick="removeFile('sVideoFile','sVideoPreview','sVideoProgress')">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
 <div class="uprog-wrap" id="sVideoProgress">
@@ -4190,11 +4175,11 @@ onchange="handleFileSelect(this,'sVideoPreview','sVideoProgress')">
 <div class="uprog-bg"><div class="uprog-fill" id="sVideoProgFill"></div></div>
 </div>
 <div class="uhelp">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Files up to 4GB are supported. Do not close this page while uploading.
 </div>
 <div style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;">
-<i class="hgi hgi-stroke hgi-alert-02" style="color:#D97706;font-size:13px;margin-top:1px;flex-shrink:0;"></i>
+<i class="fas fa-triangle-exclamation" style="color:#D97706;font-size:13px;margin-top:1px;flex-shrink:0;"></i>
 <div style="font-size:11.5px;color:#92400E;line-height:1.5;">
 <strong>No watermarks.</strong> Don't upload content carrying another platform's logo or watermark (TikTok, Instagram, YouTube, Snapchat, CapCut, etc.). Watermarked uploads may be removed and can affect your channel's standing.
 </div>
@@ -4204,7 +4189,7 @@ Files up to 4GB are supported. Do not close this page while uploading.
 <!-- Trailer (optional) -->
 <div class="upload-card">
 <div class="upload-card-title">
-<i class="hgi hgi-stroke hgi-film-01"></i> Trailer
+<i class="fas fa-clapperboard"></i> Trailer
 <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:4px;">(optional)</span>
 </div>
 <div class="udrop" id="sTrailerDrop"
@@ -4214,37 +4199,37 @@ ondrop="handleDrop(event,'sTrailerFile','sTrailerPreview',null)">
 <input type="file" id="sTrailerFile" accept="video/*"
 onchange="handleFileSelect(this,'sTrailerPreview',null)">
 <div class="udrop-icon" style="background:#FEF3C7;color:#D97706;">
-<i class="hgi hgi-stroke hgi-play"></i>
+<i class="fas fa-play"></i>
 </div>
 <div class="udrop-label">Upload a short trailer</div>
 <div class="udrop-sub">Viewers can watch this for free — even if video is paid or scheduled</div>
 </div>
 <div class="ufile-preview" id="sTrailerPreview" style="display:none;">
-<i class="hgi hgi-stroke hgi-file-video" style="color:#D97706;"></i>
+<i class="fas fa-file-video" style="color:#D97706;"></i>
 <div>
 <div class="ufile-name" id="sTrailerName">—</div>
 <div class="ufile-size" id="sTrailerSize">—</div>
 </div>
 <button class="ufile-remove" onclick="removeFile('sTrailerFile','sTrailerPreview',null)">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
 <div class="uhelp">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 A great trailer under 2 minutes can increase views by 3×. It goes live immediately regardless of your release schedule.
 </div>
 </div>
 
 <!-- Details -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-information-circle"></i> Video Details</div>
+<div class="upload-card-title"><i class="fas fa-pen-nib"></i> Video Details</div>
 
 <!-- Name -->
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Video Title</div>
 <input class="ufield-input" type="text" id="sTitle"
 placeholder="Give your video a clear, searchable title…">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Keep it descriptive and honest — clickbait titles violate Pose policy.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Keep it descriptive and honest — clickbait titles violate Pose policy.</div>
 </div>
 
 <!-- Category -->
@@ -4273,7 +4258,7 @@ placeholder="Give your video a clear, searchable title…">
 <option value="health">🧘 Health</option>
 <option value="motivation">🔥 Motivation / Self-Help</option>
 </select>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Choose the category that best describes your video. This helps viewers discover your content.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Choose the category that best describes your video. This helps viewers discover your content.</div>
 </div>
 
 <!-- Subcategory (dynamic — depends on main category) -->
@@ -4282,7 +4267,7 @@ placeholder="Give your video a clear, searchable title…">
 <select class="ufield-input" id="sSubcategory">
 <option value="">— Select a subcategory —</option>
 </select>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Pick a subcategory so viewers can find your video under the right tab on the watch page.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Pick a subcategory so viewers can find your video under the right tab on the watch page.</div>
 </div>
 
 <!-- Description -->
@@ -4290,7 +4275,7 @@ placeholder="Give your video a clear, searchable title…">
 <div class="ufield-label"><span class="ureq-dot"></span> Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(min. 10 words)</span></div>
 <textarea class="ufield-input" id="sDesc"
 placeholder="Tell viewers what this video is about… (at least 10 words required)"></textarea>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> A good description helps viewers find your content through search. Minimum 10 words required.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> A good description helps viewers find your content through search. Minimum 10 words required.</div>
 </div>
 
 <!-- Thumbnail -->
@@ -4298,11 +4283,11 @@ placeholder="Tell viewers what this video is about… (at least 10 words require
 <div class="ufield-label">Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
 <div class="uthumb-preview" id="sThumbPreview" onclick="document.getElementById('sThumbFile').click()">
 <div class="uthumb-placeholder">🎬</div>
-<div class="uthumb-change"><i class="hgi hgi-stroke hgi-camera-01" style="margin-right:4px;"></i>Choose Image</div>
+<div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Choose Image</div>
 </div>
 <input type="file" id="sThumbFile" accept="image/*" style="display:none"
 onchange="handleThumb(this,'sThumbPreview')">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> 16:9 ratio works best (e.g. 1280×720). If skipped, a placeholder is shown.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> 16:9 ratio works best (e.g. 1280×720). If skipped, a placeholder is shown.</div>
 </div>
 
 <!-- Age Rating -->
@@ -4318,7 +4303,7 @@ onchange="handleThumb(this,'sThumbPreview')">
 <div class="urating-pill" onclick="selectRating('single','25+',this)">25+</div>
 </div>
 <input type="hidden" id="sRating" value="">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i>
+<div class="uhelp"><i class="fas fa-circle-info"></i>
 <span><strong>Required.</strong> Inaccurate ratings result in immediate loss of Pose Coin pricing privileges. <strong>3+/7+</strong> = young children, no scary or risky content. <strong>10+/13+</strong> = mild language or fantasy violence. <strong>16+/18+</strong> = mature themes, must be strictly gated. <strong>25+</strong> = adults-only / explicit.</span>
 </div>
 </div>
@@ -4326,9 +4311,9 @@ onchange="handleThumb(this,'sThumbPreview')">
 
 <!-- Production & Cast -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-film-01"></i> Production & Cast <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional)</span></div>
+<div class="upload-card-title"><i class="fas fa-clapperboard"></i> Production & Cast <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional)</span></div>
 <div class="uhelp" style="margin-bottom:14px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Adding cast and production credits boosts discoverability — viewers can search by actor, director, or studio.
 </div>
 
@@ -4336,7 +4321,7 @@ Adding cast and production credits boosts discoverability — viewers can search
 <div class="ufield-label">Director(s)</div>
 <input class="ufield-input" type="text" id="sDirector"
 placeholder="e.g. Kunle Afolayan, Genevieve Nnaji">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Separate multiple directors with commas.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Separate multiple directors with commas.</div>
 </div>
 
 <div class="ufield">
@@ -4355,7 +4340,7 @@ placeholder="e.g. Mo Abudu, EbonyLife Studios">
 <div class="ufield-label">Cast / Actors & Actresses</div>
 <textarea class="ufield-input" id="sCast"
 placeholder="e.g. Genevieve Nnaji, Ramsey Nouah, Rita Dominic, Pete Edochie…"></textarea>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Comma-separated list of leads & supporting cast.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated list of leads & supporting cast.</div>
 </div>
 
 <div class="ufield">
@@ -4386,7 +4371,7 @@ placeholder="e.g. Nigeria, Ghana, South Africa">
 <div class="ufield-label">Genre Tags</div>
 <input class="ufield-input" type="text" id="sGenres"
 placeholder="e.g. Drama, Thriller, Family">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Comma-separated. These appear as filter tags on the watch page.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated. These appear as filter tags on the watch page.</div>
 </div>
 
 <div class="ufield">
@@ -4398,7 +4383,7 @@ placeholder="e.g. English, French, Hausa">
 
 <!-- Schedule -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-calendar-03"></i> Release Schedule</div>
+<div class="upload-card-title"><i class="fas fa-calendar-days"></i> Release Schedule</div>
 <div class="usched-toggle" onclick="toggleSched('sSchedToggle','sSchedDate',true)">
 <div>
 <div class="usched-toggle-label">Schedule for Later</div>
@@ -4414,33 +4399,33 @@ onchange="toggleSched('sSchedToggle','sSchedDate')">
 <div class="ufield-label" style="margin-bottom:6px;">Release Date & Time</div>
 <input class="ufield-input" type="datetime-local" id="sSchedDT">
 <div class="uhelp" style="margin-top:6px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Your trailer (if uploaded) will be watchable immediately. The main video unlocks at this date/time.
 </div>
 </div>
 <div class="uhelp" style="margin-top:8px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Scheduling a release and sharing your trailer first is a great way to build hype before launch.
 </div>
 </div>
 <!-- Pricing -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-coins-01"></i> Pricing</div>
+<div class="upload-card-title"><i class="fas fa-coins"></i> Pricing</div>
 <div class="uprice-toggle">
 <div class="uprice-opt active" id="sFreeBtn" onclick="setPrice('single','free')">
-<i class="hgi hgi-stroke hgi-square-unlock-01"></i> Free
+<i class="fas fa-unlock"></i> Free
 </div>
 <div class="uprice-opt" id="sPaidBtn" onclick="setPrice('single','paid')">
-<i class="hgi hgi-stroke hgi-coins-01"></i> Paid (Pose Coin)
+<i class="fas fa-coins"></i> Paid (Pose Coin)
 </div>
 <div class="uprice-opt" id="sWtcBtn" onclick="setPrice('single','wtc')" title="Let WTC set the price automatically from category, length and your channel's views">
-<i class="hgi hgi-stroke hgi-magic-wand-01"></i> WTC
+<i class="fas fa-wand-magic-sparkles"></i> WTC
 </div>
 </div>
 
 <!-- Free Info -->
 <div id="sFreeInfo" class="ufree-badge">
-<i class="hgi hgi-stroke hgi-square-unlock-01"></i>
+<i class="fas fa-unlock"></i>
 <div>
 <div class="ufree-badge-text">Free to Watch</div>
 <div class="ufree-badge-sub">No direct earnings — great for building reach and audience.</div>
@@ -4459,11 +4444,11 @@ oninput="updateCoinSlider('s')">
 <span id="sCoinMinLbl">4 PCK minimum</span><span id="sCoinMaxLbl">2,000 PCK</span>
 </div>
 <div id="sSlotsNotice" class="uhelp" style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 10px;">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#D97706;"></i>
+<i class="fas fa-circle-info" style="color:#D97706;"></i>
 You've used <strong id="sSlotsRemaining">0/5</strong> custom-price slots on movies this month.
 </div>
 <div class="uhelp" style="margin-top:8px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 1 PCK = ₦1 in Nigeria · ₦3 in other African countries · ₦6 internationally. Also converted to your local currency below.
 </div>
 </div>
@@ -4472,7 +4457,7 @@ You've used <strong id="sSlotsRemaining">0/5</strong> custom-price slots on movi
 <div id="sAutoPriceLocked" class="ucoin-wrap" style="display:none;">
 <div class="ucoin-display" id="sAutoPriceVal">— PCK</div>
 <div class="uhelp" style="margin-top:6px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;" id="sAutoPriceReason">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#6B21A8;"></i>
+<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
 This video's price is auto-calculated from its category, length and your channel's current total views.
 </div>
 <div class="uhelp" style="margin-top:8px;" id="sAutoPriceBreakdown"></div>
@@ -4484,7 +4469,7 @@ This video's price is auto-calculated from its category, length and your channel
 
 <!-- Post Button -->
 <button class="usubmit-btn" id="sPostBtn" onclick="postSingleVideo()">
-<i class="hgi hgi-stroke hgi-sent"></i> Post Video
+<i class="fas fa-paper-plane"></i> Post Video
 </button>
 
 </div>
@@ -4499,10 +4484,10 @@ TAB 2 — SEASONS & EPISODES
 <!-- Mode Toggle -->
 <div class="smode-toggle">
 <div class="smode-btn active" id="smodeNewBtn" onclick="setSeasonMode('new')">
-<i class="hgi hgi-stroke hgi-add-circle"></i> Start New Season
+<i class="fas fa-plus-circle"></i> Start New Season
 </div>
 <div class="smode-btn" id="smodeAddBtn" onclick="setSeasonMode('add')">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Add to Existing Season
+<i class="fas fa-folder-plus"></i> Add to Existing Season
 </div>
 </div>
 
@@ -4510,28 +4495,28 @@ TAB 2 — SEASONS & EPISODES
 <div id="newSeasonBlock">
 
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-information-circle"></i> Season Details</div>
+<div class="upload-card-title"><i class="fas fa-layer-group"></i> Season Details</div>
 
 <!-- Season Title -->
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Season Title</div>
 <input class="ufield-input" type="text" id="seaTitle"
 placeholder="e.g. The Lagos Chronicles — Season 1">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> This is the name viewers will see for the entire season.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> This is the name viewers will see for the entire season.</div>
 </div>
 
 <!-- Season Number -->
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Season Number</div>
 <input class="ufield-input" type="number" id="seaNumber" value="1" min="1">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Auto-filled based on your existing seasons. Edit if needed.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Auto-filled based on your existing seasons. Edit if needed.</div>
 </div>
 
 <!-- Planned Episode Count -->
 <div class="ufield">
 <div class="ufield-label">Episodes Planned for This Season</div>
 <input class="ufield-input" type="number" id="seaPlannedEpisodes" min="1" placeholder="e.g. 8">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Optional — how many episodes you plan to release under this season. You don't have to upload them all now; viewers will see "X of Y episodes released" as you add more over time.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Optional — how many episodes you plan to release under this season. You don't have to upload them all now; viewers will see "X of Y episodes released" as you add more over time.</div>
 </div>
 
 <!-- Season Category — multi-select (Music, Dance, News/Politics and Lifestyle
@@ -4557,7 +4542,7 @@ placeholder="e.g. The Lagos Chronicles — Season 1">
 <div class="ucat-chip" data-cat="motivation" onclick="toggleSeaCategory(this,'motivation')">🔥 Motivation / Self-Help</div>
 </div>
 <input type="hidden" id="seaCategory" value="">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Select all categories that apply — this applies to the entire season and all its episodes. Picking more categories raises the WTC auto-price.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Select all categories that apply — this applies to the entire season and all its episodes. Picking more categories raises the WTC auto-price.</div>
 </div>
 
 <!-- Season Subcategory (dynamic — depends on main category) -->
@@ -4566,7 +4551,7 @@ placeholder="e.g. The Lagos Chronicles — Season 1">
 <select class="ufield-input" id="seaSubcategory">
 <option value="">— Select a subcategory —</option>
 </select>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Pick a subcategory so viewers can find your season under the right tab on the watch page.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Pick a subcategory so viewers can find your season under the right tab on the watch page.</div>
 </div>
 
 <!-- Season Description -->
@@ -4574,7 +4559,7 @@ placeholder="e.g. The Lagos Chronicles — Season 1">
 <div class="ufield-label"><span class="ureq-dot"></span> Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(min. 10 words)</span></div>
 <textarea class="ufield-input" id="seaDesc"
 placeholder="What is this season about? (at least 10 words required)"></textarea>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Minimum 10 words required. Helps viewers understand what the season covers.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Minimum 10 words required. Helps viewers understand what the season covers.</div>
 </div>
 
 <!-- Season Thumbnail -->
@@ -4582,11 +4567,11 @@ placeholder="What is this season about? (at least 10 words required)"></textarea
 <div class="ufield-label">Season Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
 <div class="uthumb-preview" id="seaThumbPreview" onclick="document.getElementById('seaThumbFile').click()">
 <div class="uthumb-placeholder">🎬</div>
-<div class="uthumb-change"><i class="hgi hgi-stroke hgi-camera-01" style="margin-right:4px;"></i>Choose Image</div>
+<div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Choose Image</div>
 </div>
 <input type="file" id="seaThumbFile" accept="image/*" style="display:none"
 onchange="handleThumb(this,'seaThumbPreview')">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> This represents the whole season in search and discovery.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> This represents the whole season in search and discovery.</div>
 </div>
 
 <!-- Season Trailer -->
@@ -4599,22 +4584,22 @@ ondrop="handleDrop(event,'seaTrailerFile','seaTrailerPreview',null)">
 <input type="file" id="seaTrailerFile" accept="video/*"
 onchange="handleFileSelect(this,'seaTrailerPreview',null)">
 <div class="udrop-icon" style="background:#FEF3C7;color:#D97706;">
-<i class="hgi hgi-stroke hgi-play"></i>
+<i class="fas fa-play"></i>
 </div>
 <div class="udrop-label">Upload a season trailer</div>
 <div class="udrop-sub">Always watchable — free for all viewers</div>
 </div>
 <div class="ufile-preview" id="seaTrailerPreview" style="display:none;">
-<i class="hgi hgi-stroke hgi-file-video" style="color:#D97706;"></i>
+<i class="fas fa-file-video" style="color:#D97706;"></i>
 <div>
 <div class="ufile-name" id="seaTrailerName">—</div>
 <div class="ufile-size" id="seaTrailerSize">—</div>
 </div>
 <button class="ufile-remove" onclick="removeFile('seaTrailerFile','seaTrailerPreview',null)">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Trailers go live immediately regardless of episode schedules.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Trailers go live immediately regardless of episode schedules.</div>
 </div>
 
 <!-- Season Age Rating -->
@@ -4630,7 +4615,7 @@ onchange="handleFileSelect(this,'seaTrailerPreview',null)">
 <div class="urating-pill" onclick="selectRating('season','25+',this)">25+</div>
 </div>
 <input type="hidden" id="seaRating" value="">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i>
+<div class="uhelp"><i class="fas fa-circle-info"></i>
 <strong>Required.</strong> This rating covers the entire season. Individual episodes cannot exceed this rating.
 </div>
 </div>
@@ -4638,9 +4623,9 @@ onchange="handleFileSelect(this,'seaTrailerPreview',null)">
 
 <!-- Season Production & Cast -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-film-01"></i> Production & Cast <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional — applies to whole season)</span></div>
+<div class="upload-card-title"><i class="fas fa-clapperboard"></i> Production & Cast <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional — applies to whole season)</span></div>
 <div class="uhelp" style="margin-bottom:14px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Cast and credits entered here cover every episode. You can add a per-episode "Guest Cast" later.
 </div>
 
@@ -4648,7 +4633,7 @@ Cast and credits entered here cover every episode. You can add a per-episode "Gu
 <div class="ufield-label">Director(s)</div>
 <input class="ufield-input" type="text" id="seaDirector"
 placeholder="e.g. Kunle Afolayan, Genevieve Nnaji">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Separate multiple directors with commas.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Separate multiple directors with commas.</div>
 </div>
 
 <div class="ufield">
@@ -4667,7 +4652,7 @@ placeholder="e.g. Mo Abudu, EbonyLife Studios">
 <div class="ufield-label">Main Cast / Actors & Actresses</div>
 <textarea class="ufield-input" id="seaCast"
 placeholder="e.g. Genevieve Nnaji, Ramsey Nouah, Rita Dominic, Pete Edochie…"></textarea>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Comma-separated list of recurring leads & supporting cast.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated list of recurring leads & supporting cast.</div>
 </div>
 
 <div class="ufield">
@@ -4698,7 +4683,7 @@ placeholder="e.g. Nigeria, Ghana, South Africa">
 <div class="ufield-label">Genre Tags</div>
 <input class="ufield-input" type="text" id="seaGenres"
 placeholder="e.g. Drama, Thriller, Family">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Comma-separated. Used as filter tags on the season page.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated. Used as filter tags on the season page.</div>
 </div>
 
 <div class="ufield">
@@ -4710,37 +4695,37 @@ placeholder="e.g. English, French, Hausa">
 
 <!-- Season Pricing Mode -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-coins-01"></i> Season Pricing Model</div>
+<div class="upload-card-title"><i class="fas fa-coins"></i> Season Pricing Model</div>
 <div class="uhelp" style="margin-bottom:14px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Choose how viewers pay for this season. You can change per-episode pricing later.
 </div>
 <div class="season-price-mode">
 <div class="spmode-option selected" id="spFreeOpt" onclick="setSeasonPriceMode('free')">
 <div class="spmode-radio"></div>
 <div>
-<div class="spmode-label"><i class="hgi hgi-stroke hgi-square-unlock-01" style="margin-right:5px;color:#D97706;"></i>Free Season (No Earnings)</div>
+<div class="spmode-label"><i class="fas fa-unlock" style="margin-right:5px;color:#D97706;"></i>Free Season (No Earnings)</div>
 <div class="spmode-sub">All episodes free. No direct revenue — best for growing an audience fast before switching to paid.</div>
 </div>
 </div>
 <div class="spmode-option" id="spPerEpOpt" onclick="setSeasonPriceMode('per-episode')">
 <div class="spmode-radio"></div>
 <div>
-<div class="spmode-label"><i class="hgi hgi-stroke hgi-coins-01" style="margin-right:5px;color:var(--purple-main);"></i>Pay Per Episode</div>
+<div class="spmode-label"><i class="fas fa-coins" style="margin-right:5px;color:var(--purple-main);"></i>Pay Per Episode</div>
 <div class="spmode-sub">Viewers pay Pose Coins per episode. You set the price for each episode individually.</div>
 </div>
 </div>
 <div class="spmode-option" id="spFullOpt" onclick="setSeasonPriceMode('full-season')">
 <div class="spmode-radio"></div>
 <div>
-<div class="spmode-label"><i class="hgi hgi-stroke hgi-information-circle" style="margin-right:5px;color:#059669;"></i>Buy Full Season</div>
+<div class="spmode-label"><i class="fas fa-layer-group" style="margin-right:5px;color:#059669;"></i>Buy Full Season</div>
 <div class="spmode-sub">Viewers pay once to unlock all episodes. You set the full season price in coins.</div>
 </div>
 </div>
 <div class="spmode-option" id="spMixedOpt" onclick="setSeasonPriceMode('mixed')">
 <div class="spmode-radio"></div>
 <div>
-<div class="spmode-label"><i class="hgi hgi-stroke hgi-shuffle" style="margin-right:5px;color:#2563EB;"></i>Mixed (Free Intro + Paid)</div>
+<div class="spmode-label"><i class="fas fa-shuffle" style="margin-right:5px;color:#2563EB;"></i>Mixed (Free Intro + Paid)</div>
 <div class="spmode-sub">First episode(s) free to watch, remaining episodes require coin payment. Great for hooking new viewers.</div>
 </div>
 </div>
@@ -4750,10 +4735,10 @@ Choose how viewers pay for this season. You can change per-episode pricing later
 <!-- Full Season Coin Price -->
 <div id="seaFullPriceToggle" class="uprice-toggle" style="display:none;">
 <div class="uprice-opt active" id="seaFullManualBtn" onclick="setSeasonFullPricingMode('manual')">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Manual
+<i class="fas fa-sliders"></i> Manual
 </div>
 <div class="uprice-opt" id="seaFullWtcBtn" onclick="setSeasonFullPricingMode('wtc')" title="WTC prices the full season at double this category's single-video auto-price">
-<i class="hgi hgi-stroke hgi-magic-wand-01"></i> WTC
+<i class="fas fa-wand-magic-sparkles"></i> WTC
 </div>
 </div>
 <div id="seaFullCoinWrap" class="ucoin-wrap" style="display:none;margin-top:14px;">
@@ -4766,7 +4751,7 @@ oninput="updateSeasonCoinSlider()">
 <span>100 PCK</span><span>10,000 PCK</span>
 </div>
 <div class="uhelp" style="margin-top:10px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Full-season pricing rewards binge-watchers and gives you predictable income per fan.
 </div>
 </div>
@@ -4775,7 +4760,7 @@ Full-season pricing rewards binge-watchers and gives you predictable income per 
 <div id="seaFullAutoPriceLocked" class="ucoin-wrap" style="display:none;margin-top:14px;">
 <div class="ucoin-display" id="seaFullAutoPriceVal">— PCK</div>
 <div class="uhelp" style="margin-top:6px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#6B21A8;"></i>
+<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
 WTC prices the full season at double what a single video in this category would auto-price at.
 </div>
 <div class="uhelp" style="margin-top:8px;" id="seaFullAutoPriceBreakdown"></div>
@@ -4788,7 +4773,7 @@ WTC prices the full season at double what a single video in this category would 
 <div class="ufield-label" style="margin-bottom:6px;">How many free episodes?</div>
 <input class="ufield-input" type="number" id="seaFreeEpCount" value="1" min="1" max="20">
 <div class="uhelp" style="margin-top:6px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Episodes beyond this number will require coin payment. You set prices per episode below.
 </div>
 </div>
@@ -4796,7 +4781,7 @@ Episodes beyond this number will require coin payment. You set prices per episod
 
 <!-- Season Schedule -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-calendar-03"></i> Season Premiere Date</div>
+<div class="upload-card-title"><i class="fas fa-calendar-days"></i> Season Premiere Date</div>
 <div class="usched-toggle" onclick="toggleSched('seaSchedToggle','seaSchedDate',true)"></div>
 <div>
 <div class="usched-toggle-label">Schedule Premiere</div>
@@ -4812,14 +4797,14 @@ onchange="toggleSched('seaSchedToggle','seaSchedDate')">
 <div class="ufield-label" style="margin-bottom:6px;">Premiere Date & Time</div>
 <input class="ufield-input" type="datetime-local" id="seaSchedDT">
 <div class="uhelp" style="margin-top:6px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 The season trailer is always visible. Episodes respect their own release dates.
 </div>
 </div>
 </div>
 
 <button class="usubmit-btn" id="seaCreateBtn" onclick="createSeason()">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Create Season Shell
+<i class="fas fa-folder-plus"></i> Create Season Shell
 </button>
 
 <div class="upload-divider"><span>then add your first episode below</span></div>
@@ -4829,7 +4814,7 @@ The season trailer is always visible. Episodes respect their own release dates.
 <!-- ── EXISTING SEASON PICKER ── -->
 <div id="existingSeasonBlock" style="display:none;">
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-folder-02"></i> Select Season</div>
+<div class="upload-card-title"><i class="fas fa-folder-open"></i> Select Season</div>
 <div id="existingSeasonList">
 <div style="font-size:13px;color:var(--gray-400);font-style:italic;padding:8px 0;">
 Loading your seasons…
@@ -4837,14 +4822,14 @@ Loading your seasons…
 </div>
 <input type="hidden" id="selectedSeasonId" value="">
 <div class="uhelp" style="margin-top:8px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Select the season you want to add an episode to. Episode number is auto-filled.
 </div>
 </div>
 
 <!-- Selected Season Info Preview -->
 <div id="selectedSeasonInfo" style="display:none;" class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-information-circle"></i> Season Info</div>
+<div class="upload-card-title"><i class="fas fa-circle-info"></i> Season Info</div>
 <div id="selectedSeasonInfoContent"></div>
 <div id="epListPreview" class="ep-list-preview" style="display:none;">
 <div class="ep-list-title">Episodes already uploaded</div>
@@ -4857,16 +4842,16 @@ Select the season you want to add an episode to. Episode number is auto-filled.
 <div id="episodeBlock" style="display:none;">
 <!-- Draft-until-2-episodes progress — see createSeason()/postEpisode() -->
 <div id="seasonDraftNotice" class="uhelp" style="margin-bottom:14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px;">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#D97706;"></i>
+<i class="fas fa-circle-info" style="color:#D97706;"></i>
 This season stays a private draft — invisible everywhere on Pose — until it has at least
 <strong>2 episodes</strong>. Currently <strong id="seasonDraftEpCount">0</strong>/2 added.
 </div>
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-play-circle"></i> Episode Details</div>
+<div class="upload-card-title"><i class="fas fa-play-circle"></i> Episode Details</div>
 <div class="ufield">
 <div class="ufield-label"><span class="ureq-dot"></span> Episode Number</div>
 <input class="ufield-input" type="number" id="epNumber" value="1" min="1">
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Auto-filled from the last episode. Edit freely.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Auto-filled from the last episode. Edit freely.</div>
 </div>
 
 <div class="ufield">
@@ -4879,14 +4864,14 @@ placeholder="e.g. Episode 1: The Beginning">
 <div class="ufield-label"><span class="ureq-dot"></span> Description <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(min. 10 words)</span></div>
 <textarea class="ufield-input" id="epDesc"
 placeholder="What happens in this episode? (at least 10 words required)"></textarea>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Minimum 10 words required per episode.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Minimum 10 words required per episode.</div>
 </div>
 
 <div class="ufield">
 <div class="ufield-label">Episode Thumbnail <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;">(optional)</span></div>
 <div class="uthumb-preview" id="epThumbPreview" onclick="document.getElementById('epThumbFile').click()">
 <div class="uthumb-placeholder">🎬</div>
-<div class="uthumb-change"><i class="hgi hgi-stroke hgi-camera-01" style="margin-right:4px;"></i>Choose Image</div>
+<div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Choose Image</div>
 </div>
 <input type="file" id="epThumbFile" accept="image/*" style="display:none"
 onchange="handleThumb(this,'epThumbPreview')">
@@ -4895,25 +4880,25 @@ onchange="handleThumb(this,'epThumbPreview')">
 
 <!-- Episode Video + Trailer -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-video-01"></i> Episode Video File <span class="ureq-dot" style="margin-left:2px;"></span></div>
+<div class="upload-card-title"><i class="fas fa-video"></i> Episode Video File <span class="ureq-dot" style="margin-left:2px;"></span></div>
 <div class="udrop" id="epVideoDrop"
 ondragover="event.preventDefault();this.classList.add('dragover')"
 ondragleave="this.classList.remove('dragover')"
 ondrop="handleDrop(event,'epVideoFile','epVideoPreview','epVideoProgress')">
 <input type="file" id="epVideoFile" accept="video/*"
 onchange="handleFileSelect(this,'epVideoPreview','epVideoProgress')">
-<div class="udrop-icon"><i class="hgi hgi-stroke hgi-information-circle"></i></div>
+<div class="udrop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
 <div class="udrop-label">Tap or drag episode video</div>
 <div class="udrop-sub">MP4 · MOV · AVI</div>
 </div>
 <div class="ufile-preview" id="epVideoPreview" style="display:none;">
-<i class="hgi hgi-stroke hgi-file-video"></i>
+<i class="fas fa-file-video"></i>
 <div>
 <div class="ufile-name" id="epVideoName">—</div>
 <div class="ufile-size" id="epVideoSize">—</div>
 </div>
 <button class="ufile-remove" onclick="removeFile('epVideoFile','epVideoPreview','epVideoProgress')">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
 <div class="uprog-wrap" id="epVideoProgress">
@@ -4924,10 +4909,10 @@ onchange="handleFileSelect(this,'epVideoPreview','epVideoProgress')">
 <div class="uprog-bg"><div class="uprog-fill" id="epVideoProgFill"></div></div>
 </div>
 <div class="uhelp" style="margin-top:10px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Files up to 4GB are supported. Keep this page open during upload.
+<i class="fas fa-circle-info"></i> Files up to 4GB are supported. Keep this page open during upload.
 </div>
 <div style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;">
-<i class="hgi hgi-stroke hgi-alert-02" style="color:#D97706;font-size:13px;margin-top:1px;flex-shrink:0;"></i>
+<i class="fas fa-triangle-exclamation" style="color:#D97706;font-size:13px;margin-top:1px;flex-shrink:0;"></i>
 <div style="font-size:11.5px;color:#92400E;line-height:1.5;">
 <strong>No watermarks.</strong> Don't upload content carrying another platform's logo or watermark (TikTok, Instagram, YouTube, Snapchat, CapCut, etc.). Watermarked uploads may be removed and can affect your channel's standing.
 </div>
@@ -4942,28 +4927,28 @@ ondrop="handleDrop(event,'epTrailerFile','epTrailerPreview',null)">
 <input type="file" id="epTrailerFile" accept="video/*"
 onchange="handleFileSelect(this,'epTrailerPreview',null)">
 <div class="udrop-icon" style="background:#FEF3C7;color:#D97706;">
-<i class="hgi hgi-stroke hgi-play"></i>
+<i class="fas fa-play"></i>
 </div>
 <div class="udrop-label">Episode Trailer <span style="font-weight:400;color:var(--gray-400);">(optional)</span></div>
 <div class="udrop-sub">Always free to watch — builds anticipation</div>
 </div>
 <div class="ufile-preview" id="epTrailerPreview" style="display:none;">
-<i class="hgi hgi-stroke hgi-file-video" style="color:#D97706;"></i>
+<i class="fas fa-file-video" style="color:#D97706;"></i>
 <div>
 <div class="ufile-name" id="epTrailerName">—</div>
 <div class="ufile-size" id="epTrailerSize">—</div>
 </div>
 <button class="ufile-remove" onclick="removeFile('epTrailerFile','epTrailerPreview',null)">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
 </div>
 
 <!-- Episode Production & Guest Cast -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-film-01"></i> Episode Credits <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional)</span></div>
+<div class="upload-card-title"><i class="fas fa-clapperboard"></i> Episode Credits <span style="font-weight:400;color:var(--gray-400);text-transform:none;letter-spacing:0;font-size:12px;">(optional)</span></div>
 <div class="uhelp" style="margin-bottom:14px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Main cast is inherited from the season. Use these fields only for episode-specific credits.
 </div>
 
@@ -4983,13 +4968,13 @@ placeholder="Leave blank to use the season writer">
 <div class="ufield-label">Guest Cast</div>
 <textarea class="ufield-input" id="epGuestCast"
 placeholder="e.g. Special guests appearing only in this episode…"></textarea>
-<div class="uhelp"><i class="hgi hgi-stroke hgi-information-circle"></i> Comma-separated list of guest stars.</div>
+<div class="uhelp"><i class="fas fa-circle-info"></i> Comma-separated list of guest stars.</div>
 </div>
 </div>
 
 <!-- Episode Schedule -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-calendar-03"></i> Episode Release Date</div>
+<div class="upload-card-title"><i class="fas fa-calendar-days"></i> Episode Release Date</div>
 
 <div class="usched-toggle" onclick="toggleSched('epSchedToggle','epSchedDate',true)">
 <div>
@@ -5006,7 +4991,7 @@ onchange="toggleSched('epSchedToggle','epSchedDate')">
 <div class="ufield-label" style="margin-bottom:6px;">Release Date & Time</div>
 <input class="ufield-input" type="datetime-local" id="epSchedDT">
 <div class="uhelp" style="margin-top:6px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Leave blank to use the season premiere date. Episode trailer always goes live immediately.
 </div>
 </div>
@@ -5014,25 +4999,25 @@ Leave blank to use the season premiere date. Episode trailer always goes live im
 
 <!-- Episode Pricing -->
 <div class="upload-card">
-<div class="upload-card-title"><i class="hgi hgi-stroke hgi-coins-01"></i> Episode Pricing</div>
+<div class="upload-card-title"><i class="fas fa-coins"></i> Episode Pricing</div>
 <div class="uhelp" style="margin-bottom:14px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 You can make episode 1 free to attract viewers, then charge for the rest.
 </div>
 <div class="uprice-toggle">
 <div class="uprice-opt active" id="epFreeBtn" onclick="setPrice('episode','free')">
-<i class="hgi hgi-stroke hgi-square-unlock-01"></i> Free
+<i class="fas fa-unlock"></i> Free
 </div>
 <div class="uprice-opt" id="epPaidBtn" onclick="setPrice('episode','paid')">
-<i class="hgi hgi-stroke hgi-coins-01"></i> Paid
+<i class="fas fa-coins"></i> Paid
 </div>
 <div class="uprice-opt" id="epWtcBtn" onclick="setPrice('episode','wtc')" title="Let WTC set the price automatically from category, length and your channel's views">
-<i class="hgi hgi-stroke hgi-magic-wand-01"></i> WTC
+<i class="fas fa-wand-magic-sparkles"></i> WTC
 </div>
 </div>
 
 <div id="epFreeInfo" class="ufree-badge">
-<i class="hgi hgi-stroke hgi-square-unlock-01"></i>
+<i class="fas fa-unlock"></i>
 <div>
 <div class="ufree-badge-text">Free Episode — No Earnings</div>
 <div class="ufree-badge-sub">Great for episode 1 to hook new viewers</div>
@@ -5050,11 +5035,11 @@ oninput="updateCoinSlider('ep')">
 <span id="epCoinMinLbl">4 PCK minimum</span><span id="epCoinMaxLbl">2,000 PCK</span>
 </div>
 <div id="epSlotsNotice" class="uhelp" style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 10px;">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#D97706;"></i>
+<i class="fas fa-circle-info" style="color:#D97706;"></i>
 Pricing this season uses 1 of your monthly season slots — <strong id="epSlotsRemaining">0/5</strong> used this month. Once a season is priced, you can price as many episodes inside it as you like.
 </div>
 <div class="uhelp" style="margin-top:8px;">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 Viewers can also buy the full season if that option is set.
 </div>
 </div>
@@ -5063,7 +5048,7 @@ Viewers can also buy the full season if that option is set.
 <div id="epAutoPriceLocked" class="ucoin-wrap" style="display:none;">
 <div class="ucoin-display" id="epAutoPriceVal">— PCK</div>
 <div class="uhelp" style="margin-top:6px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;" id="epAutoPriceReason">
-<i class="hgi hgi-stroke hgi-information-circle" style="color:#6B21A8;"></i>
+<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
 This episode's price is auto-calculated from its category, length and your channel's current total views.
 </div>
 <div class="uhelp" style="margin-top:8px;" id="epAutoPriceBreakdown"></div>
@@ -5075,7 +5060,7 @@ This episode's price is auto-calculated from its category, length and your chann
 
 <!-- Post Episode Button -->
 <button class="usubmit-btn" id="epPostBtn" onclick="postEpisode()">
-<i class="hgi hgi-stroke hgi-sent"></i> Post Episode
+<i class="fas fa-paper-plane"></i> Post Episode
 </button>
 
 </div><!-- /episodeBlock -->
@@ -5107,11 +5092,11 @@ oninput="onAvSearch(this.value)" />
 </div>
 <div class="av-tabs">
 <div class="av-tab active" id="avTabSingle" onclick="switchAvTab('single')">
-<i class="hgi hgi-stroke hgi-film-01"></i> Single Videos
+<i class="fas fa-film"></i> Single Videos
 <span class="av-tab-count" id="avCountSingle">0</span>
 </div>
 <div class="av-tab" id="avTabSeason" onclick="switchAvTab('season')">
-<i class="hgi hgi-stroke hgi-information-circle"></i> Seasons & Episodes
+<i class="fas fa-layer-group"></i> Seasons & Episodes
 <span class="av-tab-count" id="avCountSeason">0</span>
 </div>
 </div>
@@ -5174,7 +5159,7 @@ Back
 <div class="uppop-sub" id="uppopSub">Please keep this page open</div>
 
 <div class="uppop-file-row">
-<div class="uppop-file-icon"><i class="hgi hgi-stroke hgi-file-video"></i></div>
+<div class="uppop-file-icon"><i class="fas fa-file-video"></i></div>
 <div style="flex:1;min-width:0;">
 <div class="uppop-file-name" id="uppopFileName">video.mp4</div>
 <div class="uppop-file-size" id="uppopFileSize">—</div>
@@ -5195,25 +5180,25 @@ Back
 </div>
 
 <div class="uppop-note">
-<i class="hgi hgi-stroke hgi-information-circle"></i>
+<i class="fas fa-circle-info"></i>
 <span>Upload time depends on your video's file size and your internet speed — bigger files and slower networks naturally take longer. Keep this page open.</span>
 </div>
 
 <div class="uppop-tip" id="uppopTip">
-<i class="hgi hgi-stroke hgi-idea-01"></i>
+<i class="fas fa-lightbulb"></i>
 <span id="uppopTipText"></span>
 </div>
 
 <button class="uppop-retry-btn" id="uppopRetryBtn" style="display:none;">
-<i class="hgi hgi-stroke hgi-rotate-right-01" style="margin-right:6px;"></i>Retry Upload
+<i class="fas fa-rotate-right" style="margin-right:6px;"></i>Retry Upload
 </button>
 <div style="display:flex;gap:10px;">
 <button class="uppop-cancel-btn" id="uppopMinBtn" onclick="minimiseUploadPopup()"
 style="flex:1;background:var(--purple-ghost);color:var(--purple-main);border-color:var(--purple-pale);">
-<i class="hgi hgi-stroke hgi-minus-sign" style="margin-right:6px;"></i>Minimise
+<i class="fas fa-minus" style="margin-right:6px;"></i>Minimise
 </button>
 <button class="uppop-cancel-btn" id="uppopCancelBtn" onclick="cancelUpload()" style="flex:1;">
-<i class="hgi hgi-stroke hgi-cancel-01" style="margin-right:6px;"></i>Cancel
+<i class="fas fa-times" style="margin-right:6px;"></i>Cancel
 </button>
 </div>
 
@@ -5227,7 +5212,7 @@ style="flex:1;background:var(--purple-ghost);color:var(--purple-main);border-col
 <div class="uppop-mini-pct" id="uppopMiniPct">0%</div>
 <div class="uppop-mini-bar-bg"><div class="uppop-mini-bar-fill" id="uppopMiniBarFill"></div></div>
 </div>
-<div class="uppop-mini-expand"><i class="hgi hgi-stroke hgi-arrow-up-01"></i></div>
+<div class="uppop-mini-expand"><i class="fas fa-chevron-up"></i></div>
 </div>
 
 <div id="historyPopup" class="earn-popup-overlay hidden">
@@ -5237,24 +5222,24 @@ style="flex:1;background:var(--purple-ghost);color:var(--purple-main);border-col
 <!-- Header -->
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
 <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-main);">
-<i class="hgi hgi-stroke hgi-reload" style="margin-right:7px;color:var(--purple-main);"></i>History
+<i class="fas fa-clock-rotate-left" style="margin-right:7px;color:var(--purple-main);"></i>History
 </div>
 <button onclick="closeHistoryPopup()"
 style="background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;">
-<i class="hgi hgi-stroke hgi-cancel-01"></i>
+<i class="fas fa-times"></i>
 </button>
 </div>
 
 <!-- 3 Tabs -->
 <div style="display:flex;gap:0;background:var(--gray-100);border-radius:12px;padding:4px;margin-bottom:20px;">
 <div class="hist-tab active" id="htab-transactions" onclick="switchHistTab('transactions')">
-<i class="hgi hgi-stroke hgi-information-circle" style="margin-right:5px;font-size:11px;"></i>Transactions
+<i class="fas fa-receipt" style="margin-right:5px;font-size:11px;"></i>Transactions
 </div>
 <div class="hist-tab" id="htab-requests" onclick="switchHistTab('requests')">
-<i class="hgi hgi-stroke hgi-sent" style="margin-right:5px;font-size:11px;"></i>Requests
+<i class="fas fa-paper-plane" style="margin-right:5px;font-size:11px;"></i>Requests
 </div>
 <div class="hist-tab" id="htab-support" onclick="switchHistTab('support')">
-<i class="hgi hgi-stroke hgi-headset" style="margin-right:5px;font-size:11px;"></i>Support
+<i class="fas fa-headset" style="margin-right:5px;font-size:11px;"></i>Support
 </div>
 </div>
 
@@ -5309,7 +5294,7 @@ TAB 3 — SUPPORT
 border-radius:14px;padding:18px;margin-bottom:18px;">
 
 <div style="font-size:14px;font-weight:700;color:var(--purple-deep);margin-bottom:14px;">
-<i class="hgi hgi-stroke hgi-pencil-edit-01" style="margin-right:7px;"></i>New Message
+<i class="fas fa-pen-to-square" style="margin-right:7px;"></i>New Message
 </div>
 
 <!-- Type selector -->
@@ -5318,16 +5303,16 @@ border-radius:14px;padding:18px;margin-bottom:18px;">
 letter-spacing:.6px;color:var(--gray-500);margin-bottom:7px;">Type</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;">
 <div class="supp-type active" id="stype-complaint" onclick="setSuppType('complaint')">
-<i class="hgi hgi-stroke hgi-alert-02" style="margin-right:4px;font-size:11px;"></i>Complaint
+<i class="fas fa-triangle-exclamation" style="margin-right:4px;font-size:11px;"></i>Complaint
 </div>
 <div class="supp-type" id="stype-report" onclick="setSuppType('report')">
-<i class="hgi hgi-stroke hgi-flag-01" style="margin-right:4px;font-size:11px;"></i>Report
+<i class="fas fa-flag" style="margin-right:4px;font-size:11px;"></i>Report
 </div>
 <div class="supp-type" id="stype-notification" onclick="setSuppType('notification')">
-<i class="hgi hgi-stroke hgi-notification-03" style="margin-right:4px;font-size:11px;"></i>Notification
+<i class="fas fa-bell" style="margin-right:4px;font-size:11px;"></i>Notification
 </div>
 <div class="supp-type" id="stype-inquiry" onclick="setSuppType('inquiry')">
-<i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;font-size:11px;"></i>Inquiry
+<i class="fas fa-circle-question" style="margin-right:4px;font-size:11px;"></i>Inquiry
 </div>
 </div>
 <input type="hidden" id="suppType" value="complaint">
@@ -5376,7 +5361,7 @@ placeholder="Describe your issue, complaint, or inquiry in detail…"></textarea
 </div>
 
 <button id="suppSubmitBtn" onclick="submitSupportMessage()" class="earn-primary-btn">
-<i class="hgi hgi-stroke hgi-sent" style="margin-right:7px;"></i>Send Message
+<i class="fas fa-paper-plane" style="margin-right:7px;"></i>Send Message
 </button>
 
 <!-- Success badge -->
@@ -5384,7 +5369,7 @@ placeholder="Describe your issue, complaint, or inquiry in detail…"></textarea
 <span style="display:inline-flex;align-items:center;gap:6px;
 background:#ECFDF5;color:#059669;font-size:12px;font-weight:600;
 padding:7px 16px;border-radius:20px;border:1px solid #A7F3D0;">
-<i class="hgi hgi-stroke hgi-checkmark-circle-02"></i> Message sent — we'll reply within 24 hours
+<i class="fas fa-check-circle"></i> Message sent — we'll reply within 24 hours
 </span>
 </div>
 </div>
@@ -5393,7 +5378,7 @@ padding:7px 16px;border-radius:20px;border:1px solid #A7F3D0;">
 <div style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:12px;
 display:flex;align-items:center;justify-content:space-between;">
 <span>
-<i class="hgi hgi-stroke hgi-inbox" style="margin-right:7px;color:var(--purple-main);"></i>Inbox
+<i class="fas fa-inbox" style="margin-right:7px;color:var(--purple-main);"></i>Inbox
 </span>
 <span id="hsupp-unread-badge"
 style="display:none;font-size:10px;font-weight:700;
@@ -7243,8 +7228,8 @@ async function countAllContent() {
       const reasonEl = document.getElementById(prefix + 'AutoPriceReason');
       if (reasonEl) {
         reasonEl.innerHTML = isWtcChoice
-          ? `<i class="hgi hgi-stroke hgi-information-circle" style="color:#6B21A8;"></i> WTC is set to auto-price this ${isSingle ? 'video' : 'episode'} from its category, length and your channel's current total views.`
-          : `<i class="hgi hgi-stroke hgi-information-circle" style="color:#6B21A8;"></i> You've used all <strong>${MONTHLY_PRICING_SLOTS}/${MONTHLY_PRICING_SLOTS}</strong> ${isSingle ? 'movie' : 'season'} pricing slots this month, so this ${isSingle ? "video's" : "episode's"} price is auto-calculated from its category, length and your channel's current total views — it can't be set manually until your slots reset next month.`;
+          ? `<i class="fas fa-circle-info" style="color:#6B21A8;"></i> WTC is set to auto-price this ${isSingle ? 'video' : 'episode'} from its category, length and your channel's current total views.`
+          : `<i class="fas fa-circle-info" style="color:#6B21A8;"></i> You've used all <strong>${MONTHLY_PRICING_SLOTS}/${MONTHLY_PRICING_SLOTS}</strong> ${isSingle ? 'movie' : 'season'} pricing slots this month, so this ${isSingle ? "video's" : "episode's"} price is auto-calculated from its category, length and your channel's current total views — it can't be set manually until your slots reset next month.`;
       }
 
       const category    = isSingle
@@ -7257,7 +7242,7 @@ async function countAllContent() {
       if (valEl) valEl.textContent = `🪙 ${total} PCK`;
       const bdEl = document.getElementById(prefix + 'AutoPriceBreakdown');
       if (bdEl) {
-        bdEl.innerHTML = `<i class="hgi hgi-stroke hgi-information-circle"></i> ${cat} PCK (category) + ${dur} PCK (length) + ${view} PCK (channel views) = <b>${total} PCK</b>`;
+        bdEl.innerHTML = `<i class="fas fa-circle-info"></i> ${cat} PCK (category) + ${dur} PCK (length) + ${view} PCK (channel views) = <b>${total} PCK</b>`;
       }
       if (priceModeEl) priceModeEl.value = 'paid';
       if (coinPriceEl) coinPriceEl.value = total;
@@ -7491,7 +7476,7 @@ async function countAllContent() {
 
       const btn = document.getElementById('pmSaveBtn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:6px;"></i> Saving…';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Saving…';
 
       db.collection('channels').doc(CHANNEL_UID).update({
         paymentMethod: payMethod,
@@ -7500,12 +7485,12 @@ async function countAllContent() {
         bankName:      bankName,
       }).then(() => {
         btn.disabled = false;
-        btn.innerHTML = '<i class="hgi hgi-stroke hgi-floppy-disk" style="margin-right:6px;"></i> Save Payment Details';
+        btn.innerHTML = '<i class="fas fa-save" style="margin-right:6px;"></i> Save Payment Details';
         document.getElementById('pmSavedBadge').style.display = '';
         setTimeout(() => { document.getElementById('pmSavedBadge').style.display = 'none'; }, 4000);
       }).catch(e => {
         btn.disabled = false;
-        btn.innerHTML = '<i class="hgi hgi-stroke hgi-floppy-disk" style="margin-right:6px;"></i> Save Payment Details';
+        btn.innerHTML = '<i class="fas fa-save" style="margin-right:6px;"></i> Save Payment Details';
         alert('Failed to save: ' + e.message);
       });
     }
@@ -7699,7 +7684,7 @@ function requestWithdrawal() {
   const btn = document.getElementById('withdrawBtn');
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:6px;"></i> Requesting…';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Requesting…';
   }
 
   db.collection('channels').doc(CHANNEL_UID)
@@ -7717,7 +7702,7 @@ function requestWithdrawal() {
     .then(() => {
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="hgi hgi-stroke hgi-sent" style="margin-right:6px;"></i> Request Withdrawal';
+        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal';
       }
       closeWithdrawPopup();
       loadWithdrawRequests();
@@ -7726,7 +7711,7 @@ function requestWithdrawal() {
     .catch(e => {
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="hgi hgi-stroke hgi-sent" style="margin-right:6px;"></i> Request Withdrawal';
+        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:6px;"></i> Request Withdrawal';
       }
       alert('Failed to submit request: ' + e.message);
     });
@@ -7812,24 +7797,24 @@ function openSettings() {
           <button onclick="openModal('editProfileModal')"
             style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
             border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
-            <i class="hgi hgi-stroke hgi-pencil-edit-01" style="margin-right:6px;font-size:12px;"></i>Edit Profile
+            <i class="fa-solid fa-pen" style="margin-right:6px;font-size:12px;"></i>Edit Profile
           </button>
           <button onclick="openModal('photoModal')"
             style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
             border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
-            <i class="hgi hgi-stroke hgi-camera-01" style="margin-right:6px;font-size:12px;"></i>Change Photo
+            <i class="fa-solid fa-camera" style="margin-right:6px;font-size:12px;"></i>Change Photo
           </button>
           <button onclick="openModal('bannerModal')"
             style="flex:1;padding:10px;border-radius:11px;background:rgba(255,255,255,.15);
             border:1px solid rgba(255,255,255,.25);color:white;font-size:13px;font-weight:600;cursor:pointer;">
-            <i class="hgi hgi-stroke hgi-image-01" style="margin-right:6px;font-size:12px;"></i>Change Background
+            <i class="fa-solid fa-image" style="margin-right:6px;font-size:12px;"></i>Change Background
           </button>
         </div>
       </div>
 
       <!-- NOTIFICATIONS -->
           <div class="card" style="padding:22px;margin-bottom:20px;">
-            <div class="sett-section-title"><i class="hgi hgi-stroke hgi-notification-03" style="color:var(--purple-main);margin-right:8px;"></i>Notifications</div>
+            <div class="sett-section-title"><i class="fa-solid fa-bell" style="color:var(--purple-main);margin-right:8px;"></i>Notifications</div>
             ${[
               { id:'notif1', label:'New view on paid video',  desc:'Notify when someone buys a view',       on: true  },
               { id:'notif2', label:'Earnings milestone',      desc:'Alert at ₦5K, ₦10K, ₦50K earned',      on: true  },
@@ -7839,7 +7824,7 @@ function openSettings() {
             ].map(n => `
               <div class="sett-row" style="justify-content:space-between;">
                 <div style="display:flex;align-items:center;gap:12px;">
-                  <div class="sett-icon" style="background:var(--purple-ghost);color:var(--purple-main);"><i class="hgi hgi-stroke hgi-notification-03"></i></div>
+                  <div class="sett-icon" style="background:var(--purple-ghost);color:var(--purple-main);"><i class="fa-solid fa-bell"></i></div>
                   <div>
                     <div style="font-size:13.5px;font-weight:600;color:var(--text-main);">${n.label}</div>
                     <div style="font-size:12px;color:var(--gray-500);">${n.desc}</div>
@@ -7856,7 +7841,7 @@ function openSettings() {
 
      
 <div class="card" style="padding:22px;margin-bottom:20px;">
-  <div class="sett-section-title"><i class="hgi hgi-stroke hgi-information-circle" style="color:var(--purple-main);margin-right:8px;"></i>Account Actions</div>
+  <div class="sett-section-title"><i class="fa-solid fa-user-gear" style="color:var(--purple-main);margin-right:8px;"></i>Account Actions</div>
 
   <!-- My Channels -->
   <div style="margin-bottom:16px;">
@@ -7871,7 +7856,7 @@ function openSettings() {
     style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
     padding:12px;border-radius:11px;font-size:14px;font-weight:600;color:var(--purple-main);
     background:var(--purple-ghost);border:1.5px solid var(--purple-pale);cursor:pointer;margin-bottom:10px;">
-    <i class="hgi hgi-stroke hgi-add-01"></i> Create New Channel
+    <i class="fa-solid fa-plus"></i> Create New Channel
   </button>
 
   <!-- Delete Account -->
@@ -7879,7 +7864,7 @@ function openSettings() {
     style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
     padding:12px;border-radius:11px;font-size:14px;font-weight:600;color:#fff;
     background:#DC2626;border:1.5px solid #B91C1C;cursor:pointer;">
-    <i class="hgi hgi-stroke hgi-delete-02"></i> Delete Account
+    <i class="fa-solid fa-trash"></i> Delete Account
   </button>
 
   <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--gray-400);">
@@ -7970,7 +7955,7 @@ setTimeout(loadChannelSwitchList, 500);
       if (!list) return;
       if (!inboxMessages.length) {
         list.innerHTML = `<div style="text-align:center;padding:36px 12px;color:var(--gray-400);font-size:13px;">
-          <i class="hgi hgi-stroke hgi-inbox" style="font-size:28px;display:block;margin-bottom:10px;opacity:.4;"></i>
+          <i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:10px;opacity:.4;"></i>
           No messages yet
         </div>`;
         return;
@@ -8057,7 +8042,7 @@ setTimeout(loadChannelSwitchList, 500);
           <input type="file" id="newPhotoFile" accept="image/*" style="display:none" onchange="uploadNewPhoto(this)" />
           <button onclick="document.getElementById('newPhotoFile').click()"
             style="width:100%;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;">
-            <i class="hgi hgi-stroke hgi-camera-01" style="margin-right:6px;"></i>Choose Photo
+            <i class="fa-solid fa-camera" style="margin-right:6px;"></i>Choose Photo
           </button>
           <button onclick="closeModal()" style="width:100%;padding:11px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>`,
 
@@ -8067,7 +8052,7 @@ setTimeout(loadChannelSwitchList, 500);
           <input type="file" id="newBannerFile" accept="image/*" style="display:none" onchange="uploadNewBanner(this)" />
           <button onclick="document.getElementById('newBannerFile').click()"
             style="width:100%;padding:11px;border-radius:10px;background:var(--purple-main);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;">
-            <i class="hgi hgi-stroke hgi-image-01" style="margin-right:6px;"></i>Choose Banner Image
+            <i class="fa-solid fa-image" style="margin-right:6px;"></i>Choose Banner Image
           </button>
           <button onclick="closeModal()" style="width:100%;padding:11px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>`,
 
@@ -8093,7 +8078,7 @@ setTimeout(loadChannelSwitchList, 500);
           <div style="display:flex;gap:10px;margin-top:16px;">
             <button onclick="if(!window._selectedBoost){showToast('Please select a stage');return;}showToast(window._selectedBoost+' boost activated!');closeModal();"
               style="flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#92400E,#D97706);color:white;font-size:14px;font-weight:600;cursor:pointer;border:none;">
-              <i class="hgi hgi-stroke hgi-rocket-01" style="margin-right:6px;"></i>Boost Now
+              <i class="fa-solid fa-rocket" style="margin-right:6px;"></i>Boost Now
             </button>
             <button onclick="closeModal()" style="padding:11px 18px;border-radius:10px;background:var(--gray-100);color:var(--gray-700);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);">Cancel</button>
           </div>`,
@@ -8126,7 +8111,7 @@ setTimeout(loadChannelSwitchList, 500);
       container.innerHTML = `
         <div class="image-viewer-overlay" onclick="if(event.target===this)closeModal();">
           <button class="image-viewer-close" onclick="closeModal()" aria-label="Close">
-            <i class="hgi hgi-stroke hgi-cancel-01"></i>
+            <i class="fa-solid fa-xmark"></i>
           </button>
           <div class="image-viewer-content">
             <img src="${url}" alt="${label || 'Image'}" />
@@ -8219,14 +8204,14 @@ setTimeout(loadChannelSwitchList, 500);
           <div style="background:white;border-radius:20px;padding:28px;max-width:340px;width:100%;text-align:center;">
             <div style="width:56px;height:56px;border-radius:50%;background:#FEF2F2;
               display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
-              <i class="hgi hgi-stroke hgi-logout-01" style="color:#DC2626;font-size:22px;"></i>
+              <i class="fa-solid fa-right-from-bracket" style="color:#DC2626;font-size:22px;"></i>
             </div>
             <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:8px;">Log Out?</div>
             <div style="font-size:13px;color:var(--gray-500);margin-bottom:22px;">You will be signed out of your Pose Channel account.</div>
             <button onclick="handleLogout()"
               style="width:100%;padding:12px;border-radius:11px;background:#DC2626;color:white;
               font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;">
-              <i class="hgi hgi-stroke hgi-logout-01" style="margin-right:6px;"></i>Yes, Log Out
+              <i class="fa-solid fa-right-from-bracket" style="margin-right:6px;"></i>Yes, Log Out
             </button>
             <button onclick="document.body.removeChild(this.closest('div[style*=fixed]').parentElement);"
               style="width:100%;padding:12px;border-radius:11px;background:var(--gray-100);
@@ -8298,7 +8283,7 @@ async function loadChannelSwitchList() {
           ${isActive
             ? `<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;
                 background:var(--purple-pale);color:var(--purple-deep);">Active</span>`
-            : `<i class="hgi hgi-stroke hgi-information-circle" style="color:var(--gray-400);font-size:12px;"></i>`
+            : `<i class="fa-solid fa-arrow-right-arrow-left" style="color:var(--gray-400);font-size:12px;"></i>`
           }
         </div>`;
     }).join('');
@@ -8572,7 +8557,7 @@ function handleThumb(input, previewId) {
       <img src="${e.target.result}"
         style="width:100%;height:100%;object-fit:cover;" />
       <div class="uthumb-change">
-        <i class="hgi hgi-stroke hgi-camera-01" style="margin-right:4px;"></i>Change
+        <i class="fas fa-camera" style="margin-right:4px;"></i>Change
       </div>`;
   };
   reader.readAsDataURL(file);
@@ -8649,15 +8634,15 @@ function toggleSched(toggleId, dateWrapId, fromWrapper) {
   const sBtn   = document.getElementById('sPostBtn');
   if (sSched && sBtn && !sBtn.disabled) {
     sBtn.innerHTML = sSched.checked
-      ? '<i class="hgi hgi-stroke hgi-clock-01"></i> Schedule Video'
-      : '<i class="hgi hgi-stroke hgi-sent"></i> Post Video';
+      ? '<i class="fas fa-clock"></i> Schedule Video'
+      : '<i class="fas fa-paper-plane"></i> Post Video';
   }
   const eSched = document.getElementById('epSchedToggle');
   const eBtn   = document.getElementById('epPostBtn');
   if (eSched && eBtn && !eBtn.disabled) {
     eBtn.innerHTML = eSched.checked
-      ? '<i class="hgi hgi-stroke hgi-clock-01"></i> Schedule Episode'
-      : '<i class="hgi hgi-stroke hgi-sent"></i> Post Episode';
+      ? '<i class="fas fa-clock"></i> Schedule Episode'
+      : '<i class="fas fa-paper-plane"></i> Post Episode';
   }
 }
 
@@ -8759,8 +8744,8 @@ function refreshSeasonFullAutoPriceUI() {
   const bdEl = document.getElementById('seaFullAutoPriceBreakdown');
   if (bdEl) {
     bdEl.innerHTML = markup > 0
-      ? `<i class="hgi hgi-stroke hgi-information-circle"></i> (${cat} PCK category + ${view} PCK channel views = ${base} PCK) × 2 = ${rawSeasonTotal} PCK + ${markup} PCK markup (${SEASON_WTC_MIN_PCK} PCK season minimum) = <b>${seasonTotal} PCK</b>`
-      : `<i class="hgi hgi-stroke hgi-information-circle"></i> (${cat} PCK category + ${view} PCK channel views = ${base} PCK) × 2 = <b>${seasonTotal} PCK</b>`;
+      ? `<i class="fas fa-circle-info"></i> (${cat} PCK category + ${view} PCK channel views = ${base} PCK) × 2 = ${rawSeasonTotal} PCK + ${markup} PCK markup (${SEASON_WTC_MIN_PCK} PCK season minimum) = <b>${seasonTotal} PCK</b>`
+      : `<i class="fas fa-circle-info"></i> (${cat} PCK category + ${view} PCK channel views = ${base} PCK) × 2 = <b>${seasonTotal} PCK</b>`;
   }
   // Written to a dedicated hidden field, NOT seaFullCoinSlider — a native range
   // input silently clamps .value to its min/max (100–10000) when set from JS,
@@ -8908,7 +8893,7 @@ function setSeasonPriceMode(mode) {
     hintEl.id = 'epPriceHint';
     hintEl.className = 'uhelp';
     hintEl.style.marginBottom = '10px';
-    hintEl.innerHTML = `<i class="hgi hgi-stroke hgi-information-circle"></i>
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
       Season is set to <strong>Free (Ad-Supported)</strong> — all episodes are free.
       Change the season pricing model above to enable paid episodes.`;
     document.getElementById('epFreeBtn').closest('.uprice-toggle')
@@ -8928,7 +8913,7 @@ function setSeasonPriceMode(mode) {
     hintEl.id = 'epPriceHint';
     hintEl.className = 'uhelp';
     hintEl.style.marginBottom = '10px';
-    hintEl.innerHTML = `<i class="hgi hgi-stroke hgi-information-circle"></i>
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
       Viewers buy the <strong>full season</strong> for 🪙 ${
         document.getElementById('seaFullCoinSlider')?.value || 20
       } coins and unlock all episodes. Individual episode pricing is disabled.`;
@@ -8948,7 +8933,7 @@ function setSeasonPriceMode(mode) {
     hintEl.id = 'epPriceHint';
     hintEl.className = 'uhelp';
     hintEl.style.marginBottom = '10px';
-    hintEl.innerHTML = `<i class="hgi hgi-stroke hgi-information-circle"></i>
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
       <strong>Pay per episode</strong> — set a coin price for each episode individually below.
       Pricing this season uses 1 of your monthly season slots — every episode inside it
       can be priced with no extra limit.`;
@@ -8972,7 +8957,7 @@ function setSeasonPriceMode(mode) {
     hintEl.id = 'epPriceHint';
     hintEl.className = 'uhelp';
     hintEl.style.marginBottom = '10px';
-    hintEl.innerHTML = `<i class="hgi hgi-stroke hgi-information-circle"></i>
+    hintEl.innerHTML = `<i class="fas fa-circle-info"></i>
       <strong>Mixed mode</strong> — first ${freeCount} episode(s) are free.
       Episode ${epNum} ${epNum <= freeCount ? 'is free' : 'requires coin payment'}.
       Set pricing below accordingly.`;
@@ -9010,7 +8995,7 @@ function setSeasonPriceMode(mode) {
         hintEl.id = 'epPriceHint';
         hintEl.className = 'uhelp';
         hintEl.style.cssText = 'margin-bottom:10px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:8px 10px;';
-        hintEl.innerHTML = `<i class="hgi hgi-stroke hgi-information-circle" style="color:#6B21A8;"></i>
+        hintEl.innerHTML = `<i class="fas fa-circle-info" style="color:#6B21A8;"></i>
           You've used all <strong>5/5</strong> season pricing slots this month — full-season and
           mixed pricing aren't available. This season auto-prices each episode individually
           (category + length + your channel's current views) as you upload them.`;
@@ -9582,7 +9567,7 @@ async function postSingleVideo(resumeRecord) {
   if (hasError) return;
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:8px;"></i>Starting…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Starting…';
 
   // Build step list
   const steps = [
@@ -9786,7 +9771,7 @@ async function postSingleVideo(resumeRecord) {
 
     const doneBtn = document.getElementById('uppopCancelBtn');
     if (doneBtn) {
-      doneBtn.innerHTML   = '<i class="hgi hgi-stroke hgi-tick-02" style="margin-right:6px;"></i>Done';
+      doneBtn.innerHTML   = '<i class="fas fa-check" style="margin-right:6px;"></i>Done';
       doneBtn.style.background  = '#D1FAE5';
       doneBtn.style.color       = '#065F46';
       doneBtn.style.borderColor = '#A7F3D0';
@@ -9837,14 +9822,14 @@ async function postSingleVideo(resumeRecord) {
 
     const cancelBtn = document.getElementById('uppopCancelBtn');
     if (cancelBtn) {
-      cancelBtn.innerHTML  = '<i class="hgi hgi-stroke hgi-cancel-01" style="margin-right:6px;"></i>Close';
+      cancelBtn.innerHTML  = '<i class="fas fa-times" style="margin-right:6px;"></i>Close';
       cancelBtn.style.background  = '#FEE2E2';
       cancelBtn.style.color       = '#DC2626';
       cancelBtn.style.borderColor = '#FECACA';
     }
 
     btn.disabled = false;
-    btn.innerHTML = '<i class="hgi hgi-stroke hgi-sent"></i> Post Video';
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video';
   }
 }
 
@@ -9885,7 +9870,7 @@ function showResumeUploadBanner(resumeId, record) {
     font-family:'DM Sans',sans-serif;`;
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;">
-      <div style="font-size:20px;"><i class="hgi hgi-stroke hgi-information-circle" style="color:var(--purple-main,#7C3AED);"></i></div>
+      <div style="font-size:20px;"><i class="fas fa-cloud-arrow-up" style="color:var(--purple-main,#7C3AED);"></i></div>
       <div style="flex:1;min-width:0;">
         <div style="font-weight:700;font-size:13.5px;">Unfinished video upload</div>
         <div style="font-size:12px;color:var(--gray-500,#666);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -9932,7 +9917,7 @@ async function resumeSavedUpload(resumeId, record) {
       const wrap = document.getElementById('sThumbPreview');
       if (!wrap) return;
       wrap.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;" />
-        <div class="uthumb-change"><i class="hgi hgi-stroke hgi-camera-01" style="margin-right:4px;"></i>Change</div>`;
+        <div class="uthumb-change"><i class="fas fa-camera" style="margin-right:4px;"></i>Change</div>`;
     };
     reader.readAsDataURL(record.thumbFile);
   }
@@ -9999,7 +9984,7 @@ async function createSeason() {
   if (hasError) return;
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:8px;"></i>Creating Season…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Creating Season…';
 
   try {
     const seaRef  = db.collection('channels').doc(CHANNEL_UID).collection('seasons').doc();
@@ -10023,13 +10008,13 @@ async function createSeason() {
     if (isScheduled) {
       if (!schedDTVal) {
         shakeField('seaSchedDT'); scrollTo_('seaSchedDT');
-        btn.disabled = false; btn.innerHTML = '<i class="hgi hgi-stroke hgi-information-circle"></i> Create Season Shell'; return;
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell'; return;
       }
       const schedTime = new Date(schedDTVal);
       if (schedTime <= new Date()) {
         shakeField('seaSchedDT'); scrollTo_('seaSchedDT');
         alert('Premiere date must be in the future.');
-        btn.disabled = false; btn.innerHTML = '<i class="hgi hgi-stroke hgi-information-circle"></i> Create Season Shell'; return;
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell'; return;
       }
       scheduleDate = firebase.firestore.Timestamp.fromDate(schedTime);
     }
@@ -10105,7 +10090,7 @@ async function createSeason() {
 
     btn.disabled = false;
     btn.style.background = '#059669';
-    btn.innerHTML = '<i class="hgi hgi-stroke hgi-tick-02" style="margin-right:8px;"></i>Season Created — Add Episodes Below';
+    btn.innerHTML = '<i class="fas fa-check" style="margin-right:8px;"></i>Season Created — Add Episodes Below';
 
     // ── Show "Preparing to add episodes…" mini-loader, then reveal episode block ──
     showPrepEpisodesLoader();
@@ -10122,7 +10107,7 @@ async function createSeason() {
     console.error('createSeason error:', e);
     btn.disabled = false;
     btn.style.background = '';
-    btn.innerHTML = '<i class="hgi hgi-stroke hgi-information-circle"></i> Create Season Shell';
+    btn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell';
     alert('Failed to create season: ' + e.message);
   }
 }
@@ -10293,7 +10278,7 @@ document.getElementById('episodeBlock').style.display = 'block';
   if (hasError) return;
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:8px;"></i>Starting…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Starting…';
 
   const steps = [
     { icon: 'fa-video',        label: 'Uploading episode video' },
@@ -10515,13 +10500,13 @@ document.getElementById('episodeBlock').style.display = 'block';
     if (draftNoticeEl && seasonWillPublishNow) {
       draftNoticeEl.style.background = '#D1FAE5';
       draftNoticeEl.style.borderColor = '#A7F3D0';
-      draftNoticeEl.innerHTML = '<i class="hgi hgi-stroke hgi-checkmark-circle-02" style="color:#059669;"></i> ' +
+      draftNoticeEl.innerHTML = '<i class="fas fa-circle-check" style="color:#059669;"></i> ' +
         'This season just hit 2 episodes and is now published — visible on Pose.';
     }
 
     const epDoneBtn = document.getElementById('uppopCancelBtn');
     if (epDoneBtn) {
-      epDoneBtn.innerHTML   = '<i class="hgi hgi-stroke hgi-tick-02" style="margin-right:6px;"></i>Done';
+      epDoneBtn.innerHTML   = '<i class="fas fa-check" style="margin-right:6px;"></i>Done';
       epDoneBtn.style.background  = '#D1FAE5';
       epDoneBtn.style.color       = '#065F46';
       epDoneBtn.style.borderColor = '#A7F3D0';
@@ -10555,14 +10540,14 @@ document.getElementById('episodeBlock').style.display = 'block';
 
     const cancelBtn = document.getElementById('uppopCancelBtn');
     if (cancelBtn) {
-      cancelBtn.innerHTML   = '<i class="hgi hgi-stroke hgi-cancel-01" style="margin-right:6px;"></i>Close';
+      cancelBtn.innerHTML   = '<i class="fas fa-times" style="margin-right:6px;"></i>Close';
       cancelBtn.style.background   = '#FEE2E2';
       cancelBtn.style.color        = '#DC2626';
       cancelBtn.style.borderColor  = '#FECACA';
     }
 
     btn.disabled = false;
-    btn.innerHTML = '<i class="hgi hgi-stroke hgi-sent"></i> Post Episode';
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode';
   }
 }
 
@@ -10633,7 +10618,7 @@ function showUploadPopup(fileName, fileSize, steps) {
 
   const cancelBtn = document.getElementById('uppopCancelBtn');
   if (cancelBtn) {
-    cancelBtn.innerHTML   = '<i class="hgi hgi-stroke hgi-cancel-01" style="margin-right:6px;"></i>Cancel';
+    cancelBtn.innerHTML   = '<i class="fas fa-times" style="margin-right:6px;"></i>Cancel';
     cancelBtn.style.background  = '';
     cancelBtn.style.color       = '';
     cancelBtn.style.borderColor = '';
@@ -10729,7 +10714,7 @@ function resetUploadPage() {
     if (el) el.innerHTML = `
       <div class="uthumb-placeholder">🎬</div>
       <div class="uthumb-change">
-        <i class="hgi hgi-stroke hgi-camera-01" style="margin-right:4px;"></i>Choose Image
+        <i class="fas fa-camera" style="margin-right:4px;"></i>Choose Image
       </div>`;
   });
 
@@ -10737,14 +10722,14 @@ function resetUploadPage() {
   if (seaBtn) {
     seaBtn.disabled = false;
     seaBtn.style.background = '';
-    seaBtn.innerHTML = '<i class="hgi hgi-stroke hgi-information-circle"></i> Create Season Shell';
+    seaBtn.innerHTML = '<i class="fas fa-folder-plus"></i> Create Season Shell';
   }
 
   const sBtn = document.getElementById('sPostBtn');
-  if (sBtn) { sBtn.disabled = false; sBtn.innerHTML = '<i class="hgi hgi-stroke hgi-sent"></i> Post Video'; }
+  if (sBtn) { sBtn.disabled = false; sBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video'; }
 
   const eBtn = document.getElementById('epPostBtn');
-  if (eBtn) { eBtn.disabled = false; eBtn.innerHTML = '<i class="hgi hgi-stroke hgi-sent"></i> Post Episode'; }
+  if (eBtn) { eBtn.disabled = false; eBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode'; }
 
   document.getElementById('uSuccessScreen').classList.remove('visible');
   document.querySelector('.upload-tabs').style.display = 'flex';
@@ -10885,14 +10870,14 @@ function renderAvSingle() {
   if (!filtered.length) {
     panel.innerHTML = `
       <div class="av-empty">
-        <div class="av-empty-icon"><i class="hgi hgi-stroke hgi-film-01"></i></div>
+        <div class="av-empty-icon"><i class="fas fa-film"></i></div>
         <div class="av-empty-title">${avQuery ? 'No results found' : 'No Videos Yet'}</div>
         <div class="av-empty-sub">${avQuery
           ? 'Try a different search term'
           : 'Upload your first video to get started'}</div>
         ${!avQuery ? `<button class="btn btn-purple btn-lg"
           style="margin:0 auto;display:inline-flex;" onclick="closeAllVideos();openUpload();">
-          <i class="hgi hgi-stroke hgi-upload-01" style="margin-right:7px;"></i>Upload Now
+          <i class="fas fa-upload" style="margin-right:7px;"></i>Upload Now
         </button>` : ''}
       </div>`;
     return;
@@ -10910,10 +10895,10 @@ function renderAvSingle() {
 
     const priceBadge = isPaid
       ? `<span class="av-badge av-badge-paid">🪙 ${coins} PCK</span>`
-      : `<span class="av-badge av-badge-free"><i class="hgi hgi-stroke hgi-information-circle"></i> Ad-Supported</span>`;
+      : `<span class="av-badge av-badge-free"><i class="fas fa-rectangle-ad"></i> Ad-Supported</span>`;
 
     const schedBadge = isSched
-      ? `<span class="av-badge av-badge-sched"><i class="hgi hgi-stroke hgi-clock-01"></i> Scheduled</span>`
+      ? `<span class="av-badge av-badge-sched"><i class="fas fa-clock"></i> Scheduled</span>`
       : '';
 
     const ratedBadge = v.ageRating
@@ -10936,16 +10921,16 @@ function renderAvSingle() {
           <div class="av-vcard-body">
             <div class="av-vcard-title" title="${v.title || 'Untitled'}">${v.title || 'Untitled'}</div>
             <div class="av-vcard-meta">
-              <span class="av-vmeta-item"><i class="hgi hgi-stroke hgi-view"></i> ${fmt(v.views || 0)}</span>
-              <span class="av-vmeta-item"><i class="hgi hgi-stroke hgi-favourite"></i> ${fmt(v.likes || 0)}</span>
-              <span class="av-vmeta-item"><i class="hgi hgi-stroke hgi-comment-01"></i> ${fmt(v.comments || 0)}</span>
-              ${isPaid ? `<span class="av-vmeta-item"><i class="hgi hgi-stroke hgi-reload"></i> ${fmt(v.replays || 0)}</span>` : ''}
+              <span class="av-vmeta-item"><i class="fas fa-eye"></i> ${fmt(v.views || 0)}</span>
+              <span class="av-vmeta-item"><i class="fas fa-heart"></i> ${fmt(v.likes || 0)}</span>
+              <span class="av-vmeta-item"><i class="fas fa-comment"></i> ${fmt(v.comments || 0)}</span>
+              ${isPaid ? `<span class="av-vmeta-item"><i class="fas fa-rotate"></i> ${fmt(v.replays || 0)}</span>` : ''}
             </div>
             <div class="av-vcard-badges">
               ${priceBadge}${schedBadge}${ratedBadge}
             </div>
             ${revLine}
-            <div class="av-vcard-date"><i class="hgi hgi-stroke hgi-calendar-01" style="margin-right:4px;opacity:.5;"></i>${avFmtDate(v)}</div>
+            <div class="av-vcard-date"><i class="fas fa-calendar" style="margin-right:4px;opacity:.5;"></i>${avFmtDate(v)}</div>
           </div>
         </div>
       </div>`;
@@ -10987,7 +10972,7 @@ function renderAvSeasons() {
   if (!list.length) {
     panel.innerHTML = `
       <div class="av-empty">
-        <div class="av-empty-icon"><i class="hgi hgi-stroke hgi-information-circle"></i></div>
+        <div class="av-empty-icon"><i class="fas fa-layer-group"></i></div>
         <div class="av-empty-title">${avQuery ? 'No seasons found' : 'No Seasons Yet'}</div>
         <div class="av-empty-sub">${avQuery
           ? 'Try a different search term'
@@ -11009,10 +10994,10 @@ function renderAvSeasons() {
     const rev     = Number(s.totalRevenue) || 0;
 
     const priceBadgeText =
-      s.priceMode === 'free'         ? '<i class="hgi hgi-stroke hgi-information-circle"></i> Free'        :
-      s.priceMode === 'per-episode'  ? `<i class="hgi hgi-stroke hgi-coins-01"></i> Per Episode`         :
+      s.priceMode === 'free'         ? '<i class="fas fa-rectangle-ad"></i> Free'        :
+      s.priceMode === 'per-episode'  ? `<i class="fas fa-coins"></i> Per Episode`         :
       s.priceMode === 'full-season'  ? `🪙 ${s.fullSeasonCoins || 0} Full Season`         :
-      s.priceMode === 'mixed'        ? `<i class="hgi hgi-stroke hgi-shuffle"></i> Mixed`             : 'Free';
+      s.priceMode === 'mixed'        ? `<i class="fas fa-shuffle"></i> Mixed`             : 'Free';
 
     const priceBadgeClass = s.priceMode === 'free' ? 'av-badge-free' : 'av-badge-paid';
 
@@ -11032,7 +11017,7 @@ function renderAvSeasons() {
             <div class="av-season-title">${s.title || 'Untitled Season'}</div>
             <div class="av-season-sub">Season ${s.seasonNumber || 1} · ${s.episodeCount || 0}${s.plannedEpisodeCount ? ` of ${s.plannedEpisodeCount}` : ''} episodes</div>
             <div class="av-season-stats">
-              ${s.status === 'draft' ? `<span class="av-badge" style="background:#FEF3C7;color:#92400E;"><i class="hgi hgi-stroke hgi-view-off"></i> Draft — needs ${Math.max(0, 2 - (Number(s.episodeCount)||0))} more ep.</span>` : ''}
+              ${s.status === 'draft' ? `<span class="av-badge" style="background:#FEF3C7;color:#92400E;"><i class="fas fa-eye-slash"></i> Draft — needs ${Math.max(0, 2 - (Number(s.episodeCount)||0))} more ep.</span>` : ''}
               <span class="av-badge ${priceBadgeClass}">${priceBadgeText}</span>
               ${s.ageRating ? `<span class="av-badge" style="${avRatingColor(s.ageRating)}">${avRatingLabel(s.ageRating)}</span>` : ''}
             </div>
@@ -11040,7 +11025,7 @@ function renderAvSeasons() {
           </div>
           <button class="av-season-delete" title="Delete season"
             onclick="event.stopPropagation();confirmDeleteSeason('${s.id}')">
-            <i class="hgi hgi-stroke hgi-delete-02"></i>
+            <i class="fas fa-trash"></i>
           </button>
           <svg class="av-season-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M6 9l6 6 6-6"/>
@@ -11170,7 +11155,7 @@ function renderAvEpisodes(seasonId, episodes, sea) {
 
     const schedHTML = ep.isScheduled
       ? `<span class="av-badge av-badge-sched" style="font-size:9px;">
-           <i class="hgi hgi-stroke hgi-clock-01"></i> Scheduled</span>` : '';
+           <i class="fas fa-clock"></i> Scheduled</span>` : '';
 
     return `
      <div class="av-ep-row" style="cursor:pointer;"
@@ -11183,13 +11168,13 @@ function renderAvEpisodes(seasonId, episodes, sea) {
           <div class="av-ep-title">${ep.title || 'Untitled Episode'}</div>
           <div class="av-ep-meta">
             <span class="av-vmeta-item" style="font-size:10.5px;">
-              <i class="hgi hgi-stroke hgi-view"></i> ${fmt(ep.views || 0)}</span>
+              <i class="fas fa-eye"></i> ${fmt(ep.views || 0)}</span>
             <span class="av-vmeta-item" style="font-size:10.5px;">
-              <i class="hgi hgi-stroke hgi-favourite"></i> ${fmt(ep.likes || 0)}</span>
+              <i class="fas fa-heart"></i> ${fmt(ep.likes || 0)}</span>
             <span class="av-vmeta-item" style="font-size:10.5px;">
-              <i class="hgi hgi-stroke hgi-comment-01"></i> ${fmt(ep.comments || 0)}</span>
+              <i class="fas fa-comment"></i> ${fmt(ep.comments || 0)}</span>
             ${isPaid ? `<span class="av-vmeta-item" style="font-size:10.5px;">
-              <i class="hgi hgi-stroke hgi-reload"></i> ${fmt(ep.replays || 0)}</span>` : ''}
+              <i class="fas fa-rotate"></i> ${fmt(ep.replays || 0)}</span>` : ''}
             ${schedHTML}
           </div>
         </div>
@@ -11199,7 +11184,7 @@ function renderAvEpisodes(seasonId, episodes, sea) {
         </div>
         <button class="av-ep-delete" title="Delete episode"
           onclick="event.stopPropagation();confirmDeleteEpisode('${seasonId}','${ep.id}')">
-          <i class="hgi hgi-stroke hgi-delete-02"></i>
+          <i class="fas fa-trash"></i>
         </button>
       </div>`;
   }).join('');
@@ -11273,14 +11258,14 @@ function renderVdPlayer(video) {
     wrap.innerHTML = `
       <div style="aspect-ratio:16/9;background:#111;display:flex;flex-direction:column;
         align-items:center;justify-content:center;color:rgba(255,255,255,.3);gap:10px;">
-        <i class="hgi hgi-stroke hgi-information-circle" style="font-size:32px;"></i>
+        <i class="fas fa-video-slash" style="font-size:32px;"></i>
         <span style="font-size:13px;">Video not available</span>
       </div>`;
     return;
   }
 
   const trailerChip = video.trailerUrl
-    ? `<div class="vd-trailer-chip"><i class="hgi hgi-stroke hgi-play"></i> Trailer available below</div>`
+    ? `<div class="vd-trailer-chip"><i class="fas fa-play"></i> Trailer available below</div>`
     : '';
 
   const videoEl = document.createElement('video');
@@ -11299,7 +11284,7 @@ function renderVdPlayer(video) {
     wrap.innerHTML = `
       <div style="aspect-ratio:16/9;background:#111;display:flex;flex-direction:column;
         align-items:center;justify-content:center;color:rgba(255,255,255,.3);gap:10px;">
-        <i class="hgi hgi-stroke hgi-alert-02" style="font-size:32px;color:#D97706;"></i>
+        <i class="fas fa-triangle-exclamation" style="font-size:32px;color:#D97706;"></i>
         <span style="font-size:13px;">Could not load video</span>
       </div>`;
   });
@@ -11339,7 +11324,7 @@ function renderVdBody(video) {
          🪙 ${video.coinPrice || 0} PCK
        </span>`
     : `<span class="vd-badge" style="background:#D1FAE5;color:#065F46;">
-         <i class="hgi hgi-stroke hgi-information-circle"></i> Free · Ad-Supported
+         <i class="fas fa-rectangle-ad"></i> Free · Ad-Supported
        </span>`;
 
   const ratingBadge = video.ageRating
@@ -11348,10 +11333,10 @@ function renderVdBody(video) {
 
   const typeTag = video.episodeNumber !== undefined
     ? `<span class="vd-badge" style="background:var(--gray-100);color:var(--gray-600);">
-         <i class="hgi hgi-stroke hgi-information-circle"></i> Episode ${video.episodeNumber}
+         <i class="fas fa-layer-group"></i> Episode ${video.episodeNumber}
        </span>`
     : `<span class="vd-badge" style="background:var(--gray-100);color:var(--gray-600);">
-         <i class="hgi hgi-stroke hgi-film-01"></i> Single Video
+         <i class="fas fa-film"></i> Single Video
        </span>`;
 
   // ── Pool card — paid videos only; free videos are never monetized ──
@@ -11360,14 +11345,14 @@ function renderVdBody(video) {
     poolCardHTML = `
       <div class="vd-pool-card">
         <div class="vd-pool-header">
-          <div class="vd-pool-icon"><i class="hgi hgi-stroke hgi-information-circle"></i></div>
+          <div class="vd-pool-icon"><i class="fas fa-circle-info"></i></div>
           <div>
             <div class="vd-pool-title">Free Video · No Pool</div>
             <div class="vd-pool-sub">Free videos don't generate earnings</div>
           </div>
         </div>
         <div class="vd-pool-notice">
-          <i class="hgi hgi-stroke hgi-information-circle"></i>
+          <i class="fas fa-circle-info"></i>
           <span>
             No payment is made for views on free videos, so there's no pool here —
             views only build reach and audience. To start earning from this video,
@@ -11390,7 +11375,7 @@ function renderVdBody(video) {
       <div class="vd-pool-card" style="border-left-color:#F59E0B;">
         <div class="vd-pool-header">
           <div class="vd-pool-icon" style="background:linear-gradient(135deg,#92400E,#F59E0B);">
-            <i class="hgi hgi-stroke hgi-coins-01"></i>
+            <i class="fas fa-coins"></i>
           </div>
           <div>
             <div class="vd-pool-title">Paid Video · Instant Payout</div>
@@ -11402,7 +11387,7 @@ function renderVdBody(video) {
         </div>
 
         <div class="vd-pool-notice" style="background:#FFFBEB;border-color:#FDE68A;">
-          <i class="hgi hgi-stroke hgi-information-circle" style="color:#D97706;"></i>
+          <i class="fas fa-circle-info" style="color:#D97706;"></i>
           <span>
             Every paid view splits <b>${Math.round(CREATOR_SHARE*100)}% to you</b> and
             <b>${Math.round((1-CREATOR_SHARE)*100)}% to POSE</b> the instant it's paid for —
@@ -11428,15 +11413,15 @@ function renderVdBody(video) {
 
         <div class="vd-pool-flow">
           <div class="vd-pool-flow-step">👁 Paid View</div>
-          <i class="hgi hgi-stroke hgi-arrow-right-01 vd-pool-arrow"></i>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
           <div class="vd-pool-flow-step vd-pool-flow-rev">💰 ${Math.round(CREATOR_SHARE*100)}% → You (instant)</div>
-          <i class="hgi hgi-stroke hgi-arrow-right-01 vd-pool-arrow"></i>
+          <i class="fas fa-arrow-right vd-pool-arrow"></i>
           <div class="vd-pool-flow-step vd-pool-flow-take">🏠 Withdraw</div>
         </div>
 
         ${legacyLockedNGN > 0 ? `
         <div class="vd-pool-notif">
-          <div class="vd-pool-notif-icon"><i class="hgi hgi-stroke hgi-notification-03"></i></div>
+          <div class="vd-pool-notif-icon"><i class="fas fa-bell"></i></div>
           <div class="vd-pool-notif-text">
             <b>Legacy balance:</b> ₦${Math.round(legacyLockedNGN).toLocaleString('en-NG')} earned
             before instant payouts is still sitting in the old pool and will release automatically.
@@ -11445,7 +11430,7 @@ function renderVdBody(video) {
 
         <button class="vd-pool-cta" type="button" style="background:linear-gradient(135deg,#92400E,#F59E0B);"
           onclick="closeVideoDetail();onMainTab(document.querySelector('.tab-item[data-tab=&quot;earnings&quot;]'),'earnings');">
-          <i class="hgi hgi-stroke hgi-coins-01"></i> See it in Direct Sales →
+          <i class="fas fa-coins"></i> See it in Direct Sales →
         </button>
       </div>`;
   }
@@ -11461,7 +11446,7 @@ function renderVdBody(video) {
 
     revCardHTML = `
       <div class="vd-rev-card">
-        <div class="vd-rev-lbl"><i class="hgi hgi-stroke hgi-coins-01" style="margin-right:5px;"></i>Revenue</div>
+        <div class="vd-rev-lbl"><i class="fas fa-coins" style="margin-right:5px;"></i>Revenue</div>
         <div class="vd-rev-main">🪙 ${totalPCK.toLocaleString()} PCK</div>
         <div class="vd-rev-naira">₦${totalNaira} total earned</div>
         <div class="vd-rev-row">
@@ -11495,14 +11480,14 @@ function renderVdBody(video) {
   if (video.trailerUrl) {
     trailerHTML = `
       <div class="vd-info-card" style="margin-bottom:16px;">
-        <div class="vd-info-title"><i class="hgi hgi-stroke hgi-play" style="color:var(--purple-main);"></i> Trailer</div>
+        <div class="vd-info-title"><i class="fas fa-play" style="color:var(--purple-main);"></i> Trailer</div>
         <video controls preload="metadata" playsinline
           style="width:100%;border-radius:11px;background:#000;max-height:200px;"
           src="${video.trailerUrl}"
           ${video.thumbnailURL ? `poster="${video.thumbnailURL}"` : ''}>
         </video>
         <div style="font-size:11.5px;color:var(--gray-500);margin-top:8px;">
-          <i class="hgi hgi-stroke hgi-information-circle" style="margin-right:4px;color:var(--purple-light);"></i>
+          <i class="fas fa-circle-info" style="margin-right:4px;color:var(--purple-light);"></i>
           Trailer is always free to watch
         </div>
       </div>`;
@@ -11542,23 +11527,23 @@ function renderVdBody(video) {
     <div class="vd-actions">
       ${isSched ? `
         <button class="vd-action-btn warn" onclick="rescheduleVideo()">
-          <i class="hgi hgi-stroke hgi-information-circle"></i> Edit Schedule
+          <i class="fas fa-calendar-pen"></i> Edit Schedule
         </button>
         <button class="vd-action-btn" onclick="removeSchedule()">
-          <i class="hgi hgi-stroke hgi-information-circle"></i> Remove Schedule
+          <i class="fas fa-calendar-xmark"></i> Remove Schedule
         </button>` : `
         <button class="vd-action-btn warn" onclick="rescheduleVideo()">
-          <i class="hgi hgi-stroke hgi-information-circle"></i> Set Schedule
+          <i class="fas fa-calendar-plus"></i> Set Schedule
         </button>`}
       <button class="vd-action-btn" onclick="editPricing()">
-        <i class="hgi hgi-stroke hgi-tag-01"></i> Edit Pricing
+        <i class="fas fa-tag"></i> Edit Pricing
       </button>
       <button class="vd-action-btn" onclick="togglePauseVideo()">
         <i class="fas fa-${video.status === 'paused' ? 'play' : 'pause'}"></i>
         ${video.status === 'paused' ? 'Unpause' : 'Pause'}
       </button>
       <button class="vd-action-btn danger" onclick="confirmDeleteVideo()">
-        <i class="hgi hgi-stroke hgi-delete-02"></i> Delete
+        <i class="fas fa-trash"></i> Delete
       </button>
     </div>
 
@@ -11567,32 +11552,32 @@ function renderVdBody(video) {
 
     <div class="vd-info-card">
       <div class="vd-info-title">
-        <i class="hgi hgi-stroke hgi-information-circle" style="color:var(--purple-main);"></i> Video Info
+        <i class="fas fa-circle-info" style="color:var(--purple-main);"></i> Video Info
       </div>
       <div class="vd-info-row">
-        <span class="vd-info-key"><i class="hgi hgi-stroke hgi-calendar-01"></i> Release Date</span>
+        <span class="vd-info-key"><i class="fas fa-calendar"></i> Release Date</span>
         <span class="vd-info-val">${releaseDateStr}</span>
       </div>
       <div class="vd-info-row">
-        <span class="vd-info-key"><i class="hgi hgi-stroke hgi-coins-01"></i> Pricing</span>
+        <span class="vd-info-key"><i class="fas fa-coins"></i> Pricing</span>
         <span class="vd-info-val">${isPaid
           ? `🪙 ${video.coinPrice || 0} PCK = ₦${((video.coinPrice || 0) * PCK_TO_NGN).toLocaleString()}`
           : 'Free · Ad-Supported'}</span>
       </div>
       ${isPaid ? `
       <div class="vd-info-row">
-        <span class="vd-info-key"><i class="hgi hgi-stroke hgi-information-circle"></i> Your Cut</span>
+        <span class="vd-info-key"><i class="fas fa-handshake"></i> Your Cut</span>
         <span class="vd-info-val" style="color:var(--green);">
           75% · 🪙 ${Math.round((video.coinPrice || 0) * CREATOR_SHARE)} PCK per view
         </span>
       </div>` : ''}
       <div class="vd-info-row">
-        <span class="vd-info-key"><i class="hgi hgi-stroke hgi-shield-01"></i> Age Rating</span>
+        <span class="vd-info-key"><i class="fas fa-shield"></i> Age Rating</span>
         <span class="vd-info-val">${avRatingLabel(video.ageRating)}</span>
       </div>
       ${isSched ? `
       <div class="vd-info-row">
-        <span class="vd-info-key"><i class="hgi hgi-stroke hgi-clock-01"></i> Status</span>
+        <span class="vd-info-key"><i class="fas fa-clock"></i> Status</span>
         <span class="vd-info-val" style="color:#D97706;">
           ${(() => {
             const dt = vdToDate(video.scheduleDate);
@@ -11602,7 +11587,7 @@ function renderVdBody(video) {
         </span>
       </div>` : `
       <div class="vd-info-row">
-        <span class="vd-info-key"><i class="hgi hgi-stroke hgi-checkmark-circle-02"></i> Status</span>
+        <span class="vd-info-key"><i class="fas fa-circle-check"></i> Status</span>
         <span class="vd-info-val" style="color:var(--green);">✅ Live</span>
       </div>`}
     </div>
@@ -11615,7 +11600,7 @@ function renderVdBody(video) {
         if (!val || (Array.isArray(val) && !val.length)) return;
         const display = Array.isArray(val) ? val.join(', ') : val;
         rows.push(`<div class="vd-info-row">
-          <span class="vd-info-key"><i class="hgi hgi-stroke hgi-information-circle"></i> ${label}</span>
+          <span class="vd-info-key"><i class="fas fa-${icon}"></i> ${label}</span>
           <span class="vd-info-val" style="text-align:right;">${display}</span>
         </div>`);
       };
@@ -11632,7 +11617,7 @@ function renderVdBody(video) {
       if (video.guestCast && video.guestCast.length) addRow('user-plus', 'Guest Cast', video.guestCast);
       if (!rows.length) return '';
       return `<div class="vd-info-card">
-        <div class="vd-info-title"><i class="hgi hgi-stroke hgi-film-01" style="color:var(--purple-main);"></i> Production &amp; Cast</div>
+        <div class="vd-info-title"><i class="fas fa-clapperboard" style="color:var(--purple-main);"></i> Production &amp; Cast</div>
         ${rows.join('')}
       </div>`;
     })()}
@@ -11641,7 +11626,7 @@ function renderVdBody(video) {
     <div class="vd-comments-card">
       <div class="vd-comments-header">
         <div class="vd-comments-title">
-          <i class="hgi hgi-stroke hgi-comment-02" style="color:var(--purple-main);"></i>
+          <i class="fas fa-comments" style="color:var(--purple-main);"></i>
           Comments
           <span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;
             background:var(--purple-pale);color:var(--purple-deep);"
@@ -11670,7 +11655,7 @@ function confirmDeleteVideo() {
   overlay.id = 'vdDeleteOverlay';
   overlay.innerHTML = `
     <div class="vd-delete-card">
-      <div class="vd-delete-icon"><i class="hgi hgi-stroke hgi-delete-02"></i></div>
+      <div class="vd-delete-icon"><i class="fas fa-trash"></i></div>
       <div class="vd-delete-title">Delete this video?</div>
       <div class="vd-delete-sub">
         <strong>"${vdCurrentVideo.title || 'Untitled'}"</strong> will be permanently deleted.
@@ -11685,10 +11670,10 @@ function confirmDeleteVideo() {
       </div>
       <div class="vd-delete-btns">
         <button class="vd-delete-cancel-btn" onclick="cancelDeleteVideo()">
-          <i class="hgi hgi-stroke hgi-cancel-01" style="margin-right:6px;"></i>Cancel
+          <i class="fas fa-times" style="margin-right:6px;"></i>Cancel
         </button>
         <button class="vd-delete-confirm-btn" id="vdDeleteConfirmBtn" onclick="executeDeleteVideo()">
-          <i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Delete Now
+          <i class="fas fa-trash" style="margin-right:6px;"></i>Delete Now
         </button>
       </div>
     </div>`;
@@ -11711,7 +11696,7 @@ function confirmDeleteVideo() {
       if (numEl) numEl.textContent = '0';
       if (confirmBtn) {
         confirmBtn.classList.add('enabled');
-        confirmBtn.innerHTML = '<i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Confirm Delete';
+        confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
       }
     }
   }, 1000);
@@ -11729,7 +11714,7 @@ async function executeDeleteVideo() {
   const confirmBtn = document.getElementById('vdDeleteConfirmBtn');
   if (confirmBtn) {
     confirmBtn.disabled = true;
-    confirmBtn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:6px;"></i>Deleting…';
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Deleting…';
   }
 
   try {
@@ -11774,7 +11759,7 @@ async function executeDeleteVideo() {
     alert('Failed to delete: ' + e.message);
     if (confirmBtn) {
       confirmBtn.disabled = false;
-      confirmBtn.innerHTML = '<i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Confirm Delete';
+      confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
     }
   }
 }
@@ -11803,7 +11788,7 @@ function confirmDeleteSeason(seasonId) {
   overlay.id = 'vdDeleteOverlay';
   overlay.innerHTML = `
     <div class="vd-delete-card">
-      <div class="vd-delete-icon"><i class="hgi hgi-stroke hgi-delete-02"></i></div>
+      <div class="vd-delete-icon"><i class="fas fa-trash"></i></div>
       <div class="vd-delete-title">Delete this entire season?</div>
       <div class="vd-delete-sub">
         <strong>"${sea.title || 'Untitled Season'}"</strong> and <strong>all ${sea.episodeCount || 0} episode(s)</strong>
@@ -11818,10 +11803,10 @@ function confirmDeleteSeason(seasonId) {
       </div>
       <div class="vd-delete-btns">
         <button class="vd-delete-cancel-btn" onclick="cancelDeleteVideo()">
-          <i class="hgi hgi-stroke hgi-cancel-01" style="margin-right:6px;"></i>Cancel
+          <i class="fas fa-times" style="margin-right:6px;"></i>Cancel
         </button>
         <button class="vd-delete-confirm-btn" id="vdDeleteConfirmBtn" onclick="executeDeleteSeason()">
-          <i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Delete Now
+          <i class="fas fa-trash" style="margin-right:6px;"></i>Delete Now
         </button>
       </div>
     </div>`;
@@ -11844,7 +11829,7 @@ function confirmDeleteSeason(seasonId) {
       if (numEl) numEl.textContent = '0';
       if (confirmBtn) {
         confirmBtn.classList.add('enabled');
-        confirmBtn.innerHTML = '<i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Confirm Delete';
+        confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
       }
     }
   }, 1000);
@@ -11856,7 +11841,7 @@ async function executeDeleteSeason() {
   const confirmBtn = document.getElementById('vdDeleteConfirmBtn');
   if (confirmBtn) {
     confirmBtn.disabled = true;
-    confirmBtn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:6px;"></i>Deleting…';
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Deleting…';
   }
 
   try {
@@ -11883,7 +11868,7 @@ async function executeDeleteSeason() {
     alert('Failed to delete season: ' + e.message);
     if (confirmBtn) {
       confirmBtn.disabled = false;
-      confirmBtn.innerHTML = '<i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Confirm Delete';
+      confirmBtn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Confirm Delete';
     }
   }
 }
@@ -11937,7 +11922,7 @@ function rescheduleVideo() {
       <div style="display:flex;gap:10px;">
         <button class="vd-delete-cancel-btn" onclick="closeReschedule()" style="flex:1;">Cancel</button>
         <button class="btn btn-purple btn-lg" onclick="saveReschedule()" style="flex:1;">
-          <i class="hgi hgi-stroke hgi-information-circle" style="margin-right:6px;"></i>Save
+          <i class="fas fa-calendar-check" style="margin-right:6px;"></i>Save
         </button>
       </div>
     </div>`;
@@ -12032,10 +12017,10 @@ function editPricing() {
       <div class="vd-resched-sub">Change how "${vdCurrentVideo.title || 'Untitled'}" is monetized</div>
       <div style="display:flex;gap:10px;margin-bottom:16px;">
         <button type="button" id="vdPmFree" class="vd-pm-opt ${!isPaid ? 'active' : ''}" onclick="vdSetPriceMode('free')">
-          <i class="hgi hgi-stroke hgi-information-circle"></i> Free (Ads)
+          <i class="fas fa-rectangle-ad"></i> Free (Ads)
         </button>
         <button type="button" id="vdPmPaid" class="vd-pm-opt ${isPaid ? 'active' : ''}" onclick="vdSetPriceMode('paid')">
-          <i class="hgi hgi-stroke hgi-coins-01"></i> Paid (PCK)
+          <i class="fas fa-coins"></i> Paid (PCK)
         </button>
       </div>
       <div id="vdPriceInputWrap" style="display:${isPaid ? 'block' : 'none'};margin-bottom:6px;">
@@ -12046,7 +12031,7 @@ function editPricing() {
       <div style="display:flex;gap:10px;">
         <button class="vd-delete-cancel-btn" onclick="closePricing()" style="flex:1;">Cancel</button>
         <button class="btn btn-purple btn-lg" onclick="savePricing()" style="flex:1;">
-          <i class="hgi hgi-stroke hgi-tick-02" style="margin-right:6px;"></i>Save
+          <i class="fas fa-check" style="margin-right:6px;"></i>Save
         </button>
       </div>
     </div>`;
@@ -12222,8 +12207,8 @@ function cancelUpload() {
   hideUploadPopup();
   const sBtn = document.getElementById('sPostBtn');
   const eBtn = document.getElementById('epPostBtn');
-  if (sBtn) { sBtn.disabled = false; sBtn.innerHTML = '<i class="hgi hgi-stroke hgi-sent"></i> Post Video'; }
-  if (eBtn) { eBtn.disabled = false; eBtn.innerHTML = '<i class="hgi hgi-stroke hgi-sent"></i> Post Episode'; }
+  if (sBtn) { sBtn.disabled = false; sBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Video'; }
+  if (eBtn) { eBtn.disabled = false; eBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Episode'; }
 }
 
 
@@ -12543,7 +12528,7 @@ function reqCardHTML(r) {
   const etaBlock = r.status === 'pending' ? `
     <div style="display:flex;align-items:center;gap:6px;margin-top:10px;
       background:#FEF3C7;border-radius:9px;padding:9px 12px;">
-      <i class="hgi hgi-stroke hgi-clock-01" style="color:#D97706;font-size:12px;flex-shrink:0;"></i>
+      <i class="fas fa-clock" style="color:#D97706;font-size:12px;flex-shrink:0;"></i>
       <span style="font-size:11.5px;color:#92400E;line-height:1.4;">
         Processed daily <b>9 AM – 12 AM</b> · ETA 15 min – 1 hour
       </span>
@@ -12551,7 +12536,7 @@ function reqCardHTML(r) {
 
   const noteBlock = r.note ? `
     <div class="hist-req-note">
-      <i class="hgi hgi-stroke hgi-information-circle" style="margin-right:5px;color:var(--purple-light);"></i>
+      <i class="fas fa-circle-info" style="margin-right:5px;color:var(--purple-light);"></i>
       ${r.note}
     </div>` : '';
 
@@ -12561,7 +12546,7 @@ function reqCardHTML(r) {
       background:#FEE2E2;color:#DC2626;font-size:12.5px;font-weight:600;
       border:1.5px solid #FECACA;cursor:pointer;font-family:'DM Sans',sans-serif;
       display:flex;align-items:center;justify-content:center;gap:6px;">
-      <i class="hgi hgi-stroke hgi-cancel-01"></i> Cancel Request
+      <i class="fas fa-times"></i> Cancel Request
     </button>` : '';
 
   return `
@@ -12582,16 +12567,16 @@ function reqCardHTML(r) {
       </div>
 
       <div class="hist-req-bank">
-        <i class="hgi hgi-stroke hgi-bank"
+        <i class="fas fa-building-columns"
           style="margin-right:5px;color:var(--gray-400);"></i>
         ${r.bankName || '—'} · ${r.bankAcctNum || '—'} · ${r.bankAcctName || '—'}
       </div>
 
       <div class="hist-req-date">
-        <i class="hgi hgi-stroke hgi-calendar-01"
+        <i class="fas fa-calendar"
           style="margin-right:4px;opacity:.5;"></i>Requested: ${dateStr}
         ${processedStr
-          ? `<br><i class="hgi hgi-stroke hgi-tick-02" style="margin-right:4px;opacity:.5;"></i>Processed: ${processedStr}`
+          ? `<br><i class="fas fa-check" style="margin-right:4px;opacity:.5;"></i>Processed: ${processedStr}`
           : ''}
       </div>
 
@@ -12648,7 +12633,7 @@ async function submitSupportMessage() {
 
   btn.disabled = true;
   btn.innerHTML =
-    '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:7px;"></i>Sending…';
+    '<i class="fas fa-spinner fa-spin" style="margin-right:7px;"></i>Sending…';
 
   try {
     await db.collection('channels').doc(CHANNEL_UID)
@@ -12666,7 +12651,7 @@ async function submitSupportMessage() {
 
     btn.disabled = false;
     btn.innerHTML =
-      '<i class="hgi hgi-stroke hgi-sent" style="margin-right:7px;"></i>Send Message';
+      '<i class="fas fa-paper-plane" style="margin-right:7px;"></i>Send Message';
 
     /* clear form */
     document.getElementById('suppSubject').value = '';
@@ -12685,7 +12670,7 @@ async function submitSupportMessage() {
   } catch (e) {
     btn.disabled = false;
     btn.innerHTML =
-      '<i class="hgi hgi-stroke hgi-sent" style="margin-right:7px;"></i>Send Message';
+      '<i class="fas fa-paper-plane" style="margin-right:7px;"></i>Send Message';
     alert('Failed to send: ' + e.message);
   }
 }
@@ -12794,17 +12779,17 @@ function suppInboxCardHTML(m) {
 
       ${m.txnId
         ? `<div style="font-size:11px;color:var(--purple-mid);margin-top:5px;">
-            <i class="hgi hgi-stroke hgi-text-number-sign" style="margin-right:3px;"></i>${m.txnId}
+            <i class="fas fa-hashtag" style="margin-right:3px;"></i>${m.txnId}
           </div>`
         : ''}
       ${m.amountInvolved
         ? `<div style="font-size:11px;color:var(--gray-500);margin-top:3px;">
-            <i class="hgi hgi-stroke hgi-coins-01" style="margin-right:3px;"></i>${m.amountInvolved}
+            <i class="fas fa-coins" style="margin-right:3px;"></i>${m.amountInvolved}
           </div>`
         : ''}
 
       <div class="supp-inbox-time">
-        <i class="hgi hgi-stroke hgi-clock-01" style="margin-right:4px;opacity:.5;"></i>${dateStr}
+        <i class="fas fa-clock" style="margin-right:4px;opacity:.5;"></i>${dateStr}
       </div>
     </div>`;
 }
@@ -12828,7 +12813,7 @@ function histEmptyHTML(title, sub) {
         background:var(--purple-ghost);color:var(--purple-mid);
         display:flex;align-items:center;justify-content:center;
         margin:0 auto 12px;font-size:22px;">
-        <i class="hgi hgi-stroke hgi-inbox"></i>
+        <i class="fas fa-inbox"></i>
       </div>
       <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
         color:var(--text-main);margin-bottom:5px;">${title}</div>
@@ -12839,7 +12824,7 @@ function histEmptyHTML(title, sub) {
 function histErrorHTML(msg) {
   return `
     <div style="padding:20px;text-align:center;color:var(--red);font-size:13px;">
-      <i class="hgi hgi-stroke hgi-alert-02" style="margin-right:5px;"></i>${msg}
+      <i class="fas fa-triangle-exclamation" style="margin-right:5px;"></i>${msg}
     </div>`;
 }
 
@@ -12857,7 +12842,7 @@ function confirmDeleteAccount() {
       width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">
       <div style="width:60px;height:60px;border-radius:50%;background:#FEE2E2;
         display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-        <i class="hgi hgi-stroke hgi-delete-02" style="color:#DC2626;font-size:24px;"></i>
+        <i class="fa-solid fa-trash" style="color:#DC2626;font-size:24px;"></i>
       </div>
       <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
         margin-bottom:8px;color:var(--text-main);">Delete Account?</div>
@@ -12867,7 +12852,7 @@ function confirmDeleteAccount() {
       </div>
       <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:11px;
         padding:11px 14px;margin-bottom:20px;font-size:12px;color:#DC2626;">
-        <i class="hgi hgi-stroke hgi-alert-02" style="margin-right:5px;"></i>
+        <i class="fas fa-triangle-exclamation" style="margin-right:5px;"></i>
         Your pending earnings may be forfeited.
       </div>
       <button id="deleteConfirmBtn"
@@ -12875,7 +12860,7 @@ function confirmDeleteAccount() {
         font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;
         font-family:'DM Sans',sans-serif;"
         onclick="executeDeleteAccount(this)">
-        <i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Yes, Delete Everything
+        <i class="fas fa-trash" style="margin-right:6px;"></i>Yes, Delete Everything
       </button>
       <button onclick="this.closest('div[style*=fixed]').remove()"
         style="width:100%;padding:12px;border-radius:11px;background:var(--gray-100);
@@ -12889,7 +12874,7 @@ function confirmDeleteAccount() {
 
 async function executeDeleteAccount(btn) {
   btn.disabled = true;
-  btn.innerHTML = '<i class="hgi hgi-stroke hgi-loading-03 hgi-spin" style="margin-right:6px;"></i>Deleting…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Deleting…';
 
   try {
     const user = auth.currentUser;
@@ -12904,7 +12889,7 @@ async function executeDeleteAccount(btn) {
     window.location.href = 'index.html';
   } catch (e) {
     btn.disabled = false;
-    btn.innerHTML = '<i class="hgi hgi-stroke hgi-delete-02" style="margin-right:6px;"></i>Yes, Delete Everything';
+    btn.innerHTML = '<i class="fas fa-trash" style="margin-right:6px;"></i>Yes, Delete Everything';
 
     if (e.code === 'auth/requires-recent-login') {
       alert('For security, please log out and log back in before deleting your account.');
