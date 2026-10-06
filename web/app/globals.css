@@ -106,6 +106,138 @@
       transform: none;
     }
   }
+
+  /*
+   * Main app shell (legacy index.html). Black surfaces plus the #8A2BE2
+   * interaction purple used by the bottom nav; shares neither the light brand
+   * ramp nor the music green.
+   */
+  --color-app-black: #000000;
+  --color-app-shell: #0c0c0f;
+  --color-app-panel: #222222;
+  --color-app-card: #0a0a0a;
+  --color-app-post: #111111;
+  --color-app-hair: #333333;
+  --color-app-muted: #888888;
+  --color-app-sub: #e0e0e0;
+  --color-app-interact: #8a2be2;
+
+  --animate-app-fade-in: app-fade-in 0.3s ease-in;
+  --animate-app-slide-in: app-slide-in 0.3s ease-out;
+  --animate-app-slide-up: app-slide-up 0.3s ease;
+  --animate-app-spin-disk: app-spin-disk 4s linear infinite;
+  --animate-app-shimmer: app-shimmer 1.5s linear infinite;
+  --animate-app-play-pulse: app-play-pulse 2s ease-in-out infinite;
+  --animate-app-foryou-shimmer: app-foryou-shimmer 1.6s linear infinite;
+  --animate-app-foryou-spin: app-foryou-spin 0.9s cubic-bezier(.5,.1,.5,.9) infinite;
+  --animate-app-foryou-pulse: app-foryou-pulse 1.4s ease-in-out infinite;
+  --animate-app-foryou-dot: app-foryou-dot 1.2s ease-in-out infinite;
+
+  @keyframes app-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Legacy `@keyframes slideInRight` @187, used by `.trend-modal-overlay`. */
+  @keyframes app-slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Legacy `@keyframes playPulse` @9808, on the trend grid play affordance. */
+  @keyframes app-play-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  /* Legacy `@keyframes slideUp` @1283, used by `.notifications-overlay`. */
+  @keyframes app-slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /*
+   * The purple POSE-branded feed loader, legacy `.foryou-loader` @23445. Four
+   * keyframes: `foryouShimmer` @23479 sweeps the skeleton, `foryouSpin` @23511
+   * turns the ring only (the logo stays static), `foryouPulse` @23534 breathes
+   * the wordmark and `foryouDot` @23548 bounces the trailing dots.
+   */
+  @keyframes app-foryou-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
+  @keyframes app-foryou-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes app-foryou-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.55;
+      transform: scale(0.96);
+    }
+  }
+
+  @keyframes app-foryou-dot {
+    0%,
+    80%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes app-spin-disk {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes app-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
 }
 
 body {
