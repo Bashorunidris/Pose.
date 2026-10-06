@@ -44,7 +44,8 @@
 /channeldashboard.html
   X-Robots-Tag: noindex, nofollow
 
-/channelintro.html
+# Frozen copies of the ported pages — the Next.js routes own these URLs
+/legacy/*
   X-Robots-Tag: noindex, nofollow
 
 /firebase-upload-module.html

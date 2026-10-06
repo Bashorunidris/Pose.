@@ -85332,7 +85332,7 @@ For more help, visit: help.pose.app
 
     // No channels → go create one
     if (snap.empty) {
-      window.location.href = `channelintro.html?email=${encodeURIComponent(user.email)}`;
+      window.location.href = `/legacy/channelintro.html?email=${encodeURIComponent(user.email)}`;
       return;
     }
 
@@ -85410,7 +85410,7 @@ function _renderChannelPicker(user, channels) {
         </div>
 
         ${channels.length < 5 ? `
-        <button onclick="window.location.href='channelintro.html?email=${encodeURIComponent(user.email)}'"
+        <button onclick="window.location.href='/legacy/channelintro.html?email=${encodeURIComponent(user.email)}'"
           style="width:100%;padding:12px;border-radius:12px;
           background:#F5F3FF;border:1.5px solid #DDD6FE;
           color:#7C3AED;font-size:14px;font-weight:600;cursor:pointer;">

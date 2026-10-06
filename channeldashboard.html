@@ -6022,7 +6022,7 @@ let inboxMessages = [];
       .where('ownerUid', '==', user.uid)
       .orderBy('createdAt', 'desc')
       .limit(1).get();
-    if (snap.empty) { window.location.href = 'channelintro.html'; return; }
+    if (snap.empty) { window.location.href = '/legacy/channelintro.html'; return; }
     CHANNEL_UID = snap.docs[0].id;
   }
   bootDashboard();
@@ -6045,7 +6045,7 @@ let inboxMessages = [];
 
   db.collection('channels').doc(CHANNEL_UID)
   .onSnapshot(snap => {
-    if (!snap.exists) { window.location.href = 'channelintro.html?fromDash=1'; return; }
+    if (!snap.exists) { window.location.href = '/legacy/channelintro.html?fromDash=1'; return; }
       channelData = snap.data();
       updatePckToNgnRate();
       const fansNow = Number(channelData.fans) || Number(channelData.subscribers) || 0;
@@ -8331,7 +8331,7 @@ async function goToCreateChannel() {
     showToast('You have reached the maximum of 5 channels.');
     return;
   }
-  window.location.href = 'channelintro.html';
+  window.location.href = '/legacy/channelintro.html';
 }
 
 

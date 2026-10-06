@@ -1,0 +1,6 @@
+# Cloudflare Pages redirects — legacy pages moved into /legacy/ after the Next.js port
+
+# These two pages are ported to web/app/*; the originals live in /legacy/ for
+# reference until the Next.js app is deployed and takes over the URLs.
+/channelintro.html  /legacy/channelintro.html  301
+/posemusic.html     /legacy/posemusic.html     301
