@@ -37,9 +37,10 @@ const PROFILE_SECTION =
 const PROFILE_PIC = 'relative h-[50px] w-[50px] shrink-0 rounded-full bg-[#666] bg-cover bg-center';
 const FOLLOW_BADGE =
   'flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full border-2 border-white ' +
-  'bg-gradient-to-br from-pose-accent to-[#ff4081] text-[13px] text-white ' +
-  'shadow-[0_2px_8px_rgba(255,0,80,0.45)] transition-all duration-200 hover:scale-[1.15]';
-const FOLLOW_BADGE_DONE = 'bg-white/15 text-white shadow-none';
+  'text-[13px] text-white transition-all duration-200 hover:scale-[1.15]';
+const FOLLOW_BADGE_IDLE =
+  'bg-gradient-to-br from-pose-accent to-[#ff4081] shadow-[0_2px_8px_rgba(255,0,80,0.45)]';
+const FOLLOW_BADGE_DONE = 'bg-white/15 shadow-none';
 const VERIFIED_BADGE =
   'absolute -bottom-[5px] left-1/2 flex h-[19px] w-[19px] -translate-x-1/2 items-center justify-center ' +
   'rounded-full bg-gradient-to-br from-pose-purple-darker to-pose-purple-mid text-[10px] text-white';
@@ -57,27 +58,41 @@ const INTERACTIONS =
   'items-center gap-[clamp(6px,1.5vw,12px)]';
 const INTERACTION_BTN =
   'flex flex-col items-center border-0 bg-transparent p-0 text-white transition-all duration-200';
+// BTN_ICON carries no background or text colour: same-property utilities of equal
+// specificity resolve by stylesheet order, so the idle pair is chosen exclusively
+// against each active state rather than overridden by composition.
 const BTN_ICON =
   'mb-[4px] flex h-[clamp(40px,10vw,52px)] w-[clamp(40px,10vw,52px)] items-center justify-center ' +
-  'rounded-full bg-black/50 text-[clamp(18px,4.5vw,24px)] text-white transition-all duration-200 ' +
-  'hover:scale-[1.1] hover:bg-black/70';
+  'rounded-full text-[clamp(18px,4.5vw,24px)] transition-all duration-200 hover:scale-[1.1]';
+const BTN_ICON_IDLE = 'bg-black/50 text-white hover:bg-black/70';
+const BTN_ICON_LIKED = 'bg-[rgba(255,45,85,0.2)] text-[#ff2d55]';
+const BTN_ICON_REPOSTED = 'bg-[rgba(34,197,94,0.2)] text-[#22c55e]';
 const INTERACTION_COUNT = 'text-[clamp(12px,2.8vw,14px)] font-medium text-white';
 const DISK =
-  'absolute bottom-[80px] right-[10px] z-[10] h-[50px] w-[50px] shrink-0 animate-app-spin-disk rounded-full bg-cover ' +
+  'absolute bottom-[80px] right-[10px] z-[10] h-[50px] w-[50px] shrink-0 rounded-full bg-cover ' +
   'bg-center max-md:right-[9px]';
 const PLAY_OVERLAY =
-  'pointer-events-none absolute left-1/2 top-1/2 z-[100] flex h-[64px] w-[64px] -translate-x-1/2 ' +
-  '-translate-y-1/2 scale-[0.85] items-center justify-center rounded-full opacity-0 transition-[opacity,transform] ' +
+  'absolute left-1/2 top-1/2 z-[100] flex h-[64px] w-[64px] -translate-x-1/2 ' +
+  '-translate-y-1/2 items-center justify-center rounded-full transition-[opacity,transform] ' +
   'duration-[250ms] [filter:drop-shadow(0_2px_6px_rgba(0,0,0,0.55))]';
-const PLAY_OVERLAY_PAUSED =
-  'pointer-events-auto scale-100 opacity-[0.55]';
+const PLAY_OVERLAY_IDLE = 'pointer-events-none scale-[0.85] opacity-0';
+const PLAY_OVERLAY_PAUSED = 'pointer-events-auto scale-100 opacity-[0.55]';
 const SEEK_BAR =
-  'absolute bottom-[60px] left-0 right-0 box-border h-[28px] cursor-pointer touch-none select-none ' +
-  'px-[12px] pt-[3px]';
+  'absolute bottom-[60px] left-0 right-0 box-border cursor-pointer touch-none select-none px-[12px]';
+const SEEK_BAR_IDLE = 'z-[120] h-[28px] pt-[3px]';
+const SEEK_BAR_ACTIVE = 'z-[130] h-[44px] pt-[22px]';
 const SEEK_FILL = 'pointer-events-none absolute left-0 top-0 h-full rounded-[2px] bg-[#ff2d55]';
 const SEEK_TIME =
   'pointer-events-none absolute bottom-[18px] right-[12px] whitespace-nowrap rounded-[4px] bg-black/85 ' +
-  'px-[8px] py-[3px] font-mono text-[12px] text-white opacity-0 transition-opacity duration-150';
+  'px-[8px] py-[3px] font-mono text-[12px] text-white transition-opacity duration-150';
+const SEEK_TIME_IDLE = 'opacity-0';
+const SEEK_TIME_ON = 'opacity-100';
+const SEEK_THUMB =
+  'pointer-events-none absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ' +
+  'shadow-[0_1px_4px_rgba(0,0,0,0.5)] transition-transform duration-150';
+const SEEK_THUMB_IDLE =
+  'scale-0 h-[12px] w-[12px] hover:scale-100 max-md:scale-100 max-md:h-[14px] max-md:w-[14px]';
+const SEEK_THUMB_ACTIVE = 'scale-100 h-[18px] w-[18px]';
 
 function formatClock(seconds: number): string {
   const safe = Number.isFinite(seconds) && seconds > 0 ? seconds : 0;
@@ -206,7 +221,7 @@ export function ForYouCard({
       )}
 
       {!photo && (
-        <div className={cx(PLAY_OVERLAY, paused && PLAY_OVERLAY_PAUSED)} aria-hidden>
+        <div className={cx(PLAY_OVERLAY, paused ? PLAY_OVERLAY_PAUSED : PLAY_OVERLAY_IDLE)} aria-hidden>
           <i className={cx('fas text-[40px] text-white', paused ? 'fa-play' : 'fa-pause')} />
         </div>
       )}
@@ -259,7 +274,7 @@ export function ForYouCard({
                 <button
                   type="button"
                   aria-label={following ? 'Following' : 'Follow'}
-                  className={cx(FOLLOW_BADGE, following && FOLLOW_BADGE_DONE)}
+                  className={cx(FOLLOW_BADGE, following ? FOLLOW_BADGE_DONE : FOLLOW_BADGE_IDLE)}
                   onClick={(event) => {
                     event.stopPropagation();
                     onToggleFollow(video.userId ?? '');
@@ -288,7 +303,7 @@ export function ForYouCard({
               onToggleLike(video, !liked, next);
             }}
           >
-            <span className={cx(BTN_ICON, liked && 'bg-[rgba(255,45,85,0.2)] text-[#ff2d55]')}>
+            <span className={cx(BTN_ICON, liked ? BTN_ICON_LIKED : BTN_ICON_IDLE)}>
               <i className="fas fa-heart" />
             </span>
             <span className={INTERACTION_COUNT}>{likeCount}</span>
@@ -304,7 +319,7 @@ export function ForYouCard({
               onToggleRepost(video, !reposted, next);
             }}
           >
-            <span className={cx(BTN_ICON, reposted && 'bg-[rgba(34,197,94,0.2)] text-[#22c55e]')}>
+            <span className={cx(BTN_ICON, reposted ? BTN_ICON_REPOSTED : BTN_ICON_IDLE)}>
               <i className="fas fa-retweet" />
             </span>
             <span className={INTERACTION_COUNT}>{repostCount}</span>
@@ -325,7 +340,7 @@ export function ForYouCard({
               void navigator.clipboard?.writeText(url).catch(() => undefined);
             }}
           >
-            <span className={BTN_ICON}>
+            <span className={cx(BTN_ICON, BTN_ICON_IDLE)}>
               <i className="fas fa-share-alt" />
             </span>
             <span className={INTERACTION_COUNT}>{interactionCount(video.shareCount)}</span>
@@ -335,7 +350,7 @@ export function ForYouCard({
 
       {!photo && (
         <div
-          className={cx(SEEK_BAR, paused || dragging ? 'z-[130] h-[44px] pt-[22px]' : 'z-[120]')}
+          className={cx(SEEK_BAR, paused || dragging ? SEEK_BAR_ACTIVE : SEEK_BAR_IDLE)}
           onClick={(event) => event.stopPropagation()}
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId);
@@ -362,14 +377,14 @@ export function ForYouCard({
             <div className={SEEK_FILL} style={{ width: `${progress}%` }} />
             <div
               className={cx(
-                'pointer-events-none absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-0',
-                'h-[12px] w-[12px] rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.5)] transition-transform duration-150',
-                'max-md:h-[14px] max-md:w-[14px] max-md:scale-100 hover:scale-100',
-                (paused || dragging) && 'h-[18px] w-[18px] scale-100',
+                SEEK_THUMB,
+                paused || dragging ? SEEK_THUMB_ACTIVE : SEEK_THUMB_IDLE,
               )}
               style={{ left: `${progress}%` }}
             />
-            <div className={cx(SEEK_TIME, (paused || dragging) && 'opacity-100')}>{clock}</div>
+            <div className={cx(SEEK_TIME, paused || dragging ? SEEK_TIME_ON : SEEK_TIME_IDLE)}>
+              {clock}
+            </div>
           </div>
         </div>
       )}

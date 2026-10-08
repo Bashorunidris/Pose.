@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
+import { AuthModal } from './AuthModal';
 import { BottomNav } from './BottomNav';
 import { BuzzFeed } from './BuzzFeed';
 import { ForYouFeed } from './ForYouFeed';
@@ -28,12 +29,13 @@ export function AppShell() {
   const [trendOpen, setTrendOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [liveOpen, setLiveOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const [forYouKey, setForYouKey] = useState(0);
   const [buzzKey, setBuzzKey] = useState(0);
 
   const notifications = usePoseNotifications(uid);
   const unread = unreadCount(notifications);
-  const overlayOpen = trendOpen || notifOpen || liveOpen;
+  const overlayOpen = trendOpen || notifOpen || liveOpen || authOpen;
 
   // Every overlay is a full-bleed fixed panel above both nav bars, so a tab or
   // Home press can only ever fire while nothing is open.
@@ -50,9 +52,26 @@ export function AppShell() {
     setForYouKey((key) => key + 1);
   }, [tab]);
 
+  // The legacy pages hard-reload with a cache-busting query after signing in
+  // (`clearAllFeedCaches` @30675 + `location.replace`). Dropping the caches and
+  // remounting both feeds is the same reset without throwing away the SPA.
+  const handleAuthenticated = useCallback(() => {
+    setAuthOpen(false);
+    clearForYouFeedCache();
+    clearBuzzFeedCache();
+    setForYouKey((key) => key + 1);
+    setBuzzKey((key) => key + 1);
+  }, []);
+
   return (
     <div className="min-h-[100dvh] overscroll-y-contain bg-app-black md:bg-app-shell">
-      <TopNav tab={tab} onSelect={setTab} onOpenTrend={() => setTrendOpen(true)} />
+      <TopNav
+        tab={tab}
+        onSelect={setTab}
+        onOpenTrend={() => setTrendOpen(true)}
+        user={user}
+        onProfileClick={() => setAuthOpen(true)}
+      />
 
       <div className={cx(TAB_CONTENT, tab === 'forYou' ? 'block' : 'hidden')}>
         <ForYouFeed
@@ -84,6 +103,8 @@ export function AppShell() {
       />
 
       <LiveComingSoon open={liveOpen} onClose={() => setLiveOpen(false)} uid={uid} />
+
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />
     </div>
   );
 }

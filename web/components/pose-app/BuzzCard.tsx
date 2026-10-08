@@ -53,9 +53,13 @@ const BANNER_AD =
 const MEDIA_WRAP = 'min-w-0 flex-1';
 const MEDIA = 'mx-auto block max-h-[250px] w-full rounded-[8px] bg-black object-contain';
 const INTERACTIONS = 'flex gap-[16px] border-t border-[#222] py-[12px]';
+// No text colour lives on BTN: two same-property utilities of equal specificity
+// resolve by generated-stylesheet order, not class-attribute order, so an
+// additive state class can silently lose. Idle/active must be mutually exclusive.
 const BTN =
   'flex cursor-pointer items-center gap-[6px] rounded-[6px] border-0 bg-transparent px-[12px] py-[6px] ' +
-  'text-[13px] text-app-muted transition-all duration-300 hover:scale-[1.05] hover:bg-[rgba(76,29,149,0.08)]';
+  'text-[13px] transition-all duration-300 hover:scale-[1.05] hover:bg-[rgba(76,29,149,0.08)]';
+const BTN_IDLE = 'text-app-muted';
 const LIKE_BTN = 'text-pose-accent';
 const REPOST_BTN = 'text-[#00B060]';
 
@@ -218,7 +222,7 @@ export function BuzzCard({
         <button
           type="button"
           title="Like"
-          className={cx(BTN, liked && LIKE_BTN)}
+          className={cx(BTN, liked ? LIKE_BTN : BTN_IDLE)}
           onClick={() => onToggleLike(post, !liked, liked ? Math.max(0, likes - 1) : likes + 1)}
         >
           <i className={cx('fas fa-heart', liked && 'font-black')} />
@@ -228,7 +232,7 @@ export function BuzzCard({
         <button
           type="button"
           title="Repost"
-          className={cx(BTN, reposted && REPOST_BTN)}
+          className={cx(BTN, reposted ? REPOST_BTN : BTN_IDLE)}
           onClick={() =>
             onToggleRepost(post, !reposted, reposted ? Math.max(0, reposts - 1) : reposts + 1)
           }

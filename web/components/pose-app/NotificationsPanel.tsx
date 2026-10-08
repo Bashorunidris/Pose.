@@ -49,22 +49,28 @@ const TABS_WRAP =
   'flex gap-[6px] overflow-x-auto border-b border-white/5 bg-[#0f0f12] px-[12px] py-[10px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
 /** `.pose-notif-tab` @1479 with `.active` @1494. */
+// State-dependent properties (border colour, text colour, display) must resolve
+// through a ternary: two same-property utilities of equal specificity are decided
+// by generated-stylesheet order, not by the order they appear in class="".
 const TAB =
-  'inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-[20px] border border-white/8 ' +
-  'bg-white/4 px-[14px] py-[8px] text-[13px] font-semibold text-[#ccc] transition-all duration-200 hover:bg-[rgba(187,134,252,0.12)] hover:text-white';
+  'inline-flex shrink-0 cursor-pointer items-center gap-[6px] whitespace-nowrap rounded-[20px] border ' +
+  'px-[14px] py-[8px] text-[13px] font-semibold transition-all duration-200 hover:bg-[rgba(187,134,252,0.12)] hover:text-white';
+const TAB_IDLE = 'border-white/8 bg-white/4 text-[#ccc]';
 const TAB_ACTIVE =
   'border-transparent bg-[linear-gradient(135deg,#8a2be2_0%,#bb86fc_100%)] text-white shadow-[0_4px_12px_rgba(138,43,226,0.35)]';
 
 /** `.pose-notif-tab-count` @1500 — hidden until it has a count. */
-const TAB_COUNT = 'hidden min-w-[18px] rounded-[10px] bg-white/18 px-[7px] py-[1px] text-center text-[11px] text-white';
+const TAB_COUNT = 'min-w-[18px] rounded-[10px] bg-white/18 px-[7px] py-[1px] text-center text-[11px] text-white';
 const TAB_COUNT_ON = 'inline-block';
+const TAB_COUNT_OFF = 'hidden';
 
 /** `.pose-notif-container` @1511. */
 const LIST = 'flex-1 overflow-y-auto bg-[#0f0f12] pt-[4px] pb-[80px]';
 
 /** `.pose-notif-card` @1515 with `.unread` @1526/@1536. */
 const CARD =
-  'relative flex cursor-pointer gap-[12px] border-b border-white/5 bg-[#0f0f12] px-[16px] py-[14px] transition-colors duration-200 hover:bg-[rgba(187,134,252,0.06)]';
+  'relative flex cursor-pointer gap-[12px] border-b border-white/5 px-[16px] py-[14px] transition-colors duration-200 hover:bg-[rgba(187,134,252,0.06)]';
+const CARD_IDLE = 'bg-[#0f0f12]';
 const CARD_UNREAD =
   'bg-[rgba(187,134,252,0.05)] before:absolute before:left-[6px] before:top-1/2 before:h-[6px] before:w-[6px] ' +
   'before:-translate-y-1/2 before:rounded-full before:bg-[#bb86fc] before:shadow-[0_0_8px_#bb86fc] before:content-[""]';
@@ -99,8 +105,8 @@ const THUMB = 'h-11 w-11 shrink-0 self-center rounded-[6px] bg-[#222] bg-cover b
 
 /** `.pose-notif-card-action-btn` @1598 with `.followed` @1610. */
 const ACTION_BTN =
-  'self-center whitespace-nowrap rounded-[6px] border-none bg-[linear-gradient(135deg,#8a2be2_0%,#bb86fc_100%)] ' +
-  'px-[14px] py-[6px] text-[12px] font-bold text-white';
+  'self-center whitespace-nowrap rounded-[6px] border-none px-[14px] py-[6px] text-[12px] font-bold';
+const ACTION_BTN_IDLE = 'bg-[linear-gradient(135deg,#8a2be2_0%,#bb86fc_100%)] text-white';
 const ACTION_BTN_DONE = 'bg-white/8 text-[#ccc]';
 
 /** `.pose-notif-empty-state` @1614. */
@@ -166,11 +172,11 @@ export function NotificationsPanel({ open, onClose, uid, displayName, items }: P
             <button
               type="button"
               key={key}
-              className={cx(TAB, tab === key && TAB_ACTIVE)}
+              className={cx(TAB, tab === key ? TAB_ACTIVE : TAB_IDLE)}
               onClick={() => setTab(key)}
             >
               {NOTIF_TAB_LABELS[key]}
-              <span className={cx(TAB_COUNT, count > 0 && TAB_COUNT_ON)}>
+              <span className={cx(TAB_COUNT, count > 0 ? TAB_COUNT_ON : TAB_COUNT_OFF)}>
                 {count > 99 ? '99+' : count}
               </span>
             </button>
@@ -195,7 +201,7 @@ export function NotificationsPanel({ open, onClose, uid, displayName, items }: P
             return (
               <div
                 key={n.id}
-                className={cx(CARD, !n.read && CARD_UNREAD)}
+                className={cx(CARD, n.read ? CARD_IDLE : CARD_UNREAD)}
                 onClick={() => markRead(n)}
               >
                 <div
@@ -223,7 +229,7 @@ export function NotificationsPanel({ open, onClose, uid, displayName, items }: P
                 {isFollow ? (
                   <button
                     type="button"
-                    className={cx(ACTION_BTN, followed && ACTION_BTN_DONE)}
+                    className={cx(ACTION_BTN, followed ? ACTION_BTN_DONE : ACTION_BTN_IDLE)}
                     onClick={(event) => {
                       event.stopPropagation();
                       if (!uid || followed) return;
