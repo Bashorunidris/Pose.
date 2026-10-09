@@ -89,6 +89,8 @@ type Props = {
   onToast: (message: string) => void;
   /** `openProfileFromSearch()` @79600 hands the user card off to the profile route. */
   onOpenCreator: (userId: string) => void;
+  /** The shell hosts the comment sheet, so a played result can open it. */
+  onOpenComments?: (video: PoseVideo) => void;
 };
 
 /**
@@ -97,7 +99,15 @@ type Props = {
  * Results refresh on every keystroke, exactly like `updateSearchQuery()` @80619,
  * so the only debounce is the 1.2s history write.
  */
-export function SearchOverlay({ uid, displayName, email, onClose, onToast, onOpenCreator }: Props) {
+export function SearchOverlay({
+  uid,
+  displayName,
+  email,
+  onClose,
+  onToast,
+  onOpenCreator,
+  onOpenComments,
+}: Props) {
   const [tab, setTab] = useState<Tab>('recent');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Results | null>(null);
@@ -565,6 +575,7 @@ export function SearchOverlay({ uid, displayName, email, onClose, onToast, onOpe
             email={email}
             onToast={onToast}
             onHide={() => setPlayed(null)}
+            onOpenComments={onOpenComments}
             onOpenProfile={(targetUserId) => {
               setPlayed(null);
               onClose();

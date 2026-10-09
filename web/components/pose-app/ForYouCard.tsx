@@ -27,6 +27,14 @@ type Props = {
   onToggleLike: (video: PoseVideo, liked: boolean, nextCount: number) => void;
   onToggleRepost: (video: PoseVideo, reposted: boolean, nextCount: number) => void;
   onToggleFollow: (userId: string) => void;
+  /**
+   * The comment tally the button shows. The shell owns this number once the
+   * sheet has counted the replies; without it the card falls back to the stored
+   * counter, which is what `#forYouFeed` @40571 rendered.
+   */
+  commentCount?: number;
+  /** `openCommentModal()` @66211 — opens the comment sheet for this video. */
+  onOpenComments?: (video: PoseVideo) => void;
   displayName: string;
   /** Attached to any report the creator files from the share menu. */
   email: string;
@@ -120,6 +128,8 @@ export function ForYouCard({
   onToggleLike,
   onToggleRepost,
   onToggleFollow,
+  commentCount,
+  onOpenComments,
   displayName,
   email,
   onToast,
@@ -138,6 +148,7 @@ export function ForYouCard({
   // `setPlaybackSpeed()` @65695 wrote straight onto the element; the card keeps the
   // rate in state so a re-render or a source change cannot quietly reset it.
   const [rate, setRate] = useState(1);
+  const shownComments = commentCount ?? Number(video.comments ?? video.commentCount ?? 0);
   const photo = isPhotoPost(video);
   const photos = photo ? (video.images?.length ? video.images : [video.videoUrl ?? '']) : [];
   const owner = videoOwnerName(video);
@@ -347,6 +358,22 @@ export function ForYouCard({
               <i className="fas fa-heart" />
             </span>
             <span className={INTERACTION_COUNT}>{likeCount}</span>
+          </button>
+
+          {/* Like → comment → repost → share, the order `#forYouFeed` @40563 uses.
+              The ported card shipped without this button at all. */}
+          <button
+            type="button"
+            className={INTERACTION_BTN}
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpenComments?.(video);
+            }}
+          >
+            <span className={cx(BTN_ICON, BTN_ICON_IDLE)}>
+              <i className="fas fa-comment" />
+            </span>
+            <span className={INTERACTION_COUNT}>{shownComments}</span>
           </button>
 
           <button

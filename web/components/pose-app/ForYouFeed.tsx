@@ -12,6 +12,7 @@ import {
   fetchForYouPage,
   getCachedForYouVideos,
 } from '@/lib/pose-app/feed';
+import { videoCommentsKey } from '@/lib/pose-app/comments';
 import { setFollow, setVideoLike, setVideoRepost } from '@/lib/pose-app/interactions';
 import { withVote } from '@/lib/pose-app/format';
 import type { PoseVideo } from '@/lib/pose-app/types';
@@ -26,11 +27,24 @@ type Props = {
   onToast: (message: string) => void;
   /** Opens another creator's profile; the shell decides route vs. own profile. */
   onOpenCreator?: (userId: string) => void;
+  /** Live comment tallies, keyed by video, kept in step by the comment sheet. */
+  commentCounts: Record<string, number>;
+  /** `openCommentModal()` @66211 — the shell hosts the sheet. */
+  onOpenComments: (video: PoseVideo) => void;
 };
 
 const NEAR_BOTTOM_PX = 900;
 
-export function ForYouFeed({ uid, active, displayName, email, onToast, onOpenCreator }: Props) {
+export function ForYouFeed({
+  uid,
+  active,
+  displayName,
+  email,
+  onToast,
+  onOpenCreator,
+  commentCounts,
+  onOpenComments,
+}: Props) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<QueryDocumentSnapshot<DocumentData> | null>(null);
   const loadingRef = useRef(false);
@@ -203,6 +217,10 @@ export function ForYouFeed({ uid, active, displayName, email, onToast, onOpenCre
           onToggleLike={handleLike}
           onToggleRepost={handleRepost}
           onToggleFollow={handleFollow}
+          commentCount={
+            commentCounts[videoCommentsKey(video.id)] ?? Number(video.comments ?? video.commentCount ?? 0)
+          }
+          onOpenComments={onOpenComments}
           displayName={displayName}
           email={email}
           onToast={onToast}

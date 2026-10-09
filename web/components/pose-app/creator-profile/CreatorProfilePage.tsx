@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { BuzzCard } from '../BuzzCard';
+import { CommentModal } from '../comments/CommentModal';
 import { ForYouCard } from '../ForYouCard';
 import { cx } from '../styles';
 import { CreatorGrid } from './CreatorGrid';
@@ -57,6 +58,7 @@ import {
   setCreatorFollow,
   type CreatorProfile,
 } from '@/lib/pose-app/creator-profile';
+import { commentTargetKey, videoCommentsKey, type CommentTarget } from '@/lib/pose-app/comments';
 import { withVote } from '@/lib/pose-app/format';
 import {
   setBuzzHit,
@@ -143,6 +145,13 @@ export function CreatorProfilePage({
   const [mutual, setMutual] = useState(false);
   const [followers, setFollowers] = useState(0);
   const [played, setPlayed] = useState<PoseVideo | null>(null);
+  /**
+   * This page is its own route, outside the shell, so it hosts its own copy of
+   * the comment sheet rather than borrowing the shell's — otherwise the comment
+   * button on the in-place player here would be the only dead one left.
+   */
+  const [commentsFor, setCommentsFor] = useState<{ target: CommentTarget; ownerId: string | null } | null>(null);
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [aboutOpen, setAboutOpen] = useState(false);
   const [bioTruncated, setBioTruncated] = useState(false);
   const [toast, setToast] = useState('');
@@ -566,6 +575,22 @@ export function CreatorProfilePage({
         />
       )}
 
+      <CommentModal
+        open={commentsFor !== null}
+        target={commentsFor?.target ?? null}
+        ownerId={commentsFor?.ownerId ?? null}
+        uid={viewerUid}
+        viewerName={displayName}
+        viewerPic=""
+        onClose={() => setCommentsFor(null)}
+        onToast={notify}
+        onOpenCreator={(creatorId) => router.push(`/u/${encodeURIComponent(creatorId)}`)}
+        onCount={(target, count) => {
+          const key = commentTargetKey(target);
+          setCommentCounts((current) => (current[key] === count ? current : { ...current, [key]: count }));
+        }}
+      />
+
       {played && (
         <div className="fixed inset-0 z-[4000] bg-black/90">
           <ForYouCard
@@ -578,6 +603,13 @@ export function CreatorProfilePage({
             email={email}
             onToast={notify}
             onHide={() => setPlayed(null)}
+            commentCount={
+              commentCounts[videoCommentsKey(played.id)] ??
+              Number(played.comments ?? played.commentCount ?? 0)
+            }
+            onOpenComments={(video) =>
+              setCommentsFor({ target: { kind: 'video', id: video.id }, ownerId: video.userId ?? null })
+            }
             onToggleLike={(video, likedNow, nextCount) => {
               setPlayed((previous) =>
                 previous

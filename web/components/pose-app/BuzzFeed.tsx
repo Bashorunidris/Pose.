@@ -10,6 +10,7 @@ import {
   fetchBuzzPosts,
   getCachedBuzzPosts,
 } from '@/lib/pose-app/feed';
+import { buzzCommentsKey } from '@/lib/pose-app/comments';
 import { setBuzzHit, setBuzzLike, setBuzzPass, setBuzzRepost } from '@/lib/pose-app/interactions';
 import type { BuzzPost } from '@/lib/pose-app/types';
 
@@ -26,12 +27,24 @@ type Props = {
   jumpTo?: BuzzPost | null;
   /** Clears `jumpTo` once the post has been revealed. */
   onJumpHandled?: () => void;
+  /** The shell's comment tallies, keyed by `buzzCommentsKey()`. */
+  commentCounts?: Record<string, number>;
+  /** `openBuzzComments()` @33961 — the shell hosts the sheet. */
+  onOpenComments?: (post: BuzzPost) => void;
 };
 
 /** `startBuzzBackgroundLoader` polls the daily buckets every 12 seconds. */
 const POLL_MS = 12_000;
 
-export function BuzzFeed({ uid, active, onOpenCreator, jumpTo, onJumpHandled }: Props) {
+export function BuzzFeed({
+  uid,
+  active,
+  onOpenCreator,
+  jumpTo,
+  onJumpHandled,
+  commentCounts,
+  onOpenComments,
+}: Props) {
   const loadedOnce = useRef(false);
   const listRef = useRef<HTMLDivElement>(null);
   /** The post the next render should scroll to and flash, as `date/id`. */
@@ -190,6 +203,8 @@ export function BuzzFeed({ uid, active, onOpenCreator, jumpTo, onJumpHandled }: 
               onOpenAuthor={
                 onOpenCreator && post.userId ? () => onOpenCreator(post.userId ?? '') : undefined
               }
+              commentCount={commentCounts?.[buzzCommentsKey(post)]}
+              onOpenComments={onOpenComments}
             />
           </div>
         ))}

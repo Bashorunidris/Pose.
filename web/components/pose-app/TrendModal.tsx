@@ -25,6 +25,8 @@ type Props = {
   onToast: (message: string) => void;
   /** The Trend player's creator block opens the profile, like the feed cards. */
   onOpenCreator?: (userId: string) => void;
+  /** `openCommentModal()` — the shell hosts the sheet. */
+  onOpenComments?: (video: PoseVideo) => void;
 };
 
 const RAILS: { key: string; title: string; icon: string; hours: number; badge: string; badgeIcon: string }[] = [
@@ -209,6 +211,7 @@ export function TrendModal({
   email,
   onToast,
   onOpenCreator,
+  onOpenComments,
 }: Props) {
   const [feed, setFeed] = useState<TrendFeed | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading');
@@ -473,6 +476,7 @@ export function TrendModal({
             email={email}
             onToast={onToast}
             onHide={() => setPlayed(null)}
+            onOpenComments={onOpenComments}
             onOpenProfile={
               onOpenCreator
                 ? (targetUserId) => {

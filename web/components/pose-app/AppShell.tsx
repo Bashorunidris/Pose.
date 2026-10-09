@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { AuthModal } from './AuthModal';
 import { BottomNav } from './BottomNav';
 import { BuzzFeed } from './BuzzFeed';
+import { CommentModal } from './comments/CommentModal';
 import { ForYouFeed } from './ForYouFeed';
 import { LiveComingSoon } from './LiveComingSoon';
 import { NotificationsPanel } from './NotificationsPanel';
@@ -15,11 +16,12 @@ import { SearchOverlay } from './search/SearchOverlay';
 import { TopNav, type FeedTab } from './TopNav';
 import { TrendModal } from './TrendModal';
 import { TAB_CONTENT, cx } from './styles';
+import { commentTargetKey, type CommentTarget } from '@/lib/pose-app/comments';
 import { clearBuzzFeedCache, clearForYouFeedCache } from '@/lib/pose-app/feed';
 import { unreadCount, usePoseNotifications } from '@/lib/pose-app/notifications';
 import { clearBuzzSearchCache } from '@/lib/pose-app/search';
 import { usePoseSession } from '@/lib/pose-app/session';
-import type { BuzzPost } from '@/lib/pose-app/types';
+import type { BuzzPost, PoseVideo } from '@/lib/pose-app/types';
 
 /**
  * The ported `index.html` shell. Both feeds stay mounted and are shown with
@@ -43,6 +45,19 @@ export function AppShell() {
   const [searchMode, setSearchMode] = useState<'forYou' | 'buzz' | null>(null);
   /** A buzz post picked out of search, handed to the feed to prepend and reveal. */
   const [buzzJump, setBuzzJump] = useState<BuzzPost | null>(null);
+  /**
+   * `openCommentModal()` @66211 / `openBuzzComments()` @33961 — whose comment
+   * sheet is open. Both sheets are the same component, so the target travels
+   * with the open state.
+   */
+  const [commentsFor, setCommentsFor] = useState<{ target: CommentTarget; ownerId: string | null } | null>(null);
+  /**
+   * The comment tallies the feed buttons show, keyed by `commentTargetKey()`.
+   * `renderCommentsList()` @69769 recounted the real total on every render and
+   * wrote it back onto the button, because the stored counter drifts as soon as a
+   * comment is deleted.
+   */
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [toast, setToast] = useState('');
   const [forYouKey, setForYouKey] = useState(0);
   const [buzzKey, setBuzzKey] = useState(0);
@@ -76,6 +91,21 @@ export function AppShell() {
   }, []);
 
   const handleBuzzJumpHandled = useCallback(() => setBuzzJump(null), []);
+
+  const openComments = useCallback((video: PoseVideo) => {
+    setCommentsFor({ target: { kind: 'video', id: video.id }, ownerId: video.userId ?? null });
+  }, []);
+
+  /** `openBuzzComments(event, buzz.id, buzz.date, buzz.userId)` @33961. */
+  const openBuzzComments = useCallback((post: BuzzPost) => {
+    if (!post.date) return;
+    setCommentsFor({ target: { kind: 'buzz', id: post.id, date: post.date }, ownerId: post.userId ?? null });
+  }, []);
+
+  const handleCommentCount = useCallback((target: CommentTarget, count: number) => {
+    const key = commentTargetKey(target);
+    setCommentCounts((current) => (current[key] === count ? current : { ...current, [key]: count }));
+  }, []);
 
   /** The same toast the dashboard uses for screens that are still legacy-only. */
   const showToast = useCallback((message: string) => {
@@ -132,6 +162,8 @@ export function AppShell() {
           email={user?.email ?? ''}
           onToast={showToast}
           onOpenCreator={openCreator}
+          commentCounts={commentCounts}
+          onOpenComments={openComments}
         />
       </div>
 
@@ -143,6 +175,8 @@ export function AppShell() {
           onOpenCreator={openCreator}
           jumpTo={buzzJump}
           onJumpHandled={handleBuzzJumpHandled}
+          commentCounts={commentCounts}
+          onOpenComments={openBuzzComments}
         />
       </div>
 
@@ -161,6 +195,7 @@ export function AppShell() {
         email={user?.email ?? ''}
         onToast={showToast}
         onOpenCreator={openCreator}
+        onOpenComments={openComments}
       />
 
       <NotificationsPanel
@@ -187,6 +222,7 @@ export function AppShell() {
           onClose={() => setSearchMode(null)}
           onToast={showToast}
           onOpenCreator={openCreator}
+          onOpenComments={openComments}
         />
       )}
 
@@ -199,6 +235,27 @@ export function AppShell() {
           onOpenBuzzPost={openBuzzPost}
         />
       )}
+
+      {/*
+        `openCommentModal()` did not pause the feed the way the other overlays do
+        — the clip keeps playing behind the sheet — so this deliberately stays out
+        of `overlayOpen`.
+      */}
+      <CommentModal
+        open={commentsFor !== null}
+        target={commentsFor?.target ?? null}
+        ownerId={commentsFor?.ownerId ?? null}
+        uid={uid}
+        viewerName={user?.displayName ?? ''}
+        viewerPic={user?.photoURL ?? ''}
+        onClose={() => setCommentsFor(null)}
+        onToast={showToast}
+        onOpenCreator={(creatorId) => {
+          setCommentsFor(null);
+          openCreator(creatorId);
+        }}
+        onCount={handleCommentCount}
+      />
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />
 

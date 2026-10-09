@@ -30,6 +30,10 @@ type Props = {
    * legacy `.buzz-author` row carried `cursor-pointer` for exactly this.
    */
   onOpenAuthor?: (post: BuzzPost) => void;
+  /** The tally `updateBuzzCommentCountInUI()` @35714 wrote onto the button. */
+  commentCount?: number;
+  /** `openBuzzComments()` @33961 — the shell hosts the sheet. */
+  onOpenComments?: (post: BuzzPost) => void;
 };
 
 const POST = 'border-b border-[#222] bg-app-card p-[20px]';
@@ -79,12 +83,15 @@ export function BuzzCard({
   onToggleHit,
   onTogglePass,
   onOpenAuthor,
+  commentCount,
+  onOpenComments,
 }: Props) {
   const [playing, setPlaying] = useState(false);
   const author = buzzAuthorName(post);
   const avatar = post.userProfilePic ?? '';
   const likes = interactionCount(post.likes, post.likedBy);
   const reposts = interactionCount(post.reposts, post.repostedBy);
+  const comments = commentCount ?? post.comments ?? 0;
   const hashtags = normaliseTags(post.hashtags, '#');
   const video = buzzIsVideo(post);
   const hasAudio = Boolean(post.audioUrl);
@@ -244,6 +251,19 @@ export function BuzzCard({
           <i className={cx('fas fa-heart', liked && 'font-black')} />
           <span>{likes}</span>
         </button>
+
+        {/* `buzz.allowComments` gated this button entirely in the legacy row. */}
+        {onOpenComments && post.allowComments !== false && (
+          <button
+            type="button"
+            title="Reply"
+            className={cx(BTN, BTN_IDLE)}
+            onClick={() => onOpenComments(post)}
+          >
+            <i className="fas fa-comment" />
+            <span>{comments}</span>
+          </button>
+        )}
 
         <button
           type="button"

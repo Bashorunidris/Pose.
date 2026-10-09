@@ -131,6 +131,9 @@
    * no scale, so they need a keyframe of their own.
    */
   --animate-app-modal-rise: app-modal-rise 0.3s forwards;
+  /* Legacy `@keyframes popIn` @12627 — the comment sheet's crown / 1st badge
+     scales in off the avatar's corner. */
+  --animate-app-pop-in: app-pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-app-spin-disk: app-spin-disk 4s linear infinite;
   --animate-app-shimmer: app-shimmer 1.5s linear infinite;
   --animate-app-play-pulse: app-play-pulse 2s ease-in-out infinite;
@@ -186,6 +189,21 @@
     }
     to {
       transform: translateY(0);
+    }
+  }
+
+  /* Legacy `@keyframes popIn` @12627. */
+  @keyframes app-pop-in {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 
