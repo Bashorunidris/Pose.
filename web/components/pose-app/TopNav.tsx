@@ -1,6 +1,6 @@
 'use client';
 
-import { NAVBAR, PROFILE_ICON, PROFILE_ICON_STATIC, TAB, TAB_ACTIVE, TABS, cx } from './styles';
+import { NAVBAR, PROFILE_ICON, SEARCH_ICON, TAB, TAB_ACTIVE, TABS, cx } from './styles';
 import type { PoseSession } from '@/lib/pose-app/session';
 
 /** The two top-level feed tabs; Trend opens a modal instead of a panel. */
@@ -15,6 +15,9 @@ type Props = {
   /** `handleProfileClick` @29260 — signed in opens the profile, signed out opens auth. */
   user: PoseSession | null;
   onProfileClick: () => void;
+  onOpenProfile: () => void;
+  /** `openSearchForActiveTab()` @79729 — `#searchIconBtn` @24530. */
+  onOpenSearch: () => void;
 };
 
 const BTN = 'appearance-none border-0 bg-transparent';
@@ -28,7 +31,15 @@ function PersonGlyph() {
   );
 }
 
-export function TopNav({ tab, onSelect, onOpenTrend, user, onProfileClick }: Props) {
+export function TopNav({
+  tab,
+  onSelect,
+  onOpenTrend,
+  user,
+  onProfileClick,
+  onOpenProfile,
+  onOpenSearch,
+}: Props) {
   // `updateProfileIcon` @44228: picture when there is one, otherwise the first letter.
   const pic = user?.photoURL?.trim() ?? '';
   const initial = user ? (user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U') : '';
@@ -43,13 +54,12 @@ export function TopNav({ tab, onSelect, onOpenTrend, user, onProfileClick }: Pro
 
   return (
     <div className={NAVBAR}>
-      {/* `handleProfileClick` @29260 sends a signed-out visitor to the auth screen.
-          The signed-in branch opens `#profilePage`, which is not ported yet, so the
-          avatar is a plain image rather than a button that would do nothing. */}
+      {/* `handleProfileClick` @29260 sends a signed-out visitor to the auth
+          screen and a signed-in user to `#profilePage`. */}
       {user ? (
-        <div className={PROFILE_ICON_STATIC} aria-label="Signed in">
+        <button type="button" className={cx(PROFILE_ICON, BTN)} onClick={onOpenProfile} aria-label="Profile">
           {avatar}
-        </div>
+        </button>
       ) : (
         <button type="button" className={cx(PROFILE_ICON, BTN)} onClick={onProfileClick} aria-label="Sign in">
           {avatar}
@@ -74,6 +84,16 @@ export function TopNav({ tab, onSelect, onOpenTrend, user, onProfileClick }: Pro
           Trend
         </button>
       </div>
+      {/* The shell had no search button at all until this landed; the legacy
+          `#searchIconBtn` is the last child of `.navbar`. */}
+      <button
+        type="button"
+        className={cx(SEARCH_ICON, BTN)}
+        onClick={onOpenSearch}
+        aria-label="Search"
+      >
+        <i className="fas fa-magnifying-glass" />
+      </button>
     </div>
   );
 }
