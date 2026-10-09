@@ -19,6 +19,12 @@ type Props = {
   open: boolean;
   onClose: () => void;
   uid: string | null;
+  /** Handed to the played card so its share menu can send and report. */
+  displayName: string;
+  email: string;
+  onToast: (message: string) => void;
+  /** The Trend player's creator block opens the profile, like the feed cards. */
+  onOpenCreator?: (userId: string) => void;
 };
 
 const RAILS: { key: string; title: string; icon: string; hours: number; badge: string; badgeIcon: string }[] = [
@@ -195,7 +201,15 @@ function LikeChip({ row, className }: { row: TrendRow; className: string }) {
   );
 }
 
-export function TrendModal({ open, onClose, uid }: Props) {
+export function TrendModal({
+  open,
+  onClose,
+  uid,
+  displayName,
+  email,
+  onToast,
+  onOpenCreator,
+}: Props) {
   const [feed, setFeed] = useState<TrendFeed | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading');
   const [played, setPlayed] = useState<PoseVideo | null>(null);
@@ -455,6 +469,18 @@ export function TrendModal({ open, onClose, uid }: Props) {
             active
             following={playedFollowing}
             followers={playedFollowers}
+            displayName={displayName}
+            email={email}
+            onToast={onToast}
+            onHide={() => setPlayed(null)}
+            onOpenProfile={
+              onOpenCreator
+                ? (targetUserId) => {
+                    setPlayed(null);
+                    onOpenCreator(targetUserId);
+                  }
+                : undefined
+            }
             onToggleLike={(video, liked, nextCount) => {
               setPlayed((previous) =>
                 previous

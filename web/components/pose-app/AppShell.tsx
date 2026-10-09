@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { AuthModal } from './AuthModal';
 import { BottomNav } from './BottomNav';
@@ -8,12 +9,17 @@ import { BuzzFeed } from './BuzzFeed';
 import { ForYouFeed } from './ForYouFeed';
 import { LiveComingSoon } from './LiveComingSoon';
 import { NotificationsPanel } from './NotificationsPanel';
+import { ProfilePage } from './ProfilePage';
+import { BuzzSearchOverlay } from './search/BuzzSearchOverlay';
+import { SearchOverlay } from './search/SearchOverlay';
 import { TopNav, type FeedTab } from './TopNav';
 import { TrendModal } from './TrendModal';
 import { TAB_CONTENT, cx } from './styles';
 import { clearBuzzFeedCache, clearForYouFeedCache } from '@/lib/pose-app/feed';
 import { unreadCount, usePoseNotifications } from '@/lib/pose-app/notifications';
+import { clearBuzzSearchCache } from '@/lib/pose-app/search';
 import { usePoseSession } from '@/lib/pose-app/session';
+import type { BuzzPost } from '@/lib/pose-app/types';
 
 /**
  * The ported `index.html` shell. Both feeds stay mounted and are shown with
@@ -22,6 +28,7 @@ import { usePoseSession } from '@/lib/pose-app/session';
  * because hiding a `<video>` does not stop it.
  */
 export function AppShell() {
+  const router = useRouter();
   const { user } = usePoseSession();
   const uid = user?.uid ?? null;
 
@@ -30,12 +37,51 @@ export function AppShell() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [liveOpen, setLiveOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  // `openSearchForActiveTab()` @79729 dispatched on the active tab; Buzz has its
+  // own overlay, so the mode travels with the open state.
+  const [searchMode, setSearchMode] = useState<'forYou' | 'buzz' | null>(null);
+  /** A buzz post picked out of search, handed to the feed to prepend and reveal. */
+  const [buzzJump, setBuzzJump] = useState<BuzzPost | null>(null);
+  const [toast, setToast] = useState('');
   const [forYouKey, setForYouKey] = useState(0);
   const [buzzKey, setBuzzKey] = useState(0);
 
   const notifications = usePoseNotifications(uid);
   const unread = unreadCount(notifications);
-  const overlayOpen = trendOpen || notifOpen || liveOpen || authOpen;
+  const overlayOpen =
+    trendOpen || notifOpen || liveOpen || authOpen || profileOpen || searchMode !== null;
+
+  /**
+   * `openForYouProfilePage()` @66391 opened another creator at `#forYouProfilePageModal`
+   * and, when the id was your own, fell through to `openProfile()`. The port gives
+   * the creator its own route and keeps the same self-redirect.
+   */
+  const openCreator = useCallback(
+    (creatorId: string, landingTab?: 'feed' | 'photos' | 'buzzs' | 'liked' | 'stories') => {
+      if (!creatorId) return;
+      if (uid && creatorId === uid) {
+        setProfileOpen(true);
+        return;
+      }
+      router.push(`/u/${encodeURIComponent(creatorId)}${landingTab ? `?tab=${landingTab}` : ''}`);
+    },
+    [router, uid],
+  );
+
+  /** `openBuzzPostFromSearch()` @80498 — the post belongs in the Buzz feed. */
+  const openBuzzPost = useCallback((post: BuzzPost) => {
+    setTab('buzz');
+    setBuzzJump(post);
+  }, []);
+
+  const handleBuzzJumpHandled = useCallback(() => setBuzzJump(null), []);
+
+  /** The same toast the dashboard uses for screens that are still legacy-only. */
+  const showToast = useCallback((message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(''), 2500);
+  }, []);
 
   // Every overlay is a full-bleed fixed panel above both nav bars, so a tab or
   // Home press can only ever fire while nothing is open.
@@ -45,6 +91,7 @@ export function AppShell() {
     // remount reads the same stale page straight back out of localStorage.
     if (tab === 'buzz') {
       clearBuzzFeedCache();
+      clearBuzzSearchCache();
       setBuzzKey((key) => key + 1);
       return;
     }
@@ -59,6 +106,7 @@ export function AppShell() {
     setAuthOpen(false);
     clearForYouFeedCache();
     clearBuzzFeedCache();
+    clearBuzzSearchCache();
     setForYouKey((key) => key + 1);
     setBuzzKey((key) => key + 1);
   }, []);
@@ -71,6 +119,8 @@ export function AppShell() {
         onOpenTrend={() => setTrendOpen(true)}
         user={user}
         onProfileClick={() => setAuthOpen(true)}
+        onOpenProfile={() => setProfileOpen(true)}
+        onOpenSearch={() => setSearchMode(tab === 'buzz' ? 'buzz' : 'forYou')}
       />
 
       <div className={cx(TAB_CONTENT, tab === 'forYou' ? 'block' : 'hidden')}>
@@ -78,11 +128,22 @@ export function AppShell() {
           key={`forYou-${forYouKey}`}
           uid={uid}
           active={tab === 'forYou' && !overlayOpen}
+          displayName={user?.displayName ?? ''}
+          email={user?.email ?? ''}
+          onToast={showToast}
+          onOpenCreator={openCreator}
         />
       </div>
 
       <div className={cx(TAB_CONTENT, tab === 'buzz' ? 'block' : 'hidden')}>
-        <BuzzFeed key={`buzz-${buzzKey}`} uid={uid} active={tab === 'buzz' && !overlayOpen} />
+        <BuzzFeed
+          key={`buzz-${buzzKey}`}
+          uid={uid}
+          active={tab === 'buzz' && !overlayOpen}
+          onOpenCreator={openCreator}
+          jumpTo={buzzJump}
+          onJumpHandled={handleBuzzJumpHandled}
+        />
       </div>
 
       <BottomNav
@@ -92,7 +153,15 @@ export function AppShell() {
         onLive={() => setLiveOpen(true)}
       />
 
-      <TrendModal open={trendOpen} onClose={() => setTrendOpen(false)} uid={uid} />
+      <TrendModal
+        open={trendOpen}
+        onClose={() => setTrendOpen(false)}
+        uid={uid}
+        displayName={user?.displayName ?? ''}
+        email={user?.email ?? ''}
+        onToast={showToast}
+        onOpenCreator={openCreator}
+      />
 
       <NotificationsPanel
         open={notifOpen}
@@ -104,7 +173,61 @@ export function AppShell() {
 
       <LiveComingSoon open={liveOpen} onClose={() => setLiveOpen(false)} uid={uid} />
 
+      {/*
+        `openSearchForActiveTab()` @79729 dispatched on the active tab: Buzz opens
+        `openBuzzSearch()` @80067, Pose opens `openPoseSearch()` @79789 and
+        everything else opens the For You overlay. Pose search is still to come,
+        so the Pose tab falls through to the For You overlay for now.
+      */}
+      {searchMode === 'forYou' && (
+        <SearchOverlay
+          uid={uid}
+          displayName={user?.displayName ?? ''}
+          email={user?.email ?? ''}
+          onClose={() => setSearchMode(null)}
+          onToast={showToast}
+          onOpenCreator={openCreator}
+        />
+      )}
+
+      {searchMode === 'buzz' && (
+        <BuzzSearchOverlay
+          uid={uid}
+          onClose={() => setSearchMode(null)}
+          onToast={showToast}
+          onOpenCreator={openCreator}
+          onOpenBuzzPost={openBuzzPost}
+        />
+      )}
+
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />
+
+      {profileOpen && uid ? (
+        <ProfilePage
+          uid={uid}
+          email={user?.email ?? ''}
+          onClose={() => setProfileOpen(false)}
+          onOpenChannel={() => {
+            setProfileOpen(false);
+            router.push('/channel-dashboard');
+          }}
+          onToast={showToast}
+          // Logout, deactivation and deletion all end the same way the legacy
+          // `location.href = 'index.html'` did: back to the auth screen.
+          onSignedOut={() => {
+            setProfileOpen(false);
+            setAuthOpen(true);
+          }}
+        />
+      ) : null}
+
+      <div
+        className="pointer-events-none fixed bottom-[80px] left-1/2 z-[9999] -translate-x-1/2 rounded-[30px] bg-app-interact px-[22px] py-[10px] text-[13px] font-medium whitespace-nowrap text-white transition-all duration-[300ms]"
+        style={{ opacity: toast ? 1 : 0 }}
+        role="status"
+      >
+        {toast}
+      </div>
     </div>
   );
 }

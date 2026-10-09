@@ -25,12 +25,6 @@ export const PROFILE_ICON =
   'transition-all duration-300 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-pose-purple-deep hover:scale-110';
 
 /** The same chip with the `:hover` @8884 and pointer behaviour removed. */
-export const PROFILE_ICON_STATIC =
-  'relative shrink-0 box-border flex items-center justify-center rounded-full p-[8px] ' +
-  'w-[clamp(38px,10vw,48px)] h-[clamp(38px,10vw,48px)] text-[clamp(20px,5.5vw,26px)] ' +
-  'border-2 border-pose-purple-mid bg-pose-purple-deep/80';
-
-/** `.tabs` @8896 + `@media (max-width:768px)` @9072 + `@media (max-width:480px)` @9098. */
 export const TABS =
   'flex flex-1 justify-center gap-[12px] mx-[15px] text-[16px] font-semibold relative z-[1001] overflow-visible ' +
   'max-md:mx-auto max-md:gap-[14px] max-md:text-[15px] ' +
