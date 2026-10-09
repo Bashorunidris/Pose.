@@ -25,6 +25,11 @@ type Props = {
   onToggleRepost: (post: BuzzPost, next: boolean, count: number) => void;
   onToggleHit: (post: BuzzPost, next: boolean) => void;
   onTogglePass: (post: BuzzPost, next: boolean) => void;
+  /**
+   * `openBuzzUserProfile()` @66368 — the author block opens their profile. The
+   * legacy `.buzz-author` row carried `cursor-pointer` for exactly this.
+   */
+  onOpenAuthor?: (post: BuzzPost) => void;
 };
 
 const POST = 'border-b border-[#222] bg-app-card p-[20px]';
@@ -73,6 +78,7 @@ export function BuzzCard({
   onToggleRepost,
   onToggleHit,
   onTogglePass,
+  onOpenAuthor,
 }: Props) {
   const [playing, setPlaying] = useState(false);
   const author = buzzAuthorName(post);
@@ -86,7 +92,17 @@ export function BuzzCard({
   return (
     <article className={POST}>
       <div className={USER_INFO}>
-        <div className={AUTHOR}>
+        <div
+          className={cx(AUTHOR, onOpenAuthor && 'cursor-pointer')}
+          onClick={
+            onOpenAuthor
+              ? (event) => {
+                  event.stopPropagation();
+                  onOpenAuthor(post);
+                }
+              : undefined
+          }
+        >
           <div
             className={AVATAR}
             style={avatar ? { backgroundImage: `url('${avatar}')` } : undefined}
