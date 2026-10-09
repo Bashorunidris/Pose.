@@ -1,0 +1,258 @@
+/**
+ * Firestore/Auth compatibility layer over the modular Firebase SDK.
+ *
+ * `channeldashboard.html` was written against the CDN compat SDK
+ * (`firebase.firestore()` with `db.collection(...).doc(...).get()` chains).
+ * The App Router cannot load that bundle — it touches `window` at module scope —
+ * and this repo standardises on the modular SDK (see `lib/firebase.ts`).
+ *
+ * Rather than rewrite ~90 call sites in one step, the ported dashboard logic
+ * talks to this shim, which implements exactly the compat surface the legacy
+ * script used: collection/doc/where/orderBy/limit/get/set/update/delete/add,
+ * onSnapshot, batch, runTransaction, FieldValue and Timestamp. Call sites can
+ * then be migrated to the modular API a flow at a time without touching the
+ * page logic again.
+ */
+
+import {
+  addDoc,
+  collection as fsCollection,
+  deleteDoc,
+  doc as fsDoc,
+  getDoc,
+  getDocs,
+  limit as fsLimit,
+  onSnapshot as fsOnSnapshot,
+  orderBy as fsOrderBy,
+  query as fsQuery,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+  updateDoc,
+  where as fsWhere,
+  writeBatch,
+} from 'firebase/firestore';
+
+import { getPoseFirebase } from '@/lib/firebase';
+
+export type CompatDocData = Record<string, unknown>;
+
+export type CompatDocSnapshot = {
+  id: string;
+  exists: boolean;
+  ref: CompatDocRef;
+  data: () => CompatDocData | undefined;
+  get: (field: string) => unknown;
+};
+
+export type CompatQuerySnapshot = {
+  docs: CompatDocSnapshot[];
+  size: number;
+  empty: boolean;
+  forEach: (fn: (snap: CompatDocSnapshot) => void) => void;
+  docChanges: () => { type: string; doc: CompatDocSnapshot }[];
+};
+
+type Filter = { kind: 'where'; field: string; op: string; value: unknown } | { kind: 'orderBy'; field: string; dir?: 'asc' | 'desc' } | { kind: 'limit'; count: number };
+
+type Ref = { collection: string; id?: string; filters: Filter[] };
+
+function toDocSnapshot(snapshot: { id: string; exists: () => boolean; data: () => CompatDocData | undefined }, ref: CompatDocRef): CompatDocSnapshot {
+  return {
+    id: snapshot.id,
+    exists: snapshot.exists(),
+    ref,
+    data: () => snapshot.data(),
+    get: (field: string) => {
+      const payload = snapshot.data();
+      return payload ? payload[field] : undefined;
+    },
+  };
+}
+
+function buildQuery(ref: Ref) {
+  const { db } = getPoseFirebase();
+  const base = ref.id
+    ? fsDoc(db, ref.collection, ref.id)
+    : fsCollection(db, ref.collection);
+  if (ref.id) return base;
+  const clauses: unknown[] = [];
+  for (const filter of ref.filters) {
+    if (filter.kind === 'where') clauses.push(fsWhere(filter.field, filter.op as never, filter.value));
+    else if (filter.kind === 'orderBy') clauses.push(fsOrderBy(filter.field, filter.dir));
+    else if (filter.kind === 'limit') clauses.push(fsLimit(filter.count));
+  }
+  return clauses.length ? fsQuery(base as never, ...(clauses as never[])) : base;
+}
+
+export class CompatDocRef {
+  constructor(private readonly ref: Ref) {}
+
+  get path(): string {
+    return this.ref.id ? `${this.ref.collection}/${this.ref.id}` : this.ref.collection;
+  }
+
+  get id(): string {
+    return this.ref.id ?? '';
+  }
+
+  private next(id?: string, extra?: Filter): CompatDocRef {
+    return new CompatDocRef({
+      collection: this.ref.collection,
+      id: id ?? this.ref.id,
+      filters: extra ? [...this.ref.filters, extra] : this.ref.filters,
+    });
+  }
+
+  doc(id: string): CompatDocRef {
+    return this.next(id);
+  }
+
+  collection(name: string): CompatCollectionRef {
+    const parentId = this.ref.id;
+    const path = parentId ? `${this.ref.collection}/${parentId}/${name}` : `${this.ref.collection}/${name}`;
+    return new CompatCollectionRef(path);
+  }
+
+  where(field: string, op: string, value: unknown): CompatDocRef {
+    return this.next(undefined, { kind: 'where', field, op, value });
+  }
+
+  orderBy(field: string, dir: 'asc' | 'desc' = 'asc'): CompatDocRef {
+    return this.next(undefined, { kind: 'orderBy', field, dir });
+  }
+
+  limit(count: number): CompatDocRef {
+    return this.next(undefined, { kind: 'limit', count });
+  }
+
+  async get(): Promise<CompatDocSnapshot> {
+    const result = await getDoc(buildQuery(this.ref) as never);
+    return toDocSnapshot(result as never, this);
+  }
+
+  async set(data: CompatDocData): Promise<void> {
+    await setDoc(fsDoc(getPoseFirebase().db, this.ref.collection, this.ref.id as string), data);
+  }
+
+  async update(data: CompatDocData): Promise<void> {
+    await updateDoc(fsDoc(getPoseFirebase().db, this.ref.collection, this.ref.id as string), data);
+  }
+
+  async delete(): Promise<void> {
+    await deleteDoc(fsDoc(getPoseFirebase().db, this.ref.collection, this.ref.id as string));
+  }
+
+  onSnapshot(onNext: (snap: CompatDocSnapshot) => void, onError?: (error: Error) => void): () => void {
+    return fsOnSnapshot(
+      buildQuery(this.ref) as never,
+      (snap) => onNext(toDocSnapshot(snap as never, this)),
+      onError,
+    );
+  }
+}
+
+export class CompatCollectionRef {
+  constructor(private readonly path: string) {}
+
+  private static split(path: string): { collection: string; id?: string } {
+    return { collection: path };
+  }
+
+  doc(id?: string): CompatDocRef {
+    return new CompatDocRef({ collection: this.path, id, filters: [] });
+  }
+
+  where(field: string, op: string, value: unknown): CompatCollectionRef {
+    return this.withFilter({ kind: 'where', field, op, value });
+  }
+
+  private filters: Filter[] = [];
+
+  private withFilter(filter: Filter): CompatCollectionRef {
+    const next = new CompatCollectionRef(this.path);
+    next.filters = [...this.filters, filter];
+    return next;
+  }
+
+  orderBy(field: string, dir: 'asc' | 'desc' = 'asc'): CompatCollectionRef {
+    return this.withFilter({ kind: 'orderBy', field, dir });
+  }
+
+  limit(count: number): CompatCollectionRef {
+    return this.withFilter({ kind: 'limit', count });
+  }
+
+  private refFor(): Ref {
+    const { collection, id } = CompatCollectionRef.split(this.path);
+    return { collection, id, filters: this.filters };
+  }
+
+  async get(): Promise<CompatQuerySnapshot> {
+    const snap = await getDocs(buildQuery(this.refFor()) as never);
+    return CompatCollectionRef.wrap(snap as never);
+  }
+
+  async add(data: CompatDocData): Promise<CompatDocRef> {
+    const created = await addDoc(fsCollection(getPoseFirebase().db, this.path), data);
+    return new CompatDocRef({ collection: this.path, id: created.id, filters: [] });
+  }
+
+  onSnapshot(onNext: (snap: CompatQuerySnapshot) => void, onError?: (error: Error) => void): () => void {
+    return fsOnSnapshot(
+      buildQuery(this.refFor()) as never,
+      (snap) => onNext(CompatCollectionRef.wrap(snap as never)),
+      onError,
+    );
+  }
+
+  private static wrap(snap: { docs: unknown[] }): CompatQuerySnapshot {
+    const docs: CompatDocSnapshot[] = [];
+    for (const raw of snap.docs) {
+      const entry = raw as { id: string; exists: () => boolean; data: () => CompatDocData; ref?: unknown };
+      docs.push({
+        id: entry.id,
+        exists: entry.exists(),
+        ref: entry.ref as CompatDocRef,
+        data: () => entry.data(),
+        get: (field: string) => (entry.data() ?? {})[field],
+      });
+    }
+    return {
+      docs,
+      size: docs.length,
+      empty: docs.length === 0,
+      forEach: (fn) => docs.forEach(fn),
+      docChanges: () => docs.map((doc) => ({ type: 'modified', doc })),
+    };
+  }
+}
+
+export class CompatDb {
+  collection(name: string): CompatCollectionRef {
+    return new CompatCollectionRef(name);
+  }
+
+  batch() {
+    const batch = writeBatch(getPoseFirebase().db);
+    return {
+      set: (ref: CompatDocRef, data: CompatDocData) => batch.set(fsDoc(getPoseFirebase().db, ref.path.split('/')[0] as string, ref.id), data),
+      update: (ref: CompatDocRef, data: CompatDocData) => batch.update(fsDoc(getPoseFirebase().db, ref.path.split('/')[0] as string, ref.id), data),
+      delete: (ref: CompatDocRef) => batch.delete(fsDoc(getPoseFirebase().db, ref.path.split('/')[0] as string, ref.id)),
+      commit: () => batch.commit(),
+    };
+  }
+
+  runTransaction<T>(handler: (txn: never) => Promise<T>): Promise<T> {
+    return runTransaction(getPoseFirebase().db, handler as never) as Promise<T>;
+  }
+}
+
+export const FieldValue = {
+  increment: (by: number) => ({ __compatField: 'increment', by }),
+  serverTimestamp: () => serverTimestamp(),
+  arrayUnion: (...values: unknown[]) => ({ __compatField: 'arrayUnion', values }),
+};
+
+export const CompatTimestamp = Timestamp;

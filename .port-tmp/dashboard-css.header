@@ -1,0 +1,12 @@
+/*
+ * Pose Channel Dashboard (`channeldashboard.html`).
+ *
+ * Carried over from the legacy page stylesheet and scoped under `.channel-dash`
+ * so its generic hooks (`.page`, `.btn`, `.tab-item`, `.modal` …) cannot leak
+ * into other routes. Ids are kept because the ported logic still addresses them
+ * by id, exactly as the legacy script did.
+ *
+ * Two legacy quirks are resolved here: the `:root` token block now lives on the
+ * wrapper, and the `body` rules (font, background, 100vh) moved onto the wrapper
+ * as well. `dashboard.css` is generated — see `.port-tmp/README.md`.
+ */

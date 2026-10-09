@@ -1,0 +1,121 @@
+<div id="page-studio" class="page">
+
+<div class="studio-topbar">
+<button class="back-btn" onclick="goBack()">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M19 12H5M12 5l-7 7 7 7"/>
+</svg>
+Back
+</button>
+<span class="studio-title">Studio Analytics</span>
+</div>
+
+<div class="studio-layout">
+
+<div class="studio-sidebar">
+<div class="sb-tab active" onclick="onSidebarTab(this,'views')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+</svg>
+<span class="sb-label">Views</span>
+</div>
+<div class="sb-tab" onclick="onSidebarTab(this,'likes')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+</svg>
+<span class="sb-label">Likes</span>
+</div>
+<div class="sb-tab" onclick="onSidebarTab(this,'fan')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+</svg>
+<span class="sb-label">Fan</span>
+</div>
+<div class="sb-tab" onclick="onSidebarTab(this,'comments')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+</svg>
+<span class="sb-label">Cmts</span>
+</div>
+<div class="sb-tab" onclick="onSidebarTab(this,'engagement')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+</svg>
+<span class="sb-label">Engage</span>
+</div>
+</div>
+
+<div class="studio-content">
+
+<div class="card analytics-card">
+<div class="analytics-header">
+<div>
+<div class="analytics-htitle" id="aTitle">Monthly Views</div>
+<div class="analytics-hsub" id="aSub">Total views across all content · Last 6 months</div>
+</div>
+<div class="analytics-period-badge">Last 6 months</div>
+</div>
+<div class="analytics-nums" id="aNums"></div>
+<div class="chart-wrap">
+<canvas id="analyticsChart"></canvas>
+</div>
+</div>
+
+<div class="card banner-section">
+<div class="banner-title">
+<i class="fas fa-fire"></i> Most Watched Videos
+<span class="banner-badge">Top 10</span>
+</div>
+<div class="banner-scroll" id="banner-watched"></div>
+</div>
+
+<div class="card banner-section">
+<div class="banner-title">
+<i class="fas fa-coins"></i> Most Paid Videos
+<span class="banner-badge">Top Earners</span>
+</div>
+<div class="banner-scroll" id="banner-paid"></div>
+</div>
+
+<div class="two-col-banners">
+<div class="card banner-section">
+<div class="banner-title">
+<i class="fas fa-heart"></i> Most Liked
+</div>
+<div class="banner-scroll" id="banner-liked"></div>
+</div>
+<div class="card banner-section">
+<div class="banner-title">
+<i class="fas fa-bolt"></i> Most Engaged
+</div>
+<div class="banner-scroll" id="banner-engaged"></div>
+</div>
+</div>
+
+<div class="card table-section">
+<div class="table-header-row">
+<div class="table-title">Video Performance</div>
+<div class="period-tabs">
+<div class="ptab active" onclick="onPeriod(this,'24h')">24 hrs</div>
+<div class="ptab" onclick="onPeriod(this,'72h')">72 hrs</div>
+<div class="ptab" onclick="onPeriod(this,'7d')">7 days</div>
+</div>
+</div>
+<table>
+<thead>
+<tr>
+<th>Video</th>
+<th class="c"><i class="fas fa-eye"></i> Views</th>
+<th class="c"><i class="fas fa-heart"></i> Likes</th>
+<th class="c"><i class="fas fa-comment"></i> Comments</th>
+<th class="c"><i class="fas fa-coins"></i> Coins</th>
+</tr>
+</thead>
+<tbody id="perfBody"></tbody>
+</table>
+</div>
+
+</div><!-- /studio-content -->
+</div><!-- /studio-layout -->
+</div><!-- /page-studio -->

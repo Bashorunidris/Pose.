@@ -1,0 +1,10 @@
+# Port tooling scratch — the converter scripts in .port-tmp are tracked, the
+# files they regenerate from the legacy pages are not.
+.port-tmp/main.js
+.port-tmp/dash-src.css
+.port-tmp/dash-scoped.css
+.port-tmp/markup.html
+.port-tmp/markup-nohome.html
+.port-tmp/markup-pages.html
+.port-tmp/pages.jsx
+.port-tmp/before.md5
