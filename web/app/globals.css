@@ -125,6 +125,12 @@
   --animate-app-fade-in: app-fade-in 0.3s ease-in;
   --animate-app-slide-in: app-slide-in 0.3s ease-out;
   --animate-app-slide-up: app-slide-up 0.3s ease;
+  /*
+   * Legacy `@keyframes account-settings-modal-in` @18045 and `modalSlideIn`
+   * @18526 — the two settings/confirm dialogs rise 20px while fading in, with
+   * no scale, so they need a keyframe of their own.
+   */
+  --animate-app-modal-rise: app-modal-rise 0.3s forwards;
   --animate-app-spin-disk: app-spin-disk 4s linear infinite;
   --animate-app-shimmer: app-shimmer 1.5s linear infinite;
   --animate-app-play-pulse: app-play-pulse 2s ease-in-out infinite;
@@ -132,6 +138,14 @@
   --animate-app-foryou-spin: app-foryou-spin 0.9s cubic-bezier(.5,.1,.5,.9) infinite;
   --animate-app-foryou-pulse: app-foryou-pulse 1.4s ease-in-out infinite;
   --animate-app-foryou-dot: app-foryou-dot 1.2s ease-in-out infinite;
+  /*
+   * The For You profile page's two own animations: `@keyframes profileRingGlow`
+   * @7216 breathes the gradient ring around the avatar, and `@keyframes
+   * profileSkel` @6707 sweeps the name/username placeholders while the user
+   * document loads.
+   */
+  --animate-app-profile-ring: app-profile-ring 4s infinite;
+  --animate-app-profile-skel: app-profile-skel 0.9s linear infinite;
 
   @keyframes app-fade-in {
     from {
@@ -172,6 +186,18 @@
     }
     to {
       transform: translateY(0);
+    }
+  }
+
+  /* Legacy `@keyframes account-settings-modal-in` @18045 / `modalSlideIn` @18526. */
+  @keyframes app-modal-rise {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
 
@@ -236,6 +262,28 @@
     }
     100% {
       background-position: -100% 0;
+    }
+  }
+
+  /* Legacy `@keyframes profileRingGlow` @7216. */
+  @keyframes app-profile-ring {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.4));
+    }
+    50% {
+      filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.6));
+    }
+  }
+
+  /* Legacy `@keyframes profileSkel` @6707 — the end offset is -200%, not the
+     -100% `app-shimmer` uses, so the sweep crosses the whole placeholder. */
+  @keyframes app-profile-skel {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
     }
   }
 

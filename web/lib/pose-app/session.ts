@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 
 import { getPoseFirebase } from '@/lib/firebase';
+import { clearBuzzFeedCache, clearForYouFeedCache } from '@/lib/pose-app/feed';
 
 /**
  * The legacy app kept its own copy of the signed-in user in
@@ -92,6 +93,40 @@ export function saveLegacySession(user: User, userData?: Record<string, unknown>
 export function enterGuestMode(): void {
   if (typeof window === 'undefined') return;
   window.sessionStorage.setItem('guestMode', 'true');
+}
+
+/**
+ * `logoutUser()` @45339. The logout flag is stamped *before* anything is
+ * cleared, because Firebase's local persistence can fire `onAuthStateChanged`
+ * while the keys are still being removed and would otherwise look signed-in
+ * again. The legacy function finished with `location.href = 'index.html'`; the
+ * App Router equivalent is a `router.replace('/')` after this resolves.
+ */
+export async function signOutPose(options?: { clearAll?: boolean }): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  // `confirmDeleteAccount()` @45567 finished by wiping every key, not just the
+  // session ones, because the account it belonged to no longer exists.
+  if (options?.clearAll) {
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    clearForYouFeedCache();
+    clearBuzzFeedCache();
+    const { auth: staleAuth } = getPoseFirebase();
+    await staleAuth.signOut().catch(() => undefined);
+    return;
+  }
+
+  window.localStorage.setItem(LOGGED_OUT_KEY, '1');
+  window.localStorage.removeItem(SESSION_KEY);
+  window.localStorage.removeItem('userLoggedIn');
+  window.localStorage.removeItem('currentUserId');
+  window.sessionStorage.clear();
+  clearForYouFeedCache();
+  clearBuzzFeedCache();
+
+  const { auth } = getPoseFirebase();
+  await auth.signOut().catch(() => undefined);
 }
 
 export function usePoseSession(): PoseSessionState {

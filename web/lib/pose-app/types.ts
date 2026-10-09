@@ -18,6 +18,8 @@ export type PoseVideo = {
   videoUrl?: string;
   isPhoto?: boolean;
   type?: string;
+  /** Photos and stories carry their still frame here instead of `videoUrl`. */
+  imageUrl?: string;
   images?: string[];
   userId?: string;
   userName?: string;

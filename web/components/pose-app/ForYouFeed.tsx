@@ -20,11 +20,17 @@ import type { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 type Props = {
   uid: string | null;
   active: boolean;
+  /** The signed-in name, used as the sender on a share to a friend. */
+  displayName: string;
+  email: string;
+  onToast: (message: string) => void;
+  /** Opens another creator's profile; the shell decides route vs. own profile. */
+  onOpenCreator?: (userId: string) => void;
 };
 
 const NEAR_BOTTOM_PX = 900;
 
-export function ForYouFeed({ uid, active }: Props) {
+export function ForYouFeed({ uid, active, displayName, email, onToast, onOpenCreator }: Props) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<QueryDocumentSnapshot<DocumentData> | null>(null);
   const loadingRef = useRef(false);
@@ -197,6 +203,11 @@ export function ForYouFeed({ uid, active }: Props) {
           onToggleLike={handleLike}
           onToggleRepost={handleRepost}
           onToggleFollow={handleFollow}
+          displayName={displayName}
+          email={email}
+          onToast={onToast}
+          onHide={() => setVideos((current) => current.filter((entry) => entry.id !== video.id))}
+          onOpenProfile={onOpenCreator}
         />
       ))}
     </div>

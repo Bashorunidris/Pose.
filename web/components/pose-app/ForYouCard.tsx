@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { cx } from './styles';
+import { VideoActionSheets } from './VideoActionSheets';
 import { toMillis } from '@/lib/pose-app/feed';
 import {
   captionText,
@@ -26,6 +27,17 @@ type Props = {
   onToggleLike: (video: PoseVideo, liked: boolean, nextCount: number) => void;
   onToggleRepost: (video: PoseVideo, reposted: boolean, nextCount: number) => void;
   onToggleFollow: (userId: string) => void;
+  displayName: string;
+  /** Attached to any report the creator files from the share menu. */
+  email: string;
+  onToast: (message: string) => void;
+  /** Blocking or a "not interested" drops the post out of the feed. */
+  onHide: () => void;
+  /**
+   * `.foryou-profile-clickable` — the avatar/name block opens the creator's
+   * profile (`setupForYouProfileClickHandlers()` @40319).
+   */
+  onOpenProfile?: (userId: string) => void;
 };
 
 const POST = 'relative h-[100vh] w-full cursor-pointer snap-start overflow-hidden bg-app-post md:h-full';
@@ -108,6 +120,11 @@ export function ForYouCard({
   onToggleLike,
   onToggleRepost,
   onToggleFollow,
+  displayName,
+  email,
+  onToast,
+  onHide,
+  onOpenProfile,
 }: Props) {
   const postRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLVideoElement>(null);
@@ -117,6 +134,10 @@ export function ForYouCard({
   const [progress, setProgress] = useState(0);
   const [clock, setClock] = useState('0:00 / 0:00');
   const [expanded, setExpanded] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  // `setPlaybackSpeed()` @65695 wrote straight onto the element; the card keeps the
+  // rate in state so a re-render or a source change cannot quietly reset it.
+  const [rate, setRate] = useState(1);
   const photo = isPhotoPost(video);
   const photos = photo ? (video.images?.length ? video.images : [video.videoUrl ?? '']) : [];
   const owner = videoOwnerName(video);
@@ -150,6 +171,11 @@ export function ForYouCard({
     observer.observe(node);
     return () => observer.disconnect();
   }, [active, photo]);
+
+  useEffect(() => {
+    const media = mediaRef.current;
+    if (media) media.playbackRate = rate;
+  }, [rate]);
 
   const syncClock = useCallback(() => {
     const media = mediaRef.current;
@@ -214,7 +240,11 @@ export function ForYouCard({
           playsInline
           aria-label={`${owner}'s video, posted ${postedAt ? new Date(postedAt).toLocaleDateString() : 'recently'}`}
           onTimeUpdate={syncClock}
-          onLoadedMetadata={syncClock}
+          onLoadedMetadata={(event) => {
+            // A new source resets `playbackRate`, so the chosen speed is re-applied.
+            event.currentTarget.playbackRate = rate;
+            syncClock();
+          }}
           onPause={() => setPaused(true)}
           onPlay={() => setPaused(false)}
         />
@@ -260,7 +290,17 @@ export function ForYouCard({
           )}
         </div>
 
-        <div className={PROFILE_SECTION}>
+        <div
+          className={cx(PROFILE_SECTION, onOpenProfile && 'cursor-pointer')}
+          onClick={
+            onOpenProfile
+              ? (event) => {
+                  event.stopPropagation();
+                  if (video.userId) onOpenProfile(video.userId);
+                }
+              : undefined
+          }
+        >
           <div
             className={PROFILE_PIC}
             style={{ backgroundImage: `url('${video.userProfilePic ?? ''}')` }}
@@ -330,14 +370,7 @@ export function ForYouCard({
             className={INTERACTION_BTN}
             onClick={(event) => {
               event.stopPropagation();
-              const url = `${window.location.origin}/?v=${video.id}`;
-              if (navigator.share) {
-                void navigator
-                  .share({ title: `${owner} on Pose`, text: truncated.text, url })
-                  .catch(() => undefined);
-                return;
-              }
-              void navigator.clipboard?.writeText(url).catch(() => undefined);
+              setShareOpen(true);
             }}
           >
             <span className={cx(BTN_ICON, BTN_ICON_IDLE)}>
@@ -388,6 +421,19 @@ export function ForYouCard({
           </div>
         </div>
       )}
+
+      <VideoActionSheets
+        open={shareOpen}
+        video={video}
+        uid={uid}
+        email={email || null}
+        displayName={displayName}
+        rate={rate}
+        onRateChange={setRate}
+        onClose={() => setShareOpen(false)}
+        onToast={onToast}
+        onHide={onHide}
+      />
     </article>
   );
 }
