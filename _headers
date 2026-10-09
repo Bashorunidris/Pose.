@@ -40,15 +40,9 @@
   Content-Type: image/svg+xml
   Cache-Control: public, max-age=604800
 
-# Discourage indexing of private tools even if linked
-/channeldashboard.html
-  X-Robots-Tag: noindex, nofollow
-
-# Frozen copies of the ported pages — the Next.js routes own these URLs
+# Frozen copies of the ported pages — the Next.js routes own these URLs, and
+# the dashboard/original tools stay out of the index even if linked.
 /legacy/*
-  X-Robots-Tag: noindex, nofollow
-
-/firebase-upload-module.html
   X-Robots-Tag: noindex, nofollow
 
 /zoho-domain-verification.html
