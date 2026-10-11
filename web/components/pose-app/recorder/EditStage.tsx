@@ -18,6 +18,8 @@ type Props = {
   settings: CaptureSettings;
   onBackToRecord: () => void;
   onNext: (edit: VideoEdit) => void;
+  /** `openSoundLibrary()` @59012 — the music button above the tool column. */
+  onAddSound: () => void;
   onToast: (message: string, kind?: 'info' | 'success' | 'error') => void;
 };
 
@@ -41,6 +43,7 @@ export function EditStage({
   settings,
   onBackToRecord,
   onNext,
+  onAddSound,
   onToast,
 }: Props) {
   const previewRef = useRef<HTMLVideoElement | null>(null);
@@ -233,7 +236,7 @@ export function EditStage({
           <button
             type="button"
             className="v2-edit-side-btn"
-            onClick={() => onToast('The sound library lands in the next slice')}
+            onClick={onAddSound}
             title="Add Sound"
           >
             <i className="fas fa-music" />
