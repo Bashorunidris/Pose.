@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { BuzzCard } from '../BuzzCard';
+import { ChatRoom } from '../chat/ChatRoom';
 import { CommentModal } from '../comments/CommentModal';
 import { ForYouCard } from '../ForYouCard';
 import { cx } from '../styles';
@@ -154,6 +155,10 @@ export function CreatorProfilePage({
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [aboutOpen, setAboutOpen] = useState(false);
   const [bioTruncated, setBioTruncated] = useState(false);
+  /** `openDirectMessage()` @68896 — the room with the creator on screen. */
+  const [chatPeer, setChatPeer] = useState<{ userId: string; name: string; pic: string } | null>(
+    null,
+  );
   const [toast, setToast] = useState('');
   /** Every document `loadCreatorVideos()` returned, for the Likes/Views totals. */
   const [allVideos, setAllVideos] = useState<PoseVideo[]>([]);
@@ -342,7 +347,7 @@ export function CreatorProfilePage({
 
   /**
    * `openDirectMessage()` @68896 kept both of its guards before it opened the
-   * chat room, and the room itself is still legacy-only.
+   * chat room; the same two guards stand in front of it here.
    */
   const openMessage = () => {
     if (!viewerUid) {
@@ -353,7 +358,7 @@ export function CreatorProfilePage({
       notify('You both need to follow each other to chat');
       return;
     }
-    notify('Messages is the next screen to be ported');
+    setChatPeer({ userId: uid, name: profile?.displayName ?? 'User', pic: profile?.profilePic ?? '' });
   };
 
   const picture = profile?.profilePic ?? '';
@@ -650,6 +655,15 @@ export function CreatorProfilePage({
       >
         {toast}
       </div>
+
+      <ChatRoom
+        open={chatPeer !== null}
+        uid={viewerUid}
+        displayName={displayName}
+        peer={chatPeer}
+        onClose={() => setChatPeer(null)}
+        onToast={notify}
+      />
     </div>
   );
 }
