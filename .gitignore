@@ -29,3 +29,5 @@
 .port-tmp/pose/pose-scoped.css
 .port-tmp/pose/player-filtered.css
 .port-tmp/pose/player-scoped.css
+.port-tmp/chat/chat-filtered.css
+.port-tmp/chat/chat-scoped.css
