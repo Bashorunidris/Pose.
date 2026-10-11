@@ -3,8 +3,8 @@
 import { NAVBAR, PROFILE_ICON, SEARCH_ICON, TAB, TAB_ACTIVE, TABS, cx } from './styles';
 import type { PoseSession } from '@/lib/pose-app/session';
 
-/** The two top-level feed tabs; Trend opens a modal instead of a panel. */
-export type FeedTab = 'forYou' | 'buzz';
+/** The three top-level feed tabs; Trend opens a modal instead of a panel. */
+export type FeedTab = 'forYou' | 'buzz' | 'pose';
 
 type Props = {
   /** `switchMainTab('trend')` returns before it moves `.active`, so the
@@ -79,6 +79,13 @@ export function TopNav({
           onClick={() => onSelect('buzz')}
         >
           Buzz
+        </button>
+        <button
+          type="button"
+          className={cx(TAB, BTN, tab === 'pose' && TAB_ACTIVE)}
+          onClick={() => onSelect('pose')}
+        >
+          Pose
         </button>
         <button type="button" className={cx(TAB, BTN)} onClick={onOpenTrend}>
           Trend
