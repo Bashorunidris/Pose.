@@ -1,0 +1,930 @@
+/* Generated from index.html by .port-tmp/pose/extract-player-css.py — do not edit.
+   The Pose video player keeps the legacy class names, scoped under
+   `.pose-player-shell`. */
+/* Desktop / laptop: all full pages use a centered mobile-width shell (full height) */
+@media (min-width: 768px) {
+.pose-player-shell {
+--pose-shell-w: 420px;
+                --pose-shell-h: 100dvh;
+}
+/* Shared phone-shell geometry (no transform — avoids fighting modal animations) */
+.pose-player-shell #tnPlayerPage {
+left: calc(50% - (var(--pose-shell-w) / 2)) !important;
+                right: auto !important;
+                width: var(--pose-shell-w) !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+                border-radius: 0 !important;
+}
+.pose-player-shell #tnPlayerPage {
+top: 0 !important;
+                bottom: 0 !important;
+                height: var(--pose-shell-h) !important;
+                max-height: var(--pose-shell-h) !important;
+                overflow-x: hidden !important;
+}
+}
+@media (max-width: 768px) {
+/* .profile-icon / .search-icon sizing now comes entirely from their
+               base clamp()-based rules, which already scale down smoothly at this
+               width — the fixed 36px overrides that used to live here fought with
+               that scaling instead of complementing it. */
+}
+@media (max-width: 480px) {
+/* .profile-icon / .search-icon sizing comes from their base
+               clamp()-based rules (see note above) — no override needed here. */
+}
+/* ===== POSETAB STYLES ===== */
+.pose-player-shell {
+--nb:#0d0d0d;--ns:#141414;--ns2:#1c1c1c;--ns3:#252525;
+          --nr:#4C1D95;--nt:#e5e5e5;--nm:#aaa;--nbd:#2a2a2a;
+          --ng:#46d369;--ngold:#f5c518;--nblue:#0071eb;
+}
+/* ════════════════════════════════════
+   VIDEO PLAYER PAGE
+   ════════════════════════════════════ */
+.pose-player-shell #tnPlayerPage {
+position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0d0d0d;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.pose-player-shell #tnPlayerPage * {
+box-sizing: border-box;
+}
+/* ── Season tabs ── */
+.pose-player-shell .tnp-season-tabs {
+display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.pose-player-shell .tnp-season-tab {
+background: #1c1c1c;
+  border: 1px solid #333;
+  color: #aaa;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+  font-family: Arial, sans-serif;
+}
+.pose-player-shell .tnp-season-tab:hover {
+background: #2a2a2a; color: #fff;
+}
+.pose-player-shell .tnp-season-tab.active {
+background: #e50914;
+  border-color: #e50914;
+  color: #fff;
+}
+/* ── Related horizontal scroll ── */
+.pose-player-shell .tnp-related-block {
+margin-bottom: 28px;
+}
+.pose-player-shell .tnp-row-scroll {
+display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a transparent;
+}
+.pose-player-shell .tnp-row-scroll::-webkit-scrollbar {
+height: 3px;
+}
+.pose-player-shell .tnp-row-scroll::-webkit-scrollbar-thumb {
+background: #2a2a2a; border-radius: 2px;
+}
+/* ── Horizontal video card (reused in player) ── */
+.pose-player-shell .tnp-h-card {
+flex-shrink: 0;
+  width: 180px;
+  cursor: pointer;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #1a1a1a;
+  transition: transform .25s;
+  position: relative;
+}
+.pose-player-shell .tnp-h-card:hover {
+transform: scale(1.07);
+}
+.pose-player-shell .tnp-h-card img {
+width: 100%; height: 105px;
+  object-fit: cover; display: block;
+}
+.pose-player-shell .tnp-h-card video {
+width: 100%; height: 105px;
+  object-fit: cover; display: block;
+}
+.pose-player-shell .tnp-h-card-info {
+padding: 7px 9px 9px;
+}
+.pose-player-shell .tnp-h-card-title {
+font-size: 12px; font-weight: 700; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: Arial, sans-serif;
+}
+.pose-player-shell .tnp-h-card-meta {
+font-size: 11px; color: #777;
+  margin-top: 3px;
+  font-family: Arial, sans-serif;
+}
+.pose-player-shell .tnp-h-card-price {
+position: absolute; top: 5px; right: 5px;
+  font-size: 9px; font-weight: 700;
+  padding: 2px 5px; border-radius: 2px;
+  font-family: Arial, sans-serif;
+}
+.pose-player-shell .tnp-h-card-price.free {
+background: #46d369; color: #0d2b12;
+}
+.pose-player-shell .tnp-h-card-price.paid {
+background: #f5c518; color: #2b2000;
+}
+/* ════════════════════════════════════
+   BACK BUTTON — fixed top right
+   ════════════════════════════════════ */
+.pose-player-shell .tnp-back-btn {
+position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 210;
+  background: rgba(0,0,0,.5);
+  border: none;
+  color: #fff;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background .2s, transform .15s;
+}
+.pose-player-shell .tnp-back-btn:hover {
+background: rgba(255,255,255,.2);
+  transform: scale(1.1);
+}
+/* ════════════════════════════════════
+   BRAND — slide in from left, glass bg
+   ════════════════════════════════════ */
+.pose-player-shell .tnp-brand {
+position: fixed;
+  top: 18px;
+  left: 70px; /* sits to the right of the back button */
+  z-index: 200;
+  pointer-events: none;
+}
+.pose-player-shell .tnp-brand-inner {
+display: flex; align-items: center; gap: 0;
+  transform: translateX(-140%);
+  opacity: 0;
+  animation: tnpBrandSlide 0.9s cubic-bezier(.22,1,.36,1) 0.3s forwards;
+}
+/* Brand logo — text always visible, logo image fades in beside it. */
+.pose-player-shell .tnp-brand-logo {
+display: inline-flex;
+  align-items: center;
+  gap: 2px;       /* keep text + logo image tight together */
+  height: 30px;
+  line-height: 30px;
+}
+/* Purple Netflix-style text — visible first, then hides when logo slides in */
+.pose-player-shell .tnp-brand-text {
+color: #a855f7;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-family: 'Bebas Neue','Netflix Sans','Helvetica Neue Condensed',
+               'Impact',Arial,sans-serif;
+  text-shadow: 0 2px 8px rgba(168,85,247,.45);
+  opacity: 1;
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity .35s ease, max-width .45s ease,
+              margin .45s ease, letter-spacing .45s ease;
+}
+/* Logo image — hidden first, slides + fades in on .show-img */
+.pose-player-shell .tnp-brand-img {
+height: 100%;
+  width: 0;
+  max-width: 80px;
+  object-fit: contain;
+  opacity: 0;
+  transform: translateX(-6px) scale(.9);
+  transition: opacity .45s ease, transform .45s ease, width .45s ease;
+}
+.pose-player-shell .tnp-brand-logo.show-img .tnp-brand-img {
+width: 60px;
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+/* When logo slides in, collapse the text so only the logo remains */
+.pose-player-shell .tnp-brand-logo.show-img .tnp-brand-text {
+opacity: 0;
+  max-width: 0;
+  margin-left: -2px;       /* swallow the flex gap */
+  letter-spacing: 0;
+  pointer-events: none;
+}
+.pose-player-shell .tnp-brand-divider {
+width: 1.5px; height: 18px;
+  background: rgba(255,255,255,.4);
+  margin: 0 8px; opacity: .7;
+}
+.pose-player-shell .tnp-brand-age {
+font-size: 11px; font-weight: 700;
+  font-family: Arial, sans-serif;
+  border: 1.5px solid #e50914;
+  color: #e50914;
+  padding: 1px 5px;
+  border-radius: 2px;
+  letter-spacing: .5px;
+  background: transparent;
+}
+/* ════════════════════════════════════
+   VIDEO WRAP — portrait / landscape
+   ════════════════════════════════════ */
+.pose-player-shell .tnp-video-wrap {
+position: relative;
+  width: 100%;
+  height: min(56.25vw, 72vh);
+  min-height: 260px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.pose-player-shell .tnp-video-wrap.portrait-mode {
+height: 100vh;
+  background: #000;
+}
+.pose-player-shell #tnpVideo {
+position: absolute;
+  inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  background: #000; z-index: 2;
+  transition: filter .2s;
+}
+.pose-player-shell .tnp-video-wrap.portrait-mode #tnpVideo {
+object-fit: contain;
+}
+.pose-player-shell .tnp-poster {
+position: absolute;
+  inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 1;
+  transition: opacity .5s;
+}
+.pose-player-shell .tnp-poster.tnp-hide {
+opacity: 0;
+}
+.pose-player-shell .tnp-video-grad {
+position: absolute; inset: 0; z-index: 3;
+  background: linear-gradient(to top, #0d0d0d 0%, transparent 40%);
+  pointer-events: none;
+}
+/* ════════════════════════════════════
+   CUSTOM CONTROLS OVERLAY
+   ════════════════════════════════════ */
+.pose-player-shell .tnp-controls-overlay {
+position: absolute;
+  inset: 0;
+  z-index: 10;
+  opacity: 0 !important;
+  visibility: hidden;
+  transition: opacity .25s ease, visibility .25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,.6) 0%, transparent 25%,
+    transparent 65%, rgba(0,0,0,.7) 100%);
+  pointer-events: none;
+}
+.pose-player-shell .tnp-controls-overlay.visible {
+opacity: 1 !important;
+  visibility: visible;
+  pointer-events: auto;
+}
+/* ── Netflix-style screen lock ──
+   When the overlay has .locked, every control disappears
+   except the lock button itself. Tap zone still receives
+   taps so the lock icon can be flashed back on. */
+.pose-player-shell .tnp-controls-overlay.locked {
+background: transparent;
+}
+.pose-player-shell .tnp-controls-overlay.locked .tnp-ctrl-title-mini, .pose-player-shell .tnp-controls-overlay.locked .tnp-ctrl-centre, .pose-player-shell .tnp-controls-overlay.locked .tnp-ctrl-bottom, .pose-player-shell .tnp-controls-overlay.locked .tnp-brightness-popup, .pose-player-shell .tnp-controls-overlay.locked #tnpBrightnessBtn {
+display: none !important;
+}
+.pose-player-shell .tnp-controls-overlay.locked #tnpLockBtn {
+width: 56px; height: 56px;
+  font-size: 20px;
+  background: rgba(0,0,0,.7);
+  border: 2px solid rgba(255,255,255,.55);
+  box-shadow: 0 2px 12px rgba(0,0,0,.55);
+}
+/* Hide brand + back button while locked (Netflix hides chrome) */
+.pose-player-shell #tnPlayerPage.tnp-locked .tnp-back-btn, .pose-player-shell #tnPlayerPage.tnp-locked .tnp-brand {
+display: none !important;
+}
+/* Tap zone — invisible layer on top of video to catch taps */
+.pose-player-shell .tnp-tap-zone {
+position: absolute;
+  inset: 0;
+  z-index: 9;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Top row — back | title center | tools right */
+.pose-player-shell .tnp-ctrl-top {
+display: flex; align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.pose-player-shell .tnp-ctrl-title-mini {
+position: absolute;
+  bottom: 52px;          /* sits just above the progress bar */
+  left: 50%; transform: translateX(-50%);
+  font-size: 15px; font-weight: 700; color: #fff;
+  font-family: Arial,sans-serif;
+  text-shadow: 0 1px 6px rgba(0,0,0,.9);
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; max-width: 70%;
+  text-align: center;
+  pointer-events: none;
+}
+.pose-player-shell .tnp-ctrl-top-right {
+display: flex; align-items: center; gap: 8px;
+}
+.pose-player-shell .tnp-ctrl-icon-btn {
+background: rgba(0,0,0,.45);
+  border: none; color: #fff;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 17px;
+  transition: background .2s, transform .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pose-player-shell .tnp-ctrl-icon-btn:hover {
+background: rgba(255,255,255,.2);
+  transform: scale(1.1);
+}
+.pose-player-shell .tnp-ctrl-icon-btn.active {
+color: #e50914;
+}
+/* Brightness popup slider */
+.pose-player-shell .tnp-brightness-popup {
+position: absolute;
+  top: 60px; right: 16px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,.85);
+  border-radius: 20px;
+  padding: 8px 14px;
+  z-index: 25;
+}
+.pose-player-shell .tnp-brightness-slider {
+-webkit-appearance: none;
+  width: 100px; height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,.3);
+  outline: none; cursor: pointer;
+}
+.pose-player-shell .tnp-brightness-slider::-webkit-slider-thumb {
+-webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+/* Centre seek controls */
+.pose-player-shell .tnp-ctrl-centre {
+display: flex; align-items: center;
+  justify-content: center; gap: 32px;
+}
+.pose-player-shell .tnp-seek-btn {
+background: none;
+  border: none;
+  color: #fff; 
+  width: 56px; height: 56px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  cursor: pointer; gap: 2px;
+  transition: transform .15s, opacity .2s;
+  opacity: .85;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pose-player-shell .tnp-seek-btn i {
+font-size: 20px;
+}
+.pose-player-shell .tnp-seek-btn span {
+font-size: 11px; font-weight: 700; font-family: Arial,sans-serif; line-height: 1;
+}
+.pose-player-shell .tnp-seek-btn:hover, .pose-player-shell .tnp-seek-btn:active {
+transform: scale(1.15); opacity: 1;
+}
+.pose-player-shell .tnp-play-pause-btn {
+background: rgba(255,255,255,.15);
+  border: 2px solid rgba(255,255,255,.8);
+  color: #fff;
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 24px;
+  transition: background .2s, transform .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pose-player-shell .tnp-play-pause-btn:hover, .pose-player-shell .tnp-play-pause-btn:active {
+background: rgba(255,255,255,.3); transform: scale(1.1);
+}
+/* Bottom progress */
+.pose-player-shell .tnp-ctrl-bottom {
+display: flex; align-items: center; gap: 10px;
+}
+.pose-player-shell .tnp-time {
+font-size: 12px; color: #ccc;
+  font-family: 'Courier New', monospace;
+  white-space: nowrap; flex-shrink: 0;
+}
+.pose-player-shell .tnp-progress-wrap {
+flex: 1;
+}
+.pose-player-shell .tnp-progress {
+-webkit-appearance: none;
+  width: 100%; height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,.25);
+  outline: none; cursor: pointer;
+}
+.pose-player-shell .tnp-progress::-webkit-slider-thumb {
+-webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%; background: #e50914;
+  cursor: pointer;
+}
+/* ── Subtitle display on video ── */
+/* ════════════════════════════════════
+   CHANNEL TOP ROW (above title)
+   ════════════════════════════════════ */
+.pose-player-shell .tnp-channel-top-row {
+display: flex; align-items: center;
+  gap: 12px; margin-bottom: 14px;
+  padding: 12px 0 12px;
+  border-bottom: 1px solid #222;
+}
+.pose-player-shell .tnp-ch-top-avatar {
+width: 44px; height: 44px;
+  border-radius: 50%; object-fit: cover;
+  background: #2a2a2a; flex-shrink: 0;
+  border: 2px solid #7c3aed;
+}
+.pose-player-shell .tnp-ch-top-info {
+flex: 1; min-width: 0;
+}
+.pose-player-shell .tnp-ch-top-name {
+font-size: 14px; font-weight: 700; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pose-player-shell .tnp-ch-top-sub {
+font-size: 12px; color: #777; margin-top: 2px;
+}
+/* ════════════════════════════════════
+   PORTRAIT MODE — panel hidden
+   ════════════════════════════════════ */
+.pose-player-shell #tnPlayerPage.portrait-active .tnp-panel {
+display: none;
+}
+.pose-player-shell #tnPlayerPage.portrait-active .tnp-video-wrap {
+height: 100vh;
+}
+.pose-player-shell #tnPlayerPage.portrait-active .tnp-controls-overlay {
+opacity: 1 !important;
+}
+/* ═══════════════════════════════════════════════════
+   NETFLIX-STYLE PLAYING MODE
+   When .tnp-playing is set, video fills the entire
+   fixed overlay. No orientation forcing. Works on
+   desktop and mobile identically.
+   ═══════════════════════════════════════════════════ */
+.pose-player-shell #tnPlayerPage.tnp-playing {
+overflow: hidden !important;
+  background: #000 !important;
+}
+/* Hide the detail panel — only the video is visible */
+.pose-player-shell #tnPlayerPage.tnp-playing .tnp-panel {
+display: none !important;
+}
+/* Video wrap fills the whole player overlay */
+.pose-player-shell #tnPlayerPage.tnp-playing .tnp-video-wrap {
+position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: unset !important;
+  background: #000 !important;
+  z-index: 1 !important;
+}
+/* Video element fills the wrap, centered */
+.pose-player-shell #tnPlayerPage.tnp-playing #tnpVideo {
+position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  background: #000 !important;
+  z-index: 2 !important;
+}
+/* Back button stays visible above the video */
+.pose-player-shell #tnPlayerPage.tnp-playing .tnp-back-btn {
+position: absolute !important;
+  z-index: 200 !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+/* Brand stays visible */
+.pose-player-shell #tnPlayerPage.tnp-playing .tnp-brand {
+position: absolute !important;
+  z-index: 200 !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+/* Controls overlay — JS controls .visible, no CSS force */
+.pose-player-shell #tnPlayerPage.tnp-playing .tnp-controls-overlay {
+z-index: 100 !important;
+}
+/* Gradient grad hides in playing mode (controls handle it) */
+.pose-player-shell #tnPlayerPage.tnp-playing .tnp-video-grad {
+display: none;
+}
+/* Also handle native browser fullscreen gracefully */
+.pose-player-shell #tnPlayerPage:fullscreen, .pose-player-shell #tnPlayerPage:-webkit-full-screen {
+overflow: hidden !important;
+  background: #000 !important;
+}
+.pose-player-shell #tnPlayerPage:fullscreen .tnp-panel, .pose-player-shell #tnPlayerPage:-webkit-full-screen .tnp-panel {
+display: none !important;
+}
+.pose-player-shell #tnPlayerPage:fullscreen .tnp-video-wrap, .pose-player-shell #tnPlayerPage:-webkit-full-screen .tnp-video-wrap {
+position: absolute !important; inset: 0 !important;
+  width: 100% !important; height: 100% !important; min-height: unset !important;
+  background: #000 !important; z-index: 1 !important;
+}
+.pose-player-shell #tnPlayerPage:fullscreen #tnpVideo, .pose-player-shell #tnPlayerPage:-webkit-full-screen #tnpVideo {
+position: absolute !important; inset: 0 !important;
+  width: 100% !important; height: 100% !important;
+  object-fit: contain !important; display: block !important; background: #000 !important; z-index: 2 !important;
+}
+/* landscape-active kept as alias for backward compat */
+.pose-player-shell #tnPlayerPage.landscape-active {
+overflow: hidden !important; background: #000 !important;
+}
+.pose-player-shell #tnPlayerPage.landscape-active .tnp-panel {
+display: none !important;
+}
+.pose-player-shell #tnPlayerPage.landscape-active .tnp-video-wrap {
+position: absolute !important; inset: 0 !important;
+  width: 100% !important; height: 100% !important; min-height: unset !important;
+  background: #000 !important; z-index: 1 !important;
+}
+.pose-player-shell #tnPlayerPage.landscape-active #tnpVideo {
+position: absolute !important; inset: 0 !important;
+  width: 100% !important; height: 100% !important;
+  object-fit: contain !important; display: block !important; background: #000 !important; z-index: 2 !important;
+}
+.pose-player-shell #tnPlayerPage.landscape-active .tnp-back-btn, .pose-player-shell #tnPlayerPage.landscape-active .tnp-brand {
+position: absolute !important; z-index: 200 !important;
+  display: flex !important; visibility: visible !important; opacity: 1 !important;
+}
+.pose-player-shell #tnPlayerPage:fullscreen .tnp-brand, .pose-player-shell #tnPlayerPage:-webkit-full-screen .tnp-brand, .pose-player-shell #tnPlayerPage:fullscreen .tnp-back-btn, .pose-player-shell #tnPlayerPage:-webkit-full-screen .tnp-back-btn {
+display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 10001 !important;
+  position: fixed !important;
+}
+/* ── Scheduled overlay ── */
+.pose-player-shell .tnp-scheduled-overlay {
+position: absolute;
+  inset: 0; z-index: 5;
+  background: rgba(0,0,0,.78);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px;
+  backdrop-filter: blur(6px);
+}
+.pose-player-shell .tnp-sched-icon {
+font-size: 36px; color: #e50914; margin-bottom: 4px;
+}
+.pose-player-shell .tnp-sched-label {
+font-size: 13px; color: #aaa; letter-spacing: 1px; text-transform: uppercase;
+}
+.pose-player-shell .tnp-sched-countdown {
+font-size: 38px; font-weight: 900;
+  color: #fff; letter-spacing: 4px;
+  font-family: 'Courier New', monospace;
+}
+.pose-player-shell .tnp-sched-date {
+font-size: 13px; color: #777; margin-top: 2px;
+}
+.pose-player-shell .tnp-panel {
+position: relative;
+  z-index: 2;
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 60px;
+  background: #0d0d0d;
+}
+/* Title */
+.pose-player-shell .tnp-title-row {
+display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.pose-player-shell .tnp-title {
+font-size: 32px; font-weight: 900;
+  color: #fff; margin: 0;
+  text-transform: uppercase; letter-spacing: 1px;
+  line-height: 1.1;
+}
+.pose-player-shell .tnp-meta-row {
+display: flex; gap: 12px; align-items: center;
+  flex-wrap: wrap; margin-top: 6px;
+  font-size: 13px; color: #aaa;
+}
+.pose-player-shell .tnp-meta-tag {
+border: 1px solid #555;
+  color: #bbb; font-size: 11px;
+  padding: 1px 7px; border-radius: 3px;
+}
+.pose-player-shell .tnp-match-score {
+flex-shrink: 0;
+  font-size: 22px; font-weight: 900;
+  color: #46d369;
+  white-space: nowrap;
+}
+/* Actions */
+.pose-player-shell .tnp-actions {
+display: flex; gap: 10px;
+  align-items: center; margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pose-player-shell .tnp-btn-primary {
+display: flex; align-items: center; gap: 8px;
+  background: #fff; color: #000;
+  border: none; font-weight: 700; font-size: 15px;
+  padding: 10px 26px; border-radius: 5px;
+  cursor: pointer; transition: background .2s;
+}
+.pose-player-shell .tnp-btn-primary:hover {
+background: #ddd;
+}
+.pose-player-shell .tnp-btn-secondary {
+display: flex; align-items: center; gap: 8px;
+  background: rgba(100,100,100,.5); color: #fff;
+  border: none; font-weight: 700; font-size: 14px;
+  padding: 10px 22px; border-radius: 5px;
+  cursor: pointer; transition: background .2s;
+  backdrop-filter: blur(4px);
+}
+.pose-player-shell .tnp-btn-secondary:hover {
+background: rgba(130,130,130,.6);
+}
+.pose-player-shell .tnp-btn-icon {
+width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid #555; background: none;
+  color: #ccc; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: border-color .2s, color .2s;
+}
+.pose-player-shell .tnp-btn-icon:hover {
+border-color: #fff; color: #fff;
+}
+.pose-player-shell .tnp-btn-icon.active {
+border-color: #e50914; color: #e50914;
+}
+/* Stats bar */
+.pose-player-shell .tnp-stats-bar {
+display: flex; gap: 20px; flex-wrap: wrap;
+  padding: 12px 0;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+  margin-bottom: 16px;
+}
+.pose-player-shell .tnp-stat {
+font-size: 12px; color: #777;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.pose-player-shell .tnp-stat b {
+font-size: 16px; font-weight: 700; color: #e5e5e5;
+}
+/* Description */
+.pose-player-shell .tnp-desc {
+font-size: 14px; color: #ccc;
+  line-height: 1.7; margin: 0 0 22px;
+}
+/* ── Star Rating ── */
+.pose-player-shell .tnp-rating-block {
+background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pose-player-shell .tnp-rating-label {
+font-size: 11px; color: #777;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.pose-player-shell .tnp-stars-input {
+display: flex; gap: 6px;
+}
+.pose-player-shell .tnp-stars-input i {
+font-size: 26px; color: #333;
+  cursor: pointer;
+  transition: color .15s, transform .15s;
+}
+.pose-player-shell .tnp-stars-input i.hovered, .pose-player-shell .tnp-stars-input i.selected {
+color: #f5c518;
+}
+.pose-player-shell .tnp-stars-input i:hover {
+transform: scale(1.2);
+}
+.pose-player-shell .tnp-rating-summary {
+font-size: 13px; color: #aaa;
+}
+.pose-player-shell .tnp-rating-msg {
+font-size: 12px; color: #46d369;
+  min-height: 16px;
+  transition: opacity .3s;
+}
+/* ── Channel block ── */
+.pose-player-shell .tnp-channel-block {
+display: flex; align-items: center; gap: 14px;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+}
+.pose-player-shell .tnp-ch-avatar {
+width: 52px; height: 52px;
+  border-radius: 50%; object-fit: cover;
+  background: #2a2a2a; flex-shrink: 0;
+  border: 2px solid #333;
+}
+.pose-player-shell .tnp-ch-info {
+flex: 1;
+}
+.pose-player-shell .tnp-ch-name {
+font-size: 15px; font-weight: 700; color: #fff;
+}
+.pose-player-shell .tnp-ch-sub {
+font-size: 12px; color: #888; margin-top: 3px;
+}
+.pose-player-shell .tnp-ch-follow-btn {
+flex-shrink: 0;
+  background: linear-gradient(135deg, #7c3aed, #bb86fc);
+  color: #fff;
+  border: none; font-weight: 700; font-size: 12px;
+  padding: 8px 14px; border-radius: 20px;
+  cursor: pointer; transition: all .2s;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+}
+.pose-player-shell .tnp-ch-follow-btn:hover {
+filter: brightness(1.1); transform: scale(1.03);
+}
+.pose-player-shell .tnp-ch-follow-btn:active {
+transform: scale(0.97);
+}
+.pose-player-shell .tnp-ch-follow-btn.following {
+background: rgba(187,134,252,0.12);
+  border: 1.5px solid rgba(187,134,252,0.35);
+  color: #bb86fc;
+}
+/* ── Episodes / Remaining ── */
+.pose-player-shell .tnp-episodes-block, .pose-player-shell .tnp-more-block {
+margin-bottom: 28px;
+}
+.pose-player-shell .tnp-section-head {
+display: flex; align-items: baseline;
+  gap: 10px; margin-bottom: 12px;
+}
+.pose-player-shell .tnp-section-title {
+font-size: 18px; font-weight: 700;
+  color: #e5e5e5; margin: 0;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.pose-player-shell .tnp-ep-count {
+font-size: 12px; color: #555;
+}
+/* Episode list */
+.pose-player-shell .tnp-episodes-list {
+display: flex; flex-direction: column; gap: 2px;
+}
+.pose-player-shell .tnp-ep-item {
+display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .2s;
+  position: relative;
+}
+.pose-player-shell .tnp-ep-item:hover {
+background: #1c1c1c;
+}
+.pose-player-shell .tnp-ep-item.tnp-ep-locked {
+opacity: .45; cursor: default;
+}
+.pose-player-shell .tnp-ep-num {
+font-size: 18px; font-weight: 900;
+  color: #555; min-width: 28px;
+  font-family: 'Impact', Arial, sans-serif;
+}
+.pose-player-shell .tnp-ep-thumb {
+width: 100px; height: 58px;
+  border-radius: 4px; object-fit: cover;
+  background: #1a1a1a; flex-shrink: 0;
+}
+.pose-player-shell .tnp-ep-info {
+flex: 1; min-width: 0;
+}
+.pose-player-shell .tnp-ep-title {
+font-size: 14px; font-weight: 700; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pose-player-shell .tnp-ep-meta {
+font-size: 12px; color: #777; margin-top: 3px;
+}
+.pose-player-shell .tnp-ep-desc {
+font-size: 12px; color: #aaa;
+  margin-top: 4px; line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pose-player-shell .tnp-ep-lock {
+font-size: 16px; color: #555;
+  flex-shrink: 0;
+}
+.pose-player-shell .tnp-ep-sched-badge {
+position: absolute; top: 8px; right: 10px;
+  background: #e50914; color: #fff;
+  font-size: 9px; font-weight: 700;
+  padding: 2px 6px; border-radius: 2px;
+  letter-spacing: .5px;
+}
+.pose-player-shell .tnp-ep-progress {
+height: 3px; background: #333; border-radius: 2px;
+  margin-top: 6px; overflow: hidden;
+}
+.pose-player-shell .tnp-ep-progress-fill {
+height: 100%; background: #e50914; border-radius: 2px;
+}
+/* More from channel - horizontal scroll */
+.pose-player-shell .tnp-more-scroll {
+display: flex; gap: 8px;
+  overflow-x: auto; padding-bottom: 6px;
+  scrollbar-width: thin; scrollbar-color: #2a2a2a transparent;
+}
+.pose-player-shell .tnp-more-scroll::-webkit-scrollbar {
+height: 3px;
+}
+.pose-player-shell .tnp-more-scroll::-webkit-scrollbar-thumb {
+background: #2a2a2a;
+}
+/* Reuse .tn-card styles for "more" cards — they already exist */
+/* ── Progress bar on video ── */
+.pose-player-shell #tnpVideo::-webkit-media-controls-panel {
+background: rgba(0,0,0,.7);
+}
+/* ── Skeleton for panel ── */
+.pose-player-shell .tnp-skel-line {
+height: 16px; border-radius: 4px;
+  background: linear-gradient(90deg, #1a1a1a 25%, #252525 50%, #1a1a1a 75%);
+  background-size: 400% 100%;
+  animation: tn-shimmer 1.3s infinite;
+  margin-bottom: 10px;
+}
+@keyframes tn-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+@keyframes tnpBrandSlide {
+  0%   { transform: translateX(-140%); opacity: 0; }
+  50%  { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
