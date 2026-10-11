@@ -5042,4 +5042,3 @@ width: 50px;
 @keyframes gpo-down {from{transform:translateY(0)}to{transform:translateY(100%)}}
 @keyframes gpo-fade-out {from{opacity:1}to{opacity:0}}
 @keyframes gpo-pin-shake {0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
-</style>;
