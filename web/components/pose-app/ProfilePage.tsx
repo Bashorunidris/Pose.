@@ -16,6 +16,7 @@ import {
 } from '@/lib/pose-app/profile';
 import type { PoseUser, PoseVideo } from '@/lib/pose-app/types';
 
+import { DraftsSheet } from './profile/DraftsSheet';
 import { ProfileSettingsModal } from './profile/ProfileSettingsModal';
 
 type Props = {
@@ -26,8 +27,9 @@ type Props = {
   onOpenChannel: () => void;
   /** `openWallet()` @61904. */
   onOpenWallet: () => void;
-  /** Drafts is still a legacy-only screen. */
   onToast: (message: string) => void;
+  /** `postDraft()` @45807 — a video draft goes to the editor, not to a preview. */
+  onEditDraft: (clip: { url: string; blob: Blob; seconds: number }) => void;
   /** A sign-out drops the whole profile overlay, like the legacy reload did. */
   onSignedOut: () => void;
 };
@@ -55,7 +57,16 @@ const TAB =
  * that do nothing would be worse than shipping the one that works, so the tab
  * strip carries the tabs that exist until those loaders are ported.
  */
-export function ProfilePage({ uid, email, onClose, onOpenChannel, onOpenWallet, onToast, onSignedOut }: Props) {
+export function ProfilePage({
+  uid,
+  email,
+  onClose,
+  onOpenChannel,
+  onOpenWallet,
+  onToast,
+  onEditDraft,
+  onSignedOut,
+}: Props) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<PoseUser | null>(null);
   const [videos, setVideos] = useState<PoseVideo[]>([]);
@@ -64,6 +75,7 @@ export function ProfilePage({ uid, email, onClose, onOpenChannel, onOpenWallet, 
   const [visible, setVisible] = useState(PROFILE_BATCH_SIZE);
   const [playing, setPlaying] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [draftsOpen, setDraftsOpen] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -121,7 +133,7 @@ export function ProfilePage({ uid, email, onClose, onOpenChannel, onOpenWallet, 
           <button
             type="button"
             className="flex h-[36px] items-center gap-[8px] rounded-[20px] border-[1.5px] border-white/35 bg-white/15 px-[14px] text-white transition-all duration-[300ms] hover:scale-[1.05] hover:bg-white/28"
-            onClick={() => onToast('Drafts is the next screen to be ported')}
+            onClick={() => setDraftsOpen(true)}
           >
             <i className="fas fa-bookmark text-[12px] opacity-90" /> Drafts
           </button>
@@ -248,6 +260,15 @@ export function ProfilePage({ uid, email, onClose, onOpenChannel, onOpenWallet, 
           </div>
         )}
       </div>
+
+      {draftsOpen ? (
+        <DraftsSheet
+          uid={uid}
+          onClose={() => setDraftsOpen(false)}
+          onToast={onToast}
+          onEditDraft={onEditDraft}
+        />
+      ) : null}
 
       {settingsOpen ? (
         <ProfileSettingsModal
