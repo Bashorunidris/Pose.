@@ -24,7 +24,9 @@ type Props = {
   email: string;
   onClose: () => void;
   onOpenChannel: () => void;
-  /** Drafts and Wallet are still legacy-only screens. */
+  /** `openWallet()` @61904. */
+  onOpenWallet: () => void;
+  /** Drafts is still a legacy-only screen. */
   onToast: (message: string) => void;
   /** A sign-out drops the whole profile overlay, like the legacy reload did. */
   onSignedOut: () => void;
@@ -53,7 +55,7 @@ const TAB =
  * that do nothing would be worse than shipping the one that works, so the tab
  * strip carries the tabs that exist until those loaders are ported.
  */
-export function ProfilePage({ uid, email, onClose, onOpenChannel, onToast, onSignedOut }: Props) {
+export function ProfilePage({ uid, email, onClose, onOpenChannel, onOpenWallet, onToast, onSignedOut }: Props) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<PoseUser | null>(null);
   const [videos, setVideos] = useState<PoseVideo[]>([]);
@@ -198,7 +200,7 @@ export function ProfilePage({ uid, email, onClose, onOpenChannel, onToast, onSig
           type="button"
           className="flex h-[48px] w-[48px] items-center justify-center rounded-[14px] border border-white/[0.08] text-[1.1rem] text-white"
           style={{ background: 'rgba(24,24,27,0.7)' }}
-          onClick={() => onToast('Wallet is the next screen to be ported')}
+          onClick={onOpenWallet}
           aria-label="Wallet"
         >
           <i className="fas fa-wallet" />
