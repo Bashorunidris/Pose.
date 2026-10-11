@@ -6,11 +6,31 @@
 
 export type FirestoreDate = unknown;
 
+/**
+ * The sound a post was published with. `owner*` credits the sound's original
+ * creator — which is not always the post author, because a reused sound keeps the
+ * owner it was first published under, while `credit*` names the post author who
+ * used it.
+ */
 export type CustomAudio = {
-  ownerProfilePic?: string;
+  id?: string;
+  title?: string;
+  artist?: string;
   thumbnail?: string;
+  url?: string;
+  duration?: number | string;
   image?: string;
   cover?: string;
+  creditUser?: string;
+  creditName?: string;
+  creditUsername?: string;
+  ownerUserId?: string;
+  ownerUsername?: string;
+  ownerName?: string;
+  ownerProfilePic?: string;
+  ownerVideoId?: string;
+  songId?: string;
+  isReusedSound?: boolean;
 };
 
 export type PoseVideo = {
