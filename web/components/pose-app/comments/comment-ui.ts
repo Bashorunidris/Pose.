@@ -162,6 +162,18 @@ export const EMOJI_OPTION =
   'cursor-pointer rounded-[8px] border-0 bg-transparent p-[4px] text-[20px] leading-none ' +
   'transition-transform duration-200 hover:scale-[1.2]';
 
+/**
+ * `#commentPreviewSection` @? / `#commentMediaPreview` — the strip the gift popup
+ * fills (`_gpoDoAddToComment()` @90100). A gift previews as its receipt chip,
+ * the same way `CommentMediaItem` draws one under a posted comment.
+ */
+export const ATTACHMENT_STRIP =
+  'flex shrink-0 flex-wrap gap-[6px] border-t border-white/10 px-[12px] py-[8px]';
+
+export const ATTACHMENT_CHIP =
+  'flex items-center gap-[6px] rounded-[14px] border border-[rgba(245,158,11,0.55)] ' +
+  'bg-[linear-gradient(135deg,rgba(245,158,11,0.22),rgba(251,146,60,0.12))] p-[4px_8px]';
+
 /** The `#commentLoadingSkeleton` @66234 shown while a cold sheet loads. */
 export const SKELETON_ROW = 'flex items-start gap-[10px]';
 export const SKELETON_AVATAR = 'h-[36px] w-[36px] shrink-0 rounded-full bg-white/[0.08]';
