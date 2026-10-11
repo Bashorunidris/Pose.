@@ -40,6 +40,19 @@ RANGES = [
     (62, 23761, 'the main legacy stylesheet'),
 ]
 
+# The legacy `:root` @64 tokens the kept rules use. `:root` cannot survive the
+# prefix filter above, so the ones these screens lean on are carried by hand —
+# without them `var(--transition)` resolved to nothing and every animated
+# affordance in the recorder snapped instead of easing.
+VARS = (
+    '/* The legacy `:root` @64 tokens these rules use. */\n'
+    '.recorder-shell {\n'
+    '    --radius-sm: 8px;\n'
+    '    --radius-lg: 16px;\n'
+    '    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n'
+    '}\n\n'
+)
+
 
 def split_blocks(css):
     out, i, prelude = [], 0, ''
@@ -158,7 +171,7 @@ def main():
         '   The capture and editor surfaces keep the legacy class names, scoped under\n'
         '   .recorder-shell. */\n'
     )
-    OUT.write_text(header + Path('.port-tmp/recorder/recorder-scoped.css').read_text())
+    OUT.write_text(header + VARS + Path('.port-tmp/recorder/recorder-scoped.css').read_text())
     print(f'wrote {OUT.relative_to(ROOT)}')
 
 
