@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Outfit, Syne } from "next/font/google";
 import "./globals.css";
-// The wallet sheet's, the recorder's, the sound library's and the gift popup's own
-// rules are scoped under `.wallet-shell`, `.recorder-shell`, `.sounds-shell` and
-// `.gifts-shell`; Next only lets a layout pull in a global stylesheet, so they are
-// pulled in here rather than from the components.
+// The wallet sheet's, the recorder's, the sound library's, the gift popup's, the
+// Pose tab's and the Pose player's own rules are scoped under `.wallet-shell`,
+// `.recorder-shell`, `.sounds-shell`, `.gifts-shell`, `.pose-shell` and
+// `.pose-player-shell`; Next only lets a layout pull in a global stylesheet, so
+// they are pulled in here rather than from the components.
 import "../components/pose-app/wallet/wallet.css";
 import "../components/pose-app/recorder/recorder.css";
 import "../components/pose-app/sounds/sounds.css";
 import "../components/pose-app/gifts/gifts.css";
+import "../components/pose-app/pose/pose.css";
+import "../components/pose-app/pose/player.css";
 
 const syne = Syne({
   variable: "--font-display",
