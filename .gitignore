@@ -20,3 +20,5 @@
 .port-tmp/recorder/recorder-filtered.css
 .port-tmp/recorder/markup-recorder.html
 .port-tmp/recorder/markup-recorder.jsx
+.port-tmp/sounds/sounds-filtered.css
+.port-tmp/sounds/sounds-scoped.css
