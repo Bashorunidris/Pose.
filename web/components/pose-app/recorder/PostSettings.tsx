@@ -2,16 +2,9 @@
 
 import { useState } from 'react';
 
-import {
-  CAPTION_LIMIT,
-  POST_CATEGORIES,
-  POST_PRIVACY,
-  POST_TOGGLES,
-  type PostFields,
-  type PostPrivacy,
-  type VideoEdit,
-} from '@/lib/pose-app/publish';
+import { POST_TOGGLES, type PostFields, type VideoEdit } from '@/lib/pose-app/publish';
 import { cx } from '../styles';
+import { PostFieldSections } from './PostFieldSections';
 import { RecorderConfirm } from './RecorderConfirm';
 
 type Props = {
@@ -100,97 +93,7 @@ export function PostSettings({ clipUrl, seconds, edit, busy, onBack, onPublish, 
       </div>
 
       <div className="rec-post-content">
-        <div className="rec-post-section">
-          <div className="mb-[10px] flex items-center justify-between">
-            <div className="rec-section-header m-0">Caption</div>
-            <span className="text-[12px] text-[#999]">
-              {fields.caption.length}/{CAPTION_LIMIT}
-            </span>
-          </div>
-          <textarea
-            className="rec-caption-input"
-            placeholder="Add a caption..."
-            maxLength={CAPTION_LIMIT}
-            value={fields.caption}
-            onChange={(event) => patch({ caption: event.target.value })}
-          />
-        </div>
-
-        <div className="rec-post-section">
-          <div className="rec-section-header">
-            <i className="fas fa-tag" /> Category
-          </div>
-          <input
-            type="text"
-            className="rec-input-field"
-            list="screen4CategoryList"
-            placeholder="Select or type a category (e.g. Football, Cooking)"
-            autoComplete="off"
-            maxLength={40}
-            value={fields.category}
-            onChange={(event) => patch({ category: event.target.value })}
-          />
-          <datalist id="screen4CategoryList">
-            {POST_CATEGORIES.map((category) => (
-              <option key={category} value={category} />
-            ))}
-          </datalist>
-        </div>
-
-        <div className="rec-post-section">
-          <div className="rec-section-header"># Hashtags</div>
-          <input
-            type="text"
-            className="rec-input-field"
-            placeholder="Add hashtags"
-            value={fields.hashtags}
-            onChange={(event) => patch({ hashtags: event.target.value })}
-          />
-        </div>
-
-        <div className="rec-post-section">
-          <div className="rec-section-header">@ Tags</div>
-          <input
-            type="text"
-            className="rec-input-field"
-            placeholder="Tag people"
-            value={fields.tags}
-            onChange={(event) => patch({ tags: event.target.value })}
-          />
-        </div>
-
-        <div className="rec-post-section">
-          <div className="rec-section-header">
-            <i className="fas fa-eye" /> Privacy
-          </div>
-          <select
-            className="rec-input-field"
-            value={fields.privacy}
-            onChange={(event) => patch({ privacy: event.target.value as PostPrivacy })}
-          >
-            {POST_PRIVACY.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
-        </div>
-
-        {POST_TOGGLES.map((toggle) => (
-          <div className="rec-post-section toggle-section" key={toggle.field}>
-            <div className="rec-section-header">
-              <i className={`fas ${toggle.icon}`} /> {toggle.label}
-            </div>
-            <label className="rec-toggle-switch">
-              <input
-                type="checkbox"
-                checked={fields.toggles[toggle.field] ?? false}
-                onChange={(event) =>
-                  patch({ toggles: { ...fields.toggles, [toggle.field]: event.target.checked } })
-                }
-              />
-              <span className="rec-toggle-slider" />
-            </label>
-          </div>
-        ))}
+        <PostFieldSections fields={fields} onChange={patch} showCategory />
       </div>
 
       <div className="rec-post-actions">
