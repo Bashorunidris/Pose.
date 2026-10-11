@@ -8,8 +8,15 @@ import Image from 'next/image';
  * POSE logo, and the wordmark with three bouncing dots.
  */
 const LOADER =
-  'relative flex h-[100vh] w-full flex-col items-center justify-center gap-[22px] overflow-hidden ' +
-  'bg-app-black md:h-full';
+  'relative flex w-full flex-col items-center justify-center gap-[22px] overflow-hidden ' +
+  'bg-app-black';
+
+/**
+ * `showPoseTabLoader()` @30831 reuses the same loader inside a 200px-tall card
+ * slot, which is why the height is a variant rather than baked into `LOADER`.
+ */
+const LOADER_FULL = `${LOADER} h-[100vh] md:h-full`;
+const LOADER_COMPACT = `${LOADER} min-h-[200px]`;
 
 /** Two of the three `background-image` layers legacy stacks on `::before`. */
 const BACKDROP =
@@ -41,9 +48,9 @@ const BRAND =
 const DOTS = 'inline-flex gap-[4px]';
 const DOT = 'h-[6px] w-[6px] animate-app-foryou-dot rounded-full bg-[#a855f7]';
 
-export function FeedLoader() {
+export function FeedLoader({ variant = 'full' }: { variant?: 'full' | 'compact' } = {}) {
   return (
-    <div className={LOADER} role="status" aria-label="Loading videos">
+    <div className={variant === 'compact' ? LOADER_COMPACT : LOADER_FULL} role="status" aria-label="Loading videos">
       <div className={BACKDROP} aria-hidden="true" />
       <div className={BACKDROP_TOP} aria-hidden="true" />
       <div className={SHIMMER} aria-hidden="true" />
