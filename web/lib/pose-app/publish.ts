@@ -1,9 +1,10 @@
 'use client';
 
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { getPoseFirebase } from '@/lib/firebase';
 import { uploadToR2 } from '@/lib/r2-upload';
+import { loadPostAuthor, toggleFields, type PostAuthor } from './post-author';
 
 /**
  * Publishing a recording: the write `publishRecordingPostToFirebase()` @57684,
@@ -220,26 +221,11 @@ export async function renderClip(
   }
 }
 
-type Author = {
-  uid: string;
-  name: string;
-  username: string;
-  profilePic: string | null;
-};
-
-async function loadAuthor(uid: string): Promise<Author> {
-  const { db } = getPoseFirebase();
-  const snapshot = await getDoc(doc(db, 'users', uid));
-  const data = snapshot.data() ?? {};
-  return {
-    uid,
-    name: (data['name'] as string) || 'Anonymous',
-    username: (data['username'] as string) || 'user',
-    profilePic: (data['profilePicUrl'] as string) || null,
-  };
-}
-
-function commonFields(fields: PostFields, author: Author, extra: Record<string, unknown> = {}) {
+/**
+ * The fields every video document shares. `toggleFields()` and the author lookup
+ * moved to `post-author.ts`, which the photo slice writes with too.
+ */
+function commonFields(fields: PostFields, author: PostAuthor, extra: Record<string, unknown> = {}) {
   return {
     id: extra['id'],
     userId: author.uid,
@@ -251,7 +237,7 @@ function commonFields(fields: PostFields, author: Author, extra: Record<string, 
     hashtags: fields.hashtags,
     tags: fields.tags,
     privacy: fields.privacy,
-    ...Object.fromEntries(POST_TOGGLES.map((toggle) => [toggle.field, fields.toggles[toggle.field] ?? false])),
+    ...toggleFields(fields),
     createdAt: new Date().toISOString(),
     type: 'video',
   };
@@ -267,7 +253,7 @@ export async function publishVideoPost(options: {
 }): Promise<string> {
   const { db } = getPoseFirebase();
   const docId = generateDocId();
-  const author = await loadAuthor(options.uid);
+  const author = await loadPostAuthor(options.uid);
 
   const rendered = await renderClip(options.blob, options.edit, (fraction) =>
     options.onProgress?.(fraction * 0.4),
@@ -313,7 +299,7 @@ export async function saveVideoDraft(options: {
 }): Promise<string> {
   const { db } = getPoseFirebase();
   const docId = generateDocId();
-  const author = await loadAuthor(options.uid);
+  const author = await loadPostAuthor(options.uid);
 
   const rendered = await renderClip(options.blob, options.edit);
   const videoUrl = await uploadToR2(rendered, {
@@ -354,7 +340,7 @@ export async function addVideoStory(options: {
   const { db } = getPoseFirebase();
   const docId = generateDocId();
   const date = todayKey();
-  const author = await loadAuthor(options.uid);
+  const author = await loadPostAuthor(options.uid);
 
   const rendered = await renderClip(options.blob, options.edit);
   const videoUrl = await uploadToR2(rendered, {
