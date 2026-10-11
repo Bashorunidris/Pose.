@@ -22,3 +22,5 @@
 .port-tmp/recorder/markup-recorder.jsx
 .port-tmp/sounds/sounds-filtered.css
 .port-tmp/sounds/sounds-scoped.css
+.port-tmp/gifts/gifts-filtered.css
+.port-tmp/gifts/gifts-scoped.css
