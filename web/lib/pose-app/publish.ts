@@ -5,6 +5,7 @@ import { arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { getPoseFirebase } from '@/lib/firebase';
 import { uploadToR2 } from '@/lib/r2-upload';
 import { loadPostAuthor, toggleFields, type PostAuthor } from './post-author';
+import { soundAttribution, type PoseSound } from './sounds';
 
 /**
  * Publishing a recording: the write `publishRecordingPostToFirebase()` @57684,
@@ -249,6 +250,7 @@ export async function publishVideoPost(options: {
   blob: Blob;
   fields: PostFields;
   edit: VideoEdit;
+  sound?: PoseSound | null;
   onProgress?: (fraction: number) => void;
 }): Promise<string> {
   const { db } = getPoseFirebase();
@@ -270,7 +272,7 @@ export async function publishVideoPost(options: {
     videoUrl,
     publicId: docId,
     effectApplied: options.edit.effect,
-    customAudio: null,
+    customAudio: options.sound ? soundAttribution(options.sound, author) : null,
     isUploadedFile: false,
     status: 'published',
     views: 0,
