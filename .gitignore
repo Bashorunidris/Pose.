@@ -8,3 +8,15 @@
 .port-tmp/markup-pages.html
 .port-tmp/pages.jsx
 .port-tmp/before.md5
+.port-tmp/wallet/wallet-src.css
+.port-tmp/wallet/wallet-scoped.css
+.port-tmp/wallet/wallet-filtered.css
+.port-tmp/wallet/wallet-media-src.css
+.port-tmp/wallet/wallet-media-filtered.css
+.port-tmp/wallet/markup-wallet.html
+.port-tmp/wallet/markup-kyc.html
+.port-tmp/recorder/recorder-src.css
+.port-tmp/recorder/recorder-scoped.css
+.port-tmp/recorder/recorder-filtered.css
+.port-tmp/recorder/markup-recorder.html
+.port-tmp/recorder/markup-recorder.jsx
