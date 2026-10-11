@@ -6,6 +6,8 @@ import {
   BOTTOM_NAV,
   NAV_BUTTON,
   NAV_BUTTON_ACTIVE,
+  NAV_BUTTON_CREATE_ICON,
+  NAV_BUTTON_CREATE_LABEL,
   NAV_BUTTON_ICON,
   NAV_BUTTON_LABEL,
   NOTIF_BADGE,
@@ -16,10 +18,12 @@ type Props = {
   unread: number;
   onHome: () => void;
   onNotifications: () => void;
+  /** `#navCreate` — `openRecordingUI(event)` @24561. */
+  onCreate: () => void;
   onLive: () => void;
 };
 
-export function BottomNav({ unread, onHome, onNotifications, onLive }: Props) {
+export function BottomNav({ unread, onHome, onNotifications, onCreate, onLive }: Props) {
   return (
     <nav className={BOTTOM_NAV}>
       {/* `updateNavActiveState` @42719 lights Home whenever a feed section is
@@ -38,6 +42,11 @@ export function BottomNav({ unread, onHome, onNotifications, onLive }: Props) {
         {unread > 0 && <span className={NOTIF_BADGE}>{unread > 99 ? '99+' : unread}</span>}
         <i className={cx(NAV_BUTTON_ICON, 'fa-solid fa-bell')} />
         <span className={NAV_BUTTON_LABEL}>Alert</span>
+      </button>
+
+      <button type="button" className={cx(NAV_BUTTON, 'group')} onClick={onCreate} title="Create Video">
+        <i className={cx('fa-solid fa-plus', NAV_BUTTON_CREATE_ICON)} />
+        <span className={cx(NAV_BUTTON_LABEL, NAV_BUTTON_CREATE_LABEL)}>Create</span>
       </button>
 
       <button type="button" className={NAV_BUTTON} onClick={onLive} title="Go Live">
