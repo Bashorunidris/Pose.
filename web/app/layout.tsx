@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Outfit, Syne } from "next/font/google";
 import "./globals.css";
+// The wallet sheet's and the recorder's own rules are scoped under
+// `.wallet-shell` and `.recorder-shell`; Next only lets a layout pull in a global
+// stylesheet, so they are pulled in here rather than from the components.
+import "../components/pose-app/wallet/wallet.css";
+import "../components/pose-app/recorder/recorder.css";
 
 const syne = Syne({
   variable: "--font-display",
