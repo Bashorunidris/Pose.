@@ -83,7 +83,6 @@ export function PosePlayer({
   }, []);
 
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
-  const [mode, setMode] = useState<'trailer' | 'full'>('trailer');
   const [playing, setPlaying] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(false);
   const [locked, setLocked] = useState(false);
@@ -129,7 +128,6 @@ export function PosePlayer({
 
     // The resets go through a microtask: an effect must not setState synchronously.
     void Promise.resolve().then(() => {
-      setMode('trailer');
       setPlaying(false);
       setControlsVisible(false);
       setLocked(false);
@@ -257,7 +255,6 @@ export function PosePlayer({
         el.load();
         void el.play().catch(() => {});
       }
-      setMode(full ? 'full' : 'trailer');
       setPosterHidden(true);
       setPlaying(true);
       setControlsVisible(true);
@@ -271,7 +268,6 @@ export function PosePlayer({
     const trailer = playerTrailer(video);
     if (!trailer) return;
     startPlayback({ ...video, videoUrl: trailer });
-    setMode('trailer');
   };
 
   const togglePlayback = () => {
