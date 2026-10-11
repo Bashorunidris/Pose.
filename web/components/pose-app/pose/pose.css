@@ -1,0 +1,1205 @@
+/* Generated from index.html by .port-tmp/pose/extract-css.py — do not edit.
+   The Pose tab keeps the legacy class names, scoped under `.pose-shell`. */
+/* Desktop / laptop: all full pages use a centered mobile-width shell (full height) */
+@media (min-width: 768px) {
+.pose-shell {
+--pose-shell-w: 420px;
+                --pose-shell-h: 100dvh;
+}
+/* Shared phone-shell geometry (no transform — avoids fighting modal animations) */
+.pose-shell .pt-catpage, .pose-shell #ptCatPage, .pose-shell .pt-cat-overlay, .pose-shell #ptCatOverlay {
+left: calc(50% - (var(--pose-shell-w) / 2)) !important;
+                right: auto !important;
+                width: var(--pose-shell-w) !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+                border-radius: 0 !important;
+}
+.pose-shell .pt-catpage, .pose-shell #ptCatPage, .pose-shell .pt-cat-overlay, .pose-shell #ptCatOverlay {
+top: 0 !important;
+                bottom: 0 !important;
+                height: var(--pose-shell-h) !important;
+                max-height: var(--pose-shell-h) !important;
+                overflow-x: hidden !important;
+}
+/* inset:0 screens need explicit top/bottom reset */
+.pose-shell .pt-catpage, .pose-shell #ptCatPage, .pose-shell .pt-cat-overlay, .pose-shell #ptCatOverlay {
+inset: auto !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: calc(50% - (var(--pose-shell-w) / 2)) !important;
+                right: auto !important;
+}
+/* Side drawers open inside the phone column */
+.pose-shell .pt-cat-sidebar {
+left: calc(50% - (var(--pose-shell-w) / 2)) !important;
+                width: min(300px, var(--pose-shell-w)) !important;
+                max-width: var(--pose-shell-w) !important;
+}
+}
+@media (max-width: 768px) {
+/* .profile-icon / .search-icon sizing now comes entirely from their
+               base clamp()-based rules, which already scale down smoothly at this
+               width — the fixed 36px overrides that used to live here fought with
+               that scaling instead of complementing it. */
+}
+@media (max-width: 480px) {
+/* .profile-icon / .search-icon sizing comes from their base
+               clamp()-based rules (see note above) — no override needed here. */
+}
+/* ===== POSETAB STYLES ===== */
+.pose-shell {
+--nb:#0d0d0d;--ns:#141414;--ns2:#1c1c1c;--ns3:#252525;
+          --nr:#4C1D95;--nt:#e5e5e5;--nm:#aaa;--nbd:#2a2a2a;
+          --ng:#46d369;--ngold:#f5c518;--nblue:#0071eb;
+}
+.pose-shell #poseTab {
+padding-top: 70px;
+             padding-bottom: 100px;
+             background: #000;
+             min-height: 100vh;
+}
+/* TOPNAV */
+.pose-shell .pt-nav {
+display:flex;align-items:center;gap:6px;padding:14px 20px 10px;background:linear-gradient(to bottom,#000 60%,transparent);position:relative;z-index:50
+}
+.pose-shell .pt-nav-item {
+display:flex;align-items:center;gap:7px;color:var(--nm);font-size:12px;font-weight:700;padding:6px 14px;border-radius:4px;cursor:pointer;border:1px solid transparent;letter-spacing:.8px;text-transform:uppercase;transition:color .2s,border-color .2s
+}
+.pose-shell .pt-nav-item:hover {
+color:#fff;border-color:var(--nbd)
+}
+.pose-shell .pt-nav-item.active-nav {
+color:#fff
+}
+.pose-shell .pt-nav-item.active-nav i {
+color:var(--nr)
+}
+.pose-shell .pt-logo {
+font-size:22px;font-weight:900;letter-spacing:3px;color:#fff;text-transform:uppercase;margin-right:10px
+}
+.pose-shell .pt-logo span {
+color:var(--nr)
+}
+.pose-shell .posetab-nav-item {
+display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+}
+.pose-shell .posetab-nav-item i {
+font-size: 16px;
+            color:var(--nr);
+}
+/* HERO BANNER — matched to trending (.tn-hero) spacing */
+.pose-shell .pt-hero {
+position:relative;width:100%;height:720px;overflow:hidden;background:#111
+}
+.pose-shell .pt-hero-bg {
+position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1
+}
+.pose-shell .pt-hero-thumb, .pose-shell .pt-hero-video {
+position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .9s ease, transform .9s ease
+}
+.pose-shell .pt-hero-thumb {
+z-index:1;opacity:1;transform:translateX(0)
+}
+.pose-shell .pt-hero-video {
+z-index:2;opacity:0;transform:translateX(100%)
+}
+.pose-shell .pt-hero.pt-show-vid .pt-hero-thumb {
+opacity:0;transform:translateX(-100%)
+}
+.pose-shell .pt-hero.pt-show-vid .pt-hero-video.pt-loaded {
+opacity:1;transform:translateX(0)
+}
+.pose-shell .pt-hero-video.pt-loaded {
+opacity:0
+}
+/* top-left badge zone */
+.pose-shell .pt-hero-topleft {
+position:absolute;top:18px;left:20px;z-index:5
+}
+/* top-right channel zone */
+.pose-shell .pt-hero-topright {
+position:absolute;top:14px;right:18px;z-index:5;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);padding:5px 10px 5px 12px;border-radius:30px
+}
+.pose-shell .pt-hero-chname {
+color:#fff;font-size:12px;font-weight:700;letter-spacing:.3px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.pose-shell .pt-hero-chpic {
+width:28px;height:28px;border-radius:50%;object-fit:cover;border:1.5px solid #fff;background:#333
+}
+/* watch later button */
+.pose-shell .pt-btn-watch {
+display:flex;align-items:center;gap:6px;background:rgba(60,60,60,.6);color:#fff;border:1px solid rgba(255,255,255,.25);font-weight:600;font-size:12px;padding:7px 14px;border-radius:5px;cursor:pointer;transition:background .2s;backdrop-filter:blur(4px)
+}
+.pose-shell .pt-btn-watch:hover {
+background:rgba(90,90,90,.8)
+}
+/* ═══════════ CATEGORIES SIDEBAR ═══════════ */
+.pose-shell .pt-cat-overlay {
+position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;opacity:0;pointer-events:none;transition:opacity .25s
+}
+.pose-shell .pt-cat-overlay.pt-open {
+opacity:1;pointer-events:auto
+}
+.pose-shell .pt-cat-sidebar {
+position:fixed;top:0;left:0;width:300px;max-width:85vw;height:100vh;background:#0d0d0d;z-index:10001;transform:translateX(-100%);transition:transform .3s ease;display:flex;flex-direction:column;border-right:1px solid #222;box-shadow:4px 0 24px rgba(0,0,0,.6)
+}
+.pose-shell .pt-cat-sidebar.pt-open {
+transform:translateX(0)
+}
+.pose-shell .pt-cat-side-head {
+display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #1f1f1f
+}
+.pose-shell .pt-cat-side-head h3 {
+color:#fff;font-size:18px;font-weight:800;margin:0;letter-spacing:.5px
+}
+.pose-shell .pt-cat-close {
+background:none;border:none;color:#fff;font-size:26px;cursor:pointer;line-height:1;padding:0 4px
+}
+.pose-shell .pt-cat-close:hover {
+color:var(--nr,#e50914)
+}
+.pose-shell .pt-cat-side-wallet {
+display:flex;align-items:center;gap:12px;margin:14px 16px 6px;padding:14px 16px;border-radius:14px;cursor:pointer;background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(251,146,60,.08));border:1px solid rgba(245,158,11,.35);transition:background .15s,border-color .15s
+}
+.pose-shell .pt-cat-side-wallet:hover {
+background:linear-gradient(135deg,rgba(245,158,11,.28),rgba(251,146,60,.14));border-color:rgba(245,158,11,.6)
+}
+.pose-shell .pt-cat-side-wallet-icon {
+width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,.22);color:#fbbf24;font-size:16px;flex-shrink:0
+}
+.pose-shell .pt-cat-side-wallet-info {
+flex:1;min-width:0
+}
+.pose-shell .pt-cat-side-wallet-label {
+font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#888
+}
+.pose-shell .pt-cat-side-wallet-amount {
+font-size:18px;font-weight:800;color:#fbbf24;margin-top:2px
+}
+.pose-shell .pt-cat-side-list {
+flex:1;overflow-y:auto;padding:8px 0
+}
+.pose-shell .pt-cat-side-section {
+padding:14px 20px 6px;font-size:10px;font-weight:800;letter-spacing:1.5px;color:#666;text-transform:uppercase
+}
+.pose-shell .pt-cat-side-item {
+display:flex;align-items:center;gap:14px;padding:13px 20px;color:#ddd;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,color .15s
+}
+.pose-shell .pt-cat-side-item i:first-child {
+width:20px;text-align:center;color:#aaa;font-size:15px
+}
+.pose-shell .pt-cat-side-item .pt-cat-emoji {
+width:22px;text-align:center;font-size:16px;line-height:1;flex-shrink:0
+}
+.pose-shell .pt-cat-side-item span {
+flex:1
+}
+.pose-shell .pt-cat-side-item .pt-cat-chev {
+font-size:11px;color:#555
+}
+.pose-shell .pt-cat-side-item:hover {
+background:#171717;color:#fff
+}
+.pose-shell .pt-cat-side-item:hover i:first-child {
+color:var(--nr,#e50914)
+}
+/* ═══════════ CATEGORY / WATCH-LATER FULL PAGE (mirrors #trendingPage pattern) ═══════════ */
+.pose-shell .pt-catpage {
+position:fixed;inset:0;background:#0d0d0d;z-index:9999;display:none;flex-direction:column;overflow:hidden;color:#e5e5e5;font-family:'Segoe UI',Arial,sans-serif;scrollbar-width:thin;scrollbar-color:#e50914 #1a1a1a
+}
+.pose-shell .pt-catpage * {
+box-sizing:border-box
+}
+.pose-shell .pt-catpage.pt-open {
+display:flex
+}
+.pose-shell .pt-catpage-head {
+display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid #1f1f1f;background:#0d0d0d;position:sticky;top:0;z-index:2
+}
+.pose-shell .pt-catpage-back {
+background:rgba(255,255,255,.08);border:none;color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .2s
+}
+.pose-shell .pt-catpage-back:hover {
+background:rgba(255,255,255,.18)
+}
+.pose-shell .pt-catpage-head h2 {
+color:#fff;font-size:22px;font-weight:800;margin:0;flex:1
+}
+.pose-shell .pt-catpage-count {
+color:#888;font-size:13px;font-weight:600
+}
+.pose-shell .pt-catpage-grid {
+flex:1;overflow-y:auto;padding:18px 22px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;align-content:start
+}
+.pose-shell .pt-catpage-card {
+background:#171717;border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s
+}
+.pose-shell .pt-catpage-card:hover {
+transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.6)
+}
+.pose-shell .pt-catpage-thumb {
+width:100%;aspect-ratio:16/9;background:#222;object-fit:cover;display:block
+}
+.pose-shell .pt-catpage-info {
+padding:10px 12px
+}
+.pose-shell .pt-catpage-title {
+color:#fff;font-size:13px;font-weight:700;margin:0 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3
+}
+.pose-shell .pt-catpage-sub {
+color:#888;font-size:11px;display:flex;gap:8px;align-items:center;flex-wrap:wrap
+}
+.pose-shell .pt-catpage-empty {
+grid-column:1/-1;text-align:center;color:#777;padding:60px 20px;font-size:14px
+}
+/* Watch later card extras */
+.pose-shell .pt-wl-card {
+position:relative
+}
+.pose-shell .pt-wl-remove {
+position:absolute;top:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:2;opacity:0;transition:opacity .2s,background .2s
+}
+.pose-shell .pt-wl-card:hover .pt-wl-remove, .pose-shell .pt-wl-remove:focus {
+opacity:1
+}
+.pose-shell .pt-wl-remove:hover {
+background:var(--nr,#e50914)
+}
+.pose-shell .pt-wl-time {
+display:flex;align-items:center;gap:5px;color:#999;font-size:10px;margin-top:6px
+}
+.pose-shell .pt-wl-time i {
+font-size:9px
+}
+.pose-shell .pt-wl-status {
+display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:#1f3a1f;color:#46d369;margin-left:6px;text-transform:uppercase;letter-spacing:.5px
+}
+@media (max-width:480px) {
+.pose-shell .pt-wl-remove {
+opacity:1;width:26px;height:26px;font-size:11px
+}
+}
+@media (max-width:480px) {
+.pose-shell .pt-catpage-grid {
+grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:14px
+}
+.pose-shell .pt-catpage-head h2 {
+font-size:18px
+}
+.pose-shell .pt-cat-sidebar {
+width:84vw
+}
+}
+.pose-shell .pt-hero-overlay {
+position:absolute;inset:0;z-index:3;background:linear-gradient(to right,rgba(13,13,13,.95) 0%,rgba(13,13,13,.45) 55%,transparent 100%),linear-gradient(to top,#0d0d0d 0%,transparent 55%)
+}
+.pose-shell .pt-hero-content {
+position:absolute;bottom:110px;left:36px;z-index:4;max-width:480px
+}
+.pose-shell .pt-hero-badges {
+display:flex;align-items:center;gap:10px;margin-bottom:10px
+}
+.pose-shell .pt-badge-nr {
+background:var(--nr);color:#fff;font-size:10px;font-weight:900;padding:3px 9px;border-radius:3px;letter-spacing:1px
+}
+.pose-shell .pt-badge-new {
+background:var(--ng);color:#0d2b12;font-size:10px;font-weight:900;padding:3px 9px;border-radius:3px;letter-spacing:1px
+}
+.pose-shell .pt-badge-rank {
+background:var(--ngold);color:#2b1a00;font-size:10px;font-weight:900;padding:3px 9px;border-radius:3px;letter-spacing:1px
+}
+.pose-shell .pt-hero-stars {
+color:#f5c518;font-size:16px;letter-spacing:2px
+}
+.pose-shell .pt-hero-price {
+font-size:12px;font-weight:700;padding:3px 9px;border-radius:3px
+}
+.pose-shell .pt-hero-price.free {
+background:#46d369;color:#0d2b12
+}
+.pose-shell .pt-hero-price.paid {
+background:#f5c518;color:#2b2000
+}
+.pose-shell .pt-hero-title {
+font-size:48px;font-weight:900;color:#fff;margin:0 0 8px;text-shadow:2px 2px 10px rgba(0,0,0,.9);line-height:1;text-transform:uppercase;letter-spacing:1px
+}
+.pose-shell .pt-hero-desc {
+font-size:13px;color:#ccc;line-height:1.5;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
+}
+.pose-shell .pt-hero-meta {
+font-size:12px;color:#aaa;display:flex;gap:14px;align-items:center;margin-bottom:16px;flex-wrap:wrap
+}
+.pose-shell .pt-hero-meta span {
+display:flex;align-items:center;gap:4px
+}
+.pose-shell .pt-meta-dot {
+width:4px;height:4px;border-radius:50%;background:#555
+}
+.pose-shell .pt-hero-btns {
+display:flex;gap:10px;flex-wrap:wrap
+}
+.pose-shell .pt-btn-play {
+display:flex;align-items:center;gap:6px;background:#fff;color:#000;border:none;font-weight:700;font-size:12px;padding:7px 16px;border-radius:5px;cursor:pointer;transition:background .2s
+}
+.pose-shell .pt-btn-play:hover {
+background:#ddd
+}
+.pose-shell .pt-btn-info {
+display:flex;align-items:center;gap:6px;background:rgba(100,100,100,.55);color:#fff;border:none;font-weight:600;font-size:12px;padding:7px 14px;border-radius:5px;cursor:pointer;transition:background .2s;backdrop-filter:blur(4px)
+}
+.pose-shell .pt-btn-info:hover {
+background:rgba(140,140,140,.7)
+}
+/* HERO STRIP */
+.pose-shell .pt-strip {
+position:absolute;bottom:0;left:0;right:0;z-index:5;display:flex;gap:5px;padding:8px 14px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(to top,rgba(13,13,13,1) 50%,transparent)
+}
+.pose-shell .pt-strip::-webkit-scrollbar {
+display:none
+}
+.pose-shell .pt-strip-thumb {
+flex-shrink:0;width:90px;height:54px;border-radius:4px;object-fit:cover;opacity:.5;cursor:pointer;border:2px solid transparent;transition:opacity .2s,border-color .2s,transform .15s;background:#222
+}
+.pose-shell .pt-strip-thumb:hover {
+opacity:1;transform:scale(1.06)
+}
+.pose-shell .pt-strip-thumb.pt-sa, .pose-shell .pt-strip-thumb.pt-strip-active {
+opacity:1;border-color:#e50914
+}
+/* strip placeholder colors */
+.pose-shell .pt-strip-thumb:nth-child(1) {
+background:linear-gradient(135deg,#e50914,#7a0000)
+}
+.pose-shell .pt-strip-thumb:nth-child(2) {
+background:linear-gradient(135deg,#0071eb,#003d80)
+}
+.pose-shell .pt-strip-thumb:nth-child(3) {
+background:linear-gradient(135deg,#46d369,#1a5c2a)
+}
+.pose-shell .pt-strip-thumb:nth-child(4) {
+background:linear-gradient(135deg,#f5c518,#7a5c00)
+}
+.pose-shell .pt-strip-thumb:nth-child(5) {
+background:linear-gradient(135deg,#e83e8c,#6a1040)
+}
+.pose-shell .pt-strip-thumb:nth-child(6) {
+background:linear-gradient(135deg,#17a2b8,#0a4d5c)
+}
+.pose-shell .pt-strip-thumb:nth-child(7) {
+background:linear-gradient(135deg,#fd7e14,#6a3200)
+}
+/* TABS */
+.pose-shell .pt-tabs-wrap {
+padding:0 20px 0;border-bottom:1px solid var(--nbd)
+}
+.pose-shell .pt-tabs-scroll {
+display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:0
+}
+.pose-shell .pt-tabs-scroll::-webkit-scrollbar {
+display:none
+}
+.pose-shell .posetab-tab-item {
+flex-shrink:0;padding:8px 18px;border-radius:20px 20px 0 0;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;color:var(--nm);border:1px solid transparent;border-bottom:none;background:transparent;transition:all .2s;white-space:nowrap;text-transform:uppercase
+}
+.pose-shell .posetab-tab-item:hover {
+color:#fff
+}
+.pose-shell .posetab-tab-item.active {
+background:var(--nr);color:#fff;border-color:var(--nr)
+}
+/* CONTENT */
+.pose-shell .pt-content-wrap {
+padding:0 0 60px
+}
+.pose-shell .posetab-content {
+display:none
+}
+.pose-shell .posetab-content.active {
+display:block
+}
+/* AD BANNER — cinematic */
+.pose-shell .pt-ad-banner {
+position:relative;margin:0 0 4px;height:90px;overflow:hidden;background:linear-gradient(135deg,#667eea 0%,#764ba2 60%,#f093fb 100%)
+}
+.pose-shell .pt-ad-inner {
+display:flex;align-items:center;height:100%;padding:0 28px;gap:20px
+}
+.pose-shell .pt-ad-icon {
+width:52px;height:52px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0
+}
+.pose-shell .pt-ad-text {
+flex:1
+}
+.pose-shell .pt-ad-title {
+font-size:16px;font-weight:900;color:#fff;letter-spacing:.5px;text-shadow:1px 1px 6px rgba(0,0,0,.4)
+}
+.pose-shell .pt-ad-sub {
+font-size:12px;color:rgba(255,255,255,.8);margin-top:2px
+}
+.pose-shell .pt-ad-cta {
+background:#fff;color:#5a2d82;font-weight:900;font-size:12px;padding:8px 18px;border-radius:20px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:.5px
+}
+.pose-shell .pt-ad-dots {
+position:absolute;bottom:8px;right:16px;display:flex;gap:5px
+}
+.pose-shell .pt-ad-dot {
+width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35)
+}
+.pose-shell .pt-ad-dot.pt-ad-da {
+background:#fff
+}
+/* ROWS */
+.pose-shell .pt-rows {
+padding:10px 16px 0
+}
+.pose-shell .pt-row {
+margin-bottom:28px
+}
+.pose-shell .pt-row-head {
+display:flex;align-items:baseline;gap:10px;margin-bottom:10px;padding:0 4px
+}
+.pose-shell .pt-row-head h2 {
+font-size:17px;font-weight:700;color:var(--nt);margin:0;text-transform:uppercase;letter-spacing:.5px
+}
+.pose-shell .pt-row-count {
+font-size:11px;color:#555
+}
+.pose-shell .pt-row-scroll {
+display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:#2a2a2a transparent
+}
+.pose-shell .pt-row-scroll::-webkit-scrollbar {
+height:3px
+}
+.pose-shell .pt-row-scroll::-webkit-scrollbar-thumb {
+background:#2a2a2a;border-radius:2px
+}
+/* CARD */
+.pose-shell .pt-card {
+flex-shrink:0;width:190px;cursor:pointer;position:relative;border-radius:5px;transition:transform .25s ease,z-index 0s .25s;z-index:1
+}
+.pose-shell .pt-card:hover {
+transform:scale(1.18);z-index:10;transition:transform .25s ease,z-index 0s 0s
+}
+.pose-shell .pt-card-img {
+width:100%;height:110px;border-radius:5px;object-fit:cover;display:block;background:#1c1c1c
+}
+/* card placeholder gradients */
+.pose-shell .pt-card-img.g1 {
+background:linear-gradient(135deg,#e50914 0%,#4a0000 100%)
+}
+.pose-shell .pt-card-img.g2 {
+background:linear-gradient(135deg,#0071eb 0%,#002855 100%)
+}
+.pose-shell .pt-card-img.g3 {
+background:linear-gradient(135deg,#f5c518 0%,#6a4500 100%)
+}
+.pose-shell .pt-card-img.g4 {
+background:linear-gradient(135deg,#46d369 0%,#0d2b12 100%)
+}
+.pose-shell .pt-card-img.g5 {
+background:linear-gradient(135deg,#e83e8c 0%,#4a0020 100%)
+}
+.pose-shell .pt-card-img.g6 {
+background:linear-gradient(135deg,#17a2b8 0%,#052a30 100%)
+}
+.pose-shell .pt-card-img.g7 {
+background:linear-gradient(135deg,#fd7e14 0%,#4a1a00 100%)
+}
+.pose-shell .pt-card-img.g8 {
+background:linear-gradient(135deg,#6f42c1 0%,#1a0040 100%)
+}
+.pose-shell .pt-card-wrap {
+position:relative;width:190px;height:110px;border-radius:5px;overflow:hidden;flex-shrink:0
+}
+.pose-shell .pt-card-badge {
+position:absolute;top:6px;right:6px;z-index:3;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px
+}
+.pose-shell .pt-card-badge.free {
+background:var(--ng);color:#0d2b12
+}
+.pose-shell .pt-card-badge.new {
+background:var(--nblue);color:#fff
+}
+.pose-shell .pt-card-badge.hot {
+background:var(--nr);color:#fff
+}
+.pose-shell .pt-card-badge.prem {
+background:var(--ngold);color:#2b1a00
+}
+.pose-shell .pt-card-stars {
+position:absolute;bottom:5px;right:5px;z-index:3;color:var(--ngold);font-size:10px;text-shadow:0 1px 4px rgba(0,0,0,.9)
+}
+.pose-shell .pt-card-price {
+position:absolute;bottom:5px;left:5px;z-index:3;display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.78);color:#fbbf24;font-size:10px;font-weight:800;padding:3px 7px;border-radius:12px;border:1px solid rgba(245,158,11,.5)
+}
+.pose-shell .pt-card-price i {
+font-size:10px
+}
+.pose-shell .pt-yt-price {
+position:absolute;bottom:6px;left:6px;z-index:3;display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.78);color:#fbbf24;font-size:11px;font-weight:800;padding:3px 8px;border-radius:12px;border:1px solid rgba(245,158,11,.5)
+}
+.pose-shell .pt-catpage-price {
+display:inline-flex;align-items:center;gap:4px;margin-top:5px;background:rgba(245,158,11,.16);color:#fbbf24;font-size:11px;font-weight:800;padding:3px 9px;border-radius:12px;border:1px solid rgba(245,158,11,.4)
+}
+.pose-shell .pt-rank {
+position:absolute;bottom:-8px;left:-3px;font-size:68px;font-weight:900;color:#0d0d0d;-webkit-text-stroke:2.5px #555;line-height:1;z-index:2;pointer-events:none;font-family:'Impact','Arial Black',sans-serif
+}
+.pose-shell .pt-card-panel {
+display:none;position:absolute;top:100%;left:0;width:190px;background:#1c1c1c;border:1px solid #2e2e2e;border-top:none;border-radius:0 0 5px 5px;padding:8px 10px;z-index:6
+}
+.pose-shell .pt-card:hover .pt-card-panel {
+display:block
+}
+.pose-shell .pt-card-panel-title {
+font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 0 4px
+}
+.pose-shell .pt-card-panel-sub {
+font-size:11px;color:#888;display:flex;gap:6px;align-items:center
+}
+.pose-shell .pt-card-vid-badge {
+background:var(--nr);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:2px
+}
+/* ─────────────────────────────────────────────────────────────
+   YOUTUBE-STYLE MIXED GRID (videos + music videos + movies)
+   Combines our brand styling with YouTube card sizing/layout.
+   ───────────────────────────────────────────────────────────── */
+.pose-shell .pt-yt-section {
+padding:14px 16px 4px
+}
+.pose-shell .pt-yt-chips {
+display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none
+}
+.pose-shell .pt-yt-chips::-webkit-scrollbar {
+display:none
+}
+.pose-shell .pt-yt-chip {
+flex-shrink:0;padding:7px 14px;border-radius:8px;background:#1c1c1c;border:1px solid #2e2e2e;color:#ddd;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s
+}
+.pose-shell .pt-yt-chip:hover {
+background:#262626;border-color:#3a3a3a
+}
+.pose-shell .pt-yt-chip.active {
+background:#fff;color:#0d0d0d;border-color:#fff
+}
+.pose-shell .pt-yt-grid {
+display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px 14px
+}
+.pose-shell .pt-yt-card {
+cursor:pointer;display:flex;flex-direction:column;gap:10px;border-radius:10px;transition:transform .2s ease
+}
+.pose-shell .pt-yt-card:hover {
+transform:translateY(-2px)
+}
+.pose-shell .pt-yt-thumb-wrap {
+position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#1c1c1c
+}
+.pose-shell .pt-yt-thumb {
+width:100%;height:100%;object-fit:cover;display:block;background:#1c1c1c;transition:transform .3s ease
+}
+.pose-shell .pt-yt-card:hover .pt-yt-thumb {
+transform:scale(1.03)
+}
+.pose-shell .pt-yt-thumb-fallback {
+width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#444;font-size:42px
+}
+.pose-shell .pt-yt-duration {
+position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.85);color:#fff;font-size:11px;font-weight:600;padding:2px 5px;border-radius:4px;letter-spacing:.3px
+}
+.pose-shell .pt-yt-typebadge {
+position:absolute;top:8px;left:8px;font-size:10px;font-weight:800;letter-spacing:.4px;padding:3px 7px;border-radius:4px;text-transform:uppercase;backdrop-filter:blur(6px)
+}
+.pose-shell .pt-yt-typebadge.movie {
+background:rgba(229,9,20,.92);color:#fff
+}
+.pose-shell .pt-yt-typebadge.music {
+background:rgba(245,84,140,.92);color:#fff
+}
+.pose-shell .pt-yt-typebadge.video {
+background:rgba(0,113,235,.92);color:#fff
+}
+.pose-shell .pt-yt-typebadge.season {
+background:rgba(70,211,105,.92);color:#0d2b12
+}
+.pose-shell .pt-yt-info {
+display:flex;gap:10px;align-items:flex-start;padding:0 2px
+}
+.pose-shell .pt-yt-avatar {
+width:36px;height:36px;border-radius:50%;flex-shrink:0;background:#262626;background-size:cover;background-position:center;border:1px solid #2e2e2e
+}
+.pose-shell .pt-yt-meta {
+flex:1;min-width:0
+}
+.pose-shell .pt-yt-title {
+font-size:14px;font-weight:600;color:#fff;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 4px
+}
+.pose-shell .pt-yt-channel {
+font-size:12px;color:#aaa;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.pose-shell .pt-yt-stats {
+font-size:12px;color:#888;line-height:1.3;margin-top:2px
+}
+.pose-shell .pt-yt-stats .dot {
+margin:0 4px;color:#555
+}
+.pose-shell .pt-yt-empty {
+grid-column:1/-1;text-align:center;color:#666;font-size:13px;padding:30px 10px
+}
+.pose-shell .pt-yt-skel {
+aspect-ratio:16/9;border-radius:10px;background:linear-gradient(90deg,#1a1a1a 0%,#262626 50%,#1a1a1a 100%);background-size:200% 100%;animation:ptYtShimmer 1.4s infinite
+}
+@media(max-width:900px) {
+.pose-shell .pt-yt-grid {
+grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px 12px
+}
+.pose-shell .pt-yt-section {
+padding:12px 12px 4px
+}
+}
+@media(max-width:600px) {
+.pose-shell .pt-yt-grid {
+grid-template-columns:repeat(2,1fr);gap:14px 10px
+}
+.pose-shell .pt-yt-section {
+padding:10px 10px 4px
+}
+.pose-shell .pt-yt-title {
+font-size:13px
+}
+.pose-shell .pt-yt-channel, .pose-shell .pt-yt-stats {
+font-size:11px
+}
+.pose-shell .pt-yt-avatar {
+width:30px;height:30px
+}
+}
+@media(max-width:380px) {
+.pose-shell .pt-yt-grid {
+grid-template-columns:1fr
+}
+}
+/* SEASON CARD */
+.pose-shell .pt-season-card {
+flex-shrink:0;width:160px;cursor:pointer;position:relative;border-radius:5px;overflow:hidden;background:#1c1c1c;border:1px solid var(--nbd);transition:transform .2s,border-color .2s
+}
+.pose-shell .pt-season-card:hover {
+transform:scale(1.06);border-color:#555
+}
+.pose-shell .pt-season-thumb {
+width:160px;height:90px;object-fit:cover;display:block
+}
+.pose-shell .pt-season-thumb.gs1 {
+background:linear-gradient(135deg,#e50914,#4a0000);width:160px;height:90px;display:block
+}
+.pose-shell .pt-season-thumb.gs2 {
+background:linear-gradient(135deg,#0071eb,#002855);width:160px;height:90px;display:block
+}
+.pose-shell .pt-season-thumb.gs3 {
+background:linear-gradient(135deg,#f5c518,#6a4500);width:160px;height:90px;display:block
+}
+.pose-shell .pt-season-thumb.gs4 {
+background:linear-gradient(135deg,#46d369,#0d2b12);width:160px;height:90px;display:block
+}
+.pose-shell .pt-season-thumb.gs5 {
+background:linear-gradient(135deg,#6f42c1,#1a0040);width:160px;height:90px;display:block
+}
+.pose-shell .pt-season-info {
+padding:7px 9px
+}
+.pose-shell .pt-season-title {
+font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.pose-shell .pt-season-ep {
+font-size:11px;color:#888;margin-top:2px
+}
+.pose-shell .pt-season-new {
+position:absolute;top:6px;left:6px;background:var(--ng);color:#0d2b12;font-size:9px;font-weight:900;padding:2px 6px;border-radius:3px
+}
+/* SEASON GRID — 3 cols × 2 rows, bigger cards */
+.pose-shell .pt-season-grid {
+display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px
+}
+.pose-shell .pt-season-grid .pt-season-card {
+width:100%
+}
+.pose-shell .pt-season-grid .pt-season-thumb {
+width:100%;height:120px
+}
+.pose-shell .pt-season-grid .pt-season-info {
+padding:8px 10px
+}
+.pose-shell .pt-season-grid .pt-season-title {
+font-size:13px
+}
+.pose-shell .pt-season-grid .pt-season-ep {
+font-size:11px
+}
+@media(max-width:480px) {
+.pose-shell .pt-season-grid {
+grid-template-columns:repeat(2,1fr)
+}
+}
+/* CATEGORY GRID — fills width, 2 rows */
+.pose-shell .pt-cat-grid {
+display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;padding:0 16px;max-height:none
+}
+.pose-shell .pt-cat-grid .pt-card {
+width:100%
+}
+.pose-shell .pt-cat-grid .pt-card-wrap {
+width:100%;height:110px
+}
+.pose-shell .pt-cat-grid .pt-card-img {
+width:100%;height:110px
+}
+.pose-shell .pt-cat-grid .pt-card-panel {
+width:100%
+}
+/* SKELETON */
+.pose-shell .pt-skel {
+flex-shrink:0;border-radius:5px;background:linear-gradient(90deg,#1a1a1a 25%,#222 50%,#1a1a1a 75%);background-size:400% 100%;animation:ptshin 1.3s infinite
+}
+/* SECTION DIVIDER */
+.pose-shell .pt-divider {
+display:flex;align-items:center;gap:10px;margin:4px 20px 16px
+}
+.pose-shell .pt-divider-line {
+flex:1;height:1px;background:var(--nbd)
+}
+.pose-shell .pt-divider-label {
+font-size:11px;font-weight:700;letter-spacing:1.5px;color:#555;text-transform:uppercase;white-space:nowrap
+}
+/* COLOR ACCENTS */
+.pose-shell .c-red {
+color:var(--nr)
+}
+.pose-shell .c-green {
+color:var(--ng)
+}
+.pose-shell .c-gold {
+color:var(--ngold)
+}
+.pose-shell .c-blue {
+color:var(--nblue)
+}
+/* Make sure content doesn't hide behind fixed elements */
+.pose-shell #poseTab .video-grid-page {
+padding-top: 80px;
+            padding-bottom: 100px;
+}
+/* ═══════════════════════════════════════
+   RESPONSIVE UPDATES — paste after existing CSS
+   ═══════════════════════════════════════ */
+/* ── Hero fluid height (matches tn-hero) ── */
+.pose-shell .pt-hero {
+height: clamp(440px, 82vw, 720px);
+}
+.pose-shell .pt-hero-content {
+bottom: clamp(80px, 14vw, 110px);
+  left: clamp(16px, 4vw, 36px);
+  max-width: clamp(280px, 65vw, 480px);
+}
+.pose-shell .pt-hero-title {
+font-size: clamp(24px, 6vw, 48px);
+}
+.pose-shell .pt-hero-desc {
+font-size: clamp(11px, 1.8vw, 13px);
+}
+.pose-shell .pt-hero-meta {
+gap: clamp(6px, 2vw, 14px);
+  flex-wrap: wrap;
+}
+/* ── Strip thumbs ── */
+.pose-shell .pt-strip-thumb {
+width: clamp(64px, 11vw, 90px);
+  height: clamp(38px, 6.5vw, 54px);
+}
+/* ── Top nav ── */
+.pose-shell .pt-nav {
+padding: 10px clamp(12px, 3vw, 22px) 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pose-shell .pt-logo {
+font-size: clamp(16px, 4vw, 24px);
+}
+.pose-shell .pt-nav-item {
+padding: 5px clamp(8px, 2vw, 14px);
+  font-size: clamp(10px, 1.8vw, 12px);
+}
+/* ── Tabs ── */
+.pose-shell .pt-tabs-wrap {
+padding: 0 clamp(10px, 3vw, 20px) 0;
+}
+.pose-shell .posetab-tab-item {
+padding: 7px clamp(10px, 2.5vw, 18px);
+  font-size: clamp(10px, 1.8vw, 12px);
+}
+/* ── Rows ── */
+.pose-shell .pt-rows {
+padding: 10px clamp(10px, 3vw, 18px) 0;
+}
+.pose-shell .pt-row-head h2 {
+font-size: clamp(13px, 2.8vw, 18px);
+}
+/* ── Card fluid ── */
+.pose-shell .pt-card, .pose-shell .pt-card-wrap {
+width: clamp(130px, 28vw, 200px);
+}
+.pose-shell .pt-card-wrap {
+height: clamp(76px, 16vw, 116px);
+}
+.pose-shell .pt-card-img {
+height: clamp(76px, 16vw, 116px);
+}
+.pose-shell .pt-rank {
+font-size: clamp(44px, 10vw, 72px);
+}
+/* ── Season card fluid ── */
+.pose-shell .pt-season-card, .pose-shell .pt-season-thumb {
+width: clamp(120px, 24vw, 168px);
+}
+.pose-shell .pt-season-thumb {
+height: clamp(68px, 14vw, 95px);
+}
+/* ── Ad banner fluid ── */
+.pose-shell .pt-ad-banner {
+height: clamp(70px, 14vw, 96px);
+}
+.pose-shell .pt-ad-inner {
+padding: 0 clamp(14px, 3vw, 28px);
+  gap: clamp(10px, 2vw, 20px);
+}
+.pose-shell .pt-ad-title {
+font-size: clamp(12px, 2.5vw, 17px);
+}
+.pose-shell .pt-ad-sub {
+font-size: clamp(10px, 1.8vw, 12px);
+}
+.pose-shell .pt-ad-icon {
+width: clamp(36px, 7vw, 54px);
+  height: clamp(36px, 7vw, 54px);
+  font-size: clamp(18px, 4vw, 28px);
+}
+/* ═══════════════════════════════════════
+   TABLET  (≤ 768px)
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+.pose-shell .pt-hero {
+height: clamp(420px, 80vw, 600px);
+}
+.pose-shell .pt-hero-content {
+bottom: 90px;
+    left: 18px;
+    max-width: calc(100% - 36px);
+}
+.pose-shell .pt-hero-title {
+font-size: clamp(22px, 6vw, 36px);
+}
+.pose-shell .pt-hero-desc {
+-webkit-line-clamp: 2; font-size: 12px;
+}
+.pose-shell .pt-btn-play, .pose-shell .pt-btn-info {
+padding: 9px 18px; font-size: 13px;
+}
+.pose-shell .pt-card, .pose-shell .pt-card-wrap {
+width: clamp(120px, 26vw, 170px);
+}
+.pose-shell .pt-card-wrap, .pose-shell .pt-card-img {
+height: clamp(70px, 15vw, 100px);
+}
+.pose-shell .pt-card-panel {
+width: clamp(120px, 26vw, 170px);
+}
+.pose-shell .pt-season-card, .pose-shell .pt-season-thumb {
+width: clamp(110px, 22vw, 150px);
+}
+.pose-shell .pt-season-thumb {
+height: clamp(62px, 12.5vw, 85px);
+}
+}
+/* ═══════════════════════════════════════
+   MOBILE  (≤ 480px)
+   ═══════════════════════════════════════ */
+@media (max-width: 480px) {
+/* Nav */
+.pose-shell .pt-logo {
+font-size: 18px; letter-spacing: 2px; margin-right: 4px;
+}
+.pose-shell .pt-nav-item span {
+display: none;
+}
+/* icon only on very small */
+.pose-shell .pt-nav-item {
+padding: 5px 10px;
+}
+/* Hero */
+.pose-shell .pt-hero {
+height: 95vw; min-height: 420px;
+}
+.pose-shell .pt-hero-content {
+bottom: 80px; left: 16px;
+    max-width: calc(100% - 32px);
+}
+.pose-shell .pt-hero-title {
+font-size: clamp(20px, 7vw, 30px);
+}
+.pose-shell .pt-hero-desc {
+display: none;
+}
+/* hide desc, show title + meta only */
+.pose-shell .pt-hero-meta {
+gap: 8px; font-size: 11px; margin-bottom: 12px;
+}
+.pose-shell .pt-hero-badges {
+flex-wrap: wrap; gap: 6px;
+}
+.pose-shell .pt-hero-btns {
+gap: 8px;
+}
+.pose-shell .pt-btn-play, .pose-shell .pt-btn-info {
+padding: 9px 16px; font-size: 13px; gap: 6px;
+}
+/* Strip */
+.pose-shell .pt-strip {
+padding: 7px 10px; gap: 4px;
+}
+.pose-shell .pt-strip-thumb {
+width: 64px; height: 38px;
+}
+/* Tabs */
+.pose-shell .pt-tabs-wrap {
+padding: 0 10px;
+}
+.pose-shell .posetab-tab-item {
+padding: 6px 12px;
+    font-size: 10px;
+    letter-spacing: .3px;
+}
+/* Rows */
+.pose-shell .pt-rows {
+padding: 8px 10px 0;
+}
+.pose-shell .pt-row {
+margin-bottom: 22px;
+}
+.pose-shell .pt-row-head {
+margin-bottom: 8px;
+}
+.pose-shell .pt-row-head h2 {
+font-size: 13px;
+}
+/* Cards */
+.pose-shell .pt-card, .pose-shell .pt-card-wrap {
+width: clamp(110px, 36vw, 150px);
+}
+.pose-shell .pt-card-wrap, .pose-shell .pt-card-img {
+height: clamp(64px, 20vw, 88px);
+}
+.pose-shell .pt-card-panel {
+width: clamp(110px, 36vw, 150px);
+}
+.pose-shell .pt-rank {
+font-size: clamp(38px, 12vw, 56px); bottom:-6px; left:-2px;
+}
+.pose-shell .pt-card-badge {
+font-size: 9px; padding: 1px 5px; top: 4px; right: 4px;
+}
+.pose-shell .pt-card-stars {
+font-size: 9px;
+}
+/* Season cards */
+.pose-shell .pt-season-card, .pose-shell .pt-season-thumb {
+width: clamp(105px, 34vw, 145px);
+}
+.pose-shell .pt-season-thumb {
+height: clamp(60px, 19vw, 82px);
+}
+.pose-shell .pt-season-title {
+font-size: 11px;
+}
+.pose-shell .pt-season-ep {
+font-size: 10px;
+}
+/* Ad banner stack vertically */
+.pose-shell .pt-ad-banner {
+height: auto; min-height: 70px;
+}
+.pose-shell .pt-ad-inner {
+flex-wrap: wrap; padding: 10px 14px; gap: 8px;
+}
+.pose-shell .pt-ad-icon {
+width: 36px; height: 36px; font-size: 18px;
+}
+.pose-shell .pt-ad-title {
+font-size: 13px;
+}
+.pose-shell .pt-ad-sub {
+display: none;
+}
+.pose-shell .pt-ad-cta {
+padding: 6px 14px; font-size: 11px;
+}
+.pose-shell .pt-ad-dots {
+bottom: 6px;
+}
+}
+/* ═══════════════════════════════════════
+   SMALL MOBILE  (≤ 360px)
+   ═══════════════════════════════════════ */
+@media (max-width: 360px) {
+.pose-shell .pt-hero-title {
+font-size: 17px;
+}
+.pose-shell .pt-card, .pose-shell .pt-card-wrap {
+width: 110px;
+}
+.pose-shell .pt-card-wrap, .pose-shell .pt-card-img {
+height: 62px;
+}
+.pose-shell .pt-card-panel {
+width: 110px;
+}
+.pose-shell .pt-season-card, .pose-shell .pt-season-thumb {
+width: 105px;
+}
+.pose-shell .pt-season-thumb {
+height: 60px;
+}
+.pose-shell .pt-btn-play, .pose-shell .pt-btn-info {
+padding: 7px 12px; font-size: 11px;
+}
+.pose-shell .pt-rows {
+padding: 6px 8px 0;
+}
+}
+/* ── Vertical Card (poster style) ── */
+.pose-shell .pt-vcard {
+flex-shrink: 0;
+  width: 120px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1c1c1c;
+  border: 1px solid var(--nbd);
+  transition: transform .25s ease, border-color .2s, z-index 0s .25s;
+  z-index: 1;
+}
+.pose-shell .pt-vcard:hover {
+transform: scale(1.1);
+  border-color: #555;
+  z-index: 10;
+  transition: transform .25s ease, border-color .2s, z-index 0s 0s;
+}
+.pose-shell .pt-vcard-img {
+width: 120px;
+  height: 175px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+/* vertical card gradient placeholders */
+.pose-shell .pt-vcard-img.gv1 {
+background: linear-gradient(180deg,#e50914 0%,#4a0000 100%);
+}
+.pose-shell .pt-vcard-img.gv2 {
+background: linear-gradient(180deg,#0071eb 0%,#002855 100%);
+}
+.pose-shell .pt-vcard-img.gv3 {
+background: linear-gradient(180deg,#f5c518 0%,#3a2600 100%);
+}
+.pose-shell .pt-vcard-img.gv4 {
+background: linear-gradient(180deg,#46d369 0%,#0d2b12 100%);
+}
+.pose-shell .pt-vcard-img.gv5 {
+background: linear-gradient(180deg,#e83e8c 0%,#3a0018 100%);
+}
+.pose-shell .pt-vcard-img.gv6 {
+background: linear-gradient(180deg,#17a2b8 0%,#031a1f 100%);
+}
+.pose-shell .pt-vcard-img.gv7 {
+background: linear-gradient(180deg,#fd7e14 0%,#3a1200 100%);
+}
+.pose-shell .pt-vcard-img.gv8 {
+background: linear-gradient(180deg,#6f42c1 0%,#150030 100%);
+}
+/* overlay gradient on image bottom */
+.pose-shell .pt-vcard-overlay {
+position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, rgba(0,0,0,.92) 0%, transparent 100%);
+  pointer-events: none;
+}
+/* badge top-left */
+.pose-shell .pt-vcard-badge {
+position: absolute;
+  top: 7px; left: 7px;
+  font-size: 9px; font-weight: 900;
+  padding: 2px 6px; border-radius: 3px;
+  letter-spacing: .5px; z-index: 2;
+}
+.pose-shell .pt-vcard-badge.free {
+background: var(--ng);   color: #0d2b12;
+}
+.pose-shell .pt-vcard-badge.new {
+background: var(--nblue); color: #fff;
+}
+.pose-shell .pt-vcard-badge.hot {
+background: var(--nr);    color: #fff;
+}
+.pose-shell .pt-vcard-badge.prem {
+background: var(--ngold); color: #2b1a00;
+}
+/* stars bottom-right over image */
+.pose-shell .pt-vcard-stars {
+position: absolute;
+  bottom: 38px; right: 7px;
+  font-size: 9px; color: var(--ngold);
+  text-shadow: 0 1px 4px rgba(0,0,0,.9);
+  z-index: 2;
+}
+/* title + meta below image */
+.pose-shell .pt-vcard-info {
+padding: 7px 8px 9px;
+}
+.pose-shell .pt-vcard-title {
+font-size: 11px; font-weight: 700; color: #fff;
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; margin-bottom: 3px;
+}
+.pose-shell .pt-vcard-meta {
+font-size: 10px; color: #777;
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* responsive vertical cards */
+@media (max-width: 480px) {
+.pose-shell .pt-vcard {
+width: 100px;
+}
+.pose-shell .pt-vcard-img {
+width: 100px; height: 148px;
+}
+.pose-shell .pt-vcard-stars {
+bottom: 34px;
+}
+}
+@media (max-width: 360px) {
+.pose-shell .pt-vcard {
+width: 88px;
+}
+.pose-shell .pt-vcard-img {
+width: 88px; height: 130px;
+}
+}
+@keyframes ptYtShimmer {0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes ptshin {0%{background-position:100% 0}100%{background-position:-100% 0}}
