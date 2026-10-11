@@ -467,6 +467,42 @@ export function savePinPayMode(mode: PinPayMode): void {
 }
 
 /**
+ * `window._pinLastVerifiedAt` @64115 — the stamp `_pinModeIsSkip()` @64100 reads
+ * to decide whether the five-minute window is still open.
+ */
+let lastPinVerifiedAt = 0;
+
+export function markPaymentPinVerified(): void {
+  lastPinVerifiedAt = Date.now();
+}
+
+/** `_pinModeIsSkip()` @64100 — 'never', or '5min' inside the window. */
+export function paymentPinSkipped(): boolean {
+  const mode = loadPinPayMode();
+  if (mode === 'never') return true;
+  return mode === '5min' && Date.now() - lastPinVerifiedAt < 5 * 60 * 1000;
+}
+
+/**
+ * `requirePaymentPin()` @64109 — run the callback straight away when the mode
+ * skips the prompt or the account has never set a PIN, and otherwise hand the
+ * callback to the wallet's `#pinModalOverlay` and let the PIN gate it.
+ *
+ * The legacy reached into Firestore for the whole user document only to test for
+ * `walletPin`; this reads the same field.
+ */
+export async function paymentPinRequired(uid: string | null): Promise<boolean> {
+  if (paymentPinSkipped() || !uid) return false;
+  const { db } = getPoseFirebase();
+  try {
+    const snapshot = await getDoc(doc(db, 'users', uid));
+    return Boolean(snapshot.data()?.walletPin);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * `submitPin()` @63899. The legacy stored `btoa(pin)` with the comment "simple
  * hash for demo" — that is an encoding, not a hash, and a six-digit PIN falls out
  * of it instantly. The port keeps the same field so existing PINs still verify,
