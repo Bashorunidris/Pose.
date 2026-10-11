@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: dirname(fileURLToPath(import.meta.url)),
   },
+  // `next dev` otherwise rewrites AGENTS.md/CLAUDE.md on every run, which keeps
+  // showing up as uncommitted noise.
+  agentRules: false,
 };
 
 export default nextConfig;
