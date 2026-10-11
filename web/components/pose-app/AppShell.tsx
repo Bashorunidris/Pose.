@@ -11,10 +11,12 @@ import { ForYouFeed } from './ForYouFeed';
 import { LiveComingSoon } from './LiveComingSoon';
 import { NotificationsPanel } from './NotificationsPanel';
 import { ProfilePage } from './ProfilePage';
+import { RecorderSheet } from './recorder/RecorderSheet';
 import { BuzzSearchOverlay } from './search/BuzzSearchOverlay';
 import { SearchOverlay } from './search/SearchOverlay';
 import { TopNav, type FeedTab } from './TopNav';
 import { TrendModal } from './TrendModal';
+import { WalletSheet } from './wallet/WalletSheet';
 import { TAB_CONTENT, cx } from './styles';
 import { commentTargetKey, type CommentTarget } from '@/lib/pose-app/comments';
 import { clearBuzzFeedCache, clearForYouFeedCache } from '@/lib/pose-app/feed';
@@ -40,6 +42,10 @@ export function AppShell() {
   const [liveOpen, setLiveOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  /** `openWallet()` @61904 — the wallet sheet is a full-bleed surface over the feeds. */
+  const [walletOpen, setWalletOpen] = useState(false);
+  /** `openRecordingUI()` @58472 behind `#navCreate` @24561. */
+  const [recorderOpen, setRecorderOpen] = useState(false);
   // `openSearchForActiveTab()` @79729 dispatched on the active tab; Buzz has its
   // own overlay, so the mode travels with the open state.
   const [searchMode, setSearchMode] = useState<'forYou' | 'buzz' | null>(null);
@@ -65,7 +71,14 @@ export function AppShell() {
   const notifications = usePoseNotifications(uid);
   const unread = unreadCount(notifications);
   const overlayOpen =
-    trendOpen || notifOpen || liveOpen || authOpen || profileOpen || searchMode !== null;
+    trendOpen ||
+    notifOpen ||
+    liveOpen ||
+    authOpen ||
+    profileOpen ||
+    walletOpen ||
+    recorderOpen ||
+    searchMode !== null;
 
   /**
    * `openForYouProfilePage()` @66391 opened another creator at `#forYouProfilePageModal`
@@ -184,6 +197,7 @@ export function AppShell() {
         unread={unread}
         onHome={handleHome}
         onNotifications={() => setNotifOpen(true)}
+        onCreate={() => setRecorderOpen(true)}
         onLive={() => setLiveOpen(true)}
       />
 
@@ -257,6 +271,30 @@ export function AppShell() {
         onCount={handleCommentCount}
       />
 
+      <WalletSheet
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        uid={uid}
+        viewer={{ name: user?.displayName ?? '', email: user?.email ?? '' }}
+        onToast={showToast}
+        onRequestOpen={() => setWalletOpen(true)}
+      />
+
+      {/*
+        `openRecordingUI()` paused the feeds before it raised the overlay; the
+        shell's `overlayOpen` does that here, and unmounting the sheet on close is
+        what stops the camera the legacy used to leave running.
+      */}
+      {recorderOpen ? (
+        <RecorderSheet
+          uid={uid}
+          onClose={() => setRecorderOpen(false)}
+          // `publishRecordingPostToFirebase()` @57684 re-pulled the For You feed
+          // itself, because the new video has to be in it.
+          onPublished={handleHome}
+        />
+      ) : null}
+
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />
 
       {profileOpen && uid ? (
@@ -268,6 +306,7 @@ export function AppShell() {
             setProfileOpen(false);
             router.push('/channel-dashboard');
           }}
+          onOpenWallet={() => setWalletOpen(true)}
           onToast={showToast}
           // Logout, deactivation and deletion all end the same way the legacy
           // `location.href = 'index.html'` did: back to the auth screen.
