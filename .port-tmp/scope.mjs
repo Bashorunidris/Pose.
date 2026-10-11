@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-const ROOT = '.channel-dash';
+const ROOT = process.argv[4] || '.channel-dash';
 const RAW_AT = new Set(['keyframes', 'font-face', 'page', 'property', 'counter-style', 'font-feature-values']);
 const src = fs.readFileSync(process.argv[2], 'utf8');
 const css = src.replace(/^\s*<style[^>]*>\s*/m, '').replace(/\s*<\/style>\s*$/m, '');
