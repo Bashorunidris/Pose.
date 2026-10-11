@@ -35,6 +35,11 @@ type Props = {
   onToast: (message: string) => void;
   /** Drops the post from the feed after a block or a "not interested". */
   onHide: () => void;
+  /**
+   * Which sheet to land on. The For You card opens the share root; the Pose
+   * player's report button opens straight into the report list.
+   */
+  initialSheet?: Sheet;
 };
 
 const OVERLAY =
@@ -85,20 +90,21 @@ export function VideoActionSheets({
   onClose,
   onToast,
   onHide,
+  initialSheet = 'share',
 }: Props) {
   const [sheet, setSheet] = useState<Sheet>('share');
   const [reportTarget, setReportTarget] = useState<ReportTarget>('video');
   const [friends, setFriends] = useState<ShareFriend[] | null>(null);
 
-  // Opening the menu always lands on the share root, not on the sheet that was
+  // Opening the menu always lands on its entry sheet, not on the sheet that was
   // left open last time.
   useEffect(() => {
     if (!open) return;
     void Promise.resolve().then(() => {
-      setSheet('share');
+      setSheet(initialSheet);
       setFriends(null);
     });
-  }, [open]);
+  }, [open, initialSheet]);
 
   const loadFriends = useCallback(async () => {
     if (!uid) return;
