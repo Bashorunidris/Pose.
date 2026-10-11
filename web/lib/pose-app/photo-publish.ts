@@ -14,6 +14,7 @@ import { getPoseFirebase } from '@/lib/firebase';
 import { uploadToR2 } from '@/lib/r2-upload';
 import { loadPostAuthor, toggleFields } from './post-author';
 import { generateDocId, todayKey, type PostFields } from './publish';
+import { soundAttribution, type PoseSound } from './sounds';
 
 /** `photos/{type}/{uid}/…` was the legacy key; the folder carries the kind. */
 async function uploadPhoto(
@@ -44,6 +45,7 @@ function photoDoc(
   docId: string,
   urls: string[],
   kind: PhotoKind,
+  sound: PoseSound | null,
 ) {
   return {
     id: docId,
@@ -68,7 +70,7 @@ function photoDoc(
     reposts: 0,
     saves: 0,
     type: kind === 'story' ? 'story' : 'photo',
-    customAudio: null,
+    customAudio: sound ? soundAttribution(sound, author) : null,
     edits: {},
   };
 }
@@ -84,6 +86,7 @@ export async function publishPhotoPost(options: {
   uid: string;
   photos: Blob[];
   fields: PostFields;
+  sound?: PoseSound | null;
   onProgress?: (fraction: number) => void;
 }): Promise<string> {
   const { db } = getPoseFirebase();
@@ -100,7 +103,7 @@ export async function publishPhotoPost(options: {
     );
   }
 
-  const record = photoDoc(options.fields, author, docId, urls, 'post');
+  const record = photoDoc(options.fields, author, docId, urls, 'post', options.sound ?? null);
   await setDoc(doc(db, 'posephotosposted', todayKey(), 'posts', docId), record);
 
   await setDoc(doc(db, 'videos', docId), {
@@ -135,6 +138,7 @@ export async function savePhotoDraft(options: {
   uid: string;
   photo: Blob;
   fields: PostFields;
+  sound?: PoseSound | null;
   onProgress?: (fraction: number) => void;
 }): Promise<string> {
   const { db } = getPoseFirebase();
@@ -144,7 +148,7 @@ export async function savePhotoDraft(options: {
   const url = await uploadPhoto(options.uid, options.photo, 'draft', (percent) =>
     options.onProgress?.(percent / 100),
   );
-  const record = photoDoc(options.fields, author, docId, [url], 'draft');
+  const record = photoDoc(options.fields, author, docId, [url], 'draft', options.sound ?? null);
 
   await setDoc(doc(db, 'posephotosposted', todayKey(), 'posts', docId), record);
   await setDoc(doc(db, 'users', options.uid, 'drafts', docId), record);
@@ -163,6 +167,7 @@ export async function addPhotoStory(options: {
   photo: Blob;
   caption: string;
   fields: PostFields;
+  sound?: PoseSound | null;
   onProgress?: (fraction: number) => void;
 }): Promise<string> {
   const { db } = getPoseFirebase();
@@ -172,7 +177,7 @@ export async function addPhotoStory(options: {
   const url = await uploadPhoto(options.uid, options.photo, 'story', (percent) =>
     options.onProgress?.(percent / 100),
   );
-  const record = photoDoc(options.fields, author, docId, [url], 'story');
+  const record = photoDoc(options.fields, author, docId, [url], 'story', options.sound ?? null);
 
   await setDoc(doc(db, 'posephotosposted', todayKey(), 'posts', docId), record);
   await updateDoc(doc(db, 'users', options.uid), {
