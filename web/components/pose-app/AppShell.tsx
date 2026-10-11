@@ -10,6 +10,9 @@ import { CommentModal } from './comments/CommentModal';
 import { ForYouFeed } from './ForYouFeed';
 import { LiveComingSoon } from './LiveComingSoon';
 import { NotificationsPanel } from './NotificationsPanel';
+import { PoseInfoModal } from './pose/PoseInfoModal';
+import { PosePlayer } from './pose/PosePlayer';
+import { PoseTab } from './pose/PoseTab';
 import { ProfilePage } from './ProfilePage';
 import type { CaptureClip } from './recorder/RecordStage';
 import { RecorderSheet } from './recorder/RecorderSheet';
@@ -20,11 +23,12 @@ import { TrendModal } from './TrendModal';
 import { WalletSheet } from './wallet/WalletSheet';
 import { TAB_CONTENT, cx } from './styles';
 import { commentTargetKey, type CommentTarget } from '@/lib/pose-app/comments';
-import { clearBuzzFeedCache, clearForYouFeedCache } from '@/lib/pose-app/feed';
+import { clearBuzzFeedCache, clearForYouFeedCache, clearPoseTabFeedCache } from '@/lib/pose-app/feed';
 import { unreadCount, usePoseNotifications } from '@/lib/pose-app/notifications';
 import { clearBuzzSearchCache } from '@/lib/pose-app/search';
 import { usePoseSession } from '@/lib/pose-app/session';
-import type { BuzzPost, PoseVideo } from '@/lib/pose-app/types';
+import type { PosePlayerVideo } from '@/lib/pose-app/pose-player';
+import type { BuzzPost, PoseChannel, PoseVideo } from '@/lib/pose-app/types';
 
 /**
  * The ported `index.html` shell. Both feeds stay mounted and are shown with
@@ -70,10 +74,23 @@ export function AppShell() {
   const [toast, setToast] = useState('');
   const [forYouKey, setForYouKey] = useState(0);
   const [buzzKey, setBuzzKey] = useState(0);
+  const [poseKey, setPoseKey] = useState(0);
+  /**
+   * `loadPoseTabPosts()` fans out one read per channel, so the tab mounts on
+   * first visit rather than prefetching on load the way the legacy's 1.5s timer
+   * did — and then stays mounted so its rows and scroll survive a tab switch.
+   */
+  const [poseVisited, setPoseVisited] = useState(false);
+  /** The Pose tab's own video player (`openTnPlayer()` @87774). */
+  const [playerVideo, setPlayerVideo] = useState<PosePlayerVideo | null>(null);
+  /** `tnOpenModal()` @87644 — the hero's "More Info" dialog. */
+  const [infoVideo, setInfoVideo] = useState<PosePlayerVideo | null>(null);
 
   const notifications = usePoseNotifications(uid);
   const unread = unreadCount(notifications);
   const overlayOpen =
+    playerVideo !== null ||
+    infoVideo !== null ||
     trendOpen ||
     notifOpen ||
     liveOpen ||
@@ -141,9 +158,39 @@ export function AppShell() {
       setBuzzKey((key) => key + 1);
       return;
     }
+    if (tab === 'pose') {
+      clearPoseTabFeedCache();
+      setPoseKey((key) => key + 1);
+      return;
+    }
     clearForYouFeedCache();
     setForYouKey((key) => key + 1);
   }, [tab]);
+
+  const selectTab = useCallback((next: FeedTab) => {
+    if (next === 'pose') setPoseVisited(true);
+    setTab(next);
+  }, []);
+
+  /** Cards and rails in the Pose tab all open the same player. */
+  const openPoseVideo = useCallback((video: PosePlayerVideo) => {
+    setInfoVideo(null);
+    setPlayerVideo(video);
+  }, []);
+
+  /**
+   * `openChannelDirect()` @67942 opened a creator's channel page. A channel doc
+   * carries the owning user id, so that creator's profile is the port's
+   * equivalent; without one the channel dashboard is the closest surface.
+   */
+  const openPoseChannel = useCallback(
+    (channelId: string, channel: PoseChannel | null) => {
+      const owner = channel?.userId ?? '';
+      if (owner) openCreator(owner);
+      else if (channelId) router.push('/channel-dashboard');
+    },
+    [openCreator, router],
+  );
 
   // The legacy pages hard-reload with a cache-busting query after signing in
   // (`clearAllFeedCaches` @30675 + `location.replace`). Dropping the caches and
@@ -161,7 +208,7 @@ export function AppShell() {
     <div className="min-h-[100dvh] overscroll-y-contain bg-app-black md:bg-app-shell">
       <TopNav
         tab={tab}
-        onSelect={setTab}
+        onSelect={selectTab}
         onOpenTrend={() => setTrendOpen(true)}
         user={user}
         onProfileClick={() => setAuthOpen(true)}
@@ -195,6 +242,22 @@ export function AppShell() {
           onOpenComments={openBuzzComments}
         />
       </div>
+
+      {poseVisited ? (
+        <PoseTab
+          key={`pose-${poseKey}`}
+          active={tab === 'pose' && !overlayOpen}
+          uid={uid}
+          onToast={showToast}
+          onOpenVideo={openPoseVideo}
+          onOpenInfo={(video) => setInfoVideo(video)}
+          onOpenSeason={(season) =>
+            openPoseVideo({ ...season, isSeason: true, seasons: [season], title: season.title } as PosePlayerVideo)
+          }
+          onOpenChannel={openPoseChannel}
+          onOpenWallet={() => setWalletOpen(true)}
+        />
+      ) : null}
 
       <BottomNav
         unread={unread}
@@ -303,6 +366,24 @@ export function AppShell() {
           onPublished={handleHome}
         />
       ) : null}
+
+      <PosePlayer
+        open={playerVideo !== null}
+        video={playerVideo}
+        uid={uid}
+        email={user?.email ?? null}
+        displayName={user?.displayName ?? ''}
+        onClose={() => setPlayerVideo(null)}
+        onToast={showToast}
+        onOpenChannel={openPoseChannel}
+        onOpenVideo={openPoseVideo}
+      />
+
+      <PoseInfoModal
+        video={infoVideo}
+        onClose={() => setInfoVideo(null)}
+        onPlay={(video) => openPoseVideo(video)}
+      />
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />
 
