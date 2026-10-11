@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { AuthModal } from './AuthModal';
 import { BottomNav } from './BottomNav';
 import { BuzzFeed } from './BuzzFeed';
+import { ChatRoom } from './chat/ChatRoom';
 import { CommentModal } from './comments/CommentModal';
 import { ForYouFeed } from './ForYouFeed';
 import { LiveComingSoon } from './LiveComingSoon';
@@ -85,6 +86,14 @@ export function AppShell() {
   const [playerVideo, setPlayerVideo] = useState<PosePlayerVideo | null>(null);
   /** `tnOpenModal()` @87644 — the hero's "More Info" dialog. */
   const [infoVideo, setInfoVideo] = useState<PosePlayerVideo | null>(null);
+  /**
+   * `openChatRoomWithUser()` @81223 — the direct-message room is one overlay
+   * over the whole shell, opened from a message notification or a profile's
+   * Message button.
+   */
+  const [chatPeer, setChatPeer] = useState<{ userId: string; name: string; pic: string } | null>(
+    null,
+  );
 
   const notifications = usePoseNotifications(uid);
   const unread = unreadCount(notifications);
@@ -98,6 +107,7 @@ export function AppShell() {
     profileOpen ||
     walletOpen ||
     recorderOpen ||
+    chatPeer !== null ||
     searchMode !== null;
 
   /**
@@ -144,6 +154,12 @@ export function AppShell() {
   const showToast = useCallback((message: string) => {
     setToast(message);
     setTimeout(() => setToast(''), 2500);
+  }, []);
+
+  /** `openChatRoomWithUser(userId, name, pic)` @81223. */
+  const openChat = useCallback((userId: string, name: string, pic: string) => {
+    if (!userId) return;
+    setChatPeer({ userId, name, pic });
   }, []);
 
   // Every overlay is a full-bleed fixed panel above both nav bars, so a tab or
@@ -284,6 +300,14 @@ export function AppShell() {
         uid={uid}
         displayName={user?.displayName ?? ''}
         items={notifications}
+        onOpenChat={(userId, name, pic) => {
+          setNotifOpen(false);
+          openChat(userId, name, pic);
+        }}
+        onOpenCreator={(creatorId) => {
+          setNotifOpen(false);
+          openCreator(creatorId);
+        }}
       />
 
       <LiveComingSoon open={liveOpen} onClose={() => setLiveOpen(false)} uid={uid} />
@@ -413,6 +437,15 @@ export function AppShell() {
           }}
         />
       ) : null}
+
+      <ChatRoom
+        open={chatPeer !== null}
+        uid={uid}
+        displayName={user?.displayName ?? ''}
+        peer={chatPeer}
+        onClose={() => setChatPeer(null)}
+        onToast={showToast}
+      />
 
       <div
         className="pointer-events-none fixed bottom-[80px] left-1/2 z-[9999] -translate-x-1/2 rounded-[30px] bg-app-interact px-[22px] py-[10px] text-[13px] font-medium whitespace-nowrap text-white transition-all duration-[300ms]"
