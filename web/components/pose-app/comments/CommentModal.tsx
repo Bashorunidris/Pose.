@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 
 import { cx } from '../styles';
+import { GiftSheet } from '../gifts/GiftSheet';
 import * as UI from './comment-ui';
 import { initials } from '@/lib/pose-app/format';
 import {
@@ -88,6 +89,9 @@ export function CommentModal({
   const [state, setState] = useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
   const [text, setText] = useState('');
   const [emojiOpen, setEmojiOpen] = useState(false);
+  /** `window.commentMediaAttachments` @90109 — the gifts waiting to be posted. */
+  const [attachments, setAttachments] = useState<CommentMedia[]>([]);
+  const [giftOpen, setGiftOpen] = useState(false);
   const [replyTo, setReplyTo] = useState<{ commentId: string; username: string; replyId?: string } | null>(null);
   const [sending, setSending] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -112,6 +116,8 @@ export function CommentModal({
       setText('');
       setReplyTo(null);
       setEmojiOpen(false);
+      setAttachments([]);
+      setGiftOpen(false);
       setExpanded({});
       setRevealed(null);
       try {
@@ -262,11 +268,14 @@ export function CommentModal({
    */
   const post = async () => {
     const body = text.trim();
-    if (!body || !uid || !target || sending) return;
+    // `postComment()` @70253: "Allow posting if either text exists OR images
+    // exist" — a gift on its own is a comment.
+    if ((!body && attachments.length === 0) || !uid || !target || sending) return;
 
     const name = viewerName || 'User';
     const now = new Date().toISOString();
     const isReply = Boolean(replyTo);
+    const media = attachments;
 
     setSending(true);
     setText('');
@@ -282,7 +291,7 @@ export function CommentModal({
       timestamp: now,
       likes: 0,
       likedBy: {},
-      media: [],
+      media,
       replies: [],
       isReply,
       replyingTo: replyTo?.username,
@@ -312,6 +321,7 @@ export function CommentModal({
       } else {
         await saveComment(target, { ...optimistic, videoOwnerId: ownerId ?? undefined });
       }
+      setAttachments([]);
       settleRow(optimistic.id, false);
     } catch (error) {
       console.error('❌ posting the comment:', error);
@@ -433,6 +443,35 @@ export function CommentModal({
           </div>
         )}
 
+        {/* `updateMediaPreviewForYou()` @? — the strip the popup feeds. The legacy
+            rebuilt it from `window.commentMediaAttachments` on every add; here the
+            same array is state. */}
+        {attachments.length > 0 && (
+          <div className={UI.ATTACHMENT_STRIP}>
+            {attachments.map((item, index) => (
+              <div key={`${item.giftId ?? item.filename ?? 'gift'}-${index}`} className={UI.ATTACHMENT_CHIP}>
+                {item.img ? (
+                  <img src={item.img} alt="" className="h-[22px] w-[22px] rounded-[6px] object-cover" />
+                ) : (
+                  <i className="fas fa-gift text-[#f59e0b]" />
+                )}
+                <span className="text-[12px] text-white">
+                  {item.name ?? 'Gift'}
+                  {item.qty && item.qty > 1 ? ` ×${item.qty}` : ''}
+                </span>
+                <button
+                  type="button"
+                  className="ml-[2px] cursor-pointer border-0 bg-transparent text-[12px] text-[#ff8fab]"
+                  onClick={() => setAttachments((current) => current.filter((_, position) => position !== index))}
+                  aria-label={`Remove ${item.name ?? 'gift'}`}
+                >
+                  <i className="fas fa-times" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className={UI.INPUT_SECTION}>
           <div className={UI.INPUT_WRAP}>
             <input
@@ -470,7 +509,7 @@ export function CommentModal({
             >
               <i className="fas fa-plus" />
             </button>
-            <button type="button" className={UI.EMOJI_BTN} title="Send a gift" onClick={() => notYet('Gifting')}>
+            <button type="button" className={UI.EMOJI_BTN} title="Send a gift" onClick={() => setGiftOpen(true)}>
               <i className="fas fa-gift" />
             </button>
           </div>
@@ -478,13 +517,25 @@ export function CommentModal({
             type="button"
             className={UI.SEND_BTN}
             onClick={() => void post()}
-            disabled={sending || !text.trim()}
+            disabled={sending || (!text.trim() && attachments.length === 0)}
             aria-label="Post comment"
           >
             <i className="fas fa-paper-plane" />
           </button>
         </div>
       </div>
+
+      {giftOpen ? (
+        <GiftSheet
+          uid={uid}
+          targetUserId={ownerId}
+          onClose={() => setGiftOpen(false)}
+          onAttach={(media) => {
+            setAttachments((current) => [...current, ...media]);
+            onToast(`Gift added · ${media.reduce((sum, item) => sum + (item.subtotal ?? 0), 0).toLocaleString()} Pose Coins`);
+          }}
+        />
+      ) : null}
 
       {openMedia && (
         <div className="fixed inset-0 z-[10003] flex items-center justify-center bg-black/95 p-[20px]">
