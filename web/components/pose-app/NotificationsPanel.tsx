@@ -23,6 +23,10 @@ type Props = {
   uid: string | null;
   displayName: string;
   items: PoseNotification[];
+  /** `openChatRoomWithUser()` @81223 — a message notification opens its room. */
+  onOpenChat: (userId: string, name: string, pic: string) => void;
+  /** `openForYouProfilePage()` @66391 — a follow or a visit opens the profile. */
+  onOpenCreator: (userId: string) => void;
 };
 
 /**
@@ -114,7 +118,15 @@ const EMPTY = 'flex flex-col items-center px-[24px] py-[80px] text-center text-[
 
 const INITIAL = 'U';
 
-export function NotificationsPanel({ open, onClose, uid, displayName, items }: Props) {
+export function NotificationsPanel({
+  open,
+  onClose,
+  uid,
+  displayName,
+  items,
+  onOpenChat,
+  onOpenCreator,
+}: Props) {
   const [tab, setTab] = useState<NotifTab>('all');
 
   useEffect(() => {
@@ -141,8 +153,19 @@ export function NotificationsPanel({ open, onClose, uid, displayName, items }: P
     return acc;
   }, {});
 
-  const markRead = (n: PoseNotification) => {
+  /**
+   * `openNotification()` @78520 routed each type to its content. A follow, a
+   * visit and a message are the three the port can follow all the way today.
+   */
+  const openNotification = (n: PoseNotification) => {
     if (uid) void markNotificationRead(uid, n.id);
+    if ((n.type === 'follow' || n.type === 'visit') && n.fromUserId) {
+      onOpenCreator(n.fromUserId);
+      return;
+    }
+    if (n.type === 'message' && n.fromUserId) {
+      onOpenChat(n.fromUserId, n.fromUserName ?? '', n.fromUserPic ?? '');
+    }
   };
 
   return (
@@ -202,7 +225,7 @@ export function NotificationsPanel({ open, onClose, uid, displayName, items }: P
               <div
                 key={n.id}
                 className={cx(CARD, n.read ? CARD_IDLE : CARD_UNREAD)}
-                onClick={() => markRead(n)}
+                onClick={() => openNotification(n)}
               >
                 <div
                   className={AVATAR}
