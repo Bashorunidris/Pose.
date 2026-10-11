@@ -16,6 +16,9 @@ import {
   type VideoEdit,
 } from '@/lib/pose-app/publish';
 import type { CaptureFilter, CaptureSettings, RecorderToastKind } from '@/lib/pose-app/recorder';
+import type { PoseSound } from '@/lib/pose-app/sounds';
+import { SelectedSoundChip } from '../sounds/SelectedSoundChip';
+import { SoundLibrarySheet } from '../sounds/SoundLibrarySheet';
 import { cx } from '../styles';
 import { CaptureSetup } from './CaptureSetup';
 import { EditStage } from './EditStage';
@@ -31,6 +34,11 @@ type Props = {
   onClose: () => void;
   /** The legacy reloaded the For You feed once the post was written. */
   onPublished: () => void;
+  /**
+   * `postDraft()` @45807 — a draft opened from the drafts sheet arrives as a
+   * finished clip, so the sheet comes up on the editor with the recorder skipped.
+   */
+  initialClip?: CaptureClip | null;
 };
 
 type Stage = 'setup' | 'record' | 'edit' | 'post' | 'photo' | 'photo-edit' | 'photo-post';
@@ -71,10 +79,10 @@ const TOAST_ICONS: Record<RecorderToastKind, string> = {
  * at `z-index: 2001` while `#v2RecordScreen` covers the screen at `z-index:
  * 99999`, so the shell's toast cannot be seen while the recorder is up.
  */
-export function RecorderSheet({ uid, onClose, onPublished }: Props) {
-  const [stage, setStage] = useState<Stage>('setup');
+export function RecorderSheet({ uid, onClose, onPublished, initialClip }: Props) {
+  const [stage, setStage] = useState<Stage>(initialClip ? 'edit' : 'setup');
   const [settings, setSettings] = useState<CaptureSettings>(INITIAL_SETTINGS);
-  const [clip, setClip] = useState<CaptureClip | null>(null);
+  const [clip, setClip] = useState<CaptureClip | null>(initialClip ?? null);
   const [edit, setEdit] = useState<VideoEdit>(INITIAL_EDIT);
   const [progress, setProgress] = useState<PublishState>({ kind: 'idle' });
   /** Bumped per take; the key on `RecordStage` is what gives a retake a fresh camera and clock. */
@@ -84,6 +92,9 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
   const [photoSettings, setPhotoSettings] = useState<PhotoSettings>(INITIAL_PHOTO_SETTINGS);
   const [photos, setPhotos] = useState<CapturedPhoto[]>([]);
   const [photoIndex, setPhotoIndex] = useState(0);
+  /** `soundLibraryState.selectedSound` @58621 and `window.v2EditedVideoState.soundData`. */
+  const [sound, setSound] = useState<PoseSound | null>(null);
+  const [soundSheetOpen, setSoundSheetOpen] = useState(false);
 
   const patchSettings = useCallback((patch: Partial<CaptureSettings>) => {
     setSettings((current) => ({ ...current, ...patch }));
@@ -113,6 +124,9 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
       return null;
     });
   }, []);
+
+  /** `openSoundLibrary()` @59012, raised from the Add Sound button on any stage. */
+  const openSoundLibrary = useCallback(() => setSoundSheetOpen(true), []);
 
   const handleRecorded = useCallback((recorded: CaptureClip) => {
     setClip(recorded);
@@ -166,10 +180,10 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
     (fields: PostFields) => {
       if (!clip) return;
       void upload('Publishing your video…', 'Your video is posted', (onProgress) =>
-        publishVideoPost({ uid: uid ?? '', blob: clip.blob, fields, edit, onProgress }),
+        publishVideoPost({ uid: uid ?? '', blob: clip.blob, fields, edit, sound, onProgress }),
       );
     },
-    [clip, edit, upload, uid],
+    [clip, edit, sound, upload, uid],
   );
 
   const saveDraft = useCallback(
@@ -288,11 +302,12 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
           uid: uid ?? '',
           photos: photosRef.current.map((photo) => photo.blob),
           fields,
+          sound,
           onProgress,
         }),
       );
     },
-    [upload, uid],
+    [sound, upload, uid],
   );
 
   const draftPhoto = useCallback(
@@ -300,10 +315,10 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
       const current = photosRef.current[photoIndex];
       if (!current) return;
       void upload('Saving your draft…', 'Draft saved', (onProgress) =>
-        savePhotoDraft({ uid: uid ?? '', photo: current.blob, fields, onProgress }),
+        savePhotoDraft({ uid: uid ?? '', photo: current.blob, fields, sound, onProgress }),
       );
     },
-    [photoIndex, upload, uid],
+    [photoIndex, sound, upload, uid],
   );
 
   const storyPhoto = useCallback(
@@ -316,11 +331,12 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
           photo: current.blob,
           caption: fields.caption,
           fields,
+          sound,
           onProgress,
         }),
       );
     },
-    [photoIndex, upload, uid],
+    [photoIndex, sound, upload, uid],
   );
 
   return (
@@ -332,6 +348,7 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
             onChange={patchSettings}
             onStart={() => setStage('record')}
             onMode={switchMode}
+            onAddSound={openSoundLibrary}
             onClose={onClose}
             onToast={notify}
           />
@@ -358,6 +375,7 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
             setEdit(next);
             setStage('post');
           }}
+          onAddSound={openSoundLibrary}
           onToast={notify}
         />
       ) : null}
@@ -395,7 +413,7 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
           onAddPhotos={openGallery}
           onDiscard={discardPhoto}
           onNext={() => setStage('photo-post')}
-          onAddSound={() => notify('The sound library lands in the next slice')}
+          onAddSound={openSoundLibrary}
           onToast={notify}
         />
       ) : null}
@@ -409,7 +427,7 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
           onPublish={publishPhoto}
           onDraft={draftPhoto}
           onStory={storyPhoto}
-          onAddSound={() => notify('The sound library lands in the next slice')}
+          onAddSound={openSoundLibrary}
         />
       ) : null}
 
@@ -435,6 +453,23 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
           if (!failed) onClose();
         }}
       />
+
+      {sound && !soundSheetOpen ? (
+        <SelectedSoundChip sound={sound} onRemove={() => setSound(null)} />
+      ) : null}
+
+      {soundSheetOpen ? (
+        <SoundLibrarySheet
+          uid={uid}
+          onClose={() => setSoundSheetOpen(false)}
+          onToast={notify}
+          onSelect={(chosen) => {
+            setSound(chosen);
+            setSoundSheetOpen(false);
+            notify(`"${chosen.title}" added to your post`, 'success');
+          }}
+        />
+      ) : null}
 
       <div
         className={cx('recording-toast', toast?.kind, toast && 'show')}
