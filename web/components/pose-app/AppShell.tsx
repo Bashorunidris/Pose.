@@ -11,6 +11,7 @@ import { ForYouFeed } from './ForYouFeed';
 import { LiveComingSoon } from './LiveComingSoon';
 import { NotificationsPanel } from './NotificationsPanel';
 import { ProfilePage } from './ProfilePage';
+import type { CaptureClip } from './recorder/RecordStage';
 import { RecorderSheet } from './recorder/RecorderSheet';
 import { BuzzSearchOverlay } from './search/BuzzSearchOverlay';
 import { SearchOverlay } from './search/SearchOverlay';
@@ -46,6 +47,8 @@ export function AppShell() {
   const [walletOpen, setWalletOpen] = useState(false);
   /** `openRecordingUI()` @58472 behind `#navCreate` @24561. */
   const [recorderOpen, setRecorderOpen] = useState(false);
+  /** `postDraft()` @45807's clip, when the recorder is being opened from Drafts. */
+  const [draftClip, setDraftClip] = useState<CaptureClip | null>(null);
   // `openSearchForActiveTab()` @79729 dispatched on the active tab; Buzz has its
   // own overlay, so the mode travels with the open state.
   const [searchMode, setSearchMode] = useState<'forYou' | 'buzz' | null>(null);
@@ -288,7 +291,13 @@ export function AppShell() {
       {recorderOpen ? (
         <RecorderSheet
           uid={uid}
-          onClose={() => setRecorderOpen(false)}
+          initialClip={draftClip}
+          onClose={() => {
+            setRecorderOpen(false);
+            // A draft that was opened but never saved must not reopen the editor
+            // the next time Create is pressed.
+            setDraftClip(null);
+          }}
           // `publishRecordingPostToFirebase()` @57684 re-pulled the For You feed
           // itself, because the new video has to be in it.
           onPublished={handleHome}
@@ -308,6 +317,13 @@ export function AppShell() {
           }}
           onOpenWallet={() => setWalletOpen(true)}
           onToast={showToast}
+          // `postDraft()` @45807: the draft becomes a clip and the recorder opens
+          // straight on the editor, which is where the legacy put it too.
+          onEditDraft={(clip) => {
+            setDraftClip(clip);
+            setProfileOpen(false);
+            setRecorderOpen(true);
+          }}
           // Logout, deactivation and deletion all end the same way the legacy
           // `location.href = 'index.html'` did: back to the auth screen.
           onSignedOut={() => {
