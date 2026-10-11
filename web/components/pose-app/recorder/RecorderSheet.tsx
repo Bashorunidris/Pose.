@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { CaptureSettings, RecorderToastKind } from '@/lib/pose-app/recorder';
+import {
+  INITIAL_PHOTO_SETTINGS,
+  type CapturedPhoto,
+  type PhotoSettings,
+} from '@/lib/pose-app/photo-capture';
+import { addPhotoStory, publishPhotoPost, savePhotoDraft } from '@/lib/pose-app/photo-publish';
 import {
   addVideoStory,
   publishVideoPost,
@@ -10,9 +15,13 @@ import {
   type PostFields,
   type VideoEdit,
 } from '@/lib/pose-app/publish';
+import type { CaptureFilter, CaptureSettings, RecorderToastKind } from '@/lib/pose-app/recorder';
 import { cx } from '../styles';
 import { CaptureSetup } from './CaptureSetup';
 import { EditStage } from './EditStage';
+import { PhotoCapture } from './PhotoCapture';
+import { PhotoEdit } from './PhotoEdit';
+import { PhotoPostSettings } from './PhotoPostSettings';
 import { PostSettings } from './PostSettings';
 import { PublishOverlay, type PublishState } from './PublishOverlay';
 import { RecordStage, type CaptureClip } from './RecordStage';
@@ -24,7 +33,9 @@ type Props = {
   onPublished: () => void;
 };
 
-type Stage = 'setup' | 'record' | 'edit' | 'post';
+type Stage = 'setup' | 'record' | 'edit' | 'post' | 'photo' | 'photo-edit' | 'photo-post';
+
+type Mode = 'video' | 'photo' | 'buzz';
 
 const INITIAL_SETTINGS: CaptureSettings = {
   layout: 'full',
@@ -43,15 +54,18 @@ const TOAST_ICONS: Record<RecorderToastKind, string> = {
 };
 
 /**
- * `openRecordingUI()` @58472 — the Create button's overlay and the three screens
- * a recording passes through: `#screen1` @24849, the recorder `#v2RecordScreen`
- * @73603, the editor `#v2EditScreen` @73758 and the post settings `#screen4`
- * @25583. `closeRecordingUI()` @50842 only hid the overlay and left the screen-1
- * camera running; unmounting this closes it instead.
+ * `openRecordingUI()` @58472 — the Create button's overlay and every screen a
+ * post passes through: `#screen1` @24849, the recorder `#v2RecordScreen` @73603,
+ * the editor `#v2EditScreen` @73758, the post settings `#screen4` @25583, and
+ * photo mode's `#screen5` @25117, `#screen6` @25258 and `#screen7` @25332.
+ * `closeRecordingUI()` @50842 only hid the overlay and left the screen-1 camera
+ * running; unmounting this closes it instead.
  *
  * The layout, duration, timer and filter the recorder runs with live here and
  * nowhere else, because the legacy kept them on the shared `recordingState`
- * @47021 object where a later screen could quietly overwrite them.
+ * @47021 object where a later screen could quietly overwrite them. Photo mode's
+ * own settings and its captured shots live here for the same reason — the legacy
+ * kept them on `photoState` @49350, which survived the sheet being closed.
  *
  * The toast is the recorder's own, not the shell's: `#recordingToast` @24841 sat
  * at `z-index: 2001` while `#v2RecordScreen` covers the screen at `z-index:
@@ -67,8 +81,16 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
   const [take, setTake] = useState(0);
   const [toast, setToast] = useState<{ message: string; kind: RecorderToastKind } | null>(null);
 
+  const [photoSettings, setPhotoSettings] = useState<PhotoSettings>(INITIAL_PHOTO_SETTINGS);
+  const [photos, setPhotos] = useState<CapturedPhoto[]>([]);
+  const [photoIndex, setPhotoIndex] = useState(0);
+
   const patchSettings = useCallback((patch: Partial<CaptureSettings>) => {
     setSettings((current) => ({ ...current, ...patch }));
+  }, []);
+
+  const patchPhotoSettings = useCallback((patch: Partial<PhotoSettings>) => {
+    setPhotoSettings((current) => ({ ...current, ...patch }));
   }, []);
 
   const toastTimer = useRef<number | null>(null);
@@ -170,6 +192,137 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
     [clip, edit, upload, uid],
   );
 
+  /**
+   * `photoState.capturedPhotos` with its index, kept in a ref as well so the
+   * gallery handler and the publish handlers read the same list the render sees
+   * without re-creating themselves on every capture.
+   */
+  const photosRef = useRef<CapturedPhoto[]>([]);
+  const commitPhotos = useCallback((next: CapturedPhoto[]) => {
+    photosRef.current = next;
+    setPhotos(next);
+  }, []);
+
+  const galleryRef = useRef<HTMLInputElement | null>(null);
+
+  /** `openPhotoGallery()` @54454 — the legacy built the input on the fly; this one lives in the sheet. */
+  const openGallery = useCallback(() => galleryRef.current?.click(), []);
+
+  const handleGalleryFiles = useCallback(
+    (files: FileList) => {
+      const added: CapturedPhoto[] = Array.from(files).map((file) => ({
+        url: URL.createObjectURL(file),
+        blob: file,
+        filter: 'none' as CaptureFilter,
+        timestamp: Date.now(),
+        fromGallery: true,
+      }));
+      if (!added.length) return;
+
+      const next = [...photosRef.current, ...added];
+      commitPhotos(next);
+      setPhotoIndex(next.length - added.length);
+      notify(
+        added.length === 1 ? 'Photo added from the gallery' : `${added.length} photos added`,
+        'success',
+      );
+      setStage('photo-edit');
+    },
+    [commitPhotos, notify],
+  );
+
+  const handleCaptured = useCallback(
+    (blob: Blob) => {
+      const photo: CapturedPhoto = {
+        url: URL.createObjectURL(blob),
+        blob,
+        filter: photoSettings.filter,
+        timestamp: Date.now(),
+        fromGallery: false,
+      };
+      const next = [...photosRef.current, photo];
+      commitPhotos(next);
+      setPhotoIndex(next.length - 1);
+      setStage('photo-edit');
+      notify('Photo captured', 'success');
+    },
+    [commitPhotos, notify, photoSettings.filter],
+  );
+
+  /** `confirmDiscardPhoto()` @54538 dropped the previewed shot and reopened the camera. */
+  const discardPhoto = useCallback(() => {
+    const current = photosRef.current[photoIndex];
+    if (current) URL.revokeObjectURL(current.url);
+    commitPhotos(photosRef.current.filter((_, position) => position !== photoIndex));
+    setPhotoIndex(Math.max(0, photoIndex - 1));
+    setStage('photo');
+  }, [commitPhotos, photoIndex]);
+
+  /**
+   * `switchRecMode()` @51004 — and the one part of it worth keeping: the legacy
+   * stopped screen 1's camera by hand before requesting the photo one, because
+   * `showScreen('screen5')` released it only *after* `initializePhotoMode()` had
+   * already asked for the hardware. The port's screens own their streams, so
+   * changing stage is what hands the camera over.
+   */
+  const switchMode = useCallback(
+    (mode: Mode) => {
+      if (mode === 'video') {
+        setStage('setup');
+        return;
+      }
+      if (mode === 'photo') {
+        setStage('photo');
+        return;
+      }
+      notify('Buzz posting lands in a later slice');
+    },
+    [notify],
+  );
+
+  const publishPhoto = useCallback(
+    (fields: PostFields) => {
+      if (!photosRef.current.length) return;
+      void upload('Publishing your photo…', 'Your photo is posted', (onProgress) =>
+        publishPhotoPost({
+          uid: uid ?? '',
+          photos: photosRef.current.map((photo) => photo.blob),
+          fields,
+          onProgress,
+        }),
+      );
+    },
+    [upload, uid],
+  );
+
+  const draftPhoto = useCallback(
+    (fields: PostFields) => {
+      const current = photosRef.current[photoIndex];
+      if (!current) return;
+      void upload('Saving your draft…', 'Draft saved', (onProgress) =>
+        savePhotoDraft({ uid: uid ?? '', photo: current.blob, fields, onProgress }),
+      );
+    },
+    [photoIndex, upload, uid],
+  );
+
+  const storyPhoto = useCallback(
+    (fields: PostFields) => {
+      const current = photosRef.current[photoIndex];
+      if (!current) return;
+      void upload('Adding to your story…', 'Added to your story', (onProgress) =>
+        addPhotoStory({
+          uid: uid ?? '',
+          photo: current.blob,
+          caption: fields.caption,
+          fields,
+          onProgress,
+        }),
+      );
+    },
+    [photoIndex, upload, uid],
+  );
+
   return (
     <div className="recorder-shell">
       {stage === 'setup' ? (
@@ -178,6 +331,7 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
             settings={settings}
             onChange={patchSettings}
             onStart={() => setStage('record')}
+            onMode={switchMode}
             onClose={onClose}
             onToast={notify}
           />
@@ -220,6 +374,58 @@ export function RecorderSheet({ uid, onClose, onPublished }: Props) {
           onStory={shareStory}
         />
       ) : null}
+
+      {stage === 'photo' ? (
+        <PhotoCapture
+          settings={photoSettings}
+          onChange={patchPhotoSettings}
+          onCaptured={handleCaptured}
+          onOpenGallery={openGallery}
+          onBack={() => setStage('setup')}
+          onMode={switchMode}
+          onToast={notify}
+        />
+      ) : null}
+
+      {stage === 'photo-edit' && photos.length > 0 ? (
+        <PhotoEdit
+          photos={photos}
+          index={photoIndex}
+          onSelect={setPhotoIndex}
+          onAddPhotos={openGallery}
+          onDiscard={discardPhoto}
+          onNext={() => setStage('photo-post')}
+          onAddSound={() => notify('The sound library lands in the next slice')}
+          onToast={notify}
+        />
+      ) : null}
+
+      {stage === 'photo-post' && photos.length > 0 ? (
+        <PhotoPostSettings
+          photoUrl={photos[photoIndex]?.url ?? photos[0].url}
+          count={photos.length}
+          busy={progress.kind === 'working'}
+          onBack={() => setStage('photo-edit')}
+          onPublish={publishPhoto}
+          onDraft={draftPhoto}
+          onStory={storyPhoto}
+          onAddSound={() => notify('The sound library lands in the next slice')}
+        />
+      ) : null}
+
+      <input
+        ref={galleryRef}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(event) => {
+          const files = event.target.files;
+          if (files) handleGalleryFiles(files);
+          // Let the same files be picked again after a discard.
+          event.target.value = '';
+        }}
+      />
 
       <PublishOverlay
         state={progress}

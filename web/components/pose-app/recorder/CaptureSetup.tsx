@@ -23,6 +23,8 @@ type Props = {
   onChange: (patch: Partial<CaptureSettings>) => void;
   /** `#recMainBtn` — `openV2RecordScreen()` @74037 took these settings with it. */
   onStart: () => void;
+  /** `switchRecMode()` @51004: `photo` swaps this screen for `#screen5`, `buzz` opens the upload page. */
+  onMode: (mode: 'video' | 'photo' | 'buzz') => void;
   onClose: () => void;
   onToast: (message: string, kind?: RecorderToastKind) => void;
 };
@@ -33,7 +35,7 @@ type Props = {
  * is what `#recMainBtn` did in the legacy; the status bar and the pause/stop
  * cluster that `recordVideo()` @47275 drove are gone with that dead path.
  */
-export function CaptureSetup({ settings, onChange, onStart, onClose, onToast }: Props) {
+export function CaptureSetup({ settings, onChange, onStart, onMode, onClose, onToast }: Props) {
   const { layout, duration, timer, filter, facing } = settings;
   const [customDuration, setCustomDuration] = useState(String(settings.duration));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -151,13 +153,7 @@ export function CaptureSetup({ settings, onChange, onStart, onClose, onToast }: 
       </div>
 
       <div className={cx('rec-left-menu', menuOpen && 'show')}>
-        <div
-          className="rec-menu-item"
-          onClick={() => {
-            closePanels();
-            onToast('Photo mode lands in the next slice');
-          }}
-        >
+        <div className="rec-menu-item" onClick={() => onMode('photo')}>
           <i className="fas fa-camera" /> Photo
         </div>
         <div
@@ -391,21 +387,13 @@ export function CaptureSetup({ settings, onChange, onStart, onClose, onToast }: 
         </div>
 
         <div className="rec-mode-tabs">
-          <button type="button" className="rec-mode-tab active">
+          <button type="button" className="rec-mode-tab active" onClick={() => onMode('video')}>
             Video
           </button>
-          <button
-            type="button"
-            className="rec-mode-tab"
-            onClick={() => onToast('Photo mode lands in the next slice')}
-          >
+          <button type="button" className="rec-mode-tab" onClick={() => onMode('photo')}>
             Photo
           </button>
-          <button
-            type="button"
-            className="rec-mode-tab"
-            onClick={() => onToast('Buzz posting lands in a later slice')}
-          >
+          <button type="button" className="rec-mode-tab" onClick={() => onMode('buzz')}>
             Buzz
           </button>
         </div>
