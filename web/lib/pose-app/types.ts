@@ -114,6 +114,13 @@ export type PoseChannel = {
   avatar?: string;
   channelAvatar?: string;
   profilePic?: string;
+  /** The picker in `channeldashboard.html` writes the channel's genre here. */
+  category?: string;
+  /** Every spelling of the channel picture the legacy reads when it falls back. */
+  profileURL?: string;
+  photoURL?: string;
+  profileImage?: string;
+  profilePicture?: string;
   subscribers?: number;
   userId?: string;
 };
@@ -131,9 +138,20 @@ export type PoseSeason = {
 export type PoseEpisode = {
   id: string;
   title?: string;
+  description?: string;
   episodeNumber?: number;
   videoUrl?: string;
   thumbnail?: string;
+  thumbnailURL?: string;
+  thumbnailUrl?: string;
+  duration?: string;
+  /** A scheduled episode lists with an UPCOMING badge and does not play. */
+  scheduledDate?: FirestoreDate;
+  watchProgress?: number;
+  coinPrice?: number;
+  priceMode?: string;
+  isPremium?: boolean;
+  locked?: boolean;
   createdAt?: FirestoreDate;
 };
 
