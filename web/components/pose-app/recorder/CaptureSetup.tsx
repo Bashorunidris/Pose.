@@ -25,6 +25,8 @@ type Props = {
   onStart: () => void;
   /** `switchRecMode()` @51004: `photo` swaps this screen for `#screen5`, `buzz` opens the upload page. */
   onMode: (mode: 'video' | 'photo' | 'buzz') => void;
+  /** `openSoundLibrary()` @59012 — the side button beside the record button. */
+  onAddSound: () => void;
   onClose: () => void;
   onToast: (message: string, kind?: RecorderToastKind) => void;
 };
@@ -35,7 +37,15 @@ type Props = {
  * is what `#recMainBtn` did in the legacy; the status bar and the pause/stop
  * cluster that `recordVideo()` @47275 drove are gone with that dead path.
  */
-export function CaptureSetup({ settings, onChange, onStart, onMode, onClose, onToast }: Props) {
+export function CaptureSetup({
+  settings,
+  onChange,
+  onStart,
+  onMode,
+  onAddSound,
+  onClose,
+  onToast,
+}: Props) {
   const { layout, duration, timer, filter, facing } = settings;
   const [customDuration, setCustomDuration] = useState(String(settings.duration));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -344,7 +354,7 @@ export function CaptureSetup({ settings, onChange, onStart, onMode, onClose, onT
             <button
               type="button"
               className="rec-side-btn"
-              onClick={() => onToast('The sound library lands in the next slice')}
+              onClick={onAddSound}
               title="Add Sound"
             >
               <i className="fas fa-music" />
