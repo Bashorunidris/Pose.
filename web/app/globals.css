@@ -150,6 +150,25 @@
   --animate-app-profile-ring: app-profile-ring 4s infinite;
   --animate-app-profile-skel: app-profile-skel 0.9s linear infinite;
 
+  /* Legacy `@keyframes recordingCountdownPulse`, injected by
+     `showRecordingCountdown()` @53544 just before the recorder rolls. */
+  --animate-countdown-pulse: pose-countdown-pulse 1s ease-in-out;
+
+  @keyframes pose-countdown-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
   @keyframes app-fade-in {
     from {
       opacity: 0;
