@@ -24,3 +24,8 @@
 .port-tmp/sounds/sounds-scoped.css
 .port-tmp/gifts/gifts-filtered.css
 .port-tmp/gifts/gifts-scoped.css
+.port-tmp/pose/markup-shell.html
+.port-tmp/pose/pose-filtered.css
+.port-tmp/pose/pose-scoped.css
+.port-tmp/pose/player-filtered.css
+.port-tmp/pose/player-scoped.css
