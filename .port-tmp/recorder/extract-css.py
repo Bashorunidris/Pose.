@@ -93,6 +93,10 @@ def split_blocks(css):
 
 def keep(selector):
     stripped = selector.strip()
+    # A range that ends on the stylesheet's closing tag leaves `</style>`
+    # sitting where a selector would go.
+    if '<style' in stripped or '</style>' in stripped:
+        return False
     if stripped.startswith(EXCLUDE_PREFIXES):
         return False
     return stripped.startswith(PREFIXES)
@@ -108,7 +112,8 @@ def filter_css(css):
     res = []
     for prelude, body in split_blocks(css):
         if body is None:
-            res.append(prelude + ';')
+            if '<style' not in prelude and '</style>' not in prelude:
+                res.append(prelude + ';')
             continue
         selector, comments = clean_prelude(prelude)
         name = re.split(r'[\s({]', selector[1:])[0].lower() if selector.startswith('@') else ''
