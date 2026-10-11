@@ -205,6 +205,14 @@ export function clearForYouFeedCache(): void {
   window.localStorage.removeItem(FORYOU_CACHE_TIME_KEY);
 }
 
+/** The Pose tab half of the same reset. */
+export function clearPoseTabFeedCache(): void {
+  if (typeof window === 'undefined') return;
+  window.localStorage.removeItem(POSE_TAB_VIDEOS_CACHE_KEY);
+  window.localStorage.removeItem(POSE_TAB_SEASONS_CACHE_KEY);
+  window.localStorage.removeItem(POSE_TAB_CACHE_TIME_KEY);
+}
+
 export type PoseTabFeed = {
   videos: (PoseVideo & { channelId: string; channel: PoseChannel | null })[];
   seasons: (PoseSeason & { channelId: string; channel: PoseChannel | null; episodes: PoseEpisode[] })[];
