@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -33,6 +34,7 @@ const CATALOGUE_REFRESH_DELAY_MS = 1500;
 const CREATOR_VIEWS: ViewName[] = ['dashboard', 'upload', 'catalogue', 'profile'];
 
 export default function PoseMusicPage() {
+  const router = useRouter();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const engine = useAudioEngine(audioRef);
   const { artist, setArtist, createProfile, updateProfile } = usePoseCreator();
@@ -433,9 +435,10 @@ export default function PoseMusicPage() {
           onOpenDrawer={() => setDrawerOpen(true)}
           onLogoClick={() => showView('search')}
           onBack={() => {
-            // /poseappdash.html is a legacy static page, not a Next route.
-            // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-            window.location.assign('/poseappdash.html');
+            // The legacy player's back button pointed at `/poseappdash.html`,
+            // which was never a real page. Music is reached from the shell's
+            // bottom nav, so the arrow returns there.
+            router.push('/');
           }}
         />
 
