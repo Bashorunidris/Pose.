@@ -140,6 +140,8 @@ export type PoseEpisode = {
   title?: string;
   description?: string;
   episodeNumber?: number;
+  /** A draft episode is filtered out of the season panel the way a video is. */
+  status?: string;
   videoUrl?: string;
   thumbnail?: string;
   thumbnailURL?: string;
