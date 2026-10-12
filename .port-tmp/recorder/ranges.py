@@ -2,7 +2,7 @@
 import re, sys
 from pathlib import Path
 
-lines = (Path(__file__).resolve().parents[2] / 'index.html').read_text().splitlines()
+lines = (Path(__file__).resolve().parents[2] / 'legacy/index.html').read_text().splitlines()
 
 def find(name):
     pattern = re.compile(r'^\s*(async\s+)?function\s+' + re.escape(name) + r'\s*\(')
