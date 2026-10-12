@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-INDEX = ROOT / 'index.html'
+INDEX = ROOT / 'legacy/index.html'
 OUT = ROOT / 'web/components/pose-app/sounds/sounds.css'
 
 PREFIXES = ('.sound-', '.banner-', '.voice-', '.search-icon', '.trending-')
