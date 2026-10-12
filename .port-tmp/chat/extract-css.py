@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-INDEX = ROOT / 'index.html'
+INDEX = ROOT / 'legacy/index.html'
 OUT = ROOT / 'web/components/pose-app/chat/chat.css'
 
 PREFIXES = (
