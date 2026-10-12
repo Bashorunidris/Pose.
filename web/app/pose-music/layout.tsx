@@ -7,10 +7,10 @@ export const metadata: Metadata = {
   title: 'Pose Music — Sound for Creators',
   description: DESCRIPTION,
   robots: { index: true, follow: true },
-  alternates: { canonical: 'https://www.poseweb.site/posemusic.html' },
+  alternates: { canonical: 'https://www.poseweb.site/pose-music' },
   openGraph: {
     type: 'website',
-    url: 'https://www.poseweb.site/posemusic.html',
+    url: 'https://www.poseweb.site/pose-music',
     siteName: 'Pose',
     title: 'Pose Music — Sound for Creators',
     description:
