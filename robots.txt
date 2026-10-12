@@ -1,12 +1,10 @@
 User-agent: *
 Allow: /
-Allow: /index.html
-Allow: /posemusic.html
-Allow: /poselivevisual.html
 
 # Private / auth / utility pages — do not index
-Disallow: /channeldashboard.html
-Disallow: /legacy/channeldashboard.html
+Disallow: /channel-dashboard
+Disallow: /api/
+Disallow: /legacy/
 Disallow: /zoho-domain-verification.html
 Disallow: /functions/
 
