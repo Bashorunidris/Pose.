@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { signInAnonymously } from 'firebase/auth';
 import {
   addDoc,
@@ -117,6 +118,7 @@ function UploadDrop({
 }
 
 export default function CreateChannelPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [channelName, setChannelName] = useState('');
   const [channelDesc, setChannelDesc] = useState('');
@@ -225,7 +227,9 @@ export default function CreateChannelPage() {
 
       setBusyMessage('All done! Redirecting…');
       window.setTimeout(() => {
-        window.location.href = `/channeldashboard.html?uid=${channelId}`;
+        // `/channeldashboard.html` is a frozen copy in `/legacy/` now; the
+        // ported dashboard owns the route.
+        router.push(`/channel-dashboard?uid=${encodeURIComponent(channelId)}`);
       }, 800);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
