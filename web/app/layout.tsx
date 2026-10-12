@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Outfit, Syne } from "next/font/google";
 import "./globals.css";
 // The wallet sheet's, the recorder's, the sound library's, the gift popup's, the
-// Pose tab's, the Pose player's and the chat room's own rules are scoped under
-// `.wallet-shell`, `.recorder-shell`, `.sounds-shell`, `.gifts-shell`,
-// `.pose-shell`, `.pose-player-shell` and `.chat-shell`; Next only lets a layout
-// pull in a global stylesheet, so they are pulled in here rather than from the
-// components.
+// Pose tab's, the Pose player's, the chat room's and the channel page's own rules
+// are scoped under `.wallet-shell`, `.recorder-shell`, `.sounds-shell`,
+// `.gifts-shell`, `.pose-shell`, `.pose-player-shell`, `.chat-shell` and
+// `.fyc-shell`; Next only lets a layout pull in a global stylesheet, so they are
+// pulled in here rather than from the components.
 import "../components/pose-app/wallet/wallet.css";
 import "../components/pose-app/recorder/recorder.css";
 import "../components/pose-app/sounds/sounds.css";
@@ -14,6 +14,7 @@ import "../components/pose-app/gifts/gifts.css";
 import "../components/pose-app/pose/pose.css";
 import "../components/pose-app/pose/player.css";
 import "../components/pose-app/chat/chat.css";
+import "../components/pose-app/channel/fyc.css";
 
 const syne = Syne({
   variable: "--font-display",
