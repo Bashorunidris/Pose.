@@ -2,7 +2,7 @@
 // legacy index.html so the Next.js port carries the same text byte for byte.
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const html = readFileSync('index.html', 'utf8');
+const html = readFileSync('legacy/index.html', 'utf8');
 
 function sliceBalanced(source, startIndex, open, close) {
   let depth = 0;
