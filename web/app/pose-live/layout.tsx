@@ -7,11 +7,10 @@ export const metadata: Metadata = {
   title: 'Pose Live — Go Live & Watch Creators',
   description: DESCRIPTION,
   robots: { index: true, follow: true },
-  // Canonical stays on the legacy URL until the port replaces poselivevisual.html.
-  alternates: { canonical: 'https://www.poseweb.site/poselivevisual.html' },
+  alternates: { canonical: 'https://www.poseweb.site/pose-live' },
   openGraph: {
     type: 'website',
-    url: 'https://www.poseweb.site/poselivevisual.html',
+    url: 'https://www.poseweb.site/pose-live',
     siteName: 'Pose',
     title: 'Pose Live — Go Live & Watch Creators',
     description: DESCRIPTION,
