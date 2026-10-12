@@ -29,6 +29,15 @@ export type PoseTabVideo = PoseVideo & {
   priceMode?: string;
   rating?: number | string;
   stars?: number | string;
+  /**
+   * A channel's own videos carry the publish state and the release fields; the
+   * creator channel page filters on them (`fycBuildTabs()` @68300,
+   * `fycComingSoonCard()` @68245).
+   */
+  status?: string;
+  comingSoon?: boolean;
+  releaseDate?: string;
+  description?: string;
 };
 
 export type PoseTabSeason = PoseSeason & {
