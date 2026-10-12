@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { BuzzCard } from '../BuzzCard';
+import { ChannelPage } from '../channel/ChannelPage';
 import { ChatRoom } from '../chat/ChatRoom';
 import { CommentModal } from '../comments/CommentModal';
 import { ForYouCard } from '../ForYouCard';
@@ -159,6 +160,8 @@ export function CreatorProfilePage({
   const [chatPeer, setChatPeer] = useState<{ userId: string; name: string; pic: string } | null>(
     null,
   );
+  /** `openForYouChannel()` @67986 — the creator's public channel page. */
+  const [channelOpen, setChannelOpen] = useState(false);
   const [toast, setToast] = useState('');
   /** Every document `loadCreatorVideos()` returned, for the Likes/Views totals. */
   const [allVideos, setAllVideos] = useState<PoseVideo[]>([]);
@@ -342,8 +345,8 @@ export function CreatorProfilePage({
     });
   };
 
-  const openCreatorChannel = () =>
-    notify('The creator channel page is the next screen to be ported');
+  /** `openForYouChannel()` @67986 — the creator's public channel page. */
+  const openCreatorChannel = () => setChannelOpen(true);
 
   /**
    * `openDirectMessage()` @68896 kept both of its guards before it opened the
@@ -663,6 +666,22 @@ export function CreatorProfilePage({
         peer={chatPeer}
         onClose={() => setChatPeer(null)}
         onToast={notify}
+      />
+
+      <ChannelPage
+        open={channelOpen}
+        ownerUid={uid}
+        ownerName={profile?.displayName ?? 'Channel'}
+        ownerPic={profile?.profilePic ?? ''}
+        viewerUid={viewerUid}
+        viewerName={displayName}
+        viewerEmail={email ?? null}
+        onClose={() => setChannelOpen(false)}
+        onToast={notify}
+        onMessage={(userId, name, pic) => {
+          setChannelOpen(false);
+          setChatPeer({ userId, name, pic });
+        }}
       />
     </div>
   );
