@@ -12,13 +12,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-with: 20
+          node-version: 22
 
       - name: Install Tools
         run: |
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "My App" "com.example.myapp" --web-dir=./
+          npx cap init "Pose" "com.pose.app" --web-dir=./
 
       - name: Add Android Platform
         run: |
