@@ -12,13 +12,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'
 
-      - name: Install Tools
+      - name: Create Web Asset Directory
+        run: |
+          mkdir -p www
+          cp -r * www/ || true
+          rm -rf www/www www/node_modules www/.github
+
+      - name: Install Capacitor and Initialize
         run: |
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Pose" "com.pose.app" --web-dir=./
+          npx cap init "Pose" "com.pose.app" --web-dir=www
 
       - name: Add Android Platform
         run: |
